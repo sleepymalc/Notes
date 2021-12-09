@@ -1,0 +1,157 @@
+\lecture{24}{06 Dec. 08:00}{Cutting Planes}
+\subsection{Cutting Planes}
+\begin{prev}
+	We focus on the problem in the form of
+	\begin{align*}
+		\max~                    & y^{T}b                                      \\
+		                         & y^{T}A\leq c^{T}                            \\
+		(D_{\mathfrak{X} })\quad & y_{i}\text{ integer for }i = 1, \ldots , m.
+	\end{align*}
+	\begin{note}
+		Compare to what we have seen, now we require all \(y_{i}\) be integer. Further, as before, we also let \(P\) be
+		\begin{align*}
+			\min~    & c^Tx     \\
+			         & Ax = b   \\
+			(P)\quad & x\geq 0.
+		\end{align*}
+	\end{note}
+\end{prev}
+\begin{remark}
+	We assume that the data is all integer.
+\end{remark}
+
+Now, we choose \(w\in \mathbb{\MakeUppercase{R}}^n\), \(w\geq 0\). Then the constraint becomes
+\[
+	y^{T}(Aw) \leq c^{T}w.
+\]
+\begin{remark}
+	This valid for all \(y\) such that
+	\[
+		y^{T}A\leq c^{T},
+	\]
+	no matter it's integer or not.
+\end{remark}
+
+Suppose \(Aw\in\mathbb{\MakeUppercase{Z}}^m\). With the fact that \(y\in \mathbb{\MakeUppercase{Z}}^m\), then for
+\[
+	y^{T}(Aw)\leq c^{T}w,
+\]
+we can actually get
+\[
+	y^{T}(Aw)\leq \left\lfloor c^{T}w \right\rfloor.
+\]
+\begin{remark}
+	This is valid for all \(y\) that satisfies
+	\[
+		y^{T}(Aw)\leq c^{T}w
+	\]
+	and \(y\in \mathbb{\MakeUppercase{Z}}^m\).
+\end{remark}
+\begin{figure}[H]
+	\centering
+	\incfig{Cutting-planes-tighter-bound}
+	\label{fig:Cutting-planes-tighter-bound}
+\end{figure}
+
+We now solve \(P\) and get an optimal basis \(\beta\). Consider
+\[
+	\overline{y}^{T}\coloneqq c_{\beta}^{T}A^{-1}_{\beta}.
+\]
+Notice that if \(\overline{y}\in\mathbb{\MakeUppercase{Z}}^m\), then \(\overline{y}\) solves \(D_{\mathfrak{X}}\). Otherwise, suppose
+\(\overline{y}_{i}\notin \mathbb{\MakeUppercase{Z}}\), then let
+\[
+	\widetilde{b}\coloneqq e^i + A_{\beta}r\in\mathbb{\MakeUppercase{Z}}^m,
+\]
+where \(r\in\mathbb{\MakeUppercase{Z}}^m\). We then see a theorem.
+\begin{theorem}
+	If \(\overline{y}^{T}\widetilde{b}\notin \mathbb{\MakeUppercase{Z}}\), then
+	\[
+		y^{T}\widetilde{b}\leq \left\lfloor \overline{y}^{T}\widetilde{b} \right\rfloor
+	\]
+	cuts off \(\overline{y}\).
+\end{theorem}
+\begin{proof}
+	Since
+	\[
+		\overline{y}^{T}\widetilde{b} = \overline{y}^{T}(e^{i+A_{\beta}r}) = \overline{y}_{i} + \overline{y}^{T}A_{\beta}r = \overline{y}_{i}+c_{\beta}^{T}A^{-1}_{\beta}A_{\beta}r = \overline{y}_{i}+c^{T}_{\beta}r
+	\]
+	We see that \(\overline{y}_{i}\notin\mathbb{\MakeUppercase{Z}}\), \(c_{\beta}^{T}, r\in \mathbb{\MakeUppercase{Z}}\), hence we see that
+	\[
+		\overline{y}^{T}\widetilde{b} = \overline{y}_{i}+c^{T}_{\beta}r\notin \mathbb{\MakeUppercase{Z}}.
+	\]
+	Now, we need to check that \(y^{T}\widetilde{b}\geq \left\lfloor \overline{y}^{T}\widetilde{b} \right\rfloor\) is satisfied by \(\overline{y}\).
+
+	\hr
+	\begin{intuition}
+		Consider if the inequality is
+		\[
+			\vec{0}^{T}y\leq -1,
+		\]
+		then it makes no sense.
+	\end{intuition}
+	\hr
+
+	Let \(H\coloneqq A^{-1}_{\beta}\), then \(H_{\cdot i} = A^{-1}_{\beta}e_{i}\). Further, we let \(w\coloneqq H_{\cdot i}+r\). Since we need
+	\(w\geq \vec{0}\), we can always choose \(r\in \mathbb{\MakeUppercase{Z}}^m\) so that \(w\leq \vec{0}\). Specifically, we choose
+	\[
+		r_K \geq -\left\lfloor h_{Ki} \right\rfloor
+	\] for \(K = 1, \ldots , m\).
+
+	Instead of considering \(y^{T}A\leq c^{T}\), we consider \(y^{T}A_{\beta}\leq c_{\beta}^{T}\). Then we have
+	\[
+		\left(y^{T}A_{\beta}\right)\left(H_{\cdot i}+r\right) \leq c_{\beta}^{T}\left(H_{\cdot i}+r\right).
+	\]
+	This is equivalence to
+	\[
+		\left(y^{T}A_{\beta}\right)\left(A^{-1}_{\beta}e_{i}+r\right) \leq c_{\beta}^{T}\left(A^{-1}_{\beta}e_{i}+r\right).
+	\]
+	After expanding, we have
+	\[
+		y_{i}+y^{T}A_{\beta}r\leq \overline{y}_{i}+c_{\beta}^{T}r,
+	\]
+	which can be written as
+	\[
+		y^{T}\left(e_{i}+A_{\beta}r\right) \leq \overline{y}^{T}\left(e_{i}+A_{\beta}r\right)
+	\]
+	since \(\overline{y}^{T} = c_{\beta}^{T}A^{-1}_{\beta}\). Then we see
+	\[
+		y^{T}\widetilde{b}\leq \left\lfloor \overline{y}^{T}\widetilde{b} \right\rfloor.
+	\]
+
+	Lastly, we need \(Aw\) are all integers. This is true since
+	\[
+		A_{\beta}w = A_{\beta}\left(A^{-1}_{\beta}e_{i}+r\right) = e_{i}+A_{\beta}r \in \mathbb{\MakeUppercase{Z}}^m.
+	\]
+\end{proof}
+
+Revisiting the \hyperref[eg:branch-and-bound]{example}. Now we see that the cutting plane algorithm will need at least \(2k\) steps
+for such a triangle with height \(k\), since it can only cut off one point at a time.
+
+\hr
+
+\begin{eg}
+	Now we see some bad examples for Branch and Bound. Consider the following integer programming problem.
+	\begin{align*}
+		\min~ & y_{n+1}                                                              \\
+		      & 2y_{1} + 2y_2 + \ldots +2y_n + y_{n+1} = \underbrace{n}_{\text{odd}} \\
+		      & 0\leq y_{i}\leq 1 \text{ for }i = 1, \ldots , n+1, \text{ integer}.
+	\end{align*}
+	We see that the optimum has \(y_{n+1} = 1\).
+
+	If \(n = 17\). Then we can let
+	\[
+		y_{18} = 0,\quad y_1 = y_2 = \ldots = y_8 = 1,\quad y_9 = \frac{1}{2},\quad y_{10} = \ldots = y_{17} = 0.
+	\]
+	We immediately see there are lots of solutions like this, namely there are lots of symmetric groups going on such that
+	half of the variables are \(1\), and another half of the variables are \(0\). This is pretty bad
+	for the branch and bound algorithm since it will look at all of them. Analytically, we see that this will go into \(\frac{n}{2}\)
+	depth in the recursion tree, hence it's clearly exponential.
+\end{eg}
+
+\newpage
+\appendix
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendices}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+This note is completed in \LaTeX with Inkscape, in case of anyone is interested, please check out this blog\footnote{\url{https://castel.dev/}}
+together with my configuration\footnote{\url{https://github.com/sleepymalc/VSCode-LaTeX-Inkscape}}.

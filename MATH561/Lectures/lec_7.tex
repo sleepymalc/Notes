@@ -1,0 +1,250 @@
+\lecture{7}{22 Sep. 08:00}{Simplex Algorithm}
+\section{Simplex Algorithm}
+\subsection{Simplex Algorithm}
+We start with considering the standard form problem
+\[
+	\begin{alignedat}{5}
+		\min~&c^{T}x\qquad\qquad &&\max ~ &&y^{T}b\\
+		&Ax = b && &&y^{T}A\leq c^{T}\\
+		(P)\quad&x\geq  0 &&(D)\quad&&
+	\end{alignedat}.
+\]
+
+\begin{definition}
+	Define \emph{dual basic solution} \(\overline{y}\in \mathbb{\MakeUppercase{R}}^m\) as
+	\[
+		\overline{y}^{T} = c_{\beta}^{T} A^{-1}_{\beta}.
+	\]
+\end{definition}
+
+\begin{lemma}
+	If \(\beta, \eta\) is a basic partition, and \(\overline{x}, \overline{y}\) are the associated primal and dual basic solution,
+	then
+	\[
+		c^{T}\overline{x} = \overline{y}^{T} b.
+	\]
+\end{lemma}
+\begin{proof}
+	\[
+		c^{T}\overline{x} = \begin{pmatrix}
+			c^{T}_{\beta} & c^{T}_{\eta} \\
+		\end{pmatrix}\begin{pmatrix}
+			\overline{x}_{\beta} \\
+			\overline{x}_{\eta}  \\
+		\end{pmatrix}= c_{\beta}^{T} \overline{x}_{\beta}+ c_{\eta}^{T} \overline{c}_{\eta} = c_{\beta} A^{-1}_{\beta}b = \overline{y}b.
+	\]
+\end{proof}
+
+\begin{prev}
+	\begin{align*}
+		\min~ & c^{T}_{\beta}x_{\beta} + c^{T}_{\eta}x_{\eta} \\
+		      & A_{\beta}x_{\beta} + A_{\eta}x_{\eta} = b     \\
+		      & x_{\beta}\geq 0, x_{\eta}\geq 0
+	\end{align*}, and hence
+	\begin{align*}
+		c^{T}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{T} - c_{\beta}^{T}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
+		                                     & A^{-1}_{\beta}A_{\eta}x_{\eta} \leq A^{-1}_{\beta}b          \\
+		                                     & x_{\beta}\geq 0, x_{\eta}\geq 0.
+	\end{align*}
+\end{prev}
+
+We now formalize the concept of \emph{reduced cost}.
+\begin{definition}
+	\(\overline{c}_{\eta}\) is called \emph{reduced cost} for non-basic variables, where \(\overline{c}_{\eta}\) is
+	\[
+		\overline{c}_{\eta}^{T} \coloneqq c_{\eta}^{T} - c_{\beta}^{T} A^{-1}_{\beta}A_{\eta} = c_{\eta}^{T} - \overline{y}^{T}A_{\eta}.
+	\]
+\end{definition}
+
+\subsubsection{Dual Feasibility}
+\begin{lemma}
+	\(\overline{y}\) is feasible for \(D\) if and only if \(\overline{c}_{\eta}\geq 0\).
+\end{lemma}
+\begin{proof}
+	\[
+		y^{T}A\leq c^{T} \iff y^{T}\begin{bmatrix}
+			A_{\beta} & A_{\eta} \\
+		\end{bmatrix}\leq \begin{pmatrix}
+			c_{\beta}^{T} & c_{\eta}^{T} \\
+		\end{pmatrix}
+	\]
+	since
+	\[
+		\begin{alignedat}{3}
+			&y^{T} A_{\beta}\leq c_{\beta}^{T}\\
+			&y^{T} A_{\eta}\leq c_{\eta}^{T} \implies c_{\eta}^{T} - y^{T}A_{\eta}\geq 0.
+		\end{alignedat}
+	\]
+\end{proof}
+
+\begin{corollary}
+	If \(\hat{x}\) is feasible for \(P\) and \(\hat{y}\) is feasible for \(D\), and if \(c^{T}\hat{x} = \hat{y}^{T} b\), then \(\hat{x}\) and \(\hat{y}\) are optimal.
+\end{corollary}
+
+\begin{theorem}
+	Weak Optimal Basis Theorem: Let \(\overline{x}\) and \(\overline{y}\) are basic primal and dual solutions for \(P\) and \(D\). Then if \(\beta\) is a feasible basis and \(\overline{c}_{\eta}\geq 0\), \(\overline{x}\) and
+	\(\overline{y}\) are optimal.
+\end{theorem}
+\begin{proof}
+	Obvious from the standard problem in the form of
+	\begin{align*}
+		c^{T}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{T} - c_{\beta}^{T}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
+		                                     & A^{-1}_{\beta}A_{\eta}x_{\eta} \leq A^{-1}_{\beta}b          \\
+		                                     & x_{\beta}\geq 0, x_{\eta}\geq 0.
+	\end{align*}
+\end{proof}
+
+\begin{note}
+	The order of the arguments in text book for weak optimal basis theorem is slightly different.
+\end{note}
+
+\subsubsection{Naive Algorithmic Approach}
+\begin{enumerate}
+	\item[0] Start with a basis partition \(\beta, \eta\) with \(\overline{x}_{\beta}\geq 0\).
+	\item[1] If \(\overline{c}_{\eta}\geq 0\), then \(\overline{x}\) and \(\overline{y}\) are optimal and \emph{STOP}.
+	\item[2] Otherwise, choose \(\eta_j	\) with \(\overline{c}_{\eta_j}<0\). Consider the associated basis direction \(\overline{z}\).(Idea: \(\overline{x}\to \overline{x}+\lambda \overline{z}\) with \(\lambda >0\)) Then
+		\[
+			c^{T}(\overline{x} + \lambda \overline{z}) = c^{T} \overline{x} + \lambda c^{T} \overline{z} = c^{T} \overline{x} + \lambda \overline{c}_{\eta_j},
+		\]
+		where \begin{itemize}
+			\item \(c^{T} \overline{x}\) is the current objective value
+			\item \(c^{T}\overline{z}\) is
+			      \[
+				      \begin{split}
+					      c^{T}\overline{z} &= c_{\eta}^{T} \overline{z}_{\eta}+c_{\beta}^{T} \overline{z}_{\beta}\\
+					      &=c_{\eta}^{T}e_{j} - c_{\beta}^{T}(A^{-1}_{\beta}A_{\eta_j})\\
+					      &=c_{\eta_{j}} - c_{\beta}^{T} A^{-1}_{\beta}A_{\eta_j}\\
+					      &= \overline{c}_{\eta_{j}}
+				      \end{split}
+			      \]
+			\item \(\lambda \overline{c}_{\eta_{j}}\) is the \emph{rate} of change of objective value as we move in direction \(\overline{z}\).
+		\end{itemize}
+	\item[3] Move from \(\overline{x}\) to \(\overline{x}+\overline{\lambda} \overline{z}\), where we let \(\overline{\lambda}\) as large as possible. Operationally, since we need
+		\[
+			\overline{x}_{\beta} + \lambda \overline{z}_{\beta} \geq 0,
+		\]
+		where \(\overline{z}_{\eta} = e_{j},\ \overline{z}_{\beta} = -A^{-1}_{\beta}A_{\eta_{j}}\). We then have
+		\[
+			\begin{alignedat}{3}
+				&\overline{x}_{\beta_{i}} - \lambda \overline{a}_{i, \eta_{j}}\geq 0, &&\text{ for }i = 1, \ldots , m\\
+				& \lambda \leq \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}}, &&\text{ for }i \text{ such that }\overline{a}_{i, \eta_j}>0.
+			\end{alignedat}
+		\]
+		Hence,
+		\[
+			\overline{\lambda} \coloneqq \min_{i: \overline{a}_{i, \eta_{j}}>0} \left\{ \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}} \right\} \geq 0.
+		\]
+		\begin{remark}
+			If \(\overline{a}_{i, \eta_{j}}\leq 0\) for all \(i = 1, \ldots , m\), namely
+			\[
+				\overline{A}_{i, \eta_{j}}\leq 0 \iff -A^{-1}_{\beta}A_{\eta_{j}}\geq 0 \iff \overline{z}\geq 0,
+			\]
+			then \(\overline{z}\) is a ray. This means \(P\) is unbounded below, hence we \emph{STOP}.
+		\end{remark}
+\end{enumerate}
+
+\subsubsection{Simplex Algorithm}
+Now, we give the very first generation about our simplex algorithm. Consider the standard form problem
+\[
+	\begin{alignedat}{5}
+		\min~&c^{T}x\\
+		&Ax = b \\
+		(P)\quad&x\geq  0.
+	\end{alignedat}
+\]
+The simplex algorithm is described as follows.
+\begin{enumerate}
+	\item[0.] Start with a basic feasible partition \(\beta, \eta\) and assume that \(x_{\beta}\geq 0\)(\(x\) is a basic feasible solution)
+	\item[1.] \begin{enumerate}
+			\item Compute \(\overline{x}_{\beta} \coloneqq A^{-1}_{\beta} b \geq 0\)
+			\item Compute \(\overline{c}_{\eta}^{T} \coloneqq c_{\eta}^{T} - c_{\beta}^{T} A^{-1}_{\beta} A_{\eta}\)
+		\end{enumerate}
+		If \(\overline{c}_{\eta} \geq 0\), then \emph{STOP}. \(\overline{x}\) is optimal for \(P\). \\(Recall that the dual solution \(\overline{y}\coloneqq c_{\beta}^{T}A^{-1}_{\beta}\) is optimal for \(D\) )
+	\item[2.] Otherwise, choose \(j\) such that \(1\leq j\leq n-m\) for \(\eta_j\) such that \(\overline{c}_{\eta_j} < 0\). (Basic direction \(\overline{z}\), then \(c^{T}\overline{z} = \overline{c}_{\eta_{j}}<0\))
+	\item[3.] Replace \(\overline{x}\) with \(\overline{x} + \lambda \overline{z}\) where
+		\[
+			\lambda \coloneqq \min_{i:\overline{a}_{i, \eta_{j}}>0}\left\{ \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}} \right\}.
+		\]
+		(Largest choice so that \(\overline{x} + \lambda \overline{z} \geq 0\))\\
+		If we can't compute this, namely
+		\[
+			\overline{A}_{\eta_{j}} \leq 0\implies P \text{ is unbounded }\implies \text{ \emph{STOP}}
+		\]
+		Otherwise, \emph{GOTO} 1.
+\end{enumerate}
+
+\begin{problem}
+The problem is that is \(\overline{x}+\lambda \overline{z}\) still a basic solution? And if it is, what is the basic partition that goes with it?
+\end{problem}
+
+\begin{answer}
+	We see that after one iteration, one of the basic index \(i^{*}\) will become non-basic, namely
+	\[
+		(\overline{x} + \lambda \overline{z})_{\beta_{i^{*}}} = 0;
+	\]
+	while one of the non-basic index will need to become basic, since
+	\[
+		(\overline{x} + \lambda \overline{z})_{\beta_{i^{*}}} = \lambda \overline{e}_j.
+	\]
+	Namely
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{cc|c|c|cc}
+			\toprule
+			                       &           & \(\overline{x}\)            & \(\overline{z}\)                & \(\overline{x} + \lambda \overline{z}\) &                                            \\
+			\midrule
+			\(\beta_{i^{*}} \to \) & \(\beta\) & \(\overline{x}_{\beta}\)    & \(\overline{z}_{\beta}\)        & \(\to 0\)                               & \emph{\(\beta_{i^{*}}\) becomes non-basic} \\\hline
+			                       & \(\eta\)  & \(\overline{x}_{\eta} = 0\) & \(\overline{x}_{\eta} = e_{j}\) & \(\lambda \overline{e}_j\)              & \emph{\(\eta_{j}\) becomes basic}          \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+\end{answer}
+
+Now, suppose \(i^{*}\) is that chosen index, which means \(\overline{a}_{i^{*}, \eta_{j}}>0\) and \(\frac{\overline{x}_{\beta_{i^{*}}}}{\overline{a}_{i^{*}, \eta_{j}}} = \overline{\lambda}\). Then we have
+\(\beta_{i^{*}}\) such that
+\[
+	\overline{x} + \lambda \overline{z} \implies \overline{x}_{\beta_{i^{*}}} + \overline{\lambda} \overline{z}_{\beta_{i^{*}}} = \overline{x}_{\beta_{i^{*}}}+\frac{\overline{x}_{\beta_{i^{*}}}}{\overline{a}_{i^{*}, \eta_{j}}}\left( -\overline{a}_{i^{*}, \eta_{j}} \right) = 0.
+\]
+
+So we reasonably suspect that there is a new basic partition such that
+\[
+	\begin{alignedat}{5}
+		\widetilde{\beta} &\coloneqq ( \beta_1, \beta_2, \ldots , \beta_{i^{*}-1}, &&\eta_{j}, \beta_{i^{*}+1}, \ldots , \beta_m ) \\
+		& &&\updownarrow\\
+		\widetilde{\eta} &\coloneqq ( \eta_1, \eta_2, \ldots , \eta_{j - 1}, &&\beta_{i^{*}}, \eta_{j+1}, \ldots , \eta_{n-m} ).
+	\end{alignedat}
+\]
+
+The remaining question is that, is \(A_{\widetilde{\beta}}\) still invertible? Namely, is \(\det(A_{\widetilde{\beta}}) \neq 0\)?
+\begin{lemma}
+	\(A_{\widetilde{\beta}}\) is invertible.
+\end{lemma}
+\begin{proof}
+	We see that \(A_{\widetilde{\beta}}\) is invertible if and only if \(A^{-1}_{\beta}A_{\widetilde{\beta}}\) is invertible. And since
+	\[
+		A^{-1}_{\beta}A_{\widetilde{\beta}} = \begin{bmatrix}
+			e_1 & e_2 & \ldots & e_{i^{*}-1} & \overline{A}_{\eta_{j}} & e_{i^{*}+1} & \ldots & e_m \\
+		\end{bmatrix},
+	\]
+	and since \(\det(A^{-1}_\beta A_{\widetilde{\beta}}) = \overline{a}_{i^{*}, \eta_{j}}\), if \(\overline{a}_{i^{*}, \eta_{j}}\neq 0\), then we see that this is indeed invertible. But this is
+	a obvious fact by our choice of \(i^{*}\).
+\end{proof}
+
+\begin{figure}[H]
+	\centering
+	\incfig{pivot-swap}
+	\caption{Pivot Swap in terms of feasible region.}
+	\label{fig:pivot-swap}
+\end{figure}
+
+Finally, we check that the unique \emph{basic} solution for this basic partition \(\widetilde{\beta},\ \widetilde{\eta}\) are exactly \(\overline{x} + \overline{\lambda}\overline{z}\).
+\begin{lemma}
+	The unique solution of \(Ax = b\) having \(x_{\widetilde{\eta}} = 0\) is \(\overline{x} + \overline{\lambda}\overline{z}\).
+\end{lemma}
+\begin{proof}
+	Firstly, \((\overline{x} + \overline{\lambda}\overline{z})_j = 0\) for \(j\in \widetilde{\eta}\). Moreover, \(\overline{x} + \overline{\lambda}\overline{z}\) is
+	the unique solution to \(Ax = b\) having \(x_{\widetilde{\eta}} = 0\) because \(A_{\widetilde{\beta}}\) is invertible, namely
+	\[
+		Ax = b \implies \underbrace{\cancel{A_{\widetilde{\eta}}x_{\widetilde{\eta}}}}_{=0} + A_{\widetilde{\beta}}x_{\widetilde{\beta}} = b \implies x_{\widetilde{\beta}} = A^{-1}_{\widetilde{\beta}}b.
+	\]
+\end{proof}

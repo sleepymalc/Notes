@@ -1,0 +1,202 @@
+\lecture{9}{29 Sep. 08:00}{Practical Simplex Algorithm}
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsection{\(A_{\beta}^{-1}\) in Reality}
+
+\begin{note}
+	In reality, we don't really calculate \(A^{-1}_{\beta}\), since in order to calculate
+	\[
+		A_{\beta}x_{\beta} = b,
+	\]
+	we do not use
+	\[
+		\overline{x}_{\beta} = A^{-1}_{\beta}b.
+	\]
+	Instead, we use \emph{LU-Factorization}. And since after applying pivot change,
+	there is only a column change in \(A^{-1}_{\beta}\), we can use the previous result
+	to calculate the new \(\overline{x}_{\beta}\) much faster.
+\end{note}
+
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsection{Why \emph{Simplex}?}
+For a standard form problem
+\begin{align*}
+	\min~ & c^Tx    \\
+	      & Ax = b  \\
+	      & x\geq 0
+\end{align*}
+
+But instead, we consider
+\begin{align*}
+	\min~ & z                                  \\
+	      & z - c^{T} x = 0 \iff (c^{T} x = z) \\
+	      & Ax = b                             \\
+	      & x\geq 0
+\end{align*}
+
+\begin{prev}
+	Our picture is in \(\mathbb{\MakeUppercase{R}}^{n-m}\), but we consider \emph{Dantzig picture}, which is in \(\mathbb{\MakeUppercase{R}}^{m+1}\)
+\end{prev}
+
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsubsection{Column geometry}
+Plot columns:
+\[
+	\underbrace{
+		\begin{pmatrix}
+			c_1 \\
+			A_1 \\
+		\end{pmatrix}
+		\begin{pmatrix}
+			c_2 \\
+			A_2 \\
+		\end{pmatrix}
+		\cdots
+		\begin{pmatrix}
+			c_n \\
+			A_n \\
+		\end{pmatrix}}_{n \text{ points in }\mathbb{\MakeUppercase{R}}^{m+1}}
+\]
+
+The requirement line is
+\[
+	\begin{pmatrix}
+		z \\
+		b \\
+	\end{pmatrix}.
+\]
+
+\begin{figure}[H]
+	\centering
+	\incfig{column-geometry}
+	\caption{column-geometry}
+	\label{fig:column-geometry}
+\end{figure}
+
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsubsection{Simplices(plural of simplex)}
+\begin{figure}[H]
+	\centering
+	\incfig{simplex}
+	\caption{Simplex shapes}
+	\label{fig:simplex}
+\end{figure}
+
+\begin{eg}
+	Example of a simplex:
+	\[
+		\{x\in \mathbb{\MakeUppercase{R}}^n : \sum\limits_{i=1}^{n} x_i = 1, x_i \geq 0\}.
+	\]
+	Which is \(n-1\) dimensional simplex in \(\mathbb{\MakeUppercase{R}}^n\) with \(n\)
+	standard unit vectors are the corners.
+\end{eg}
+
+\begin{note}
+	\(m+1\) points of a simplex of dimension.
+\end{note}
+
+A simplicial cone is rather simple, the graph below is informative enough.
+\begin{figure}[H]
+	\centering
+	\incfig{simplicial-cones}
+	\caption{Simplicial Cones}
+	\label{fig:simplicial-cones}
+\end{figure}
+
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsection{Complete Simplex Algorithm}
+Now, we have the standard form problem \((P)\):
+\begin{align*}
+	\min~ & c^Tx             \\
+	      & Ax = b           \\
+	      & x\geq 0 &  & (P)
+\end{align*}
+and the \emph{Phase one problem}\((\Phi)\)(Getting started):
+\(A_{n+1} = -A_{\widetilde{\beta}}\vec{1}\):
+\begin{itemize}
+	\item First pivot is special
+	\item Last pivot is special
+\end{itemize}:
+\begin{align*}
+	\min~ & x_{n+1}                            \\
+	      & Ax +A_{n+1} x_{n+1}= b             \\
+	      & x\geq 0, x_{n+1}\geq 0 &  & (\Phi)
+\end{align*}
+with the perturbed problem \((P_{\epsilon})\)(making sure we stop):
+\begin{align*}
+	\min~ & c^Tx                                          \\
+	      & Ax = b + B \vec{\epsilon}                     \\
+	      & x\geq 0                   &  & (P_{\epsilon})
+\end{align*}
+
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\section{Duality}
+Consider the standard problem and its duality:
+\[
+	\begin{alignedat}{5}
+		\min~&c^{T}x\qquad\qquad &&\max ~ &&y^{T}b\\
+		&Ax = b && &&y^{T}A\leq c^{T}\\
+		(P)\quad&x\geq  0 &&(D)\quad&&
+	\end{alignedat}.
+\]
+
+\begin{prev}
+	Weak duality theorem: If \(\hat{x}\) is feasible for \(P\), and \(\hat{y}\)
+	is feasible for \(D\), then
+	\[
+		c^{T} \hat{x} \geq  \hat{y}^{T} b.
+	\]
+	Moreover, the equality holds if and only if \(\hat{x}\) and \(\hat{y}\) are optimal.
+\end{prev}
+
+\begin{theorem}
+	Weak optimal Basic Theorem: If we have a basic partition \(\beta, \eta\), and we also have
+	\(\overline{x}_{\beta}\geq  \vec{0}\)(\(\overline{x}\) is feasible for \(P\)) and \(\overline{c}_{\eta} \geq  \vec{0}\)(\(\overline{y}\) is feasible for \(D\))
+	\[
+		\implies \overline{x}\ \&\ \overline{y} \text{ are optimal}.
+	\]
+\end{theorem}
+
+Now, we have so-called \emph{strong optimal basis theorem}.
+\begin{theorem}
+	Strong Optimal Basis Theorem: If \((P)\) has a feasible solution, and if \((P)\) is not unbounded, then there exist a basic partition \(\beta, \eta\) such that
+	\(\overline{x}\) and \(\overline{y}\) are optimal, and
+	\[
+		c^{T} \overline{x} = \overline{y}^{T} b.
+	\]
+\end{theorem}
+\begin{proof}
+	Since if \(P\) has a feasible solution and is not unbounded, we can just run the Simplex Algorithm, which will terminate with a basis \(\beta\) such
+	that the associated basic solution \(\overline{x}\) and the associated dual solution \(\overline{y}\) are optimal.
+\end{proof}
+
+We see that this leads to another similar result.
+\begin{theorem}
+	\label{strong duality theorem}
+	Strong Duality Theorem: If \(P\) has a feasible solution and \(P\) is not unbounded, then there exist optimal solutions
+	\(\hat{x}\) and \(\hat{y}\) with
+	\[
+		c^{T} \hat{x} = \hat{y}^{T} b.
+	\]
+\end{theorem}
+
+\begin{note}
+	The proof of these two theorems are by directly using the \emph{mathematical complete} version of Simplex Algorithm, hence the completeness of
+	Simplex Algorithm(namely the Phase I problem and the perturbation) is important.
+\end{note}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c|c|c|c|c}
+		\toprule
+		\emph{Simplex Algorithm}                             & P\(\backslash\) D          & \begin{tabular}{@{}c@{}}optimal\\solution\end{tabular} & infeasible  & unbounded   \\
+		\midrule
+		\(\overline{c}_{\eta}\geq \vec{0}\implies\) Stop     & \begin{tabular}{@{}c@{}}optimal\\solution\end{tabular} & \(\surd \)                 & \(\times \) & \(\times \) \\
+		\midrule
+		\begin{tabular}{@{}c@{}}optimal \(x_{n+1}\) in \(\Phi\) \\is positive\end{tabular}                           & infeasible                 & \(\times \)                & \(\surd\)   & \(\surd \)  \\
+		\midrule
+		\(\overline{A}_{\eta_{j}}\leq \vec{0}\implies\) Stop & unbounded                  & \(\times \)                & \(\surd \)  & \(\times \) \\
+		\bottomrule
+	\end{tabular}
+	\caption{Comparison between \(P\) and \(D\) }
+	\label{tab:label}
+\end{table}

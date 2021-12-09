@@ -1,0 +1,177 @@
+\lecture{10}{4 Oct. 08:00}{Duality}
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsection{Complementary}
+Solutions \(\hat{x}\) to \((P)\) and \(\hat{y}\) to \((D)\) are \emph{complementary} if
+\[
+	m+n\text{ equations}\begin{cases}
+		(\underbrace{c_{j} - \hat{y}^{T} A_{\cdot j}}_{ = 0\text{ for }j\in \beta}) \underbrace{\hat{x}_j}_{ \substack{= 0 \\\text{ for }\\j\in \eta}} = 0, & j = 1\cdots n \\\\
+		\hat{y}_i(\underbrace{A_{i\cdot} \hat{x} - b_{i}}_{ = 0 \text{ for }\overline{x}}) = 0, & i = 1\cdots m
+	\end{cases}.
+\]
+
+Now, suppose we have a basic partition \(\beta, \eta\) such that
+\[
+	\begin{split}
+		\overline{x}&: \overline{x}_{\beta} = A^{-1}_{\beta}b,\ \overline{x}_{\eta} = \vec{0}\\
+		\overline{y}&: \overline{y}^{T} = c^{T}_{\beta}A^{-1}_{\beta}.
+	\end{split}
+\]
+
+\begin{note}
+	Specifically, we see that \(c_{j} - \hat{y}^{T}A_{\cdot j} = 0\) for \(j\in\beta\) is because \(\overline{y}^{T} = c^{T}_{\beta}A^{-1}_{\beta}\), and then
+	\[
+		c_{j} - \hat{y}^{T}A_{\cdot j} = c_{j} - c^{T}_{\beta}\underbrace{A^{-1}_{\beta}A_{\cdot j}}_{e_{j}} = c_{j} - c_{j} = 0.
+	\]
+\end{note}
+
+Then just from above, we see that the following theorems hold.
+\begin{theorem}
+	If \(\overline{x}\) and \(\overline{y}\) are basic solutions for \(\beta, \eta\), then \(\overline{x}\) and \(\overline{y}\) are
+	complementary.
+\end{theorem}
+
+\begin{theorem}
+	\label{complementary with equal objective value}
+	If \(\hat{x}\) and \(\hat{y}\) are complementary, then
+	\[
+		c^{T}\hat{x} = \hat{y}^{T} b.
+	\]
+\end{theorem}
+\begin{note}
+	\[
+		c^{T}_{\beta} A^{-1}_{\beta}b = \overline{y}^{T} b,\qquad c^{T}(A^{-1}_{\beta} b) = c^{T}_{\beta}\overline{x}_{\beta} = c^{T}\overline{x}.
+	\]
+\end{note}
+\begin{proof}
+	We show that
+	\[
+		c^{T} \hat{x} - \hat{y}^{T} b = 0.
+	\]
+	We have
+	\[
+		\begin{split}
+			c^{T} \hat{x} - \hat{y}^{T} b &= (c^{T} - \underbrace{\hat{y}^{T}A)\hat{x} + \hat{y}^{T}(A \hat{x}}_{\text{added terms}} - b)\\
+			&=\sum\limits_{j=1}^{n} \underbrace{(c_{j}-\hat{y}^{T}A_{\cdot j})x_{j}}_{ = 0\text{ for }i = 1\ldots n}
+			+ \sum\limits_{i=1}^{m} \underbrace{\hat{y}_i(A_{i\cdot}\hat{x} - b_{i})}_{ = 0\text{ for }i = 1\ldots m}\\
+			&= 0.
+		\end{split}
+	\]
+\end{proof}
+
+\begin{theorem}
+	\label{Weak Complementary Slackness}
+	Weak Complementary Slackness Theorem: If \(\hat{x}\) and \(\hat{y}\) are feasible and complementary, then they are optimal.
+\end{theorem}
+\begin{proof}
+	Follows from weak duality theorem(\autoref{Weak Duality Theorem}) and complementary solutions having equal objective value(\autoref{complementary with equal objective value}).
+\end{proof}
+
+\begin{theorem}
+	\label{Strong Complementary Slackness}
+	Strong Complementary Slackness Theorem: If \(\hat{x}\) and \(\hat{y}\) are optimal, then \(\hat{x}\) and \(\hat{y}\) are complementary.
+\end{theorem}
+\begin{proof}
+	Recall that
+	\[
+		\overbrace{\sum\limits_{j=1}^{n} \underbrace{(c_{j}-\hat{y}^{T}A_{\cdot j})}_{ \geq 0\text{ for each }j}\underbrace{\hat{x}_{j}}_{\geq 0 \text{ for each }j}}^{\cancel{\geq 0}\implies = 0\text{ for each }j}
+		+ \overbrace{\sum\limits_{i=1}^{m} \underbrace{\hat{y}_i(A_{i\cdot}\hat{x} - b_{i})}_{ = 0\text{ for each }i}}^{=0}
+		\underbrace{= 0 = c^{T}\hat{x} - \hat{y}^{T}b}_{\substack{\text{if }\hat{x}\text{ and }\hat{y}\text{ are optimal}\\ \text{since same object value}}}
+	\]
+	Hence, the equality can only hold if
+	\[
+		(c_{j} - \hat{y}^{T}A_{\cdot j})\hat{x}_j = 0, \text{ for }j = 1, 2, \ldots , n;
+	\]
+	with the obvious fact that
+	\[
+		\hat{y}_i(A_{i\cdot}\hat{x} - b_{i}) = 0, \text{ for }i = 1, 2, \ldots , m,
+	\]
+	so they are complementary.
+\end{proof}
+
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsection{Duality for General Linear-Optimization Problems}
+So far, we only discuss the dual of the standard form problem. But we will see that \emph{every} linear-optimization problem has a natural dual.
+
+Now consider a general linear programming problem
+\begin{align*}
+	\min~              & c^{T}_P x_P + c^{T}_N x_N + c^{T}_U x_U          \\
+	                   & A_{GP}x_P +A_{GN}x_N + A_{GU}x_U\geq b_G         \\
+	                   & A_{LP}x_P +A_{LN}x_N + A_{LU}x_U \leq b_L        \\
+	                   & A_{EP}x_P +A_{EN}x_N + A_{EU}x_U = b_E           \\
+	(\mathcal{G})\quad & x_P\geq 0, x_N \leq 0, x_U \text{ unrestricted}.
+\end{align*}
+
+We first turn this into a standard form problem:
+\begin{enumerate}
+	\item \(\widetilde{x}_N \coloneqq -x_N\):
+	      \begin{align*}
+		      \min~ & c^{T}_P x_P + c^{T}_N x_N + c^{T}_u x_U         \\
+		            & A_{GP}x_P -A_{GN}x_N + A_{GU}x_U\geq b_G        \\
+		            & A_{LP}x_P -A_{LN}x_N + A_{LU}x_U \leq b_L       \\
+		            & A_{EP}x_P -A_{EN}x_N + A_{EU}x_U = b_E          \\
+		            & x_P\geq 0, x_N \leq 0, x_U \text{ unrestricted}
+	      \end{align*}
+	\item \(x_U = \widetilde{x}_U - \widetilde{\widetilde{x}}_U\), where \(\widetilde{x}_U, \widetilde{\widetilde{x}}_U \geq 0\):
+	      \begin{align*}
+		      \min~ & c^{T}_P x_P + c^{T}_N x_N + c^{T}_U \widetilde{x}_U - c_U \widetilde{\widetilde{x}}_U    \\
+		            & A_{GP}x_P -A_{GN}x_N + A_{GU}\widetilde{x}_U -A_{GU}\widetilde{\widetilde{x}}_U \geq b_G \\
+		            & A_{LP}x_P -A_{LN}x_N + A_{LU}\widetilde{x}_U -A_{LU}\widetilde{\widetilde{x}}_U\leq b_L  \\
+		            & A_{EP}x_P -A_{EN}x_N + A_{EU}\widetilde{x}_U -A_{EU}\widetilde{\widetilde{x}}_U= b_E     \\
+		            & x_P\geq 0, x_N \leq 0, \widetilde{x}_U \geq 0, \widetilde{\widetilde{x}}_U\geq 0
+	      \end{align*}
+	\item Adding slack variables:
+	      \[
+		      \begin{alignedat}{3}
+			      \min~ & c^{T}_P x_P + c^{T}_N x_N + c^{T}_U \widetilde{x}_U - c_U \widetilde{\widetilde{x}}_U    \\
+			      & A_{GP}x_P -A_{GN}x_N + A_{Gu}\widetilde{x}_U -A_{GU}\widetilde{\widetilde{x}}_U - s_G &       && = b_G \\
+			      & A_{LP}x_P -A_{LN}x_N + A_{Lu}\widetilde{x}_U -A_{LU}\widetilde{\widetilde{x}}_U       & + t_L && = b_L \\
+			      & A_{EP}x_P -A_{EN}x_N + A_{Eu}\widetilde{x}_U -A_{EU}\widetilde{\widetilde{x}}_U       &       && = b_E \\
+			      & x_P\geq 0, x_N \leq 0, \widetilde{x}_U \geq 0, \widetilde{\widetilde{x}}_U\geq 0, s_G\geq 0, t_L \geq 0
+		      \end{alignedat}
+	      \]
+\end{enumerate}
+
+With \emph{Dual variables} \(y_G, y_L, y_E\), we have
+\[
+	\begin{alignedat}{4}
+		\max~ & y^{T}_G b_G &&+ y^{T}_L b_L &&+ y^{T}_E b_E                     \\
+		& y^{T}_G A_{GP} &&+ y^{T}_L A_{LP} &&+ y^{T}_E A_{EP} &&\leq c^{T}_P   \\
+		-& y^{T}_G A_{GN} &&- y^{T}_L A_{LN} &&- y^{T}_E A_{EN} &&\leq -c^{T}_N \\
+		& y^{T}_G A_{GU} &&+ y^{T}_L A_{LU} &&+ y^{T}_E A_{EU} &&\leq c^{T}_U   \\
+		-& y^{T}_G A_{GU} &&- y^{T}_L A_{LU} &&- y^{T}_E A_{EU} &&\leq -c^{T}_U \\
+		&y^{T}_G \geq 0&&, y^{T}_L\leq 0.
+	\end{alignedat}.
+\]
+We time \(-1\) to the both side of the second constraint, and we see that last two structure constraints can be reduced to a single equality, results in
+\[
+	\begin{alignedat}{4}
+		\max~ & y^{T}_G b_G &&+ y^{T}_L b_L &&+ y^{T}_E b_E                     \\
+		& y^{T}_G A_{GP} &&+ y^{T}_L A_{LP} &&+ y^{T}_E A_{EP} &&\leq c^{T}_P   \\
+		& y^{T}_G A_{GN} &&+ y^{T}_L A_{LN} &&+ y^{T}_E A_{EN} &&\geq c^{T}_N \\
+		& y^{T}_G A_{GU} &&+ y^{T}_L A_{LU} &&+ y^{T}_E A_{EU} && = c^{T}_U     \\
+		(\mathcal{H})\quad &y^{T}_G \geq 0&&, y^{T}_L\leq 0.
+	\end{alignedat}
+\]
+
+Finally, we remark that this gives us a simple result as we have already seen before.
+\begin{theorem}
+	We rephrase the weak and strong duality theorem in a more general term.
+	\begin{itemize}
+		\item Weak Duality Theorem: If \((\hat{x}_P, \hat{x}_N, \hat{x}_U)\) is feasible in \(\mathcal{G}\) and the dual variables \((\hat{y}_G, \hat{y}_L, \hat{y}_E)\) is
+		      feasible in \(\mathcal{H}\), then
+		      \[
+			      c^{T}_P \hat{x}_P + c^{T}_N \hat{x}_N + c^{T}_U \hat{x}_U \geq \hat{y}^{T}_G b_G + \hat{y}^{T}_L b_L + \hat{y}^{T}_E b_E.
+		      \]
+		\item Strong Duality Theorem: If \(\mathcal{G}\) has a feasible solution, and \(\mathcal{G}\) is not unbounded, then there exist feasible
+		      solutions \((\hat{x}_P, \hat{x}_N, \hat{x}_U)\) for \(\mathcal{G}\) and \((\hat{y}_G, \hat{y}_L, \hat{y}_E)\) for \(\mathcal{H}\) that are optimal.
+		      Moreover,
+		      \[
+			      c^{T}_P \hat{x}_P + c^{T}_N \hat{x}_N + c^{T}_U \hat{x}_U = \hat{y}^{T}_G b_G + \hat{y}^{T}_L b_L + \hat{y}^{T}_E b_E.
+		      \]
+	\end{itemize}
+\end{theorem}
+
+\begin{remark}
+	We can also rephrase the Weak Complementary Slackness Theorem (\autoref{Weak Complementary Slackness}) and also the Strong Complementary Slackness Theorem (\autoref{Strong Complementary Slackness})
+	in this setup. The proof follows the same idea, but with some more works.
+\end{remark}

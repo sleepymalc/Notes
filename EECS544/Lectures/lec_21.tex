@@ -1,0 +1,236 @@
+\lecture{21}{17 Nov. 12:30}{Bayesian Game}
+\begin{prev}
+	We look back some games and introduce another measure of Nash Equilibrium.
+	\begin{itemize}
+		\item Coordination game. The payoff matrix is defined as
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                                & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                           \\
+				                                & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$S$}        & \multicolumn{1}{c}{$H$} \\\cline{3-4}
+				      \multirow{2}*{Player $1$} & $S$                  & $(5, 5)$                       & $(0, 3)$                \\\cline{3-4}
+				                                & $H$                  & $(3, 0)$                       & $(3, 3)$                \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+		      As we can see, there are two Nash Equilibrium \((S, S)\) and \((H, H)\) with payoffs \((5, 5)\) and \((3, 3)\) respectively. We can
+		      further consider so-called \textbf{Social welfare}, then in order to maximize the sum of
+		      payoffs, one will choose to play \((S, S)\) with social welfare as \(10\) rather than \(6\).
+		\item \textbf{Prisoner's Dilemma}.
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                                & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                                       \\
+				                                & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{NC}$} & \multicolumn{1}{c}{$\mathrm{C}$} \\\cline{3-4}
+				      \multirow{2}*{Player $1$} & $\mathrm{NC}$        & $(-1, -1)$                        & $(-10, 0)$                       \\\cline{3-4}
+				                                & $\mathrm{C}$         & $(0, -10)$                        & $(-4, -4)$                       \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+		      We see that \((\mathrm{C} , \mathrm{C} )\) is the only Nash Equilibrium, but \((\mathrm{NC} , \mathrm{NC} )\) is the social welfare maximization, which is not in
+		      the Nash Equilibrium.
+	\end{itemize}
+\end{prev}
+
+\begin{definition}
+	A Nash Equilibrium reaches \emph{Social Welfare} if it's the maximizer of the \textbf{sum of the payoffs} among all other states.
+\end{definition}
+
+
+\subsubsection{Operating Points}
+Let \(i\in \mathcal{I} \) be the set of players, and \(\P_{i}\) be the corresponding distribution of strategy on player \(i\). Then we see the
+so-called \emph{operating points}.
+
+\begin{figure}[H]
+	\centering
+	\incfig{NE-social-welfare}
+	\label{fig:NE-social-welfare}
+\end{figure}
+
+Let \(P\) denotes the set of operating points. We see that we cannot increase the payoff of one agent without decreasing the payoff of at least
+one other agent. From here, we have the following criteria for \emph{Pareto Optimal}.
+
+\begin{definition}
+	A solution is called \emph{Pareto Optimal} if no individual or preference criterion can be better off without making at least one
+	individual or preference criterion worse off or without any loss thereof.
+\end{definition}
+
+\begin{figure}[H]
+	\centering
+	\incfig{Pareto-Optimal}
+	\caption{Parteo Optimality}
+	\label{fig:Pareto-Optimal}
+\end{figure}
+
+\begin{note}
+	For either social welfare maximizing or Pareto operating point,
+	\begin{itemize}
+		\item Nash Equilibrium need not achieve either goal.
+		\item Social welfare maximizing points are always Pareto optimal.
+	\end{itemize}
+\end{note}
+
+\begin{remark}
+	We can (re)designing games such that some nice objective is additive, then social welfare maximization can be achieved.
+	\begin{itemize}
+		\item The goal is that any Nash Equilibrium should be social welfare maximizing.
+	\end{itemize}
+\end{remark}
+
+\hr
+
+Until this point, we only study the games are complete and symmetric information - Every agent knows actions, utility function of everyone(common knowledge assumption).
+Now, we can look at some more complicated case such that we have an Incomplete and/or asymmetric information setting.
+
+\subsection{Bayesian Game}
+This is a framework for asymmetric/incomplete games such as auctions. And since we need to use \emph{Bayesian Theorem} to analysis such games, so
+it gets its name.
+
+An important difference is that in Bayesian games, nation is also a player. Further, randomness decides the state of everyone and people may
+know their state but not of the others.
+
+\begin{note}
+	Randomness is different from mixed strategies. This happens \textbf{at the beginning}.
+\end{note}
+
+\subsubsection{Basic setup}
+Let \(\mathcal{I} \) denotes the set of players, and \(I = \left\vert \mathcal{I}  \right\vert \). Let each player \(i\) has a type
+\(\tau_{i}\in T_{i}\) chosen with distribution \(\pi_i\) such that
+\[
+	\probability{\tau_{i} = t_{i}} = \pi_i(t_{i}) .
+\]
+And also, we have the set of actions \(\mathcal{S}_{i}\), and the set of feasible action
+\[
+	c_{i}(t_{i})\in \mathcal{S}_{i}.
+\]
+
+Furthermore, the utility of player \(i\) is
+\[
+	u_{i}(t_1, s_1, t_2, s_2, \ldots , t_I, s_I),
+\]
+where we need types and action of all players to determine this. Also, we have
+\[
+	\vec{t}\coloneqq (t_1, \ldots , t_I),\quad \vec{s} \coloneqq (s_1, \ldots , s_I),
+\]
+with the common notation for \(-i\), namely
+\[
+	\vec{t}_{-i} \coloneqq (t_1, \ldots , t_{i-1}, t_{i+1}, \ldots , t_{I}),\quad \vec{s}_{-i} \coloneqq (s_1, \ldots , s_{i-1}, s_{i+1}, \ldots , s_{I}).
+\]
+
+We see that player \(i\) has to choose a strategy \(\sigma_{i}\colon T_{i}\to \mathcal{S}_{i}\) such that
+\[
+	\forall t_{i}\in T_{i}, \text{ choose }\sigma_{i}(t_{i})\in c_{i}(t_{i})\subseteq \mathcal{S}_{i}.
+\]
+\begin{intuition}
+	We are simply picking functions as strategies.
+\end{intuition}
+\begin{eg}
+	Let \(T_{i} = \mathbb{\MakeUppercase{R}}_+ = [0, +\infty )\) be non-negative real number. Let
+	\[
+		\sigma_{i}(t_{i}) = \min(100, t_{i}),
+	\]
+	and \(\mathcal{S}_{i} = \mathbb{\MakeUppercase{R}}_+\).
+
+	\begin{figure}[H]
+		\centering
+		\incfig{action-function-eg}
+		\label{fig:action-function-eg}
+	\end{figure}
+\end{eg}
+
+\hr
+
+Then we can have so-called \textbf{Independent types model}. Let \(\tau_{i}\), \(i = 1, \ldots , I\) be the set of mutually independent
+variables, then
+\[
+	\probability{\tau_{1} = t_1, \ldots , \tau_{I} = t_{I}}=\prod\limits_{i = 1}^{I} \pi_{i}(t_{i}).
+\]
+
+\hr
+
+We see that we can express all games we have previously seen like follows. Let \(T_{i} = \left\{i\right\}\), and
+\(c_{i}(i) = \mathcal{S}_{i}\) with type being \(\pi_i(i) = 1\) such that
+\[
+	u_{i}(1, s_1, 2, s_2, \ldots , I, s_I) = u_{i}(s_1, s_2, \ldots , s_I).
+\]
+
+\hr
+
+Now we define the notions of incomplete information.
+\begin{itemize}
+	\item Ex-Ante: No player has information about anyone's types but only the distribution information where strategy is chosen.
+	      Since we don't know the exact utility, hence we simply take the expected value for the payoff based on the strategy functions:
+	      \[
+		      u_{i}(\sigma_1, \ldots , \sigma_I)=\mathbb{\MakeUppercase{E}}_{\tau_1, \ldots , \tau_I}\left[u_{i}(\tau_1, \sigma_1(\tau_1), \ldots ,\tau_I, \sigma_I(\tau_I) )\right].
+	      \]
+	      Then the Nash Equilibrium \((\sigma_1^{*}, \ldots , \sigma_{I}^{*})\) such that
+	      \[
+		      \underset{i\in\mathcal{I}}{\forall} \ \underset{\sigma_{i}}{\forall}\ u_{i}(\sigma_{i}^{*}, \sigma^{*}_{-i})\geq u_{i}(\sigma_{i}, \sigma^{*}_{-i}).
+	      \]
+	      This type of information mechanism can be summarized as follows.
+	      \begin{enumerate}
+		      \item Given player \(i, \ldots , I\).
+		      \item \(\sigma_1, \ldots , \sigma_{I}\) are chosen: Each player picks strategy \(\sigma_{i}\).
+		      \item \(\tau_1, \ldots \tau_{I}\) are realized: Nation chooses types for each player.
+		      \item \(\underset{i}{\forall }\ s_{i} = \sigma_{i}(\tau_{i})\) is chosen: Actions produced, and the game is realized.
+		      \item \(u_{i}(\tau_1, s_1, \ldots , \tau_{I}, s_{I})\), namely the payoff is received.
+	      \end{enumerate}
+	\item Interim: Players get to know their types since Nation play first, and they can reason based on that. So we see that player \(i\) knows \(\tau_{i}\)
+	      but not \(\tau_{-i}\). Then \(u_{i}(t_{i}, \sigma_{i}(t_{i}), \sigma_{-i})\) can be described as
+	      \[
+		      \begin{split}
+			      \mathbb{\MakeUppercase{E}}_{\tau_{-i}}\left[u_{i}(\underline{t_{i}, \sigma_{i}(t_{i})}, \tau_1, \sigma_1(\tau_1), \ldots ,\right.&\underline{\tau_{i-1}, \sigma_{i-1}(\tau_{i-1}),}\\
+				      &\left.\underline{\tau_{i+1}, \sigma_{i+1}(\tau_{i+1})}, \ldots ,\tau_I, \sigma_I(\tau_I) )\right].
+		      \end{split}
+	      \]
+	      This type of information mechanism can be summarized as follows.
+	      \begin{enumerate}
+		      \item Given player \(i, \ldots , I\).
+		      \item \(\tau_1, \ldots \tau_{I}\) are realized: Nation chooses types for each player.
+		      \item \(\sigma_1, \ldots , \sigma_{I}\) are chosen: Each player picks strategy \(\sigma_{i}\).
+		      \item \(\underset{i}{\forall }\ s_{i} = \sigma_{i}(\tau_{i})\) is chosen: Actions produced, and the game is realized.
+		      \item \(u_{i}(\tau_1, s_1, \ldots , \tau_{I}, s_{I})\), namely the payoff is received.
+	      \end{enumerate}
+	\item Ex-Post: Every player gets to know everyone's type.
+	      \[
+		      u_{i}(t_1, \sigma_1(t_1), \ldots , t_{I}, \sigma_{I}(t_{I})).
+	      \]
+\end{itemize}
+We will focus on \textbf{Interim} setting. We first see the example of auctions, which model this well.
+
+Think about the best response. Suppose \(\sigma_{-i}\) is fixed. Then for all \(s_{i}\in \mathcal{S}_{i} \), \(u_{i}(t_{i}, s_{i}, \sigma_{-i})\) is defined.
+\[
+	\arg\max_{s_{i}\in\mathcal{S}_{i}} u_{i}(t_{i}, s_{i}, \sigma_{-i})
+\]
+for every \(t_{i}\), \(\mathrm{BR}_{i}(\sigma_{-i}) = \overline{\sigma}_{i}(\sigma_{-i})\). Then we call that
+\[
+	(\sigma^{*}_1, \ldots , \sigma^{*}_I)
+\]
+is a (Bayes interim) Nash Equilibrium if
+\[
+	\underset{i\in \mathcal{I}}{\forall}\ \sigma_{i}^{*}\in \overline{\sigma}_{i}(\sigma_{-i}).
+\]
+
+We now use \textbf{auctions} to see how it applies.
+
+\section{Auctions}
+We now introduce a specific kind of game, auction. Rather than the simple set up we have seen, the auction is more complex and interesting. We'll see how can we
+extend what we have discussed in Game Theory into this set up. Firstly, we see some examples.
+
+\begin{eg}
+	There are mainly four types of auction:
+	\begin{enumerate}
+		\item[1.] First-price auction(Sealed bid): Each player bids an amount for the item (how much the player is willing to pay), and the sellers selects
+			the highest bidder and charges him/her the price that was bid by him/her and give the item. Others pay nothing, receive nothing.
+		\item[2.] Dutch auction(Descending price auction): Seller announces a price(high price). If no players raise hands, seller drops price until
+			the first time some player ha hand up. Item sold to the player at that price.
+			\par Ties breaking:
+			\begin{itemize}
+				\item Random order.
+				\item Choose some fixed order(specified earlier).
+			\end{itemize}
+	\end{enumerate}
+	\begin{remark}
+		The first two auctions basically implement the same result.
+	\end{remark}
+\end{eg}

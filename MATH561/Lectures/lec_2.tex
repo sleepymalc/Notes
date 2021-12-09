@@ -1,0 +1,111 @@
+\lecture{2}{1 Sep. 08:00}{Duality}
+\subsection{Duality - First Glance}
+We can associate the standard form problem with another linear programming problem, called the \emph{dual} of the original problem.
+We sometimes called the original problem the \emph{primal}. The dual of the primal is
+\[
+	\begin{alignedat}{5}
+		\min~&c^{T}x\qquad\qquad &&\max ~ &&y^{T}b\\
+		&Ax = b && &&y^{T}A\leq c^{T}\\
+		(P)\quad&x\geq  0 &&(D)\quad&&
+	\end{alignedat}.
+\]
+
+\begin{note}
+	We see that the dual is equivalent to
+	\begin{align*}
+		\max~ & b^{T}y         \\
+		      & A^{T}y \leq c.
+	\end{align*}
+\end{note}
+
+Then we have a direct, but important theorem.
+\begin{theorem}\label{Weak Duality Theorem}
+	Weak Duality Theorem: If \(\hat{x}\) is feasible for \(P\), and \(\hat{y}\) is feasible for \(D\), then we have
+	\[
+		c^{T}\hat{x} \geq  \hat{y}^{T} b.
+	\]
+\end{theorem}
+\begin{proof}
+	Since
+	\[
+		\hat{y}^{T}A\leq c^{T} \underset{\hat{x}\geq 0}{\implies} \hat{y}^{T}A \hat{x} \leq \hat{c}^{T} \hat{x} \underset{A \hat{x} = b}{\implies} \hat{y}^{T}b \leq c^{T} \hat{x}.
+	\]
+\end{proof}
+
+\begin{eg}
+	Consider
+	\begin{align*}
+		\min~ & c^Tx       \\
+		      & Ax \geq b,
+	\end{align*}
+	turn this into the standard form problem and find the dual.
+
+	We see that \(x\) is unrestricted. We first minus a surplus variable \(S\), we have
+	\begin{align*}
+		\min~ & c^Tx      \\
+		      & Ax - S= b \\
+		      & S \geq 0.
+	\end{align*}
+	Now, we turn \(x\) into \(x^+ - x^-\), namely
+	\[
+		x = \begin{pmatrix}
+			x_1    \\
+			\vdots \\
+			x_n    \\
+		\end{pmatrix},\qquad
+		x^+ \coloneqq \begin{pmatrix}
+			x^+_1  \\
+			\vdots \\
+			x^+_n  \\
+		\end{pmatrix},\qquad
+		x^- \coloneqq \begin{pmatrix}
+			x^-_1  \\
+			\vdots \\
+			x^-_n  \\
+		\end{pmatrix}, x^\pm \geq \vec{0}.
+	\]
+	Then we see the original problem becomes
+	\begin{align*}
+		\min~ & c^T(x^+ - x^-)       \\
+		      & A(x^+ - x^-) - S = b \\
+		      & x^+, x^-, S \geq 0
+	\end{align*}
+	\hr
+	We can further have
+	\begin{align*}
+		\min~ & \begin{pmatrix}
+			c^{T} & -c^{T} & 0 \\
+		\end{pmatrix}\begin{pmatrix}
+			x^+ \\
+			x^- \\
+			S   \\
+		\end{pmatrix}     \\
+		      & \begin{pmatrix}
+			A & -A & -I \\
+		\end{pmatrix}\begin{pmatrix}
+			x^+ \\
+			x^- \\
+			S   \\
+		\end{pmatrix} = b \\
+		      & \begin{pmatrix}
+			x^+ \\
+			x^- \\
+			S   \\
+		\end{pmatrix}\geq 0.
+	\end{align*}
+	Set the dual variable being \(y\), we further have
+	\begin{align*}
+		\max~ & y^{T}b                                                           \\
+		      & y^{T} \begin{pmatrix}
+			A & -A & -I \\
+		\end{pmatrix} \leq \begin{pmatrix}
+			c^{T} & -c^{T} & 0^{T} \\
+		\end{pmatrix}
+	\end{align*}
+
+
+\end{eg}
+
+\begin{note}
+	The dual of the dual is the primal.
+\end{note}

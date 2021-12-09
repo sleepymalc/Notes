@@ -1,0 +1,187 @@
+\lecture{10}{4 Oct. 12:30}{PageRank}
+\begin{prev}
+	Voting procedure - hubs voted authorities, while authorities voted for hubs.
+\end{prev}
+
+But this is not always the case. Rankings that can be collaborated.
+
+\section{Page Rank}
+\subsection{Basic Page Rank Algorithm}
+\begin{enumerate}
+	\item INITIALIZE: For all nodes in \(\mathcal{V}\)(\(\left\vert \mathcal{V} \right\vert = V\)),
+	      set page rank to be \(\frac{1}{V}\).
+	\item SEND: Basic Page Rank updates: Each node divides of its current page rank equally across its outgoing
+	      links and sends the value to the node at the end. If there are no outgoing links, then the node retains its page rank.
+	\item RECEIVE: Each node updates its page rank to be the sum of the values it receives on its incoming links. If
+	      a node has retained its page rank, then it adds it to this value.
+	\item LOOP: Run step 2 for \(L\) steps.
+\end{enumerate}
+\begin{note}
+	Page rank is never lost over gained in the network, it is just passed around. This means no normalization is required,
+	the page ranks always sum to \(1\), with all terms non-negative.
+\end{note}
+
+\begin{problem}
+Will it converge? To what if it does? Is the final state always interesting?
+\end{problem}
+\begin{answer}
+	Fact: \begin{enumerate}
+		\item It will converge in most cases.
+		\item Eigenvector of some eigenvalue of some matrix associated with the graph.
+		\item It may not always be interesting.
+	\end{enumerate}
+\end{answer}
+
+\begin{eg}
+	Consider a cycle graph, with different initial page rank. It will not converge! All values just cycling around.
+\end{eg}
+
+We want
+\begin{enumerate}
+	\item convergence for all starting vectors
+	\item the final vector to be relevant to the graph
+\end{enumerate}
+
+\subsection{Scaled Page Rank}
+\begin{intuition}
+	Try to
+\end{intuition}
+\begin{enumerate}
+	\item INITIALIZE: Denote \(r^{old}\) as the column vector of ranks.
+	\item SEND: if \(d^{out}_i > 0\), then
+	\item \[
+		      \frac{r_{i}^{old}}{d_{i}^{out}}
+	      \]send to neighbor at the end of the outgoing links. If \(d_{i}^{out} = 0\), then \(r_{i}^{old}\) sent to itself.
+	\item RECEIVE: Collect all the page rank values. Therefore,
+	      \[
+		      r_{i}^{new} = \sum\limits_{j:j\to i}\frac{r_{j}^{old}}{d_{j}^{out}}+\begin{cases}
+			      r_{i}^{old} & , \text{ if }d_{i}^{out} = 0 \\
+			      0           & , \text{ if }d_{i}^{out} > 0 \\
+		      \end{cases} .
+	      \]
+\end{enumerate}
+
+We have \(r^{new} = N^{T} r^{old}\), where
+\[
+	\begin{alignedat}{3}
+		&\text{if }i\neq  j,\ (N^{T})_{ij} = \begin{dcases}
+			\frac{1}{d_{j}^{out}} & , \text{ if } A_{ji} = 1 \\
+			0                     & , \text{ if } A_{ji} = 0 \\
+		\end{dcases} &&= \begin{dcases}
+			\frac{A_{ji}}{d_{j}^{out}} & , \text{ if }d_{j}^{out}>0 \\
+			A_{ji}                     & , \text{ otherwise}        \\
+		\end{dcases}\\
+		&\text{if }i = j,\ (N^{T})_{ij} = \begin{dcases}
+			1 & , \text{ if } d_{i}^{out} = 0 \\
+			0 & , \text{ if } d_{i}^{out} > 0 \\
+		\end{dcases} &&= \begin{dcases}
+			1      & , \text{ if } d_{i}^{out} = 0 \\
+			A_{ii} & , \text{ if } d_{i}^{out} > 0 \\
+		\end{dcases}
+	\end{alignedat}
+\]
+Hence,
+\[
+	N = \begin{dcases}
+		\frac{A_{ij}}{d_{i}^{out}} & , \text{ if } d_{i}^{out}>0                \\
+		A_{ij}                     & , \text{ if }d_{i}^{out} = 0 \land i\neq j \\
+		1                          & , \text{ if }d_{i}^{out} = 0 \land i= j    \\
+	\end{dcases}.
+\]
+
+After \(L\) steps, we have
+\[
+	r(L) = (N^{T})^L r(0).
+\]
+
+To study what happens as \(L\to \infty\), we suppose there is a convergence vector \(r\) such that
+\[
+	r = (N^{T})r.
+\]
+We see that \(r\) must be an eigenvector for \(N^{T}\) for eigenvalue \(1\). Notice that \(u\) should be
+\emph{non-negative} and sums to \(1\) over entries. Now we have
+\[
+	(N^{T})r = r \implies r^{T}N = r^{T},
+\]
+\(r\) is a left eigenvector of \(N\) with eigenvalue \(1\).
+\begin{note}
+	\(N\) has an eigenvalue \(1\)(we will show this)
+\end{note}
+To study \(N\),
+\[
+	N_{ij} = \begin{dcases}
+		\frac{A_{ij}}{d_{i}^{out}}, & \text{ if }d_{i}^{out}>0               \\
+		A_{ij},                     & \text{ if }d_{i}^{out}=0\land i\neq  j \\
+		1,                          & \text{ if }d_{i}^{out}=0 \land i = j   \\
+	\end{dcases}.
+\]
+Then
+\[
+	\sum\limits_{j\in\mathcal{V}}N_{ij} = \begin{dcases}
+		\sum\limits_{j\in\mathcal{V}} \frac{A_{ij}}{d_{i}^{out}} = \frac{\sum\limits_{j\in\mathcal{V}} A_{ij} }{d_{i}^{out}} = \frac{d_{i}^{out}}{d_{i}^{out}}= 1 & , \text{ if }d_{i}^{out} > 0 \\\\
+		\underbrace{1}_{j = i} + \underbrace{\sum\limits_{j\neq i} A_{ij}}_{ = d_{i}^{out} = 0} = 1 + 0 = 1                                                       & , \text{ if }d_{i}^{out} = 0 \\
+	\end{dcases}
+\]
+\(N\) is a matrix such that the row sums are always \(1\),
+\[
+	N \vec{1} = \vec{1}.
+\]
+This is an eigenvalue! \(1\) is an eigenvalue of \(N\), with \(\vec{1}\) being a right eigenvector!
+
+We can ask about the left eigenvector — it exists. Corresponding to \(\vec{1}\).
+\begin{problem}
+What do we know about the entries?
+\end{problem}
+\begin{answer}
+	We have
+	\begin{enumerate}
+		\item Row sums on \(1\)
+		\item Non-negative entries
+		\item Row stochastic matrix(associated with Markov chains)
+	\end{enumerate}
+\end{answer}
+
+\begin{property}
+	Each row vector is a probability mass function(PMF) on
+	\[
+		\{1, 2, \ldots , V\}.
+	\]
+\end{property}
+
+\subsection{Non-negative Matrices}
+In the following lectures, we will study so-called Perron–Frobenius theorem: about non-negative matrices. Before this, we need to study
+\emph{irreducible} matrix.
+
+\begin{definition}
+	A non-navigate matrix \(A_{n\times n}\) is called \emph{irreducible} if
+	\[
+		\forall i, j\ \exists \underbrace{k(i, j)}_{\in\mathbb{\MakeUppercase{Z}}}>0
+	\]
+	such that
+	\[
+		(A^k)_{ij}>0.
+	\]
+\end{definition}
+
+We have
+\[
+	\begin{split}
+		(A^2)_{ij} &= \sum\limits_{k} A_{ik}A_{kj}\\
+		(A^3)_{ij} &= (A A^2)_{ij} = \sum\limits_{k} A_{ik}(A^2)_{kj} = \sum\limits_{k}\sum\limits_{l} A_{ik} A_{kl}A_{lj}\\
+		&\vdots\\
+		(A^n)_{ij} &= \sum\limits_{k_1}\sum\limits_{k_2}\ldots \sum\limits_{k_n}A_{ik_1}A_{k_1 k_2}A_{k_2 k_3}\ldots A_{k_n j}
+	\end{split}
+\]
+
+\(A\) is non-negative so \(A^{n+1}_{ij} > 0\implies \) at least one of the sums \(>0\).
+
+"Adjacency" matrix associated with \(A\):
+\[
+	\widetilde{A}_{ij} = \begin{dcases}
+		1, & \text{ if }A_{ij}>0 \\
+		0, & \text{ if }A_{ij}=0 \\
+	\end{dcases}.
+\]
+
+Find graph from \(\widetilde{A}, g\) if \((A^{n+1})_{ij}\) is positive \(\iff\) there is a path in \(g\) from
+\(i\) to \(j\).

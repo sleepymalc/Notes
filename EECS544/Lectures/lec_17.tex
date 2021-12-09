@@ -1,0 +1,328 @@
+\lecture{17}{3 Nov. 12:30}{Random Graph}
+\subsection{Real-World Graphs}
+In this section, we compare the random graph models with the real-world graphs. In practice, a real-world graph will have the following
+properties:
+\begin{enumerate}
+	\item The number of edges is linear in \(V\).
+	\item Giant component usually entice graph(connectivity)
+	\item Lots of triangles
+\end{enumerate}
+
+Compare to the real-world graphs, the Erdős-Rényi random graphs family usually have the following properties, for each different settings:
+\begin{enumerate}
+	\item Very sparse
+	      \begin{itemize}
+		      \item edges is linear in \(V\)
+		      \item giant component
+		      \item isolated nodes
+		      \item no triangles as \(V\to \infty \)
+	      \end{itemize}
+	\item Sparse
+	      \begin{itemize}
+		      \item edges is \(\sim \Theta(V\log V)\)
+		      \item most nodes in the giant component
+		      \item can have connectivity
+		      \item Many triangles
+	      \end{itemize}
+	\item Dense
+	      \begin{itemize}
+		      \item edges is \(\sim \Omega(V^{1+\epsilon})\) with \(\epsilon>0\)
+		      \item fully connected
+		      \item lots of triangles
+	      \end{itemize}
+\end{enumerate}
+
+\subsection{R-MAT Graphs}
+Besides Erdős-Rényi random graph family, we can use different approaches to generate a random graph. We now introduce so-called \emph{R-MAT Graphs}.
+\subsubsection{Recursion Adjacency Matrix Method}
+We assume that the number of nodes is
+\[
+	V = 2^k
+\]
+for some \(k\). Now, given four numbers \(a, b, c, d \geq 0\) with \(a+b+c+d = 1\)
+\[
+	\begin{bmatrix}
+		a & b \\
+		c & d \\
+	\end{bmatrix},
+\]
+which is a distribution on \(\{1, 2, 3, 4\}\). Further, we denote
+\begin{itemize}
+	\item \(E\): Target number of edges to be placed on a directed graph. Furthermore, we add entries in the adjacency matrix one edge of a time.
+	\item \(A\): \(2k \times 2k\) matrix.
+\end{itemize}
+\[
+	\substack{2^{k - 1}\\ \\ \\ \\ 2^{k-1}} \overset{\ \ \ 2^{k - 1}\ \ \ 2^{k-1}}{\begin{bmatrix}
+			 & 1 &  & 2 & \\
+			 &   &  &   & \\
+			 & 3 &  & 4 & \\
+		\end{bmatrix}}_{2^k\times 2^k}
+\]
+
+Then the algorithm to generate a R-MAT graph just works like the following.
+\begin{enumerate}
+	\item[1.] For \(e = 1 : E\)
+		\begin{enumerate}
+			\item \(l = k: -1 : 2\)
+			      \begin{itemize}
+				      \item Choose a region of \(A_{2^l \times 2^l}\) with size \(2^{l-1} \times  2^{l-1}\):
+				            \[
+					            \substack{2^{l - 1}\\ \\ \\ \\ 2^{l-1}} \overset{\ \ \ 2^{l - 1}\ \ \ 2^{l-1}}{\begin{bmatrix}
+							             & 1 &  & 2 & \\
+							             &   &  &   & \\
+							             & 3 &  & 4 & \\
+						            \end{bmatrix}}_{2^l\times 2^l}
+				            \]
+				            with the probability \(1\sim a\), \(2\sim b\), \(3\sim c\), \(4\sim c\).
+				      \item Determine the region for the next step. If \(i\), then we simply pick the region \(i\) and \textbf{GOTO (a).}
+			      \end{itemize}
+			\item Place edge in the chosen region if entry is \(0\), else we ignore. \textbf{GOTO 1.}
+		\end{enumerate}
+	\item[2.] Clean of. Delete any entries on the diagonal and produce the adjacency matrix \(A\) to make it a simple directed graph.
+\end{enumerate}
+
+\begin{remark}
+	\begin{itemize}
+		\item We implement \(1\sim a, 2\sim b, 3\sim c, 4\sim d\) by letting \(r = \texttt{rand(1)}\)(uniform in \([0, 1]\)) such that if
+		      \begin{itemize}
+			      \item \(r\leq a\), then \(1\)
+			      \item \(a< r\leq a+b\), then \(2\)
+			      \item \(a+b<r\leq a+b+c\), then \(3\)
+			      \item \(a+b+c < r\leq a+b+c+d = 1\), then \(4\)
+		      \end{itemize}
+		\item \begin{eg}
+			      \[
+				      M = \left(
+				      \begin{array}{c|c}
+						      \begin{array}{cc}
+							       & \\
+							       &
+						      \end{array} & \begin{array}{c|c}
+							      \begin{array}{c|c}
+								            & \\
+								      \hline
+								      \cdot &
+							      \end{array} & \\
+							      \hline
+							                                 &
+						      \end{array} \\
+						      \hline
+						      \begin{array}{cc}
+							       & \\
+							       &
+						      \end{array} & \begin{array}{cc}
+							       & \\
+							       &
+						      \end{array}
+					      \end{array}
+				      \right),
+			      \]
+			      where we choose \(k = 3\) with the sequence
+			      \[
+				      2, 1, 3.
+			      \]
+		      \end{eg}
+		\item Clean-up stage. In this step, we delete any entries on the diagonal and produce the adjacency matrix \(A\) for a simple directed graph.
+		      \begin{eg}
+			      Let \(A\) be
+			      \[
+				      A = \begin{pmatrix}
+					      0 & 0 & 0 & 1 \\
+					      1 & 0 & 0 & 0 \\
+					      0 & 0 & 1 & 0 \\
+					      0 & 1 & 0 & 1 \\
+				      \end{pmatrix}.
+			      \]
+			      After cleaning up, we have
+			      \[
+				      A^\prime = \begin{pmatrix}
+					      0 & 0 & 0 & 1 \\
+					      1 & 0 & 0 & 0 \\
+					      0 & 0 & 0 & 0 \\
+					      0 & 1 & 0 & 0 \\
+				      \end{pmatrix}.
+			      \]
+		      \end{eg}
+	\end{itemize}
+\end{remark}
+
+\subsection{Preferential Attachment Graph(Directed)}
+Yet, we have another algorithm to produce a random graph. Let the (undirected) degree distribution on \(V\) being
+\[
+	d_1, d_2, \ldots , d_V
+\]
+with \(\sum\limits_{i=1}^{V} d_i\) being even. Then by considering a histogram, for \(k = \{0, 1, \ldots , V - 1\}\), we have
+\[
+	P_k^{\alpha} = \frac{1}{V}\sum\limits_{i=1}^{V} \mathbbm{1}_{\{d_i = k\}} = \frac{\#\text{ of nodes with degree }k}{V}.
+\]
+
+\begin{remark}
+	We can do some comparison between what we have already seen.
+	\begin{enumerate}
+		\item Erdős-Rényi Random Graph: Poisson degree distribution with \(p = \frac{c}{V}\). Then the tail probability(CCDF) is
+		      \[
+			      \probability{\deg\geq k}\cong c e^{-\alpha k},
+		      \]
+		      which decreases exponentially.
+		\item Real-World graphs. Tail probability is
+		      \[
+			      \probability{\deg\geq k} = \frac{c}{k^{\alpha - 1}},
+		      \]
+		      which is polynomial decrease if \(\alpha\in(2, 3)\). More specifically,
+		      \begin{itemize}
+			      \item \(\alpha>2\):
+			            \begin{itemize}
+				            \item mean degree exists, such that
+				                  \[
+					                  \text{mean degree }\cong \sum\limits_{k=1}^{\infty} k \frac{\widetilde{c}}{k^{\alpha}} = \sum\limits_{k=1}^{\infty} \frac{\widetilde{c}}{k^{\alpha - 1}}.
+				                  \]
+				                  We see that \(\alpha - 1 > 1\) is needed for above to converge to a finite number.
+				            \item mean squared of degree exists, such that
+				                  \[
+					                  \text{mean squared of degree }\cong \sum\limits_{k=1}^{\infty} k^2 \frac{\widetilde{c}}{k^{\alpha}} = \sum\limits_{k=1}^{\infty} \frac{\widetilde{c}}{k^{\alpha-2}}.
+				                  \]
+			            \end{itemize}
+			      \item \(\alpha<3 \implies \alpha - 2 < 1\): Above will just diverge to \(+\infty\).
+		      \end{itemize}
+		\item In practice, the variance of degrees is exponentially high.
+	\end{enumerate}
+\end{remark}
+
+\hr
+
+We make the following assumptions for constructing a preferential attachment graph.
+\begin{itemize}
+	\item Nodes arrive in sequence \(1, 2, \ldots , V\)
+	\item Each node has an out-degree. Out going edges that need to be paired with nodes earlier in sequence such that
+	      \[
+		      d_{i}^{out} \leq i - 1.
+	      \]
+\end{itemize}
+
+Now, with \(p\in(0, 1)\), we do the following to generate a preferential attachment graph.
+\begin{enumerate}
+	\item[1.] for each edge in \(d_{i}^{out}\)(\(d_{i}^{out}\) time)
+		\begin{itemize}
+			\item Toss a biased coin with probability \(p\) for Heads(\(q\coloneqq 1 - p\) for Tails).
+			      \begin{itemize}
+				      \item If Heads, then choose one of unpaired nodes at random and pair.
+				      \item If Tails, then choose one of the unpaired nodes in \textbf{proportion} to their incoming edges.
+			      \end{itemize}
+		\end{itemize}
+	\item[3.] \textbf{GOTO 1.}
+\end{enumerate}
+
+\begin{remark}
+	Node \(1 \) always has out-degree \(0\).
+\end{remark}
+
+Now, lets analysis the situation such that if \(d_{i}^{out} = 1\) for all \(i = 2, 3, \ldots \) with \(t = 2, 3, \ldots , V\). Further, we define
+\[
+	X_i(t)\coloneqq \#\text{ of incoming edges for node \(i\) after node \(t\) is added to the graph}.
+\]
+We then see
+\[
+	\sum\limits_{i=1}^{V} X_i(t) = t - 1 = \sum\limits_{i=1}^{t - 1} X_{i}(t)
+\]
+since \(X_i(t) = 0\) for all \(i\) such that \(t\leq i\leq V\). Look at the change of \(X_{i}(t)\) with respect to \(X_i(t - 1)\), we further have
+\[
+	X_{j}(t) = \begin{dcases}
+		X_{j}(t - 1) = 0, & \text{ if }t\leq j\leq V                                                 \\
+		X_{j}(t - 1),     & \text{ w.p. } p \frac{t - 2}{t - 1}+q \frac{t - 1 - X_{j}(t - 1)}{t - 1} \\
+		X_{j}(t - 1)+1    & \text{ w.p. } p \frac{1}{t - 1} + q \frac{X_{j}(t - 1)}{t - 1}.          \\
+	\end{dcases}
+\]
+
+\begin{remark}
+	This is a vector valued random process.
+\end{remark}
+
+In order to simply the analysis, we take a look at the expectation. We have
+\[
+	x_{j}(t) = \expectation{X_{j}(t)} \\
+	x_{j}(t)=\begin{dcases}
+		x_{j}(t - 1)= 0, \text{ if }t\leq j\leq V \\
+		x_{j}(t - 1) + p \frac{1}{t - 1} + q \frac{x_{j}(t - 1)}{t - 1}, \text{ otherwise}.
+	\end{dcases}
+\]
+Then
+\[
+	\underbrace{x_{j}(t) - x_{j}(t - 1)}_{\text{like a derivative}} = \begin{dcases}
+		0,                                              & \text{ if }t\leq j\leq V \\
+		\frac{p}{t - 1} + q \frac{x_{j}(t - 1)}{t - 1}, & \text{ otherwise}.
+	\end{dcases}
+\]
+
+Let \(V\to \infty \) and \(\widetilde{x}_i(t) = \frac{x_{i}(t)}{V}\cong \frac{X_{i}(t)}{V}\) will be well-approximated by a differential equation
+\[
+	\frac{\mathrm{d}\widetilde{x}_j(t)}{\mathrm{d}t} = \frac{p}{t} + q \frac{\widetilde{x}_j(t)}{t} = \frac{p + q \widetilde{x}_j(t)}{t}.
+\]
+Rearranging, we have
+\[
+	\frac{1}{p+q \widetilde{x}_j(t)}\frac{\mathrm{d}\widetilde{x}_j(t)}{\mathrm{d}t} = \frac{1}{t}.
+\]
+Then since
+\[
+	\frac{\mathrm{d}}{\mathrm{d}t}\left(\ln(p + q \widetilde{x}_j(t))\right) = \frac{1}{p + q \widetilde{x}_j(t)}\cdot q \frac{\mathrm{d}\widetilde{x}_j(t)}{\mathrm{d}t},
+\]
+hence we have
+\[
+	\frac{\mathrm{d}}{\mathrm{d}t}\left(\ln(p + q \widetilde{x}_j(t))\right) = \frac{q}{t},
+\]
+
+In all, we have
+\[
+	\ln(p + q \widetilde{x}_j(t)) = q \ln(t) + qc.
+\]
+Take exponential on both sides,
+\[
+	p + q \widetilde{x}_j(t) = t^q e^{cq}.
+\]
+Solving for \(\widetilde{x}_j\), we see that
+\[
+	\widetilde{x}_j(t) = \frac{t^q e^{cq} - p}{q}.
+\]
+
+We now need the initial value. In this case, we have
+\[
+	x_{j}(t) = 0, \forall\ t\leq j\leq V\implies \widetilde{x}_j(j) = 0.
+\]
+This further implies
+\[
+	\widetilde{x}_j(j) = 0 \iff j^q e^{cq} = p \implies e^{cq} = \frac{p}{j^q} \implies \widetilde{x}_j(t) = \frac{p}{q}\left(\left(\frac{t}{j}\right)^q - 1\right)\forall\ t\geq j.
+\]
+
+From this, we see that the fraction of nodes with degree greater than \(k\) is
+\[
+	\frac{1}{\left(1 + \frac{q}{p}\frac{k}{V}\right)^{\frac{1}{q}}} \cong \frac{c}{k^{\alpha}}
+\]
+where \(\alpha = \frac{1}{q} = \frac{1}{1 - p}\).
+
+\begin{note}
+	This is what we called \textbf{power law tail}.
+\end{note}
+
+\begin{remark}
+	This process is biasing towards incoming degrees, which is caused from the second step.
+\end{remark}
+
+\begin{remark}
+	A more formal setup is the following. Let
+	\[
+		\left[X_j(t)\right]_{j = 1, \ldots , V}
+	\]
+	be a Markov Chain. Considering two aggregations:
+	\begin{enumerate}
+		\item For \(i = 0, 1, \ldots \), we determine the fraction of nodes with in-degree at least \(i\) at time \(t\). Then
+		      \[
+			      y_{i}(t) = \frac{1}{V}\sum\limits_{k=1}^{V} \sum\limits_{j=1}^{V} \mathbbm{1}_{\{ X_{j}(t) = k \}} = \frac{1}{V}\sum\limits_{j=1}^{V} \mathbbm{1}_{\{ X_{j}(t)\geq i \}}.
+		      \]
+		\item The for \(s\in[0, 1]\), define \(t = \left\lfloor sV\right\rfloor \). Now, for \(i = 0, 1, \ldots \), set \(\widetilde{y}^V_t(s) = y_{i}(\left\lfloor sV\right\rfloor )\).
+		      Then the formal comparison of \(\widetilde{y}^V_i(s)\) can be made with an appropriate O.D.E. solution
+		      \[
+			      \left\{y_{i}(s)\right\}_{i = 0, 1, \ldots }
+		      \]
+		      for \(s\in [0, 1]\). This is the formal mean-field analysis that is not in the scope of the course. Hence, we give a flavour of the
+		      results using a hand-wavy argument.
+	\end{enumerate}
+\end{remark}

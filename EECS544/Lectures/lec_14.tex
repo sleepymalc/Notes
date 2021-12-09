@@ -1,0 +1,343 @@
+\lecture{14}{25 Oct. 12:30}{Random Walker and Monte Carlo Estimator}
+\subsection{Personalized Page Rank}
+\begin{prev}
+	Recall that we want to associate Page Rank with random walker.
+	\begin{itemize}
+		\item Basic PageRank: Random walker on the graph.
+		\item Scaled PageRank: Random walker with reset to a uniformly chosen node.
+	\end{itemize}
+	This is a good view point for the \emph{population as a whole} user surfing the webs.
+\end{prev}
+
+\hr
+
+Across population reset is to a randomly chosen webpage. We can rank webpages across the population.
+
+\begin{problem}
+Can we be more specific?
+\end{problem}
+
+\begin{answer}
+	With the help of reset, one can make this happen:
+	\begin{itemize}
+		\item Starting point of random walk
+		      \begin{itemize}
+			      \item Random Walk
+		      \end{itemize}
+		\item Reset
+	\end{itemize}
+	where we restart/reset to a specific node \(v^{*}\in \mathcal{V}\).
+	\begin{remark}
+		Personalizing the restart distribution is what allows this to happen.
+	\end{remark}
+\end{answer}
+
+\begin{definition}
+	\emph{Personalized PageRank} is denoted by
+	\[
+		\pi_{v^{*}}(s).
+	\]
+\end{definition}
+Collect \(\pi_{v^{*}}(s)\) for all \(v^{*}\in\mathcal{V}\), then if we reset uniformly,
+\[
+	\pi(s) = \frac{1}{V}\sum\limits_{v^{*}\in\mathcal{V}} \pi_{v^{*}}(s).
+\]
+
+\begin{remark}
+	Average of all the personalized PageRank, one gets the scaled PageRank. We see this as follows.
+	Similar average with respect to any specific distribution \(\mu\) distributed on \(\mathcal{V}\), then
+	\[
+		\pi_\mu(s) = \sum\limits_{v^{*}\in \mathcal{V}} \mu(v^{*})\pi_{v^{*}}(s).
+	\]
+
+	Compare to the Scaled PageRank, we see that \(\mu\) is uniformly distributed for Scaled PageRank.
+\end{remark}
+
+\begin{figure}[H]
+	\centering
+	\incfig{personalized-pagerank}
+	\caption{Random Walk for personalized PageRank}
+	\label{fig:personalized-pagerank}
+\end{figure}
+
+\subsection{Monte Carlo Algorithm}
+\begin{note}
+	This is a simulation-based algorithm.
+\end{note}
+
+The basic algorithm is
+\begin{enumerate}
+	\item[0.] Start at a uniformly random node.
+	\item[1.] First toss a biased coin such that
+		\[
+			\mathbb{\MakeUppercase{P}}(\text{heads}) = s,\qquad \mathbb{\MakeUppercase{P}}(\text{tails}) = 1 - s.
+		\]
+		\begin{itemize}
+			\item If Heads, then perform random walk if possible(namely when \(d_i^{out}=0\)).
+			\item If Tails, then reset to a uniformly chosen node.
+		\end{itemize}
+	\item[2.] \textbf{GOTO 1.}(Repeat \(T\) times).
+\end{enumerate}
+
+We can describe this algorithm as Markov Chain. Let
+\[
+	\left\{ X_n \right\}_{n\geq 0}
+\]
+where \(X_n\) is the location of the random walker at time \(n\). We see that
+\[
+	\begin{split}
+		X_0 &\sim \mathrm{uniform}(\{1, 2, \ldots , V\})\\
+		X_0 &=\begin{dcases}
+			\mathrm{uniform}(\{1, 2, \ldots , V\}) & \text{ with probability }1 - s \\
+			\mathrm{NextHop}(x_0)                  & \text{ with probability }s     \\
+		\end{dcases}\\
+		\mathrm{NextHop}(i)&=\begin{dcases}
+			\mathrm{uniform}(\{N^{out}_i\}), & \text{ if }d^{out}_i>0   \\
+			i,                               & \text{ if }d^{out}_i = 0
+		\end{dcases}
+	\end{split}.
+\]
+This is irreducible and aperiodic. And by the SLLN property, we now analyze this algorithm by Markov Chain. Let run Monte Carlo Algorithm
+for \(T\) long.
+
+\subsubsection{\(1^{st}\) Estimator for \(\pi_V(s)\)}
+The estimation of \(\pi\) is then
+\[
+	\hat{\pi}^{T}_{V}(s) = \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}}\qquad \forall v\in \mathcal{V}.
+\]
+With \(T\to \infty \), we have
+\[
+	\lim_{T\to \infty}\frac{1}{T} \sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}} = \pi_V(s)
+\]
+by SLLN. But this algorithm has two main issues.
+\begin{enumerate}
+	\item Not clear how long we should run this for. Namely, we need to be able to say something about
+	      \[
+		      \expectation{\left\vert \hat{\pi}^{T}_V(s) - \pi_V(s) \right\vert^2 }
+	      \]
+	      in \(T\) to ensure the speed of convergence.
+	\item The estimator is a biased estimator. Recall that an estimator is unbiased if
+	      \[
+		      \mathrm{E}\left[ \hat{\pi}_{V}^{T}(s) \right] = \pi_V(s);
+	      \]
+	      and if it is biased,
+	      \[
+		      \hat{\pi}_{V}^{T}(s) - \pi_V(s)\neq 0
+	      \]
+	      for this particular estimator \(\hat{\pi}^{T}_V(s)\). We see that \(\hat{\pi}^{T}_V(s)\) is indeed biased by
+	      \[
+		      \begin{split}
+			      \mathrm{E}\left[\hat{\pi}^{T}_V(s)\right] &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbb{\MakeUppercase{E}}\left[ \mathbbm{1}_{\{X_n = v\}} \right]\\
+			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbb{\MakeUppercase{P}}\left( X_n = v \right) \\
+			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} (\mu_0 P^n)_v\underset{T\to \infty }{\to }\pi_V(s),
+		      \end{split}
+	      \]
+	      where \(P\) is the \emph{one step trransform matrix}. We see that this only converges when \(T\to \infty \) by Perron-Frobenius Theorem(\autoref{Perron-Frobenius Theorem})
+	      since aperiodicity.
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\incfig{Monte-Carlo-Estimator-1}
+	\caption{First Monte Carlo Estimator}
+	\label{fig:Monte-Carlo-Estimator-1}
+\end{figure}
+
+\subsubsection{\(2^{nd}\) Estimator for \(\pi_V(s)\)}
+Recall that
+\[
+	\widetilde{N}(s) = sN+(1-s)\frac{1}{N}\vec{1}\vec{1}^{T}.
+\]
+Notice that \(\pi(s)\) is the left eigenvector of \(\widetilde{N}(s)\) with eigenvalue \(1\). Write
+\[
+	\begin{split}
+		\pi^{T}(s)\widetilde{N}(s) &= \pi^{T}(s) \\
+		&= \pi^{T}(s)sN+(1 - s)\underbrace{\pi^{T}(s)\vec{1}}_{ = 1}\frac{1}{V}\vec{1}^{T}\\
+		&= \pi^{T}(s)sN+(1 - s)\frac{1}{V}\vec{1}^{T},
+	\end{split}
+\]
+where \(\pi^{T}(s)\vec{1} = 1\) because \(\pi(s)\) is a probability vector, which sums to \(1\). Then
+\[
+	\pi^{T}(s)(I - sN) = (1 - s)\frac{1}{V}\vec{1}^{T}.
+\]
+\begin{prev}
+	\[
+		(I - A)^{-1} = I + A + A^2 + \ldots .
+	\]
+\end{prev}
+Hence,
+\[
+	\begin{split}
+		\pi^{T}(s) &= (1 - s)\frac{1}{V}\vec{1}^{T}(I - sN)^{-1}\\
+		&= (1 - s)\frac{1}{V}\vec{1}^{T}\left(\sum\limits_{i=0}^{\infty} s^i N^i\right)\\
+		&= \sum\limits_{i=0}^{\infty} s^i (1 - s)\frac{1}{V}\vec{1}^{T}N^i.
+	\end{split}
+\]
+Notice that \(N^0\coloneqq I\).
+
+We now analysis this expression.
+\[
+	\pi^{T}(s) = \sum\limits_{i=0}^{\infty} \underbrace{s^i (1 - s)}_{\tau}\frac{1}{V}\vec{1}^{T}N^i,
+\]
+where
+\begin{itemize}
+	\item \(\tau\)
+	      \begin{itemize}
+		      \item Tossing a series of independent biased coins until first tail occurs.
+		            \[
+			            \begin{split}
+				            \mathbb{\MakeUppercase{P}}(\tau = 0) &= 1 - s\\
+				            \mathbb{\MakeUppercase{P}}(\tau = 1) &= s(1 - s)\\
+				            &\vdots\\
+				            \mathbb{\MakeUppercase{P}}(\tau = i) &= s^i(1 - s).
+			            \end{split}
+		            \]
+		      \item \(\tau\) is so-called \emph{geometric random variable}.
+	      \end{itemize}
+	      We see that reset happens at time \(N\), hence we look at \textbf{time} \(\bm{N-1}\).
+	\item \(\frac{1}{V}\vec{1}^{T}N^i\)
+	      \begin{itemize}
+		      \item \(u = \frac{1}{V}\vec{1}^{T}\) is the uniform distribution on the nodes of the graph.
+		      \item \(N^i\) represents random walk repeated \(i\) times.
+	      \end{itemize}
+	      In all, this term represents that we start at a uniformly random node and take \(i\) steps as per random walk. Namely,
+	      \begin{center}
+		      \textbf{Distribution of locations of the random walk after \(i\) steps}.
+	      \end{center}
+\end{itemize}
+
+\hr
+
+Now, the algorithm becomes
+\begin{enumerate}
+	\item[0.] Toss a geometric random variable \(\tau\) such that
+		\[
+			\mathbb{\MakeUppercase{P}}(\tau = i) = s^i(1 - s).
+		\]
+	\item[1.] Pick a random node of the graph and run random walk \(\tau\) times to find where we end up.
+	\item[2.] \textbf{GOTO 1.}(Repeat \(K\) times)
+\end{enumerate}
+
+Denote those \(K\) random variables \(\tau\) as
+\[
+	\tau_1, \tau_2, \ldots , \tau_K
+\]
+and the associated \(X_{\tau}\) as
+\[
+	X_{\tau_1}, X_{\tau_2}, \ldots , X_{\tau_K}.
+\]
+
+We see that
+\[
+	\hat{\pi}_V^K(s) = \frac{1}{K}\sum\limits_{k=1}^{K} \mathbbm{1}_{\{X_{\tau_k} = v\}}.
+\]
+This is an unbiased estimator since
+\[
+	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \mathbb{\MakeUppercase{P}}(x_{\tau_k} = v) = \pi_v(s).
+\]
+Also, the variance can be derived as
+\[
+	\mathrm{Var} \left[ \hat{\pi}_V^K(s) \right] = \frac{\pi_v(s)(1 - \pi_v(s))}{K}\leq \frac{1}{4K}.
+\]
+
+\begin{remark}
+	Since \(n(1-n)\leq 1/4\) for every \(n\in[0, 1]\) with equality if \(x = 1/2\).
+\end{remark}
+
+\begin{figure}[H]
+	\centering
+	\incfig{Monte-Carlo-Estimator-2}
+	\caption{Second Monte Carlo Estimator}
+	\label{fig:Monte-Carlo-Estimator-2}
+\end{figure}
+
+
+\hr
+
+\begin{note}
+	We note that the empirical mean is unbiased while the empirical variance is biased. Let \(X_1, X_2, \ldots  ,X_N\) are i.i.d. with mean \(\mu\) and variance \(\sigma^2\).
+	\begin{itemize}
+		\item We see that \(\hat{\mu}_N\) is the empirical mean which is defined as
+		      \[
+			      \hat{\mu}_N \coloneqq  \frac{1}{N}\sum\limits_{i=1}^{N} X_i
+		      \]
+		      with
+		      \[
+			      \expectation{\hat{\mu}_N} = \frac{1}{N}\sum\limits_{i=1}^{N} \expectation{X_i} = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
+		      \]
+		      which implies this is an unbiased estimator.
+		\item Denote \(\hat{\mathrm{Var}}(N)\) as the empirical variance estimator. It's defined as
+		      \[
+			      \hat{\mathrm{Var}}(N) \coloneqq \frac{1}{N}\sum\limits_{i=1}^{N} (X_i - \hat{\mu}_N)^2.
+		      \]
+		      This is indeed a biased estimator since
+		      \[
+			      \expectation{\hat{\mathrm{Var}}(N)} = \left(\frac{N-1}{N}\right) \sigma^2,
+		      \]
+		      which is slightly less than the true variance. We then have an unbiased estimator defined as
+		      \[
+			      \overline{\mathrm{Var}}(N) \coloneqq  \frac{1}{N-1}\sum\limits_{i=1}^{N} (X_{i-\hat{\mu}_N})^2
+		      \]
+		      with
+		      \[
+			      \expectation{\overline{\mathrm{Var}}(N)} = \sigma^2.
+		      \]
+	\end{itemize}
+\end{note}
+
+\subsubsection{\(3^{rd}\) Estimator for \(\pi_V(s)\)}
+Recall that
+\[
+	\pi(s) = \frac{1 - s}{V}\vec{1}^{T} (I - sN)^{-1}.
+\]
+Define
+\[
+	Z \coloneqq (I - sN)^{-1} = \sum\limits_{i=0}^{\infty} s^i N^i
+\]
+with \(s^0\coloneqq 1\) and \(N^0\coloneqq I\). \(Z\) is a non-negative matrix since \(Z_{ij}\geq 0\).
+Let
+\[
+	\sigma_{ij}\coloneqq (1 - s)Z_{ij} , \qquad \left(\Sigma\right)_{ij}\coloneqq \sigma_{ij}
+\]
+where \(\sigma_{i\cdot}\) is the row of \(\Sigma\) corresponding to node \(i\). We then modify the algorithm as
+\begin{enumerate}
+	\item[0.] PageRank corresponding to reset distribution where we always reset to node \(i\).
+	\item[1.] Start at node \(i\).
+		\begin{itemize}
+			\item Find geometric length \(\tau^i\).
+			\item Run random walk until \(\tau^i\) steps to find the node that we end up with.
+		\end{itemize}
+	\item[2.] \textbf{GOTO 1.}(Repeat \(M\) times for every \(i\))
+\end{enumerate}
+
+If we only take one walk, namely \(M = 1\), then
+\[
+	\pi_V(s) = \frac{1}{V}\sum\limits_{i\in\mathcal{V}}\sigma_{iv}(s).
+\]
+
+Now, for every node \(i\) in the network, we run \(M\) times with
+\[
+	\tau^i_1, \tau^i_2, \ldots , \tau^i_M
+\]
+and
+\[
+	X_{\tau_1}^i, X_{\tau_2}^i, \ldots , X_{\tau_M}^i.
+\]
+
+We count the number of arrivals in node \(v\) and find the average. More explicitly, we have
+\[
+	\hat{\pi}_V(s) = \frac{1}{V}\sum\limits_{i=1}^{V} \frac{1}{M}\sum\limits_{m=1}^{M} \mathbbm{1}_{\{X^i_{\tau^i_m} = v\}} = \frac{1}{VM}\sum\limits_{i=1}^{V} \sum\limits_{m=1}^{M} \mathbbm{1}_{\{X^i_{\tau^i_m} = v\}} .
+\]
+
+This is another unbiased estimator for the same reason given in the second estimator, but we see that this converges faster and with smaller variance. Specifically, we have
+\[
+	\variance{\hat{\pi}_V(s)} = \frac{1}{VM}\left(\pi_{j} - \frac{\sum\limits_{i=1}^{V} \sigma_{ij}^2}{V}\right).
+\]
+We see that this is a better estimator.
+
+\begin{figure}[H]
+	\centering
+	\incfig{Monte-Carlo-Estimator-3}
+	\caption{Third Monte Carlo Estimator}
+	\label{fig:Monte-Carlo-Estimator-3}
+\end{figure}

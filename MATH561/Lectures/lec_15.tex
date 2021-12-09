@@ -1,0 +1,194 @@
+\lecture{15}{27 Oct. 08:00}{Sensitivity Analysis}
+\subsection{More on Local Analysis}
+\begin{prev}
+	Based on an optimal basic solution:
+	\[
+		\overline{x}_{\beta} \coloneqq A^{-1}_{\beta}\bm{b}\geq \vec{0}
+	\]
+	and the reduced cost
+	\[
+		\overline{c}_{\eta}\coloneqq \bm{c_{\eta}^{T}} - \bm{c^{T}_{\beta}}A^{-1}_{\beta}\bm{A_{\eta}} \geq \vec{0},
+	\]
+	we see that \(\bm{c, b, A_{\eta}}\) are linear respect to the objective value. Therefore, there is no limitation for us to only do local analysis
+	respect to \(b\), we can do this for any one of the data mentioned above.
+\end{prev}
+
+\subsubsection{Change \(A_{\eta}\) on the right-hand side}
+We now change \(A_{\eta}\) to do the local analysis for example. If
+\[
+	a_{i, \eta_j} \to a_{i, \eta_{j}}+\Delta,
+\]
+then
+\[
+	A_{\eta_j} = \begin{pmatrix}
+		a_{1, \eta_{j}} \\
+		a_{2, \eta_{j}} \\
+		\vdots          \\
+		a_{m, \eta_{j}} \\
+	\end{pmatrix}.
+\]
+\begin{problem}
+For what \(\Delta\) is \(\beta, \eta\) still an optimal partition?
+\end{problem}
+
+\begin{answer}
+	We see that the reduced cost is now
+	\[
+		\begin{split}
+			\overline{c}_{\eta_{j}}^\prime &= c_{\eta_{j}} - \underline{c_{\beta}^{T}A^{-1}_{\beta}}\left( A_{\eta_{j}} +\Delta e_{i}\right) \\
+			&= c_{\eta_{j}} - \overline{y}^{T}(A_{\eta_{j}}+\Delta e_{i})\\
+			&= \overline{c}_{\eta_{j}} - \Delta \overline{y}_i\underset{\text{want}}{\geq} 0.
+		\end{split}
+	\]
+	Hence, the condition becomes
+	\[
+		\overline{c}_{\eta_{j}} \geq \Delta \overline{y}_i.
+	\]
+\end{answer}
+
+\subsubsection{Change \(c\) on the right-hand side}
+We can also try to change \(c\) for local analysis. Firstly, consider changing \(c_{\eta_{j}}\), we have
+\[
+	c_{\eta_{j}}\to c_{\eta_{j}}+\Delta,
+\]
+then the reduced cost for \(x_{\eta_{j}}\) becomes
+\[
+	(c_{\eta_{j}}+\Delta) - \overline{y}^{T}A_{\eta_{j}} = \overline{c}_{\eta_{j}}+\Delta\underset{\text{want}}{\geq} 0.
+\]
+Hence, the condition becomes
+\[
+	\Delta\geq -\overline{c}_{\eta_{j}}.
+\]
+
+Now, for \(c_{\beta_{i}}\),
+\[
+	c_{\beta_{i}}\to c_{\beta_{i}}+\Delta.
+\]
+
+Then
+\[
+	\underline{c_{\eta}^{T}} - (\underline{c_{\beta}^{T}} + \Delta e_{i}^{T}) \underline{A^{-1}_{\beta}A_{\eta}}\underset{\text{want}}{\geq} \vec{0}.
+\]
+We see that the underlined part is just \(\overline{c}_{\eta}\), hence the reduced cost is just
+\[
+	\overline{c}_{\eta}^{T} - \Delta e_{i}^{T}\overline{A}_{\eta} = (\overline{c}_{\eta_1}, \ldots , \overline{c}_{\eta_{n-m}}) - \Delta(\overline{a}_{i, \eta_1}, \overline{a}_{i, \eta_2}, \ldots , \overline{a}_{i, \eta_{n-m}})\underset{\text{want}}{\geq} 0
+\]
+
+Separate them, we see
+\[
+	\overline{c}_{\eta_{j}} - \Delta \overline{a}_{i, \eta_{j}} \geq 0 \text{ for }j = 1, \ldots , n-m.
+\]
+Equivalently,
+\[
+	\Delta\leq \frac{\overline{c}_{\eta_{j}}}{\overline{a}_{i, \eta_{j}}} \text{ for }j \text{ such that }\overline{a}_{i, \eta_{j}}>0
+\]
+and
+\[
+	\Delta\geq \frac{\overline{c}_{\eta_{j}}}{\overline{a}_{i, \eta_{j}}} \text{ for }j \text{ such that }\overline{a}_{i, \eta_{j}}<0.
+\]
+Recall the definition of \(L\) and \(U\), we can have the similar inequality for \(\Delta\) such that \(L\leq \Delta\leq U\), where
+\[
+	\underbrace{\max_{j\colon \overline{a}_{i, \eta_{j}} < 0}\left\{ \frac{\overline{c}_{\eta_{j}}}{\overline{a}_{i, \eta_{j}}} \right\}}_{\coloneqq L} \leq \Delta \leq \underbrace{\min_{j\colon \overline{a}_{i, \eta_{j}} > 0}\left\{ \frac{\overline{c}_{\eta_{j}}}{\overline{a}_{i, \eta_{j}}} \right\}}_{\coloneqq U}.
+\]
+
+\subsubsection{Change \(b\) on the right-hand side, but in two entries}
+There is no limitation for us to change two entries for \(b\). Consider
+\[
+	b\to b+\Delta(e_{i} - e_{K}).
+\]
+
+Then
+\[
+	\begin{split}
+		\overline{x}_{\beta}^\prime &= A_{\beta}^{-1}(b+\Delta(e_{i} - e_K))\\
+		&= \overline{x}_{\beta}+\Delta A^{-1}_{\beta}(e_{i} - e_K)\\
+		&= \overline{x}_{\beta}+\Delta(h_{i} - h_K)\underset{\text{want}}{\geq} \vec{0}.
+	\end{split}
+\]
+Writing things separately, we have
+\[
+	\overline{x}_{\beta_l} + \Delta(h_{il} - h_{Kl}) \geq 0 \text{ for }l = 1\ldots , m
+\]
+where \(H\coloneqq A^{-1}_{\beta}\).
+Then,
+\[
+	\Delta\geq \frac{-\overline{x}_{\beta_l}}{h_{il} - h_{Kl}} \text{ if }h_{il} - h_{Kl} > 0
+\]
+and
+\[
+	\Delta\leq \frac{-\overline{x}_{\beta_l}}{h_{il} - h_{Kl}} \text{ if }h_{il} - h_{Kl} < 0.
+\]
+
+But when we want to change more than one variables in the same time, it becomes more complicated. Consider
+\[
+	b\to b+\Delta_{i}e_{i}, \qquad c_{\beta_l}\to c_{\beta_l} + \Delta_l e_l.
+\]
+
+The condition for \(\beta, \eta\) still being a basic partition is
+\[
+	A_{\beta}^{-1}(b+\Delta_{i}e_{i})\geq \vec{0}, \qquad c_{\eta} - (c_{\beta}+\Delta_l e_l)^{T}A_{\eta}\geq \vec{0}.
+\]
+
+Originally, the objective value is
+\[
+	\underbrace{c_{\beta}^{T} \overline{x}_{\beta}}_{c_{\beta}^{T}(A^{-1}_{\beta}b)} = \underbrace{\vphantom{c_{\beta}^{T}}\overline{y}^{T}b}_{(c_{\beta}^{T}A^{-1}_{\beta})b},
+\]
+after considering the changes, we have
+\[
+	(c_{\beta}+\Delta_l e_l)^{T}A^{-1}_{\beta}(b+\Delta_{i}e_{i}).
+\]
+We see that this is a \emph{quadratic} relation. Expanding the expression, we have
+\[
+	\begin{split}
+		&c_{\beta}^{T}A^{-1}_{\beta}b + \Delta_{i}c_{\beta}^{T}A^{-1}_{\beta}e_{i}+\Delta_{l}e_{l}^{T}A^{-1}_{\beta}b+\Delta_i \Delta_l e_{l}^{T}A^{-1}_{\beta}e_{i}\\
+		=& c_{\beta}A^{-1}_{\beta}b+\Delta_{i}\overline{y}_{i}+\Delta_l \overline{x}_{\beta_l}+\Delta_{i}\Delta_l h_{li}
+	\end{split}
+\]
+where again, \(H\coloneqq A^{-1}_{\beta}\).
+\begin{remark}
+	We see that if we hold one of \(\Delta_i\) or \(\Delta_l\) \(0\), it's still a linear relation.
+\end{remark}
+
+\begin{figure}[H]
+	\centering
+	\incfig{local-analysis}
+	\caption{Local Analysis}
+	\label{fig:local-analysis}
+\end{figure}
+
+\subsection{More on Global Analysis}
+Still, consider the primal and dual pair
+\[
+	\begin{alignedat}{5}
+		f(b) = \min~&c^{T}x\qquad\qquad&&\max ~&&y^{T}b\\
+		&Ax = b 				&&		&&y^{T}A\leq c^{T}.\\
+		(P_b)\quad	&x\geq  0 	&&(D_b)\quad&&
+	\end{alignedat}
+\]
+
+A basis \(\beta\) is feasible for \(D_b\) is independent of \(b\)(recall that \(\overline{y}^{T}\coloneqq c_{\beta}^{T}A^{-1}_{\beta}\) ). Then we have
+\[
+	f(b)\coloneqq \max\left\{ (c^{T}A^{-1})_{\beta})b \colon \beta \text{ is a dual feasible basis} \right\} .
+\]
+
+Consider
+\begin{align*}
+	g(c)=\min~ & c^Tx    \\
+	           & Ax = b  \\
+	(P_c)\quad & x\geq 0
+\end{align*}
+where \(g\) is a piece-wise linear concave function in \(c\).
+
+\begin{figure}[H]
+	\centering
+	\incfig{local-analysis-dual}
+	\caption{The dual version}
+	\label{fig:local-analysis-dual}
+\end{figure}
+
+We see that \(D_b\) is equivalence to
+\begin{align*}
+	-\min~  - & (y^+ - y^-)^{T}b                   \\
+	          & (y^+ - y^-)^{T}A + I S^{T} = c^{T} \\
+	          & y^+\geq 0,\ y^- \geq 0
+\end{align*}

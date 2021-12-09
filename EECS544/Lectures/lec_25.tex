@@ -1,0 +1,285 @@
+\lecture{25}{08 Dec. 12:30}{Perfect Matching}
+\begin{problem}
+We now want to solve the following questions.
+\begin{enumerate}
+	\item Given a bipartite graph, can we check if there is a perfect matching?
+	      \begin{answer}
+		      Yes, by Hopcroft–Karp algorithm, which is an \emph{asymmetric BFS algorithm}.
+	      \end{answer}
+	\item Market-clearing prices. Do they exist, can we find them?
+	      \begin{answer}
+		      Yes. We can find it in polynomial time by Hungarian algorithm.
+	      \end{answer}
+	\item Social welfare maximizing. Connection of market clearing prices.
+	\item VCG principle. To obtain specific market clearing prices.
+\end{enumerate}
+\end{problem}
+
+\subsection{Hopcroft–Karp Algorithm}
+\label{Hopcroft-Karp Algorithm}
+To answer the first question, we need to use Kőnig-Hall Maximize theorem.
+\begin{intuition}
+	It's essentially an asymmetric BFS with labels.
+\end{intuition}
+
+We first define buyer nodes such that
+\[
+	\text{Buyer nodes}\in \{\text{free}, \text{matched}, \text{exhausted}   \}
+\]
+and seller nodes such that
+\[
+	\text{Seller nodes}\in \{\text{free}, \text{matched}\},
+\]
+and also edges such that
+\[
+	\text{Edges}\in \{\text{free}, \text{matched}\}.
+\]
+
+Then the algorithm can be described as follows.
+\begin{enumerate}
+	\item[0.] All nodes and edges are marked as free.
+	\item[1.] Initial step. Pick some matching and go through free buyers and match to free sellers they are connected to.
+		After match labels of buyers, sellers and edge to matched. If any buyers is not able to be matched, let it be free for now.
+	\item[2.] If after this initial step, there are no free buyers, then we're done and perfect match is obtained.
+	\item[3.] Otherwise, there are some free buyers left.
+		\begin{itemize}
+			\item Pick one of these free buyers, connect it to all \textbf{matched} sellers that this free buyers has edges with(all edges here are free)
+			\item For each \textbf{matched} sellers, go to the other side using the \textbf{matched} edges, we'll end up at matched buyers.
+			\item For each \textbf{matched} buyers, use free edges to connect to the other side, which is seller.
+			\item Return to the buyers side from any \textbf{matched} sellers using their \textbf{matched} edges.
+		\end{itemize}
+	\item[4.] Repeat until no exploration can be done.
+		\begin{itemize}
+			\item Matched buyer has no free edges.
+			\item All new sellers are free.
+		\end{itemize}
+\end{enumerate}
+\begin{remark}
+	We see that
+	\begin{itemize}
+		\item At termination, if there is a path from a \textbf{free} buyer to a \textbf{free} seller, then it has to have alternating labels. We
+		      call such a path an \emph{augmenting path}, since we can augment the total size of the matching by \(1\) by altering this path.
+		\item Specifically, if an augmenting path exists, then flip all the labels of the edges, and label the free buyers and sellers to matched. This
+		      will increase the size of the matching by \(1\).
+		\item If for a free buyer node, no augmenting paths are found, then label it as exhausted. Repeat through all free buyers nodes, until none remain.
+		\item This is a polynomial time algorithm, since we will only explore every node once.
+	\end{itemize}
+\end{remark}
+
+We then state a fundamental theorem about the \textbf{only} constraint when constructing a perfect matching, without proving it
+\begin{theorem}
+	If no exhausted buyer nodes, then we have a perfect matching. Otherwise, if there are exhausted buyer nodes, then we
+	can find constricted sets.
+\end{theorem}
+\begin{note}
+	In the first scenario, we will obtain it using matched edges. Also, in the second scenario, we will only obtain a maximal matching
+	using the matched edges.
+\end{note}
+
+\begin{remark}
+	This theorem essentially tells us that the only obstacle one will meet when constructing a perfect matching is the existence of
+	constricted set.
+\end{remark}
+
+\subsection{Market Clearing Prices}
+We now come back to market clearing prices problem.
+
+\begin{problem}
+Given valuation matrix \(V\) and price vector \(p\), is it always the case that a market clearing price exists?
+\end{problem}
+
+\begin{answer}
+	Yes, and we can find it in polynomial time.(Hungarian algorithm do it in \(O(n^{3})\), which is strongly polynomial time)
+\end{answer}
+
+Without loss of generality. Assume that \(V_{1}>V_{2}>V_{3}\geq \ldots \geq V_{N}\). Then we easily see that if
+\begin{itemize}
+	\item \(p = (V_{1}, 0, \ldots , 0 )\), then a perfect matching exists.
+	      \begin{note}
+		      This is essentially a first price auction.
+	      \end{note}
+	\item \(p = (V_{2}, 0, \ldots , 0 )\), then a perfect matching exists as well.
+	      \begin{note}
+		      This is essentially a second price auction.
+	      \end{note}
+	      Furthermore, if
+	      \begin{itemize}
+		      \item \(p_{1}>V_{1}\), then no perfect matching exists.
+		      \item \(p_{1}<V_{2}\), then no perfect matching exists as well.
+	      \end{itemize}
+\end{itemize}
+
+We claim that market clearing prices always exists, and will follow so-called \emph{Lattice structure}. Says if
+\(p^{1}\) and \(p^{2}\) are both market clearing prices, then
+\[
+	\begin{split}
+		p^{1}\lor p^{2} &\coloneqq \text{element-wise max}\\
+		p^{1}\land p^{2} &\coloneqq \text{element-wise min}\\
+	\end{split}
+\]
+are also market clearing prices, where
+\begin{itemize}
+	\item Max market clearing price is by taking the maximum in all components.
+	\item Min market clearing price is by taking the minimum in all components.
+\end{itemize}
+
+
+\begin{remark}
+	There is a nice property for market clearing prices: It's always social-welfare maximizing, respect to the utility of all buyers
+	and the sum of prices(seller made).
+\end{remark}
+
+We can actually formulate the above question as a linear programming. Define \(x_{ij} \in [0, 1]\) as the part of
+good \(j\) in assigned to buyer \(i\), namely we allow fractional assignment. Then we model the above question as
+
+\begin{align*}
+	V^{*} \coloneqq \max~ & \sum\limits_{i, j}V_{ij}x_{ij}       \\
+	                      & \sum\limits_{j}x_{ij} = 1\ \forall i \\
+	                      & \sum\limits_{i}x_{ij} = 1\ \forall j \\
+	                      & x_{ij}\in[0, 1].
+\end{align*}
+\begin{intuition}
+	We see that
+	\begin{itemize}
+		\item The first constraint says that buyer want one good.
+		\item The second constraint says that seller has one good for type \(j\).
+	\end{itemize}
+\end{intuition}
+
+If we further restrict the fractional assignment property, then we have the integer programming version of above, namely
+\begin{align*}
+	V^{*} \coloneqq \max~ & \sum\limits_{i, j}V_{ij}x_{ij}       \\
+	                      & \sum\limits_{j}x_{ij} = 1\ \forall i \\
+	                      & \sum\limits_{i}x_{ij} = 1\ \forall j \\
+	                      & x_{ij}\in\{0, 1\}.
+\end{align*}
+
+\begin{remark}
+	We see that
+	\begin{itemize}
+		\item Perfect matching is the only possible solution.
+		\item Solving the LP leads to an integer solution.
+		\item The market clearing price induced by perfect matching will achieve \(V^{*}\) in the IP, which is social welfare maximizing.
+	\end{itemize}
+\end{remark}
+
+\subsection{Demange-Gale-Sotomayor(DGS) Algorithm}
+Given an English auction for multiple goods, with valuations and prices being all in integers. Then by running the following DGS algorithm, we'll have
+a set of market clearing prices.
+\begin{enumerate}
+	\item Set initial price to \(p = (0, 0, \ldots , 0 )\)
+	\item At \(p\) fixed the preferred sellers bipartite graph.
+	\item Check if there is a perfect matching.(Can be done by \hyperref[Hopcroft-Karp Algorithm]{Hopcroft-Karp Algorithm})
+	      \begin{itemize}
+		      \item If yes, then end.
+		      \item Otherwise, determine a constricted set of buyers \(B\), namely find a \(B\) such that
+		            \[
+			            \left\vert N(B) \right\vert < \left\vert B \right\vert.
+		            \]
+
+		            Pick any non-empty subset \(S\) of \(N(B)\) and increase the price of the goods in \(S\) all by \(1\).
+	      \end{itemize}
+	\item \textbf{GOTO 2}.
+\end{enumerate}
+
+\begin{intuition}
+	If there is more demand and less supply, then we increase the price.
+\end{intuition}
+
+\begin{remark}
+	This algorithm will terminate in finite-time, further, it's actually a polynomial time algorithm.
+\end{remark}
+
+If one carefully enough for choosing \(S\), he will always terminate in the minimum market clearing prices.
+
+\subsection{VCG Principle}
+Consider a \(2^{nd}\) price auction. There is only \(1\) item to be sold with \(N\) buyers with valuation \(V_{1}, V_{2}, \ldots , V_{N}\). We
+further let
+\[
+	V_{1}>V_{2}>V_{3}\geq \ldots V_{N}.
+\]
+
+In this case, we see that agent \(1\) gets the good with price \(V_{2}\). We denote the utility as \(\Delta\coloneqq V_{1}-V_{2}>0\).
+
+\begin{problem}
+What's the utility of other players?
+\begin{answer}
+	\(0\).
+\end{answer}
+\end{problem}
+
+\hr
+
+We now conduct a thought experiment. If we remove agent \(1\) and replace him with a dummy agent, says \(\tilde{1}\), then we see that agent \(2\) will
+get the good with price \(V_{3}\). Further, we see that the sum of the values obtained by agents other than \(\tilde{1}\) is \(V_{2}\), since now agent \(2\) gets
+the good and his valuation is \(V_{2}\).
+
+\hr
+
+We see that by the appearance of agent \(1\), other agents collectively lost \(V_{2}\) values. We call such collectively lost values as \emph{Externality} agent \(1\) imposes.
+
+With this view point to view a second price auction, we see the following principle.
+\begin{theorem}
+	VCG Principle. Charge a price to an agent as the externality agent imposes on others.
+\end{theorem}
+\begin{eg}
+	We see that for
+	\begin{itemize}
+		\item Agent \(1\) should be charged with price \(V_2\)
+		\item Agent \(2\) should be charged with:
+		      \par In the original auction, the value of all other agents are \(V_{1}\). Now, replace agent \(2\) by a dummy agent \(\tilde{2}\), then the value of all agents other
+		      than \(\tilde{2}\) is \(V_{1}\). Hence, the difference is
+		      \[
+			      \Delta_{2} = V_{1} - V_{1} = 0,
+		      \]
+		      namely by VCG principle, we charge agent \(2\) with price \(0\).
+	\end{itemize}
+\end{eg}
+
+To apply VCG principle in a matching market problem mathematically, we first denote the total set of sellers as \(S\), and the total set of buyers as \(B\). Recall
+the definition of \(V^{*}\), we further specify it by adding the superscript and subscript as
+\[
+	V^{*, S}_{B}
+\]
+for considering \(S\) and \(B\) in the programming. Then, for \(i\in B\), denote \(j^{*} (i)\) as the matched seller respect to \(i\) in a perfect matching that
+maximize social welfare. Now, consider the \emph{reduced problem}, namely calculate
+\[
+	V^{*, S-j^{*}(i)}_{B-i},
+\]
+which stands for the value of everyone else when agent \(i\) is not present.
+
+Lastly, we consider the \emph{alternate problem}, where we need to calculate the value that everyone else gets if \(i\) is not present, namely we
+calculate
+\[
+	V^{*, S}_{\widetilde{B}}
+\]
+where \(\widetilde{B} \coloneqq B - i + \varnothing \), where \(\varnothing \) stands for a dummy agent \(\widetilde{i} \).
+
+Combining the reduced problem and the alternate problem, together with the VCG principle, we see that the auctioneer should charge buyer \(i\)
+\[
+	p_{i}^\mathrm{VCG} = V_{\widetilde{B} }^{*, S} - V_{B-i}^{*, S-j^{*} (i)}.
+\]
+
+We now simply let
+\[
+	p_{j^{*} (i)} = p_{i}^\mathrm{VCG},
+\]
+namely we make the price as posted price.
+
+\begin{remark}
+	We finally note that
+	\begin{itemize}
+		\item It's market clearing price, furthermore, it's actually the minimum market clearing price.
+		\item There is a conceptual difference between the VCG approach and the DGS algorithm approach. One is posted, one is not. We see that in VCG approach, we determine
+		      the prices for each agent by their valuation, while this is not the case in DGS algorithm approach.
+	\end{itemize}
+\end{remark}
+
+
+\newpage
+\appendix
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendices}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+This note is completed in \LaTeX with Inkscape, in case of anyone is interested, please check out this blog\footnote{\url{https://castel.dev/}}
+together with my configuration\footnote{\url{https://github.com/sleepymalc/VSCode-LaTeX-Inkscape}}.

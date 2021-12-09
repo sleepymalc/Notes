@@ -1,0 +1,157 @@
+\lecture{13}{18 Oct. 08:00}{Duality}
+\begin{prev}
+	Strictly complementary.
+\end{prev}
+
+\begin{proof}
+	First prove for one fixed \(j\). Consider
+	\begin{align*}
+		\max~        & x_{j}         \\
+		             & c^{T}x \leq v \\
+		             & Ax = b        \\
+		(P_{j})\quad & x\geq 0,
+	\end{align*}
+	where
+	\begin{align*}
+		 & c^Tx    \\
+		 & Ax = b  \\
+		 & x\geq 0
+	\end{align*}
+	is trying to model the set of optimal solutions to \(P\), and \(P_{j}\) is trying to find an optimal solution of
+	\(P\) with \(x_{j}>0\).
+
+	We see that there are three cases.
+	\begin{enumerate}
+		\item[I.] \(P_{j}\) has an optimal solution. \(\hat{x}\) with \(\hat{x}_j>0\). Take \(\hat{x}\) optimal for \(P_{j}\)
+			\(\implies\) \(\hat{x}\) optimal for \(P\). Take an \(\hat{y}\) optimal for \(D\).
+		\item[II.] \(P_{j}\) is unbounded. Take any feasible solutions \(\hat{x}\) of \(P_{j}\) with \(\hat{x}_j>0\).
+		\item[III.] The optimal value of \(P_{j}\) is zero. Then consider the dual of \(P_{j}\), denoted by \(D_{j}\) with the dual variables \(w\in\mathbb{\MakeUppercase{R}},\ y\in\mathbb{\MakeUppercase{R}}^m\).
+			We then have
+			\begin{align*}
+				\min~        & wv + y^{T}b                  \\
+				             & wc^{T}+y^{T}A \geq e_{j}^{T} \\
+				(D_{j})\quad & w\geq 0,\ y \text{ unres.}
+			\end{align*}
+			Suppose \(\hat{w}\) and \(\hat{y}\) is optimal for \(D_{j}\).
+			\begin{enumerate}
+				\item[Case 1.] \(\hat{w}>0\): Then
+					\[
+						\begin{split}
+							&-c^{T} + \left( \frac{\hat{y}^{T}}{-\hat{w}} \right)A\underset{\leq }{\cancel{\geq}} \frac{1}{-\hat{w}} e_{j}^{T}\\
+							\implies&\underbrace{\left( \frac{\hat{y}^{T}}{-\hat{w}} \right)}_{\hat{\hat{y}}} A\leq c^{T} -  \frac{1}{\hat{w}} e_{j}^{T}\\
+							\implies&\hat{\hat{y}}^{T}A\leq c^{T} - \frac{1}{\hat{w}_j}e_{j}^{T}\\
+							\implies&\hat{\hat{y}}^{T}A\leq c^{T} \text{ with a little slack in the \(j^{th}\) constraint.}\\
+							\implies&\hat{\hat{y}}^{T}A_{\cdot j}\leq c_{j} - \frac{1}{\hat{w}}<c_{j}, \forall j.
+						\end{split}
+					\]
+					Note that the optimal value of \(D_{j}\) is zero since the optimal value of \(P_{j}\) is zero. Then
+					\[
+						\begin{split}
+							&\hat{w} v + \hat{y}^{T}b = 0\\
+							\implies& -v + \left( \frac{\hat{y}^{T}}{-\hat{w}} \right) b = 0\\
+							\implies& \hat{\hat{y}}^{T}b = v\\
+							\implies& \hat{\hat{y}} \text{ is optimal for }D.
+						\end{split}
+					\]
+				\item[Case 2.] \(\hat{w} = 0\): Then
+					\[
+						\hat{y}^{T}A\geq e_{j}^{T}.
+					\]
+					Let \(\widetilde{y}\) be an optimal solution of \(D\). Now consider \(\widetilde{y} - \hat{y}\), we have
+					\[
+						\left(\widetilde{y} - \hat{y}\right)^{T}A = \underbrace{\widetilde{y}^{T}A}_{\leq c^{T}} - \underbrace{\hat{y}^{T}A}_{\geq e_{j}^{T}} \leq c^{T} - e_{j}^{T},
+					\]
+					we see that \(\left( \widetilde{y} - \hat{y} \right) \) is feasible for \(D\) with slackness in the right-hand side in the \(j^{th}\) constraint.
+
+					Then the objective value of \(\widetilde{y}-\hat{y}\) of \(D\) is
+					\[
+						\left( \widetilde{y}-\hat{y} \right)^{T}b = \widetilde{y}^{T}b - \hat{y}^{T}b = v - \hat{y}^{T}b = v
+					\]
+					since \(\hat{y}^{T}b\) is the optimal value of \(D_{j}\), which is zero.
+			\end{enumerate}
+	\end{enumerate}
+\end{proof}
+
+Notice that this is just for a fixed \(j\)!
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c|ccccc|ccccc}
+		\toprule
+		\(j\)      & \multicolumn{5}{c|}{\(\hat{x}^{T}\)}      & \multicolumn{5}{c}{\(c^{T} - \hat{y}^{T}A\)}                                                                                                                                                                                                                        \\
+		\midrule
+		1          & \(\ddots\)                                &                                              &                   & 0            &            & \(\ddots\)                                       &            &                                                                            &            &            \\
+		\(\vdots\) &                                           & \(\ddots\)                                   &                   & \(\vdots\)   &            &                                                  & \(\ddots\) &                                                                            &            &            \\
+		\(j\)      & \multicolumn{2}{c}{\(\to \hat{x}^{(j)}\)} & \(0/+\)                                      & \(\vdots\)        &              &            &                                                  & \(+/0\)    & \multicolumn{2}{c}{\footnotesize{\(\leftarrow c^{T}-\hat{y}^{(j)^{T}}A\)}}                           \\
+		\(\vdots\) &                                           &                                              &                   & \(\ddots\)   &            &                                                  &            &                                                                            & \(\ddots\) &            \\
+		\(n\)      &                                           &                                              &                   & 0            & \(\ddots\) &                                                  &            &                                                                            & \(+\)      & \(\ddots\) \\
+		\hline
+		           &                                           &                                              & \(\hat{\hat{x}}\) & \(\uparrow\) &            & \multicolumn{5}{c}{\(c^{T}-\hat{\hat{y}}^{T}A\)}                                                                                                                     \\
+		           &                                           &                                              &                   & 0            &            &                                                  &            &                                                                            & \(+\)      &            \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+\begin{intuition}
+	We average out for all \(j\), then we have
+	\[
+		\hat{\hat{x}} \coloneqq \sum\limits_{j=1}^{n} \frac{1}{n}\hat{x}^{(j)},\quad \hat{\hat{y}} \coloneqq \sum\limits_{j=1}^{n} \frac{1}{n}\hat{y}^{(j)}
+	\]
+\end{intuition}
+
+We check that \(\hat{\hat{x}}\) and \(\hat{\hat{y}}\) are feasible. Since
+\[
+	A\hat{\hat{x}} = A\left( \frac{1}{n}\sum\limits_{j=1}^{n} \hat{x}^{(j)} \right) = \frac{1}{n}\sum\limits_{j=1}^{n} \underbrace{\hat{Ax}^{(j)}}_{b} = b.
+\]
+
+\begin{problem}
+For multicommodity flow problem, we see that
+\begin{align*}
+	\min~ & \sum\limits_{(i, j)\in \mathcal{A}} c_{ij}x_{ij}                                                                                                                                                     \\
+	      & \underbrace{\sum\limits_{j\colon (i, j)\in\mathcal{A}} x_{ij}}_{\text{flow out of }i} - \underbrace{\sum\limits_{j\colon (j, i)\in\mathcal{A}} x_{ji}}_{\text{flow into }i}  = b_i, i \in\mathcal{N} \\
+	      & x_{ij}\geq 0 \leq u_{ij} \text{ for }(i, j)\in\mathcal{A}
+\end{align*}
+\end{problem}
+
+\begin{answer}
+	Write it in the matrix form, we have
+	\begin{align*}
+		\min~ & c^Tx                       \\
+		      & Ax = b                     \\
+		      & 0\leq \underline{x\leq u},
+	\end{align*}
+	write it in another way, we have
+	\begin{align*}
+		\min~ & c^Tx     \\
+		      & Ax = b   \\
+		      & Ix\leq u \\
+		      & x\geq 0
+	\end{align*}
+	with the dual variables \(y\) and \(\Pi\), we have the dual
+	\begin{align*}
+		\max~ & y^{T}b + \Pi^{T}u            \\
+		      & y^{T}A+\Pi^{T}I\leq c^{T}    \\
+		      & y\text{ unres.},\ \Pi\leq 0.
+	\end{align*}
+
+	The \(A\) looks like
+	\[
+		A_{(m\times n)} = \substack{\text{Nodes }\\\mathcal{N}}\overset{\mathrm{arc}(i, j)}{
+			\begin{pmatrix}
+				 &  & \ddots &        & 0      &        &        &  & \\
+				 &  &        & \ddots & \vdots &        &        &  & \\
+				 &  & \ldots & \ldots & +1     & \ldots & \ldots &  & \\
+				 &  &        &        & \vdots &        &        &  & \\
+				 &  & \ldots & \ldots & -1     & \ldots & \ldots &  & \\
+				 &  &        &        & \vdots & \ddots &        &  & \\
+				 &  &        &        & 0      &        & \ddots &  & \\
+			\end{pmatrix}}\substack{i\\ \\ \\ \\ \\ j}
+	\]
+
+	Then we see the dual is just
+	\[
+		\begin{alignedat}{3}
+			\max~ & \sum\limits_{i\in\mathcal{N}}y_{i}b_{i}+\sum\limits_{(i, j)\in\mathcal{A}} \Pi_{ij}u_{ij}                                        \\
+			& y_{i} - y_{j}+\Pi_{ij}\leq c_{ij}                                                         && \text{ for all }(i, j)\in\mathcal{A} \\
+			& \Pi_{ij}\leq 0                                                                            && \text{ for all }(i, j)\in\mathcal{A}
+		\end{alignedat}
+	\]
+\end{answer}

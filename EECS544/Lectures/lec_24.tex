@@ -1,0 +1,313 @@
+\lecture{24}{06 Dec. 12:30}{Matching Market}
+\subsection{Bayesian Nash Equilibrium}
+\begin{prev}
+	For a valuation \(\vec{v}\), the bid \(\sigma^{*}(\vec{v})\) is in the same space as \(\vec{v}\) by \hyperref[Revelation-Principle]{revelation principle}.
+	With allocation being specified as
+	\[
+		\vec{x}_{i}(v_{i})
+	\]
+	which is monotonically increasing, and the payment being specified as
+	\[
+		\overline{p}_{i}(v_{i}) = v_{i}\overline{x}_{i}(v_{i}) - \int_0^{v_{i}}\overline{x}_{i}(z)\,dz + \overline{p}_{i}(0),
+	\]
+	we now try to analyze a general auction.
+\end{prev}
+
+\subsubsection{Revenue Equivalence}
+We start with the expected revenue. The expected revenue is
+\[
+	\mathbb{\MakeUppercase{E}}_v\left[\sum\limits_{i}\overline{p}_{i}(v_{i}) \right] = \mathbb{\MakeUppercase{E}}_v\left[F(\vec{v}) \right] + \sum\limits_{i=1}^{I} \overline{p}_{i}(v).
+\]
+\begin{enumerate}
+	\item If two mechanisms have the same allocation rule in equilibrium, then
+	      \begin{itemize}
+		      \item \(\overline{x}_{i}(v_{i})\) will be the same
+		      \item \(\overline{p}_{i}(v_{i})\) will be the same except for the \(\overline{p}_{i}(0)\) term.
+	      \end{itemize}
+	\item If agent with valuation zero, pay zero, then
+	      \[
+		      \overline{p}_{i}(0) = 0
+	      \]
+	      in both mechanisms. This implies that the revenue will be the same.
+\end{enumerate}
+
+\begin{note}
+	Similar characterization holds for dominant strategy equilibrium but those ex-post.
+	\begin{itemize}
+		\item Allocation rule property
+		\item Payment rule property
+	\end{itemize}
+\end{note}
+
+Assume the independent and identical valuation setting, together with the valuation being \(\mathrm{uniform}([0,1])\). Then the \(2^{nd}\) price auction
+and \(1^{st}\) price auction are \emph{revenue equivalent}.
+
+By symmetry, the payment rules will be identical in each auction, hence the revenue is
+\[
+	I\times \text{payment rule for each agent}.
+\]
+
+\begin{itemize}
+	\item For the second price auction(SP),
+	      \[
+		      \overline{p}_1^{\mathrm{SP}}(v_1) = \expectation{\left(\max_{j\in -1}v_{j}\right)\mathbbm{1}_{\{ \max\limits_{j\in -1} v_{j}\leq v_1\}} }.
+	      \]
+	      Denote \(\widetilde{p}_1 = \max\limits_{j\in -1} v_{j}\), then
+	      \[
+		      F_{\widetilde{p}^{\mathrm{SP}}_i}(x) = \probability{\widetilde{p}_1\leq x} = \probability{v_2\leq x, v_3\leq x, \ldots , v_I\leq x} = x^{I-1},
+	      \]
+	      where \(x\in [0, 1]\). Then,
+	      \[
+		      f_{\widetilde{p}^{\mathrm{SP}}}(x) = (I - 1)x^{I-2}.
+	      \]
+	      We see that
+	      \[
+		      \begin{split}
+			      \widetilde{p}_1^{\mathrm{SP}} &= \expectation{\widetilde{p}_{1}\mathbbm{1}_{\{ \widetilde{p}_1\leq v_1 \}} }\\
+			      &=\int_0^{v_1} xf_{\widetilde{p}_1}(x)\,dx \\
+			      &= (I - 1)\int_0^{v_1}x\cdot x^{I-2}\,dx \\
+			      &= (I - 1)\int_0^{v_1}x^{I-1}\,dx\\
+			      & = \frac{I-1}{I}v_1^I.
+		      \end{split}
+	      \]
+	\item For the first price auction(FP),
+	      \[
+		      \overline{p}_1^{\mathrm{FP}}(v_1) = \sigma^{\mathrm{FP}}(v_1)\probability{\text{Agent 1 has the highest value \(v_1\)}} = \sigma^{\mathrm{FP}}(v_1)v_1^{I-1},
+	      \]
+	      where every other agent's value is less or equal to \(v_1\).
+
+	      From Revenue equivalence,
+	      \[
+		      \widetilde{p}^{\mathrm{SP}}(v_1) = \widetilde{p}^{\mathrm{FP}}(v_1),
+	      \]
+	      which implies
+	      \[
+		      \frac{I-1}{I}v_{1}^I = \sigma^{\mathrm{FP}}(v_1)v_1^{I-1} \implies \sigma^{\mathrm{FP}} = \frac{I-1}{I}v_1,
+	      \]
+	      as we discussed before.
+\end{itemize}
+
+\section{Matching Market}
+Beyond the current setup of auctions, we can see a more general setup. Specifically, we introduce so-called \textbf{Matching Market}. The comparison is as follows.
+\begin{itemize}
+	\item One good to many buyers: Auctions.
+	\item Many goods to many buyers: Matching Market.
+\end{itemize}
+
+\begin{eg}
+	We first see an example of matching market in terms of a general form of auction, namely \textbf{Ad-Auctions}. Specifically, consider a particular keyword searching result,
+	the ads related to which may show up in the following order:
+	\begin{itemize}
+		\item AD1 with \(r_1\)
+		\item AD2 with \(r_2\)
+		\item AD3 with \(r_3\)
+		\item AD4 with \(r_4\)
+		\item \(\vdots\)
+	\end{itemize}
+	where \(r_i\) is the \emph{click-through rate} for ad location \(i\). We see that the location of ads matter.
+
+	\begin{note}
+		We see that
+		\begin{itemize}
+			\item Click-through rate is location dependent. Person needs to click on ad and then buy the product the ad is about.
+			\item Often, \(r_i < r_j\) for \(i > j\).
+		\end{itemize}
+	\end{note}
+\end{eg}
+
+\hr
+
+We see that there is a \emph{bipartite structure}. On the one side of the graph contains buyers, and the other side contains sellers(Ad positions).
+Now, assuming for each buyer's good, the cost is \(b_i\). Then the expected revenue to advertiser \(i\) is
+\[
+	b_i r_j
+\] if one purchase the location \(j\). Now, let \(v_{ij} \coloneqq b_{i}r_{i}\), where \(i\) denotes the buyers, and \(j\) denotes the sellers.
+Then we have the so-called \emph{Valuation matrix} \(V\) such that
+\[
+	V \coloneqq  \vec{r}^{T}\vec{b},
+\]
+which is also called the \textbf{rank one valuation matrix}.
+
+If \(V_{ij}\geq 0\) and beyond rank-one imply good allocation here.
+
+We allow the sellers to set prices to goods.
+\begin{remark}
+	There are different types of prices.
+	\begin{itemize}
+		\item Posted. Item comes with price.
+		\item Anonymous. The price is the same for any buyers.
+	\end{itemize}
+\end{remark}
+
+\begin{definition}
+	The market is called \emph{balance} if the number of sellers and buyers are the same.
+\end{definition}
+
+Without loss of generality, we assume that the market is \textbf{balanced} by letting
+\[
+	V\in \mathbb{\MakeUppercase{R}}^{N\times N},
+\]
+which implies there are a same number(\(N\)) of buyers and sellers. This can be achieved by adding dummy buyers or sellers.
+\begin{itemize}
+	\item Dummy Buyers: Value every good as \(0\).
+	\item Dummy Sellers: Valued as \(0\) for every buyer.
+\end{itemize}
+
+Consider each seller/item coming with a posted and anonymous price, namely item \(j\) has price \(p_j\geq 0\).
+\begin{problem}
+How does a buyer \(i\) react to this? Assuming \(i\) knows her/his valuation, and each buyer can only purchase one good.
+\end{problem}
+\begin{answer}
+	Suppose the valuation for buyer \(i\) is
+	\[
+		V_{i1}, V_{i2}, \ldots , V_{iN},
+	\]
+	and the prices for each good is
+	\[
+		p_{1}, p_2, \ldots , p_{N}.
+	\]
+	Then it's clear that buyer \(i\) will
+	\begin{itemize}
+		\item only consider item whose valuation exceeds the price
+		\item further, focus only on goods whose payoff is maximum(\(\text{valuation}-\text{price}\))
+	\end{itemize}
+	Mathematically,
+	\[
+		\underset{j \text{ s.t. }V_{ij}\geq p_{j}}{\arg\max} V_{ij} - p_{j}.
+	\]
+
+	For convenience, we define a function \(\left[\ \cdot\ \right]_+\) such that
+	\[
+		\left[ x \right]_+ \coloneqq \max(x, 0) = \begin{dcases}
+			x, & \text{ if } x\geq 0 \\
+			0, & \text{ if } x\leq 0 \\
+		\end{dcases}
+	\]
+
+	The utility of buyer \(i\) at price vector \(\vec{p}\) is
+	\[
+		u_{i} = \left[\max_{j\in\{1, \ldots , N\}} V_{ij} - p_{j}\right]_+ = \max_{j\in \{1, \ldots , N\}}\left[V_{ij}-p_{j}\right]_+.
+	\]
+
+	We then defined so-called \emph{preferred sellers list} \(s(i)\) for buyer \(i\), which contains goods that buyer \(i\) is interested in.
+	\[
+		s(i) = \begin{dcases}
+			\varnothing ,                           & \text{ if }  \forall j\ V_{ij}<p_{j} \\
+			\arg\max_j \left(V_{ij} - p_{j}\right), & \text{ otherwise}.
+		\end{dcases}
+	\]
+
+	\begin{remark}
+		If \(s(i)\neq \varnothing \), then there is at last one seller that buyer \(i\) is interested in.
+	\end{remark}
+
+	We then use the preferred sellers lists to construct an undirected bipartite graph between buyers and sellers.
+\end{answer}
+
+\begin{eg}
+	We see some examples.
+	\begin{enumerate}
+		\item Let \(N = 3\), and
+		      \[
+			      V\coloneqq \begin{pmatrix}
+				      5 & 3 & 4 \\
+				      3 & 8 & 3 \\
+				      5 & 4 & 7 \\
+			      \end{pmatrix}, \quad p \coloneqq \begin{pmatrix}
+				      4 \\
+				      3 \\
+				      7 \\
+			      \end{pmatrix}.
+		      \]
+		      Then, we have
+		      \begin{enumerate}
+			      \item Buyer 1. \(V_{11}-p_1 = 1\), \(V_{12} - p_2 = 0\), \(V_{13} - p_3 = -3\). Hence,
+			            \[
+				            s(1) = \left\{1\right\}.
+			            \]
+			      \item Buyer 2. \(V_{21}-p_1 = -1\), \(V_{22} - p_2 = 5\), \(V_{23} - p_3 = -4\). Hence,
+			            \[
+				            s(2) = \left\{2\right\}.
+			            \]
+			      \item Buyer 3. \(V_{31}-p_1 = 1\), \(V_{32} - p_2 = 1\), \(V_{33} - p_3 = 0\). Hence,
+			            \[
+				            s(3) = \left\{1, 2\right\}.
+			            \]
+		      \end{enumerate}
+		      We see that \(c\) is not desired by any buyers at current price.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{satisfaction-eg-1}
+			      \label{fig:satisfaction-eg-1}
+		      \end{figure}
+		\item Consider changing \(p\) into
+		      \[
+			      p = \begin{pmatrix}
+				      0 \\
+				      0 \\
+				      0 \\
+			      \end{pmatrix}.
+		      \]
+		      Then we see that satisfaction is possible.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{satisfaction-eg-2}
+			      \label{fig:satisfaction-eg-2}
+		      \end{figure}
+		\item Consider changing \(p\) into
+		      \[
+			      p = \begin{pmatrix}
+				      5 \\
+				      8 \\
+				      7 \\
+			      \end{pmatrix}.
+		      \]
+		      Then we see that satisfaction is possible as well.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{satisfaction-eg-3}
+			      \label{fig:satisfaction-eg-3}
+		      \end{figure}
+	\end{enumerate}
+\end{eg}
+
+\begin{remark}
+	We see that the satisfaction match is not always possible.
+\end{remark}
+
+Now, the task is that for any given price, find the preferred sellers bipartite graph and perform matching. Furthermore, we try to
+maximize the matching in terms of size. In other words, we are trying to satisfy as many buyers as possible.
+
+\begin{note}
+	We call a matching is \emph{perfect} if the size of the maximum matching is \(N\).
+\end{note}
+
+\subsection{Perfect Matching}
+To discuss perfect matching, we first defined some notations. Let
+\[
+	S\subseteq \{1, \ldots , N\}
+\] be the subset of sellers, and
+\[
+	B\subseteq\{1, \ldots , N\}
+\]
+be the subset of buyers. We further denote \(N(S)\) be the union of all buyers that like goods in \(S\), and \(N(B)\) be the union
+of preferred sellers of all the buyers in \(B\).
+
+If \(\left\vert S \right\vert > \left\vert N(S) \right\vert \), then we call \(S\) is a \emph{constricted set}. Similarly, if
+\(\left\vert B \right\vert > \left\vert N(B) \right\vert \) then \(B\) is constricted.
+
+\begin{theorem}
+	Kőnig-Hall Maximize theorem. A bipartite graph has a perfect matching if and only if there are no constricted sets.
+\end{theorem}
+\begin{note}
+	This is a necessary and sufficient conditions for a perfect matching to exist given a bipartite graph.
+\end{note}
+\begin{remark}
+	We see that
+	\begin{itemize}
+		\item With naive approach, we need to check every non-empty subset of sellers. Hence, there are \(2^N - 1\) checks.
+		\item Polynomial time checks exists.
+		\item We can also find a perfect matching in polynomial time.
+		\item Prices for which a perfect matching exists are called \emph{market clearing prices}.
+	\end{itemize}
+\end{remark}

@@ -1,0 +1,361 @@
+\lecture{22}{29 Nov. 12:30}{Auctions}
+\begin{eg}
+	There are more types of auction.
+	\begin{enumerate}
+		\item[3.] Second-price auction(Sealed bid):
+			\begin{enumerate}
+				\item Sort the bids from the highest
+				\item Find the highest bidder
+				\item Give the good to this bidder but charge him/her the second-highest bid.
+			\end{enumerate}
+			\par Ties breaking:
+			\begin{itemize}
+				\item Random order.
+				\item Choose some fixed order(specified earlier).
+			\end{itemize}
+			\begin{eg}
+				For example, we have
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{c|c|c|c|c}
+						\toprule
+						          & A  & B & C & D \\
+						\midrule
+						\(b_{i}\) & 10 & 2 & 3 & 7 \\
+						\bottomrule
+					\end{tabular}
+				\end{table}
+				After sorted:
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{c|c|c|c|c}
+						\toprule
+						          & A  & D & C & B \\
+						\midrule
+						\(b_{i}\) & 10 & 7 & 3 & 2 \\
+						\bottomrule
+					\end{tabular}
+				\end{table}
+				We then sell the good to \(A\) with price \(7\).
+			\end{eg}
+		\item[4.] English auction(Ascending price auction):
+			\begin{enumerate}
+				\item Start from price \(0\)
+				\item Keeping increasing price until only one left
+				\item Sell the good to the person remaining and at the price at which everyone else drops out.
+			\end{enumerate}
+			\begin{eg}
+				For example, we start with \(0\), and everyone wants the good. Then we slightly increase the price, until:
+				\begin{enumerate}
+					\item Price is \(2\) or \((2+\epsilon)\):
+					      A, D and C want the good, B drops out.
+					\item Price is \(3\) or \((3+\epsilon)\):
+					      A and D want the good, C drops out too.
+					\item Price is \(7\) or \((7+\epsilon)\):
+					      A want the good, D drops out too.
+				\end{enumerate}
+				Then A gets the good with price being \(7\).
+			\end{eg}
+	\end{enumerate}
+\end{eg}
+
+\subsection{Order Statistics}
+For all kinds of auctions we mentioned, we see that to analyze auctions, it'll involve some kind of order of bidding. In the content of auctions, we often refer
+this as \emph{Order Statistics}.
+
+Let \(x_1, x_2, \ldots , x_n\) be i.i.d. and non-negative, continuous valued random variables. Let
+\(F_{X}(\cdot)\) be the CDF, and \(f_{x}(\cdot)\) be the probability density function.
+\begin{eg}
+	Consider
+	\begin{enumerate}
+		\item \(X = \mathrm{uniform}([0, 1])\):
+		      \[
+			      F_X(x) = \begin{dcases}
+				      x,         & \text{ if } x\in[0, 1] \\
+				      \min(x, 1) & \text{ if }x>1         \\
+			      \end{dcases}
+		      \]
+		      with
+		      \[
+			      f_X(x) = \begin{dcases}
+				      1, & \text{ if } x\in[0, 1] \\
+				      0, & \text{ if }x>1.
+			      \end{dcases}
+		      \]
+		\item \(\mathrm{Exp}(\lambda)\):
+		      \[
+			      F_X(x) = 1 - e^{-\lambda x}, \quad x\geq 0
+		      \]
+		      with
+		      \[
+			      f_X(x) = \lambda e^{-\lambda x},\quad x\geq 0.
+		      \]
+	\end{enumerate}
+\end{eg}
+
+\hr
+
+The idea is simple, we first sort \(x_1, x_2, \ldots , x_n\) in decreasing order and denotes
+\[
+	y_1, y_2, \ldots , y_{n}
+\]
+such that
+\[
+	\begin{split}
+		y_1 &= \max\{x_1, \ldots , x_n\}\\
+		y_2 &= \max\{x_1, \ldots , x_n\}\setminus \{y_1\}\\
+		y_3 &= \max\{x_1, \ldots , x_n\}\setminus \{y_2, y_3\}\\
+		&\vdots
+	\end{split}
+\]
+
+Then we have
+\[
+	\max\{x_1, \ldots , x_n\} = y_1\geq y_2\geq \ldots \geq y_n = \min\{x_1, \ldots , x_{n}\}.
+\]
+Now, we want to find out \(\expectation{y_1} \), which is just
+\[
+	\expectation{y_1} = \int_0^{\infty } y f_{y_1}(y)\,dy
+\]
+where \(f_{y_1}\) is the probability density function of \(y_1\). Since \(f_{y_1}(y) = \frac{\mathrm{d}}{\mathrm{d}y} \left(F_{y_1}(y)\right)\),
+where
+\[
+	\begin{split}
+		F_{y_1}(y) &= \probability{y_1\leq y}\\
+		&= \probability{\max\{x_1, \ldots , x_{n}\}\leq y}\\
+		&= \probability{x_1\leq y, x_2\leq y, \ldots , x_n\leq y}\\
+		&= \prod\limits_{i=1}^{n} \probability{x_{i}\leq y}\\
+		&= \prod\limits_{i=1}^{n} F_{x_{i}}(y)\\
+		&= \left(F_x(y)\right)^n,
+	\end{split}
+\]
+where we have used the properties like independence and identically distributed(i.i.d.) assumptions.
+
+Further, since we now know
+\[
+	f_{y_1}(y) = \frac{\mathrm{d}}{\mathrm{d}y}\left(\left(F_x(y)\right)^n\right) = n \left(F_x(y)\right)^{n-1} \frac{\mathrm{d}}{\mathrm{d}y} F_x(y) = n\left(F_{x}(y)\right)^{n-1}f_x(y),
+\]
+we have
+\[
+	\expectation{y_1} = \int_0^{\infty }n y \left(F_{x}(y)\right)^{n-1} f_x(y)\,dy.
+\]
+
+\begin{eg}
+	We now revisit the examples we just show.
+	\begin{enumerate}
+		\item Let \(F_{x}(\cdot)\sim \mathrm{uniform}([0,1]) \). Then
+		      \[
+			      \expectation{y_1} = \int_0^1 n y y^{n-1}\,dy = n\int_0^1 y^n \,dy = \at{\frac{ny^{n+1}}{n+1}}{0}{1} = \frac{n}{n+1} .
+		      \]
+		      Hence, \(\expectation{x_1}= \frac{1}{2} \).
+		\item Exercise - Try exponential.
+	\end{enumerate}
+\end{eg}
+\begin{remark}
+	For the uniform case, the expected value of the \(k^{th}\) element is exactly
+	\[
+		\frac{k}{n+1}
+	\]
+	as one can check.
+\end{remark}
+
+
+\subsection{Game-Form for Auction}
+We relate auctions with game as we discussed before. Given the types for player \(i\in \mathcal{I} \) being i.i.d. such that
+\[
+	t_1, t_2, \ldots , t_I,
+\]
+and also for the valuations such that
+\[
+	v_1, v_2, \ldots , v_I.
+\]
+
+\begin{note}
+	We see that
+	\begin{itemize}
+		\item For simplicity, without specifying, we assume they are distributed in
+		      \[
+			      \mathrm{uniform} ([0, 1]).
+		      \]
+		\item The valuation \(v_{i}\) is taken as the satisfaction in dollar amount from buying the good.
+	\end{itemize}
+\end{note}
+
+Then, the utility function is determined based on specific forms of auction. We now see some explicit examples.
+
+\subsection{Second-price Auction}
+We first analyze second-price auction, since it's easier to analyze. Recall the Interim Setting, namely each agent know its valuation but
+only the distribution of the valuation of others. Now, let
+\[
+	\sigma_{i}\colon [0, 1]\to [0, 1]\qquad v_{i}\mapsto  \sigma_{i}(v_{i})
+\]
+where \(\sigma_{i}\) is just the strategy of bidding. Then the utility is
+\[
+	\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(\underbrace{v_{i}, \sigma_{i}(v_{i})}_{\text{known for \(i\)}}, \underbrace{v_{-i}, \sigma_{-i}(v_{-i})}_{\text{random}})\right].
+\]
+
+The goal is to choose \(\sigma_{i}(\cdot)\) such that expected utility is maximized for each \(v_{i}\)
+assuming \(\sigma_{-i}\) is fixed.
+
+Then,
+\[
+	\begin{split}
+		&u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))\\
+		=&\left(v_{i} - \max_{j\in I\setminus\{i\}}\sigma_{j}(v_{j})\right)\mathbbm{1}_{\{\text{\(i\) wins the auction}\}}\\
+		=&\left(v_{i} - \max_{j\in -i}\sigma_{j}(v_{j})\right)\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \forall j\in -i \}}.
+	\end{split}
+\]
+
+We now aim to maximize
+\[
+	\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))\right].
+\]
+
+\subsubsection{Reason of Response}
+We need to reason how agents will bid strategically.
+\begin{itemize}
+	\item Case 1: If \(b_{i} = \sigma_{i}(v_{i})>v_{i}\).
+	      \begin{enumerate}
+		      \item[(a)] \(b_{i}< \widetilde{P}_i = \max\limits_{j\in -i}\sigma_{j}(v_{j}) = b_{j}\), then we see that
+			      \[
+				      \max(b_{i}, \widetilde{P}_{i}) = \widetilde{P}_{i},
+			      \]
+			      so \(i\) never wins the auction.
+			      \par Continue to do so even if he reduces bid to \(v_{i}\).
+		      \item[(b)] \(b_{i} = \widetilde{P}_{i}\), then \(i\) can win the auction.
+			      \par Since \(v_{i} - \widetilde{P}_{i}<0\),  and the second-highest bid is \(\widetilde{P}_{i}\). So He better to bid \(v_{i}\) and
+			      lost the auction.
+		      \item[(c)] \(b_{i} > \widetilde{P}_{i}\), then \(i\) definitely wins the auction.
+			      \begin{itemize}
+				      \item \(v_{i}<\widetilde{P}_{i}\): utility is \(v_{i} - \widetilde{P}_{i}<0\), not a viable option.
+				      \item \(v_{i}\geq \widetilde{P}_{i}\): utility is \(v_{i} - \widetilde{P}_{i}\geq 0\), but
+				            same result would also hold if \(b_{i}\) is exactly \(v_{i}\).
+			      \end{itemize}
+	      \end{enumerate}
+	\item Case 2: If \(b_{i} = \sigma_{i}(v_{i})<v_{i}\).
+	      \begin{enumerate}
+		      \item[(a)] \(\widetilde{P}_{i}\leq b_{i}<v_{i}\). Agent \(i\) wins with utility being \(v_{i} - \widetilde{P}_{i}\geq 0\) and
+			      no lose in increasing bid to \(v_{i}\).
+		      \item[(b)] \(b_{i}< v_{i}\leq \widetilde{P}_{i}\). Don't win the auction. No lose in increasing bid to \(v_{i}\).
+		      \item[(c)] \(b_{i}\leq \widetilde{P}_{i}\leq v_{i}\). Lose the auction. However, bidding \(v_{i}\) the agent could have won the
+			      auction and gotten non-negative utility.
+	      \end{enumerate}
+	      \begin{remark}
+		      Bidding \(v_i\) is a (weakly) dominant strategy for agent \(i\). This further implies that for second-price auction, agents
+		      bid their true value. This is essentially \emph{Incentive Compatibility}, or \emph{Truth-telling desirable}.
+	      \end{remark}
+\end{itemize}
+
+\begin{remark}
+	We see that \(2^{nd}\) price auction is truth-telling in dominant strategies. Hence, irrespective of how the other players bid, truthfully bidding is optimal, namely
+	\[
+		\sigma_{i}(v_{i}) = v_{i}.
+	\]
+\end{remark}
+\subsubsection{Revenue of the Auctioneer}
+Given \(v_1, v_2, \ldots , v_I\), defined \(\widetilde{v}_i\) as before, namely
+\[
+	\max\{v_1, \ldots , v_I\} = \widetilde{v}_{I}\geq \widetilde{v}_{I-1}\geq \ldots \geq \widetilde{v}_1 = \min\{v_1, \ldots , v_I\}.
+\]
+
+And since it's a \(2^{nd}\) auction, so the revenue is \(\widetilde{v}_{I - 1}\).
+
+\begin{note}
+	The expected revenue of \(\widetilde{v}_{I - 1}\) is
+	\[
+		\expectation{\widetilde{v}_{I-1}} = \frac{I-1}{I+1}
+	\]
+	if we assume uniform valuation.
+\end{note}
+
+Hence, we see that the winner gets \(\widetilde{v}_{I} - \widetilde{v}_{I-1}\), and the expected utility is
+\[
+	\expectation{\widetilde{v}_{I}} - \expectation{\widetilde{v}_{I - 1}}.
+\]
+In the uniform case, the above further equals to
+\[
+	\frac{I}{I+1} - \frac{I - 1}{I + 1} = \frac{1}{I+1}.
+\]
+
+With winner and auctioneer together, their utility is
+\[
+	\widetilde{v}_{I} - \widetilde{v}_{I - 1}+\widetilde{v}_{I - 1} = \widetilde{v}_{I}.
+\]
+
+\begin{remark}
+	We see that the good always goes to the highest valuation.
+\end{remark}
+
+\hr
+
+Sums of utilities of all players in auctioneer is Social welfare - max value possible of \(\widetilde{v}_{I}\).
+
+\begin{remark}
+	\(2^{nd}\) price auction is social-welfare maximizing.
+\end{remark}
+
+We see that if agent \(i\) bids \(v_{i}\) and wins, then he gets
+\[
+	v_{i} = \max_{j\in -i} v_{j}\geq 0,
+\]
+and if lose then get \(0\). Hence, the expected utility is always non-negative if you attend the auction, while staying out will get you \(0\), hence
+we see that it's better to participate in the auction. This phenomenon is called \emph{voluntary participation}(Individual rationality, IR).
+
+And since the probability of winning is \(\frac{1}{I}\), hence the expected utility is
+\[
+	\frac{1}{I}\times \frac{1}{I+1} = \frac{1}{I(I + 1)}
+\]
+for every agent.
+
+\begin{note}
+	Even if we are using Ex Post setting, it's still optimal to bid truthfully in a \(2^{nd}\) auction.
+\end{note}
+
+\subsection{First-price Auction}
+We'll see that the first price auction is not as "simple". There are no dominant strategy equilibrium, only so-called
+Bayes-Nash Equilibrium in interim.
+
+\hr
+
+Consider \(I = 2\), and \(v_{i}\) choose \(b_{i} = \sigma_{i}(v_{i})\). The utility is
+\[
+	u_{i}(v_{i}, b_{i}, v_{-i}, b_{-i}) = (v_{i} - \max_{j\in \mathcal{I} }b_{i})\mathbbm{1}_{\{ i \text{ is the winner} \}} = (v_{i} - b_{i})\mathbbm{1}_{\{ b_{i}\geq b_{-i} \}}
+\]
+
+If \(I>2\), then the utility is now
+\[
+	(v_{i} - b_{i})\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j})\forall j\in -i \}} = (v_{i} - b_{i})\prod\limits_{j\in -i} \mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \}}
+\]
+Then, since we're in the interim set-up, the expected value of the utility is
+\[
+	\begin{split}
+		&\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))\right]\\
+		= &\mathbb{\MakeUppercase{E}}_{-i}\left[(v_{i} - \sigma_{i}(v_{i})) \prod\limits_{j\in -i}\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \}}  \right]\\
+		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})},
+	\end{split}
+\]
+where the last equality comes from independence.
+
+\begin{note}
+	There are two facts to note.
+	\begin{itemize}
+		\item Fact 1: Identical valuation implies \(\sigma_{i} \equiv \sigma\) for all \(i\in \mathcal{I} \). Same bidding function so it's symmetric.
+		\item Fact 2: \(\sigma(\cdot)\) is monotonically increasing. Then
+		      \[
+			      \probability{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})} = \probability{\sigma(v_{i})\leq \sigma(v_{i})} = \probability{v_{j}\leq v_{i}} = F(v_{i}) = v_{i},
+		      \]
+		      where \(F\) is the CDF, and the last equality comes from the fact that we assume the valuation is \(\mathrm{uniform}([0, 1])\).
+
+		      This is a fairly reasonable assumption, since it'll rule out the situations like if two buyers' true value are different, but they somehow decide to bid
+		      the same value.
+	\end{itemize}
+\end{note}
+
+With the second fact of the note above, the expected utility is
+\[
+	(v_{i} - \sigma(v_{i})) F^{I-1}(v_{i}).
+\]
+If we assume that this is uniform valuation, then above further equals to
+\[
+	(v_{i} - \sigma(v_{i}))v^{I-1}_{i}.
+\]

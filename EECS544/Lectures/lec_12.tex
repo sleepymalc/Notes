@@ -1,0 +1,305 @@
+\lecture{12}{11 Oct. 12:30}{PageRank, Markov Chain and Randomness}
+\begin{problem}
+Why doing this?
+\end{problem}
+\begin{answer}
+	They can offer better computational complexity while controlling error.
+\end{answer}
+
+\begin{problem}
+Recall that we want to measure the centrality of a network. We did this by introducing Spectral Theorem(\autoref{Spectral Theorem}) adn
+Perron-Frobenius Theorem (\autoref{Perron-Frobenius Theorem}).
+
+We first look at following two problems.
+\begin{itemize}
+	\item \textbf{Eigenvector Centrality.} For \(A\) be an adjacency matrix, which is a non-negative matrix with \(r(0) = \vec{1}\)and
+	      \[
+		      r(k) = Ar(k - 1), \qquad \forall k = 1\ldots
+	      \]
+
+	      Then if it is irreducible and aperiodic, then
+	      \[
+		      \lim_{k\to \infty } \frac{r(k)}{(\rho(A))^k} = v(w^{T} r(0))
+	      \]
+	      where \(\rho(A)\) is the spectral radius, \(v\) is the right eigenvector of \(A\) and \(w\) is the left eigenvector of \(A\), and \(w^{T}v = 1\) for \(\rho(A)\).
+
+	      We then have
+	      \[
+		      \lim_{k\to \infty}\frac{A^k}{(\rho(A))^k} = vw^{T}.
+	      \]
+
+	      \begin{remark}
+		      Notice that
+		      \begin{itemize}
+			      \item \(v\) would be the eigenvector centrality measure.
+			      \item \(r^k = A r^k\) need not hold because \(1\) need not be an eigenvector.
+			      \item Since
+			            \[
+				            (r(k))_i = \sum\limits_{j} A_{ij}r_{j}(k - 1) = \sum\limits_{j:i\to j} r_j(k-1),
+			            \]
+			            so we see that nodes that either point to many nodes, or important nodes or both, will have higher value.
+		      \end{itemize}
+	      \end{remark}
+	\item \textbf{Katz Centrality.} Again, consider \(r(k) = Ar(k - 1)\), but this time we modify the equation to be
+	      \[
+		      r(k) = \alpha Ar(k - 1) + \beta \vec{1}
+	      \]
+	      where \(\alpha\) is aiming to dampen the degree, and \(\beta\) is aiming to add a constants weight for each node to increase the fairness.
+
+	      Solution will satisfy
+	      \[
+		      r^{*} = \alpha Ar^{*} + \beta \vec{1}\iff (I - \alpha A)r^{*} = \beta \vec{1}
+	      \]
+	      where \(r^{*}\) is the \emph{Katz centrality} if it exits. Now, if \(I - \alpha A\) is invertible, then
+	      \[
+		      r^{*} = \beta(1 - \alpha A)^{-1} \vec{1}.
+	      \]
+	      Noting that
+	      \[
+		      \det(\lambda I - A) = 0 \iff \det(I - \lambda A) = 0,
+	      \]
+	      which implies \(\alpha\) should not be the inverse of an eigenvalue of \(A\). Also, we also need that \(r^*\) to be positive.
+
+	      \begin{figure}[H]
+		      \centering
+		      \incfig{katz-centrality}
+		      \caption{Katz Centrality}
+		      \label{fig:katz-centrality}
+	      \end{figure}
+
+	      Then for all \(1/\alpha > \rho(A)\), \(\alpha\) can't be the inverse of any eigenvalues of \(A\).
+	      \[
+		      \implies \alpha\rho(A)<1 \iff \rho(\alpha A)<1
+	      \]
+	      where we see that \(\alpha A\) is non-negative with spectral radius \(<1\).
+
+	      Now, if \(\alpha A\) is non-negative with spectral radius strictly less than one, then we have
+	      \[
+		      (I - \alpha A)^{-1} = I + (\alpha A) + (\alpha A)^2 + \ldots
+	      \]
+	      just like the geometry series of \(\frac{1}{1-k}\) for \(\left\vert k \right\vert <1 \).
+
+	      Then, we will have
+	      \[
+		      r^* = \beta\left(\sum\limits_{i=0}^{\infty} (\alpha A)^i\right)\vec{1}.
+	      \]
+
+	      \begin{remark}
+		      Since
+		      \[
+			      \rho(A) \leq \text{ the maximum of row sum of }A = \text{ the highest out-degree},
+		      \]
+		      we see that
+		      \[
+			      \underline{\alpha \times \text{the highest out-degree}<1}
+		      \]
+		      is a sufficient condition for this to hold.
+	      \end{remark}
+
+	      \begin{remark}
+		      Katz centrality is commonly used.
+	      \end{remark}
+\end{itemize}
+\end{problem}
+
+
+
+\section{Scaled PageRank via Markov Chain}
+\begin{problem}
+What's the motivation?
+\end{problem}
+
+\begin{answer}
+	\(\widetilde{N}(s)\) is formed in a way such that
+	\[
+		\widetilde{r}(k) = \widetilde{N}^{T}(s)\widetilde{r}(k - 1)
+	\]
+	with \(\widetilde{r}(0) = \frac{1}{V}\vec{1}\), where \(\widetilde{r}(k)\) is the vector form of the scaled page rank.
+
+	Further,
+	\[
+		\widetilde{r}(k) = \left(\widetilde{N}^{T}(s)\right)^k r(0).
+	\]
+
+	This is so-called \emph{Power iteration} or \emph{Power Method}. This provides a uniform decrease in the relative error of the entries.
+
+	Now, let \(v\) be the left eigenvalues, then we have
+	\[
+		\max_{i\in \mathcal{V}}\left\vert (r(k))_i - v_i\right\vert \leq c_0 s^k
+	\]
+	where \(s\) is the scaled PageRank factor. Then, by using this, if we set the error tolerance as \(\epsilon\)(RHS \(\leq \epsilon\)), we have
+	\[
+		\#\text{iteration} = \frac{\log(\epsilon)}{\log(s)}\times \mathrm{nnz}(N),
+	\]
+	where \(\mathrm{nnz}(N)\) is the number of non-zero elements in \(N\).
+	\begin{remark}
+		A sparse graph like Internet will typically have
+		\[
+			\mathrm{nnz}(N)\sim\Theta(n^2),
+		\]
+		where \(n\) is the number of the nodes.
+	\end{remark}
+\end{answer}
+
+
+\subsection{Probability}
+We first look at some definition.
+\begin{definition}
+	We let
+	\begin{itemize}
+		\item \(\Sigma\) being our sample space.
+		\item \(\mathcal{F}\) being the \(\sigma-\)algebra(field). This is essentially just a collection of events subsets of the sample space.
+		\item \(\mathbb{\MakeUppercase{P}}\) is the probability.
+	\end{itemize}
+\end{definition}
+
+\begin{eg}
+	Skip\ldots Enough Ve401\ldots
+\end{eg}
+
+\subsubsection{Properties and Notions}
+\begin{enumerate}
+	\item Mutually disjoint sets. Let \(A\) and \(B\in\mathcal{F}\) and \(A\cap B = \varnothing\). Then we have
+	      \[
+		      \probability{A\cup B} = \probability{A} +\probability{B}.
+	      \]
+	      This can be easily generalized to any finite collection of mutually disjoint subsets
+	      \[
+		      A_1, A_2, \ldots , A_n
+	      \]
+	      such that
+	      \[
+		      A_i \cup A_j = \begin{dcases}
+			      A_i,         & \text{ if }i = j    \\
+			      \varnothing, & \text{ if }i\neq j.
+		      \end{dcases}
+	      \]
+	      We then have \[
+		      \probability{\bigcup\limits_{i = 1}^n A_{i}} = \sum\limits_{i=1}^{n} \probability{A_{i}}.
+	      \]
+	      \begin{remark}
+		      Axioms of probability says that this extends to countably infinity collections. Namely, consider mutually disjoint sets
+		      \[
+			      A_1, A_2, \ldots
+		      \]
+
+		      Then
+		      \[
+			      \probability{\bigcup\limits_{i=1}^{\infty} A_{i}} = \sum\limits_{i=1}^{\infty} \probability{A_{i}} = \lim_{n \to \infty} \sum\limits_{i=1}^{\infty} \probability{A_{i}}.
+		      \]
+	      \end{remark}
+	\item Let \(\Omega\) be the sample space, then we have
+	      \[
+		      \probability{\Omega} = 1.
+	      \]
+	      This implies
+	      \[
+		      \probability{\varnothing } = 0.
+	      \]
+
+	      Further, if \(A\in\mathcal{F}\), then \(A^{c}\in\mathcal{F}\) and \(A\cap A^{c}= \varnothing \). We then see
+	      \[
+		      \probability{\Omega} = 1 = \probability{A\cup A^{c}} = \probability{A} + \probability{A^{c}} \implies \probability{A^{c}} = 1 - \probability{A}.
+	      \]
+
+	      Notice that \(\varnothing  = \Omega^{c}\).
+	\item Mutually independent sets. We say that \(A\), \(B\) are independent if
+	      \[
+		      \probability{A\cap B} = \probability{A}\probability{B}.
+	      \]
+	      Also, we have similar definition for countably infinite collections of sets. We call a countably infinite collection mutually independent if \emph{any finite sub-collection}
+	      is independent. Namely, for any index set \(K\subsetneq \mathbb{\MakeUppercase{N}}\),
+	      \[
+		      \probability{\bigcap\limits_{k\in K} A_k } = \prod_{k\in K} \probability{A_k}.
+	      \]
+\end{enumerate}
+
+\subsubsection{Random Variable}
+A random variable is essentially just a mappings(functions) from the sample space to real number. Typically, we let
+\[
+	X\colon \Omega\to \mathbb{\MakeUppercase{R}} \text{ with measurability}.
+\]
+And we denote the Borel \(\sigma-\)algebra as \(\mathcal{B}(\mathbb{\MakeUppercase{R}})\). In particular, we have
+\[
+	(-\infty , x] \in \mathcal{B}(\mathbb{\MakeUppercase{R}}),
+\]
+or more generally,
+\[
+	\left\{\omega\colon X(\omega)\leq x\right\}\in\mathcal{F}\quad \forall x\in(-\infty , +\infty ).
+\]
+
+Above allows us to define the cumulative density function\((\mathrm{CDF})\) of \(x\). In particular,
+\[
+	\mathbb{\MakeUppercase{P}}_X\left((-\infty , x)\right) = \probability{\underbrace{\left\{\omega\colon X(\omega)\leq \right\}}_{\mathcal{F}}}  .
+\]
+
+Same as probability, we can define \textbf{mutual independence} of a collection of random variables.
+\begin{definition}
+	Let \(X\) and \(Y\) being two random variables. We say \(X, Y\) are independent if
+	\[
+		\probability{\left\{x\in A\right\}\cap \left\{y\in B\right\}} = \probability{\left\{x\in A\right\}}\probability{\left\{y\in B\right\}}\quad \forall A, B \text{ in }\mathcal{B}(\mathbb{\MakeUppercase{R}}).
+	\]
+\end{definition}
+\begin{remark}
+	Notice that we are abusing the notation here. In the definition, \(x\) is sampled from \(X\) and \(y\) is sampled from \(Y\) without explicitly mentioning.
+	In reality, we have
+	\[
+		\left\{x\in A\right\}\cup \left\{y\in B\right\} = \left\{\omega\in \Omega\colon X(\omega)\in A\land Y(\omega)\in B\right\},
+	\]
+	we see that we need
+	\[
+		\left\{\omega\in \Omega\colon X(\omega)\in A\right\}\in\mathcal{F} \text{ and }\left\{\omega\in \Omega\colon Y(\omega)\in B\right\}\in\mathcal{F}.
+	\]
+
+	Another important property is that \(\mathcal{F}\) is closed under (countably many) intersections.
+\end{remark}
+
+We can also view this from the probability density function \(f(x)\). We have
+\[
+	\expectation{f(x)} \coloneqq \begin{dcases}
+		\sum\limits_{i=1}^{n} f(x_i)\probability{x = x_i} \\
+		\int_{-\infty }^{\infty }f(x)\,d\underbrace{F_x(x)}_{\mathrm{CDF}}
+	\end{dcases}
+\]
+where \(f_x(x)\) is probability density function.
+
+The in this case, we say \(X\) and \(Y\) are independent if for any \(f\) and \(g\),
+\[
+	\expectation{f(x)g(y)} = \expectation{f(x)}\expectation{g(y)}.
+\]
+\begin{eg}
+	Let \(f(x) = x^2\) and \(g(y) = y^3\). Then
+	\[
+		\expectation{x^2 y^3} = \expectation{x^2} \expectation{y^3}.
+	\]
+\end{eg}
+
+Again, we have similar definition for countably infinite collection of random variables being independent. Let random variables being
+\[
+	X_1, X_2, \ldots
+\]
+associated with the probability density function
+\[
+	f_1, f_2, \ldots
+\]
+
+Then, we say this collection of random variables is independent if for any finite sub-collection is independent. Namely, for any index set \(K\subsetneq\mathbb{\MakeUppercase{N}}\),
+\[
+	\expectation{\prod\limits_{k\in K} f_k(x_k)} = \prod\limits_{k\in K} \expectation{f_k(x_k)}.
+\]
+
+
+\subsection{Stochastic Process(Random Process)}
+This is essentially a collection of random variable induced by a discrete (time) index
+\[
+	X_1, X_2, X_3, \ldots
+\]
+or
+\[
+	\{X_i\}_{i = 1}^{\infty }.
+\]
+
+\begin{intuition}
+	A stochastic process is essentially just a collection of (Mutually) \underline{independent and identical}(i.i.d) distinct random variables.
+\end{intuition}
+

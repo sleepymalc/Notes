@@ -1,0 +1,190 @@
+\lecture{11}{6 Oct. 08:00}{Duality}
+\begin{prev}
+	Complementary: we have
+	\[
+		\begin{alignedat}{5}
+			\min~&c^{T}x\qquad\qquad &&\max ~ &&y^{T}b\\
+			&Ax = b && &&y^{T}A\leq c^{T}\\
+			(P)\quad&x\geq  0 &&(D)\quad&&
+		\end{alignedat}.
+	\]
+	Then the complementary means that
+	\[
+		\begin{split}
+			&(\underbrace{c_{j} - \hat{y}^{T} A_{\cdot j}}_{\geq  0})\underbrace{\hat{x}_j}_{\geq 0} = 0 \text{ for }j = 1\ldots n\\
+			&\hat{y}_i(\underbrace{A_{i\cdot}\hat{x} - b_{i}}_{=0}) = 0\text{ for }i = 1\ldots m.
+		\end{split}
+	\]
+\end{prev}
+
+\begin{prev}
+	The production problem: The primal:
+	\begin{align*}
+		\max~ & c^Tx          \\
+		      & Ax \leq b     \\
+		      & x\geq \vec{0}
+	\end{align*}
+	\begin{itemize}
+		\item \(n\) products activities
+		\item \(c_{j}=\) per-unit revenue for activity \(j = 1\ldots n\)
+		\item \(b_{i}=\) resource endowment for resource \(i(i = 1\ldots m)\)
+		\item \(a_{ij}=\) amount of resource \(i\) consumed by activity \(j\)
+	\end{itemize}
+	\begin{align*}
+		\min~ & y^{T}b               \\
+		      & y^{T} A\geq  \vec{c} \\
+		      & y\geq \vec{0}
+	\end{align*}
+	where \[
+		y^{T}A_{\cdot j}\geq c_{j}(\sum\limits_{i=1}^{m} y_{i}a_{ij}) \geq c_{j}.
+	\]
+\end{prev}
+
+\begin{note}
+	We have
+	\[
+		\begin{array}{rl|ll}
+
+			                                & \min          & \max          &                                \\
+			\cline{2-3}
+			\ldelim\{{3}{20mm}[constraints] & \geq          & \geq 0        & \rdelim\}{3}{3mm}[variables]   \\
+			                                & \leq          & \leq 0        &                                \\
+			                                & =             & \mbox{unres.} &                                \\
+			\cline{2-3}
+			\ldelim\{{3}{17mm}[variables]   & \geq 0        & \leq          & \rdelim\}{3}{3mm}[constraints] \\
+			                                & \leq 0        & \geq          &                                \\
+			                                & \mbox{unres.} & =             &                                \\
+		\end{array}
+	\]
+	for a general rule to find a primal's dual.
+\end{note}
+
+Come back to complementary.
+\[
+	\begin{split}
+		&\hat{y}^{T} A_{\cdot j} - c_{j}\hat{x}_j = 0\text{ for }j = 1\ldots n\\
+		&\hat{y}_i(b_{i} - A_{i\cdot }x) = 0\text{ for }i = 1\ldots m\\
+	\end{split}
+\]
+
+\begin{note}
+	For feasible solutions of \(P\) and \(D\), at most one of \(\hat{y}A_{\cdot j} - c_{j}\) and \(\hat{x}_j\) is positive for \(j = 1\ldots n\);
+	while at most one of \(b_{i} - A_{\cdot j}\hat{x}\) and \(\hat{y}_j\) is positive for \(i = 1\ldots m\);
+\end{note}
+
+\begin{problem}
+We are looking for a way to find out the upper bound of \(c^{T}x\) from the dual.
+\end{problem}
+Since
+\[
+	c^{T}x \underset{?}{\leq} \underbrace{y^{T} A }_{\geq c^{T}}\underbrace{\vphantom{y^{T}A}x}_{\geq \vec{0}} \leq \underbrace{y^{T}}_{\geq  \vec{0}}b\iff \sum\limits_{i=1}^{m} y_{i}(\sum\limits_{j=1}^{n} a_{ij}x_{j})\leq \sum\limits_{i=1}^{m} y_{i}b_{i}.
+\]
+\begin{observe}
+	We want
+	\[
+		c^{T}\leq y^{T}A\implies c^{T}x\leq y^{T} Ax
+	\]
+\end{observe}
+
+Now, return to the standard form problem, we have
+\[
+	\begin{alignedat}{5}
+		\min~&c^{T}x\qquad\qquad &&\max ~ &&y^{T}b\\
+		&Ax = b && &&y^{T}A\leq c^{T}\\
+		(P)\quad&x\geq  0 &&(D)\quad&&
+	\end{alignedat}
+\]
+with \(y\) unrestricted.
+
+Then we have
+\[
+	c^{T}x\underset{?}{\geq} \underbrace{y^{T}A}_{\leq c^{T}}\underbrace{\vphantom{y^{T}A}x}_{\geq 0} = y^{T} b
+\]
+since \[
+	y^{T}Ax\geq c^{T}x.
+\]
+
+\begin{eg}
+	Consider the following linear programming problem:
+	\begin{align*}
+		\max~ & c^{T}x+d^{T}z                  \\
+		      & Ax\geq b                       \\
+		      & Bx - Fz = g                    \\
+		      & x\leq 0, z\text{ unrestricted}
+	\end{align*}
+	Then the dual is(with dual variables \(y, w\))
+	\[
+		\begin{alignedat}{3}
+			\min~ & y^{T}b   &&+w^{T}g            \\
+			& y^{T}A  &&+w^{T}B  \leq c^{T} \\
+			& &&-w^{T}F = d^{T}    \\
+			& y\leq &&0, w \text{ unrestricted},
+		\end{alignedat}
+	\]
+	where we just look up the table for finding the dual. Or, we can also find the dual from
+	\[
+		\begin{split}
+			&y^{T} A + w^{T} B\leq c^{T}\\
+			&(y^{T} A+w^{T} B)x\geq c^{T} x
+		\end{split},
+	\]
+	hence
+	\[
+		\begin{split}
+			&\overbrace{y^{T}}^{\leq 0}(Ax\geq b)\\
+			+\ &w^{T}(Bx - Fz = g)\\
+			\cline{1-2}
+			c^{T}x + d^{T}z\overset{\text{want}}{\leq}&\underbrace{y^{T}Ax + w^{T}Bx - w^{T} Fz}_{\underbrace{(y^{T} A + w^{T} B)}_{\leq c^{T}}\underbrace{\vphantom{y^{T}A}x}_{\leq 0} \underbrace{- (w^{T} F)z}_{=d^{T}}} \overset{\text{want}}{\leq} y^{T}b+w^{T}g
+		\end{split}
+	\]
+\end{eg}
+\begin{remark}\todo{Rethink about it}
+	Think about what if all are equal sign?(both in constraints and variables, namely unrestricted)
+\end{remark}
+
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsection{Geometrically Understanding of Duality}
+%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+\subsubsection{Farkas' Lemma}
+\begin{lemma}
+	\label{Farkas Lemma}
+	Farkas' Lemma: Let (I) and (II) being
+	\[
+		\begin{alignedat}{3}
+			& (I) \qquad&& Ax = b       \\
+			&      && x\geq 0      \\
+			& (II) \qquad&& y^{T}b > 0 \\
+			&      && y^{T}A\leq 0
+		\end{alignedat}
+	\]
+	for any data \(A\) and \(b\), exactly one of (I) or (II) has a solution.
+\end{lemma}
+\begin{note}
+	Recall that the \emph{LP Duality}
+	\[
+		\begin{alignedat}{5}
+			\min~&c^{T}x\qquad\qquad&&\max ~&&y^{T}b\\
+			&Ax = b 				&&		&&y^{T}A\leq c^{T}\\
+			(P)\quad	&x\geq  0 	&&(D)\quad&&
+		\end{alignedat}.
+	\]
+\end{note}
+
+\begin{figure}[H]
+	\centering
+	\incfig{Farkas-lemma}
+	\caption{Farkas Lemma - Geometrically point of view with \(\mathbb{\MakeUppercase{R}}^m, m = 2\) }
+	\label{fig:Farkas-lemma}
+\end{figure}
+
+\begin{intuition}
+	We outline the idea about the proof.
+	\begin{enumerate}
+		\item Step 1: (I) and (II) can't both have solutions for the same \(A, b\).
+		      Suppose \(\hat{x}\) solves (I) and \(\hat{y}\) solves (II). Then we have
+		      \[
+			      0\geq  \underbrace{\hat{y}^{T} A}_{\leq \vec{0}} \underbrace{\vphantom{\hat{y}^{T}A} \hat{x}}_{\geq \vec{0}} = \hat{y}^{T} b\ \contd
+		      \]
+		\item Step 2: Show that if (I) has no solution, then (II) has a solution.
+	\end{enumerate}
+\end{intuition}

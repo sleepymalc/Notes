@@ -1,0 +1,198 @@
+\lecture{18}{8 Nov. 08:00}{Lagrangian Relaxation}
+\begin{prev}
+	The Simplex Algorithm.
+	\begin{enumerate}
+		\item[1.] Initialization(Phase I). Find an initial basic feasible partition \(\beta, \eta\)
+		\item[2.] Is there a nonbasic variable with negative reduced cost?
+			\[
+				\overline{c}_j \coloneqq c_{j} - \overline{y}^{T}A_{\eta_{j}}<0.
+			\]
+			If not, then we have an optimal solution.
+		\item[3.] Find the leaving variable.
+			\[
+				i^{*} \coloneqq \arg\max_{\overline{a}_{i, \eta_{j}}>0} {\left\{\frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}}\right\}}.
+			\]
+			If \(i^{*}\) is undefined, then problem is unbounded.
+		\item[4.] Swap \(\beta_{i}\) and \(\eta_{j}\) and \textbf{GOTO 2}.
+	\end{enumerate}
+\end{prev}
+
+\begin{prev}
+	The Decomposition Algorithm. We change the step 0 and 2 of the original Simplex Algorithm into the following.
+	\begin{enumerate}
+		\item[0.] Reformulate \(Q\) as \(M\) and apply The Simplex Algorithm to \(M\), where
+			\begin{align*}
+				\min~    & c^Tx      \\
+				         & Ex \geq h \\
+				         & Ax = b    \\
+				(Q)\quad & x\geq 0
+			\end{align*}
+			and
+			\begin{align*}
+				\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{T} \hat{z}^k  \right)\mu_k \\
+				         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h \\
+				         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                         \\
+				(M)\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
+			\end{align*}
+		\item[2.] Solve the sub-problem
+			\begin{align*}
+				-\overline{\sigma}+\min~ & \overline{c} - \overline{y}^{T}E \\
+				                         & Ax = b                           \\
+				                         & x\geq 0
+			\end{align*}
+			\begin{itemize}
+				\item Optimal \& Obj.val \(<0 \implies\) a \(\lambda\) variable can enter the basis.
+				\item Optimal \& Obj.val \(>0 \implies\) have an optimal for \(M\).
+				\item Unbounded \(\implies\) a \(\mu_k\) variable can enter the basis.
+			\end{itemize}
+	\end{enumerate}
+
+	\begin{note}
+		Compare 2. here and 2. in the Simplex Algorithm.
+	\end{note}
+	\begin{remark}
+		For the real implementation in step 2., we
+		\begin{enumerate}
+			\item Keep all generated columns.
+			\item First check reduced costs of columns already generated. \textbf{Repeat}. Only solve for sub-problem when needed.
+		\end{enumerate}
+
+		\begin{note}
+			We see that we are solving \(M\) over the known columns. So instead, we can pass \(M\) to a solver (\texttt{Gurobi}). And since
+			it will give us the dual variable \(\overline{y}\) and \(\overline{\sigma}\), we can continue to solve the sub-problem without problems.
+			Furthermore, we solve the sub-problem and append new column to known ones and go solve the sub-problem again. In short, let the solver
+			keep track of the basis.
+		\end{note}
+	\end{remark}
+\end{prev}
+
+\subsection{Lagrangian Relaxation}
+The motivation is to get a good lower bound of optimal objective value for
+\begin{align*}
+	z\coloneqq \min~ & c^{T}x    \\
+	                 & Ex \geq h \\
+	                 & Ax = b    \\
+	(Q)\quad         & x\geq 0
+\end{align*}
+
+Since the problem is large, hence we want to exit the algorithm whenever we get a \emph{good enough} solution such that it's not far away from the objective
+value. But the problem is, when should we stop? Do we stop at plateaus? What if there is a second drop in terms of objective value?
+
+\begin{figure}[H]
+	\centering
+	\incfig{plateau}
+	\caption{Early Arrival, can we?}
+	\label{fig:plateau}
+\end{figure}
+
+\subsubsection{Laguargian Bounds}
+We choose \(\hat{y}\geq \vec{0}\), such that
+\begin{align*}
+	v(\hat{y})\coloneqq \hat{y}^{T}h + \min~ & (c^{T} - \hat{y}^{T}E)x \\
+	                                         & Ax = b                  \\
+	(L_{\hat{y}})\quad                       & x\geq 0
+\end{align*}
+where \(L\) stands for Lagrange. We first see a simple result.
+\begin{lemma}
+	For any \(\hat{y}\geq \vec{0}\), \(v(\hat{y})\leq z\).
+\end{lemma}
+\begin{proof}
+	Let \(x^{*}\) be an optimal solution for \(Q\). Then \(x^{*}\) is feasible for \(L_{\hat{y}}\). Then we see
+	\[
+		v(\hat{y}) \leq \hat{y}^{T}h + (c^{T} - \hat{y}^{T} E )x^{*} = \underbrace{\vphantom{\hat{y}^{T}}c^{T}x^{*}}_{z} + \underbrace{\hat{y}^{T}}_{\geq \vec{0}}(\underbrace{\vphantom{\hat{y}^{T}}h - Ex^{*}}_{\leq \vec{0}}) \leq z
+	\]
+\end{proof}
+
+Denote the dual variables of \(Q\) as \(y\) and \(\pi\). The dual of \(Q\) is
+\begin{align*}
+	\max~ & y^{T}h + \pi^{T} b          \\
+	      & y^{T}E + \pi^{T}A\leq c^{T} \\
+	      & y\geq 0
+\end{align*}
+and the dual of \(L_{\hat{y}}\) is
+\begin{align*}
+	\hat{y}^{T}h + \max~ & \pi^{T}b                          \\
+	                     & \pi^{T}A\leq c^{T} - \hat{y}^{T}E \\
+\end{align*}
+\begin{note}
+	\(\hat{y}\) is not the variable.
+\end{note}
+
+\begin{theorem}
+	\label{lagrangian dual}
+	Suppose \(x^{*}\) is optimal for \(Q\). Further, suppose \(\hat{y}\) and \(\hat{\pi}\) are optimal for the dual of \(Q\).
+	Then
+	\begin{itemize}
+		\item \(x^{*}\) is optimal for \(L_{\hat{y}}\)
+		\item \(\hat{\pi}\) is optimal for the dual of \(L_{\hat{y}}\)
+		\item \(\hat{y}\) is a maximizer of \(v(y)\) over \(y>\vec{0}\)
+		\item The maximum value of \(v(y)\) over \(y\geq \vec{0}\) is \(z\).
+	\end{itemize}
+\end{theorem}
+\begin{note}
+	In above, we want to find
+	\begin{align*}
+		z = \max~ & v(y)     \\
+		          & y\geq 0.
+	\end{align*}
+\end{note}
+
+\begin{proof}
+	\(x^{*}\) is feasible for \(L_{\hat{y}}\) and \(\hat{y}\) and \(\hat{\pi}\) is feasible for the dual of \(Q\). Then
+	\[
+		\hat{y}^{T}E + \hat{\pi}^{T}A \leq c^{T}
+	\]
+	with \(\hat{y}^{T}\geq \vec{0}\). But we see that this is equivalent to
+	\[
+		\hat{\pi}^{T}A\leq c^{T} - \hat{y}^{T}E,
+	\]
+	which implies \(\hat{\pi}\) is feasible for the dual of \(L_{\hat{y}}\).
+
+	From Strong Duality Theorem(\autoref{strong duality theorem}) for \(Q\),
+	\[
+		c^{T}x^{*} = \hat{y}^{T}h + \hat{\pi}^{T}b.
+	\]
+	Then, by using \(E \hat{x}^{*} \geq h\), we see that
+	\[
+		(c^{T} - \hat{y}^{T}E)x^{*} \leq \hat{\pi}^{T}b.
+	\]
+	Moreover, recall \(\hat{\pi}\) is feasible for the dual of \(L_{\hat{y}}\) with \(\hat{\pi}^{T} A \leq c^{T} - \hat{y}^{T}E\), then since \(x^{*}>0\), we have
+	\[
+		\hat{\pi}^{T} \underbrace{Ax^{*}}_{b} \leq (c^{T} - \hat{y}^{T}E)x^{*} \iff \hat{\pi}^{T} b \leq (c^{T} - \hat{y}^{T}E)x^{*}.
+	\]
+	We conclude
+	\[
+		\hat{\pi}^{T} b = (c^{T} - \hat{y}^{T}E)x^{*}.
+	\]
+
+	Now, we claim that \(x^{*}\) is optimal for \(L_{\hat{y}}\) and \(\hat{\pi}\) is optimal for the dual of \(L_{\hat{y}}\).
+	Indeed, recall that the objective function of \(L_{\hat{y}}\) is
+	\[
+		\hat{y}^{T}h + \min~  (c^{T} - \hat{y}^{T}E)x,
+	\]
+	with \((c^{T} - \hat{y}^{T}E)x^{*} \geq \hat{\pi}^{T}b\), we see that the objective value of \(x^{*}\) in \(L_{\hat{y}}\)
+	is equal to \(\hat{y}h+\hat{\pi}^{T}b \), which implies that \(x^{*}\) is optimal in \(L_{\hat{y}}\) from Weak Duality Theorem(\autoref{Weak Duality Theorem}).
+
+	Lastly, since \(x^{*}\) is optimal for \(L_{\hat{y}}\),
+	\[
+		z\geq v(\hat{y})= \hat{y}^{T}h + (c^{T} - \hat{y}^{T}E)x^{*}= \hat{y}^{T}h + \hat{\pi}^{T}b = z
+	\]
+	by optimally for \(\hat{y}\) and \(\hat{\pi}\), hence we see that \(\hat{y}\) solves
+	\begin{align*}
+		\max~ & v(y)    \\
+		      & y\geq 0
+	\end{align*}
+	and \(v(\hat{y}) = z\).
+\end{proof}
+
+\begin{theorem}
+	\label{converse-lagrangian dual}
+	Suppose that \(\hat{y}\) is a maximizer of \(v(y)\) over \(y\geq \vec{0}\). Suppose \(\hat{\pi}\) solves the dual of \(L_{\hat{y}}\).
+	Then \(\hat{\pi}\) and \(\hat{y}\) solve the dual of \(Q\) and the optimal value of \(Q\) is \(v(\hat{y})\).
+\end{theorem}
+
+\begin{figure}[H]
+	\centering
+	\incfig{Lagrangian-maximizer}
+	\label{fig:lagrangian-maximizer}
+\end{figure}

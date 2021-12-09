@@ -1,0 +1,217 @@
+\lecture{6}{20 Sep. 08:00}{Feasible Direction and Ray}
+\subsection{Feasible Directions}
+We'll talk about an important concept, but before this, we first play around with the standard form problem a little. Consider
+\begin{align*}
+	\min~ & c^Tx     \\
+	      & Ax = b   \\
+	      & x\geq 0.
+\end{align*}
+It's obvious that it's equivalent to
+\begin{align*}
+	\min~ & c^{T}_{\beta}x_{\beta} + c^{T}_{\eta}x_{\eta} \\
+	      & A_{\beta}x_{\beta} + A_{\eta}x_{\eta} = b     \\
+	      & x_{\beta}\geq 0, x_{\eta}\geq 0
+\end{align*}
+Further, we have
+\begin{align*}
+	\min~ & c^{T}_{\beta}(A^{-1}_{\beta}b - A^{-1}_{\beta}A_{\eta}x_{\eta} ) + c_{\eta}^{T}x_{\eta} \\
+	      & x_{\beta} + A^{-1}_{\beta}A_{\eta}x_{\eta} = A^{-1}_{\beta}b                            \\
+	      & x_{\beta}\geq 0, x_{\eta}\geq 0
+\end{align*}
+since from the constraint, we have \(x_{\beta} = A^{-1}_{\beta}b - A^{-1}_{\beta}A_{\eta}x_{\eta}\). Finally, we see that the objective function now
+only depends on \(x_{\eta}\), hance
+\begin{align*}
+	c^{T}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{T} - c_{\beta}^{T}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
+	                                     & A^{-1}_{\beta}A_{\eta}x_{\eta} \leq A^{-1}_{\beta}b          \\
+	                                     & x_{\beta}\geq 0, x_{\eta}\geq 0.
+\end{align*}
+
+\begin{note}
+	\(c_{\eta}^{T} - c_{\beta}^{T}A^{-1}_{\beta}A_{\eta}\) is what we called \emph{reduced costs}. We'll see that we want this to be zero.
+\end{note}
+
+Now, with this intuition, we have the following definition.
+\begin{definition}
+	Suppose \(\hat{x}\in \mathcal{S}\), where \(\mathcal{S}\) is a convex set. \(\hat{z}\) is a \emph{feasible direction} relative to \(\hat{x}\) if
+	\[
+		\exists \epsilon>0,\quad \hat{x}+\epsilon \hat{z} \in \mathcal{S}.
+	\]
+\end{definition}
+
+\begin{figure}[H]
+	\centering
+	\incfig{feasible-direction}
+	\caption{Feaisble Direction}
+	\label{fig:feasible-direction}
+\end{figure}
+
+We see that in order to let \(\hat{z}\) to be a feasible direction, we need to have
+\[
+	A(\hat{x} + \epsilon \hat{z}) = \underbrace{A \hat{x}}_{=b} + \epsilon A \hat{z} = b \iff A \hat{z} = 0
+\]
+
+\begin{remark}
+	For \(P\), we must have \(A \hat{z} = 0\) if \(\hat{z}\) is a feasible direction.
+\end{remark}
+
+\hr
+Let the basic partition \(\beta, \eta\) being
+\[
+	\beta = (\beta_1, \ldots , \beta_m), \qquad \eta = (\eta_1, \underset{\substack{\uparrow \\ \eta_j}}{\ldots} , \eta_{n-m}),
+\]
+where we choose \(j\) from \(1\leq j \leq n-m\), which means we choose an \(\eta_j\) from \(\eta\). Then, we see that there is a \emph{basic direction}
+\(\overline{z}\) associated with this particular basic and this \(j\) such that
+\[
+	\begin{split}
+		\overline{z}_{\eta_j} = 1 \implies &\overline{z}_{\eta} \coloneqq e_j = \begin{pmatrix}
+			0      \\
+			\vdots \\
+			1      \\
+			\vdots \\
+			0      \\
+		\end{pmatrix}\leftarrow j\\
+		&\overline{z}_{\beta} \coloneqq -A^{-1}_{\beta}A_{\eta_j}.
+	\end{split}
+\]
+
+\begin{note}
+	This needs
+	\[
+		A \overline{z} = 0 \implies A_{\beta}\overline{z}_{\beta} + A_{\eta}\overline{z}_{\eta} = 0 \implies A_{\beta}\overline{z}_{\beta}+A_{\eta}e_{j} = A_{\beta}\overline{z}_{\beta}+A_{\eta_j} = 0.
+	\]
+\end{note}
+
+We check for feasibility:
+\begin{enumerate}
+	\item \(A \overline{z} = 0\): \(A(\overline{x} + \epsilon \overline{z}) = b\surd\)
+	\item \(\overline{x} + \epsilon \overline{z}\):
+	      \[
+		      \begin{split}
+			      &\overline{x}_{\eta} + \epsilon \overline{z}_{\eta} = 0 + \epsilon e_j \geq  0\\
+			      &\overline{x}_{\beta}+\epsilon \overline{x}_{\beta} = \underbrace{A^{-1}_{\beta}b}_{\geq 0} - \underbrace{\vphantom{A^{-1}_{\beta}}\epsilon}_{>0} A^{-1}_{\beta}A_{\eta_j}\overset{?}{\geq}  0
+		      \end{split}
+	      \]
+\end{enumerate}
+
+Denote \(\overline{b} \coloneqq A^{-1}_{\beta} b,\ \overline{A}_{\eta_j} \coloneqq A^{-1}_{\beta}A_{\eta_j}\), then
+\[
+	\begin{split}
+		\overline{b} - \epsilon \overline{A}_{\eta_{j}}\geq 0 &\iff \overline{b}_i - \epsilon \overline{a}_{i \eta_{j}}\geq 0, \text{ for }i = 1, \ldots , m\\
+		&\iff \underbrace{\overline{b}_i}_{\geq 0} \geq \epsilon \overline{a}_{i \eta_{j}}, \text{ for }i - 1, \ldots , m
+	\end{split}
+\]
+We finally have
+\[
+	\epsilon \leq \frac{\overline{b}_i}{\overline{a}_{i \eta_j}},\qquad \underset{1\leq i\leq m}{\forall}\  \overline{a}_{i \eta_{j}}>0.
+\]
+Notice that if \(\overline{a}_{i \eta_{j}}\leq 0\), there is no restriction on \(\epsilon\) being \(\geq 0\). Hence, we have a main result:
+\(\overline{z}\) is a feasible direction from \(\overline{x}\) if
+\[
+	0< \min\{\frac{\overline{b}_i}{\overline{a}_{i, \eta_{j}}}\geq 0 \text{ for }i \text{ such that }\overline{a}_{i \eta_{j}}>0\}.
+\]
+
+\begin{note}
+	Notice that we can denote \(A\) by
+	\[
+		A = \begin{bmatrix}
+			A_{\eta} & A_{\beta} \\
+		\end{bmatrix}.
+	\]
+	Then since \(A_{\beta}\) is invertible, so
+	\[
+		A^{-1}_{\beta}\begin{bmatrix}
+			A_{\eta} & A_{\beta} \\
+		\end{bmatrix} = \begin{bmatrix}
+			A^{-1}_{\beta}A_{\eta} & I \\
+		\end{bmatrix}_{m\times n}.
+	\]
+
+	We now consider
+	\[
+		\begin{bmatrix}
+			I                       \\
+			-A^{-1}_{\beta}A_{\eta} \\
+		\end{bmatrix}.
+	\]
+	We then have
+	\[
+		\underbrace{
+			\begin{bmatrix}
+				I                       \\
+				-A^{-1}_{\beta}A_{\eta} \\
+			\end{bmatrix}}_{\dim(CS) = n-m}\underbrace{\vphantom{\begin{bmatrix}
+					\\ \\
+				\end{bmatrix}}\begin{bmatrix}
+				A^{-1}_{\beta}A_{\eta} & I \\
+			\end{bmatrix}}_{\dim(RS)=m} = 0.
+	\]
+	And since the dimension for the first matrix is \(n\times (m-n)\), we see that the columns of the first matrix form a \emph{basis} for the null space of \(\begin{bmatrix}
+		A_{\eta} & A_{\beta} \\
+	\end{bmatrix}\), namely \(A\). Furthermore, one can see that \(\overline{z}\) is the \(j^{th}\) columns of \(\begin{bmatrix}
+		I                       \\
+		-A^{-1}_{\beta}A_{\eta} \\
+	\end{bmatrix}\) for a choice of \(j\).
+\end{note}
+
+\subsection{Feasible Rays}
+\begin{definition}
+	\(\hat{z}\) is called a \emph{ray} of a convex set \(\mathcal{C}\) of \(\hat{x}\in \mathcal{C}\) if
+	\[
+		\forall \lambda>0\quad \hat{x} + \lambda \hat{z} \in \mathcal{C}.
+	\]
+\end{definition}
+
+\begin{figure}[H]
+	\centering
+	\incfig{ray}
+	\caption{Ray}
+	\label{fig:ray}
+\end{figure}
+
+Suppose \(\hat{x}\in\mathcal{C}\), where \(\mathcal{C}\) is the feasible region of
+\begin{align*}
+	 & Ax \geq  b \\
+	 & x\geq 0
+\end{align*},
+then we see that in order to let \(\lambda\) arbitrarily large, we need
+\[
+	A(\hat{x} + \lambda \hat{z}) = \underbrace{A \hat{x}}_{=b} + \lambda \underbrace{A \hat{z}}_{=0} = b\implies \hat{z} \in n.s.(A).
+\]
+
+\begin{problem}
+\[
+	\underbrace{\hat{x}}_{\geq 0} + \underbrace{\lambda}_{>0} \hat{z} \overset{?}{\geq} 0 \implies \hat{z} \geq 0.
+\]
+\end{problem}
+
+This means that starts from the idea of basic direction, \(\hat{z}\) is a \emph{ray} if
+\[
+	\hat{z} \geq 0 \iff A^{-1}_{\beta}A_{\eta_j} \leq 0.
+\]
+
+We have another concept about ray.
+\begin{definition}
+	\(\hat{z}\) is an \emph{extreme ray} of a convex set \(\mathcal{S}\) if we \textbf{cannot} write
+	\[
+		\hat{z} = z^1 + z^2 \text{ with }z^1 \neq \mu z^2,
+	\]
+	where \(z^1, z^2\) being rays of \(\mathcal{S}\) and \(\mu\neq 0\).
+\end{definition}
+\begin{figure}[H]
+	\centering
+	\incfig{extreme-ray}
+	\caption{Extreme Rays}
+	\label{fig:extreme-ray}
+\end{figure}
+
+\subsection{Summary}
+\[
+	\begin{alignedat}{4}
+		\text{Basic solution }\overline{x}=\begin{cases}
+			 & \overline{x}_{\beta}\coloneqq A^{-1}_{\beta}b\geq 0 \\
+			 & \overline{x}_{\eta}\coloneqq 0
+		\end{cases} &&\quad\iff\qquad&\text{Extreme points of the feasible region}\\
+		\text{\textbf{basic feasible direction}} && \quad\text{v.s.}\qquad&\text{\textbf{Geometry}}\\
+		\text{(Basic direction that are non-negative)}&& &\text{(Extreme Ray)}
+	\end{alignedat}
+\]

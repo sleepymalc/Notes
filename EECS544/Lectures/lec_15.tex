@@ -1,0 +1,123 @@
+\lecture{15}{27 Oct. 12:30}{Random Graph}
+\begin{prev}
+	Main idea is that to construct a Markov Chain on nodes of the graph. At none \(i\), the random walker toss a biased coin and
+	determine where to go.
+\end{prev}
+
+\subsubsection{\(4^{th}\) Estimator for \(\pi_V(s)\)}
+Although the \(3^{rd}\) estimator for \(\pi_V(s)\) is better than the other two, but it still has its flaws. The main thing is, it throws away so much
+data, which means it will converge slower. We introduce a final estimator, which make the full use of the data given.
+
+We first introduce Renewal Theorem.\footnote{\url{https://en.wikipedia.org/wiki/Renewal_theory}}
+\begin{theorem}
+	Renewal Theorem.
+	\[
+		\frac{\expectation{\# \text{ of visits to node \(k\) in this reset}} }{\underbrace{\expectation{\text{Duration of reset}}}_{= \frac{1}{1-s}}} = \pi_k(s).
+	\]
+
+	Noting that each reset duration is independent of the other \(T\) rest duration starting at uniformly chosen node. Then we have
+	\[
+		\hat{\pi}_k(s) = \frac{\frac{1}{T}\sum\limits_{i=1}^{T} N_t(k)}{1/1-s} = \frac{1-s}{T}\sum\limits_{t=1}^{T} N_t(k)
+	\]
+	where \(N_t(k)\) is the number of time we visited \(k\) in reset duration.
+\end{theorem}
+
+\begin{remark}
+	We see that
+	\begin{itemize}
+		\item This is also a non-biased estimator.
+		\item \(N_t(k)\) is i.i.d.
+		\item This estimator does not throw out those useful data, hence the estimator computed by this algorithm converges faster.
+	\end{itemize}
+\end{remark}
+
+\begin{figure}[H]
+	\centering
+	\incfig{Monte-Carlo-Estimator-4}
+	\caption{Forth Monte Carlo Estimator}
+	\label{fig:Monte-Carlo-Estimator-4}
+\end{figure}
+
+\section{Random Graph}
+We are interested in some functions depend on the number of nodes \(n\) in the graph such that
+\[
+	\lim_{n\to \infty }f(n),
+\]
+namely we are interested in so-called \emph{large graph property}.
+\subsection{Order Relationship between Functions}
+We first introduce some common notations for asymptomatic comparison.
+\begin{definition}
+	\(f(n)\) is said to be \(O(g(n))\) if there is a positive \(k\) such that
+	\[
+		f(n)\leq k\cdot g(n)
+	\]
+	for all large enough \(n\).
+\end{definition}
+
+\begin{definition}
+	\(f(n)\) is said to be \(\Omega(g(n))\) if there is a positive \(k\) such that
+	\[
+		f(n) \geq k\cdot g(n)
+	\]
+	for all large enough \(n\).
+\end{definition}
+
+\begin{definition}
+	\(f(n)\) is said to be \(\Theta(g(n))\) if there are positive \(k_1\leq k_2\) such that
+	\[
+		k_1\cdot g(n)\leq f(n) \leq k_2\cdot g(n)
+	\]
+	for all large enough \(n\).
+\end{definition}
+
+\begin{definition}
+	\(f(n)\) is said to be \(o(g(n))\) if for every positive \(\epsilon\), there exists a \(N\) large enough such that
+	\[
+		f(n) \geq \epsilon\cdot g(n)\ \forall n\geq N.
+	\]
+\end{definition}
+
+\begin{definition}
+	\(f(n)\) is said to be \(\omega(g(n))\) if for every positive \(\epsilon\), there exists a \(N\) large enough such that
+	\[
+		f(n) \leq \epsilon\cdot g(n)\ \forall n\geq N.
+	\]
+\end{definition}
+
+\begin{definition}
+	\(f(n)\) is said to be of the same order as \(g(n)\) asymptotically if
+	\[
+		\lim_{n\to \infty } \frac{f(n)}{g(n)} = 1.
+	\]
+	We can write \(f(n)\sim g(n)\) for short in this case.
+\end{definition}
+
+\begin{remark}
+	If \(f(n)\) or \(g(n)\) are not non-negative, we simply use \(\left\vert f(n) \right\vert \) and \(\left\vert g(n) \right\vert \)
+	and apply the definition.
+\end{remark}
+
+We consider the size of the largest connected component, and see how does this relation behave as \(n\to \infty\).
+\begin{eg}
+	We see some example for a function \(f(n)\) which represent the size of a graph, where \(n\) is the number of nodes in the graph.
+	\begin{itemize}
+		\item \(f(n) = \log n\): Islands with \(\frac{n}{\log(n)}\) of them. When \(n\to \infty \), \(\frac{n}{\log(n)}\to 0\).
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{random-graph-logn}
+			      \label{fig:random-graph-logn}
+		      \end{figure}
+		\item \(f(n) = n^c\) with \(c<1\): We see that \(\frac{n^c}{n}\to 0\) for \(c<1\) as \(n\to \infty \). Better than island but not that great.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{random-graph-n^c}
+			      \label{fig:random-graph-n^c}
+		      \end{figure}
+		\item \(f(n) = cn\): There is a giant component roughly \(c\) percent of nodes in the graph. We see that as \(n\to \infty \), \(\frac{cn}{n}\to c\).
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{random-graph-cn}
+			      \label{fig:random-graph-cn}
+		      \end{figure}
+	\end{itemize}
+\end{eg}

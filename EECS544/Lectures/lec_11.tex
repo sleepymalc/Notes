@@ -1,0 +1,190 @@
+\lecture{11}{6 Oct. 12:30}{Page Rank - Scaling}
+\section{Scaled Page Rank}
+\begin{prev}
+	Basic page Rank Algorithm: If the page rank converges, then we must have
+	\[
+		r^{*} = (N^{T})r^{*} \iff (r^{*})^{T} N = (r^{*})^{T},
+	\]
+	\(r^{*}\) is a left eigenvector of \(N\) for eigenvalue \(1\).
+\end{prev}
+\begin{remark}
+	row stochastic property \(\implies\) \(1\) is eigenvalue.
+\end{remark}
+
+\subsection{Irreducible}
+\par Now, we consider a very useful property of matrix, called \emph{irreducible}.
+\begin{prev}
+	\(A\) is a non-negative \(n\times n\) matrix. We say that \(A\) is irreducible if \(\forall i, j\),
+	\[
+		\exists k>0 \text{ such that }(A^k)_{ij} > 0.
+	\]
+\end{prev}
+\begin{note}
+	We can express the above as
+	\[
+		\underbrace{A_{im_1} A_{m_{1}m_2} \ldots A_{m_{k-1}j}}_{k\text{ terms}}>0.
+	\]
+\end{note}
+Define \(\widetilde{A}\) with entries in \(\{0, 1\}\) such that
+\[
+	\widetilde{A}_{ij} = \begin{dcases}
+		1 & , \text{ if }A_{ij}>0 \\
+		0 & , \text{ otherwise}.
+	\end{dcases}.
+\]
+\(\widetilde{A}\) is an adjacency matrix of same directed graph on \(n\) nodes.
+\[
+	A_{im_1} A_{m_1 m_2}\ldots A_{m_{k-1} j} > 0 \iff \widetilde{A}_{im_1} = \widetilde{A}_{m_1 m_2} = \ldots = \widetilde{A}_{m_{k-1}j} = 1.
+\]
+Then we see that the irreducibility of \(A \iff\) irreducibility of \(\widetilde{A}\iff\) \(\mathcal{G}\) corresponding to \(\widetilde{A}\) is strongly connected such that
+\(\forall  i, j\) we can find a path on \(\mathcal{G}\).
+\begin{remark}
+	This graph \(\mathcal{G}\) can be non-simple graph.
+\end{remark}
+
+\subsection{Periodicity}
+\begin{definition}
+	Given \(A\) and \(i\in\{1, \ldots , n\}\), find all \(m>0\) such that
+	\[
+		(A^m)_{ii}>0.
+	\]
+	And the greatest common divisor of them is called the \emph{period of} \(i\). If the period is \(1\) for node \(i\), then
+	\(i\) is said to be \emph{aperiodic}.
+\end{definition}
+
+\begin{remark}
+	From this definition, we have
+	\begin{itemize}
+		\item A sufficient condition for aperiodic is \(A_{ii} > 0 \implies \) period is \(1\) for \(i\).
+		\item And \(A\) is said to be aperiodic if the period of all nodes is \(1\).
+		\item If \(A\) is a positive matrix(all entries are positive), then we know that
+		      \[
+			      \begin{alignedat}{3}
+				      &\implies A_{ij}>0\ \forall i, j &&\implies \text{irreducible}\\
+				      &\implies A_{ii}>0\ \forall i &&\implies \text{aperiodic}
+			      \end{alignedat}
+		      \]
+		      Notice that this is only a simple sufficient condition for a matrix to be irreducible and aperiodic.
+	\end{itemize}
+\end{remark}
+
+\subsection{Perron-Frobenius Theorem}
+Come back to Perron-Frobenius Theorem:
+\begin{theorem}
+	\label{Perron-Frobenius Theorem}
+	Perron-Frobenius Theorem: Let \(A\) be an irreducible non-negative matrix, then the eigenvalue with the \emph{largest magnitude is positive}
+	and has \emph{multiplicity 1}. This eigenvalue is called the \textbf{spectral radius} or the \textbf{Perron-Frobenius eigenvalue},
+	denoted as \(\rho(A)\).
+	Both the right eigenvector(\(\vec{v}, A \vec{v} = \rho(A) \vec{v}\)) and the left eigenvector(\(\vec{w}, \vec{w}^{T}A = \rho(A) \vec{w}^{T}\))
+	can be taken to be positive with
+	\[
+		\vec{w}^{T} \vec{v} = 1.
+	\]
+	Furthermore, we have
+	\begin{enumerate}
+		\item The following holds:
+		      \[
+			      \lim_{m \to \infty} \frac{1}{m} \sum\limits_{k=0}^{m-1} \frac{A^k}{(\rho(A))^k} = \vec{v} \vec{w}^{T}_{(n\times n)}.
+		      \]
+		\item The following holds:
+		      \begin{itemize}
+			      \item Row sum bound:
+			            \[
+				            \min_i \sum\limits_{j} A_{ij} \leq \rho(A).\leq \max_i \sum\limits_{j} A_{ij}.
+			            \]
+			      \item Column sum bound:
+			            \[
+				            \min_j \sum\limits_{i} A_{ij} \leq \rho(A).\leq \max_j \sum\limits_{i} A_{ij}.
+			            \]
+		      \end{itemize}
+		\item If, in addition, \(A\) is also \emph{aperiodic}, then
+		      \[
+			      \lim_{m \to \infty} \frac{A^m}{(\rho(A))^m} = \vec{v} \vec{w}^{T}.
+		      \]
+		      This is a stronger statement!
+	\end{enumerate}
+\end{theorem}
+
+\begin{problem}
+We now see the problem for the basic page rank algorithm:
+\begin{enumerate}
+	\item \(N\) is non-negative and row stochastic \(\implies\) \(\rho(N) = 1\).
+	\item \(N \to \widetilde{A}\): Adjacency matrix of origin
+	\item Irreducibility is not a
+\end{enumerate}
+\end{problem}
+
+\subsection{Scaled Page Rank}
+Scaled Page Rank is a modification of Basic Page Rank that gives a matrix \(\widetilde{N}(s)\) that is always irreducible and aperiodic with
+\[
+	s\in \left( 0, 1 \right).
+\]
+\begin{enumerate}
+	\item INITIALIZATION: same as Basic Page Rank
+	\item SEND \& RECEIVE: same as Basic Page Rank
+	\item SCALE down all page ranks by \(s\)(multiply by \(s\)) and add \(\frac{1-s}{V}\) to the page ranks of all nodes.
+	\item REPEAT from step 2.
+\end{enumerate}
+
+\[
+	r_{i}^{new} = \left(\sum\limits_{j:A_{ji} = 1} \frac{u_{j}^{old}}{d_{j}^{old}}+\begin{dcases}
+		u_{i}^{old} & , \text{ if }d_{i}^{out} = 0, \\
+		0           & , \text{ otherwise}
+	\end{dcases}\right)+\frac{1-s}{V}
+\]
+Then we have
+\[
+	\begin{split}
+		r^{new} &= s(N^{T}r^{old})+\frac{1-s}{V}\vec{1}\\
+		&= s(N^{T}r^{old})+\frac{1-s}{V}\vec{1}\cdot 1\\
+		&= s(N^{T}u^{old}) + \frac{1-s}{V}\vec{1} \underbrace{(\vec{1}^{T}r^{odd})}_{\text{add to }1}\\
+		&= \underbrace{(sN + \frac{1-s}{V}\vec{1}\vec{1}^{T})^{T}}_{\widetilde{N}(s)} r^{old}
+	\end{split}
+\]
+Finally, we have the scaled page rank being
+\[
+	\begin{split}
+		&\implies r^{new} = (\widetilde{N}(s))^{T}r^{old}\\
+		&\implies r(k) = (\widetilde{N}(s)^{T})^k r(0)
+	\end{split}
+\]
+
+\begin{note}
+	\(\widetilde{N}(s)\):
+	\begin{itemize}
+		\item non-negative
+		\item row-stochastic
+		\item strictly positive with all entries at least \(\frac{1-s}{V}\)
+	\end{itemize}
+\end{note}
+\(\rho(\widetilde{N}(s)) = 1\) and irreducible and aperiodic! \(\implies (\widetilde{N}(s))^k \to \vec{v}\vec{w}^{T}\) where
+\(\vec{v}\) is the right eigenvector of \(\widetilde{N}(s)\) and \(\vec{w}\) is the left eigenvector of \(\widetilde{N}(s)\) with
+\(\vec{w}^{T} \vec{v} = 1\).
+
+And since \(\widetilde{N}(s)\) is row stochastic, we have \(\vec{v} = \vec{1}\), hence,
+\[
+	\vec{w}^{T}\vec{1} = 1
+\]
+which means the sum of all entries is \(1\) and \(\vec{2}\) has all positive entries.
+
+If \((\vec{v}, \vec{w})\) are right and left eigenvectors of \(\widetilde{N}(s) \iff (\vec{w}, \vec{v})\) are the right and left eigenvectors
+of \(\widetilde{N}^{T}(s)\).
+
+Scaled Page Rank converges to
+\[
+	r^{*} = (\widetilde{N}(s))^{T}r^{*}.
+\]
+
+We need the right eigenvector of \(\widetilde{N}^{T}(s) \iff \) same as left eigenvector of \(\widetilde{N}(s)\), which is \(\vec{w}(s)\).
+
+\begin{remark}
+	\(s \cong 0.8 ~ 0.85\)
+\end{remark}
+
+\begin{prev}
+	HITS: We now start to investigate \(A A^{T}\), where \(A\) is adjacency matrix.
+	\begin{itemize}
+		\item Non-negative
+		\item largest eigenvalue - Perron-Frobenius eigenvalues
+	\end{itemize}
+\end{prev}

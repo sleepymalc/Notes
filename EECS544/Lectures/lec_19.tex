@@ -1,0 +1,403 @@
+\lecture{19}{10 Nov. 12:30}{Nash Equilibrium}
+\begin{prev}
+	We assume that all players have
+	\begin{itemize}
+		\item Common knowledge
+		\item Rationality
+	\end{itemize}
+\end{prev}
+
+\begin{note}
+	We also have something called \emph{bounded rationality}.
+	\begin{itemize}
+		\item Some finite levels
+		\item Not fully rational
+	\end{itemize}
+\end{note}
+
+\begin{prev}
+	Nash equilibrium.
+	\begin{itemize}
+		\item \(\mathcal{I} \): the set of players.
+		\item \(I\): \(\left\vert \mathcal{I}  \right\vert \), the number of players.
+		\item \(\mathcal{S}_{i}\): player \(i\) choose strategy/action from \(\mathcal{S}_{i}\) such that
+		      \[
+			      s_{i}\in \mathcal{S}_i
+		      \]
+		      with
+		      \[
+			      S_{i} = \left\vert \mathcal{S}_i \right\vert.
+		      \]
+		\item \(s\): \((s_1, s_2, \ldots , s_I)\), strategy chosen by all players
+		\item Player \(i\in \mathcal{I}\), then \(-i\coloneqq \mathcal{I}\setminus\{i\}\): Everyone else but \(i\).
+		      \begin{eg}
+			      \[
+				      \begin{split}
+					      i = 1\colon\quad& -1 = \{2, 3, \ldots , I\},\\
+					      i = 2\colon\quad& -2 = \{1, 3, \ldots , I\},\\
+					      &\vdots
+				      \end{split}
+			      \]
+			      since
+			      \[
+				      s_{-i} = (s_1, \ldots , s_{i - 1}, s_{i + 1}, \ldots , s_{I}).
+			      \]
+		      \end{eg}
+		\item Best-response correspondence(set): For player \(i\), give the strategies of \(-i\) (\(s_{-i} \) is given). Find the
+		      subset of strategies in \(\mathcal{S}_i \) that give player \(i\) the highest payoff/utility.
+		      \begin{intuition}
+			      \(\mathrm{BR}_i(s_{-i})\) can be though as follows: For player \(i\), given every other players' strategies they will play, find the best response. And since there may be
+			      several strategies can achieve the optimal result, so it's should be a set.
+		      \end{intuition}
+		\item Utilities/Payoffs: \(\forall i\in \mathcal{I} \),
+		      \[
+			      u_{i}\colon \prod\limits_{j = 1}^{I} \mathcal{S}_{j}\to \mathbb{\MakeUppercase{R}}.
+		      \]
+		      For every vector \(s = (s_1, s_2, \ldots , s_I)\in \prod\limits_{j\in \mathcal{I}} \mathcal{S}_j\), \(u_{i}(s)\)
+		      is a real number.
+	\end{itemize}
+	\begin{remark}
+		We see that \(s_{i}, s_{-i}\) form the entire vector of strategies every player plays, so \(u_{i}(s_{i}, s_{-i})\) is \textbf{well-defined}.
+		Moreover,
+		\[
+			\max_{s_{i}\in\mathcal{S}_i}u_{i}(s_{i}, s_{-i})
+		\]
+		finds all strategies that attain the maximum rewards.
+	\end{remark}
+\end{prev}
+
+\begin{prev}
+	We now view the \textbf{Golden Balls} game with what we just defined. The payoff matrix is
+	\begin{table}[H]
+		\centering
+		\setlength{\extrarowheight}{2pt}
+		\begin{tabular}{cc|c|c|}
+			                          & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                                              \\
+			                          & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{split}$} & \multicolumn{1}{c}{$\mathrm{steal}$} \\\cline{3-4}
+			\multirow{2}*{Player $1$} & $\mathrm{split}$     & $(x/2, x/2)$                         & $(0, x)$                             \\\cline{3-4}
+			                          & $\mathrm{steal}$     & $(x, 0)$                             & $(0, 0)$                             \\\cline{3-4}
+		\end{tabular}
+	\end{table}
+
+	For player \(1\), given
+	\begin{enumerate}
+		\item \(s_{-1} = \mathrm{steal}\):
+		      \begin{itemize}
+			      \item \(u_1(\mathrm{split} , \underbrace{\mathrm{steal}}_{s_{-1}} ) = 0\)
+			      \item \(u_1(\mathrm{steal} , \underbrace{\mathrm{steal}}_{s_{-1}} ) = 0\)
+		      \end{itemize}
+		      So
+		      \[
+			      \arg\max_{s_1\in \mathcal{S}_1} u_1(s_1, \mathrm{steal} ) = \{\mathrm{split}, \mathrm{steal}  \},
+		      \]
+		      which is our best response correspondence.
+		\item \(s_{-1} = \mathrm{split}\):
+		      \begin{itemize}
+			      \item \(u_1(\mathrm{split} , \underbrace{\mathrm{split}}_{s_{-1}} ) = \frac{x}{2}\)
+			      \item \(u_1(\mathrm{steal} , \underbrace{\mathrm{split}}_{s_{-1}} ) = x\)
+		      \end{itemize}
+		      So
+		      \[
+			      \arg\max_{s_1\in \mathcal{S}_1} u_1(s_1, \mathrm{split} ) = \{\mathrm{steal}\},
+		      \]
+		      which is our best response correspondence, and moreover, since it's unique and strictly greater than any other choices, so we call it \emph{strictly best response}.
+	\end{enumerate}
+\end{prev}
+
+\begin{definition}
+	\(\overline{s}_{i}\) is called a \emph{strict best response} to \(s_{-i}\) if
+	\[
+		u_{i}(\overline{s}_i, s_{-i})>u_{i}(s_{i}, s_{-i})
+	\]
+	for every \(s_{i}\in \mathcal{S}_{i}\setminus\{\overline{s}_i\} \).
+\end{definition}
+
+\begin{remark}
+	Obviously, a strict best response will be unique.
+\end{remark}
+
+\begin{definition}
+	\(s_{i}\) is \emph{strictly dominant} if it is the strict best response for all \(s_{-i}\).
+\end{definition}
+\begin{definition}
+	\(s_{i}\) is \emph{weakly dominant} if it is one of the best response for all \(s_{-i}\).
+\end{definition}
+
+\begin{remark}
+	We see that
+	\begin{itemize}
+		\item In the Golden balls example, where steal is a weakly dominant strategy.
+		\item Rationality plus common knowledge implies that if a player with dominant strategies, then the player will play them.
+	\end{itemize}
+\end{remark}
+
+\hr
+
+\begin{prev}
+	Nash equilibrium. Let \(s^{*} = (s_1^{*}, s_2^{*}, \ldots , s_I^{*})\) be the \textbf{strategy profile}. Then we call it as a
+	\emph{pure strategy} Nash equilibrium(NE) if
+	\[
+		s_{i}^{*}\in\mathrm{BR}(s_{-i}^{*})
+	\]
+	for all \(i\in \mathcal{I} \).
+\end{prev}
+
+\begin{note}
+	We see that
+	\begin{itemize}
+		\item Every agent is playing a \(\mathrm{BR}\) to the others.
+		\item Utility(Return/Payoff/Reward) is the incentive for agents. Setting everyone else at \(s^{*}_{-i}\), there is no incentive for player \(i\) to deviate(not necessary to change action). This implies there are no \emph{unilateral dominants} are possible.
+		      \[
+			      \underset{i\in \mathcal{I}}{\forall}\ \underset{s_{i}\in \mathcal{S}_i}{\forall}\ u_{i}(s^{*}_i, s^{*}_{-i}) \geq u_{i}(s_{i}, s^{*}_{-i}).
+		      \]
+	\end{itemize}
+	\begin{prev}
+		There are two different types of strategies:
+		\begin{itemize}
+			\item Pure strategy: Fixing an action for every player.
+			\item Mixed strategy: A randomized action is played by every player.
+		\end{itemize}
+	\end{prev}
+\end{note}
+
+\begin{remark}
+	We see that
+	\begin{enumerate}
+		\item Pure strategy Nash Equilibrium needs not exist for every game.
+		\item Even if they exist, they need not be unique.
+		\item If there are multiple equilibrium, then which one gets played is a tough question and usually involves external quantities(outside information).
+	\end{enumerate}
+\end{remark}
+
+\subsubsection{Pure Strategy Nash Equilibrium}
+We first introduce the concept of \emph{Coordination Games}. Coordination games are games such that players get a higher payoff by working together(taking the same action).
+
+\begin{eg}
+	We first see some coordination game examples.
+	\begin{enumerate}
+		\item \textbf{Shaking hands}. There are two men want to shake their hands. They can either position their hand up(\(U\)) or down(\(D\)).
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                                & \multicolumn{1}{c}{} & \multicolumn{2}{c}{player $2$}                           \\
+				                                & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$U$}        & \multicolumn{1}{c}{$D$} \\\cline{3-4}
+				      \multirow{2}*{player $1$} & $U$                  & $(1, 1)$                       & $(0, 0)$                \\\cline{3-4}
+				                                & $D$                  & $(0, 0)$                       & $(1, 1)$                \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+		      We see that \((U, U)\) and \((D, D)\) are pure-strategy Nash Equilibrium.
+		\item \textbf{Battle of the sexes}. A man and a woman are going to a date. The man prefer to see football(\(F\)) while the woman prefer to go to theater(\(T\)). If
+		      their opinion are not equal, then they can't go to anywhere, so their fulfillment(payoff) will both be \(0\).
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                         & \multicolumn{1}{c}{} & \multicolumn{2}{c}{woman}                           \\
+				                         & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$T$}   & \multicolumn{1}{c}{$F$} \\\cline{3-4}
+				      \multirow{2}*{man} & $T$                  & $(1, 2)$                  & $(0, 0)$                \\\cline{3-4}
+				                         & $F$                  & $(0, 0)$                  & $(2, 1)$                \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+		      We see that \((T, T)\) and \((F, F)\) are pure-strategy Nash Equilibrium.
+		\item \textbf{Stay Hunt}.
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                                & \multicolumn{1}{c}{} & \multicolumn{2}{c}{player $1$}                             \\
+				                                & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$S$}        & \multicolumn{1}{c}{$H/R$} \\\cline{3-4}
+				      \multirow{2}*{player $2$} & $S$                  & $(4, 4)$                       & $(0, 3)$                  \\\cline{3-4}
+				                                & $H/R$                & $(3, 0)$                       & $(3, 3)$                  \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+		      We see that \((S, S)\) and \((H, H)\) are pure-strategy Nash Equilibrium.
+	\end{enumerate}
+\end{eg}
+
+\hr
+
+We also have so-called \emph{Anti-Coordination Games}. Such games mean that one player prefers to coordinate, and the other does not.
+
+\begin{eg}
+	Again, we first see some examples.
+	\begin{enumerate}
+		\item \textbf{Rock, paper, scissors}. This is an example that a game without pure Nash Equilibrium. The payoff matrix is
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|c|}
+				                                & \multicolumn{1}{c}{} & \multicolumn{3}{c}{player $2$}                                                                                       \\
+				                                & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{Rock}$} & \multicolumn{1}{c}{$\mathrm{Paper}$} & \multicolumn{1}{c}{$\mathrm{Scissors}$} \\\cline{3-5}
+				      \multirow{3}*{player $1$} & $\mathrm{Rock}$      & $(0, 0)$                            & $(-1, \underline{+1})$               & $(\underline{+1}, -1)$                  \\\cline{3-5}
+				                                & $\mathrm{Paper}$     & $(\underline{+1}, -1)$              & $(0, 0)$                             & $(-1, \underline{+1})$                  \\\cline{3-5}
+				                                & $\mathrm{Scissors}$  & $(-1, \underline{+1})$              & $(\underline{+1}, -1)$               & $(0, 0)$                                \\\cline{3-5}
+			      \end{tabular}
+		      \end{table}
+		      And it's clear that no matter what we fixed a strategy for one player first, another player will have incentive to deviate right after another player changes its strategy.
+		\item \textbf{Hawk-Dove} game. Two neighboring countries are likely going to fight. If one choose Hawk, then that country will fight; otherwise if choosing Dove, then that country will not
+		      going to fight and will not going to fight back either.
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                                 & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Country $2$}                           \\
+				                                 & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$H$}         & \multicolumn{1}{c}{$D$} \\\cline{3-4}
+				      \multirow{2}*{Country $1$} & $H$                  & $(0, 0)$                        & $(5, 1)$                \\\cline{3-4}
+				                                 & $D$                  & $(1, 5)$                        & $(3, 3)$                \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+		      \begin{problem}
+		      Is \((D, D)\) a Nash Equilibrium?
+		      \end{problem}
+		      \begin{answer}
+			      False. Since if player \(2\) is playing \(D\). We see that \(u_1(H, D) = 5\), \(u_1(D, D) = 3\). Then player \(1\) has a deviation to get a higher payoff.
+		      \end{answer}
+		      \begin{problem}
+		      Is \((H, D)\) a Nash Equilibrium?
+		      \end{problem}
+		      \begin{answer}
+			      True. Since
+			      \begin{itemize}
+				      \item Player \(1\): \(H\) is the best response
+				      \item Player \(2\): Player \(1\) is \(H\). Then \(u_2(H, H) = 0\), and \(u_2(H, D) = 1\).
+			      \end{itemize}
+			      We see that neither player \(1\) nor player \(2\) has an incentive to deviate. So \((D, H)\)(also \((H, D)\)) is a Nash
+			      Equilibrium.
+		      \end{answer}
+		\item \textbf{Matching Pennies}\label{matching-pennies}.
+		      This is a simple example for \emph{attack-defense} game. Suppose there are two people each hold a penny and simultaneously choose whether to show heads(\(H\)) or tails(\(T\)) on
+		      their penny. Player \(1\) loses his penny to Player \(2\) if they match; Player \(1\) wins Player \(2\)'s penny if they don't match.
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                                & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                           \\
+				                                & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$H$}        & \multicolumn{1}{c}{$T$} \\\cline{3-4}
+				      \multirow{2}*{Player $1$} & $H$                  & $(-1, 1)$                      & $(1, -1)$               \\\cline{3-4}
+				                                & $T$                  & $(1, -1)$                      & $(-1, 1)$               \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+		      We see that there are no pure strategy Nash Equilibrium. So we have no idea what strategy each player will play.
+		      \begin{note}
+			      An \emph{attack-defense} game can be simply described as follows. There are two players, one is attacker and another is defender. Attacker has two actions,
+			      they are attack with strategy \(A\) or \(B\), respectively. Correspondingly, defender also has two actions to choose from, namely defend against \(A\)
+			      or defend against \(B\). Clearly, if defender correctly defend attacker's attack in terms of strategy attack chooses, then defender gets a higher payoff,
+			      otherwise the attacker gets a higher payoff.
+		      \end{note}
+		      \begin{remark}
+			      This is so-called a \emph{Zero-Sum Game}. One player's gain is exactly another player's loss.
+		      \end{remark}
+	\end{enumerate}
+\end{eg}
+
+\begin{remark}
+	From \hyperref[matching-pennies]{matching pennies} games example, we see that there are no Nash Equilibrium. This is due to the fact that all player will play
+	their strategy in a deterministic way, if the best response exists. And if not, then we have no idea what they will play in this case, which is hard to analyze.
+	Now if we allow some randomness, then by John Nash, he states that with such set up, the Nash Equilibrium always exists.
+\end{remark}
+
+\subsubsection{Mixed Strategy Nash Equilibrium}
+Follows the intuition of \hyperref[matching-pennies]{matching pennies} game, we now develop the concept so-called \emph{mixed strategy}. Essentially, we are just
+randomizing one's strategies such that the randomization is done independently. This will bring the game structure with much more interesting properties.
+
+\begin{prev}
+	The reason why we call it \emph{mixed strategies} is initially, we only have distinct strategy to choose from, but now, with probability, we have some kind of
+	\textbf{mixed} strategy between choices. In \hyperref[matching-pennies]{matching pennies} game example, we have strategies which mixes between \(H\) and \(T\).
+\end{prev}
+
+\hr
+
+For player \(i\), denote \(\overrightarrow{P}_{i}\) as a probability distribution on \(\mathcal{S}_i\)(PMF) such that
+\[
+	\left\{s_{i1}, s_{i2}, s_{i3}, s_{i4}\right\} = \mathcal{S}_i,
+\]
+and \(S_i = 4\). More specifically, \(\overrightarrow{P}_i\) looks like
+\[
+	(P_{i1}, P_{i2}, P_{i3}, P_{i4})
+\]
+with all entries non-negative and their sum is \(1\). There are lots of example for such \(P_{i}\). For example,
+\begin{itemize}
+	\item \((\frac{1}{4}, \frac{1}{4}, \frac{1}{4}, \frac{1}{4})\): uniformly mixed.
+	\item \((1, 0, 0, 0)\): pure strategy.
+\end{itemize}
+
+We can then define \emph{probability simplex} \(\Delta(\mathcal{S}_i )\), which is equal to
+\[
+	\left\{\left(P_{i1}, P_{i2}, \ldots , P_{i S_{i}}\right)\colon P_{ij}\geq 0\land \sum\limits_{j=1}^{S_i} P_{ij} = 1\quad \forall j = 1, \ldots , S_{i}\right\}.
+\]
+\begin{itemize}
+	\item \(2\) actions.
+	      \begin{figure}[H]
+		      \centering
+		      \incfig{probability-simplex-2actions}
+		      \caption{Probability Simplex with 2 Actions.}
+		      \label{fig:probability-simplex-2actions}
+	      \end{figure}
+	\item \(3\) actions.
+	      \begin{figure}[H]
+		      \centering
+		      \incfig{probability-simplex-3actions}
+		      \caption{Probability Simplex with 3 Actions.}
+		      \label{fig:probability-simplex-3actions}
+	      \end{figure}
+\end{itemize}
+\begin{intuition}
+	This is just a set of probability distributions over \(\mathcal{S}_i\), but with a good geometry representation.
+\end{intuition}
+
+\hr
+
+Players' actions are enhanced to picking probability distribution(adding uncertainty to your choice).
+
+\begin{problem}
+How to evaluate payoff?
+\end{problem}
+\begin{answer}
+	Let
+	\[
+		u_{i}(\overrightarrow{P}_i, \overrightarrow{P}_{-i}) = \mathbb{\MakeUppercase{E}}_{\overrightarrow{P}_{1}\times \overrightarrow{P}_2 \times \ldots \times \overrightarrow{P}_I}\left[ u_{i}\left(\overline{S}_1, \overline{S}_2, \ldots , \overline{S}_I\right) \right],
+	\]
+	such that \(\overline{S}_i\) is a random variable that takes values in \(\mathcal{S}_i\) with distribution \(\overrightarrow{P}_i\), and they are mutually independent. This is further equal to
+	\[
+		\sum\limits_{j_1\in \mathcal{S}_1 }\sum\limits_{j_2\in \mathcal{S}_2}\ldots \sum\limits_{j_I\in \mathcal{S}_I }P_{1j_1}\times P_{2j_2}\times \ldots \times P_{Ij_I}\times u_{i}\left(\overline{S}_{1j_1}, \overline{S}_{2j_2}, \ldots , \overline{S}_{Ij_I}\right).
+	\]
+\end{answer}
+\begin{eg}
+	Recall the last game we consider, namely the \hyperref[matching-pennies]{\textbf{Matching Pennies} game}.
+	\begin{table}[H]
+		\centering
+		\setlength{\extrarowheight}{2pt}
+		\begin{tabular}{cc|c|c|}
+			                          & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                           \\
+			                          & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$H$}        & \multicolumn{1}{c}{$T$} \\\cline{3-4}
+			\multirow{2}*{Player $1$} & $H$                  & $(1, -1)$                      & $(-1, 1)$               \\\cline{3-4}
+			                          & $T$                  & $(-1, 1)$                      & $(1, -1)$               \\\cline{3-4}
+		\end{tabular}
+	\end{table}
+	with \(P_1 = (\frac{3}{4}, \frac{1}{4})\) and \(P_2 = (\frac{1}{3}, \frac{2}{3})\). Then
+	\[
+		\begin{split}
+			u_1(P_1, P_2) &= \frac{3}{4}\times \frac{1}{3} u_1(H, H) + \frac{3}{4}\times \frac{2}{3}u_1(H, T) + \frac{1}{3}\times \frac{1}{3}u_1(T, H)+\frac{1}{4}\times \frac{2}{3}u_1(T, T)\\
+			&= \frac{3}{12} - \frac{6}{12} - \frac{1}{12} + \frac{2}{12}\\
+			&= -\frac{1}{6}.
+		\end{split}
+	\]
+	Also, \(u_2(P_1, P_2)\) is \(\frac{1}{6}\) from Zero-Sum setting.
+\end{eg}
+
+We can now combine the probability set up with the definition of the best response, which gives us
+\[
+	\mathrm{BR}_{i}(\overrightarrow{P}_{-i}) = \left\{\overrightarrow{P}_i\in \Delta(\mathcal{S}_i)\colon u_{i}(\overrightarrow{P}_i, \overrightarrow{P}_{-i}) = \max_{\hat{P}_i\in \Delta(\mathcal{S}_i)}u_{i}(\hat{P}_i, \overrightarrow{P}_{-i})\right\}.
+\]
+Also, for Nash Equilibrium, let \(P^{*}\) be the same probability distribution for all \(i\in \mathcal{I} \), then
+\[
+	P^{*}_i\in\mathrm{BR}_i(P^{*}_{-i})\iff \underset{P_{i}\in \Delta(\mathcal{S}_i)}{\forall }\ u_{i}(P^{*}_i, P^{*}_{-i})\geq u_{i}(P_{i}, P^{*}_{-i}).
+\]
+
+\begin{theorem}
+	Nash's Existence Theorem. Every finite game(finite action) has at least one mixed strategy Nash Equilibrium.
+\end{theorem}
+\begin{remark}
+	This is a theorem given by Nash by using fixed-point theorem.
+\end{remark}

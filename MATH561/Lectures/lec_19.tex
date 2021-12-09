@@ -1,0 +1,135 @@
+\lecture{19}{10 Nov. 08:00}{Lagrangian Relaxation}
+\begin{prev}
+	\begin{align*}
+		z\coloneqq \min~ & c^{T}x    \\
+		                 & Ex \geq h \\
+		                 & Ax = b    \\
+		(Q)\quad         & x\geq 0
+	\end{align*}
+	and by choosing \(\hat{y}\geq \vec{0}\), we have
+	\begin{align*}
+		v(\hat{y})\coloneqq \hat{y}^{T}h + \min~ & (c^{T} - \hat{y}^{T}E)x \\
+		                                         & Ax = b                  \\
+		(L_{\hat{y}})\quad                       & x\geq 0,
+	\end{align*}
+	which we called it a \textbf{Lagrangian subproblem}.
+
+	\begin{note}
+		We see that for \(\hat{y}\geq \vec{0}\), \(v(\hat{y})\leq z\). Now, the goal is to solve the
+		\textbf{Lagrangian dual}, which is
+		\[
+			\max_{y\geq \vec{0}}\ v(y)
+		\]
+		to get a lower bound for the original problem.(Notice that this is the maximum of the dual!)
+	\end{note}
+\end{prev}
+
+Now, we try to proof \autoref{converse-lagrangian dual}, which is the \emph{partial} converse of \autoref{lagrangian dual}.
+\begin{proof}
+	Recall that
+	\[
+		\begin{split}
+			v(\hat{y})&\coloneqq \max_{y\geq \vec{0}}\ v(y) \\
+			&= \max_{y\geq \vec{0}}\ \left\{y^{T}h + \underbrace{\min_{x}\ \left\{(c^{T} - y^{T}E)x\colon Ax = b, x\geq \vec{0}\right\}}_{\text{just a linear program}}\right\}\\
+			&= \max_{y\geq \vec{0}}\ \left\{y^{T}h + \max_{\Pi}\ \left\{\Pi^{T}b\colon \Pi^{T}A\leq c^{T} - y^{T}E\right\}\right\}\\
+			&= \max_{y\geq \vec{0}, \Pi}\ \left\{y^{T}h + \Pi^{T}b\colon \Pi^{T}A + y^{T}E\leq c^{T}\right\}\\
+			&= z.
+		\end{split}
+	\]
+	The last equality is derived from the fact that it's just the dual of the \(Q\).
+\end{proof}
+
+\subsubsection{Solving the Lagrangian Dual}
+The theorem we just saw provides a simple way to calculate a lower bound on \(z\) by solving a potentially easier linear optimization problem.
+But we see that the bound depends on the choice of \(\hat{y}\geq 0\). This push us to find the best such \(\hat{y}\), and we indeed can solve
+this by solving the so-called \textbf{Lagrangian Dual} problem of \emph{maximizing} \(v(y)\) over all \(y\geq 0\) in the domain of \(v\).
+
+\hr
+
+One may want to use some calculus technique to solve for such maximizing problem, but since \(v\) is not a smooth function, rather a piece-wise linear
+function, hence we need to introduce the concept of \emph{subgradient}. Before we formally introduce it, we first see a theorem.
+
+\begin{theorem}
+	Suppose we fix \(\hat{y}\geq \vec{0}\) and solve for \(v(\hat{y})\). Let \(\hat{x}\) be the optimal solution of \(L_{\hat{y}}\).
+	Denote \(\hat{\gamma}\coloneqq h - E \hat{x}\), then
+	\[
+		v(\widetilde{y})\leq v(\hat{y})+(\widetilde{y} - \hat{y})\hat{\gamma}
+	\]
+	for all \(\widetilde{y}\) in the domain of \(v\).
+\end{theorem}
+
+\begin{figure}[H]
+	\centering
+	\incfig{subgradient-theorem-1}
+	\label{fig:subgradient-theorem}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\incfig{subgradient-theorem-2}
+	\label{fig:subgradient-theorem-2}
+\end{figure}
+
+\begin{proof}
+	We see that since
+	\[
+		\begin{split}
+			v(\hat{y})+(\hat{y} - \widetilde{y})\hat{\gamma}&=v(\hat{y})+(\hat{y} - \widetilde{y})(h - E \hat{x})\\
+			&= \hat{y}^{T}h + (c^{T} - \hat{y}^{T}E)\hat{x} + (\widetilde{y} - \hat{y})^{T}(h - E \hat{x})\\
+			&= \widetilde{y}^{T}h + (c^{T} - \widetilde{y}^{T} E)\hat{x}\\
+			&\geq v(\widetilde{y}).
+		\end{split}
+	\]
+	The last inequality follows from the fact that \(\hat{x}\) is only optimal for \(L_{\hat{y}}\), not \(L_{\widetilde{y}}\). \(\hat{x}\) may just be feasible for \(L_{\hat{y}}\).
+\end{proof}
+
+In the theorem, \(\hat{\gamma}\) is so-called the \emph{subgradient}. Given \(\widetilde{y}\) and \(\hat{y}\), we choose \(\hat{\gamma}\) such that
+the linear estimation \(v(\hat{y})+(\widetilde{y} - \hat{y})^{T}\hat{\gamma}\) is always an upper bound on the value \(v(\widetilde{y})\) of the function
+for all \(\widetilde{y}\) in the domain of \(f\). This \(\hat{\gamma}\) is then a \emph{subgradient} of (the concave function) \(v\) at \(\hat{y}\).
+
+Mathematically, we have
+\begin{definition}
+	\label{def:subgradient}
+	For a concave function \(f\) such that
+	\[
+		f\colon I\to \mathbb{\MakeUppercase{R}},
+	\]
+	the \emph{subgradient}(also known as subderivative) at point \(x_0\) is a \(c\in \mathbb{\MakeUppercase{R}}\) such that
+	\[
+		f(x) - f(x_{0})\geq c(x - x_0)
+	\]
+	for every \(x\in I\).
+
+\end{definition}
+
+With this subgradient theorem, we can then develop an algorithm to utilize this.
+
+\subsubsection{Projected Subgradient Optimization Algorithm}
+\begin{intuition}
+	We iteratively move in the direction of a subgradient to maximize \(v\).
+\end{intuition}
+\begin{enumerate}
+	\item[0.] Start with any \(\mathbb{\MakeUppercase{R}}^m\ni \hat{y}^{T}\geq \vec{0}\). Let \(k\coloneqq 1\)
+	\item[1.] Solve \(L_{\hat{y}^k}\) to get \(\hat{x}^k\)
+	\item[2.] Calculate the subgradient \(\hat{\gamma}^k\) by
+		\[
+			\hat{\gamma}^k\coloneqq h - E \hat{x}^k.
+		\]
+	\item[3.] Let \(\hat{y}^{k+1}\leftarrow \mathrm{Proj}_{\mathbb{\MakeUppercase{R}}^m_+}(\hat{y}^k + \lambda_{k}\hat{\gamma}^k) \)
+	\item[4.] Let \(k\leftarrow k+1\) \& \textbf{GOTO 1.}
+\end{enumerate}
+\begin{remark}
+	There are a few remarks we want to make.
+	\begin{itemize}
+		\item The projection \(\mathrm{Proj}_{\mathbb{\MakeUppercase{R}}^m_+}\) is just used to set any negative entries equal to \(0\).
+		\item The key is in the step 2. We want to choose \(\lambda_{k}>0\) and satisfying something, which will make this algorithm converges.
+		      \begin{itemize}
+			      \item \textbf{Harmonic step size}: Define the step size as \(\lambda_{k}\coloneqq \frac{1}{k}\), which will converge in theory, but it is slow. Notice that this choice of step size is \emph{independent} of the current value of the subgradient.
+			      \item \textbf{Polyak step size}: Define the step size as
+			            \[
+				            \lambda_{k}\coloneqq \frac{\mathrm{GUESS} - v}{\left\lVert \hat{\gamma}^k\right\rVert^2 },
+			            \]
+			            where we need an initial \(\mathrm{GUESS}\)(we get this by literally \emph{guessing}) to let the algorithm behaves reasonable.
+		      \end{itemize}
+	\end{itemize}
+\end{remark}

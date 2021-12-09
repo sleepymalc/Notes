@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This repo contains all lecture notes I took in Umich by LaTeX together with Inkscape. The `header.tex` is the same in [Academic Template](https://github.com/sleepymalc/Academic-Template), which can be freely adjusted in order to meet your own needs. The particular compile environment should be not that relvant, since the packages this notes environment depend on is quite straightforward and elegant, hence a simple `pdflatex` should do the job. As for Inkscape figures, please look into [VSCode-LaTeX-Inkscape](https://github.com/sleepymalc/VSCode-LaTeX-Inkscape) and also [inkscape-figures](https://github.com/sleepymalc/inkscape-figures) for detailed configuration. Feel free to submit pull requests if you find a typo and want to fix it.
+This repo contains all lecture notes I took in Umich by LaTeX together with Inkscape. The `header.tex` is the same in [Academic Template](https://github.com/sleepymalc/Academic-Template), which can be freely adjusted in order to meet your own needs. The particular compile environment should be not that relvant, since the packages this environment depends on are quite straightforward and minimal, hence a simple `pdflatex` should do the job. As for Inkscape figures, please look into [VSCode-LaTeX-Inkscape](https://github.com/sleepymalc/VSCode-LaTeX-Inkscape) and also [inkscape-figures](https://github.com/sleepymalc/inkscape-figures) for detailed configuration. Feel free to submit pull requests if you find a typo and want to fix it.
 
 ## About Honor Code
 

@@ -70,7 +70,7 @@ The basic algorithm is
 	\item[0.] Start at a uniformly random node.
 	\item[1.] First toss a biased coin such that
 		\[
-			\mathbb{\MakeUppercase{P}}(\text{heads}) = s,\qquad \mathbb{\MakeUppercase{P}}(\text{tails}) = 1 - s.
+			\probability{}{\text{heads}} = s,\qquad \probability{}{\text{tails}} = 1 - s.
 		\]
 		\begin{itemize}
 			\item If Heads, then perform random walk if possible(namely when \(d_i^{out}=0\)).
@@ -113,7 +113,7 @@ by SLLN. But this algorithm has two main issues.
 \begin{enumerate}
 	\item Not clear how long we should run this for. Namely, we need to be able to say something about
 	      \[
-		      \expectation{\left\vert \hat{\pi}^{T}_V(s) - \pi_V(s) \right\vert^2 }
+		      \expectation{}{\left\vert \hat{\pi}^{T}_V(s) - \pi_V(s) \right\vert^2 }
 	      \]
 	      in \(T\) to ensure the speed of convergence.
 	\item The estimator is a biased estimator. Recall that an estimator is unbiased if
@@ -127,8 +127,8 @@ by SLLN. But this algorithm has two main issues.
 	      for this particular estimator \(\hat{\pi}^{T}_V(s)\). We see that \(\hat{\pi}^{T}_V(s)\) is indeed biased by
 	      \[
 		      \begin{split}
-			      \mathrm{E}\left[\hat{\pi}^{T}_V(s)\right] &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbb{\MakeUppercase{E}}\left[ \mathbbm{1}_{\{X_n = v\}} \right]\\
-			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbb{\MakeUppercase{P}}\left( X_n = v \right) \\
+			      \mathrm{E}\left[\hat{\pi}^{T}_V(s)\right] &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \expectation{}{\mathbbm{1}_{\{X_n = v\}}}\\
+			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \probability{}{X_n = v} \\
 			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} (\mu_0 P^n)_v\underset{T\to \infty }{\to }\pi_V(s),
 		      \end{split}
 	      \]
@@ -186,10 +186,10 @@ where
 		      \item Tossing a series of independent biased coins until first tail occurs.
 		            \[
 			            \begin{split}
-				            \mathbb{\MakeUppercase{P}}(\tau = 0) &= 1 - s\\
-				            \mathbb{\MakeUppercase{P}}(\tau = 1) &= s(1 - s)\\
+				            \probability{}{\tau = 0} &= 1 - s\\
+				            \probability{}{\tau = 1} &= s(1 - s)\\
 				            &\vdots\\
-				            \mathbb{\MakeUppercase{P}}(\tau = i) &= s^i(1 - s).
+				            \probability{}{\tau = i} &= s^i(1 - s).
 			            \end{split}
 		            \]
 		      \item \(\tau\) is so-called \emph{geometric random variable}.
@@ -212,7 +212,7 @@ Now, the algorithm becomes
 \begin{enumerate}
 	\item[0.] Toss a geometric random variable \(\tau\) such that
 		\[
-			\mathbb{\MakeUppercase{P}}(\tau = i) = s^i(1 - s).
+			\probability{}{\tau = i} = s^i(1 - s).
 		\]
 	\item[1.] Pick a random node of the graph and run random walk \(\tau\) times to find where we end up.
 	\item[2.] \textbf{GOTO 1.}(Repeat \(K\) times)
@@ -233,11 +233,11 @@ We see that
 \]
 This is an unbiased estimator since
 \[
-	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \mathbb{\MakeUppercase{P}}(x_{\tau_k} = v) = \pi_v(s).
+	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \probability{}{x_{\tau_k} = v} = \pi_v(s).
 \]
 Also, the variance can be derived as
 \[
-	\mathrm{Var} \left[ \hat{\pi}_V^K(s) \right] = \frac{\pi_v(s)(1 - \pi_v(s))}{K}\leq \frac{1}{4K}.
+	\variance{}{\hat{\pi}_V^K(s)} = \frac{\pi_v(s)(1 - \pi_v(s))}{K}\leq \frac{1}{4K}.
 \]
 
 \begin{remark}
@@ -263,7 +263,7 @@ Also, the variance can be derived as
 		      \]
 		      with
 		      \[
-			      \expectation{\hat{\mu}_N} = \frac{1}{N}\sum\limits_{i=1}^{N} \expectation{X_i} = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
+			      \expectation{}{\hat{\mu}_N} = \frac{1}{N}\sum\limits_{i=1}^{N} \expectation{}{X_i} = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
 		      \]
 		      which implies this is an unbiased estimator.
 		\item Denote \(\hat{\mathrm{Var}}(N)\) as the empirical variance estimator. It's defined as
@@ -272,7 +272,7 @@ Also, the variance can be derived as
 		      \]
 		      This is indeed a biased estimator since
 		      \[
-			      \expectation{\hat{\mathrm{Var}}(N)} = \left(\frac{N-1}{N}\right) \sigma^2,
+			      \expectation{}{\hat{\mathrm{Var}}(N)} = \left(\frac{N-1}{N}\right) \sigma^2,
 		      \]
 		      which is slightly less than the true variance. We then have an unbiased estimator defined as
 		      \[
@@ -280,7 +280,7 @@ Also, the variance can be derived as
 		      \]
 		      with
 		      \[
-			      \expectation{\overline{\mathrm{Var}}(N)} = \sigma^2.
+			      \expectation{}{\overline{\mathrm{Var}}(N)} = \sigma^2.
 		      \]
 	\end{itemize}
 \end{note}
@@ -331,7 +331,7 @@ We count the number of arrivals in node \(v\) and find the average. More explici
 
 This is another unbiased estimator for the same reason given in the second estimator, but we see that this converges faster and with smaller variance. Specifically, we have
 \[
-	\variance{\hat{\pi}_V(s)} = \frac{1}{VM}\left(\pi_{j} - \frac{\sum\limits_{i=1}^{V} \sigma_{ij}^2}{V}\right).
+	\variance{}{\hat{\pi}_V(s)} = \frac{1}{VM}\left(\pi_{j} - \frac{\sum\limits_{i=1}^{V} \sigma_{ij}^2}{V}\right).
 \]
 We see that this is a better estimator.
 

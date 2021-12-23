@@ -113,18 +113,18 @@ Then we have
 \[
 	\max\{x_1, \ldots , x_n\} = y_1\geq y_2\geq \ldots \geq y_n = \min\{x_1, \ldots , x_{n}\}.
 \]
-Now, we want to find out \(\expectation{y_1} \), which is just
+Now, we want to find out \(\expectation{}{y_1} \), which is just
 \[
-	\expectation{y_1} = \int_0^{\infty } y f_{y_1}(y)\,dy
+	\expectation{}{y_1} = \int_0^{\infty } y f_{y_1}(y)\,\mathrm{d}y
 \]
 where \(f_{y_1}\) is the probability density function of \(y_1\). Since \(f_{y_1}(y) = \frac{\mathrm{d}}{\mathrm{d}y} \left(F_{y_1}(y)\right)\),
 where
 \[
 	\begin{split}
-		F_{y_1}(y) &= \probability{y_1\leq y}\\
-		&= \probability{\max\{x_1, \ldots , x_{n}\}\leq y}\\
-		&= \probability{x_1\leq y, x_2\leq y, \ldots , x_n\leq y}\\
-		&= \prod\limits_{i=1}^{n} \probability{x_{i}\leq y}\\
+		F_{y_1}(y) &= \probability{}{y_1\leq y}\\
+		&= \probability{}{\max\{x_1, \ldots , x_{n}\}\leq y}\\
+		&= \probability{}{x_1\leq y, x_2\leq y, \ldots , x_n\leq y}\\
+		&= \prod\limits_{i=1}^{n} \probability{}{x_{i}\leq y}\\
 		&= \prod\limits_{i=1}^{n} F_{x_{i}}(y)\\
 		&= \left(F_x(y)\right)^n,
 	\end{split}
@@ -137,7 +137,7 @@ Further, since we now know
 \]
 we have
 \[
-	\expectation{y_1} = \int_0^{\infty }n y \left(F_{x}(y)\right)^{n-1} f_x(y)\,dy.
+	\expectation{y_1} = \int_0^{\infty }n y \left(F_{x}(y)\right)^{n-1} f_x(y)\,\mathrm{d}y.
 \]
 
 \begin{eg}
@@ -145,7 +145,7 @@ we have
 	\begin{enumerate}
 		\item Let \(F_{x}(\cdot)\sim \mathrm{uniform}([0,1]) \). Then
 		      \[
-			      \expectation{y_1} = \int_0^1 n y y^{n-1}\,dy = n\int_0^1 y^n \,dy = \at{\frac{ny^{n+1}}{n+1}}{0}{1} = \frac{n}{n+1} .
+			      \expectation{y_1} = \int_0^1 n y y^{n-1}\,\mathrm{d}y = n\int_0^1 y^n \,\mathrm{d}y = \at{\frac{ny^{n+1}}{n+1}}{0}{1} = \frac{n}{n+1} .
 		      \]
 		      Hence, \(\expectation{x_1}= \frac{1}{2} \).
 		\item Exercise - Try exponential.
@@ -191,7 +191,7 @@ only the distribution of the valuation of others. Now, let
 \]
 where \(\sigma_{i}\) is just the strategy of bidding. Then the utility is
 \[
-	\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(\underbrace{v_{i}, \sigma_{i}(v_{i})}_{\text{known for \(i\)}}, \underbrace{v_{-i}, \sigma_{-i}(v_{-i})}_{\text{random}})\right].
+	\expectation{-i}{u_{i}(\underbrace{v_{i}, \sigma_{i}(v_{i})}_{\text{known for \(i\)}}, \underbrace{v_{-i}, \sigma_{-i}(v_{-i})}_{\text{random}})}.
 \]
 
 The goal is to choose \(\sigma_{i}(\cdot)\) such that expected utility is maximized for each \(v_{i}\)
@@ -208,7 +208,7 @@ Then,
 
 We now aim to maximize
 \[
-	\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))\right].
+	\expectation{-i}{u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))}.
 \]
 
 \subsubsection{Reason of Response}
@@ -329,9 +329,9 @@ If \(I>2\), then the utility is now
 Then, since we're in the interim set-up, the expected value of the utility is
 \[
 	\begin{split}
-		&\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))\right]\\
-		= &\mathbb{\MakeUppercase{E}}_{-i}\left[(v_{i} - \sigma_{i}(v_{i})) \prod\limits_{j\in -i}\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \}}  \right]\\
-		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})},
+		&\expectation{-i}{u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))} \\
+		= &\expectation{-i}{(v_{i} - \sigma_{i}(v_{i})) \prod\limits_{j\in -i}\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \}}}\\
+		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{}{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})},
 	\end{split}
 \]
 where the last equality comes from independence.
@@ -342,7 +342,7 @@ where the last equality comes from independence.
 		\item Fact 1: Identical valuation implies \(\sigma_{i} \equiv \sigma\) for all \(i\in \mathcal{I} \). Same bidding function so it's symmetric.
 		\item Fact 2: \(\sigma(\cdot)\) is monotonically increasing. Then
 		      \[
-			      \probability{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})} = \probability{\sigma(v_{i})\leq \sigma(v_{i})} = \probability{v_{j}\leq v_{i}} = F(v_{i}) = v_{i},
+			      \probability{}{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})} = \probability{}{\sigma(v_{i})\leq \sigma(v_{i})} = \probability{}{v_{j}\leq v_{i}} = F(v_{i}) = v_{i},
 		      \]
 		      where \(F\) is the CDF, and the last equality comes from the fact that we assume the valuation is \(\mathrm{uniform}([0, 1])\).
 

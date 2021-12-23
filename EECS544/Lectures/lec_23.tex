@@ -7,10 +7,10 @@ Now we look at the expected utility of agent \(i\) over other agents' valuation 
 of \(\sigma(\cdot)\), the expected utility of \(i\) is
 \[
 	\begin{split}
-		&\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))\right]\\
-		= &\mathbb{\MakeUppercase{E}}_{-i}\left[(v_{i} - \sigma_{i}(v_{i})) \prod\limits_{j\in -i}\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \}}  \right]\\
-		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})}\\
-		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{v_{j}\leq v_{i}}\\
+		&\expectation{-i}{u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))}\\
+		= &\expectation{-i}{(v_{i} - \sigma_{i}(v_{i})) \prod\limits_{j\in -i}\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \}}}\\
+		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{}{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})}\\
+		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{}{v_{j}\leq v_{i}}\\
 		= &(v_{i} - \sigma_{i}(v_{i}))F^{I-1}(v_{i})\\
 		= &(v_{i} - \sigma_{i}(v_{i}))v_{i}^{I-1}.
 	\end{split}
@@ -46,8 +46,8 @@ To reason about the bidding strategy, we first see an important principle.
 Assume a deviation of \(v_{i}\to v\) and the bid is \(\sigma(v)\). Then the utility becomes
 \[
 	\begin{split}
-		u_{i} &= (v_{i} - \sigma(v))\probability{ \text{Winning with bid } \sigma(v)}\\
-		&= (v_{i} - \sigma(v))\prod\limits_{j\in -i}\probability{\sigma(v_{j})\leq \sigma(v)}\\
+		u_{i} &= (v_{i} - \sigma(v))\probability{}{ \text{Winning with bid } \sigma(v)}\\
+		&= (v_{i} - \sigma(v))\prod\limits_{j\in -i}\probability{}{\sigma(v_{j})\leq \sigma(v)}\\
 		&= (v_{i} - \sigma(v))F^{I-1}(v)\\
 		&= (v_{i} - \sigma(v))v^{I-1} \eqqcolon f_{\sigma}(v; v_{i}).
 	\end{split}
@@ -88,7 +88,7 @@ This equation has to hold for every \(v_{i}\) in \([0, 1]\).
 \]
 Integrate on both sides, we have
 \[
-	\int_0^{\overline{v}}(I - 1)v_{i}^{I-1}\,d v_{i} = \at{v_{i}^{I-1}\sigma^{*}(v_{i})}{0}{\overline{v}}.
+	\int_0^{\overline{v}}(I - 1)v_{i}^{I-1}\,\mathrm{d} v_{i} = \at{v_{i}^{I-1}\sigma^{*}(v_{i})}{0}{\overline{v}}.
 \]
 Solve for the left-hand side, we have
 \[
@@ -116,11 +116,11 @@ which means that agent bids \(\frac{I - 1}{I}\) times the value who estimate!
 \subsubsection{Revenue of the Auctioneer}
 The expected revenue for the auctioneer is equal to
 \[
-	\frac{I - 1}{I}\expectation{\widetilde{v}_I} = \frac{I - 1}{I}\frac{I}{I+1} = \frac{I - 1}{I+1}.
+	\frac{I - 1}{I}\expectation{}{\widetilde{v}_I} = \frac{I - 1}{I}\frac{I}{I+1} = \frac{I - 1}{I+1}.
 \]
 
 \begin{remark}
-	Recall that the expected revenue for \(2^{nd}\) price auction for the auctioneer is \(\expectation{\widetilde{v}_{I-2}} = \frac{I-1}{I+1}\).
+	Recall that the expected revenue for \(2^{nd}\) price auction for the auctioneer is \(\expectation{}{\widetilde{v}_{I-2}} = \frac{I-1}{I+1}\).
 	We see that both auctions give the same expected revenue.
 \end{remark}
 
@@ -220,8 +220,8 @@ If \(x_{i}(\vec{v})=1\), then utility is \(v_{i}\), else \(0\). We then see that
 Then the expected value is
 \[
 	\begin{split}
-		\mathbb{\MakeUppercase{E}}_{-i}\left[u_{i}(v_{i}, x_{i}(\vec{v}))\right] &= v_{i} \mathbb{\MakeUppercase{E}}_{-i}\left[x_{i}(\vec{v})\right] - \mathbb{\MakeUppercase{E}}_{-i}\left[p_{i}(\vec{v})\right]\\
-		&= v_{i} \mathbb{\MakeUppercase{E}}_{-i}\left[x_{i}(v_{i}, v_{-i})\right] - \mathbb{\MakeUppercase{E}}_{-i}\left[p_{i}(v_{i}, v_{-i})\right]\\
+		\expectation{-i}{u_{i}(v_{i}, x_{i}(\vec{v}))} &= v_{i} \expectation{-i}{x_{i}(\vec{v})} - \expectation{-i}{p_{i}(\vec{v})}\\
+		&= v_{i} \expectation{-i}{x_{i}(v_{i}, v_{-i})} - \expectation{-i}{p_{i}(v_{i}, v_{-i})}\\
 		&= v_{i} \overline{x}_{i}(v_{i})-\overline{p}_{i}(v_{i}).
 	\end{split}
 \]
@@ -238,7 +238,7 @@ Now we see a theorem.
 		\item Monotonicity. \(\overline{x}_{i}(v_{i})\) is monotonically non-decreasing.
 		\item Payment identity.
 		      \[
-			      \overline{p}_{i}(v_{i}) = v_{i}\overline{x}_{i}(v_{i}) - \int_0^{v_{i}} \overline{x}_{i}(z)\,dz + \overline{p}_{i}(0),
+			      \overline{p}_{i}(v_{i}) = v_{i}\overline{x}_{i}(v_{i}) - \int_0^{v_{i}} \overline{x}_{i}(z)\,\mathrm{d}z + \overline{p}_{i}(0),
 		      \]
 		      where often \(\overline{p}_{i}(0) = 0\).
 	\end{itemize}

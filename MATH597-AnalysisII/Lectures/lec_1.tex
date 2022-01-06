@@ -1,0 +1,115 @@
+\lecture{1}{05 Jan. 11:00}{Measures}
+\section{Measures}
+\begin{eg}
+	Before we start, we first see some examples.
+	\begin{enumerate}
+		\item Let \(X = \{a, b, c\}\). Then
+		      \[
+			      \mathcal{P}(X)\coloneqq \left\{\varnothing , \{a\}, \{b\}, \{c\}, \{a, b\}, \{a, c\}, \{b, c\}, \{a, b, c\}\right\},
+		      \]
+		      which is the \emph{power set} of \(X\). We see that
+		      \[
+			      \# X = n \implies \# \mathcal{P}(X) = 2^n
+		      \]
+		      for \(n< \infty\).
+		\item If \(n = \infty\), say \(X = \mathbb{\MakeUppercase{N}} \), then
+		      \[
+			      \mathcal{P} (\mathbb{\MakeUppercase{N}} )
+		      \]
+		      is an uncountable set while \(\mathbb{\MakeUppercase{N}}\) is a countable set. We can see this as follows. Consider
+		      \[
+			      \phi\colon \mathcal{P}(\mathbb{\MakeUppercase{N}}) \to \left[0, 1\right],\quad A\mapsto 0.a_1 a_2 a_3 \ldots (\text{base }2),
+		      \]
+		      where
+		      \[
+			      a_i = \begin{dcases}
+				      1, & \text{ if } i\in A     \\
+				      0, & \text{ if } i\notin A,
+			      \end{dcases}
+		      \]
+		      and for example, \(A\) can be
+		      \(A = \{2, 3, 6, \ldots  \}\subseteq \mathbb{\MakeUppercase{N}}\). Note that \(\phi\) is surjective, hence we have
+		      \[
+			      \# \mathcal{P}(\mathbb{\MakeUppercase{N}} ) \geq \#\left[0, 1\right].
+		      \]
+		      But since \(\left[0, 1\right]\) is uncountable, so is \(\mathcal{P} (\mathbb{\MakeUppercase{N}} )\).
+	\end{enumerate}
+\end{eg}
+
+We like to \emph{measure} the \emph{size} of subsets of \(X\). Hence, we are intriguing to define a map \(\mu\) such that
+\[
+	\mu\colon \mathcal{P}(X) \to \left[0, \infty\right].
+\]
+\begin{eg}
+	We first see some examples.
+	\begin{enumerate}
+		\item Let \(X = \{0, 1, 2\}\). Then we want to define \(\mu\colon \mathcal{P}(X)\to \left[0, \infty\right] \), we can have
+		      \begin{itemize}
+			      \item \(\mu(A) = \# A\). Then we have
+			            \begin{itemize}
+				            \item \(\mu(\{0, 1\}) = 2\)
+				            \item \(\mu(\{0\}) = 1\)
+			            \end{itemize}
+			      \item \(\mu(A) = \sum\limits_{i\in A} 2^i\). Then we have
+			            \begin{itemize}
+				            \item \(\mu(\{0, 1\}) = 2^0 + 2^1 = 3\)
+			            \end{itemize}
+		      \end{itemize}
+		\item Let \(X = \{0\}\cup \mathbb{\MakeUppercase{N}} \). Then we want to define \(\mu\colon \mathcal{P}(\mathbb{\MakeUppercase{N}} )\to \left[0, \infty\right] \), we can have
+		      \begin{itemize}
+			      \item \(\mu(A) = \# A\). Then we have
+			            \begin{itemize}
+				            \item \(\mu(\{2, 3, 4, 5, \ldots  \}) = \infty = \mu(\{\text{even numbers} \})\)
+			            \end{itemize}
+			      \item \(\mu(A) = e^{-1}\sum\limits_{i\in A}\frac{1}{i!}\). Then we have
+			            \begin{itemize}
+				            \item \(\mu(\{0, 2, 4, 6, \ldots \}) = e^{-1} \left(1+\frac{1}{2!}+\frac{1}{3!}+\ldots  \right)\)
+			            \end{itemize}
+			      \item \(\mu(A) = \sum\limits_{i\in A} a_{i}\)
+		      \end{itemize}
+		\item Let \(X = \mathbb{\MakeUppercase{R}} \). Then we want to define \(\mu\colon \mathcal{P}(\mathbb{\MakeUppercase{R}} )\to \left[0, \infty\right] \), we can have
+		      \begin{itemize}
+			      \item \(\mu(A) = \# A\)
+			      \item \(\mu(\left(a, b\right)) = b-a\).
+			            \begin{problem}
+			            Can we extend this map to all of \(\mathcal{P}(\mathbb{\MakeUppercase{R}} )\)?
+			            \begin{answer}
+				            No!
+			            \end{answer}
+			            \end{problem}
+			      \item \(\mu(\left(a, b\right)) = e^b - e^a\).
+			            \begin{problem}
+			            Can we extend this map to all of \(\mathcal{P}(\mathbb{\MakeUppercase{R}} )\)?
+			            \begin{answer}
+				            No!
+			            \end{answer}
+			            \end{problem}
+		      \end{itemize}
+	\end{enumerate}
+\end{eg}
+
+We immediately see the problems. To extend our native measure method into \(\mathbb{\MakeUppercase{R}} \) is hard and will cause something counter-intuitive!\footnote{\url{https://en.wikipedia.org/wiki/Banach-Tarski_paradox}}
+Hence, rather than define measurement on \emph{all} subsets in the power set of \(X\), we only focus on \emph{some} subsets. In other words, we
+want to define
+\[
+	\mu\colon \mathcal{P}(\mathbb{\MakeUppercase{R}} )\supset\mathcal{U} \to \left[0, \infty\right].
+\]
+
+\subsection{\(\sigma-\)algebras}
+\begin{definition}
+	Let \(X\) be a set. A collection \(\mathcal{U} \) of subsets of \(X\), i.e., \(\mathcal{U}\subset \mathcal{P} (X) \) is called a \emph{\(\sigma-\)algebra on \(X\)} if
+	\begin{itemize}
+		\item \(\phi\subset \mathcal{U} \)
+		\item \(\mathcal{U} \) is closed under complements. i.e., if \(A\in \mathcal{U} \), \(A^c = X\setminus A\in \mathcal{U} \).
+		\item \(\mathcal{U} \) is closed under countable union. i.e., if \(A_i\in \mathcal{U} \), then \(\bigcup\limits_{i=1}^{\infty} A_{i}\in \mathcal{U} \).
+	\end{itemize}
+\end{definition}
+
+\begin{remark}
+	There are some easy properties we can immediately derive.
+	\begin{itemize}
+		\item \(X\in \mathcal{U} \)
+		\item \(\bigcap\limits_{i=1}^{\infty} A_{i} = \left(\bigcup\limits_{i=1}^{\infty} A_{i}\right)^c\), namely \(\mathcal{U} \) is closed under countable intersections.
+		\item \(A_1\cup A_2 \cup \ldots \cup A_n = A_1\cup A_2 \cup \ldots \cup A_n \cup \varnothing \cup \varnothing \cup\ldots\), hence \(\mathcal{U} \) is closed under finite unions and intersections.
+	\end{itemize}
+\end{remark}

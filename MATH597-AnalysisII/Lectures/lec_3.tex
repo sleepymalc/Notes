@@ -1,0 +1,164 @@
+\lecture{3}{10 Jan. 11:00}{Construct a Measure}
+\begin{note}
+	If \(A, B\in \mathcal{A} \) and \(A\subset B\), then
+	\[
+		\mu(B\setminus A) + \mu(A) = \mu(B) \implies \mu(B \setminus A) = \mu(B) - \mu(A) \text{ if }\mu(A)<\infty.
+	\]
+\end{note}
+
+\begin{theorem}
+	Given \((X, \mathcal{A} , \mu)\) be a measure space.
+	\begin{enumerate}
+		\item \label{thm:montonicity}(monotonicity) \(A, B\in \mathcal{A} \), \(A\subset B \implies \mu(A)\leq \mu(B)\).
+		\item (countable subadditivity) \(A_1, A_2, \ldots \in \mathcal{A} \implies \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu(A_{i})\)
+		\item \label{thm:continuity-from-below}(continuity from below/ monotone convergence theorem (MCT) for sets)
+		      \[
+			      \begin{dcases}
+				      A_1, A_2, \ldots \in \mathcal{A} \\
+				      A_1\subset A_2\subset A_3\subset \ldots
+			      \end{dcases} \implies \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+		\item \label{thm:continuity-from-above}(continuity from above)
+		      \[
+			      \begin{dcases}
+				      A_1, A_2, \ldots \in \mathcal{A}        \\
+				      A_1\supset A_2\supset A_3\supset \ldots \\
+				      \mu(A_1) < \infty
+			      \end{dcases} \implies \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	We prove this theorem one by one.
+	\begin{enumerate}
+		\item Since \(A\subset B\), hence we have
+		      \[
+			      \mu(B) = \mu\underset{\text{disjoint} }{\left(\underline{(B\setminus A)}\cup \underline{\vphantom{(B\setminus A)}A}\right)} \overset{\hyperref[def:measure-countable-additivity]{!}}{=} \underbrace{\mu(B\setminus A)}_{\geq 0} + \mu(A) \geq \mu(A).
+		      \]
+		\item This should be trivial from \hyperref[def:measure-countable-additivity]{countable additivity} with the fact that \(\mu(A)\geq 0\) for all \(A\). \todo{DIY!}
+		\item Let \(B_1 = A_1\), \(B_{i} = A_{i} \setminus A_{i-1}\) for \(i\geq 2\), then
+		      \[
+			      \bigcup\limits_{i=1}^{\infty} A_{i} = \bigcup\limits_{i=1}^{\infty} B_{i}
+		      \]
+		      is a disjoint union and \(B_{i}\in \mathcal{A}\), hence we see that
+		      \[
+			      \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \sum\limits_{i=1}^{\infty} \mu(B_{i}) = \lim\limits_{n \to \infty} \sum\limits_{i=1}^{n} \mu(B_{i}).
+		      \]
+		      With \(\mu\left(\bigcup\limits_{i=1}^{n} B_{i}\right) = \mu(A_{n})\), we have
+		      \[
+			      \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \lim\limits_{n \to \infty} \sum\limits_{i=1}^{n} \mu(B_{i}) = \lim\limits_{n \to \infty} \mu\left(\bigcup\limits_{i=1}^{n} B_{i}\right) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+		\item Let \(E_{i} = A_{1} \setminus A_{i} \implies E_{i}\in \mathcal{A}\), \(E_1\subset E_2\subset \ldots\). We then have
+		      \[
+			      \bigcup\limits_{i=1}^{\infty} E_{i} = \bigcup\limits_{i=1}^{\infty} \left(A_1 \setminus A_{i}\right) = A_1 \setminus \left(\bigcap\limits_{i=1}^{\infty} A_{i}\right),
+		      \]
+		      which implies
+		      \[
+			      \bigcap\limits_{i=1}^{\infty} A_{i} = A_1 \setminus \left(\bigcup\limits_{i=1}^{\infty} E_{i}\right) \implies \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \mu(A_1) - \mu\left(\bigcup\limits_{i=1}^{\infty} E_{i}\right)
+		      \]
+		      since \(\mu\left(\bigcup\limits_{i=1}^{\infty} E_{i}\right) \leq \mu(A_1) < \infty \). Then from \hyperref[thm:continuity-from-below]{continuity from below}, we further have
+		      \[
+			      \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \mu(A_1) - \lim\limits_{n \to \infty} \mu(E_{n}) = \mu(A_1) - \lim\limits_{n \to \infty} \left(\mu(A_1) - \mu(A_{n})\right).
+		      \]
+		      From \hyperref[thm:montonicity]{montonicity}, we see that \(\mu(A_{n})\leq \mu(A_1) < \infty\), hence we can split the limit and further get
+		      \[
+			      \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \mu(A_1) - \mu(A_1) + \lim\limits_{n \to \infty} \mu(A_{n}) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+	\end{enumerate}
+\end{proof}
+
+\begin{eg}
+	Given \(\left(\mathbb{\MakeUppercase{N}}, \mathcal{P} (\mathbb{\MakeUppercase{N}}), \text{ \hyperref[eg:counting-measure]{counting measure}}\right)\). Then we see
+	\begin{itemize}
+		\item \(A_{n} = \{n, n+1, n+2, \ldots  \} \implies \mu(A_{n}) = \infty \)
+		\item \(A_1 \supset A_2\supset A_3\supset \ldots  \)
+		\item \(\bigcap\limits_{i=1}^{\infty} A_{i} = \varnothing \implies \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = 0\)
+	\end{itemize}
+	\begin{remark}
+		We see that in this case, since \(\mu(A_1)\nless \infty \), hence \hyperref[thm:continuity-from-below]{continuity from above} doesn't hold.
+	\end{remark}
+\end{eg}
+
+\hr
+
+We now try to characterize some properties of a measure space.
+\begin{definition}
+	Given \((X, \mathcal{A} , \mu)\)
+	\begin{itemize}
+		\item \(A\subset X\) is a \emph{\(\mu\)-null set} if \(A\in \mathcal{A} \) and \(\mu(A) = 0\).
+		\item \(A\subset X\) is a \emph{\(\mu\)-subnull set} if \(\exists \mu\text{-null set \(B\) such that }A\subset B\). Note that \(A\)
+		      is not necessarily \(\mathcal{A}\)-measurable.
+		\item \((X, \mathcal{A} , \mu)\) is a \emph{complete} measure space if every \(\mu\)-subnull set is \(\mathcal{A}\)-measurable.
+	\end{itemize}
+\end{definition}
+
+There are some useful terminologies we'll use later relating to \(\mu\)-null.
+\begin{definition}[Almost everywhere]
+	Given \((X, \mathcal{A} , \mu)\), a statement \(P(x)\), \(x\in X\) holds \emph{\(\mu\)-almost everywhere (a.e.)} if
+	the set
+	\[
+		\left\{x\in X\colon P(x) \text{ does not hold} \right\}
+	\]
+	is \(\mu\)-null.
+\end{definition}
+
+It's always pleasurable working with finite rather than infinite, hence we give the following definition.
+\begin{definition}[finite measure]\label{def:finite-measure}
+	Given \((X, \mathcal{A} , \mu)\)
+	\begin{itemize}
+		\item \(\mu\) is a \emph{finite measure} if \(\mu(X)<\infty \).
+		\item \(\mu\) is a \emph{\(\sigma\)-finite measure} if \(X = \bigcup\limits_{n=1}^{\infty} X_{n}\), \(X_{n}\in \mathcal{A} \), \(\mu(X_{n})<\infty \).
+	\end{itemize}
+\end{definition}
+
+\begin{exercise}
+	Every measure space can be \textbf{completed}. Namely, we can always find a bigger \(\sigma\)-algebra to complete the space.
+\end{exercise}
+
+\subsection{Outer Measures}
+We start by giving a definition.
+
+\begin{definition}[Outer measure]\label{def:outer-measure}
+	An \emph{outer measure} on \(X\) is a map
+	\[
+		\mu^{*} \colon \mathcal{P} (X)\to [0, \infty ]
+	\]
+	such that
+	\begin{itemize}
+		\item\label{def:outer-measure-empty-measure} \(\mu^{*} (\varnothing ) = 0\)
+		\item\label{def:outer-measure-montonicity} (monotonicity) \(\mu^{*} (A)\leq \mu^{*} (B)\) if \(A\subset B\)
+		\item\label{def:outer-measure-countable-subadditivity} (countable subadditivity) \(\mu^{*} \left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu^{*} (A_{i})\) for every \(A_{i} \subset X \).
+	\end{itemize}
+\end{definition}
+
+\begin{eg}
+	For \(A\subset\mathbb{\MakeUppercase{R}} \),
+	\[
+		\mu^{*} (A) = \inf \left\{\sum\limits_{i=1}^{\infty} (b_{i} - a_{i}) \colon \bigcup\limits_{i=1}^{\infty} (a_{i}, b_{i})\supset A\right\}
+	\]
+	is an outer measure due to the \autoref{prop:outer-measure} we're going to show.
+\end{eg}
+
+\begin{remark}
+	We see that an outer measure need not be a measure. Check the \autoref{def:measure} for a measure function.
+\end{remark}
+
+\begin{proposition}\label{prop:outer-measure}
+	Let \(\mathcal{E} \subset \mathcal{P} (X)\) such that \(\varnothing, X \in  \mathcal{E} \). Let
+	\[
+		\rho\colon \mathcal{E} \to [0, \infty ]
+	\]
+	such that \(\rho(\varnothing ) = 0\). Then
+	\[
+		\mu^{*} (A) \coloneqq \inf\left\{\sum\limits_{i=1}^{\infty} \rho(E_{i})\colon \underset{i\in \mathbb{\MakeUppercase{N}} }{\forall}E_{i}\in \mathcal{E},\ \bigcup\limits_{i=1}^{\infty} E_{i}\supset A\right\}
+	\]
+	is an outer measure on \(X\).
+\end{proposition}
+
+\begin{note}\label{Thm:Tonell's}
+	Recall the Tonelli's Theorem\footnote{\url{https://en.wikipedia.org/wiki/Fubini\%27s_theorem}} for series:
+	\par If \(a_{ij}\in [0, \infty ]\), \(\forall i, j\in \mathbb{\MakeUppercase{N}} \), then
+	\[
+		\sum\limits_{(i, j)\in\mathbb{\MakeUppercase{N}} ^2}a_{ij} = \sum\limits_{i=1}^{\infty} \sum\limits_{j=1}^{\infty} a_{ij} = \sum\limits_{j=1}^{\infty} \sum\limits_{i=1}^{\infty} a_{ij}.
+	\]
+\end{note}

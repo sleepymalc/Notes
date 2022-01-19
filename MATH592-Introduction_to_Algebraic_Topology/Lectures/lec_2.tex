@@ -1,0 +1,153 @@
+\lecture{2}{07 Jan. 10:00}{Homotopy Equivalence}
+\begin{prev}
+	Two maps \(f, g\colon X\to Y\) is homotopy if there exists a map
+	\[
+		F_t(x)\colon X\times I\to Y
+	\]
+	with the properties
+	\begin{enumerate}
+		\item Continuous
+		\item \(F_0(x) = f(x)\)
+		\item \(F_1(x) = g(x)\)
+	\end{enumerate}
+	\begin{remark}
+		The continuity of \(F_t\) is an even stronger condition for the continuity of \(F_t\) for a fixed \(t\).
+	\end{remark}
+\end{prev}
+
+We now introduce another concept.
+\begin{definition}[Homotopy relative]
+	Given two spaces \(X, Y\), and let \(B\subseteq X\). Then a homotopy \(F_t(x)\colon X\to Y\) is called
+	\emph{homotopy relative \(B\)} (denotes \(\mathrm{rel} B\)) if \(F_t(b)\) is independent of \(t\) for all \(b\).
+\end{definition}
+
+\begin{eg}
+	Let \(X = [0, 1]\) and \(B = \{0, 1\}\). Then the homotopy of paths from \([0, 1]\to X\) is \(\mathrm{rel} \{0, 1\}\).
+	\begin{figure}[H]
+		\centering
+		\incfig{eg:rel-homotopy}
+		\label{fig:eg:rel-homotopy}
+	\end{figure}
+\end{eg}
+
+\subsection{Homotopy Equivalence}
+With this, we can introduce the concept of \emph{homotopy equivalence}.
+\begin{definition}[Homotopy Equivalence]
+	A map \(f\colon X\to Y\) is a \emph{homotopy equivalence} if \(\exists g\colon Y\to X\) such that
+	\[
+		f\circ g \simeq \identity_Y, \quad g\circ f \simeq \identity_X.
+	\]
+	We say that \(X\), \(Y\) are \emph{homotopy equivalent}, and \(g\) is called \emph{homotopy inverse} of \(f\).
+\end{definition}
+\begin{figure}[H]
+	\centering
+	\incfig{def:homotopy-equivalence}
+	\caption{Homotopy Equivalence}
+	\label{fig:def:homotopy-equivalence}
+\end{figure}
+If \(X, Y\) are called \emph{homotopy equivalent}, then we say that they have the same \emph{homotopy type}.
+
+\begin{notation}
+	We denote a closed \(n\)-disk as \(D^n\).
+\end{notation}
+\begin{eg}
+	\(D^n\) is homotopy equivalent to a point.
+	\begin{figure}[H]
+		\centering
+		\incfig{eg:closed-disk-eq-point}
+		\label{fig:eg:closed-disk-eq-point}
+	\end{figure}
+
+	We see that \(f\circ g = \identity_*\) and
+	\[
+		g\circ f = \text{constant map at }\underbrace{0}_{g(*)},
+	\]
+	which is homotopic to \(\identity_{D^n}\) by straight-line homotopy \(F_t(x) = tx\).
+\end{eg}
+
+\begin{note}
+	We say that a space is \emph{contractible} if \(H\) is homotopy equivalent to a point.
+\end{note}
+
+Before doing exercises, we introduce two new concepts.
+\begin{definition}[Retraction]
+	Given \(B\subseteq X\), a \emph{retraction} from \(X\) to \(B\) is a map \(f\colon X\to X\) (or \(X\to B\))
+	such that \(\forall b\in B\ f(b) = b\), namely \(\at{r}{B}{} = \identity_B\). Or one can see this from
+	\[
+		\begin{tikzcd}
+			B \ar[rr, swap, bend right=30, "r \circ i"] \ar[r,hook,"i"] & X \ar[r, "r"] & B
+		\end{tikzcd}
+	\]
+	where \(r\) is a retraction if and only if \(r\circ i = \identity_B\), where \(i\) is an inclusion identity.
+	If \(r\) exists, \(B\) is a retract of \(X\).
+\end{definition}
+\begin{definition}[Deformation retraction]
+	Given \(X\) and \(B\subseteq X\), a \emph{(strong) deformation retraction} \(F_t\colon X\to X\) onto \(B\) is
+	a homotopy \(\mathrm{rel} B\) from the \(\identity_X\) to a \emph{retraction} from \(X\) to \(B\). i.e.,
+	\[
+		\begin{alignedat}{4}
+			&F_0(x) &&= &&x\quad &&\forall x\in X\\
+			&F_1(x) &&\in &&B\quad &&\forall x\in X\\
+			&F_t(b) &&= &&b\quad &&\forall t\ \forall b\in B.
+		\end{alignedat}
+	\]
+\end{definition}
+
+\begin{exercise}
+	We now see some problems.
+	\begin{enumerate}
+		\item Let \(X\simeq Y\). Show \(X\) is path-connected if and only if \(Y\) is.
+		      \begin{answer}
+			      Suppose \(X\) is path-connected. Then we see that given two points \(x_1\) and \(x_2\) in \(X\), there exists a path \(\gamma(t)\) with
+			      \[
+				      \gamma\colon [0, 1]\to X,\quad \gamma(0) = x_1,\quad \gamma(1) = x_2.
+			      \]
+			      Since \(X\simeq Y\), then there exists a pair of \(f\) and \(g\) such that \(f\colon X\to Y\) and \(g\colon Y\to X\) with
+			      \[
+				      f\circ g\underset{F}{\simeq} \identity_Y,\quad g\circ f\underset{G}{\simeq} \identity_X.
+			      \]
+			      (Notice the abuse of notation)
+
+			      For any two \(y_1\) and \(y_2\in Y\), we want to construct a path \(\gamma^\prime (t)\) such that
+			      \[
+				      \gamma^\prime \colon [0, 1]\to Y,\quad \gamma^\prime (0) = y_1,\quad \gamma^\prime (1) = y_2.
+			      \]
+
+			      Firstly, we let \(g(y_1) \eqqcolon x_1\) and \(g(y_2) \eqqcolon x_2\). From the argument above, we know there exists such
+			      a \(\gamma\) starting at \(x_1 = g(y_1)\) ending at \(x_2 = g(y_2)\). Now, consider \(f(\gamma(t)) = (f\circ \gamma) (t)\)
+			      such that
+			      \[
+				      f\circ \gamma\colon I\to Y,\quad f\circ \gamma(0) = y_1^\prime,\quad f\circ \gamma(1) = y_2^\prime,
+			      \]
+			      we immediately see that \(y_{1}^\prime\) and \(y_2^\prime \) is path connected. Now, we
+			      claim that \(y_1\) and \(y_1^\prime\) are path connected in \(Y\), hence so are \(y_2\) and \(y_2^\prime \).
+			      To see this, note that
+			      \[
+				      f\circ g\underset{F}{\simeq} \identity_Y,
+			      \]
+			      which means that there exists \(F\colon Y\times I\to Y\) such that
+			      \[
+				      \begin{dcases}
+					       & F(y_1, 0) = f\circ g(y_1) = f(x_1) = f(\gamma(0)) = (f\circ \gamma)(0) = y_1^\prime \\
+					       & F(y_1, 1) = \identity_Y(y_1) = y_1.
+				      \end{dcases}
+			      \]
+			      Since \(F\) is continuous in \(I\), we see that there must exist a path connects \(y_1\) and \(y_1^\prime \). The same argument applies to
+			      \(y_2\) and \(y_2^\prime \). Now, we see that the path
+			      \[
+				      y_1 \to y_1^\prime \to y_2^\prime \to y_2
+			      \]
+			      is a path in \(Y\) for any two \(y_1\) and \(y_2\), which shows \(Y\) is path-connected.
+
+			      \begin{figure}[H]
+				      \centering
+				      \incfig{eg:path-connected}
+				      \caption{Demonstration of the proof}
+				      \label{fig:eg:path-connected}
+			      \end{figure}
+		      \end{answer}
+		      \textbf{Challenge}: One can further show that the connectedness is also preserved by any homotopy equivalence.
+		\item Show that if there exists deformation retraction from
+		      \(X\) to \(B\subseteq X\), then \(X\simeq B\).
+	\end{enumerate}
+\end{exercise}

@@ -1,0 +1,130 @@
+\lecture{6}{19 Jan. 10:00}{A Foray into Category Theory}
+\section{Category Theory}
+We start with a definition.
+\begin{definition}[Category]
+	A category \(\mathcal{C} \) is \(3\) pieces of data
+	\begin{itemize}
+		\item A class of objects \(\mathrm{Ob}(\mathcal{C})\)
+		\item \(\forall (x, y)\in\mathrm{Ob} (\mathcal{C} )\) a class of \underline{morphisms} or \underline{arrows}, \(\mathrm{Hom}_{\mathcal{C}}(x, y)\).
+		\item \(\forall (x, y, z)\), there exists a composition law
+		      \[
+			      \mathrm{Hom} (x, y)\times \mathrm{Hom}(y, z)\to \mathrm{Hom}(x, z) \text{ such that }(f, g)\mapsto g\circ f,
+		      \]
+	\end{itemize}
+	and \(2\) axioms
+	\begin{itemize}
+		\item Associativity. \((f\circ g)\circ h = f\circ (g\circ h)\) for all morphisms \(f, g, h\) where composites are defined.
+		\item Identity. \(\forall x\in\mathrm{Ob}(\mathcal{C})\ \exists \identity_{x}\in\mathrm{Hom}_{\mathcal{C}}(x, x)\) such that
+		      \[
+			      f\circ \identity_{x} = f,\quad \identity_{x} \circ g = g
+		      \]
+		      for all \(f, g\) where this makes sense.
+	\end{itemize}
+\end{definition}
+
+Let's see some examples.
+\begin{eg}
+	We introduce some common category.
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{c|c|c}
+			\toprule
+			\(\mathcal{C} \)       & \(\mathrm{Ob}(\mathcal{C} )\)           & \(\mathrm{Mor}(\mathcal{C} )\) \\
+			\midrule
+			set                    & sets \(X\)                              & all maps of sets               \\
+			fset                   & finite sets                             & all maps                       \\
+			Gp                     & groups                                  & group homos                    \\
+			Ab                     & Abelian groups                          & group homs                     \\
+			\(k\)-vect (Fix \(k\)) & vector spaces over \(k\)                & \(k\)-linear maps              \\
+			Rng                    & rings                                   & rings maps                     \\
+			Top                    & Topological spaces                      & continuous maps                \\
+			hTop                   & Topological spaces                      & homotopy classes of maps       \\
+			\(\mathrm{Top}_*\)     & based topological spaces\footnotemark{} & based maps\footnotemark{}      \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\addtocounter{footnote}{-2}
+	\stepcounter{footnote}\footnotetext{space + choice of distinguished base point \(x_0\in X\) }
+	\stepcounter{footnote}\footnotetext{continuous maps that presence base point \(f\colon (x, x_0)\to (y, y_0)\) such that
+		\[
+			f\colon X\to Y,\quad f(x_0) = y_0
+		\]continuous.}
+\end{eg}
+
+\begin{remark}
+	Any \textbf{diagram} plus composition law.
+	\[
+		\begin{tikzcd}[cells={nodes={}}]
+			\arrow[loop left, distance=1em, start anchor={[yshift=-1ex]west}, end anchor={[yshift=1ex]west}]{}{\identity_{A} } \arrow{r} A
+			& B \arrow[loop right, distance=1em, start anchor={[yshift=1ex]east}, end anchor={[yshift=-1ex]east}]{}{\identity_{B} }
+		\end{tikzcd}.
+	\]
+\end{remark}
+
+\begin{definition}[monic, epic]
+	A morphism \(f\colon M\to N\) is \emph{monic} if
+	\[
+		\forall g_1, g_2\ f\circ g_1 = f\circ g_2 \implies g_1 = g_2.
+	\]
+	\[
+		\begin{tikzcd}
+			A\ar[r, bend left, "g_1"]\ar[r, bend right, "g_2"']& M \ar[r, "f"]& N
+		\end{tikzcd}
+	\]
+	Dually, \(f\) is \emph{epic} if
+	\[
+		\forall g_1, g_2\ g_{1} \circ f = g_2 \circ f \implies g_1 = g_2.
+	\]
+	\[
+		\begin{tikzcd}
+			M\ar[r, "f"]& N\ar[r, bend left, "g_1"]\ar[r, bend right, "g_2"']& B
+		\end{tikzcd}
+	\]
+\end{definition}
+
+\begin{lemma}
+	In \(\mathrm{set}, \mathrm{Ab} , \mathrm{Top} , \mathrm{Gp}  \), a map is monic if and only if \(f\) is injective, and epic if and
+	only if \(f\) is surjective.
+\end{lemma}
+\begin{proof}
+	In \(\mathrm{set} \), we prove that \(f\) is monic if and only if \(f\) is injective. Suppose
+	\(f\circ g_1 = f\circ g_2\), then for any \(a\),
+	\[
+		f(g_1(a)) = f(g_2(a))\implies g_1(a) = g_2(a),
+	\]
+	hence \(g_1 = g_2\).
+
+	\par Now we prove another direction, with contrapositive. Let \(f\) be \underline{not} injective, suppose
+	\(f(a) = f(b)\) and \(a\neq b\). Then take
+	\[
+		g_1\colon *\mapsto a,\quad g_2\colon *\mapsto b.
+	\]
+\end{proof}
+
+\subsection{Functor}
+Again, we start with a definition.
+\begin{definition}[Functor]
+	Given \(\mathcal{C} , \mathcal{D} \) be two categories. A (\underline{covariant}) \emph{functor}
+	\[
+		F\colon \mathcal{C} \to \mathcal{D}
+	\]
+	is
+	\begin{enumerate}
+		\item a map on objects
+		      \[
+			      F\colon \mathrm{Ob}(\mathcal{C} )\to \mathrm{Ob}(\mathcal{D} ).
+		      \]
+		\item maps of morphisms
+		      \[
+			      \begin{split}
+				      \mathrm{Hom}_{\mathcal{C} }(x, y)&\to \mathrm{Hom}_{\mathcal{D} }(F(x), F(y))\\
+				      [f\colon X\to Y] &\mapsto [F(f)\colon F(X)\to F(Y)]
+			      \end{split}
+		      \]
+		      such that
+		      \begin{itemize}
+			      \item \(F(\identity_{x} ) = \identity_{F(x)} \)
+			      \item \(F(f\circ g) = F(g)\circ F(g)\)
+		      \end{itemize}
+	\end{enumerate}
+\end{definition}

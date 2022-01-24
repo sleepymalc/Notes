@@ -1,1 +1,172 @@
 \lecture{8}{24 Jan. 11:00}{}
+To classify all measure, we now see this last theorem to complete the task.
+\begin{theorem}[Locally finite Borel measures on \(\mathbb{\MakeUppercase{r}} \)]
+	We have
+	\begin{enumerate}
+		\item \(F\colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \) a distribution function, then there exists
+		      a unique locally finite Borel measure \(\mu _F\) on \(\mathbb{\MakeUppercase{r}} \) satisfying \(\mu _F((a, b])=F(b)-F(a)\) for every \(a<b\).
+		\item Suppose \(F, G\colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \) are distribution functions. Then,
+		      \[
+			      \mu _F = \mu _G
+		      \]
+		      on \(\mathcal{B} (\mathbb{\MakeUppercase{r}} )\) if and only if \(F-G\) is a constant function.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	\todo{HW.}
+\end{proof}
+
+\subsection{Lebesgue-Stieltjes Measure on \(\mathbb{R} \)}
+We see that
+\[
+	F \text{ distribution function} \overset{\hyperref[thm:Hahn-Kolmogorov-Thm]{!}}{\implies } \mu _F \text{ on Carathéodory \(\sigma\)-algebra }\mathcal{A}_{\mu _F}\supset \mathcal{B} (\mathbb{\MakeUppercase{r}}) .
+\]
+Actually, we have
+\[
+	(\mathcal{A}_{\mu _F}, \mu _F) = \overline{(\mathcal{B} (\mathbb{\MakeUppercase{r}} ), \mu _F)}.
+\]
+\begin{definition}[Lebesgue-Stieltjes measure]
+	We define
+	\begin{itemize}
+		\item \(\mu _F\) on \(\mathcal{A} _{\mu _F}\) is called the \emph{Lebesgue-Stieltjes} measure corresponding to \(F\).
+		\item Special case: \(F(x)=x\implies \) Lebesgue measure \((\mathcal{L} , m)\), where \(\mathcal{L} \) is called Lebesgue \(\sigma\)-algebra,
+		      and \(m\) is called Lebesgue measure.
+	\end{itemize}
+\end{definition}
+
+\begin{note}
+	We see that since \(F\) is right-continuous and increasing, hence
+	\[
+		F(x^-)\leq F(x) = F(x^+),
+	\]
+\end{note}
+
+\begin{eg}
+	We first see some examples.
+	\begin{enumerate}
+		\item \(\mu _F((a, b]) = F(b) - F(a)\). Then
+		      \begin{itemize}
+			      \item \(\mu _F(\{a\}) = F(a) - F(a^-)\)
+			      \item \(\mu _F([a, b]) = F(b) - F(a^-)\)
+			      \item \(\mu _F((a, b)) = F(b^-) - F(a)\)
+		      \end{itemize}
+		\item We define
+		      \[
+			      F(x) = \begin{dcases}
+				      1, & \text{ if } x\geq 0 ; \\
+				      0, & \text{ if } x<0.
+			      \end{dcases}
+		      \]
+		      Then
+		      \begin{itemize}
+			      \item \(\mu _F(\{0\})=1\)
+			      \item \(\mu _F(\mathbb{\MakeUppercase{r}} ) = 1\)
+			      \item \(\mu _F(\mathbb{\MakeUppercase{r}}\setminus \{0\} ) = 0\).
+		      \end{itemize}
+		      We call that \(\mu _F\) is the \underline{Dirac measure} at \(0\).
+		\item Denote \(\mathbb{\MakeUppercase{q}} = \{r_1, r_2, \ldots  \}\), and we define
+		      \[
+			      F(x) = \sum\limits_{n=1}^{\infty} \frac{F_n(x)}{2^n} \text{ where }  F_{n}(x) = \begin{dcases}
+				      1, & \text{ if } x\geq r_n; \\
+				      0, & \text{ if } x<r.       \\
+			      \end{dcases}
+		      \]
+		      Then\todo{HW}
+		      \begin{itemize}
+			      \item \(\mu _F(\{x\})>0\) for all \(r_{i}\in\mathbb{\MakeUppercase{q}} \).
+			      \item \(\mu _F(\mathbb{\MakeUppercase{r}} \setminus \mathbb{\MakeUppercase{q}} ) = 0\)
+		      \end{itemize}
+		\item If \(F\) is continuous at \(a\), then \(\mu _F(\{a\}) = 0\).
+		\item \(F(x) = x\)
+		      \begin{itemize}
+			      \item \( m((a, b]) = m((a, b)) = m([a, b]) = b - a\).
+		      \end{itemize}
+		\item \(F(x) = e^x\)
+		      \begin{itemize}
+			      \item \(\mu _F((a, b]) = \mu _F((a, b)) = e^b - e^a\).
+		      \end{itemize}
+	\end{enumerate}
+	\begin{remark}
+		We see that the first two examples are \emph{discrete measures}.
+	\end{remark}
+\end{eg}
+
+\begin{eg}[Middle thirds Cantor set]
+	Let \(C \coloneqq \bigcap\limits_{n=1}^{\infty} K_{n}\).
+
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\foreach \order in {0,...,4}
+			\draw[yshift=-\order*10pt]  l-system[l-system={cantor set, axiom=F, order=\order, step=100pt/(3^\order)}];
+		\end{tikzpicture}
+	\end{figure}
+
+	Since \(C\) is uncountable set, hence \(m(C) = 0\). And notice that
+	\[
+		x\in C \iff x = \sum\limits_{n=1}^{\infty} \frac{a_{n}}{3^n},\ a_{n}\in\{0, 2\}.
+	\]
+\end{eg}
+
+\subsubsection{Cantor Function}
+Consider \(F\) as follows.
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+		\tikzset{
+			if/.code n args=3{\pgfmathparse{#1}\ifnum\pgfmathresult=0\pgfkeysalso{#3}\else\pgfkeysalso{#2}\fi},
+			lower cantor/.initial=.3333, upper cantor/.initial=.6667, y cantor/.initial=.5,
+			declare function={
+					cantor_l(\lowerBound,\upperBound)=(\pgfkeysvalueof{/tikz/lower\space cantor})*(\upperBound-\lowerBound)+\lowerBound;
+					cantor_u(\lowerBound,\upperBound)=(\pgfkeysvalueof{/tikz/upper\space cantor})*(\upperBound-\lowerBound)+\lowerBound;
+					cantor(\lowerBound,\upperBound)=(\pgfkeysvalueof{/tikz/y\space cantor})*(\upperBound-\lowerBound)+\lowerBound;},
+			cantor start/.style n args=5{%
+					insert path={(#1,#3)},
+					cantor={#1}{#2}{#3}{#4}{#5}{0},
+					insert path={to[every cantor edge/.try, cantor 1 edge/.try] (#2,#4)}},
+			cantor/.style n args=6{%
+					/utils/exec=%
+					\pgfmathsetmacro\lBx{cantor_l(#1,#2)}%
+					\pgfmathsetmacro\uBx{cantor_u(#1,#2)}%
+					\pgfmathsetmacro\y{cantor(#3,#4)},% fun
+					style/.expanded={
+							if={#6<#5}{cantor={#1}{\lBx}{#3}{\y}{#5}{#6+1}}{},
+							insert path={to[every cantor edge/.try, cantor 1 edge/.try] (\lBx,\y)to[every cantor edge/.try, cantor 2 edge/.try] (\uBx,\y)},
+							if={#6<#5}{cantor={\uBx}{#2}{\y}{#4}{#5}{#6+1}}{}}}
+		}
+		\foreach \level in {5}{
+				\begin{tikzpicture}[line join=round, scale=0.8] % cantor 1 edge/.style={move to}
+					(0,0) grid[xstep=1/9, ystep=.25] (1,1);
+					\draw[thick, cantor start={0}{6}{0}{6}{\level}{0}];
+				\end{tikzpicture}}
+	\end{tikzpicture}
+	\caption{Cantor Function (Devil's Staircase).}
+\end{figure}
+
+We see that \(F\) is \emph{continuous} and increasing. Furthermore,
+\[
+	\begin{alignedat}{3}
+		&\mu _F(\mathbb{\MakeUppercase{r}} \setminus C) = 0 &\qquad &m(\mathbb{\MakeUppercase{r}} \setminus C)=\infty >0\\
+		&\mu _F(C) = 1 & \iff\quad &m(C) = 0\\
+		&\mu _F(\{a\}) = 0 & &m(\{a\})=0
+	\end{alignedat}
+\]
+\begin{remark}
+	\(\mu _F\) and \(m\) are said to be \textbf{singular} to each other.
+\end{remark}
+
+\subsection{Regularity Properties of Lebesgue-Stieltjes Measures}
+We first see a lemma.
+\begin{lemma}
+	Let \(\mu\) be Lebesgue-Stieltjes measure on \(\mathbb{\MakeUppercase{r}} \). Then we have
+	\[
+		\begin{split}
+			\mu (A) &\overset{\hyperref[prop:outer-measure]{!}}{=}\inf\left\{\sum\limits_{i=1}^{\infty} \mu ((a_{i}, b_{i}]) \mid \bigcup\limits_{i=1}^{\infty} (a_{i}, b_{i}]\supset A\right\}\\
+			&=\footnotemark\inf\left\{\sum\limits_{i=1}^{\infty} \mu ((a_{i}, b_{i})) \mid \bigcup\limits_{i=1}^{\infty} (a_{i}, b_{i})\supset A\right\}
+		\end{split}
+	\]
+	for every \(A\in \mathcal{A} _\mu \)
+	\footnotetext{This follows from the continuity of measure.}
+\end{lemma}
+

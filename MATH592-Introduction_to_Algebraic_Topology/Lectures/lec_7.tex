@@ -1,0 +1,221 @@
+\lecture{7}{21 Jan. 10:00}{Functors}
+\begin{prev}
+	Assume that we initially have a commutative diagram in \(\mathscr{C} \) as
+	\[
+		\begin{tikzcd}
+			X \ar[rd, "g\circ f"']\ar[r, "f"] & Y\ar[d, "g"]\\
+			& Z
+		\end{tikzcd}
+	\]
+	After applying \(F\), we'll have
+	\[
+		\begin{tikzcd}
+			F(X) \ar[rd, "F(g\circ f)=F(g)\circ F(f)"']\ar[r, "F(f)"] & F(Y)\ar[d, "F(g)"]\\
+			& F(Z)
+		\end{tikzcd}
+	\]
+	which is a commutative diagram in \(\mathscr{D}\).
+\end{prev}
+
+We can also have a so-called \underline{contravariant} functor.
+\begin{definition}[Contravariant functor]
+	Given \(\mathscr{C} , \mathscr{D} \) be two categories. A \underline{contravariant} \emph{functor}
+	\[
+		F\colon \mathscr{C} \to \mathscr{D}
+	\]
+	is
+	\begin{enumerate}
+		\item a map on objects
+		      \[
+			      \begin{split}
+				      F\colon \Object(\mathscr{C} )&\to \Object(\mathscr{D} )\\
+				      X&\mapsto F(X).
+			      \end{split}
+		      \]
+		\item maps of morphisms
+		      \[
+			      \begin{split}
+				      \Homomorphism_{\mathscr{C} }(X, Y)&\to \Homomorphism_{\mathscr{D} }(F(Y), F(X))\\
+				      \left[f\colon X\to Y\right] &\mapsto \left[F(f)\colon F(Y)\to F(X)\right]
+			      \end{split}
+		      \]
+		      such that
+		      \begin{itemize}
+			      \item \(F(\identity_{X} ) = \identity_{F(x)} \)
+			      \item \(F(f\circ g) = F(g)\circ F(f)\)
+		      \end{itemize}
+	\end{enumerate}
+\end{definition}
+
+Then, we see that in this case, when we apply a contravariant functor \(F\), the diagram becomes
+\[
+	\begin{tikzcd}
+		F(X)  & F(Y)\ar[l, "F(f)"']\\
+		& F(Z)\ar[lu, "F(g\circ f)=F(f)\circ F(g)"]\ar[u, "F(g)"']
+	\end{tikzcd}
+\]
+which is a commutative diagram in \(\mathscr{D}\).
+
+\begin{eg}
+	Let see some examples.
+	\begin{enumerate}
+		\item Identity functor.
+		      \[
+			      I\colon \mathscr{C} \to \mathscr{C}.
+		      \]
+		\item Forgetful functors.
+		      \begin{itemize}
+			      \item \[
+				            \begin{split}
+					            F\colon \underline{\mathrm{Gp}}&\to \underline{\mathrm{set}} \\
+					            G&\mapsto G\footnotemark\\
+					            \left[f\colon G\to H\right]&\mapsto \left[f\colon G\to H\right]
+				            \end{split}
+			            \]
+			            \addtocounter{footnote}{-1}
+			            \stepcounter{footnote}\footnotetext{\(G\) is now just the underlying set of the group \(G\).}
+			      \item \[
+				            \begin{split}
+					            F\colon \underline{\mathrm{Top}}&\to \underline{\mathrm{set}}\\
+					            X&\mapsto X\footnotemark\\
+					            \left[f\colon X\to Y\right]&\mapsto \left[f\colon X\to Y\right]
+				            \end{split}
+			            \]
+			            \addtocounter{footnote}{-1}
+			            \stepcounter{footnote}\footnotetext{\(X\) is now just the underlying set of the topological space \(X\).}
+		      \end{itemize}
+		\item Free functors.
+		      \[
+			      \begin{split}
+				      \underline{\mathrm{set}}&\to \underline{k\mathrm{-vect}}  \\
+				      s&\mapsto \text{"free" \(k\)-vector space on \(s\)}
+			      \end{split}
+		      \]
+		      i.e., vector space with basis \(s\)
+		      \[
+			      \left[f\colon A\to B\right]\mapsto \left[\text{unique \(k\)-linear map extending \(f\)}\right]
+		      \]
+		\item
+		      \[
+			      \begin{split}
+				      \underline{k\mathrm{-vect}}&\to \underline{k\mathrm{-vect}}  \\
+				      V&\mapsto V^{*} = \Homomorphism _k(V, k)
+			      \end{split}
+		      \]
+		      If we are working in a basis, then we have
+		      \[
+			      A\mapsto A^{T}.
+		      \]
+	\end{enumerate}
+\end{eg}
+
+\hr
+
+Specifically, we care about two functors.
+\begin{enumerate}
+	\item
+	      \[
+		      \begin{split}
+			      \underline{\mathrm{Top}^*} &\to \underline{\mathrm{Gp}} \\
+			      (X, x_0)&\mapsto \Pi_1(X, x_0)
+		      \end{split}
+	      \]
+	      where \(\Pi _1\) is so-called \emph{fundamental group}.
+	\item
+	      \[
+		      \begin{split}
+			      \underline{\mathrm{Top}} &\to \underline{\mathrm{Ab}} \\
+			      X&\mapsto \mathrm{Hp}(X)
+		      \end{split}
+	      \]
+	      where \(\mathrm{Hp} \) is so-called \emph{\(p^{th}\) homology}.
+\end{enumerate}
+
+Let see the formal definition.
+
+\section{Free Groups}
+\begin{definition}[Free group]
+	Given a set \(S\), the \emph{free group} is a group \(F_S\) on \(S\) with a map \(S\to F_S\) satisfying the
+	universal property.
+
+	If \(G\) is any group, \(f\colon S\to G\) is any map of sets, \(f\) extends uniquely to group homomorphism \(\overline{f} \colon F_S \to G\).
+	\[
+		\begin{tikzcd}
+			S \ar[rd, "f"']\ar[r, ] & F_S\ar[d, dashed, "\exists ! \overline{f} \colon \text{gp hom} "]\\
+			& G
+		\end{tikzcd}
+	\]
+\end{definition}
+\begin{note}
+	This defines a \emph{natural bijection}
+	\[
+		\Homomorphism_{\underline{\mathrm{set}}}(S, \mathscr{U}(G))\cong \Homomorphism_{\underline{\mathrm{Gp}}}(F_S, G),
+	\]
+	where \(\mathscr{U} (G)\) is the forgetful functor from the category of groups to the category of sets. This is the
+	statement that the free functor and the forgetful functor are \hyperref[def:adjoint-functor]{adjoint};
+	specifically that the free functor is the left adjoint (appears on the left in the Hom's above).
+\end{note}
+
+\begin{definition}[Adjoints functor]\label{def:adjoint-functor}
+	A \underline{free} and \underline{forgetful} functors are \emph{adjoints}.
+\end{definition}
+
+\begin{remark}
+	Whenever we state a universal property for an object (plus a map), an object (plus a map) \underline{may or may not} exist.
+	If such object exists, then it defines the object \textbf{uniquely up to unique isomorphism}, so we can use the universal
+	property as the \emph{definition} of the object (plus a map).
+\end{remark}
+
+\begin{lemma}
+	Universal property defines \(F_S\) (plus a map \(S\to F(S)\) ) uniquely up to unique isomorphism.
+\end{lemma}
+\begin{proof}
+	Fix \(S\). Suppose
+	\[
+		S\to F_S,\quad S\to \widetilde{F} _S
+	\]
+	both satisfy the unique property. By universal property, there exist maps such that
+	\[
+		\begin{tikzcd}
+			S \ar[rd, "f"']\ar[r, ] & \widetilde{F}_S\ar[d, dashed, "\exists ! \varphi"]\\
+			& F_S
+		\end{tikzcd}\qquad
+		\begin{tikzcd}
+			S \ar[rd, "f"']\ar[r, ] & F_S\ar[d, dashed, "\exists ! \psi"]\\
+			& \widetilde{F} _S
+		\end{tikzcd}
+	\]
+
+	We'll show \(\varphi\) and \(\psi \) are inverses (and the unique isomorphism making above commute). Since
+	we must have the following two commutative graphs.
+	\[
+		\begin{tikzcd}
+			& F_S\ar[dd, "\identity_{F_S}"]\\
+			S \ar[rd, "f"']\ar[ru, "f"]&\\
+			& F_S
+		\end{tikzcd}\quad
+		\begin{tikzcd}
+			& \widetilde{F}_S\ar[dd, "\identity_{\widetilde{F}_S} "]\\
+			S \ar[rd, "f"']\ar[ru, "f"]&\\
+			& \widetilde{F}_S
+		\end{tikzcd}
+	\]
+	Hence, we see that
+	\[
+		\begin{tikzcd}
+			& F_S\ar[d, "\psi"]\ar[dd, bend left, "\varphi \circ \psi = \identity_{F_S}"]\\
+			S \ar[rd, "f"']\ar[ru, "f"]\ar[rd]\ar[r] & \widetilde{F}_S\ar[d, "\varphi"]\\
+			& F_S
+		\end{tikzcd}\qquad
+		\begin{tikzcd}
+			& \widetilde{F} _S\ar[d, "\varphi"]\ar[dd, bend left, "\psi \circ \varphi = \identity_{\widetilde{F}_S}"]\\
+			S \ar[rd, "f"']\ar[ru, "f"]\ar[rd]\ar[r] & F_S\ar[d, "\psi "]\\
+			& \widetilde{F} _S
+		\end{tikzcd}
+	\]
+	where the identity makes these outer triangles commute, then by the uniqueness in universal property, we must have
+	\[
+		\varphi\circ \psi  = \identity_{F_S},\qquad \psi \circ \varphi = \identity_{\widetilde{F} _S},
+	\]
+	so \(\varphi\) and \(\psi \) are inverses (thus group isomorphism).
+\end{proof}

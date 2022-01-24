@@ -1,4 +1,4 @@
-\lecture{8}{24 Jan. 10:00}{}
+\lecture{8}{24 Jan. 10:00}{The Fundamental Group \(\pi _1\)}
 \begin{eg}
 	In category \(\underline{\mathrm{Ab}}\) free Abelian group on a set \(S\) is
 	\[
@@ -7,47 +7,80 @@
 	In category of fields, no such thing as \textbf{free field on \(\bm{S} \) }.
 \end{eg}
 
-\subsection{Constructing the free group \(F_S\)}
-Fix a set \(S\), and we define a \underline{word} as a finite sequence (possibly \(\varnothing \))
-in the formal symbols
-\[
-	\left\{s, s ^{-1} \mid s\in S\right\}.
-\]
-Then we see that elements in \(F_S\) are equivalence classes of words with the equivalence relation being
-\begin{itemize}
-	\item delete \(s s ^{-1} \) or \(s ^{-1} s\). i.e.,
-	      \[
-		      \begin{split}
-			      vs ^{-1} s w&\sim vw\\
-			      v s s ^{-1}  w &\sim vw
-		      \end{split}
-	      \]
-	      for every word \(v, w, s\in S\),
-\end{itemize}
-with the group operation being concatenation.
+\subsubsection{Constructing the Free Groups \(F_S\)}
+\begin{proposition}
+	The free group defined via the universal property before exists.
+\end{proposition}
+\begin{proof}
+	We'll just give a construction below. First, we see the definition.
+	\begin{definition}
+		Fix a set \(S\), and we define a \underline{word} as a finite sequence (possibly \(\varnothing \))
+		in the formal symbols
+		\[
+			\left\{s, s ^{-1} \mid s\in S\right\}.
+		\]
+	\end{definition}
+
+	Then we see that elements in \(F_S\) are equivalence classes of words with the equivalence relation being
+	\begin{itemize}
+		\item delete \(s s ^{-1} \) or \(s ^{-1} s\). i.e.,
+		      \[
+			      \begin{split}
+				      vs ^{-1} s w&\sim vw\\
+				      v s s ^{-1}  w &\sim vw
+			      \end{split}
+		      \]
+		      for every word \(v, w, s\in S\),
+	\end{itemize}
+	with the group operation being concatenation.
+\end{proof}
+
+\begin{eg}
+	Given words \(ab^{-1} , bba\), their product is
+	\[
+		ab^{-1} \cdot bba = ab^{-1}  bb a = aba.
+	\]
+\end{eg}
 
 \begin{exercise}
-	Check that \(F_S\) satisfies the universal property.
+	There are something we can check.
+	\begin{enumerate}
+		\item This product is well-defined on equivalence classes.
+		\item Every equivalence class of words has a unique \emph{reduced form}, namely the representation.
+		\item Check that \(F_S\) satisfies the universal property with respect to the map
+		      \[
+			      S\to F_S,\quad s\mapsto s.
+		      \]
+	\end{enumerate}
 \end{exercise}
 
-\section{Fundamental Group}
+\section{The Fundamental Group \(\pi_1\) }
 We start with the definition.
 \begin{definition}[Path]
-	A \emph{path} in a space \(X\) is a continuous map \(\gamma\colon I\to X\), \(I = [0, 1]\).
-	A \emph{homotopy of paths} \(\gamma_0\), \(\gamma_1\) is a homotopy \(\mathrm{rel} \{0, 1\}\).
+	A \emph{path} in a space \(X\) is a continuous map
+	\[
+		\gamma\colon I\to X
+	\]
+	where \(I = [0, 1]\).
+\end{definition}
+
+\begin{definition}[Homotopy path]
+	A \emph{homotopy of paths} \(\gamma_0\), \(\gamma_1\) is a homotopy from \(\gamma_0\) to \(\gamma_1\) \(\mathrm{rel} \{0, 1\}\).
 	\begin{figure}[H]
 		\centering
 		\incfig{def:homotopy-of-paths}
 		\label{fig:def:homotopy-of-paths}
 	\end{figure}
 \end{definition}
+
 \begin{eg}
 	Fix \(x_1, x_0\in X\), then \underline{\(\exists\) homotopy of paths} is an equivalence relation on paths
 	from \(x_0\) to \(x_1\) (i.e., \(\gamma\) with \(\gamma(0)=x_0, \gamma(1)=x_1\)).
 \end{eg}
 
-\begin{definition}
-	For paths \(\alpha , \beta \) in \(X\) with \(\alpha (1) = \beta (0)\), the composition \(\alpha \cdot \beta \) is
+\begin{definition}[Path composition]\label{def:path-composition}
+	For paths \(\alpha , \beta \) in \(X\) with \(\alpha (1) = \beta (0)\), the \emph{composition}\footnote{Also named \emph{product}, \emph{concatenation}.}
+	\(\alpha \cdot \beta \) is
 	\[
 		(\alpha \cdot \beta )(t) \coloneqq \begin{dcases}
 			\alpha (2t),  & \text{ if } t\in \left[0, \frac{1}{2}\right]  \\
@@ -61,36 +94,54 @@ We start with the definition.
 	\end{figure}
 \end{definition}
 
-\begin{definition}[reparameterization]
+\begin{remark}
+	By the pasting lemma, this is continuous, hence \(\alpha \cdot \beta \) is actually a path from \(\alpha (0)\) to \(\beta (1)\).
+\end{remark}
+
+\begin{definition}[Reparameterization]
 	Let \(\gamma\colon I\to X\) be a path, then a \emph{reparameterization} of \(\gamma\) is a path
 	\[
-		\gamma ^\prime \colon I\overset{\phi }{\longrightarrow} I\overset{\gamma}{\longrightarrow} X
+		\gamma ^\prime \colon I\overset{\varphi }{\longrightarrow} I\overset{\gamma}{\longrightarrow} X
 	\]
-	where \(\phi \) is continuous and
+	where \(\varphi \) is \underline{continuous} and
 	\[
-		\phi (0) = 0,\quad \phi (1) = 1.
+		\varphi (0) = 0,\quad \varphi (1) = 1.
 	\]
 \end{definition}
 
+\begin{exercise}
+	A path \(\gamma\) is homotopic \(\mathrm{rel} \{0, 1\}\) to all of its reparameterizations.\todo{HW}
+\end{exercise}
+
+\begin{exercise}
+	Fix \(x_1, x_1\in X\). Then \underline{Homotopy of paths} (relative \(\{0, 1\}\)) is an equivalence relation on paths from \(x_0\) to \(x_1\).
+\end{exercise}
+
 \begin{definition}[Fundamental Group]
-	Let \(X\) denotes the space and let \(x_0\in X\) be the base point. The fundamental group \(\pi_1(X, x_0)\) of \(X\)
-	based at \(x_0\) is a group with
+	Let \(X\) denotes the space and let \(x_0\in X\) be the base point. The \emph{fundamental group of \(X\) based at \(x_0\)},
+	denoted by \(\pi_1(X, x_0)\), is a group such that
 	\begin{itemize}
-		\item elements: homotopy classes of paths \([\gamma]\) where \(\gamma\) is a loop with \(\gamma(0) = \gamma(1) = x_0\)
+		\item Elements: Homotopy classes \(\mathrm{rel} \{0, 1\}\) of paths \([\gamma]\) where \(\gamma\) is a \textbf{loop}
+		      with \(\gamma(0) = \gamma(1) = x_0\)\footnote{We say \(\gamma\) is \textbf{based} at \(x_0\).}
 		      \begin{figure}[H]
 			      \centering
 			      \incfig{def:fundamental-group-elements}
 			      \label{fig:def:fundamental-group-elements}
 		      \end{figure}
-		\item operation: composition of paths
-		\item constant loop:
+		\item Operation: \hyperref[def:path-composition]{Composition of paths}.
+		\item Identity: Constant loop \(\gamma\) based at \(x_0\) such that
 		      \[
 			      \gamma\colon I\to X,\quad t\mapsto x_0
 		      \]
-		\item inverses.
+		\item Inverses: The inverse \([\gamma]^{-1}\) of \([\gamma]\) is represented by the loop \(\overline{\gamma}\) such that
 		      \[
 			      \overline{\gamma} (t) = \gamma(1-t).
 		      \]
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{def:fundamental-group-inverses}
+			      \label{fig:def:fundamental-group-inverses}
+		      \end{figure}
 	\end{itemize}
 \end{definition}
 \begin{proof}
@@ -104,9 +155,16 @@ We start with the definition.
 	\]
 \end{theorem}
 \begin{remark}
-	We often write \(\pi _1(X)\).
+	We often write \(\pi _1(X)\) up to isomorphism.
 \end{remark}
 \begin{proof}
 	\todo{HW.}
 \end{proof}
 
+\begin{exercise}
+	Composition of paths is well-defined on homotopy classes \(\mathrm{rel} \{0, 1\}\).
+\end{exercise}
+
+\begin{exercise}
+	If \(X\) is a contractible space, then \(X\) is path connected and \(\pi _1(X)\)  is trivial.
+\end{exercise}

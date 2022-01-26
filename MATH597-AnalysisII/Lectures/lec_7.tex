@@ -2,7 +2,7 @@
 \subsection{Borel Measures on \(\mathbb{R}\)}
 We first introduce so-called \emph{distribution function}.
 
-\begin{definition}[Distribution function]
+\begin{definition}[Distribution function]\label{def:distribution-function}
 	An \underline{increasing}\footnote{Here, increasing means \(F(x)\leq F(y)\) for \(x<y\).} function
 	\[
 		F\colon \mathbb{\MakeUppercase{R}} \to \mathbb{\MakeUppercase{R}}
@@ -47,13 +47,13 @@ We first introduce so-called \emph{distribution function}.
 	In probability theory, cumulative distribution function (CDF) is a distribution function with \(F(\infty ) = 1\), \(F(-\infty ) = 0\).\footnote{There are \underline{distributions} \cite{folland1999real} Ch9., but these are different from distribution functions.}
 \end{note}
 
-\begin{definition}[Locally finite]
+\begin{definition}[Locally finite]\label{def:locally-finite}
 	Let \(X\) be a topological space, \(\mu\) on \((X, \mathcal{B} (X))\) is called \emph{locally finite} if \(\mu (K)<\infty \)
 	for every compact set \(K\subset X\).
 \end{definition}
 
 \begin{lemma}
-	Let \(\mu \) be a locally finite Borel measure on \(\mathbb{\MakeUppercase{R}} \), then
+	Let \(\mu \) be a \hyperref[def:locally-finite]{locally finite} Borel measure on \(\mathbb{\MakeUppercase{R}} \), then
 	\[
 		F_{\mu }(x) = \begin{dcases}
 			\mu \left((0, x]\right),  & \text{ if } x > 0 \\
@@ -61,13 +61,32 @@ We first introduce so-called \emph{distribution function}.
 			-\mu \left((x, 0]\right), & \text{ if } x < 0
 		\end{dcases}
 	\]
-	is a distribution function.
+	is a \hyperref[def:distribution-function]{distribution function}.
 \end{lemma}
 \begin{proof}
+	To show \(F_\mu\) is increasing, consider \(x<y\) such that
+	\[
+		F_\mu (x) \leq F_\mu (y)
+	\]
+	by considering
+	\begin{itemize}
+		\item \(x>0\): Then \(F_\mu (x) = \mu ((0, x])\) and
+		      \[
+			      F_\mu (y) = \mu ((0, y]) = \mu ((0, x]\cup (x, y]) \geq \mu ((0, x]) = F_\mu (x).
+		      \]
+		\item \(x=0\): Then \(F_\mu (x) = 0\) and
+		      \[
+			      F_\mu (y) = \mu ((0, y])\geq 0 = F_\mu (0)
+		      \]
+		      since \(y>0\).
+		\item \(x<0\): Follows the same argument with \(x>0\).
+	\end{itemize}
+
+	\par Now, we need to show \(F_\mu \) is right-continuous.
 	\todo{DIY, use continuity of measure}
 \end{proof}
 
-\begin{definition}[Half intervals]
+\begin{definition}[Half intervals]\label{def:half-intervals}
 	We call
 	\[
 		\varnothing , (a, b], (a, \infty ), (-\infty , b], (-\infty , \infty )
@@ -76,11 +95,23 @@ We first introduce so-called \emph{distribution function}.
 \end{definition}
 
 \begin{lemma}
-	Let \(\mathcal{H} \) be the collection of \underline{finite disjoint} unions of half-intervals. Then, \(\mathcal{H} \)
-	is an algebra on \(\mathbb{\MakeUppercase{R}} \).
+	Let \(\mathcal{H} \) be the collection of \underline{finite disjoint} unions of \hyperref[def:half-intervals]{half-intervals}. Then, \(\mathcal{H} \)
+	is an \hyperref[def:algebra]{algebra} on \(\mathbb{\MakeUppercase{R}} \).
 \end{lemma}
 \begin{proof}
-	\todo{DIY}
+	We see that
+	\begin{itemize}
+		\item \(\varnothing \in \mathcal{H} \). Clearly.
+		\item To show \(\mathcal{H} \) is closed under complements, we have
+		      \begin{itemize}
+			      \item \(\varnothing ^{c} = \mathbb{\MakeUppercase{r}} = (-\infty , \infty )\in \mathcal{H}\).
+			      \item \((a, b]^{c} = (-\infty , a] \cup (a, \infty )\in\mathcal{H} \).\footnote{Since it's a two disjoint union of half intervals.}
+			      \item \((a, \infty )^{c} = (-\infty , a]\in\mathcal{H}\).
+			      \item \((-\infty , b]^{c} = (b, \infty )\in\mathcal{H} \).
+			      \item \((-\infty , \infty )^{c} = \varnothing \in\mathcal{H}\).
+		      \end{itemize}
+		\item \(\mathcal{H} \) is closed under finite unions, clearly.
+	\end{itemize}
 \end{proof}
 
 \begin{proposition}[Distribution function defines a pre-measure]
@@ -103,8 +134,8 @@ We first introduce so-called \emph{distribution function}.
 	\[
 		\mu _0(A) = \sum\limits_{k=1}^{N} \ell (I_{k}) \text{ if }A = \bigcup\limits_{k=1}^{N} I_{k},
 	\]
-	where \(A\) is a finite \underline{disjoint} union of half-intervals \(I_1, \ldots , I_{N} \).
-	Then, \(\mu _0\) is a pre-measure on \(\mathcal{H}\).
+	where \(A\) is a finite \underline{disjoint} union of \hyperref[def:half-intervals]{half-intervals} \(I_1, \ldots , I_{N} \).
+	Then, \(\mu _0\) is a \hyperref[def:pre-measure]{pre-measure} on \(\mathcal{H}\).
 \end{proposition}
 \begin{proof}
 	We see that
@@ -126,7 +157,7 @@ We first introduce so-called \emph{distribution function}.
 			      F(b) - F(a) = \sum\limits_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n})\right).
 		      \]
 		      \begin{itemize}
-			      \item Since \((a, b]\supset \bigcup\limits_{n=1}^{N} (a_{n}, b_{n}]\), hence
+			      \item Since \((a, b]\supset \bigcup\limits_{n=1}^{N} (a_{n}, b_{n}]\) for any fixed \(N\in\mathbb{\MakeUppercase{N}} \), hence
 			            \[
 				            \underset{N\in\mathbb{\MakeUppercase{N}} }{\forall}\ F(b) - F(a) \geq \sum\limits_{n=1}^{N} \left(F(b_{n}) - F(a_{n})\right).
 			            \]
@@ -148,22 +179,33 @@ We first introduce so-called \emph{distribution function}.
 			            \]
 			            hence
 			            \[
-				            \underset{ N\in\mathbb{\MakeUppercase{N}}}{\exists}\ [a ^\prime , b]\subset \bigcup\limits_{n=1}^{N} (a_{n}, b_{n} ^\prime ),
+				            \underset{ N\in\mathbb{\MakeUppercase{N}}}{\exists}\ [a ^\prime , b]\subset \bigcup\limits_{n=1}^{N} (a_{n}, b_{n} ^\prime ),\footnotemark
 			            \]
 			            which is only finitely many unions now. In this case, we have
 			            \[
 				            F(b) - F(a ^\prime ) \leq \sum\limits_{n=1}^{N} F(b_{n} ^\prime ) - F(a_{n}).
 			            \]
+			            \footnotetext{This essentially follows from the fact that open sets are closed under countable unions, hence the equality will not hold, even after taking the limit.}
 
 			            Finally, we see that
 			            \[
 				            \begin{split}
 					            F(b) - F(a)&\leq F(b) - F(a ^\prime )+\epsilon \\
 					            &\leq \sum\limits_{n=1}^{\infty} \left(F(b_{n} ^\prime ) - F(a_{n})\right) + \epsilon \\
-					            &\leq \sum\limits_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n}) + \frac{\epsilon }{2^n}\right) + \epsilon .
+					            &\leq \sum\limits_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n}) + \frac{\epsilon }{2^n}\right) + \epsilon\\
+					            &= \sum\limits_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n})\right) + 2\epsilon
 				            \end{split}
 			            \]
+			            for any fixed \(\epsilon > 0\), hence
+			            \[
+				            F(b) - F(a) \leq \sum\limits_{n=1}^{\infty} (F(b_{n}) - F(a_{n})).
+			            \]
 		      \end{itemize}
+		      Combine these two inequalities, we have
+		      \[
+			      F(b) - F(a) = \sum\limits_{n=1}^{\infty} (F(b_{n}) - F(a_{n}))
+		      \]
+		      as we desired.
 	\end{enumerate}
 \end{proof}
 \begin{remark}

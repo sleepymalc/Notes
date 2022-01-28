@@ -1,0 +1,166 @@
+\lecture{10}{26 Jan. 11:00}{Integration}
+\section{Integration}
+\subsection{Measurable Function}[Measurable function]\label{def:measurable-function}
+We start with a definition.
+\begin{definition}
+	Suppose \((X, \mathcal{A} ), (Y, \mathcal{B} )\) are measurable spaces. Then we say \(f\colon X\to Y\) is
+	\((\mathcal{A} , \mathcal{B} )\)-measurable if
+	\[
+		\forall B\in \mathcal{B}\ f^{-1} (B)\in \mathcal{A}.
+	\]
+\end{definition}
+
+\begin{lemma}\label{lma:lec10-1}
+	Suppose \(\mathcal{B} = \left< \mathcal{E}  \right> \). Then,
+	\[
+		f\colon X\to Y \text{ is \((\mathcal{A} , \mathcal{B})\)-measurable}\iff \forall E\in\mathcal{E} \ f^{-1} (E)\in \mathcal{A}.
+	\]
+\end{lemma}
+\begin{proof}
+	We see that the \emph{only if} part \((\implies )\) is clear. On the other direction, we consider the following.
+
+	\par Let \(\mathcal{D} = \{E\subset Y \mid f^{-1} (E)\in \mathcal{A} \}\), then
+	\begin{itemize}
+		\item \(E\subset \mathcal{D} \) by assumption
+		\item \(\mathcal{D} \) is a \(\sigma\)-algebra \todo{check!}
+	\end{itemize}
+	\(\implies \left< \mathcal{E} \right> \subset \mathcal{D} \).
+\end{proof}
+\begin{note}
+	Recall that
+	\begin{itemize}
+		\item \(f^{-1} (E^{c} ) = f^{-1} (E)^{c} \)
+		\item \(f^{-1} (\bigcup\limits_{\alpha} E_{\alpha }) = \bigcup\limits_{\alpha} f^{-1} (E_{\alpha })\)
+	\end{itemize}
+\end{note}
+
+\begin{definition}
+	Let \((X, \mathcal{A} )\) be a measurable space. Then,
+	\[
+		\begin{rcases}
+			f \colon X\to \mathbb{\MakeUppercase{r}}            \\
+			f \colon X\to \overline{\mathbb{\MakeUppercase{r}}} \\
+			f \colon X\to \mathbb{\MakeUppercase{c}}
+		\end{rcases} \text{ is \(\mathcal{A}\)-measurable if } \begin{dcases}
+			f             \text{ is } (\mathcal{A} , \mathcal{B} (\mathbb{\MakeUppercase{r}} ))\text{-measurable}           \\
+			f             \text{ is } (\mathcal{A} , \mathcal{B} (\overline{\mathbb{\MakeUppercase{r}}}))\text{-measurable} \\
+			\Re f, \Im  f  \colon X\to \mathbb{\MakeUppercase{r}} \text{ are }\mathcal{A} \text{-measurable}.
+		\end{dcases}
+	\]
+\end{definition}
+\begin{notation}
+	Notice that \(\overline{\mathbb{\MakeUppercase{r}} }\) is equal to \([-\infty , \infty ]\).
+\end{notation}
+\begin{eg}
+	We see that
+	\begin{itemize}
+		\item \(\mathcal{A} =\mathcal{P} (X) \implies \) every function is \(\mathcal{A}\)-measurable.
+		\item \(\mathcal{A} = \{\varnothing , X\}\implies \) only \(\mathcal{A} \)-measurable functions are constant functions.
+	\end{itemize}
+\end{eg}
+
+\begin{lemma}
+	Given \(f\colon X\to \mathbb{\MakeUppercase{r}} \), the following are equivalent.
+	\begin{enumerate}
+		\item \(f\) is \(\mathcal{A}\)-measurable
+		\item \(\forall a\in\mathbb{\MakeUppercase{r}} \), \(f^{-1} ((a, \infty ))\in\mathcal{A} \)
+		\item \(\forall a\in\mathbb{\MakeUppercase{r}} \), \(f^{-1} ([a, \infty ))\in\mathcal{A} \)
+		\item \(\forall a\in\mathbb{\MakeUppercase{r}} \), \(f^{-1} ((-\infty, a))\in\mathcal{A} \)
+		\item \(\forall a\in\mathbb{\MakeUppercase{r}} \), \(f^{-1} ((-\infty, a])\in\mathcal{A} \)
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	The result follows from the \hyperref[lma:lec10-1]{lemma} we just saw.
+\end{proof}
+
+\begin{property}
+	Given \(f, g\colon X\to \mathbb{\MakeUppercase{r}} \) and is \(\mathcal{A}\)-measurable, then
+	\begin{enumerate}
+		\item \(\phi \colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \), \(\mathcal{A}\)-measurable (i.e. Borel measurable), then
+		      \[
+			      \phi \circ f\colon X\to \mathbb{\MakeUppercase{r}}
+		      \]
+		      is \(\mathcal{A}\)-measurable.
+		\item \(-f,\ 3f,\ f^2,\ \left\vert f \right\vert \) are all \(\mathcal{A} \)-measurable, and \(\frac{1}{f}\) is \(\mathcal{A}\)-measurable if \(f(x)\neq 0, \forall x\in X\).
+		\item \(f+g\) is \(\mathcal{A}\)-measurable. We see this from
+		      \[
+			      (f+g)^{-1} ((a, \infty ))=\bigcup\limits_{r\in\mathbb{\MakeUppercase{q}}} \left(f^{-1} ((r, \infty ))\cap g^{-1} ((a-r, \infty ))\right).
+		      \]
+		\item \(f\cdot g\) is \(\mathcal{A}\)-measurable. We see this from
+		      \[
+			      f(x)g(x) = \frac{1}{2}\left((f(x)+g(x))^2 - f(x)^2 - g(x)^2\right).
+		      \]
+		\item We see that
+		      \[
+			      (f\vee g)(x)\coloneqq \max \{f(x), g(x)\}\text{ and }(f\wedge g)(x)\coloneqq \min\{f(x), g(x)\}
+		      \]
+		      are \(\mathcal{A}\)-measurable.
+		\item Let \(f_{n}\colon X\to \overline{\mathbb{\MakeUppercase{r}} }\) be \(\mathcal{A}\)-measurable. Then
+		      \[
+			      \sup\limits_{n\in\mathbb{\MakeUppercase{n}} } f_{n},\ \inf\limits_{n\in\mathbb{\MakeUppercase{n}} } f_{n},\ \limsup\limits_{n\to \infty} f_{n},\ \liminf\limits_{n\to \infty} f_{n}
+		      \]
+		      are \(\mathcal{A}\)-measurable.
+		      \begin{proof}
+			      Consider \(\sup\limits_{n\in\mathbb{\MakeUppercase{n}} } f_{n} \eqqcolon g\), then
+			      \[
+				      g^{-1} ((a, \infty ]) = \bigcup\limits_{n\in\mathbb{\MakeUppercase{n}}} f_{n}^{-1} ((a, \infty ])
+			      \]\todo{check}
+			      for \(\sup\limits_n f_{n}(x) = g(x)>a\). A similar argument can prove the case of \(\inf\limits_{n\in\mathbb{\MakeUppercase{n}} } f_{n}\).
+
+			      \par And notice that \(\limsup\limits_{n\to \infty} f_{n} = \inf\limits_{k\in\mathbb{\MakeUppercase{n}}} \sup\limits_{n\geq k} f_{n}\), then the
+			      similar argument also proves this case.
+		      \end{proof}
+		\item If \(\lim\limits_{n \to \infty} f_{n}(x)\) converges for every \(x\in X\), then \(f\) is \(\mathcal{A} \)-measurable.
+		      \begin{eg}
+			      If \(f\colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \) is continuous
+			      \begin{itemize}
+				      \item[\(\implies\)] \(f\) is Borel measurable.
+				      \item[\(\implies\)] \(f\) is Lebesgue measurable.
+			      \end{itemize}
+			      (Considering \(f^{-1} ((a, \infty ))\).)
+		      \end{eg}
+	\end{enumerate}
+\end{property}
+
+\begin{definition}
+	For \(f\colon X\to \overline{\mathbb{\MakeUppercase{r}} }\), let \(f^+ \coloneqq f\vee 0\) and \(f^-\coloneqq (-f)\vee 0\).\footnote{i.e., \[
+			f^+(x) = \max\{f(x), 0\},\quad f^-(x) = \min\{-f(x), 0\}
+		\]}
+\end{definition}
+\begin{remark}
+	If \(\mathrm{supp} f^+ \cap  \mathrm{supp} f^- = \varnothing \) and \(f(x) = f^+(x) - f^-(x)\), then
+	\[
+		f\text{ is }\mathcal{A}\text{-measurable} \iff f^+, f^- \text{ are measurable}.
+	\]
+\end{remark}
+\begin{notation}
+	\(\mathrm{supp} f\) means the support of \(f\), which is the set of domain which makes \(f\) being non-zero.
+\end{notation}
+
+\begin{definition}[Characteristic (Indicator) function]
+	For \(E\subset X\), the \emph{characteristic (indicator)} function of \(E\) is
+	\[
+		\mathcal{X} _E (x)= \mathbbm{1}_{E}(x) = \begin{dcases}
+			1, & \text{ if }  x\in E;     \\
+			0, & \text{ if }  x\in E^{c}.
+		\end{dcases}
+	\]
+\end{definition}
+\begin{remark}
+	We see that \(\mathbbm{1}_{ E}\) is \(\mathcal{A}\)-measurable \(\iff E\in\mathcal{A}\).
+\end{remark}
+
+\begin{definition}[Simple function]\label{def:simple-function}
+	Let \((X, \mathcal{A} )\) be a measurable space. Then a \emph{simple function} \(\phi \colon X\to \mathbb{\MakeUppercase{c}} \) that
+	is \(\mathcal{A} \)-measurable and takes only \underline{finitely many values}.
+\end{definition}
+\begin{remark}
+	We see that if
+	\[
+		\phi (X) = \{c_1, \ldots , c_N \},
+	\]
+	and
+	\[
+		E_{i}= \phi ^{-1} (\{c_{i}\})\in \mathcal{A} \implies \phi = \sum\limits_{i=1}^{N} \underbrace{c_{i}}_{\neq \pm \infty }\mathbbm{1}_{\underbrace{E_{i}}_{\in \mathcal{A}}}.
+	\]
+\end{remark}

@@ -110,8 +110,36 @@ We start with the definition.
 \end{definition}
 
 \begin{exercise}
-	A path \(\gamma\) is homotopic \(\mathrm{rel} \{0, 1\}\) to all of its reparameterizations.\todo{HW}
+	A path \(\gamma\) is homotopic \(\mathrm{rel} \{0, 1\}\) to all of its reparameterizations.
 \end{exercise}
+\begin{proof}
+	\par We show that \(\gamma\) and \(\gamma\circ \phi \) are homotopic \(\mathrm{rel} \{0, 1\}\) by showing that there exists a continuous \(F_t\) such that
+	\[
+		F_0 = \gamma,\quad F_1 = \gamma\circ \phi.
+	\]
+	Notice that since \(\phi \) is continuous, so we define
+	\[
+		F_t(x) = (1 - t) \gamma(x) + t\cdot \gamma\circ \phi (x).
+	\]
+	We see that
+	\[
+		F_0(x) = \gamma(x),\quad F_1(x) = \gamma\circ \phi (x),
+	\]
+	and also, we have
+	\[
+		F_t(x)\in X
+	\]
+	for all \(x, t\in I\).
+
+	\par Now, we check that \(F_t\) really gives us a homotopic \(\mathrm{rel}\{0, 1\}\). We have
+	\[
+		\begin{split}
+			F_t(0) &= (1 - t)\gamma(0) + t\cdot \gamma\circ \phi (0) = (1 - t)\gamma(0) + t\cdot \gamma(\underbrace{\phi (0)}_{0}) = \gamma(0),\\
+			F_t(1) &= (1 - t)\gamma(1) + t\cdot \gamma\circ \phi (1) = (1 - t)\gamma(1) + t\cdot \gamma(\underbrace{\phi (1)}_{1}) = \gamma(1),
+		\end{split}
+	\]
+	which shows that \(0\) and \(1\) are independent of \(t\), hence \(\gamma\) and \(\gamma\circ \phi \) are homotopic \(\mathrm{rel} \{0, 1\}\).
+\end{proof}
 
 \begin{exercise}
 	Fix \(x_1, x_1\in X\). Then \underline{Homotopy of paths} (relative \(\{0, 1\}\)) is an equivalence relation on paths from \(x_0\) to \(x_1\).
@@ -145,7 +173,107 @@ We start with the definition.
 	\end{itemize}
 \end{definition}
 \begin{proof}
-	We need to prove that the above define a group. \todo{HW.}
+	\par We prove that
+	\begin{itemize}
+		\item Associativity: \([\gamma_{1}\cdot (\gamma_2\cdot \gamma_3)] = [(\gamma_1\cdot \gamma_2)\cdot \gamma_3]\). We break this down into
+		      \[
+			      \gamma_1\cdot(\gamma_2\cdot \gamma_3)(t) = \begin{dcases}
+				      \gamma_{1}(2t ),                 & \text{ if }  t\in\left[0, \frac{1}{2}\right]; \\
+				      (\gamma_2\cdot \gamma_3)(2t-1) , & \text{ if }  t\in\left[\frac{1}{2}, 1\right]
+			      \end{dcases} = \begin{dcases}
+				      \gamma_{1}(2t ), & \text{ if }  t\in\left[0, \frac{1}{2}\right];           \\
+				      \gamma_2(4t-2) , & \text{ if }  t\in\left[\frac{1}{2}, \frac{3}{4}\right]; \\
+				      \gamma_3(4t-3) , & \text{ if }  t\in\left[\frac{3}{4}, 1\right],
+			      \end{dcases}
+		      \]
+		      and
+		      \[
+			      (\gamma_1\cdot\gamma_2)\cdot \gamma_3(t) = \begin{dcases}
+				      (\gamma_{1}\cdot \gamma_2) (2t ), & \text{ if }  t\in\left[0, \frac{1}{2}\right]; \\
+				      \gamma_3(2t-1) ,                  & \text{ if }  t\in\left[\frac{1}{2}, 1\right]
+			      \end{dcases} = \begin{dcases}
+				      \gamma_{1}(4t),  & \text{ if }  t\in\left[0, \frac{1}{4}\right];           \\
+				      \gamma_2(4t-1) , & \text{ if }  t\in\left[\frac{1}{4}, \frac{1}{2}\right]; \\
+				      \gamma_3(2t-1) , & \text{ if }  t\in\left[\frac{1}{2}, 1\right].
+			      \end{dcases}
+		      \]
+
+		      \par Then, we define \(\phi \colon I\to I\) such that
+		      \[
+			      \phi (t) = \begin{dcases}
+				      2t\in\left[0, \frac{1}{2}\right],                      & \text{ if }  t\in\left[0, \frac{1}{4}\right];           \\
+				      t+\frac{1}{4}\in\left[\frac{1}{2}, \frac{3}{4}\right], & \text{ if }  t\in\left[\frac{1}{4}, \frac{1}{2}\right]; \\
+				      \frac{t+1}{2}\in\left[\frac{3}{4}, 1\right],           & \text{ if }  t\in\left[\frac{1}{2}, 1\right].
+			      \end{dcases}
+		      \]
+		      We easily see that
+		      \[
+			      \gamma_1\cdot(\gamma_2\cdot \gamma_3)(t) = (\gamma_1\cdot\gamma_2)\cdot \gamma_{3}\circ \phi (t)
+		      \]
+		      and \(\phi (t)\) is continuous and satisfied \(\phi (0) = 0\) and \(\phi (1) = 1\), which implies that the associativity holds.
+		\item Identity: We want to show that \([\gamma\cdot c] = [\gamma]\). Again, we consider
+		      \[
+			      (\gamma\cdot c) (t) = \begin{dcases}
+				      \gamma(2t),                    & \text{ if } t\in\left[0, \frac{1}{2}\right] ; \\
+				      c(2t-1) = c = x_0 = \gamma(0), & \text{ if } t\in\left[\frac{1}{2}, 1\right].
+			      \end{dcases}
+		      \]
+		      Now, consider \(\phi \colon I\to I\) such that
+		      \[
+			      \phi (t) = \begin{dcases}
+				      2t, & \text{ if } t\in\left[0, \frac{1}{2}\right] ; \\
+				      1,  & \text{ if }  t\in\left[\frac{1}{2}, 1\right].
+			      \end{dcases}
+		      \]
+		      We easily see that
+		      \[
+			      (\gamma\cdot c)(t) = (\gamma\circ \phi) (t)
+		      \]
+		      and \(\phi (t)\) is continuous and satisfied \(\phi (0) = 0\) and \(\phi (1) = 1\).
+		\item Inverses: We want to show that \(\gamma\cdot \overline{\gamma} \simeq c\), where \(\overline{\gamma} (t) = \gamma(1-t)\).
+		      Firstly, we have
+		      \[
+			      (\gamma\cdot \overline{\gamma})(t) = \begin{dcases}
+				      \gamma(2t),               & \text{ if }  t\in\left[0, \frac{1}{2}\right]; \\
+				      \overline{\gamma} (1-2t), & \text{ if }  t\in\left[\frac{1}{2}, 1\right].
+			      \end{dcases}
+		      \]
+
+		      \par We consider \(F_t\) given by
+		      \[
+			      F_{t}(x) = \begin{dcases}
+				      \gamma(2xt),              & \text{ if } x\in\left[0, \frac{1}{2}\right]; \\
+				      \overline{\gamma}(1-2xt), & \text{ if } x\in\left[\frac{1}{2}, 1\right].
+			      \end{dcases}
+		      \]
+		      If \(t = 0\), we have
+		      \[
+			      F_{0}(x) = \begin{dcases}
+				      \gamma(0),            & \text{ if } x\in\left[0, \frac{1}{2}\right]; \\
+				      \overline{\gamma}(1), & \text{ if } x\in\left[\frac{1}{2}, 1\right]
+			      \end{dcases} = x_0
+		      \]
+		      for all \(x\in I\), namely \(F_0 = c\), while when \(t = 1\), we have
+		      \[
+			      F_{1}(x) = \begin{dcases}
+				      \gamma(2x),              & \text{ if } x\in\left[0, \frac{1}{2}\right]; \\
+				      \overline{\gamma}(1-2x), & \text{ if } x\in\left[\frac{1}{2}, 1\right]
+			      \end{dcases} = (\gamma\cdot \overline{\gamma})(x),
+		      \]
+		      and we see that \(F_t\) is continuous since at \(x = \frac{1}{2}\), we have
+		      \[
+			      \gamma(2x) = \gamma(1) = \overline{\gamma} (0) = \overline{\gamma} (1 - 2x),
+		      \]
+		      hence we see that \(F_{t}\) is the homotopy between \(\gamma\cdot \overline{\gamma} \) and \(c\).
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{def:fundamental-group}
+			      \caption{Illustration of \(F_t\). Intuitively, the path \(\gamma\cdot \overline{\gamma}\) is \(x_0 \overset{\gamma}{\to} x_0 \overset{\overline{\gamma} }{\to} x_0\).
+				      But now, \(F_t\) is \(x_0 \overset{\gamma}{\to} t \overset{\overline{\gamma} }{\to} x_0\). We can think of this homotopy is \emph{pulling back}
+				      the turning point along the original path.}
+			      \label{fig:def:fundamental-group}
+		      \end{figure}
+	\end{itemize}
 \end{proof}
 
 \begin{theorem}
@@ -158,7 +286,25 @@ We start with the definition.
 	We often write \(\pi _1(X)\) up to isomorphism.
 \end{remark}
 \begin{proof}
-	\todo{HW.}
+	\par To show that the \emph{change-of-basepoint map} is isomorphism, we show that it's one-to-one and onto.
+	\begin{itemize}
+		\item one-to-one. Consider that if \([h\cdot \gamma\cdot \overline{h} ] = [h\cdot \gamma ^\prime \cdot \overline{h} ]\), then since we know that \(h^{-1}  = \overline{h} \), hence
+		      in the fundamental group \(\pi _1(X, x_0)\), we see that
+		      \[
+			      \overline{h} \cdot h\cdot \gamma\cdot \overline{h} \cdot h = \overline{h} \cdot h\cdot \gamma ^\prime \cdot \overline{h} \cdot h. \implies \gamma = \gamma ^\prime
+		      \]
+		      as we desired.
+		\item onto. We see that for every \(\alpha \in \pi_1(X, x_0)\), there exists a \(\gamma\in \pi_1(X, x_{0})\) such that
+		      \[
+			      \gamma = \overline{h} \cdot \alpha \cdot h\in \pi _1(X, x_1)\footnotemark
+		      \]
+		      since \(h\cdot \gamma\cdot \overline{h} =\alpha \).
+		      \footnotetext{Notice that this is indeed the case, one can verify this by the fact that \(h\colon x_{0}\to x_1\) and \(\overline{h} \colon x_1 \to x_0\).}
+	\end{itemize}
+
+	\par We then see that the fundamental group of \(X\) does not depend on the choice of basepoint, only on the choice of the path component of the basepoint.
+	If \(X\) is path-connected, it now makes sense to refer to \emph{the} fundamental group of \(X\) and write \(\pi _1(X)\) for the abstract group (up to isomorphism).
+
 \end{proof}
 
 \begin{exercise}

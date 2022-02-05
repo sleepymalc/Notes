@@ -1,5 +1,5 @@
 \lecture{10}{26 Jan. 11:00}{Integration}
-\section{Integration}
+\section{Integration}\label{sec:Integration}
 \subsection{Measurable Function}
 We start with a definition.
 
@@ -12,24 +12,31 @@ We start with a definition.
 	Suppose \((X, \mathcal{A} ), (Y, \mathcal{B} )\) are \hyperref[def:measurable-space]{measurable spaces}. Then we say \(f\colon X\to Y\) is
 	\emph{\((\mathcal{A} , \mathcal{B} )\)-measurable} if
 	\[
-		\forall B\in \mathcal{B}\ f^{-1} (B)\in \mathcal{A}.
+		\underset{B\in \mathcal{B}}{\forall}\ f^{-1} (B)\in \mathcal{A}.
 	\]
 \end{definition}
 
+\begin{remark}
+	If \(\mathcal{\MakeUppercase{a}} \) and \(\mathcal{\MakeUppercase{b}} \) are given, we'll sometimes say \(f\) is \hyperref[def:measurable-function]{measurable}
+	if it'll not cause any confusions.
+\end{remark}
+
 \begin{lemma}\label{lma:lec10-1}
-	Suppose \(\mathcal{B} = \left< \mathcal{E}  \right> \). Then,
+	Given two \hyperref[def:measurable-space]{measurable spaces} \((X, \mathcal{\MakeUppercase{a}} )\) and \((Y, \mathcal{\MakeUppercase{b}} )\), and suppose
+	\(\mathcal{B} = \left< \mathcal{E}  \right> \) for some \(\mathcal{\MakeUppercase{e}} \subset Y\). Then,
 	\[
-		f\colon X\to Y \text{ is \hyperref[def:measurable-function]{\((\mathcal{A} , \mathcal{B})\)-measurable}}\iff \forall E\in\mathcal{E} \ f^{-1} (E)\in \mathcal{A}.
+		f\colon X\to Y \text{ is \hyperref[def:measurable-function]{\((\mathcal{A} , \mathcal{B})\)-measurable}}\iff \underset{E\in\mathcal{E}}{\forall}\ f^{-1} (E)\in \mathcal{A}.
 	\]
 \end{lemma}
 \begin{proof}
 	We see that the \emph{only if} part \((\implies )\) is clear. On the other direction, we consider the following. Let
 	\(\mathcal{D} = \{E\subset Y \mid f^{-1} (E)\in \mathcal{A} \}\), then
 	\begin{itemize}
-		\item \(E\subset \mathcal{D} \) by assumption
+		\item \(\mathcal{\MakeUppercase{e}} \subset \mathcal{D} \) by assumption
 		\item \(\mathcal{D} \) is a \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} \todo{Check!}
 	\end{itemize}
-	hence, we see that \(\left< \mathcal{E} \right> \subset \mathcal{D} \).
+	hence, we see that \(\left< \mathcal{E} \right> = \mathcal{\MakeUppercase{b}} \subset \mathcal{D} \) from \autoref{lma:lec2-1}. The result then
+	follows from the definition of \hyperref[def:measurable-function]{\((\mathcal{A} , \mathcal{B} )\)-measurable}.
 \end{proof}
 \begin{note}
 	Recall that
@@ -58,16 +65,24 @@ We start with a definition.
 	\begin{itemize}
 		\item \(\overline{\mathbb{\MakeUppercase{r}} } = [-\infty , \infty ]\)
 		\item \(\mathcal{\MakeUppercase{b}} (\overline{\mathbb{\MakeUppercase{r}}}) = \left\{E\subset \overline{\mathbb{\MakeUppercase{r}} } \mid E\cap \mathbb{\MakeUppercase{r}} \in \mathcal{\MakeUppercase{b}} (\mathbb{\MakeUppercase{r}} )\right\}\).
+		\item \(\Re f\) is the real part of \(f\), while \(\Im f\) is the imaginary part of \(f\).
 	\end{itemize}
 \end{notation}
 
 \begin{eg}
 	We see that
 	\begin{itemize}
-		\item \(\mathcal{A} =\mathcal{P} (X) \implies \) every function is \hyperref[def:A-measurable-function]{\(\mathcal{A}\)-measurable}.
-		\item \(\mathcal{A} = \{\varnothing , X\}\implies \) only \hyperref[def:A-measurable-function]{\(\mathcal{A} \)-measurable functions} are constant functions.
+		\item \(\mathcal{A} =\mathcal{P} (X) \implies \) Every function is \hyperref[def:A-measurable-function]{\(\mathcal{A}\)-measurable}.
+		\item \(\mathcal{A} = \{\varnothing , X\}\implies \) The only \hyperref[def:A-measurable-function]{\(\mathcal{A} \)-measurable functions} are constant functions.
 	\end{itemize}
 \end{eg}
+
+\begin{definition}[Lebesgue measurable]\label{def:Lebesgue-measurable-function}
+	A \emph{Lebesgue measurable function} \(f\) is a \hyperref[def:measurable-function]{measurable} function
+	\[
+		f\colon (\mathbb{\MakeUppercase{r}} , \mathcal{\MakeUppercase{l}} ) \to (\mathbb{\MakeUppercase{c}} , \mathcal{\MakeUppercase{b}} (\mathbb{\MakeUppercase{c}})).
+	\]
+\end{definition}
 
 \begin{lemma}\label{lma:lec10-2}
 	Given \(f\colon X\to \mathbb{\MakeUppercase{r}} \), \emph{TFAE}.
@@ -80,10 +95,10 @@ We start with a definition.
 	\end{enumerate}
 \end{lemma}
 \begin{proof}
-	The result follows from the \hyperref[lma:lec10-1]{lemma} we just saw.
+	The result follows from \autoref{lma:lec10-1} we just saw.
 \end{proof}
 
-\begin{property}
+\begin{remark}[Operations preserve \(\mathcal{A}\)-measurability]\label{rmk:Operations-preserve-measurability}
 	Given \(f, g\colon X\to \mathbb{\MakeUppercase{r}} \) and is \hyperref[def:A-measurable-function]{\(\mathcal{A}\)-measurable}, then
 	\begin{enumerate}
 		\item \(\phi \colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \), \hyperref[def:A-measurable-function]{\(\mathcal{A}\)-measurable}\footnote{\label{def:Borel-measurable}In this case, we also call it \emph{Borel measurable}.}, then
@@ -95,8 +110,9 @@ We start with a definition.
 		      \hyperref[def:A-measurable-function]{\(\mathcal{A}\)-measurable} if \(f(x)\neq 0, \forall x\in X\).
 		\item \(f+g\) is \hyperref[def:A-measurable-function]{\(\mathcal{A}\)-measurable}. We see this from
 		      \[
-			      (f+g)^{-1} ((a, \infty ))=\bigcup\limits_{r\in\mathbb{\MakeUppercase{q}}} \left(f^{-1} ((r, \infty ))\cap g^{-1} ((a-r, \infty ))\right).
+			      (f+g)^{-1} ((a, \infty ))=\bigcup\limits_{r\in\mathbb{\MakeUppercase{q}}} \left(f^{-1} ((r, \infty ))\cap g^{-1} ((a-r, \infty ))\right)
 		      \]
+		      with \autoref{lma:lec10-2}.
 		\item \(f\cdot g\) is \hyperref[def:A-measurable-function]{\(\mathcal{A}\)-measurable}. We see this from
 		      \[
 			      f(x)g(x) = \frac{1}{2}\left((f(x)+g(x))^2 - f(x)^2 - g(x)^2\right).
@@ -122,16 +138,14 @@ We start with a definition.
 			      similar argument also proves this case.
 		      \end{proof}
 		\item If \(\lim\limits_{n \to \infty} f_{n}(x)\) converges for every \(x\in X\), then \(f\) is \hyperref[def:A-measurable-function]{\(\mathcal{A} \)-measurable}.
-		      \begin{eg}
-			      If \(f\colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \) is continuous
-			      \begin{itemize}
-				      \item[\(\implies\)] \(f\) is \hyperref[def:Borel-measurable]{Borel measurable}
-				      \item[\(\implies\)] \(f\) is \hyperref[def:Lebesgue-measure]{Lebesgue measurable}
-			      \end{itemize}
-			      since the preimage of an open set of a continuous function is open, then we consider \(f^{-1} ((a, \infty ))\).
-		      \end{eg}
+		\item If \(f\colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \) is continuous
+		      \begin{itemize}
+			      \item[\(\implies\)] \(f\) is \hyperref[def:Borel-measurable]{Borel measurable}
+			      \item[\(\implies\)] \(f\) is \hyperref[def:Lebesgue-measurable-function]{Lebesgue measurable}
+		      \end{itemize}
+		      since the preimage of an open set of a continuous function is open, then we consider \(f^{-1} ((a, \infty ))\).
 	\end{enumerate}
-\end{property}
+\end{remark}
 
 \begin{definition}[\(f^+\), \(f^-\)]\label{def:f^plus-f^minus}
 	For \(f\colon X\to \overline{\mathbb{\MakeUppercase{r}} }\), let \(f^+ \coloneqq f\vee 0\) and \(f^-\coloneqq (-f)\vee 0\).\footnote{i.e., \(f^+(x) = \max\{f(x), 0\},\quad f^-(x) = \min\{-f(x), 0\}\)}
@@ -168,7 +182,7 @@ We start with a definition.
 	\[
 		\phi (X) = \{c_1, \ldots , c_N \},
 	\]
-	and
+	then
 	\[
 		E_{i}= \phi ^{-1} (\{c_{i}\})\in \mathcal{A} \implies \phi = \sum\limits_{i=1}^{N} \underbrace{c_{i}}_{\neq \pm \infty }\mathbbm{1}_{\underbrace{E_{i}}_{\in \mathcal{A}}}.
 	\]

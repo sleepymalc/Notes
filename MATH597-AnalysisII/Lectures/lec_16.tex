@@ -1,0 +1,163 @@
+\lecture{16}{11 Feb. 11:00}{Product Measure}
+Let's start with a proposition.
+
+\begin{proposition}[Fast \(L^1\) convergence leads to a.e. convergence]\label{prop:lec16:1}
+	Let \((X, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space}, and \(f_{n}, f\) are all \hyperref[def:measurable-function]{measurable}
+	functions on \(X\). Then
+	\[
+		\sum\limits_{n=1}^{\infty} \left\lVert f_{n} - f\right\rVert_1 < \infty \implies f_{n}\to f\ \hyperref[def:mu-almost-everywhere]{a.e.}
+	\]
+\end{proposition}
+\begin{proof}
+	Let
+	\[
+		E \coloneqq \bigcup\limits_{k=1}^{\infty} \bigcap\limits_{N=1}^{\infty} \bigcup\limits_{n=N}^{\infty} B_{n, k}^{c} = \{x\in X \mid f_{n}(x)\nrightarrow f(x)\}.
+	\]
+	By \autoref{lma:Markov-inequality}, we see that
+	\[
+		\underset{k}{\forall }\ \underset{N}{\forall }\ \mu \left(B_{n, k}^{c} \right) \leq k \int \left\vert f_{n} - f \right\vert \implies \underset{k}{\forall }\ \mu \left(\bigcup\limits_{n=N}^{\infty} B_{n, k}^{c} \right)\leq \sum\limits_{n=N}^{\infty} k\left\lVert f_{n} - f\right\rVert_1 \to 0
+	\]
+	as \(N\to \infty \). Now, by \hyperref[thm:measure-space-continuity-from-above]{continuity of measure from above},
+	\[
+		\underset{k}{\forall }\ \mu \left(\bigcap\limits_{N=1}^{\infty} \bigcup\limits_{n=N}^{\infty} B_{n, k}^{c} \right)= \lim\limits_{N \to \infty} \mu \left(\bigcup\limits_{n=N}^{\infty} B_{n, k}^{c} \right) = 0 \implies \mu (E) = 0
+	\]
+	since \(f_{n}\to f\) \hyperref[def:pointwise-convergence]{pointwise} on \(E^{c} \).
+\end{proof}
+
+\begin{corollary}
+	Given \(f_{n}\to f\) in \(L^1\), there exists a subsequence \(f_{n_{j}}\to f\) \hyperref[def:mu-almost-everywhere]{a.e.}
+\end{corollary}
+\begin{proof}
+	Since
+	\[
+		\underset{j\in \mathbb{\MakeUppercase{n}} }{\forall }\ \underset{n_{j}\in \mathbb{\MakeUppercase{n}} }{\forall }\ \left\lVert f_{n_{j}} - f\right\rVert _1 \leq \frac{1}{j^{2} }.
+	\]
+	Then,
+	\[
+		\sum\limits_{j=1}^{\infty} \left\lVert f_{n_{j}} - f\right\rVert _1 < \infty.
+	\]
+	From \autoref{prop:lec16:1}, we have the desired result.
+\end{proof}
+
+\begin{definition}[Converge in measure]\label{def:converge-in-measure}
+	Let \(f_{n}, f\) be \hyperref[def:measurable-function]{measurable functions} on \((X, \mathcal{\MakeUppercase{a}} , \mu )\). Then
+	\emph{\(f_{n}\to f\) in measure} means
+	\[
+		\underset{\epsilon >0}{\forall }\ \lim\limits_{n \to \infty} \mu \left(\left\{x\in X \mid \left\vert f_{n}(x) - f(x) \right\vert \geq \epsilon \right\}\right) = 0.
+	\]
+\end{definition}
+\begin{eg}
+	Let \(f_{n} = n \mathbbm{1}_{(0, \frac{1}{n})} \) and \(f = 0\). We see that
+	\[
+		\forall \epsilon >0\ \left\{x\in X \mid \left\vert f_{n}(x) - f(x) \right\vert > \epsilon \right\} = \left(0, \frac{1}{n}\right),
+	\]
+	\(f_{n}\to 0\) \hyperref[def:converge-in-measure]{in measure}. (Recall that \(f_{n}\nrightarrow 0\) in \(L^1\))
+\end{eg}
+
+\begin{remark}
+	We see that
+	\[\begin{tikzcd}
+			& {f_n\to f \text{ in }L^1} & {f_n\to f \text{ \hyperref[def:converge-in-measure]{in measure}}} \\
+			{f_n\to f \text{ \hyperref[prop:lec16:1]{fast in} }L^1} \\
+			& {f_n\to f\ \hyperref[def:mu-almost-everywhere]{a.e.}} & {\exists f_{n_j}\to f\ \hyperref[def:mu-almost-everywhere]{a.e.}}
+			\arrow[Rightarrow, "/"{marking}, shift left=1, from=1-2, to=3-2]
+			\arrow[Rightarrow, "/"{marking}, shift left=1, from=3-2, to=1-3]
+			\arrow[Rightarrow, "{\text{Check}}", shift left=1, from=1-2, to=1-3]
+			\arrow[Rightarrow, "/"{marking}, shift left=1, from=1-3, to=1-2]
+			\arrow[Rightarrow, "/"{marking}, shift left=1, from=1-3, to=3-2]
+			\arrow[Rightarrow, "/"{marking}, shift left=1, from=3-2, to=1-2]
+			\arrow[Rightarrow, from=2-1, to=1-2]
+			\arrow[Rightarrow, from=2-1, to=3-2]
+			\arrow[Rightarrow, "{\text{Read}}", from=1-3, to=3-3]
+		\end{tikzcd}\]
+\end{remark}
+
+\begin{definition}[Uniformly a.e., almost uniformly]\label{def:uniformly-almost-everywhere}\label{def:almost-uniformly}
+	Let \(f_{n}, f\) be \hyperref[def:measurable-function]{measurable functions} on \((X, \mathcal{\MakeUppercase{a}} , \mu )\).
+	\begin{enumerate}
+		\item \(f_{n}\to f\) \emph{uniformly almost everywhere} means \(\exists \)\hyperref[def:mu-null-set]{null set} \(F\) such that \(f_{n}\to f\) \hyperref[def:uniformly-convergence]{uniformly} on \(F^{c} \).
+		\item \(f_{n}\to f\) \emph{almost uniformly} means \(\forall \epsilon >0\ \exists F\in \mathcal{\MakeUppercase{a}} \) such that \(\mu (F)<\epsilon \), \(f_{n}\to f\)  \hyperref[def:uniformly-convergence]{uniformly} on \(F^{c} \).
+	\end{enumerate}
+\end{definition}
+
+\begin{lemma}
+	We have
+	\[
+		f_{n}\to f \text{ \hyperref[def:uniformly-convergence]{uniformly} on } S \iff \exists N_1, N_2, \ldots\in \mathbb{\MakeUppercase{n}}\ S\subset \bigcap\limits_{k=1}^{\infty} \bigcap\limits_{n=N_k}^{\infty} B_{n, k}.
+	\]
+\end{lemma}
+
+\begin{theorem}[Egorov's Theorem]\label{thm:Egorov-theorem}
+	Let \(f_{n}, f\) be \hyperref[def:measurable-function]{measurable functions} on \((X, \mathcal{\MakeUppercase{a}} , \mu )\). Suppose \(\mu (X)<\infty \), then
+	\[
+		f_{n}\to f\ \hyperref[def:mu-almost-everywhere]{a.e.} \iff f_{n}\to f\text{ \hyperref[def:almost-uniformly]{almost uniformly}}.
+	\]
+\end{theorem}
+\begin{proof}
+	We prove two directions.
+	\begin{itemize}
+		\item \(\Longleftarrow \) \todo{DIY}
+		\item \(\implies \) Fix \(\epsilon > 0\). We see that
+		      \[
+			      \begin{split}
+				      f_{n}\to f\ \hyperref[def:mu-almost-everywhere]{a.e.} &\implies \mu \left(\bigcup\limits_{k=1}^{\infty} \bigcap\limits_{N=1}^{\infty} \bigcup\limits_{n=N}^{\infty} B_{n, k}^{c} \right) = 0 \\
+				      &\implies \underset{k}{\forall}\ \mu \left(\bigcap\limits_{N=1}^{\infty} \bigcup\limits_{n=N}^{\infty} B_{n, k}^{c} \right) = 0.
+			      \end{split}
+		      \]
+		      From \hyperref[thm:measure-space-continuity-from-above]{continuity of measure from above} and \(\mu (X)<\infty \), we further have
+		      \[
+			      \underset{k}{\forall}\ \lim\limits_{N \to \infty} \mu \left(\bigcup\limits_{n=N}^{\infty} B_{n, k}^{c} \right) = 0 \implies \underset{k}{\forall}\ \underset{ N_{k}\in\mathbb{\MakeUppercase{n}}}{\exists}\ \mu \left(\bigcup\limits_{n=N_{k}}^{\infty} B_{n, k}^{c} \right)< \frac{\epsilon}{2^k}.
+		      \]
+		      Now, let
+		      \[
+			      F \coloneqq \bigcup\limits_{k=1}^{\infty} \bigcup\limits_{n=N_{k}}^{\infty} B_{n, k}^{c} ,
+		      \]
+		      we see that \(\mu (F) < \epsilon \), hence \(f_{n}\to f\) \hyperref[def:uniformly-convergence]{uniformly}.
+	\end{itemize}
+\end{proof}
+
+\section{Product Measure}
+\subsection{Product \(\sigma\)-algebra}
+Before we start, we see the setup.
+\begin{itemize}
+	\item Product space.
+	      \[
+		      X = \prod\limits_{\alpha \in I} X_\alpha
+	      \]
+	      where \(x = (x_\alpha )_{\alpha \in I}\in X\).
+	\item Coordinate map.
+	      \[
+		      \pi _\alpha \colon X\to X_\alpha.
+	      \]
+\end{itemize}
+
+Now we can see the formal definition.
+
+\begin{definition}[Product \(\sigma\)-algebra]\label{def:product-sigma-algebra}
+	Let \((X_\alpha , \mathcal{\MakeUppercase{a}} _\alpha )\) be a \hyperref[def:measurable-space]{measurable space} for all \(\alpha \in I\).
+	Then a \emph{product \hyperref[def:sigma-algebra]{\(\sigma\)-algebra}} on \(X = \prod\limits_{\alpha \in I} X_\alpha \) is
+	\[
+		\bigotimes_{\alpha \in I}\mathcal{\MakeUppercase{a}} _\alpha \left< \bigcup\limits_{\alpha \in I} \pi ^{-1} _{\alpha }\left(\mathcal{\MakeUppercase{a}} _\alpha \right)  \right>,
+	\]
+	where
+	\[
+		\pi ^{-1} _\alpha \left(\mathcal{\MakeUppercase{a}} _\alpha \right) = \left\{\pi ^{-1} _\alpha (E) \mid E\in \mathcal{\MakeUppercase{a}} _\alpha \right\}.
+	\]
+\end{definition}
+
+\begin{notation}
+	We denote \(I = \{1, \ldots , d\} \implies X = \prod\limits_{i=1}^{d} X_{i}, x = (x_1, \ldots , x_d )\). Also,
+	\[
+		\bigotimes_{i = 1}^d \mathcal{\MakeUppercase{a}} _{i} = \mathcal{\MakeUppercase{a}} _1\otimes \ldots \otimes \mathcal{\MakeUppercase{a}} _d.
+	\]
+\end{notation}
+
+\begin{lemma}
+	If \(I\) is countable, then
+	\[
+		\bigotimes_{i = 1}^{\infty}\mathcal{\MakeUppercase{a}} _{i} = \left< \left\{\prod\limits_{i = 1}^{\infty} E_{i} \mid E_{i}\in \mathcal{\MakeUppercase{a}} _{i}\right\} \right>.
+	\]
+\end{lemma}
+\begin{proof}
+	\todo{DIY}
+\end{proof}

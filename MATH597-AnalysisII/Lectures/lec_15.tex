@@ -70,9 +70,9 @@ Then we call
 	\[
 		\begin{split}
 			f \text{ is \hyperref[def:Riemann-integrable]{Riemann integrable}}
-			\iff  \int \phi = \int \psi
-			\iff  \int (\psi - \phi ) = 0
-			\iff  \psi = \phi \text{ Lebesgue \hyperref[def:mu-almost-everywhere]{a.e.}}
+			\iff  &\int \phi = \int \psi\\
+			\iff  &\int (\psi - \phi ) = 0\\
+			\iff  &\psi = \phi \text{ Lebesgue \hyperref[def:mu-almost-everywhere]{a.e.}}
 		\end{split}
 	\]
 
@@ -112,7 +112,7 @@ As we should already see, there are different \emph{modes} of convergence. Let's
 \begin{lemma}
 	Let \(B_{n, k}\) be
 	\[
-		B_{n, k}\coloneqq \left(x\in X \mid \left\vert f_{n}(x) - f(x) \right\vert < \frac{1}{k}\right).
+		B_{n, k}\coloneqq \left\{x\in X \mid \left\vert f_{n}(x) - f(x) \right\vert < \frac{1}{k}\right\}.
 	\]
 	Then
 	\begin{enumerate}
@@ -120,7 +120,7 @@ As we should already see, there are different \emph{modes} of convergence. Let's
 		      \[
 			      S\subset \bigcap\limits_{k=1}^{\infty} \bigcup\limits_{N=1}^{\infty} \bigcap\limits_{n=N}^{\infty} B_{n, k}.
 		      \]
-		\item \(f_{n}\to f\) \hyperref[def:uniformaly-convergence]{uniformly} on \(S\) if and only if \(\exists N_1, N_2, \ldots \in \mathbb{\MakeUppercase{n}}\) such that
+		\item \(f_{n}\to f\) \hyperref[def:uniformly-convergence]{uniformly} on \(S\) if and only if \(\exists N_1, N_2, \ldots \in \mathbb{\MakeUppercase{n}}\) such that
 		      \[
 			      S\subset \bigcap\limits_{k=1}^{\infty} \bigcap\limits_{n=N_{k}}^{\infty} B_{n, k}.
 		      \]
@@ -128,7 +128,7 @@ As we should already see, there are different \emph{modes} of convergence. Let's
 \end{lemma}
 
 \begin{definition}
-	Let \((x, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space}. Assuming that \(f_{n}, f\) are \hyperref[def:measurable-function]{measurable function},
+	Let \((X, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space}. Assuming that \(f_{n}, f\) are \hyperref[def:measurable-function]{measurable function},
 	then
 	\begin{enumerate}
 		\item \(f_{n}\to f\) \hyperref[def:mu-almost-everywhere]{a.e.} means
@@ -148,5 +148,76 @@ As we should already see, there are different \emph{modes} of convergence. Let's
 		\item \(f_{n} = \frac{1}{n}\mathbbm{1}_{(0, n)} \)
 		\item \(f_{n} = n \mathbbm{1}_{(0, \frac{1}{n})} \)
 		\item \textbf{Typewriter functions}.
+		      \begin{figure}[H]
+			      \centering
+			      \resizebox{\textwidth}{!}{%
+				      \begin{tikzpicture}[font=\Large,shorten >=-2.5pt,shorten <=-2.5pt]
+					      \begin{axis}[
+							      axis x line*=bottom,
+							      axis y line*=right,
+							      axis z line*=left,
+							      plot box ratio = 3 1000 2,
+							      view={.3}{.2},
+							      xmin=-0.2,    xmax=1.25,
+							      ymin=0.6,    ymax=\nMAX+0.3,
+							      zmin=0,    zmax=1.0,
+							      xtick={0,1/8,2/8,3/8,4/8,5/8,6/8,7/8,1},
+							      xticklabels={$0$,$\frac{1}{2^3}$,$\frac{2}{2^3}$,$\frac{3}{2^3}$,$\frac{4}{2^3}$,$\frac{5}{2^3}$,$\frac{6}{2^3}$,$\frac{7}{2^3}$,$1$},
+							      ytick={0,...,\nMAX},
+							      ztick={0,...,1.0},
+							      xlabel=$x$,
+							      ylabel=$n$,
+							      zlabel=$f_n(x)$,
+							      x label style={at={(axis description cs:0.067,-0.001)},anchor=north},
+							      y label style={at={(axis description cs:0.062,0.145)},anchor=south},
+							      z label style={at={(axis description cs:-0.002,0.035)},anchor=south},
+							      yscale=5,
+							      xscale=5,
+							      legend entries={$f_n(x)=1\,$,
+									      $f_n(x)=0\,$},
+							      legend style={rounded corners=3pt,at={(0.023,0.14)}},
+							      legend style={nodes={scale=1.5, transform shape}},
+							      legend plot pos=right,
+						      ]
+						      \foreach \n in {1, ..., \nMAX}
+							      {
+								      \pgfmathsetmacro\k{floor(log2(\n+1e-1))}
+								      \pgfmathsetmacro{\xm}{-0.2}
+								      \pgfmathsetmacro\xM{1.2}
+								      \pgfmathsetmacro\xa{(\n-(2^(\k)))/(2^(\k))}
+								      \pgfmathsetmacro\xb{(\n-(2^(\k))+1)/(2^(\k))}
+								      \edef\temp
+								      {
+									      \noexpand\coordinate (d1) at (axis cs:\xm,\n,0);
+									      \noexpand\coordinate (d2) at (axis cs:\xa,\n,0);
+									      \noexpand\coordinate (d3) at (axis cs:\xa,\n,1);
+									      \noexpand\coordinate (d4) at (axis cs:\xb,\n,1);
+									      \noexpand\coordinate (d5) at (axis cs:\xb,\n,0);
+									      \noexpand\coordinate (d6) at (axis cs:\xM,\n,0);
+									      \noexpand\coordinate (g0) at (axis cs:\xm,\n,1);
+									      \noexpand\coordinate (g1) at (axis cs:\xM,\n,1);
+								      }
+								      \temp
+								      \draw[blue,<-o] (d1)--(d2);
+								      \draw[black,dashed,line width=0.04mm] (d2)--(d3);
+								      \draw[red,*-*]   (d3)--(d4);
+								      \draw[black,dashed,line width=0.04mm] (d4)--(d5);
+								      \draw[blue,o->] (d5)--(d6);
+								      \draw[black,dashed,line width=0.04mm] (g0)--(g1);
+							      }
+						      \pgfplotsinvokeforeach{0, ..., \xGrSamp}
+						      {
+							      \draw[black,dashed,line width=0.06mm] (axis cs:#1/\xGrSamp,0,0)--(axis cs:#1/\xGrSamp,\nMAX,0);
+						      }
+						      \addlegendimage{no markers,red}
+						      \addlegendimage{no markers,blue}
+					      \end{axis}
+					      \node[rectangle,draw,rounded corners=3pt,text width=7.7cm] at (29.3,1.7)
+					      {\huge Typewriter Sequence: \\$f_n(x)={\mathbbm{1}}_{[\frac{n-2^k}{2^k},\frac{n-2^k+1}{2^k}]},$\\
+					      $\forall\, k\geq 0\,\, \&\,\, 2^k\leq n<2^{k+1} $};
+				      \end{tikzpicture}
+			      }%
+		      \end{figure}
+
 	\end{enumerate}
 \end{eg}

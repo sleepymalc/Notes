@@ -41,8 +41,13 @@ Then we call
 \begin{theorem}
 	Let \(f\colon [a, b]\to \mathbb{\MakeUppercase{r}} \) be a \underline{bounded} function. Then
 	\begin{enumerate}
-		\item If \(f\) is \hyperref[def:Riemann-integrable]{Reimann integrable}, then \(f\) is \hyperref[def:measurable-function]{Lebesgue measurable}.
-		\item If \(f\) is \hyperref[def:Riemann-integrable]{Reimann integrable} \(\iff \) \(f\) is continuous Lebesgue \hyperref[def:mu-almost-everywhere]{a.e.}
+		\item If \(f\) is \hyperref[def:Riemann-integrable]{Reimann integrable}, then \(f\) is \hyperref[def:measurable-function]{Lebesgue measurable}, thus
+		      \hyperref[def:integrable]{Lebesgue integrable}. Further,
+		      \[
+			      \int_{a}^{b} f(x) \,\mathrm{d}x = \int_{[a, b]}f \,\mathrm{d}m.
+		      \]
+		\item If \(f\) is \hyperref[def:Riemann-integrable]{Reimann integrable} \(\iff \) \(f\) is continuous \underline{Lebesgue \hyperref[def:mu-almost-everywhere]{a.e.}}\footnote{Here, we
+			      mean that the set where \(f\) is discontinuous is a \hyperref[def:mu-null-set]{null set} under \hyperref[def:Lebesgue-measure]{Lebesgue measure}.}
 	\end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -58,7 +63,7 @@ Then we call
 		Note that
 		\begin{itemize}
 			\item \(\exists M> 0\) such that \(\underset{n\in\mathbb{\MakeUppercase{n}} }{\forall }\ \left\vert \phi _{n} \right\vert, \left\vert \psi _{n} \right\vert \leq M\mathbbm{1}_{[a, b]} \)
-			\item \(\int \phi _{n}\mathrm{d}\,m = L_{P_{n}}\), \(\int \psi _{n}\mathrm{d}\,m = U_{P_{n}}\)
+			\item \(\int \phi _{n}\,\mathrm{d}m = L_{P_{n}}\), \(\int \psi _{n}\,\mathrm{d}m = U_{P_{n}}\)
 		\end{itemize}
 	\end{note}
 	By \autoref{thm:dominated-convergence-theorem} and the fact that \(M\mathbbm{1}_{[a, b]} \in L^1(\mathbb{\MakeUppercase{r}} , \mathcal{\MakeUppercase{l}} , m) \),
@@ -78,28 +83,20 @@ Then we call
 
 \end{proof}
 
-\begin{theorem}
-	Let \(f\colon [a, b]\to \mathbb{\MakeUppercase{r}} \) be a bounded function.
-	\begin{enumerate}
-		\item If \(f\) is Riemann integrable, then \(f\) is \hyperref[def:Lebesgue-measurable-function]{Lebesgue measurable}.
-		      Thus, \(f\) is Lebesgue \hyperref[def:integrable]{integrable} and
-		      \[
-			      \int_{a}^{b} f(x) \,\mathrm{d}x = \int_{[a, b]}f  \,\mathrm{d}m.
-		      \]
-		\item \(f\) is Riemann integrable if and only if \(f\) is continuous Lebesgue \hyperref[def:mu-almost-everywhere]{a.e.}
-	\end{enumerate}
-\end{theorem}
-
 \subsection{Modes of Convergence}
 As we should already see, there are different \emph{modes} of convergence. Let's formalize them.
-\begin{definition}[Pointwise, uniformly convergence]\label{def:pointwise-convergence}\label{def:uniformly-convergence}
-	Let \(f_{n}, f\colon X\to \mathbb{\MakeUppercase{c}} \), \(S\subset X\). Then we say
+\begin{definition}[Pointwise, Uniformly convergence]\label{def:pointwise-convergence}\label{def:uniformly-convergence}
+	Let
+	\[
+		f_{n}, f\colon X\to \mathbb{\MakeUppercase{c}},
+	\]
+	and \(S\subset X\). Then we say
 	\begin{itemize}
-		\item \(f_{n}\to f\) \emph{pointwise} on \(S\):
+		\item \(f_{n}\to f\) \emph{pointwise} on \(S\) if
 		      \[
 			      \underset{x\in S}{\forall}\underset{\epsilon>0}{\forall} \underset{ N\in \mathbb{\MakeUppercase{N}}}{\exists}\underset{n\geq  N}{\forall}\ \left\vert f_{n}(x) - f(x) \right\vert < \epsilon.
 		      \]
-		\item \(f_{n}\to f\) \emph{uniformly} on \(S\):
+		\item \(f_{n}\to f\) \emph{uniformly} on \(S\) if
 		      \[
 			      \underset{\epsilon >0}{\forall}\underset{N\in\mathbb{\MakeUppercase{n}}}{\exists}\underset{x\in S}{\forall}\underset{n\geq N}{\forall}\ \left\vert f_{n}(x) - f(x) \right\vert < \epsilon.
 		      \]
@@ -107,7 +104,7 @@ As we should already see, there are different \emph{modes} of convergence. Let's
 \end{definition}
 
 \begin{remark}
-	We see that we can replace \(\forall \epsilon 0\) by \(\forall k\in \mathbb{\MakeUppercase{n}} \) while change \(< \epsilon \) to \(< \frac{1}{k}\).
+	We see that we can replace \(\forall \epsilon > 0\) by \(\forall k\in \mathbb{\MakeUppercase{n}} \) with \(\epsilon \) changing to \(\frac{1}{k}\).
 \end{remark}
 \begin{lemma}
 	Let \(B_{n, k}\) be
@@ -126,16 +123,19 @@ As we should already see, there are different \emph{modes} of convergence. Let's
 		      \]
 	\end{enumerate}
 \end{lemma}
+\begin{proof}
+	This essentially follows from \autoref{def:pointwise-convergence}.
+\end{proof}
 
-\begin{definition}
+\begin{definition}[Converges a.e., Converges in \(L^1\)]\label{def:converge-almost-everywhere}\label{def:converge-in-L-1}
 	Let \((X, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space}. Assuming that \(f_{n}, f\) are \hyperref[def:measurable-function]{measurable function},
 	then
 	\begin{enumerate}
-		\item \(f_{n}\to f\) \hyperref[def:mu-almost-everywhere]{a.e.} means
+		\item \emph{\(f_{n}\to f\) almost everywhere} means
 		      \[
 			      \exists \text{ \hyperref[def:mu-null-set]{null set} } E\text{ such that } f_{n}\to f \text{ \hyperref[def:pointwise-convergence]{pointwise} on } E^{c}.
 		      \]
-		\item \(f_{n}\to f\) in \(L^1\) means
+		\item \emph{\(f_{n}\to f\) in \(L^1\)} means
 		      \[
 			      \lim\limits_{n \to \infty} \left\lVert f_{n} - f\right\rVert = 0.
 		      \]

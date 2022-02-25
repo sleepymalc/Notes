@@ -1,0 +1,157 @@
+\lecture{21}{23 Feb. 10:00}{Homology}
+\subsection{Homology}
+To demonstrate how the definition of homology arise, we first see the idea behind it. Fix a space \(X\) which equips with the \hyperref[def:delta-complex]{\(\Delta\)-complex}
+structure. Then, we define \(C_{n} (X)\) to be the free Abelian group on the \hyperref[def:standard-simplex]{\(n\)-simplices} of \(X\). That is,
+\[
+	C_{n} (X) = \left\{\text{finite sums } \sum\limits_{}^{} m_\alpha \sigma _\alpha \mid m_\alpha \in \mathbb{\MakeUppercase{z}} , \sigma _\alpha \colon \Delta ^n\to X\right\}.
+\]
+\begin{figure}[H]
+	\centering
+	\incfig{C2-lec21}
+	\caption{\(C_2(X) = \mathbb{\MakeUppercase{z}} \sigma _1 \oplus \mathbb{\MakeUppercase{z}} \sigma _2\oplus \mathbb{\MakeUppercase{z}} \sigma _3\).}
+	\label{fig:C2-lec21}
+\end{figure}
+Then, the \(n\)-th homology group will be a subquotient of \(C_{n} (X)\), where the heuristic/imprecise idea is
+\begin{itemize}
+	\item Take subgroup of \(C_{n}\) of \emph{cycles}. These are sums of \hyperref[def:standard-simplex]{simplices} satisfying a combinatorial condition
+	      on the boundary gluing maps to ensure that they \emph{close up}, i.e., they have no \hyperref[def:boundary]{boundary}.
+	      \begin{figure}[H]
+		      \centering
+		      \incfig{lec21-demo-of-homology-group}
+		      \label{fig:lec21-demo-of-homology-group}
+	      \end{figure}
+	\item To take the quotient, we consider two cycles to be equivalent if their difference is a \hyperref[def:boundary]{boundary}. For example, in
+	      the case of torus, \(a\) is homologous to \(b\) since \(a - b\) is the \hyperref[def:boundary]{boundary} of the shaded subsurface \(S\) on
+	      of the torus below.
+	      \begin{figure}[H]
+		      \centering
+		      \incfig{lec21-torus}
+		      \label{fig:lec21-torus}
+	      \end{figure}
+	      In fact, \(a\) and \(b\) are \hyperref[def:homotopic]{homotopic} (which will imply they're homologous essentially), but two loops do not
+	      need to be \hyperref[def:homotopic]{homotopic} to be homologous. For example, in the figure below, \(a+b\) is homologous to \(c\), since
+	      \(a+b-c\) is the \hyperref[def:boundary]{boundary} of \(S\) (\(a+b\)\footnote{Which isn't even a loop} and \(c\) are \underline{not} \hyperref[def:homotopic]{homotopic}).
+	      \begin{figure}[H]
+		      \centering
+		      \incfig{lec21-3-torus}
+		      \label{fig:lec21-3-torus}
+	      \end{figure}
+\end{itemize}
+
+Let's now see the formal definition.
+\begin{definition}[Chain group]\label{def:chain-group}
+	We define the \emph{chain group} \(C_{n} (X)\) of order \(n\) to be the free Abelian group on the \hyperref[def:standard-simplex]{\(n\)-simplices} of \(X\) such
+	that
+	\[
+		C_{n} (X) \coloneqq \left\{\text{finite sums } \sum\limits_{}^{} m_\alpha \sigma _\alpha \mid m_\alpha \in \mathbb{\MakeUppercase{z}} , \sigma _\alpha \colon \Delta ^n \to X\right\}.
+	\]
+\end{definition}
+
+\begin{definition}[Boundary homomorphism]\label{def:boundary-homomorphism}
+	A map \(\partial_{n} \colon C_{n} (X)\to C_{n-1}(X) \) is called a \emph{boundary homomorphism} such that
+	\[
+		\begin{split}
+			\partial_{n} n\colon C_{n} (X)&\to C_{n-1}(X)\\
+			[\sigma _\alpha ]&\mapsto \sum\limits_{i=1}^{n} (-1)^i \at{\sigma _\alpha}{[v_0, \ldots , \hat{v}_{i}, \ldots , v_{n}]}{},
+		\end{split}
+	\]
+	which defines the map on the basis, and we extend it linearly.
+\end{definition}
+
+\begin{eg}
+	We give some lower dimensions examples of \autoref{def:boundary-homomorphism} to motivate the general definition.
+	\begin{itemize}
+		\item For \(n=1\), \(\partial_1\colon C_1(X)\to C_0(X)\) such that
+		      \[
+			      [\sigma _\alpha \colon [v_0, v_1]\to X]\mapsto \at{\sigma _\alpha }{[v_1]}{} - \at{\sigma _\alpha }{[v_0]}{}.
+		      \]
+		\item For \(n=2\), \(\partial_2\colon C_2(X)\to C_1(X)\) such that
+		      \[
+			      [\sigma _\alpha \colon [v_0, v_1, v_2]\to X]\mapsto \at{\sigma _\alpha }{[v_1,v_2]}{} - \at{\sigma _\alpha }{[v_0, v_2]}{} + \at{\sigma _\alpha }{[v_0, v_1]}{}.
+		      \]
+	\end{itemize}
+\end{eg}
+
+\begin{lemma}\label{lma:lec21}
+	For any \(n\geq 2\), we have
+	\[
+		\begin{tikzcd}
+			{C_n(X)} & {C_{n-1}(X)} & {C_{n-2}(X)}
+			\arrow["{\partial_{n-1}}", from=1-2, to=1-3]
+			\arrow["{\partial_{n}}", from=1-1, to=1-2]
+			\arrow["{\partial_{n-1}\circ \partial_{n}=0}"', curve={height=12pt}, from=1-1, to=1-3]
+		\end{tikzcd}
+	\]
+\end{lemma}
+
+\begin{definition}[Chain complex]\label{def:chain-complex}
+	A \emph{chain complex} \((C_\ast, d_\ast)\) is a collection of maps such that
+	\[
+		\begin{tikzcd}
+			\ldots & {C_{n+1}} & {C_{n}} & {C_{n-1}} & \ldots
+			\arrow[from=1-1, to=1-2]
+			\arrow["{d_{n+1}}", from=1-2, to=1-3]
+			\arrow["{d_{n}}", from=1-3, to=1-4]
+			\arrow["{d_{n-1}}", from=1-4, to=1-5]
+		\end{tikzcd}
+	\]
+	of Abelian groups and group homomorphism such that
+	\[
+		d_{n-1}\circ d_n = 0.
+	\]
+	We call \(C_{n} \) the \emph{\(n\)-th chain group} and \(d_{n} \) the \emph{\(n\)-th differential}.
+\end{definition}
+\begin{remark}
+	We see that
+	\begin{itemize}
+		\item \autoref{lma:lec21} guarantees that our \hyperref[def:chain-group]{simplicial chain groups} form a \hyperref[def:chain-complex]{chain complex}.
+		\item \autoref{def:chain-complex} means that \(\mathrm{ker}(d_{n} ) \) contains \(\mathrm{Im} (d_{n+1})\), since \(d_{n} \circ d_{n+1} = 0\).
+	\end{itemize}
+\end{remark}
+
+\begin{definition}[Exact]\label{def:exact}
+	We say that the sequence is \emph{exact at \(C_{n} \)} provided that \(\mathrm{ker}(d_{n}) = \mathrm{Im}(d_{n+1})\). A \hyperref[def:chain-complex]{chain complex} is \emph{exact}
+	if it is \emph{exact at each point}.
+\end{definition}
+
+\begin{definition}[Homology group]\label{def:homology-group}
+	The \emph{\(n^{th} \) homology group of a chain complex \((C_\ast, d_\ast)\)}, denoted as \(H_{n} \) or \(H_{n} (C_\ast)\), is the quotient
+	\[
+		H_{n} \coloneqq \quotient{\mathrm{ker} (d_{n} )}{\mathrm{Im} (d_{n+1})}.
+	\]
+\end{definition}
+\begin{remark}
+	The \hyperref[def:homology-group]{homology group} measures how far the \hyperref[def:chain-complex]{chain complex} is from being \hyperref[def:exact]{exact} at \(C_{n} \).
+\end{remark}
+
+With what we have just defined, it's natural to define \hyperref[def:homology-group]{homology groups} of spaces \(X\) with a \hyperref[def:delta-complex]{\(\Delta \)-complex}
+structure.
+\begin{definition}[Homology class]\label{def:homology-class}
+	We say \(\mathrm{ker} (\partial _{n} )\) is the subgroup of \textbf{cycles} is \(C_{n} (X)\) , and \(\mathrm{Im}(\partial_{n+1}) \) is the subgroup of \textbf{boundaries}
+	in \(C_{n} (X)\). We then set
+	\[
+		H_{n} (X)\coloneqq \quotient{\mathrm{ker} (\partial _{n} )}{\mathrm{Im} (\partial _{n+1})} = \quotient{\text{cycles} }{\text{boundaries} }.
+	\]
+	In other words, it's the \hyperref[def:homology-group]{homology} of the \hyperref[def:chain-complex]{chain complex}
+	\[
+		\begin{tikzcd}
+			\ldots & {C_{n+1}} & {C_{n}} & {C_{n-1}} & \ldots
+			\arrow[from=1-1, to=1-2]
+			\arrow["{\partial_{n+1}}", from=1-2, to=1-3]
+			\arrow["{\partial_{n}}", from=1-3, to=1-4]
+			\arrow["{\partial_{n-1}}", from=1-4, to=1-5]
+		\end{tikzcd}
+	\]
+	where we take it to be \(0\) in all negative indices, namely
+	\[
+		\begin{tikzcd}
+			\ldots & {C_{n+1}} & {C_{n}} & {C_{n-1}} & 0
+			\arrow[from=1-1, to=1-2]
+			\arrow["{\partial_{3}}", from=1-1, to=1-2]
+			\arrow["{\partial_{2}}", from=1-2, to=1-3]
+			\arrow["{\partial_{1}}", from=1-3, to=1-4]
+			\arrow["{\partial_{0}}", from=1-4, to=1-5]
+		\end{tikzcd}
+	\]
+	We then call the elements of \(H_{n} (X)\) as \emph{homology classes}.
+\end{definition}

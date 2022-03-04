@@ -55,7 +55,7 @@
 \end{exercise}
 
 \section{The Fundamental Group}
-\subsection{Definition}
+\subsection{Path}
 We start with the definition.
 \begin{definition}[Path]\label{def:path}
 	A \emph{path} in a space \(X\) is a continuous map
@@ -150,6 +150,7 @@ We start with the definition.
 	equivalence relation on \hyperref[def:path]{paths} from \(x_0\) to \(x_1\).
 \end{exercise}
 
+\subsection{Fundamental Group}
 \begin{definition}[Fundamental Group]\label{def:fundamental-group}
 	Let \(X\) denotes the space and let \(x_0\in X\) be the base point. The \emph{fundamental group of \(X\) based at \(x_0\)},
 	denoted by \(\pi_1(X, x_0)\), is a group such that
@@ -281,7 +282,7 @@ We start with the definition.
 	\end{figure}
 \end{proof}
 
-\begin{theorem}
+\begin{theorem}\label{thm:lec8}
 	If \(X\) is \hyperref[def:path]{path}-connected, then
 	\[
 		\forall x_0, x_1\in X\quad \pi_1(X, x_0)\cong \pi _1(X, x_1).
@@ -318,3 +319,205 @@ We start with the definition.
 \begin{exercise}
 	If \(X\) is a contractible space, then \(X\) is \hyperref[def:path]{path}-connected and \(\pi _1(X)\)  is trivial.
 \end{exercise}
+
+\hr
+
+The followings are the properties about \hyperref[def:homotopy]{homotopy} \hyperref[def:path]{path}. They are useful when we introduce \hyperref[def:fundamental-groupoid]{fundamental groupoid}.
+\begin{lemma}\label{lma:lec8-1}
+	Given \(x_0, x_1, x_2\in X\), \(\alpha , \alpha ^\prime\) are two paths from \(x_0\) to \(x_1\), and \(\beta , \beta ^\prime \)  are two paths from \(x_1\) to \(x_2\). If
+	\(\left< \alpha  \right> = \left< \alpha ^\prime  \right> \), \(\left< \beta  \right> = \left< \beta ^\prime  \right> \), then \(\left< \alpha \cdot \beta  \right> = \left< \alpha ^\prime \cdot \beta ^\prime  \right>\).
+\end{lemma}
+\begin{proof}
+	Given \(\alpha \underset{F}{\simeq }\alpha ^\prime \ \mathrm{rel} \{0, 1\}\), \(\beta \underset{G}{\simeq }\beta ^\prime \ \mathrm{rel} \{0, 1\}\), then we want to prove
+	\[
+		\alpha \cdot \beta \simeq \alpha ^\prime \cdot \beta ^\prime\ \mathrm{rel} \{0, 1\}.
+	\]
+	This is done by using \hyperref[def:homotopy]{homotopy} \(H\colon I\times I\to X\) such that it combines \(F(2s, t)\) and \(G(2s-1, t)\).
+	\[\begin{tikzcd}
+			{x_0} & {x_1} & {x_2}
+			\arrow["{\alpha^\prime}"', curve={height=6pt}, from=1-1, to=1-2]
+			\arrow["\alpha", curve={height=-6pt}, from=1-1, to=1-2]
+			\arrow["\beta", curve={height=-6pt}, from=1-2, to=1-3]
+			\arrow["{\beta^\prime}"', curve={height=6pt}, from=1-2, to=1-3]
+		\end{tikzcd}\]
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:lma:lec8-1}
+		\label{fig:pf:lma:lec8-1}
+	\end{figure}
+
+\end{proof}
+
+\begin{lemma}\label{lma:lec8-2}
+	Let \(x_0, x_1, x_2, x_3\in X\), \(\alpha\) is a \hyperref[def:path]{path} from \(x_0\) to \(x_{1}\), \(\beta\) is a \hyperref[def:path]{path} from \(x_1\) to \(x_2\), \(\gamma\) is a \hyperref[def:path]{path} from \(x_2\) to \(x_3\). Then
+	\[
+		\left< (\alpha \cdot \beta ) \cdot \gamma \right>  = \left< \alpha \cdot (\beta \cdot \gamma ) \right>.
+	\]
+\end{lemma}
+\begin{proof}
+	We can write out the \hyperref[def:homotopy]{homotopy} by the following diagram.
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:lma:lec8-2}
+		\label{fig:pf:lma:lec8-2}
+	\end{figure}
+\end{proof}
+
+\begin{lemma}\label{lma:lec8-3}
+	Let \(X\) be a topological space, and \(x_0\in X\). Then for every \hyperref[def:path]{path} \hyperref[def:homotopy]{homotopy} \(\left< \alpha  \right> \) from
+	\(x_1\) to \(x_2\), we have
+	\[
+		\left< c_{x_1}\cdot \alpha  \right> = \left< \alpha  \right> = \left< \alpha \cdot c_{x_2} \right>.
+	\]
+\end{lemma}
+\begin{proof}
+	We only need to prove \(c_{x_1}\cdot \alpha \simeq \alpha\ \mathrm{rel} \{0,1\} \). The \hyperref[def:homotopy]{homotopy} can be written out explicitly by the following diagram.
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:lma:lec8-3}
+		\label{fig:pf:lma:lec8-3}
+	\end{figure}
+\end{proof}
+
+\begin{lemma}\label{lma:lec8-4}
+	For every \hyperref[def:path]{path} \hyperref[def:homotopy]{homotopy} \(\left< \alpha  \right> \) from \(x_1\) to \(x_2\), then
+	\[
+		\left< \alpha \cdot \alpha ^{-1}  \right> = \left< c_{x_1} \right>, \qquad \left< \alpha ^{-1} \cdot \alpha  \right> = \left< c_{x_2} \right>.
+	\]
+\end{lemma}
+\begin{proof}
+	For the first case, we have the following diagram.
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:lma:lec8-4}
+		\label{fig:pf:lma:lec8-4}
+	\end{figure}
+	The second case follows similarly.
+\end{proof}
+
+\subsection{Fundamental Groupoid}
+This section is not covered in class, but it's a useful concept. The idea is that after giving \autoref{def:fundamental-group}, we see that we actually create a \hyperref[def:fundamental-group]{fundamental group}
+at \textbf{every} point at \(X\), furthermore, when we use \autoref{thm:lec8} if \(x\) is \hyperref[def:path]{path}-connected, we actually \textbf{lose} some
+information about this space. Here is how we can store all the information.
+
+\begin{notation}[Constant loop]\label{not:constant-loop}
+	We denote \(c_x\), where \(x\in X\) such that
+	\[
+		\begin{split}
+			c_{x}\colon [0, 1]&\to X\\
+			t&\mapsto x
+		\end{split}
+	\]
+	as a \emph{constant loop}.
+\end{notation}
+
+\begin{definition}[Groupoid]\label{def:groupoid}
+	A \hyperref[def:category]{category} \(\mathcal{\MakeUppercase{C}}\) is a \emph{groupoid} if any \hyperref[def:morphism]{morphisms} in \(\mathcal{\MakeUppercase{C}} \)
+	is and isomorphism.
+\end{definition}
+\begin{remark}
+	We'll soon see that for any topological space \(x\), \autoref{def:fundamental-group} defines a \hyperref[def:groupoid]{groupoid}, denoted by \(\Pi (X)\).
+\end{remark}
+
+\begin{definition}[Fundamental groupoid]\label{def:fundamental-groupoid}
+	Let \(X\) denotes the space, then the category \(\Pi (X)\) is a \emph{fundamental groupoid of \(X\)} such that
+	\begin{itemize}
+		\item \(\Object (\Pi (X)) \coloneqq X \)
+		\item \(\Morphism (\Pi (X))\colon \forall p, q\in \Object (\Pi (X)) = X\),
+		      \[
+			      \Homomorphism _{\Pi (x)}(p, q) \coloneqq \quotient{\left\{\text{Paths from \(p\) to \(q\)} \right\}}{\sim }.
+		      \]
+		\item Composition: For every \(p, q, r\in \Object (\Pi (X)) = X\),
+		      \[
+			      \begin{split}
+				      \circ \colon \Homomorphism _{\Pi (X)}(p, q)\times \Homomorphism _{\Pi (X)}(q, r)&\to \Homomorphism _{\Pi (X)}(p, r)\\
+				      (\left< \alpha  \right> , \left< \beta  \right> )&\mapsto \left< \beta  \right> \circ \left< \alpha  \right> \coloneqq \left< \alpha \cdot \beta  \right>.
+			      \end{split}
+		      \]
+		\item Identity: For every \(p\in \Object (\Pi (X)) = X\), we define \(1_p\coloneqq \left< c_p \right> \in \Homomorphism _{\Pi (X)}(p, p)\) be the constant loop
+		      based at \(p\) such that for every \(\left< \alpha \right> \in \Homomorphism _{\Pi (X)}(p, q)\),
+		      \[
+			      \left< \alpha  \right> \circ 1_p = 1_q\circ \left< \alpha  \right> = \left< \alpha  \right>.
+		      \]
+		\item Associativity: Given \(p, q, r, s\in \Object (\Pi (X)) = X\), with the paths
+		      \[\begin{tikzcd}
+				      p & q & r & s
+				      \arrow["{\left<\alpha\right>}", curve={height=-6pt}, from=1-1, to=1-2]
+				      \arrow["{\left<\beta\right>}", curve={height=6pt}, from=1-2, to=1-3]
+				      \arrow["{\left<\gamma\right>}", curve={height=-6pt}, from=1-3, to=1-4]
+			      \end{tikzcd}\]
+		      Then
+		      \[
+			      \left< \gamma  \right> \circ \left(\left< \beta  \right> \circ \left< \alpha  \right> \right) = \left(\left< \gamma  \right> \circ \left< \beta  \right> \right)\circ \left< \alpha  \right>.
+		      \]
+	\end{itemize}
+\end{definition}
+\begin{proof}
+	Note that in \autoref{def:fundamental-groupoid}, we need to show some of the definitions is indeed well-defined, and we also need to show that \(\Pi (X)\) is actually a \hyperref[def:groupoid]{groupoid}.
+	\begin{itemize}
+		\item Composition: Since if \(\alpha \simeq \alpha ^\prime , \beta \simeq \beta ^\prime \), we
+		      have
+		      \[
+			      \alpha \cdot \beta \simeq \alpha ^\prime \cdot \beta ^\prime
+		      \]
+		      from \autoref{lma:lec8-1}.
+		\item Identity: It follows that
+		      \[
+			      \left< \alpha  \right> \circ 1_p = \left< c_p\cdot \alpha  \right> = \left< \alpha  \right>
+		      \]
+		      from \autoref{lma:lec8-3}. The left identity can be shown similarly.
+		\item Associativity: It's trivial in the sense that all the \hyperref[def:homotopy]{homotopy} can be easily derived from
+		      \autoref{lma:lec8-2}.
+	\end{itemize}
+
+	Additionally, from \autoref{lma:lec8-4}, we see that
+	\[
+		\begin{dcases}
+			\left< \alpha ^{-1} \cdot \alpha  \right> & = \left< c_q \right> \eqqcolon 1_q  \\
+			\left< \alpha \cdot \alpha^{-1}  \right>  & = \left< c_p \right> \eqqcolon 1_p.
+		\end{dcases}
+	\]
+	Furthermore, since \(\left< \alpha ^{-1} \cdot \alpha  \right> = \left< \alpha  \right> \circ \left< \alpha ^{-1}  \right> \) and
+	\(\left< \alpha \cdot \alpha^{-1} \right> = \left< \alpha ^{-1}\right> \circ \left< \alpha\right> \), hence this means
+	\(\Pi (X)\) is indeed a \hyperref[def:groupoid]{groupoid}.
+\end{proof}
+
+\begin{remark}
+	Assume \(\mathcal{\MakeUppercase{C}} \) is a \hyperref[def:groupoid]{groupoid}, then for every \(x\in \Object (\mathcal{\MakeUppercase{C}} )\), we can define
+	\[
+		\cdot \colon \Homomorphism _{\mathcal{\MakeUppercase{C}} }(X, X) \times \Homomorphism _{\mathcal{\MakeUppercase{C}} }(X, X)\to \Homomorphism _{\mathcal{\MakeUppercase{C}} }(X, X)
+	\]
+	such that
+	\[
+		(f, g)\mapsto f\cdot g \coloneqq g\circ f.
+	\]
+	We can prove that
+	\[
+		\left(\Homomorphism _{\mathcal{\MakeUppercase{C}} }(X, X), \cdot \right)
+	\]
+	defines a group \(\mathrm{Aut}_{\mathcal{\MakeUppercase{C}} }(x) \) called the \emph{isotropy group} of \(\mathcal{\MakeUppercase{C}} \) at \(x\in X\).
+\end{remark}
+\begin{exercise}
+	For every \(x, y\in \Object (\mathcal{\MakeUppercase{C}} )\), if there exists \(f\in \Homomorphism _{\mathcal{\MakeUppercase{C}} }(x, y)\), then \(f\) induces
+	\[
+		f_\ast \colon \mathrm{Aut}_{\mathcal{\MakeUppercase{C}} }(x) \overset{\simeq}{\to } \mathrm{Aut}_{\mathcal{\MakeUppercase{C}} }(y),
+	\]
+	where \(f_\ast \) is a group homomorphism.
+\end{exercise}
+
+\begin{remark}
+	For every \(p\in X=\Object (\Pi (X))\), we have
+	\[
+		\mathrm{Aut} _{\Pi (X)}(p) = \pi _1(X, p).
+	\]
+
+	Firstly, since they're the same in the sense of \textbf{set}:
+	\[
+		\mathrm{Aut}_{\Pi (X)} (p) = \Homomorphism _{\Pi (X)}(p, p) = \quotient{\left\{\text{Loops in \(X\) based at \(p\)} \right\}}{\sim} = \pi _1(X, p).
+	\]
+	Hence, we only need to verify their group composition agrees. But this is trivial, since for every two \(\left< \alpha  \right> , \left< \beta  \right> \in \mathrm{Aut}_{\Pi (X)}(p) \),
+	\[
+		\underbrace{\left< \alpha  \right> \cdot \left< \beta  \right> }_{\text{Composition from \(\mathrm{Aut}_{\Pi(X)}\)}} = \left< \beta  \right> \circ \left< \alpha  \right> =\underbrace{ \left< \alpha \cdot \beta\right>}_{\text{Composition from \(\pi_1\) } }.
+	\]
+	This implies that \autoref{thm:lec8} is just a particular example as a \hyperref[def:groupoid]{groupoid}.
+\end{remark}

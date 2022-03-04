@@ -92,7 +92,8 @@ Let's start with a simple theorem.
 	\end{enumerate}
 \end{eg}
 
-\begin{theorem}
+\subsection{Fundamental Group and Groupoid Define Functors}
+\begin{theorem}[Fundamental group defines a functor]\label{thm:fundamental-group-defines-a-functor}
 	\(\pi _1\) is a \hyperref[def:functor]{functor} such that
 	\[
 		\begin{split}
@@ -100,8 +101,7 @@ Let's start with a simple theorem.
 			(X, x_0)&\mapsto \pi _1(X, x_0).
 		\end{split}
 	\]
-
-	A map \(f\colon X\to Y\) taking base point \(x_0\) to \(y_0\) induces a map
+	While on a map \(f\colon X\to Y\) taking base point \(x_0\) to \(y_0\), \(\pi _1\) induces a map
 	\[
 		\begin{split}
 			f_*\colon \pi _1(X, x_0)&\to \pi _1(Y, y_0)\\
@@ -135,4 +135,200 @@ Let's start with a simple theorem.
 		      \]
 	\end{itemize}
 	\todo{DIY}
+	\[\begin{tikzcd}
+			{(X, x_0)} & {\pi_1(X, x_0)} \\
+			{(Y, y_0)} & {\pi_1(Y, y_0)}
+			\arrow[squiggly, from=2-1, to=2-2]
+			\arrow[squiggly, from=1-1, to=1-2]
+			\arrow["f"', from=1-1, to=2-1]
+			\arrow["{f_\ast}", from=1-2, to=2-2]
+		\end{tikzcd}\]
+\end{proof}
+
+\begin{remark}
+	We see that the construction of \hyperref[def:fundamental-group]{fundamental group} is actually constructing a \hyperref[def:functor]{functor}. Specifically,
+	\[
+		\pi _1\colon \underline{\mathrm{Top}_*} \to \underline{\mathrm{Gp}}
+	\]
+	such that
+	\begin{itemize}
+		\item on \hyperref[def:object]{objects}:
+		      \[
+			      \forall (X, x_{0} )\in \Object (\underline{\mathrm{Top}_*}),\qquad \pi _1(X, x_0) = \text{\hyperref[def:fundamental-group]{fundamental group} based at \(x_0\)}.
+		      \]
+		\item on \hyperref[def:morphism]{morphisms}:
+		      \[
+			      \forall f\colon (X, x_0)\to (Y, y_0),\qquad \pi _1(f) = f_\ast \colon \pi _1(X, x_0)\to \pi _1(Y, y_0).
+		      \]
+	\end{itemize}
+\end{remark}
+
+\hr
+
+Our initial motivation is to construct a topological invariant, but we see that using \(\pi _1\), we need an additional \textbf{base point}. But as you already
+imagined, the \hyperref[def:fundamental-groupoid]{fundamental groupoid} actually is a \hyperref[def:functor]{functor} as well.
+
+Before we proceed further, we need to see the \hyperref[def:category]{category} of \hyperref[def:groupoid]{groupoid}, denoted by \(\underline{\mathrm{Gpd}}\).
+
+\begin{definition}[Category of groupoid]\label{def:category-of-groupoid}
+	The \emph{category of groupoid}, denoted as \(\underline{\mathrm{Gpd}}\), contains the following data.
+	\begin{itemize}
+		\item \(\Object (\underline{\mathrm{Gpd}})\): \hyperref[def:groupoid]{groupoids}.
+		\item \(\Homomorphism (\underline{\mathrm{Gpd}})\): \hyperref[def:functor]{functors} between \hyperref[def:groupoid]{groupoids}.
+		\item Composition: For every \(\mathfrak{X} , \mathfrak{Y}, \mathfrak{Z} \in \Object (\underline{\mathrm{Gpd}})\),
+		      \[\begin{tikzcd}
+				      {\mathfrak{X}} & {\mathfrak{Y}} & {\mathfrak{Z}}
+				      \arrow["F", from=1-1, to=1-2]
+				      \arrow["G", from=1-2, to=1-3]
+			      \end{tikzcd}\]
+		      then \(G\circ F\colon \mathfrak{X} \to \mathfrak{Z}\) is a \hyperref[def:functor]{functor} defined as
+		      \begin{itemize}
+			      \item on \hyperref[def:object]{objects}: \(\forall X\in \Object (\mathfrak{X})\),
+			            \[
+				            G\circ F(X)\coloneqq G(F(X)).
+			            \]
+			      \item on \hyperref[def:morphism]{morphisms}: \(\forall X, Y\in \Object (\mathfrak{X})\) and \(f\colon X\to Y\),
+			            \[
+				            G\circ F(f)\coloneqq G(F(f)).
+			            \]
+		      \end{itemize}
+		\item Identity. For every \hyperref[def:groupoid]{groupoid} \(\mathfrak{X}\), we define \(\identity_{\mathfrak{X}}\colon \mathfrak{X}\to \mathfrak{X} \), where
+		      \begin{itemize}
+			      \item \(\forall X\in \Object (\mathfrak{X})\), \(\identity_{\mathfrak{X}}(X) = X \)
+			      \item \(\forall f\in \Homomorphism (\mathfrak{X})\), \(\identity_{\mathfrak{X}}(f) = f \).
+		      \end{itemize}
+		\item Associativity. Since the composition is defined based on two \hyperref[def:functor]{functors} (given \(\begin{tikzcd}
+			      {\mathfrak{X}} & {\mathfrak{Y}} & {\mathfrak{Z}}
+			      \arrow["F", from=1-1, to=1-2]
+			      \arrow["G", from=1-2, to=1-3]
+		      \end{tikzcd}\)), this holds trivially.
+	\end{itemize}
+\end{definition}
+\begin{proof}
+	We need to show that the composition is well-defined. Specifically, we need to check
+	\begin{itemize}
+		\item \(G\circ F(\identity_{X}) = \identity_{G\circ F(X)}\), since
+		      \[
+			      G\circ F(\identity_{X} ) = G(F(\identity_{X} )) = G(\identity_{F(X)}) = \identity_{G(F(X))} = \identity_{G\circ F(X)}.
+		      \]
+		\item Given \(X_1, X_2, X_3\in \Object (\mathfrak{X})\) and
+		      \[\begin{tikzcd}
+				      {X_1} & {X_2} & {X_3}
+				      \arrow["f", from=1-1, to=1-2]
+				      \arrow["g", from=1-2, to=1-3]
+			      \end{tikzcd}\]
+		      we want to show \(G\circ F(g\circ f) = G\circ F(g) \circ G\circ F(f)\). Firstly, since \(G\) is a \hyperref[def:functor]{functor}, hence
+		      \[
+			      G\circ F(g) \circ G\circ F(f) = G(F(g))	\circ G(F(f)) = G\left(F(g)\circ F(f)\right).
+		      \]
+		      Again, since \(F\) is a functor, so we further have
+		      \[
+			      G\circ F(g) \circ G\circ F(f) = G(F(g\circ f)) = G\circ F(g\circ f).
+		      \]
+	\end{itemize}
+\end{proof}
+\begin{theorem}[Fundamental groupoid defines a functor]\label{thm:fundamental-groupoid-defines-a-functor}
+	\(\Pi\) is a \hyperref[def:functor]{functor} such that
+	\[
+		\Pi\colon \underline{\mathrm{Top}} \to \underline{\mathrm{Gpd}},
+	\]
+	where
+	\begin{itemize}
+		\item on \hyperref[def:object]{objects}: For every \(X\in \Object (\underline{\mathrm{Top}})\),
+		      \[
+			      X\mapsto \Pi (X).
+		      \]
+		\item on \hyperref[def:morphism]{morphisms}: for every \(X, Y\in \Object (\underline{\mathrm{Top}})\), \(f\colon X\to Y\), define a \hyperref[def:functor]{functor}
+		      \[
+			      \Pi (f)\colon \Pi(X)\to \Pi (Y)
+		      \]
+		      such that
+		      \begin{itemize}
+			      \item on \hyperref[def:object]{objects}: For every \(p\in \Object (\Pi (X)) = X\), \(\Pi (f)(p) = f(p)\). i.e.,
+			            \[
+				            \Pi (f)\colon \underbrace{\Object (\Pi (X))}_{X}\to \underbrace{\Object (\Pi (Y))}_{Y}.
+			            \]
+			      \item on \hyperref[def:morphism]{morphisms}: For every \(\left< \alpha  \right> \in \Homomorphism _{\Pi (X)}(p, q)\), define
+			            \[
+				            \Pi (f)(\left< \alpha  \right> )\coloneqq \left< f\circ \alpha  \right> \in \Homomorphism _{\Pi (Y)}(f(p), f(q)).
+			            \]
+		      \end{itemize}
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	We need to check that the defined \hyperref[def:functor]{functor} \(\Pi (f)\) satisfies
+	\begin{itemize}
+		\item \(\Pi (f)(\identity_{p} ) = \identity_{f(p)} \). Indeed, since
+		      \[
+			      \Pi (f)(\identity_{p} ) = \Pi (f)(\left< c_p \right> ) = \left< f\circ d_{p}  \right> = \left< c_{f(p)} \right> = \identity_{f(p)}.
+		      \]
+		\item For every \(p, q, r\in X = \Object (\Pi (X))\),
+		      \[
+			      \begin{tikzcd}
+				      {p} & {q} & {r}
+				      \arrow["\left< \alpha  \right> ", from=1-1, to=1-2]
+				      \arrow["\left< \beta  \right> ", from=1-2, to=1-3]
+			      \end{tikzcd}
+		      \]
+		      we want to show \(\Pi (f)\left(\left< \beta  \right> \circ \left< \alpha  \right> \right) = \Pi (f)(\left< \beta  \right> )\circ \Pi (f)(\left< \alpha  \right> )\). Indeed,
+		      since
+		      \[
+			      \Pi (f)\left(\left< \beta  \right> \circ \left< \alpha  \right> \right) = \Pi (f)(\left< \alpha \cdot \beta  \right> ) = \left< f\circ (\alpha \cdot \beta ) \right>,
+		      \]
+		      and
+		      \[
+			      \Pi (f)(\left< \beta  \right> )\circ \Pi (f)(\left< \alpha  \right> ) = \left< f\circ \beta  \right> \circ \left< f\circ \alpha  \right> = \left< (f\circ \alpha )\cdot (f\circ \beta ) \right>.
+		      \]
+		      Since \( \left< f\circ (\alpha \cdot \beta ) \right> = \left< (f\circ \alpha )\cdot (f\circ \beta ) \right>\), hence \(\Pi (f)\) is well-defined.
+	\end{itemize}
+
+	Now, we need to prove the same thing for \(\Pi\), namely \(\Pi \) satisfies
+	\begin{itemize}
+		\item \(\Pi (\identity_{X} ) = \identity_{\Pi (X)} \) for all \(X\in \Object (\underline{\mathrm{Top}})\). This is trivial since
+		      \[
+			      \Pi (\identity_{X} )\colon \Pi (X)\to \Pi (X),
+		      \]
+		      \begin{itemize}
+			      \item on \hyperref[def:object]{objects}: \(p\mapsto \identity_{X} (p) = p\).
+			      \item on \hyperref[def:morphism]{morphisms}: \(\begin{tikzcd}
+				            {p} & {q}
+				            \arrow["\left< \alpha  \right> ", from=1-1, to=1-2]
+			            \end{tikzcd}\mapsto \left< \identity_{X} \circ \alpha  \right> = \left< \alpha  \right>  \).
+		      \end{itemize}
+		\item For all \(X, Y, Z\in \Object (\underline{\mathrm{Top} })\),
+		      \[
+			      \begin{tikzcd}
+				      {X} & {Y} & {Z}
+				      \arrow["f", from=1-1, to=1-2]
+				      \arrow["g", from=1-2, to=1-3]
+			      \end{tikzcd}
+		      \]
+		      then \(\Pi (g\circ f) = \Pi (g)\circ \Pi (f)\). The diagrams are as follows.
+		      \[
+			      \Pi (g\circ f)\colon \Pi (X)\to \Pi (Z)
+		      \]
+		      and
+		      \[
+			      \begin{tikzcd}
+				      {\Pi (X)} & {\Pi (Y)} & {\Pi (Z)}
+				      \arrow["\Pi (f)", from=1-1, to=1-2]
+				      \arrow["\Pi (g)", from=1-2, to=1-3]
+			      \end{tikzcd}
+		      \]
+
+		      We see that this equality is in the sense of \hyperref[def:functor]{functor}, hence we consider
+		      \begin{itemize}
+			      \item on \hyperref[def:object]{objects}: For every \(p\in \Object (\Pi (X)) = X\), \(\Pi (g\circ f)(p) = g\circ f(p)\) and
+			            \[
+				            \Pi (g)\circ \Pi (f)(p) = \Pi (g)(\Pi (f)(p))=\Pi (g)(f(p)=g(f(p))),
+			            \]
+			            hence they're the same.
+			      \item on \hyperref[def:morphism]{morphisms}: For all \(\left< \alpha  \right> \in \Homomorphism _{\Pi (X)}(p, q)\),
+			            \begin{itemize}
+				            \item \(\Pi (g\circ f)(\left< \alpha  \right> ) = \left< (g\circ f)\circ \alpha  \right> \).
+				            \item \(\Pi (g)\circ \Pi (f)(\left< \alpha  \right> ) = \Pi (g)\left(\underbrace{\Pi (f)(\left< \alpha  \right> )}_{\left< f\circ \alpha  \right> }\right) = \left< g\circ \left(f\circ \alpha \right) \right> \).
+			            \end{itemize}
+			            We see that they're the same.
+		      \end{itemize}
+	\end{itemize}
 \end{proof}

@@ -7,7 +7,7 @@ The goal is to compute \(\pi _1(X)\) where \(X = A\cup B\) using the data
 \subsection{Seifert-Van Kampen Theorem}
 \subsubsection{Free Product with Amalgamation}
 We first introduce a definition.
-\begin{definition}[Free product with amalgamation]\label{def:free-product-with-amalgamation}
+\begin{definition}[Free product]\label{def:free-product}
 	Given some collections of groups \(\{G_{\alpha }\}_{\alpha }\), the \emph{free product},
 	denoted by \(\underset{\alpha}{\ast}G_{\alpha }\) is a group such that
 	\begin{itemize}
@@ -21,10 +21,114 @@ We first introduce a definition.
 		      \[
 			      w e_{\alpha }v\sim wv.
 		      \]
+		      Specifically,
+		      \[
+			      \ast_\alpha G_\alpha \coloneqq \quotient{\left\{\text{\hyperref[def:word]{words} in \(\{G_\alpha \}_{\alpha}\)} \right\}}{\sim}.
+		      \]
 		\item Operation: Concatenation of \hyperref[def:word]{words}.
 	\end{itemize}
+\end{definition}
+\begin{remark}
+	In particular, we have the following universal property of \(\ast_\alpha G_\alpha \). For every \(\alpha \), there is a \(\iota _\alpha \) such that
+	\[
+		\iota _\alpha \colon G_\alpha \to \ast_\alpha G_\alpha ,\qquad g\mapsto \overline{g},
+	\]
+	where \(\iota _\alpha \) is a group homomorphism obviously. Further, \((\ast_\alpha G_\alpha ,\iota _\alpha )\) satisfies the following property: For every
+	group \(H\) and a group homomorphism \(\varphi _\alpha \colon G_\alpha \to G\) for all \(\alpha \), there exists an unique group homomorphism \(\varphi \colon \ast_\alpha G_\alpha \to H\)
+	such that \(\varphi \circ \iota _\alpha = \varphi _\alpha \), i.e., the following diagram commutes.
+	\[\begin{tikzcd}
+			{G_{\alpha_1}} \\
+			{G_{\alpha_2}} && {\ast_\alpha G_\alpha} \\
+			\vdots \\
+			&&& H
+			\arrow["{\iota_{\alpha_1}}", from=1-1, to=2-3]
+			\arrow["{\iota_{\alpha_2}}"', from=2-1, to=2-3]
+			\arrow["{\exists ! \varphi}", dashed, from=2-3, to=4-4]
+			\arrow["{\varphi_{\alpha_1}}"{description}, from=1-1, to=4-4]
+			\arrow["{\varphi_{\alpha_2}}"{description}, from=2-1, to=4-4]
+		\end{tikzcd}\]
+	\begin{proof}
+		The proof is straightforward. Firstly, we define \(w = \overline{g_1 g_2\ldots g_n}\in \ast_\alpha G_\alpha\), \(g_{i} \in G_{\alpha_{i} } \),
+		\[
+			\varphi (w)\coloneqq \varphi _{\alpha _1}(g_1)\ldots \varphi _{\alpha _{n} }(g_{n} ).
+		\]
+		Now, we just need to check
+		\begin{itemize}
+			\item It's well-defined, since \(\varphi_\alpha \) is a group homomorphism.
+			\item \(\varphi \) is a group homomorphism.
+			\item \(\varphi \circ \iota _\alpha =\varphi _\alpha \).
+			\item Such \(\varphi \) is unique. Suppose there exists another \(\psi \colon \ast_\alpha G_\alpha \to H\), then
+			      \[
+				      \psi \circ \iota _\alpha = \varphi _\alpha \implies \underset{g\in G_\alpha }{\forall }\ \psi (\overline{g} )= \psi _\alpha (g),
+			      \]
+			      But then for every \(w = \overline{g_1 g_2\ldots g_n}\in \ast_\alpha G_\alpha\), \(g_{i} \in G_{\alpha_{i} } \), we have
+			      \[
+				      \psi (w) = \psi (\overline{g_1}\ldots \overline{g_n}) = \psi (\overline{g_1}) \ldots \psi (\overline{g_n})  = \psi _{\alpha _1}(\overline{g_1}) \ldots \psi _{\alpha_n}(\overline{g_n}),
+			      \]
+			      which is just \(\varphi \).
+		\end{itemize}
+	\end{proof}
+\end{remark}
+\begin{remark}
+	We further claim that this universal property determines such \hyperref[def:free-product]{free product} uniquely. i.e., assume there are another group \(\widetilde{G} \) and
+	\(\widetilde{\iota} _\alpha \colon G_\alpha \to \widetilde{G}\). Assume \((\widetilde{G} , \widetilde{\iota} _\alpha  )\) also satisfies the following property: For every
+	group \(H\) and group homomorphism \(\varphi _\alpha \colon G_\alpha \to H\), then there exists a unique group homomorphism \(\varphi \colon \widetilde{G} \to H\) such that
+	the following diagram commutes.
+	\[\begin{tikzcd}
+			{G_{\alpha_1}} \\
+			{G_{\alpha_2}} && {\ast_\alpha \widetilde{G} _\alpha} \\
+			\vdots \\
+			&&& H
+			\arrow["{\widetilde{\iota}_{\alpha_1}}", from=1-1, to=2-3]
+			\arrow["{\widetilde{\iota}_{\alpha_2}}"', from=2-1, to=2-3]
+			\arrow["{\exists ! \varphi}", dashed, from=2-3, to=4-4]
+			\arrow["{\varphi_{\alpha_1}}"{description}, from=1-1, to=4-4]
+			\arrow["{\varphi_{\alpha_2}}"{description}, from=2-1, to=4-4]
+		\end{tikzcd}\]
+	Then, \(\widetilde{G} \cong \ast_\alpha G_\alpha \).
+	\begin{proof}
+		Assume \((\widetilde{G} , \widetilde{\iota} _\alpha  )\) satisfies the universal property mentioned above. Then from the universal property and viewing \(\widetilde{G} \) and
+		\(\ast_\alpha G_\alpha \) as \(H\) separately, we obtain the following diagram.
+		\[\begin{tikzcd}
+				{\widetilde{G}} &&&&&& {\ast_\alpha G_\alpha} \\
+				&&& {G_{\alpha_1}} \\
+				&&& {G_{\alpha_2}} \\
+				&&& \vdots
+				\arrow["{\iota_{\alpha_1}}", from=2-4, to=1-7]
+				\arrow["{\iota_{\alpha_2}}", from=3-4, to=1-7]
+				\arrow["{\exists ! f}"', shift right=1, dashed, from=1-7, to=1-1]
+				\arrow["{\widetilde{\iota}_{\alpha_1}}"', from=2-4, to=1-1]
+				\arrow["{\widetilde{\iota}_{\alpha_2}}"', from=3-4, to=1-1]
+				\arrow[from=4-4, to=1-1]
+				\arrow[from=4-4, to=1-7]
+				\arrow["{\exists! g}"', shift right=1, dashed, from=1-1, to=1-7]
+			\end{tikzcd}\]
+		We claim that
+		\[
+			g\circ f = \identity_{},\quad f\circ g = \identity_{}.
+		\]
+		To see this, we simply apply the same observation, for example,
+		\[\begin{tikzcd}
+				{G_{\alpha_1}} \\
+				{G_{\alpha_2}} && {\widetilde{G}} \\
+				\vdots \\
+				&&& {\widetilde{G}}
+				\arrow["{\widetilde{\iota}_{\alpha_1}}", from=1-1, to=2-3]
+				\arrow["{\widetilde{\iota}_{\alpha_2}}"', from=2-1, to=2-3]
+				\arrow["{\exists ! g\circ f}", dashed, from=2-3, to=4-4]
+				\arrow["{\widetilde{\iota}_{\alpha_1}}"{description}, from=1-1, to=4-4]
+				\arrow["{\widetilde{\iota}_{\alpha_2}}"{description}, from=2-1, to=4-4]
+			\end{tikzcd}\]
+		where \(g\circ f\) comes from the previous diagram. But notice that \(\identity_{} \) let the diagram commutes also, and since it's unique, hence \(g\circ f = \identity_{} \). Similarily,
+		we have \(f\circ g = \identity_{} \).
+	\end{proof}
+\end{remark}
 
-	\par Furthermore, if two groups \(G_{\alpha }\) and \(G_{\beta }\) have a common subgroup \(S_{\{\alpha , \beta \}}\)\footnote{In general, we don't need \(S_{\{\alpha , \beta\}}\) to be a subgroup.},
+If you're careful enough, you may find out that all we're doing is just writing out a specific example of \autoref{lma:lec7}! Indeed, this is exactly the construction of a
+\hyperref[def:free-group]{free group}.
+
+\begin{definition}[Free product with amalgamation]\label{def:free-product-with-amalgamation}
+	If two groups \(G_{\alpha }\) and \(G_{\beta }\) have a common subgroup \(S_{\{\alpha , \beta \}}\)\footnote{In general, we don't need \(S_{\{\alpha , \beta\}}\) to be a subgroup.},
 	given two inclusion maps\footnote{We don't actually need \(i_{\alpha \beta } , i_{\beta \alpha } \) to be inclusive as well.} \(i_{\alpha \beta }\colon S_{\{\alpha , \beta \}}\to G_{\alpha }\) and
 	\(i_{\beta \alpha }\colon S_{\{\alpha , \beta \}}\to G_{\beta }\), the \emph{free product with amalgamation} \({}_\alpha\hspace{-0.15em}\ast_S G_{\alpha }\) is defined as
 	\(\underset{\alpha }{\ast} G_{\alpha }\) modulo the normal subgroup generated by
@@ -49,7 +153,6 @@ We first introduce a definition.
 			\arrow[curve={height=12pt}, from=2-1, to=3-3]
 		\end{tikzcd}\]
 \end{definition}
-
 \begin{remark}
 	We see that
 	\begin{itemize}
@@ -75,6 +178,8 @@ We first introduce a definition.
 	\end{itemize}
 \end{remark}
 
+\subsubsection{Seifert-Van Kampen Theorem}
+With \autoref{def:free-product-with-amalgamation}, we can now see the important theorem.
 \begin{theorem}[Seifert-Van Kampen Theorem]\label{thm:Seifert-Van-Kampen-Theorem}
 	Given \((X, x_0)\) such that \(X = \bigcup\limits_{\alpha } A_{\alpha }\) with
 	\begin{itemize}

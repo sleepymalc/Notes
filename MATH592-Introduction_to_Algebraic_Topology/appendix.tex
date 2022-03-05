@@ -1,0 +1,207 @@
+\section{Additional Proofs}
+\subsection{Seifert-Van Kampen Theorem on Groupoid}\label{thm:Seifert-Van-Kampen-Theorem-on-groupoid}
+\begin{theorem}[Seifert-Van Kampen Theorem on groupoid]
+	Given \(X_0, X_1, X\) as topological spaces with \(X_0 \cup X_1 = X\). Then the functor \(\Pi \colon \underline{\mathrm{Top}}\to \underline{\mathrm{Gpd}}\) maps the
+	\hyperref[def:cocartesian]{cocartesian} diagram in \(\underline{\mathrm{Top} _\ast}\) to a \hyperref[def:cocartesian]{cocartesian} diagram in \(\underline{\mathrm{Gp} }\)
+	as follows.
+	\[\begin{tikzcd}
+			{(X_0\cap X_1, x_0)} & {(X_0, x_0)} \\
+			{(X_1, x_0)} & {(X, x_0)}
+			\arrow["{j_0}", from=1-1, to=1-2]
+			\arrow["{i_0}", from=1-2, to=2-2]
+			\arrow["{i_1}"', from=2-1, to=2-2]
+			\arrow["{j_1}"', from=1-1, to=2-1]
+		\end{tikzcd}\overset{\Pi}{\longmapsto}
+		\begin{tikzcd}
+			{\Pi(X_0\cap X_1)} & {\Pi(X_0)} \\
+			{\Pi(X_1)} & {\Pi(X)}
+			\arrow["{\Pi (j_0)}", from=1-1, to=1-2]
+			\arrow["{\Pi (i_0)}", from=1-2, to=2-2]
+			\arrow["{\Pi (i_1)}"', from=2-1, to=2-2]
+			\arrow["{\Pi (j_1)}"', from=1-1, to=2-1]
+		\end{tikzcd} \]
+\end{theorem}
+\begin{note}
+	Notice that \(X_0, X_1, X\) don't need to be \hyperref[def:path]{path}-connected in particular.
+\end{note}
+
+Suprisingly, the proof of \autoref{thm:Seifert-Van-Kampen-Theorem-on-groupoid} is much elegant with the elementary proof of \autoref{thm:Seifert-Van-Kampen-Theorem}, hence we give
+the proof here.
+\begin{proof}
+	Let \(\mathscr{G} \in \Object (\underline{\mathrm{Gpd} })\) a \hyperref[def:groupoid]{groupoid}, and given \hyperref[def:functor]{functors}
+	\[
+		F\colon \Pi (X_0)\to \mathscr{G} ,\quad G\colon \Pi (X_1)\to \mathscr{G}
+	\]
+	such that
+	\[
+		F\circ \Pi (j_0) = G\circ \Pi (j_1).
+	\]
+	\[\begin{tikzcd}
+			{\Pi(X_0\cap X_1)} & {\Pi_1(X_0)} \\
+			{\Pi_1(X_1)} & {\Pi_1(X)} \\
+			&& {\mathscr{G}}
+			\arrow["{\Pi(j_0)}", from=1-1, to=1-2]
+			\arrow["{\Pi(i_0)}", from=1-2, to=2-2]
+			\arrow["{\Pi(i_1)}"', from=2-1, to=2-2]
+			\arrow["{\Pi(j_1)}"', from=1-1, to=2-1]
+			\arrow["{\exists!K}"{description}, dashed, from=2-2, to=3-3]
+			\arrow["F", curve={height=-12pt}, from=1-2, to=3-3]
+			\arrow["G"', curve={height=12pt}, from=2-1, to=3-3]
+		\end{tikzcd}\]
+	We now only need to prove that there exists a unique \hyperref[def:functor]{functor} \(K\colon \Pi (X)\to \mathscr{G} \)  such that the above diagram commutes.
+
+	We can define \(K\) as
+	\begin{itemize}
+		\item on \hyperref[def:object]{objects}: For all \(x\in \Object (\Pi (X)) = X\),
+		      \[
+			      K(x) = \begin{dcases}
+				      F(x), & \text{ if } x\in X_0 ; \\
+				      G(x), & \text{ if } x\in X_1 .
+			      \end{dcases}
+		      \]
+		      This is well-defined since the diagram (without \(K\)) commutes.
+		\item on \hyperref[def:morphism]{morphisms}: For every \(p, q\in X\), \(\left< \gamma \right> \colon p\to q\) in \(\Homomorphism _{\Pi (X)}(p, q)\), we need to define
+		      \(K(\left< \gamma  \right> )\in \Homomorphism _{\mathscr{G} }(K(p), K(q))\). Our strategy is for every path \(\gamma \) from \(p\) to \(q\), we define
+		      \(\widetilde{K} (\gamma )\in \Homomorphism_{\mathscr{G} } (K(p), K(q))\).
+		      Then if we also have \(\widetilde{K} (\gamma ) = \widetilde{K} (\gamma ^\prime )\) for \(\gamma \simeq \gamma ^\prime \ \mathrm{rel} \{0, 1\}\), then we can just let
+		      \[
+			      K(\left< \gamma  \right> ) \coloneqq \widetilde{K} (\gamma ).
+		      \]
+		      Now we start to construct \(\widetilde{K} \).
+
+		      Given a path \(\gamma \colon [0, 1]\to X\), \(\gamma (0) = p, \gamma (1) = q\). Since \(\mathrm{int}(X_0) \cup \mathrm{int}(X_1) = X\), we see that
+		      \[
+			      \gamma ^{-1} (\mathrm{int}(X_0)) \cup \gamma ^{-1} (\mathrm{int}(X_1)) = [0, 1].
+		      \]
+		      From Lebesgue Leamma\footnote{\url{https://en.wikipedia.org/wiki/Lebesgue\%27s_number_lemma}}, there exists a finite partition
+		      \[
+			      0 = t_0 < t_1 < \ldots <t_{m-1} < t_{m} = 1
+		      \]
+		      such that for every \(i\),
+		      \[
+			      \gamma ([t_{i-1}, t_{i} ])\subset \mathrm{int}(X_0) \text{ or } \mathrm{int}(X_1) .
+		      \]
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid}
+			      \label{fig:pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid}
+		      \end{figure}
+		      Now, let \(\gamma _{i} \colon [0, 1]\to X, t\mapsto \gamma ((1-t)t_{i-1}+t\cdot t_{i} )\), we see that \(\gamma _{i} \) is either a \hyperref[def:path]{path} in \(X_0\) or \(X_1\).
+		      We then define \(\widetilde{K} (\gamma )\coloneqq \widetilde{K} (\gamma _{m} )\circ \widetilde{K} (\gamma _{m-1}) \circ \ldots \circ \widetilde{K} (\gamma _1)\in \Homomorphism _{\mathscr{G} }(K(P), K(q)) \)
+		      such that
+		      \[
+			      \widetilde{K} (\gamma _{i} ) = \begin{dcases}
+				      F(\left< \gamma _{i} \right> ), & \text{ if } \gamma _{i} \subset X_0 ; \\
+				      G(\left< \gamma _{i} \right> ), & \text{ if } \gamma _{i} \subset X_1 .
+			      \end{dcases}
+		      \]
+		      We need to prove that \(\widetilde{K} (\gamma )\) does not depend on the partition. It's sufficient to prove that for any partition
+		      \[
+			      0 = t_0 < t_1 < \ldots <t_{m-1} < t_{m} = 1,
+		      \]
+		      we consider any \textbf{finer} partition
+		      \[
+			      0 = t_0= t_{10}< t_{11} <\ldots < t_{1K_1}= t_1 = t_{20} <t_{21}<\ldots < t_{mK_{m} } = t_{m} = 1.
+		      \]
+		      As before, we denote \(\gamma _{ij}\colon [0, 1]\to X, t\mapsto \gamma ((1-t)t_{i j-1} + t\cdot t_{ij} )\). It's clear that as long as
+		      \[
+			      \widetilde{K} (\gamma _{i} ) = \widetilde{K} (\gamma _{i K_{i} })\circ \widetilde{K} (\gamma _{i K_{i}-1 })\circ \ldots \circ \widetilde{K} (\gamma _{i 0}),
+		      \]
+		      then our claim is proved. But this is immediate since \(F\) and \(G\) are \hyperref[def:functor]{functor} and for any \(i\), we only use either \(F\) or \(G\) all the time.
+
+		      Now we prove \(\gamma \underset{H}{\simeq }\gamma ^\prime \  \mathrm{rel} \{0, 1\}\), then \(\widetilde{K} (\gamma ) = \widetilde{K} (\gamma ^\prime )\).
+		      This is best shown by some diagram.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid-2}
+			      \label{fig:pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid-2}
+		      \end{figure}
+		      The left-hand side represents a partition \(\mathcal{\MakeUppercase{p}} \) of \([0, 1]\times [0, 1]\) such that every small square's image in \(X\) under \(H\) is either entirely in \(X_0\)
+		      or in \(x_1\). Consider all paths from \((0, 0)\) to \((1, 1)\) such that it only goes right or up. We see that for any such path \(L\), consider
+		      \[
+			      \gamma _{L} \colon [0, 1]\to L, \quad t\mapsto \gamma _{L} (t).
+		      \]
+		      We let \(\Gamma _{L} \colon \at{H}{L}{} \circ \gamma _{L} \colon [0, 1]\to X\), we see that \(\Gamma _{L} \) is a \hyperref[def:path]{path} from \(p\) to \(q\). Now, if
+		      for two paths \(L_1\) and \(L_2\) such that they only differ from \underline{a square}.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid-3}
+			      \label{fig:pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid-3}
+		      \end{figure}
+		      We claim that \(\gamma _{L_1}, \Gamma _{L_2}\) are two \hyperref[def:path]{paths} from \(p\) to \(q\), and \(\widetilde{K} (\Gamma _{L_1}) = \widetilde{K} (\Gamma _{L_2})\).
+		      Now, we denote \(\Gamma _0\) and \(\Gamma _1\) as follows.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid-4}
+			      \caption{The definition of \(\Gamma _0\) and \(\Gamma _1\).}
+			      \label{fig:pf:thm:Seifert-Van-Kampen-Theorem-on-groupoid-4}
+		      \end{figure}
+		      It's clearly that we by only finitely many steps, we can transform \(\Gamma _0\) to \(\Gamma _1\), hence
+		      \[
+			      \widetilde{K} (\Gamma _0) = \widetilde{K} (\Gamma _1).
+		      \]
+		      Finally, we observe that
+		      \[
+			      \widetilde{K} (\gamma _0) = \widetilde{K} (\Gamma _0) = \widetilde{K} (\Gamma _1) = \widetilde{K} (\gamma _1).
+		      \]
+
+		      If we now define \(K(\left< \gamma  \right> ) = \widetilde{K} (\gamma )\), then \(K\colon \Morphism (\Pi (X))\to \Morphism (\mathscr{G} )\), then it's well-defined.
+	\end{itemize}
+
+	We now prove \(K\colon \Pi (X)\to \mathscr{G}\) is indeed a \hyperref[def:functor]{functor}. But this is immediate from the definition of \(K\), namely it'll send identity to identity and
+	the composition associates.
+
+	Also, we need to prove that the following diagram commutes.
+	\[\begin{tikzcd}
+			{\Pi(X_0\cap X_1)} & {\Pi_1(X_0)} \\
+			{\Pi_1(X_1)} & {\Pi_1(X)} \\
+			&& {\mathscr{G}}
+			\arrow["{\Pi(j_0)}", from=1-1, to=1-2]
+			\arrow["{\Pi(i_0)}", from=1-2, to=2-2]
+			\arrow["{\Pi(i_1)}"', from=2-1, to=2-2]
+			\arrow["{\Pi(j_1)}"', from=1-1, to=2-1]
+			\arrow["{K}"{description}, from=2-2, to=3-3]
+			\arrow["F", curve={height=-12pt}, from=1-2, to=3-3]
+			\arrow["G"', curve={height=12pt}, from=2-1, to=3-3]
+		\end{tikzcd}\]
+	But this is again trivial.
+
+	Finally, we need to show that such \(K\) unique. This is the same as the proof of \autoref{lma:lec7}, hence the proof is done.
+\end{proof}
+\subsection{An alternative proof of \hyperref[thm:Seifert-Van-Kampen-Theorem]{Seifert Van-Kampen Theorem}}\label{pf:an-alternative-proof-of-Seifert-Van-Kampen-thm}
+\begin{theorem}
+	We claim that the diagram
+	\[
+		\begin{tikzcd}
+			{\pi_1(X_0\cap X_1, x_0)} & {\pi_1(X_0, x_0)} \\
+			{\pi_1(X_1, x_0)} & {\pi_1(X, x_0)}
+			\arrow["{(j_0)_\ast}", from=1-1, to=1-2]
+			\arrow["{(i_0)_\ast}", from=1-2, to=2-2]
+			\arrow["{(i_1)_\ast}"', from=2-1, to=2-2]
+			\arrow["{(j_1)_\ast}"', from=1-1, to=2-1]
+		\end{tikzcd}
+	\]
+	is \hyperref[def:cocartesian]{cocartesian}.
+\end{theorem}
+\begin{proof}
+	The basic idea is that, for this diagram,
+	\[\begin{tikzcd}
+			{\Pi(X_0\cap X_1)} & {\Pi(X_0)} \\
+			{\Pi(X_1)} & {\Pi(X)} \\
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=2-2]
+			\arrow[from=2-1, to=2-2]
+			\arrow[from=1-1, to=2-1]
+		\end{tikzcd}\]
+	we want to construct a \hyperref[def:morphism]{morphism} \(r\colon \Pi (Z)\to \pi _1(Z, p)\) in \(\underline{\mathrm{Gpd}}\) such that
+	\(Z = X_0 \cap X_1, X_0, X_1, X\). For every \(x\in Z\), we fix a \hyperref[def:path]{path} \(\gamma _{x} \) such that it connects \(p\) and \(x\) and satisfies
+	\begin{enumerate}
+		\item If \(x\in X_0 \cap X_1\), then \(\mathrm{Im} (\gamma _{x} )\subset X_0 \cap X_1\)
+		\item If \(x\in X_0\), then \(\mathrm{Im} (\gamma _{x} )\subset X_0\)
+		\item If \(x\in X_1\), then \(\mathrm{Im} (\gamma _{x} )\subset X_1\)
+		\item \(\gamma _p = c_p\)
+	\end{enumerate}
+
+	The proof is given in \url{https://www.bilibili.com/video/BV1P7411N7fW?p=38&spm_id_from=pageDriver}.
+	\todo{If have time.}
+\end{proof}

@@ -59,7 +59,7 @@ We immediately have the following proposition.
 	We already proved this in homework!
 \end{proof}
 
-\begin{corollary}
+\begin{corollary}[Path lifting property]
 	For each \hyperref[def:path]{path} \(\gamma \colon I\to X\) in \(X\), \(\widetilde{x} _0\in p^{-1} (\gamma (0)) \) such that there exists a
 	unique \hyperref[prop:homotopy-lifting-property]{lift} \(\widetilde{\gamma} \) starting at \(\widetilde{x} _0\).
 
@@ -71,6 +71,211 @@ We immediately have the following proposition.
 		\label{fig:col:lec14:1}
 	\end{figure}
 \end{corollary}
+Though we can directly use \autoref{prop:homotopy-lifting-property} to prove this, but we can see some insight by directly proving this.
+\begin{proof}
+	Assume that we have the following lift.
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:col:lec14}
+		\label{fig:pf:col:lec14}
+	\end{figure}
+	We first prove that a \hyperref[def:path]{path} will be \hyperref[prop:homotopy-lifting-property]{lifted} uniquely to a \hyperref[def:path]{path} \(\widetilde{\gamma} \)
+	from \(\widetilde{x} _0\). For every \(x\in X\), there exists an open neighborhood \(U_x\) such that
+	\[
+		p^{-1} (U_{x} ) = \coprod\limits_{\alpha }U_{x_\alpha },
+	\]
+	where for every \(\alpha \),
+	\[
+		\at{p}{U_{x_\alpha }}{} \colon U_{x_{\alpha }}\to U_{x}
+	\]
+	is a homeomorphism. We see that \(\left\{U_{x} \mid x\in X\right\}\) is an open cover of \(X\), hence
+	\[
+		\left\{\gamma ^{-1} (U_{x} )\mid x\in X\right\}
+	\]
+	is an open cover of \([0, 1]\). Note that since \([0, 1]\) is a compact metric space, from Lebesgue Lemma\footnote{\url{https://en.wikipedia.org/wiki/Lebesgue\%27s_number_lemma}},
+	there exists a partition of \([0, 1]\) such that
+	\[
+		0 = t_0 < t_1 < \ldots  < t_{k} = 1
+	\]
+	such that for every \(i\), \([t_{i} , t_{i+1}]\subset \gamma ^{-1} (U_{x} ) \) for some \(x\). Without loss of generality, we assume that \([t_{i} , t_{i+1}]\subset \gamma ^{-1} (U_{x_{i}})\),
+	i.e.,
+	\[
+		\gamma ([t_{i} , t_{i+1}])\subset U_{x_{i} }.
+	\]
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:col:lec14-2}
+		\label{fig:pf:col:lec14-2}
+	\end{figure}
+	Now, since \(p(\widetilde{x} _0) = \gamma (0)\) for \(\gamma _0\in U_{x_1}\) and \(\widetilde{x} _0\in p^{-1} (U_{x_1})\), we may assume \(\widetilde{x} _0\in U_{x_1 \alpha _1}\).
+	Consider \hyperref[prop:homotopy-lifting-property]{lifting} the first segment, namely \(\gamma ([0, t_1])\).
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:col:lec14-3}
+		\label{fig:pf:col:lec14-3}
+	\end{figure}
+	Specifically, let \(\widetilde{\gamma}_1 (t) = \left(\at{p}{U_{x_1 \alpha _1}}{}\right)^{-1} \circ \gamma (t) \) for \(0\leq t\leq t_1\), we see that
+	\[
+		\widetilde{\gamma} _1\colon [0, t_1]\to \widetilde{X}
+	\]
+	is a \hyperref[prop:homotopy-lifting-property]{lift} of \(\at{\gamma }{[0, t_1]}{} \) from \(\widetilde{x} _0\). We claim that this \hyperref[prop:homotopy-lifting-property]{lift}
+	is unique. Consider there exists another \hyperref[prop:homotopy-lifting-property]{lift} from \(\widetilde{x} _0\) \(\widetilde{\widetilde{\gamma}}_1\colon [0, t_1]\to \widetilde{X}\), then since
+	\begin{itemize}
+		\item \(\widetilde{\widetilde{\gamma}}_1(0) = \widetilde{x} _0\)
+		\item \(\widetilde{\widetilde{\gamma}}_1\) is continuous
+		\item \(\widetilde{x} _0\in U_{x_1 \alpha _1}\),
+	\end{itemize}
+	we see that \(\widetilde{\widetilde{\gamma}}_1\left(0, t_1\right)\subset U_{x_1 \alpha _1}\), which implies
+	\[
+		\begin{tikzcd}
+			{[0, t_1]} & {U_{x_1\alpha_1}} \\
+			& {U_{x_1}}
+			\arrow["{\at{p}{U_{x_1\alpha_1}}{}}", from=1-2, to=2-2]
+			\arrow["{\at{\gamma}{[0, t_1]}{}}"', from=1-1, to=2-2]
+			\arrow["{\widetilde{\widetilde{\gamma}}_1}", from=1-1, to=1-2]
+		\end{tikzcd}
+		\implies \widetilde{\widetilde{\gamma}}_1 = \left(\at{p}{U_{x_1 \alpha _1}}{} \right)^{-1} \circ \at{\gamma }{[0, t_1]}{} = \widetilde{\gamma} _1,
+	\]
+	hence this \hyperref[prop:homotopy-lifting-property]{lift} is unique. Now, we see that we can simply repeat this argument, namely replacing \(t_{i} \) by \(t_{i+1} \),
+	\(\widetilde{\gamma}_i (t_{i} )\) by \(\widetilde{\gamma}_{i+1}  (t_{i+1} )\) and so on. Since this partition is finite, hence in finitely many steps, we obtain a unique
+	\hyperref[def:homotopy-path]{path homotopy} \(\widetilde{\gamma} \) by concatenating all \(\widetilde{\gamma} _{i} \) starting at \(\widetilde{x} _0\).
+
+	We now consider lifting a \hyperref[def:homotopy-path]{path homotopy}. Consider
+	\[
+		\gamma _1\underset{F}{\simeq } \gamma _2 \ \mathrm{rel} \{0, 1\}
+	\]
+	we'll show that \(\widetilde{\gamma}_1\underset{\widetilde{F} }{\simeq} \widetilde{\gamma}_2 \ \mathrm{rel} \{0, 1\}\) where \(p\circ \widetilde{F} = F\). Firstly,
+	we denote \(x_1\coloneqq\gamma _1(1) = \gamma _2(1)\) and \(x_1\coloneqq \gamma _1(1) = \gamma _2(1)\), such that
+	\begin{figure}[H]
+		\centering
+		\incfig{pf:col:lec14-4}
+		\label{fig:pf:col:lec14-4}
+	\end{figure}
+	We claim that it's sufficient to show that there exists a continuous \(\widetilde{F} \colon I\times I\to X\) such that \(p\circ \widetilde{F} = F\), and \(\widetilde{F} (\{0\}\times I)= x_0\).
+	It's because
+	\[
+		p\circ \widetilde{F} _0 = F_0 = \gamma _1,\quad p\circ \widetilde{F} _1= F_1= \gamma _2
+	\]
+	where \(\widetilde{F} _0, \widetilde{F} _1\) is \(\gamma _1, \gamma _2\)'s \hyperref[prop:homotopy-lifting-property]{lifting} starting at \(\widetilde{x} _0\), respectively. And since
+	\(\widetilde{F} \) is continuous, now consider
+	\[
+		p\left(\widetilde{F} (\{1\}\times I)\right) = x_1 \implies \widetilde{F} (\{1\}\times I)\subset p^{-1} (\{x_1\}),
+	\]
+	which implies \(\exists \widetilde{x} _1 \in p^{-1} (\{x_1\})\) such that \(\widetilde{F} (\{1\}\times I) = \widetilde{x} _1\). We now show \(\widetilde{F} \) exists.
+
+	We define
+	\[
+		\begin{split}
+			\widetilde{F} \colon I\times I &\to X\\
+			(s, t)&\mapsto \widetilde{F} _{t} (s),
+		\end{split}
+	\]
+	where \(\widetilde{F} _{t} \colon [0, 1]\to \widetilde{X}\) is a \hyperref[prop:homotopy-lifting-property]{lift} starting at \(\widetilde{x} _0\) of \(F_{t} \colon [0, 1]\to X, s\mapsto F(s, t)\).
+	Obviously, \(p\circ \widetilde{F} = F\), hence we only need to show \(\widetilde{F} \) is continuous.
+	\begin{enumerate}
+		\item We show that \(\exists \epsilon _0>0\) such that \(\at{\widetilde{F} }{[0, \epsilon _0]\times I}{} \) is continuous.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:col:lec14-5}
+			      \label{fig:pf:col:lec14-5}
+		      \end{figure}
+		      Since \(F\) is continuous, we see that there exists an open neighborhood \(U_{x_0}\) such that \(p^{-1} (U_{x_0})= \coprod_\alpha U_{x_0 \alpha } \), where
+		      \[
+			      \at{p}{U_{x_0 \alpha }}{} \colon U_{x_0 \alpha }\overset{\cong }{\to } U_{x_0}.
+		      \]
+		      Since \(F^{-1} (U_{x_0})\) is an open set contain \(\{0\}\times I\), there exists a \(\epsilon _0>0\) such that \([0, \epsilon _0]\times I\subset F^{-1} (U_{x_0})\),
+		      which implies
+		      \[
+			      F\left([0, \epsilon _0]\times I\right)\subset U_{x_0}.
+		      \]
+		      Note that \(x_0\in U_{x_0}\) and \(p(\widetilde{x} _0) = x_0\), we may assume \(\widetilde{x} _0\in U_{x_0 \alpha _1}\). Consider \(\left(\at{p}{U_{x_0 \alpha _1}}{} \right)^{-1} \circ \at{F}{[0, \epsilon _0]\times I}{} \),
+		      which is a \hyperref[prop:homotopy-lifting-property]{lift} of \(\at{F}{[0, \epsilon _0]\times I}{} \). We claim that
+		      \[
+			      \left(\at{p}{U_{x_0 \alpha _1}}{} \right)^{-1} \circ \at{F}{[0, \epsilon _0]\times I}{} = \at{\widetilde{F} }{[0, \epsilon _0]\times I}{}.
+		      \]
+		      This is because for every \(t\in I\), \(s\mapsto \left(\at{p}{U_{x_0 \alpha _1}}{} \right)^{-1} \circ \at{F}{[0, \epsilon _0]\times I}{}(s, t) \) is a \hyperref[prop:homotopy-lifting-property]{lift}
+		      starting at \(\widetilde{x} _0\); also, for every \(t\in I\), \(s\mapsto \at{\widetilde{F}}{[0, \epsilon _0]\times I}{}(s, t) \) is a \hyperref[prop:homotopy-lifting-property]{lift} of \(F_{t} \)
+		      starting at \(\widetilde{x} _0\). From the uniqueness of the \hyperref[prop:homotopy-lifting-property]{lift} of \hyperref[def:path]{paths}, we see that they're equal. Note that this implies
+		      \(\widetilde{F} \) is now continuous at \([0, \epsilon _0]\times I\), since \(F\) is continuous.
+		\item We now prove that \(\widetilde{F} \colon I\times I\to \widetilde{X} \) is continuous. Assume there exists \((s_0, t_0)\in I\times I\) such that \(\widetilde{F} \) is
+		      discontinuous at \((s_0, t_0)\). Then consider
+		      \[
+			      0 < \epsilon _0\leq \inf \left\{s\mid \widetilde{F} \text{ is discontinuous at \(s, t_0\) } \right\} \equiv s_1,
+		      \]
+		      where the first inequality is from the first step.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:col:lec14-6}
+			      \label{fig:pf:col:lec14-6}
+		      \end{figure}
+		      Let \(x_1\coloneqq F(s_1, t_0)\), \(\widetilde{x} _1\coloneqq \widetilde{F} (s_1, t_0)\), then there exists an open neighborhood \(U_{x_1}\) in \(X\) such that
+		      \(x_1\in U_{x_1} = \coprod_\alpha U_{x_1 \alpha }\), where
+		      \[
+			      \at{p}{U_{x_1 \alpha }}{}\colon U_{x_1 \alpha }\overset{\cong }{\to }U_{x_1}.
+		      \]
+		      Since \(F\) is continuous, there exists an \(\epsilon _1> 0\), \(\delta _1> 0\) such that
+		      \[
+			      F\left((s_1 - \epsilon _1, s_1 + \epsilon _1) \times (t_{1}-\delta _1, t_0 + \delta _1 )\right)\subset U_{x_1}.
+		      \]
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:col:lec14-7}
+			      \label{fig:pf:col:lec14-7}
+		      \end{figure}
+		      We may assume \(\widetilde{x} _1\in U_{x_1 \alpha _1}\). Then, we see that \(\widetilde{F} _{t_0}\) is a \hyperref[prop:homotopy-lifting-property]{lift} of
+		      \(F_{t_0}\), which means \(\widetilde{F} _{t_0}\) is continuous, hence there exists an \(s_{2} \) such that \(s_{1}-\epsilon _1<s_{2}< s_1  \) such that
+		      \[
+			      \widetilde{F} (s_2, t_0)\in U_{x_1 \alpha _1}.
+		      \]
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:col:lec14-8}
+			      \label{fig:pf:col:lec14-8}
+		      \end{figure}
+		      We see that \(\widetilde{F} \) is continuous at \((s_2, t_0)\), hence there exists a \(\delta _2>0\) such that
+		      \[
+			      \widetilde{F} \left(\{s_2\}\times (t_0 - \delta _2, t_0 + s_2)\right)\subset U_{x_1\alpha _1}.
+		      \]
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:col:lec14-9}
+			      \label{fig:pf:col:lec14-9}
+		      \end{figure}
+		      Now, observe that \(\widetilde{F} (B)\subset U_{x_1 \alpha _1}\). To see this, consider a fixed \(t\), then the map \(\widetilde{F} \) is
+		      \[
+			      [s_{1-\epsilon _1}, s_{1+\epsilon _1}  ]\to \widetilde{X} ,\quad s\mapsto \widetilde{F} (s, t) = \widetilde{F} _{t} (s).
+		      \]
+		      Specifically,
+		      \[
+			      \widetilde{F} _{f} ([s_{1}-\epsilon _1, s_{1}+\epsilon _1]) \subset p^{-1} (U_{x_1}) = \coprod\limits_{\alpha}U_{x_1 \alpha },
+		      \]
+		      with the fact that \(\widetilde{F} _{t} ([s_{1}-\epsilon _1, s_{1}+\epsilon _1])\) is connected, and \(\widetilde{F} _{t} (s_2)\in U_{x_1 \alpha _1}\), hence
+		      \[
+			      \widetilde{F} _{t} ([s_{1}-\epsilon _1, s_{1}+\epsilon _1])\subset U_{x_1 \alpha _1}.
+		      \]
+		      This is for every \(t\in [t_0-\delta _2, t_0 + \delta _2]\), hence \(\at{\widetilde{F} }{B}{} \subset U_{x_1 \alpha _1}\). Also,
+		      \[
+			      \at{p}{U_{x_1 \alpha _1}}{}\circ \at{\widetilde{F} }{B}{} = \at{F}{b}{},
+		      \]
+		      and
+		      \[
+			      \left(\at{p}{U_{x_1 \alpha _1}}{} \right)^{-1} \circ \at{F}{B}{} \colon B\to U_{x_1 \alpha _1},
+		      \]
+		      so
+		      \[
+			      \at{p}{U_{x_1 \alpha _1}}{} \circ \left(\left(\at{p}{U_{x_1 \alpha _1}}{} \right)^{-1} \circ \at{F}{B}{}\right) = \at{F}{B}{}
+		      \]
+		      obviously. Since \(\at{p}{U_{x_1 \alpha _1}}{}\) is a homeomorphism, we have
+		      \[
+			      \at{\widetilde{F} }{B}{} = \underbrace{\left(\at{p}{U_{x_1 \alpha _1}}{} \right)^{-1}}_{\text{continuous} } \circ \underbrace{\at{F}{B}{}}_{\text{continuous} },
+		      \]
+		      hence we have \(\at{\widetilde{F} }{B}{} \) is continuous, which leads to a contradiction since
+		      \[
+			      s_1 = \inf \left\{s\mid \widetilde{F} \text{ is discontinuous at \(s, t_0\) } \right\},
+		      \]
+		      while \(\widetilde{F} \) is continuous for all \(B\), hence we see that \(\widetilde{F} :I\times I\to \widetilde{X} \) is continuous.\footnote{There is a tricky situation, namely while \(s_1 = 1\). But this can be considered also.}
+	\end{enumerate}
+\end{proof}
 
 \begin{eg}
 	Let see some examples.

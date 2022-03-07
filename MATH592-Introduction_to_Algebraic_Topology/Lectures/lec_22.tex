@@ -24,7 +24,7 @@ We start from some calculation about \hyperref[def:homology-group]{homology grou
 			\arrow["{\partial_0}", from=1-4, to=1-5]
 		\end{tikzcd}
 	\]
-	Where
+	Where we let \(A = [v_0, v_1, v_2]\) and \(B = [u_0, u_1, u_2]\), then
 	\[
 		\partial_2: \begin{dcases}
 			A & \mapsto b - c + a \\
@@ -35,12 +35,12 @@ We start from some calculation about \hyperref[def:homology-group]{homology grou
 			c & \mapsto v - v = 0 \\
 		\end{dcases}
 	\]
-	We can also calculate the image and the kernel of \(C_{i} \), i.e.,
+	We can also calculate the image and the kernel at \(C_{i} \), i.e.,
 	\[
 		\begin{alignedat}{3}
-			C_2&: \mathrm{Im} = 0, &\mathrm{ker} &= 0, \\
-			C_1&: \mathrm{Im} = \left< 2c, b - c + a \right> , \qquad&\mathrm{ker} &= \left< b +a, c \right>,\\
-			C_0&: \mathrm{Im} = \left< v, w\right> , &\mathrm{ker} &= \left< v - w\right>.
+			C_2&: \im \partial _3 = 0, &\ker \partial _2 &= 0, \\
+			C_1&: \im \partial _2 = \left< 2c, b - c + a \right> , \qquad&\ker \partial _1 &= \left< b +a, c \right>,\\
+			C_0&: \im \partial _1 = \left< v, w\right> , &\ker \partial _0 &= \left< v - w\right>.
 		\end{alignedat}
 	\]
 	Hence,
@@ -54,15 +54,38 @@ We start from some calculation about \hyperref[def:homology-group]{homology grou
 \end{eg}
 
 \begin{remark}
-	Warning! Care is needed when doing \emph{change of bases} over \(\mathbb{\MakeUppercase{z}} \). For example,
+	Given a basis for a \hyperref[def:free-Abelian-group]{free Abelian group} \(\left<  b_1, \ldots, b_n  \right>\) we can replace \(b_{i} \) with
 	\[
-		\mathbb{\MakeUppercase{z}} \left< v, w \right> \quad \begin{dcases}
-			v - w, & \text{ if }  ; \\
-			v + w, & \text{ if }  .
-		\end{dcases},\quad
-		\begin{bmatrix}
-			-1 & 1 \\
-			1  & 1 \\
-		\end{bmatrix}
+		b_i \pm m_1b_1 \pm \cdots \pm \widehat{m_ib_i} \pm \cdots \pm m_n b_n.
 	\]
 \end{remark}
+
+\begin{remark}
+	Warning! Care is needed when doing \emph{change of bases} over \(\mathbb{\MakeUppercase{z}} \). For example,
+	if \(b_1, b_2\) is a basis for \(A \subseteq \mathbb{\MakeUppercase{z}} ^n\), then \(b_1 - b_2, b_1 + b_2\) is \underline{not} a basis, it is an index-2 subgroup.
+	The key to this is that \(\begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}\) has determinant \(-2\) (\underline{not} unit in \(\mathbb{\MakeUppercase{z}} \)).
+\end{remark}
+
+We can transform a basis for a \hyperref[def:free-group]{free group} into a different basis by applying a matrix of determinant \(\pm 1\).
+If we apply a matrix of determinant \(D\) we will obtain generators for a subgroup of index \(\left\vert D \right\vert \).
+\[
+	\begin{bmatrix}
+		1      & 0      & \cdots   & 0       & \pm m_1       & 0      & \cdots & 0      \\
+		0      & 1      & \cdots 0 & \pm m_2 & 0             & \cdots & 0               \\
+		\vdots & \vdots & \ddots   & \vdots  & \vdots        & \vdots & \ddots & \vdots \\
+		0      & 0      & \cdots   & 1       & \pm m_{i - 1} & 0      & \cdots & 0      \\
+		0      & 0      & \cdots   & 0       & 1             & 0      & \cdots & 0      \\
+		0      & 0      & \cdots   & 0       & \pm m_{i + 1} & 1      & \cdots & 0      \\
+		\vdots & \vdots & \ddots   & \vdots  & \vdots        & \vdots & \ddots & \vdots \\
+		0      & 0      & \cdots   & 0       & \pm m_n       & 0      & \cdots & 1
+	\end{bmatrix}
+\]
+
+As a summary, we have the following procedures to compute \(H_{n} (X)\).
+\begin{enumerate}
+	\item Choose \hyperref[def:delta-complex]{\(\Delta\)-complex} structure on \(X\). (Later: We will prove \(H_\ast(X)\) is independent of the choice of \hyperref[def:delta-complex]{\(\Delta\)-complex} structure)
+	\item Choose orientations on each \hyperref[def:standard-simplex]{simplex} (Any choice is okay, but you must commit to a choice, or you will make a sign error!)
+	\item For each \hyperref[def:standard-simplex]{\(n\)-simplex} \(\sigma\) compute \(\partial_n(\sigma)\) (careful with signs!)
+	\item \(\im \partial_n = \langle \partial_n(\sigma) \mid \sigma \text{ an \hyperref[def:standard-simplex]{\(n\)-simplex}} \rangle\). Use linear algebra to compute \(\ker(\partial_n)\).
+	\item For each \(n\) compute \(H_n(X)= \quotient{\ker \partial_n}{\im \partial_{n + 1}}\). Be careful that any change-of-variables map you apply is invertible over $\mathbb{\MakeUppercase{z}} $.
+\end{enumerate}

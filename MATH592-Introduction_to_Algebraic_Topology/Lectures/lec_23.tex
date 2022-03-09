@@ -19,7 +19,7 @@
 	This gives us a \emph{singular chain complex}
 \end{definition}
 
-\begin{definition}[singular homology group]\label{def:singular-homology-group}
+\begin{definition}[Singular homology group]\label{def:singular-homology-group}
 	The \emph{singular homology groups} are the \hyperref[def:homology-group]{homology groups} of this \hyperref[def:singular-chain]{singular chain complex} given as
 	\[
 		H_n(X) = \quotient{\ker \partial_n}{\im \partial_{n + 1}}.
@@ -34,7 +34,12 @@ definition that does not depend on any other structure than the topology of $X$,
 	For example with \(\sigma_1 + \sigma_2\).
 \end{note}
 
-%fig 
+\begin{figure}[H]
+	\centering
+	\incfig{note:chain-as-a-map}
+	\label{fig:note:chain-as-a-map}
+\end{figure}
+
 Where we've glued $[v_1, v_2]$ of $\sigma_1$ to $[v_0, v_2]$ of $\sigma_2$ if $\at{\sigma_1}{[v_1, v_2]}{}$ and $\sigma_{[v_0, v_2]}$ are the same singular \hyperref[def:chain-group]{\(n\)-chain}
 with opposite signs.
 
@@ -73,10 +78,13 @@ with opposite signs.
 		[\sigma \colon \Delta^n \to X] & \mapsto [f \circ \sigma \colon \Delta^n \to Y].
 	\end{align*}
 \end{definition}
+\begin{remark}
+	We see that the functoriality doesn't depend on any kind of \hyperref[def:delta-complex]{\(\delta \)-complex} structure.
+\end{remark}
 
 \begin{definition}[Chain map]\label{def:chain-map}
 	Given two \hyperref[def:chain-complex]{chain complexes} $(C_\ast, \partial_\ast)$ and $(D_\ast, \delta_\ast)$, a \emph{chain map} between them is a collection of
-	group homomorphisms $g_n \colon C_n \to D_n$ such that the following diagram commutes.
+	group homomorphisms $f_n \colon C_n \to D_n$ such that the following diagram commutes.
 	\[\begin{tikzcd}
 			\ldots & {C_{n+1}} & {C_n} & {C_{n-1}} & \ldots \\
 			\ldots & {D_{n+1}} & {D_n} & {D_{n-1}} & \ldots
@@ -88,9 +96,9 @@ with opposite signs.
 			\arrow["{\partial_{n}}", from=1-3, to=1-4]
 			\arrow["{\partial_{n+1}}", from=1-2, to=1-3]
 			\arrow["{\delta_{n-1}}", from=2-4, to=2-5]
-			\arrow["{g_{n-1}}", from=1-4, to=2-4]
-			\arrow["{g_{n}}", from=1-3, to=2-3]
-			\arrow["{g_{n+1}}", from=1-2, to=2-2]
+			\arrow["{f_{n-1}}", from=1-4, to=2-4]
+			\arrow["{f_{n}}", from=1-3, to=2-3]
+			\arrow["{f_{n+1}}", from=1-2, to=2-2]
 		\end{tikzcd}\]
 	i.e. we have that $\delta_n \circ f_n = f_{n - 1} \circ \partial_n$.
 \end{definition}
@@ -119,35 +127,3 @@ with opposite signs.
 \begin{exercise}
 	\autoref{thm:homology-group-defines-a-functor} and \autoref{thm:functoriality-is-homotopy-invariant} imply that \(H_{n} \) is a \hyperref[def:homotopy]{homotopy} invariant.
 \end{exercise}
-
-To prove the second theorem, we introduce some \hyperref[sec:homological-algebra]{homological algebra}.
-
-\begin{definition}[Chain homotopy]\label{def:chain-homotopy}
-	Given \hyperref[def:chain-complex]{chain complexes} $(A_\ast, d^A_\ast)$ and $(B_\ast, d^B_\ast)$ and \hyperref[def:chain-map]{chain maps}
-	$f_\ast, g_\ast \colon  A_\ast \to B_\ast$. A \emph{chain homotopy} from $f$ to $g$ is a sequence of group homomorphisms $\psi_n\colon A_n \to B_{n + 1}$ such that
-	\[
-		f_n - g_n = d^B_{n + 1} \circ \psi_n + \psi_{n - 1} d_n^A
-	\]
-	In a diagram, letting $h_n = f_n - g_n$, we have the following.
-	\[\begin{tikzcd}
-			\ldots && {A_{n+1}} && {A_{n}} && {A_{n-1}} && \ldots \\
-			\\
-			\ldots && {B_{n+1}} && {B_{n}} && {B_{n-1}} && \ldots
-			\arrow["{d^A_{n-1}}", from=1-7, to=1-9]
-			\arrow["{d^B_{n-1}}", from=3-7, to=3-9]
-			\arrow["{d^A_{n}}", color={rgb,255:red,92;green,214;blue,92}, from=1-5, to=1-7]
-			\arrow["{d^B_{n}}", from=3-5, to=3-7]
-			\arrow["{d^B_{n+1}}", color={rgb,255:red,92;green,214;blue,92}, from=3-3, to=3-5]
-			\arrow["{d^A_{n+2}}", from=1-1, to=1-3]
-			\arrow["{d^B_{n+2}}", from=3-1, to=3-3]
-			\arrow["{h_{n+1}}", from=1-3, to=3-3]
-			\arrow["{h_{n}}", color={rgb,255:red,214;green,92;blue,92}, from=1-5, to=3-5]
-			\arrow["{h_{n-1}}", from=1-7, to=3-7]
-			\arrow["{d^A_{n+1}}", from=1-3, to=1-5]
-			\arrow["{\psi_n}"{description}, color={rgb,255:red,92;green,214;blue,92}, from=1-5, to=3-3]
-			\arrow["{\psi_{n-1}}"{description}, color={rgb,255:red,92;green,214;blue,92}, from=1-7, to=3-5]
-		\end{tikzcd}\]
-	This diagram does not commute, but it shows everything that is going on. However, the \textbf{\textcolor{red}{red}} map is the sum of the
-	\textbf{\textcolor{green}{green}} maps composed up.
-\end{definition}
-

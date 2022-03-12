@@ -1,0 +1,223 @@
+\lecture{25}{11 Mar. 10:00}{Relative Homology}
+\subsection{Relative Homology}
+\begin{definition}[Reduced homology group]\label{def:reduced-homology-group}
+	The \emph{reduced homology groups} $\widetilde{H}_n(X) = H_n(X)$ when $n > 0$. When $n = 0$ we have that:
+	\[
+		\widetilde{H}_0(X) \oplus \mathbb{\MakeUppercase{z}} = H_0(X)
+	\]
+\end{definition}
+\begin{remark}
+	The usefulness of this is that for \hyperref[def:path]{path}-connected space $X$ we have $\widetilde{H}_0(X) = 0$, and for
+	\hyperref[def:contractible]{contractible} spaces $X$ we have $\widetilde{H}_n(X) = 0$.
+\end{remark}
+
+\begin{definition}\label{def:good-pair}
+	Let $X$ be a space, and $A \subseteq X$. Then $(X, A)$ is a \emph{good pair} if $A$ is closed and nonempty, and also it is a
+	\hyperref[def:deformation-retraction]{deformation retract} of a neighborhood in $X$.
+\end{definition}
+
+\begin{eg}
+	If $X$ is a \hyperref[def:CW-Complex]{CW complex} and $A$ is a \hyperref[def:CW-subcomplex]{subcomplex}, then $(X, A)$ is a \hyperref[def:good-pair]{good pair}.
+
+	The proof is given in the Appendix of Hatcher\cite{hatcher2002algebraic} and requires some point-set topology.
+\end{eg}
+
+\begin{eg}
+	$(\text{Hawaiian earring}, \text{bad point})$ is a bad pair.
+\end{eg}
+
+\begin{theorem}\label{thm:les-of-a-good-pair}
+	If $(X, A)$ is a \hyperref[def:good-pair]{good pair}, then there exists a long \hyperref[def:exact]{exact} sequence (\hyperref[def:exact]{exact} at every $n$)
+	on \hyperref[def:reduced-homology-group]{reduced homology groups} given by:
+	\[\begin{tikzcd}
+			\ldots & {\widetilde{H}_n(A)} & {\widetilde{H}_n(X)} & {\widetilde{H}_n(\quotient{X}{A})} \\
+			& {\widetilde{H}_{n-1}(A)} & {\widetilde{H}_{n-1}(X)} & {\widetilde{H}_{n-1}(\quotient{X}{A})} \\
+			& \ldots & {\widetilde{H}_{0}(X)} & {\widetilde{H}_{0}(\quotient{X}{A})} & 0
+			\arrow["{j_\ast}"{description}, from=1-3, to=1-4]
+			\arrow["{j_\ast}"{description}, from=2-3, to=2-4]
+			\arrow[from=3-4, to=3-5]
+			\arrow["{i_\ast}"{description}, from=2-2, to=2-3]
+			\arrow["{i_\ast}"{description}, from=1-2, to=1-3]
+			\arrow[from=1-1, to=1-2]
+			\arrow["\delta"{description}, from=1-4, to=2-2]
+			\arrow["\delta"{description}, from=2-4, to=3-2]
+			\arrow["{j_\ast}"{description}, from=3-3, to=3-4]
+			\arrow["{i_\ast}"{description}, from=3-2, to=3-3]
+		\end{tikzcd}\]
+	Where $i \colon A \hookrightarrow X$ is the inclusion and $j \colon X \to \quotient{X}{A} $ is the quotient map. We will define each $\delta $ in the proof.
+\end{theorem}
+\begin{remark}
+	The fact that this sequence is \hyperref[def:exact]{exact} often means that if we know the \hyperref[def:homology-group]{homology groups} of two of the
+	spaces we can compute the \hyperref[def:homology-group]{homology} of the remaining space.
+\end{remark}
+
+\begin{proposition}\label{prop-homology-of-spheres}
+	We have that:
+	\[
+		\widetilde{H}_i(S^n) = \begin{dcases}
+			\mathbb{\MakeUppercase{z}} , & \text{ if } i = n ;    \\
+			0,                           & \text{ if } i \neq n .
+		\end{dcases}
+	\]
+\end{proposition}
+
+\begin{proof}
+	Some facts we need:
+	\begin{itemize}
+		\item $(D^n, \partial D^n)$ is a good pair (since it is a CW complex and a subcomplex)
+		\item $D^n /\partial D^n \cong S^n$ (previous homework)
+		\item $\widetilde{H}_n(D^n) = 0$ for all $n$ since $D^n$ is contractible
+		\item $\partial D^n \cong S^{n - 1}$
+	\end{itemize}
+	We then proceed by induction on $n$.
+	\begin{exercise}
+		Verify the theorem in the case $n = 0$, so $S^0 = $ 2 points.
+	\end{exercise}
+	Now using the long exact sequence, we have:
+	\[\begin{tikzcd}
+			\ldots & {\widetilde{H}_n(\partial D^n)} & {\widetilde{H}_n(D^n)} & {\widetilde{H}_n(S^n)} \\
+			& {\widetilde{H}_{n-1}(\partial D^n)} & {\widetilde{H}_{n-1}(D^n)} & {\widetilde{H}_{n-1}(S^n)} \\
+			& \ldots & {\widetilde{H}_{0}(D^n)} & {\widetilde{H}_{0}(S^n)} & 0
+			\arrow["{j_\ast}"{description}, from=1-3, to=1-4]
+			\arrow["{j_\ast}"{description}, from=2-3, to=2-4]
+			\arrow[from=3-4, to=3-5]
+			\arrow["{i_\ast}"{description}, from=2-2, to=2-3]
+			\arrow["{i_\ast}"{description}, from=1-2, to=1-3]
+			\arrow[from=1-1, to=1-2]
+			\arrow["\delta"{description}, from=1-4, to=2-2]
+			\arrow["\delta"{description}, from=2-4, to=3-2]
+			\arrow["{j_\ast}"{description}, from=3-3, to=3-4]
+			\arrow["{i_\ast}"{description}, from=3-2, to=3-3]
+		\end{tikzcd}\]
+	By induction we can fill in some of these groups as follows:
+	\[\begin{tikzcd}
+			\ldots & {0} & {0} & {\widetilde{H}_n(S^n)} \\
+			& {\mathbb{\MakeUppercase{z}} } & {0} & {\widetilde{H}_{n-1}(S^n)} \\
+			& \ldots & {0} & {\widetilde{H}_{0}(S^n)} & 0
+			\arrow["{j_\ast}"{description}, from=1-3, to=1-4]
+			\arrow["{j_\ast}"{description}, from=2-3, to=2-4]
+			\arrow[from=3-4, to=3-5]
+			\arrow["{i_\ast}"{description}, from=2-2, to=2-3]
+			\arrow["{i_\ast}"{description}, from=1-2, to=1-3]
+			\arrow[from=1-1, to=1-2]
+			\arrow["\delta"{description}, from=1-4, to=2-2]
+			\arrow["\delta"{description}, from=2-4, to=3-2]
+			\arrow["{j_\ast}"{description}, from=3-3, to=3-4]
+			\arrow["{i_\ast}"{description}, from=3-2, to=3-3]
+		\end{tikzcd}\]
+	Summary: We have an exact sequence:
+	\[\begin{tikzcd}
+			0 & {\widetilde{H}_n(S^n)} & {\mathbb{Z}} & 0
+			\arrow["\delta", from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-1, to=1-2]
+		\end{tikzcd}\]
+	By exactness, \(\delta\) is an isomorphism, thus $\widetilde{H}_n(S^n) \cong \mathbb{\MakeUppercase{z}}$. Now we must verify $\widetilde{H}_i(S^n) = 0$ when $i \neq n$. In that case the exact sequence looks like:
+	\[\begin{tikzcd}
+			{} & {\widetilde{H}_i(D^n)} & {\widetilde{H}_i(S^n)} & {\widetilde{H}_{i-1}(\partial D^n)} \\
+			{} & \color{red}0 & \color{red}{\widetilde{H}_i(S^n)} & \color{red}0
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-1, to=1-2]
+			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=2-1, to=2-2]
+			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=2-2, to=2-3]
+			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=2-3, to=2-4]
+		\end{tikzcd}\]
+	Exactness then tells us that $\widetilde{H}_i(S^n) = 0$.
+\end{proof}
+
+\begin{theorem}[Brouwer's Fixed Point Theorem]\label{thm-brouwer-fixed-point}
+	$\partial D^n$ is not a retract of $D^n$. Hence every continuous map $f : D^n \to D^n$ has a fixed point.
+\end{theorem}
+
+\begin{proof}
+	If $r : D^n \to \partial D^n$ were a retraction, then by definition this would give us that:
+	\[\begin{tikzcd}
+			{\partial D^n} & {D^n} & {\partial D^n}
+			\arrow["i", from=1-1, to=1-2]
+			\arrow["r", from=1-2, to=1-3]
+			\arrow["{\identity_{\partial D^n}}"', curve={height=12pt}, from=1-1, to=1-3]
+		\end{tikzcd}\]
+	Functoriality of homology tells us that:
+	\[\begin{tikzcd}
+			{\widetilde{H}_{n-1}(\partial D^n)} & {\widetilde{H}_{n-1}(D^n)} & {\widetilde{H}_{n-1}(\partial D^n)}
+			\arrow["{i_\ast}", from=1-1, to=1-2]
+			\arrow["{r_\ast}", from=1-2, to=1-3]
+			\arrow["\identity"', curve={height=12pt}, from=1-1, to=1-3]
+		\end{tikzcd}\]
+	So then:
+	\[\begin{tikzcd}
+			{\mathbb{Z}} & 0 & 0
+			\arrow["{i_{\ast}}", from=1-1, to=1-2]
+			\arrow["{r_\ast}", from=1-2, to=1-3]
+			\arrow["\identity"', curve={height=12pt}, from=1-1, to=1-3]
+		\end{tikzcd}\]
+	This is impossible.
+	\begin{exercise}
+		As with $D^2$, if $f : D^n \to D^n$ had no fixed point, we could build a retraction.
+	\end{exercise}
+\end{proof}
+
+\emph{Tool for proving Theorem}: \emph{diagram chase}
+
+\begin{lemma}[The Short Five Lemma]\label{lemma-short-five}
+	Suppose we have a commutative diagram:
+	\[\begin{tikzcd}
+			0 & A & B & C & 0 \\
+			0 & {A^\prime} & B & {C^\prime} & 0
+			\arrow[from=1-1, to=1-2]
+			\arrow["\psi", from=1-2, to=1-3]
+			\arrow["\varphi", from=1-3, to=1-4]
+			\arrow[from=1-4, to=1-5]
+			\arrow["\gamma", from=1-4, to=2-4]
+			\arrow[from=2-4, to=2-5]
+			\arrow["{\varphi^\prime}", from=2-3, to=2-4]
+			\arrow["\beta", from=1-3, to=2-3]
+			\arrow["{\psi^\prime}", from=2-2, to=2-3]
+			\arrow["\alpha", from=1-2, to=2-2]
+			\arrow[from=2-1, to=2-2]
+		\end{tikzcd}\]
+	So that the rows are exact. Then:
+	\begin{enumerate}
+		\item If $\alpha, \gamma$ are injective then $\beta$ is injective.
+		\item If $\alpha, \gamma$ are surjective then $\beta$ is surjective.
+		\item If $\alpha, \gamma$ are isomorphisms then $\beta$ is an isomorphism
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	(1) and (2) imply (3). We leave (2) as an exercise. We fix $b \in B$ such that $\beta(b) = 0$. We want to show that $\beta = 0$. Well, we draw a diagram chase:
+	\[\begin{tikzcd}
+			0 & {\bullet } & b & {\varphi(b)} & 0 \\
+			0 & {\bullet } & 0 & 0 & 0
+			\arrow[maps to, from=1-1, to=1-2]
+			\arrow["\psi", maps to, from=1-2, to=1-3]
+			\arrow["\varphi", maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-4, to=1-5]
+			\arrow["\gamma", maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-4, to=2-5]
+			\arrow["{\varphi^\prime}", maps to, from=2-3, to=2-4]
+			\arrow["\beta", maps to, from=1-3, to=2-3]
+			\arrow["{\psi^\prime}", maps to, from=2-2, to=2-3]
+			\arrow["\alpha", maps to, from=1-2, to=2-2]
+			\arrow[maps to, from=2-1, to=2-2]
+		\end{tikzcd}\]
+	And thus by injectivity of $\gamma$ we know $\varphi(b) = 0$. By exactness, $b \in \im \psi$. We then may write for some $a \in A$:
+	\[\begin{tikzcd}
+			0 & a & b & 0 & 0 \\
+			0 & {\alpha(a)} & 0 & 0 & 0
+			\arrow[maps to, from=1-1, to=1-2]
+			\arrow["\varphi", maps to, from=1-3, to=1-4]
+			\arrow[maps to, from=1-4, to=1-5]
+			\arrow["\gamma", maps to, from=1-4, to=2-4]
+			\arrow[maps to, from=2-4, to=2-5]
+			\arrow["{\varphi^\prime}", maps to, from=2-3, to=2-4]
+			\arrow["\beta", maps to, from=1-3, to=2-3]
+			\arrow["{\psi^\prime}", maps to, from=2-2, to=2-3]
+			\arrow["\alpha", maps to, from=1-2, to=2-2]
+			\arrow[maps to, from=2-1, to=2-2]
+			\arrow["\psi", maps to, from=1-2, to=1-3]
+		\end{tikzcd}\]
+	Therefore $\psi^\prime (\alpha(a)) = \beta(\psi(a)) = \beta(b) = 0$ by commutativity. By exactness of the bottom row we know that $\psi^\prime $ is an injection.
+	Thus $\alpha(a) = 0$, so since $\alpha$ is injective, $a = 0$. With this $b = \psi(a) = \psi(0) = 0$. Great! With this $\ker(\beta) = 0$, and $\beta$ injects. This ends the proof!
+\end{proof}

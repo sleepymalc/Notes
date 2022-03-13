@@ -1,34 +1,40 @@
 \lecture{25}{11 Mar. 10:00}{Relative Homology}
+We are now interested in the relationship between
+\[
+	H_{n}(X), H_{n} (A), H_{n} \left(\quotient{X}{A}\right).
+\]
+
 \subsection{Relative Homology}
 \begin{definition}[Reduced homology group]\label{def:reduced-homology-group}
-	The \emph{reduced homology groups} $\widetilde{H}_n(X) = H_n(X)$ when $n > 0$. When $n = 0$ we have that:
+	The \emph{reduced homology groups} \(\widetilde{H}_n(X) = H_n(X)\) when \(n > 0\). When \(n = 0\) we have that:
 	\[
-		\widetilde{H}_0(X) \oplus \mathbb{\MakeUppercase{z}} = H_0(X)
+		\widetilde{H}_0(X) \oplus \mathbb{\MakeUppercase{z}} = H_0(X).
 	\]
 \end{definition}
 \begin{remark}
-	The usefulness of this is that for \hyperref[def:path]{path}-connected space $X$ we have $\widetilde{H}_0(X) = 0$, and for
+	The usefulness of this is that for \hyperref[def:path]{path}-connected space \(X\) we have \(\widetilde{H}_0(X) = 0\), and for
 	\hyperref[def:contractible]{contractible} spaces $X$ we have $\widetilde{H}_n(X) = 0$.
 \end{remark}
 
-\begin{definition}\label{def:good-pair}
+\begin{definition}[Good pair]\label{def:good-pair}
 	Let $X$ be a space, and $A \subseteq X$. Then $(X, A)$ is a \emph{good pair} if $A$ is closed and nonempty, and also it is a
 	\hyperref[def:deformation-retraction]{deformation retract} of a neighborhood in $X$.
 \end{definition}
 
 \begin{eg}
-	If $X$ is a \hyperref[def:CW-Complex]{CW complex} and $A$ is a \hyperref[def:CW-subcomplex]{subcomplex}, then $(X, A)$ is a \hyperref[def:good-pair]{good pair}.
-
-	The proof is given in the Appendix of Hatcher\cite{hatcher2002algebraic} and requires some point-set topology.
-\end{eg}
-
-\begin{eg}
-	$(\text{Hawaiian earring}, \text{bad point})$ is a bad pair.
+	Let's see some examples.
+	\begin{enumerate}
+		\item If $X$ is a \hyperref[def:CW-Complex]{CW complex} and $A$ is a nonempty \hyperref[def:CW-subcomplex]{subcomplex}, then $(X, A)$ is a \hyperref[def:good-pair]{good pair}.
+		      The proof is given in the Appendix of Hatcher\cite{hatcher2002algebraic} and requires some point-set topology.
+		\item If \(M\) is a smooth manifold, and \(N\subseteq M\) is a smooth submanifold which is nonempty, then \((M, N)\) is a \hyperref[def:good-pair]{good pair}.
+		\item \((\text{Hawaiian earring}, \text{bad point})\) is \underline{not} a \hyperref[def:good-pair]{good pair}.
+		\item \(\mathbb{\MakeUppercase{r}} ^n, \text{ proper open set} \) is \underline{not} a \hyperref[def:good-pair]{good pair}.
+	\end{enumerate}
 \end{eg}
 
 \begin{theorem}\label{thm:les-of-a-good-pair}
 	If $(X, A)$ is a \hyperref[def:good-pair]{good pair}, then there exists a long \hyperref[def:exact]{exact} sequence (\hyperref[def:exact]{exact} at every $n$)
-	on \hyperref[def:reduced-homology-group]{reduced homology groups} given by:
+	on \hyperref[def:reduced-homology-group]{reduced homology groups} given by the following commutative diagram.
 	\[\begin{tikzcd}
 			\ldots & {\widetilde{H}_n(A)} & {\widetilde{H}_n(X)} & {\widetilde{H}_n(\quotient{X}{A})} \\
 			& {\widetilde{H}_{n-1}(A)} & {\widetilde{H}_{n-1}(X)} & {\widetilde{H}_{n-1}(\quotient{X}{A})} \\
@@ -44,14 +50,18 @@
 			\arrow["{j_\ast}"{description}, from=3-3, to=3-4]
 			\arrow["{i_\ast}"{description}, from=3-2, to=3-3]
 		\end{tikzcd}\]
-	Where $i \colon A \hookrightarrow X$ is the inclusion and $j \colon X \to \quotient{X}{A} $ is the quotient map. We will define each $\delta $ in the proof.
+	where $i \colon A \hookrightarrow X$ is the inclusion and $j \colon X \to \quotient{X}{A} $ is the quotient map.
 \end{theorem}
+We see that both \(i_\ast\) and \(j_\ast\) is naturally induced, but not for \(\delta \). In fact, we'll construct \(\delta \) in the proof!
+
 \begin{remark}
 	The fact that this sequence is \hyperref[def:exact]{exact} often means that if we know the \hyperref[def:homology-group]{homology groups} of two of the
 	spaces we can compute the \hyperref[def:homology-group]{homology} of the remaining space.
 \end{remark}
 
-\begin{proposition}\label{prop-homology-of-spheres}
+Before we see that proof of \autoref{thm:les-of-a-good-pair}, we see one application.
+
+\begin{proposition}\label{prop:homology-of-spheres}
 	We have that:
 	\[
 		\widetilde{H}_i(S^n) = \begin{dcases}
@@ -60,20 +70,18 @@
 		\end{dcases}
 	\]
 \end{proposition}
-
+\begin{exercise}
+	Verify \autoref{prop:homology-of-spheres} in the case $n = 0$, so $S^0 = $ 2 points.
+\end{exercise}
 \begin{proof}
 	Some facts we need:
 	\begin{itemize}
-		\item $(D^n, \partial D^n)$ is a good pair (since it is a CW complex and a subcomplex)
+		\item $(D^n, \partial D^n)$ is a \hyperref[def:good-pair]{good pair} (since it is a \hyperref[def:CW-Complex]{CW complex} and a \hyperref[def:CW-subcomplex]{subcomplex})
 		\item $D^n /\partial D^n \cong S^n$ (previous homework)
 		\item $\widetilde{H}_n(D^n) = 0$ for all $n$ since $D^n$ is contractible
 		\item $\partial D^n \cong S^{n - 1}$
 	\end{itemize}
-	We then proceed by induction on $n$.
-	\begin{exercise}
-		Verify the theorem in the case $n = 0$, so $S^0 = $ 2 points.
-	\end{exercise}
-	Now using the long exact sequence, we have:
+	We then proceed by induction on $n$. Now using the long exact sequence, we have
 	\[\begin{tikzcd}
 			\ldots & {\widetilde{H}_n(\partial D^n)} & {\widetilde{H}_n(D^n)} & {\widetilde{H}_n(S^n)} \\
 			& {\widetilde{H}_{n-1}(\partial D^n)} & {\widetilde{H}_{n-1}(D^n)} & {\widetilde{H}_{n-1}(S^n)} \\
@@ -89,7 +97,7 @@
 			\arrow["{j_\ast}"{description}, from=3-3, to=3-4]
 			\arrow["{i_\ast}"{description}, from=3-2, to=3-3]
 		\end{tikzcd}\]
-	By induction we can fill in some of these groups as follows:
+	By induction we can fill in some of these groups as follows.
 	\[\begin{tikzcd}
 			\ldots & {0} & {0} & {\widetilde{H}_n(S^n)} \\
 			& {\mathbb{\MakeUppercase{z}} } & {0} & {\widetilde{H}_{n-1}(S^n)} \\
@@ -105,14 +113,15 @@
 			\arrow["{j_\ast}"{description}, from=3-3, to=3-4]
 			\arrow["{i_\ast}"{description}, from=3-2, to=3-3]
 		\end{tikzcd}\]
-	Summary: We have an exact sequence:
+	In all, we have an \hyperref[def:exact]{exact} sequence:
 	\[\begin{tikzcd}
 			0 & {\widetilde{H}_n(S^n)} & {\mathbb{Z}} & 0
 			\arrow["\delta", from=1-2, to=1-3]
 			\arrow[from=1-3, to=1-4]
 			\arrow[from=1-1, to=1-2]
 		\end{tikzcd}\]
-	By exactness, \(\delta\) is an isomorphism, thus $\widetilde{H}_n(S^n) \cong \mathbb{\MakeUppercase{z}}$. Now we must verify $\widetilde{H}_i(S^n) = 0$ when $i \neq n$. In that case the exact sequence looks like:
+	By \hyperref[def:exact]{exactness}, \(\delta\) is an isomorphism, thus \(\widetilde{H}_n(S^n) \cong \mathbb{\MakeUppercase{z}}\). Now we must verify \(\widetilde{H}_i(S^n) = 0\)
+	when \(i\neq n\). In that case the \hyperref[def:exact]{exact} sequence looks like:
 	\[\begin{tikzcd}
 			{} & {\widetilde{H}_i(D^n)} & {\widetilde{H}_i(S^n)} & {\widetilde{H}_{i-1}(\partial D^n)} \\
 			{} & \color{red}0 & \color{red}{\widetilde{H}_i(S^n)} & \color{red}0
@@ -123,22 +132,22 @@
 			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=2-2, to=2-3]
 			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=2-3, to=2-4]
 		\end{tikzcd}\]
-	Exactness then tells us that $\widetilde{H}_i(S^n) = 0$.
+	\hyperref[def:exact]{Exactness} then tells us that \(\widetilde{H}_i(S^n) = 0\).
 \end{proof}
 
-\begin{theorem}[Brouwer's Fixed Point Theorem]\label{thm-brouwer-fixed-point}
-	$\partial D^n$ is not a retract of $D^n$. Hence every continuous map $f : D^n \to D^n$ has a fixed point.
+\begin{theorem}[Brouwer's fixed point theorem]\label{thm:Brouwer-fixed-point}
+	\(\partial D^n\) is not a \hyperref[def:retraction]{retract} of \(D^n\). Hence, every continuous map \(f \colon D^n \to D^n\) has a fixed point.
 \end{theorem}
 
 \begin{proof}
-	If $r : D^n \to \partial D^n$ were a retraction, then by definition this would give us that:
+	If \(r \colon D^n \to \partial D^n\) were a \hyperref[def:retraction]{retraction}, then by definition this would give us
 	\[\begin{tikzcd}
 			{\partial D^n} & {D^n} & {\partial D^n}
 			\arrow["i", from=1-1, to=1-2]
 			\arrow["r", from=1-2, to=1-3]
 			\arrow["{\identity_{\partial D^n}}"', curve={height=12pt}, from=1-1, to=1-3]
 		\end{tikzcd}\]
-	Functoriality of homology tells us that:
+	\hyperref[thm:functoriality-is-homotopy-invariant]{Functoriality} of \hyperref[def:homology-group]{homology} implies
 	\[\begin{tikzcd}
 			{\widetilde{H}_{n-1}(\partial D^n)} & {\widetilde{H}_{n-1}(D^n)} & {\widetilde{H}_{n-1}(\partial D^n)}
 			\arrow["{i_\ast}", from=1-1, to=1-2]
@@ -147,21 +156,21 @@
 		\end{tikzcd}\]
 	So then:
 	\[\begin{tikzcd}
-			{\mathbb{Z}} & 0 & 0
+			{\mathbb{Z}} & 0 & {\mathbb{\MakeUppercase{z}} }
 			\arrow["{i_{\ast}}", from=1-1, to=1-2]
 			\arrow["{r_\ast}", from=1-2, to=1-3]
 			\arrow["\identity"', curve={height=12pt}, from=1-1, to=1-3]
 		\end{tikzcd}\]
-	This is impossible.
-	\begin{exercise}
-		As with $D^2$, if $f : D^n \to D^n$ had no fixed point, we could build a retraction.
-	\end{exercise}
+	which is impossible. An map \(\identity_{Z} \) can't be factored through \(0\).
 \end{proof}
+\begin{exercise}
+	As with $D^2$, if $f : D^n \to D^n$ had no fixed point, we could build a \hyperref[def:retraction]{retraction}.
+\end{exercise}
 
-\emph{Tool for proving Theorem}: \emph{diagram chase}
+In order to proof \autoref{thm:les-of-a-good-pair}, we introduce the concept of \emph{diagram chase}.
 
-\begin{lemma}[The Short Five Lemma]\label{lemma-short-five}
-	Suppose we have a commutative diagram:
+\begin{lemma}[The short five lemma]\label{lma:the-short-five-lemma}
+	Suppose we have a commutative diagram
 	\[\begin{tikzcd}
 			0 & A & B & C & 0 \\
 			0 & {A^\prime} & B & {C^\prime} & 0
@@ -177,7 +186,7 @@
 			\arrow["\alpha", from=1-2, to=2-2]
 			\arrow[from=2-1, to=2-2]
 		\end{tikzcd}\]
-	So that the rows are exact. Then:
+	so that the rows are \hyperref[def:exact]{exact}. Then:
 	\begin{enumerate}
 		\item If $\alpha, \gamma$ are injective then $\beta$ is injective.
 		\item If $\alpha, \gamma$ are surjective then $\beta$ is surjective.
@@ -186,7 +195,7 @@
 \end{lemma}
 
 \begin{proof}
-	(1) and (2) imply (3). We leave (2) as an exercise. We fix $b \in B$ such that $\beta(b) = 0$. We want to show that $\beta = 0$. Well, we draw a diagram chase:
+	1. and 2. imply 3. We leave 2. as an exercise. We fix \(b \in B\) such that \(\beta(b) = 0\). We want to show that \(\beta = 0\). Well, we draw a diagram chase as
 	\[\begin{tikzcd}
 			0 & {\bullet } & b & {\varphi(b)} & 0 \\
 			0 & {\bullet } & 0 & 0 & 0
@@ -202,7 +211,8 @@
 			\arrow["\alpha", maps to, from=1-2, to=2-2]
 			\arrow[maps to, from=2-1, to=2-2]
 		\end{tikzcd}\]
-	And thus by injectivity of $\gamma$ we know $\varphi(b) = 0$. By exactness, $b \in \im \psi$. We then may write for some $a \in A$:
+	And thus by injectivity of $\gamma$ we know $\varphi(b) = 0$. By \hyperref[def:exact]{exactness}, $b \in \im \psi$. We then may write for some $a \in A$ such that the following
+	diagram commutes.
 	\[\begin{tikzcd}
 			0 & a & b & 0 & 0 \\
 			0 & {\alpha(a)} & 0 & 0 & 0
@@ -218,6 +228,6 @@
 			\arrow[maps to, from=2-1, to=2-2]
 			\arrow["\psi", maps to, from=1-2, to=1-3]
 		\end{tikzcd}\]
-	Therefore $\psi^\prime (\alpha(a)) = \beta(\psi(a)) = \beta(b) = 0$ by commutativity. By exactness of the bottom row we know that $\psi^\prime $ is an injection.
-	Thus $\alpha(a) = 0$, so since $\alpha$ is injective, $a = 0$. With this $b = \psi(a) = \psi(0) = 0$. Great! With this $\ker(\beta) = 0$, and $\beta$ injects. This ends the proof!
+	Therefore $\psi^\prime (\alpha(a)) = \beta(\psi(a)) = \beta(b) = 0$ by commutativity. By \hyperref[def:exact]{exactness} of the bottom row we know that $\psi^\prime $ is an injection.
+	Thus, $\alpha(a) = 0$, so since $\alpha$ is injective, $a = 0$. With this $b = \psi(a) = \psi(0) = 0$. Great! With this $\ker(\beta) = 0$, and $\beta$ injects.
 \end{proof}

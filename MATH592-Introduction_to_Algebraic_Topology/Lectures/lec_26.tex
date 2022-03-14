@@ -1,0 +1,154 @@
+\lecture{26}{14 Mar. 10:00}{Continue on Relative Homology}
+We start from a definition.
+\begin{definition}[Relative chain complex]\label{def:relative-chain-complex}
+	Let $X$ be a space and let $A \subseteq X$ be a subspace. Then we define the \emph{relative chain complex}
+	\[
+		C_n(X, A) = \quotient{C_n(X)}{C_n(A)}
+	\]
+\end{definition}
+
+\begin{exercise}
+	The boundary map $\partial \colon C_"n(X) \to C_{n - 1}(X)$ induces a well-defined map $\partial \colon C_n(X, A) \to C_{n - 1}(X, A)$.
+	Since $\partial^2 = 0$ we can conclude that these groups will in fact form a chain complex  $(C_\ast(X, A), \partial)$.
+\end{exercise}
+
+\begin{definition}[Relative homology]\label{def:relative-homology}
+	The homology groups of $(C_\ast(X, A), \partial)$ are denoted by $H_n(X, A)$, and they are called \emph{relative homology groups}.
+
+	Elements in $\ker \partial_n$ are called \emph{relative $n$-cycles}\label{def:relative-cycle}. These are elements $\alpha \in C_n(X)$
+	such that $\partial_n\alpha \in C_{n - 1}(A)$.
+	\begin{figure}[H]
+		\centering
+		\incfig{def:relative-homology-1}
+		\label{fig:def:relative-homology-1}
+	\end{figure}
+
+	Likewise, elements in $\im \partial_{n + 1}$ are called \emph{relative $n$-boundaries}\label{def:relative-boundary}.
+	This means that $\alpha = \partial \beta + \gamma$ where $\beta \in C_n(X)$ and $\gamma \in C_{n - 1}(A)$.
+	\begin{figure}[H]
+		\centering
+		\incfig{def:relative-homology-2}
+		\label{fig:def:relative-homology-2}
+	\end{figure}
+\end{definition}
+
+\begin{theorem}[Long exact sequence of a pair]\label{thm:long-exact-sequence-of-a-pair}
+	Let $A \subseteq X$ be spaces, then there exists a long exact sequence
+	\[\begin{tikzcd}
+			{} & {\widetilde{H}_n(A)} & {\widetilde{H}_n(X)} & {\widetilde{H}_n(X, A)} \\
+			& {\widetilde{H}_{n-1}(A)} & \ldots & {\widetilde{H}_{0}(X, A)} & 0
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=2-4, to=2-5]
+			\arrow[from=2-3, to=2-4]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=1-4, to=2-2]
+		\end{tikzcd}\]
+\end{theorem}
+
+\emph{Later:} We will prove that when $(X, A)$ is a good pair, then $H_n(X, A) = \widetilde{H}_n(X/A)$. Then \autoref{thm:les-of-a-good-pair}
+is a special case of \autoref{thm:les-of-a-good-pair}. The key to the proof of \autoref{thm:les-of-a-good-pair} above is the following slogan.
+
+\begin{remark}
+	\emph{Slogan} A short exact sequence of chain complexes gives rise to a long exact sequence of homology groups. This will be proved on homework.
+	Then \autoref{thm:les-of-a-good-pair} will follow from a short exact sequence:
+	\[\begin{tikzcd}
+			0 & {\widetilde{C}_\ast(A)} & {\widetilde{C}_\ast(X)} & {\widetilde{C}_\ast(X, A)} & 0
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-4, to=1-5]
+		\end{tikzcd}\]
+	where $\widetilde{C}_\ast$ denotes the \emph{augmented chain complex} (the one with $\mathbb{Z}$ after it).
+\end{remark}
+
+\begin{exercise}
+	If $A$ is a single point in $X$, then $H_n(X, A) = \widetilde{H}_n(\quotient{X}{A}) = \widetilde{H}_n(X)$.
+\end{exercise}
+
+\begin{theorem}[Excision]\label{thm:excision}
+	Suppose we have subspace $Z \subseteq A \subseteq X$ such that $\bar{Z} \subseteq \operatorname{Int} (A)$. Then the inclusion:
+	\[
+		(X - Z, A - Z) \hookrightarrow (X, A)
+	\]
+	induces isomorphisms:
+	\[
+		H_n(X - Z, A - Z) \xrightarrow{\cong} H_n(X, A)
+	\]
+\end{theorem}
+
+\begin{exercise}
+	Equivalently for subspaces $A, B \subseteq X$ whose interiors cover $X$, the inclusion:
+	\[
+		(B, A \cap B) \hookrightarrow (X, A)
+	\]
+	induces an isomorphism:
+	\[
+		H_n(B, A \cap B) \xrightarrow{\cong} H_n(X, A)
+	\]
+	Hint: $B = Z \setminus Z$, $Z = X \setminus B$.
+\end{exercise}
+Picture!
+\begin{figure}[H]
+	\centering
+	\incfig{eg:excision-1}
+	\label{fig:eg:excision-1}
+\end{figure}
+
+\begin{proof}[Proof Sketch]
+	We sketch the proof here, which is notorious for being hairy.
+	\begin{itemize}
+		\item Given a relative cycle $x$ in $(X, A)$, subdivide the simplices to make $x$ a linear combination of chains on
+		      ``smaller simplices,'' each contained in $\operatorname{Int}(A)$ or $X \setminus Z$.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{pf:excision}
+			      \caption{\(\delta ^n\to X\) subdivide into \hyperref[def:subsimplex]{subsimplices} with images in. }
+			      \label{fig:pf:excision}
+		      \end{figure}
+		      This means $x$ is homologous to sum of subsimplices with images in $\operatorname{Int}(A)$ or $X \setminus Z$. One of the things we
+		      use is that simplices are compact, so this process takes finite time.
+
+		      Key: \underline{Subdivision operator} is chain homotopic to the identity.
+		\item Since we are working relative to $A$, the chains with image in $A$ are zero. Thus we have a relative cycle homologous to $x$
+		      with all simplices contained in $X \setminus Z$.
+	\end{itemize}
+\end{proof}
+
+\begin{exercise}
+	$H_\ast(Y, y_0) \cong \widetilde{H}(Y)$.
+\end{exercise}
+
+\begin{theorem}\label{thm:good-pairs-relative-homology}
+	Let $(X, A)$ be a good pair. Then the quotient map $q : (X, A) \to (\quotient{X}{A} , \quotient{A}{A} )$ induces an isomorphism:
+	\begin{align*}
+		H_n(X, A) \xrightarrow{\cong} H_n(\quotient{X}{A}, \quotient{A}{A}) \cong \widetilde{H}_n(\quotient{X}{A})
+	\end{align*}
+	where the last equality is from the exercise.
+\end{theorem}
+
+\begin{proof}[Proof Outline]
+	Let $A \subseteq V \subseteq X$ where $V$ is a neighborhood of $A$ that deformation retracts onto $A$. Using excision, we obtain a commutative diagram as follows.
+	\par
+	\adjustbox{scale=0.9,center}{%
+		\begin{tikzcd}
+			{H_n(X, A)} & {H_n(X, V)} & {H_n(X-A, V-A)} \\
+			{H_n(\quotient{X}{A}-\quotient{A}{A})} & {H_n(\quotient{X}{A}-\quotient{V}{A})} & {H_n(\quotient{X}{A}-\quotient{A}{A}, \quotient{V}{A}-\quotient{A}{A})}
+			\arrow["{q_\ast}", from=1-1, to=2-1]
+			\arrow["{\color{green}{\cong}}", from=2-1, to=2-2]
+			\arrow["{\color{green}{\cong}}", from=1-1, to=1-2]
+			\arrow["{\color{red}{\cong}}"', from=1-3, to=1-2]
+			\arrow["{\color{red}{\cong}}"', from=2-3, to=2-2]
+			\arrow["{q_\ast}", from=1-3, to=2-3]
+			\arrow["{\color{pink}{\cong}}"', draw=none, from=1-3, to=2-3]
+		\end{tikzcd}
+	}
+
+	\par Done if we can prove all the colored isomorphisms.
+	\begin{itemize}
+		\item $\color{red}{\cong}$ is an isomorphism by excision
+		\item $\color{pink}{\cong}$ is an isomorphism by direct calculation (since $q$ is a homeomorphism on the complement of $A$)
+		\item $\color{green}{\cong}$ on Homework, since $V$ deformation retracts to $A$.
+	\end{itemize}
+\end{proof}

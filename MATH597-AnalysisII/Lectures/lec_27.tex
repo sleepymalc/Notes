@@ -1,1 +1,129 @@
-\lecture{27}{18 Mar. 11:00}{}
+\lecture{27}{18 Mar. 11:00}{Dual Space}
+\begin{prev}
+	From \autoref{def:operator-norm}, we have that
+	\[
+		\left\lVert Tv\right\rVert ^{\prime\prime} \leq \left\lVert T\right\rVert \left\lVert v\right\rVert ^\prime .
+	\]
+\end{prev}
+
+\begin{remark}
+	Notice that this \autoref{def:operator-norm} is only for \hyperref[def:bounded-linear-transformation]{bounded linear transformation}.
+\end{remark}
+
+\begin{theorem}\label{thm:blts-complete}
+	If \(W\) is \hyperref[def:complete]{complete}, then \(L(V,W)\) is \hyperref[def:complete]{complete}.
+\end{theorem}
+
+\begin{proof}
+	Suppose \(T_n\) is a \hyperref[def:Cauchy-sequence]{Cauchy sequence} in \(L(V,W)\). Fix \(v \in V\), then let \(w_n = T_n v \in W\). Also,
+	\[
+		\left\lVert w_n - w_m\right\rVert = \left\lVert T_n v - T_m v\right\rVert = \left\lVert (T_n - T_m)v\right\rVert \leq \left\lVert T_n - T_m\right\rVert \left\lVert v\right\rVert.
+	\]
+	Thus, \(w_n\) is \hyperref[def:Cauchy-sequence]{Cauchy}, so it converges since \(W\) is \hyperref[def:complete]{complete}. We call its unique
+	limit \(Tv\). This makes \(T \colon V \to W\) into a function. We must show it is a \hyperref[def:bounded-linear-transformation]{bounded linear transformation} and that
+	\(\left\lVert T_n - T\right\rVert \to 0\).\todo{DIY}
+\end{proof}
+
+\subsection{Dual of \(L^p\) Spaces}
+\begin{eg}
+	Let \(w \in \mathbb{\MakeUppercase{r}} ^d\). Then we can consider
+	\[
+		\max\{v \cdot w \mid \left\lVert v\right\rVert_2 = 1\} = \left\lVert w\right\rVert_2.
+	\]
+	If \(w \in \mathbb{\MakeUppercase{c}}^d\), this is similar we just do
+	\[
+		\max\{\left\vert v \cdot w \right\vert  \mid \left\lVert v\right\rVert_2 = 1\} = \left\lVert w\right\rVert_2.
+	\]
+	These maxes are achieved by \(v = \frac{\overline{w} }{\left\lVert w\right\rVert_w}\) if \(w \neq 0\).
+\end{eg}
+
+\begin{proposition}\label{prop:Lp-dual-formula}
+	Let \(1/p + 1/q = 1\) with \(1 \leq q < \infty\). For every \(g \in L^q\),
+	\[
+		\left\lVert g\right\rVert_q = \sup\left\{\left\vert \int fg \right\vert  \mid \left\lVert f\right\rVert_p = 1\right\}.
+	\]
+
+	Suppose \(\mu \) is \hyperref[def:finite-measure]{\(\sigma\)-finite}. Then the result also holds for \(q = \infty\), \(p = 1\).
+\end{proposition}
+
+\begin{prev}
+	For \(\alpha \in \mathbb{C}\), \(\sgn \alpha \coloneqq e^{i\theta}\) where \(\alpha = \left\vert \alpha \right\vert e^{i\theta}\).
+\end{prev}
+
+\begin{proof}
+	By \hyperref[thm:Holder-inequality]{Hölder's inequality}, we know that
+	\[
+		\left\vert \int fg \right\vert  \leq \int \left\vert fg \right\vert  = \left\lVert fg\right\rVert_1 \leq \left\lVert f\right\rVert _p \left\lVert g\right\rVert_q = \left\lVert g\right\rVert_q.
+	\]
+
+	Thus, the supremum is \(\leq \left\lVert g\right\rVert_q\).
+
+	\begin{enumerate}
+		\item Let
+		      \[
+			      f(x) = \frac{\left\vert g(x)\overline{\sgn(g(x))} \right\vert ^{q-1}}{\left\lVert g\right\rVert_q^{q-1}}
+		      \]
+		      Then \(\int \left\vert f \right\vert ^p = 1\), and \(\int fg = \left\lVert g\right\rVert _q\).\todo{Check}
+		\item DIY for handling the case when \(\mu\) is \hyperref[def:finite-measure]{\(\sigma\)-finite} and \(q = \infty, p = 1\).
+	\end{enumerate}
+\end{proof}
+
+\begin{remark}
+	One could use the above to prove \hyperref[thm:Minkowski-inequality]{Minkowski's inequality} (as it only uses \hyperref[thm:Holder-inequality]{Hölder's inequality}).
+\end{remark}
+
+\begin{definition}[Dual space]\label{defn:dual-space}
+	For a \hyperref[def:norm]{normed} space \((V, \left\lVert \cdot\right\rVert )\), its \emph{dual space} is \(V^\ast = L(V, \mathbb{\MakeUppercase{r}} )\) or
+	\(V^\ast = L(V, \mathbb{C})\).
+\end{definition}
+\begin{remark}
+	Namely, \hyperref[def:bounded-linear-transformation]{BLTs} with codomain being the scalar field.
+\end{remark}
+
+\begin{definition}[Linear functional]\label{def:linear-functional}
+	Given a \hyperref[def:norm]{normed} space \((V, \left\lVert \cdot\right\rVert )\), \(\ell \in V^\ast\) is called a \emph{linear functional} on \(V\). i.e.,
+	\begin{itemize}
+		\item \(\ell \colon V \to \mathbb{\MakeUppercase{r}}\) (or \(\mathbb{\MakeUppercase{c}} \)).
+		\item \(\ell \) is linear.
+		\item There exists a \(c \geq 0\) such that \(\left\vert \ell(v) \right\vert  = c\left\lVert v\right\rVert\).
+	\end{itemize}
+\end{definition}
+
+\begin{note}
+	$V^\ast$ is always a \hyperref[def:Banach-space]{Banach space} (even if $V$ is not \hyperref[def:complete]{complete}).
+\end{note}
+
+\begin{corollary}
+	We have the followings.
+	\begin{enumerate}
+		\item Let \(1/p + 1/q = 1, 1 \leq q < \infty\). For \(g \in L^q\) define \(\ell_g \in L^p \to \mathbb{\MakeUppercase{c}}\) by
+		      \[
+			      \ell_g(f) = \int fg.
+		      \]
+		      Then \(\ell_g \in (L^p)^\ast\). Furthermore, \(\left\lVert \ell_g\right\rVert = \left\lVert g\right\rVert_q\).
+		\item If \(\mu\) is \hyperref[def:finite-measure]{\(\sigma \)-finite} then this also holds for \(q = \infty, p = 1\).
+	\end{enumerate}
+\end{corollary}
+\begin{proof}
+	\(\ell_g\) is clear linear in \(f\) because the integral is linear. Then \autoref{prop:Lp-dual-formula} gives in both 1. and 2. that
+	\[
+		\left\lVert g\right\rVert_q = \sup\{\left\vert \ell_g(f) \right\vert  \mid \left\lVert g\right\rVert _p = 1 \} = \left\lVert \ell_g\right\rVert
+	\]
+	and so \(\ell_g\) is a \hyperref[def:bounded-linear-transformation]{bounded linear transformation} with the desired properties.
+\end{proof}
+
+\begin{theorem}
+	We have the followings.
+	\begin{enumerate}
+		\item Let \(1/p + 1/q = 1\), \(1 \leq q < \infty\). The map \(T \colon L^q \to (L^p)^\ast\) given by \(Tg = \ell_g\) is an isometric\footnote{A map \(T\) is called isometric if for a given \(g\), \(\left\lVert Tg\right\rVert = \left\lVert g\right\rVert \).}
+		      linear isomorphism.
+
+		      This means that
+		      \begin{itemize}
+			      \item \(T\) is a \hyperref[def:bounded-linear-transformation]{bounded linear transformation}.
+			      \item \(T\) is bijective.
+			      \item \(T\) is \hyperref[def:norm]{norm}-preserving.
+		      \end{itemize}
+		\item If \(\mu\) is \hyperref[def:finite-measure]{\(\sigma\)-finite} then this also holds for \(q = \infty, p = 1\).
+	\end{enumerate}
+\end{theorem}

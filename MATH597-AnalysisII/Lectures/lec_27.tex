@@ -15,9 +15,10 @@
 \end{theorem}
 
 \begin{proof}
-	Suppose \(T_n\) is a \hyperref[def:Cauchy-sequence]{Cauchy sequence} in \(L(V,W)\). Fix \(v \in V\), then let \(w_n = T_n v \in W\). Also,
+	Suppose \(T_n\) is a \hyperref[def:Cauchy-sequence]{Cauchy sequence} in \(L(V,W)\). Fix \(v \in V\) and let \(w_n \coloneqq T_n v \in W\), we then have
 	\[
-		\left\lVert w_n - w_m\right\rVert = \left\lVert T_n v - T_m v\right\rVert = \left\lVert (T_n - T_m)v\right\rVert \leq \left\lVert T_n - T_m\right\rVert \left\lVert v\right\rVert.
+		\left\lVert w_n - w_m\right\rVert = \left\lVert T_n v - T_m v\right\rVert = \left\lVert (T_n - T_m)v\right\rVert
+		\leq \underbrace{\left\lVert T_n - T_m\right\rVert}_{\to 0} \underbrace{\left\lVert v\right\rVert}_{\text{fixed}\atop \text{value}}.
 	\]
 	Thus, \(w_n\) is \hyperref[def:Cauchy-sequence]{Cauchy}, so it converges since \(W\) is \hyperref[def:complete]{complete}. We call its unique
 	limit \(Tv\). This makes \(T \colon V \to W\) into a function. We must show it is a \hyperref[def:bounded-linear-transformation]{bounded linear transformation} and that
@@ -26,15 +27,19 @@
 
 \subsection{Dual of \(L^p\) Spaces}
 \begin{eg}
-	Let \(w \in \mathbb{\MakeUppercase{r}} ^d\). Then we can consider
+	Let \(w \in \mathbb{\MakeUppercase{r}} ^d\), and denote the inner product between \(w\) and \(v\in \mathbb{\MakeUppercase{r}} ^d\) by
+	\[
+		v\cdot w \coloneqq \left< v, w \right>.
+	\]
+	Then we can consider
 	\[
 		\max\{v \cdot w \mid \left\lVert v\right\rVert_2 = 1\} = \left\lVert w\right\rVert_2.
 	\]
-	If \(w \in \mathbb{\MakeUppercase{c}}^d\), this is similar we just do
+	If \(w \in \mathbb{\MakeUppercase{c}}^d\), this is similar since
 	\[
 		\max\{\left\vert v \cdot w \right\vert  \mid \left\lVert v\right\rVert_2 = 1\} = \left\lVert w\right\rVert_2.
 	\]
-	These maxes are achieved by \(v = \frac{\overline{w} }{\left\lVert w\right\rVert_w}\) if \(w \neq 0\).
+	These maximums are achieved by \(v = \frac{\overline{w} }{\left\lVert w\right\rVert}\) if \(w \neq 0\).
 \end{eg}
 
 \begin{proposition}\label{prop:Lp-dual-formula}
@@ -47,7 +52,7 @@
 \end{proposition}
 
 \begin{prev}
-	For \(\alpha \in \mathbb{C}\), \(\sgn \alpha \coloneqq e^{i\theta}\) where \(\alpha = \left\vert \alpha \right\vert e^{i\theta}\).
+	For \(\alpha \in \mathbb{C}\), \(\sgn (\alpha) \coloneqq e^{i\theta}\) where \(\alpha = \left\vert \alpha \right\vert e^{i\theta}\).
 \end{prev}
 
 \begin{proof}
@@ -56,15 +61,14 @@
 		\left\vert \int fg \right\vert  \leq \int \left\vert fg \right\vert  = \left\lVert fg\right\rVert_1 \leq \left\lVert f\right\rVert _p \left\lVert g\right\rVert_q = \left\lVert g\right\rVert_q.
 	\]
 
-	Thus, the supremum is \(\leq \left\lVert g\right\rVert_q\).
-
+	Thus, the supremum is less or equal to \(\left\lVert g\right\rVert_q\).
 	\begin{enumerate}
 		\item Let
 		      \[
 			      f(x) = \frac{\left\vert g(x)\overline{\sgn(g(x))} \right\vert ^{q-1}}{\left\lVert g\right\rVert_q^{q-1}}
 		      \]
 		      Then \(\int \left\vert f \right\vert ^p = 1\), and \(\int fg = \left\lVert g\right\rVert _q\).\todo{Check}
-		\item DIY for handling the case when \(\mu\) is \hyperref[def:finite-measure]{\(\sigma\)-finite} and \(q = \infty, p = 1\).
+		\item The case that \(\mu\) is \hyperref[def:finite-measure]{\(\sigma\)-finite} and \(q = \infty, p = 1\) can be shown.\todo{DIY}
 	\end{enumerate}
 \end{proof}
 
@@ -72,12 +76,12 @@
 	One could use the above to prove \hyperref[thm:Minkowski-inequality]{Minkowski's inequality} (as it only uses \hyperref[thm:Holder-inequality]{Hölder's inequality}).
 \end{remark}
 
-\begin{definition}[Dual space]\label{defn:dual-space}
+\begin{definition}[Dual space]\label{def:dual-space}
 	For a \hyperref[def:norm]{normed} space \((V, \left\lVert \cdot\right\rVert )\), its \emph{dual space} is \(V^\ast = L(V, \mathbb{\MakeUppercase{r}} )\) or
 	\(V^\ast = L(V, \mathbb{C})\).
 \end{definition}
 \begin{remark}
-	Namely, \hyperref[def:bounded-linear-transformation]{BLTs} with codomain being the scalar field.
+	Namely, the \hyperref[def:dual-space]{dual space} of \(V\) contains \hyperref[def:bounded-linear-transformation]{bounded linear transformations} with codomain being the scalar field.
 \end{remark}
 
 \begin{definition}[Linear functional]\label{def:linear-functional}
@@ -105,7 +109,7 @@
 	\end{enumerate}
 \end{corollary}
 \begin{proof}
-	\(\ell_g\) is clear linear in \(f\) because the integral is linear. Then \autoref{prop:Lp-dual-formula} gives in both 1. and 2. that
+	\(\ell_g\) is clearly linear in \(f\) because the integral is linear. Then \autoref{prop:Lp-dual-formula} gives in both 1. and 2. that
 	\[
 		\left\lVert g\right\rVert_q = \sup\{\left\vert \ell_g(f) \right\vert  \mid \left\lVert g\right\rVert _p = 1 \} = \left\lVert \ell_g\right\rVert
 	\]

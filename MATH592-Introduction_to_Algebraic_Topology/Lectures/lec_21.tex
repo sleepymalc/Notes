@@ -1,5 +1,4 @@
-\lecture{21}{23 Feb. 10:00}{Homology}
-\subsection{Homology}
+\lecture{21}{23 Feb. 10:00}{Simplicial Homology}
 To demonstrate how the definition of homology arise, we first see the idea behind it. Fix a space \(X\) which equips with the \hyperref[def:delta-complex]{\(\Delta\)-complex}
 structure. Then, we define \(C_{n} (X)\) to be the \hyperref[def:free-Abelian-group]{free Abelian group} on the \hyperref[def:standard-simplex]{\(n\)-simplices} of \(X\). That is,
 \[
@@ -39,12 +38,17 @@ Then, the \(n\)-th homology group will be a subquotient of \(C_{n} (X)\), where 
 \end{itemize}
 
 Let's now see the formal definition.
-\begin{definition}[Chain group]\label{def:chain-group}
-	We define the \emph{chain group} \(C_{n} (X)\) of order \(n\) to be the \hyperref[def:free-Abelian-group]{free Abelian group} on the \hyperref[def:standard-simplex]{\(n\)-simplices} of \(X\) such
+\begin{definition}[Simplicial chain group]\label{def:simplicial-chain-group}
+	We define the \emph{simplicial chain group} \(C_{n} (X)\) of order \(n\) to be the \hyperref[def:free-Abelian-group]{free Abelian group} on the \hyperref[def:standard-simplex]{\(n\)-simplices} of \(X\) such
 	that
 	\[
 		C_{n} (X) \coloneqq \left\{\text{finite sums } \sum\limits_{}^{} m_\alpha \sigma _\alpha \mid m_\alpha \in \mathbb{\MakeUppercase{z}} , \sigma _\alpha \colon \Delta ^n \to X\right\}.
 	\]
+\end{definition}
+
+\begin{definition}[Cycles]\label{def:cycle}
+	Given any chain group \(C_{n} (X)\), a \emph{cycle} of \(C_{n} (X)\) is those chains \(\sum m_\alpha \sigma _\alpha\)
+	with no \hyperref[def:boundary]{boundaries}.
 \end{definition}
 
 \begin{definition}[Boundary homomorphism]\label{def:boundary-homomorphism}
@@ -57,6 +61,11 @@ Let's now see the formal definition.
 	\]
 	which defines the map on the basis, and we extend it linearly.
 \end{definition}
+\begin{remark}
+	We see that the definition of \hyperref[def:boundary-homomorphism]{boundary homomorphism} indeed coincides with the definition of
+	\hyperref[def:boundary]{boundary} when considering either \hyperref[def:delta-complex]{\(\Delta\)-complex} or
+	\hyperref[def:simplicial-complex]{simplicial complex} structure.
+\end{remark}
 
 \begin{eg}
 	We give some lower dimensions examples of \autoref{def:boundary-homomorphism} to motivate the general definition.
@@ -105,10 +114,16 @@ Let's now see the formal definition.
 	\]
 	We call \(C_{n} \) the \emph{\(n\)-th chain group} and \(d_{n} \) the \emph{\(n\)-th differential}.
 \end{definition}
+\begin{note}
+	Note that \autoref{def:chain-complex} is purely \emph{abstract}, namely we can put different chain group
+	structure on \(C_{n} \). We'll see what this means later.\footnote{Spoiler: It just means we can give different definition about the map \(\sigma\).}
+	But for now, \(C_{n} \) can be equipped with the definition we gave for	\hyperref[def:simplicial-chain-group]{simplicial chain group}.
+\end{note}
+
 \begin{remark}
 	We see that
 	\begin{itemize}
-		\item \autoref{lma:lec21} guarantees that our \hyperref[def:chain-group]{simplicial chain groups} form a \hyperref[def:chain-complex]{chain complex}.
+		\item \autoref{lma:lec21} guarantees that our \hyperref[def:simplicial-chain-group]{simplicial chain groups} form a \hyperref[def:chain-complex]{chain complex}.
 		\item \autoref{def:chain-complex} means that \(\ker (d_{n} ) \) contains \(\im  (d_{n+1})\), since \(d_{n} \circ d_{n+1} = 0\).
 	\end{itemize}
 \end{remark}
@@ -128,13 +143,13 @@ Let's now see the formal definition.
 	The \hyperref[def:homology-group]{homology group} measures how far the \hyperref[def:chain-complex]{chain complex} is from being \hyperref[def:exact]{exact} at \(C_{n} \).
 \end{remark}
 
-With what we have just defined, it's natural to define \hyperref[def:homology-group]{homology groups} of spaces \(X\) with a \hyperref[def:delta-complex]{\(\Delta \)-complex}
+With what we have just defined, it's natural to define \hyperref[def:homology-group]{homology groups} of space \(X\) with a \hyperref[def:delta-complex]{\(\Delta \)-complex}
 structure.
 \begin{definition}[Homology class]\label{def:homology-class}
-	We say \(\ker  (\partial _{n} )\) is the subgroup of \textbf{cycles} is \(C_{n} (X)\) , and \(\im (\partial_{n+1}) \) is the subgroup of \textbf{boundaries}
-	in \(C_{n} (X)\). We then set
+	We say \(\ker  (\partial _{n} )\) is the subgroup of \hyperref[def:cycle]{cycles} is \(C_{n} (X)\), and \(\im (\partial_{n+1}) \) is the
+	subgroup of \hyperref[def:boundary]{boundaries} in \(C_{n} (X)\). We then set
 	\[
-		H_{n} (X)\coloneqq \quotient{\ker  (\partial _{n} )}{\im  (\partial _{n+1})} = \quotient{\{\text{cycles}\}}{\{\text{boundaries}\}}.
+		H_{n} (X)\coloneqq \quotient{\ker  (\partial _{n} )}{\im  (\partial _{n+1})} = \quotient{\{\text{\hyperref[def:cycle]{cycles}}\}}{\{\text{\hyperref[def:boundary]{boundaries}}\}}.
 	\]
 	In other words, it's the \hyperref[def:homology-group]{homology} of the \hyperref[def:chain-complex]{chain complex}
 	\[
@@ -158,4 +173,9 @@ structure.
 		\end{tikzcd}
 	\]
 	We then call the elements of \(H_{n} (X)\) as \emph{homology classes}.
+\end{definition}
+
+\begin{definition}[Simplicial homology group]\label{def:simplicial-homology-group}
+	By considering the \hyperref[def:chain-complex]{chain complex} with \hyperref[def:simplicial-chain-group]{simplicial chain group},
+	we have so-called \emph{simplicial homology group} induced by \autoref{def:homology-group}.
 \end{definition}

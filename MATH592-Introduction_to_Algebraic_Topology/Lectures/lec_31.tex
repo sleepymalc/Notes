@@ -1,9 +1,22 @@
-\lecture{31}{25 Mar. 10:00}{Cellular Homology}
+\lecture{31}{25 Mar. 10:00}{Local Degree and Local Homology}
 \begin{eg}
-	Consider the composition of the quotient maps below \(S^n \to \mathbb{\MakeUppercase{r}} P^n \to \quotient{\mathbb{\MakeUppercase{r}} P^n}{\mathbb{\MakeUppercase{r}} P^{n - 1}} \cong S^n\).
+	Consider the composition of the quotient maps below
+	\[
+		\begin{tikzcd}
+			{S^n} & {\mathbb{R}P^n} & {\quotient{\mathbb{R}P^n}{\mathbb{R}P^{n-1}}\cong S^n}
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow["f", curve={height=20pt}, from=1-1, to=1-3]
+		\end{tikzcd}
+	\]
 	We want to compute the \hyperref[def:degree]{degree} of this map.
-
-	Note that this restricts to a homeomorphism on each component of \(S^n \setminus \text{equator}\) as a map to \(\mathbb{\MakeUppercase{r}}P^n \setminus \mathbb{\MakeUppercase{r}} P^{n - 1}\).
+	\begin{figure}[H]
+		\centering
+		\incfig{eg:real-projective-space-degree}
+		\label{fig:eg:real-projective-space-degree}
+	\end{figure}
+	Note that this restricts to a homeomorphism on each component of \(S^n \setminus \text{equator}\) as a map to
+	\(\quotient{\mathbb{\MakeUppercase{r}}P^n}{\mathbb{\MakeUppercase{r}} P^{n - 1}}\).
 	Suppose we've oriented our copies of \(S^n\) in such a way that the homeomorphism on the top hemisphere is orientation-preserving. The homeomorphism on the bottom hemisphere
 	is given by taking the antipodal map and composing with the homeomorphism of the top hemisphere
 	\[
@@ -14,169 +27,147 @@
 	\]
 \end{eg}
 
-\subsection{Cellular Homology}
-Suppose that \(X\) is a \hyperref[def:CW-Complex]{CW complex}. Then \((X^n, X^{n - 1})\) is a \hyperref[def:good-pair]{good pair} for all \(n > 1\), and
-\(\quotient{X^n}{X^{n - 1}}\) is a \hyperref[sssec:Wedge-sum]{wedge of \(n\)-spheres}, one for each \(n\)-cell \(e^n_\alpha\). Hence,
+We can now prove \autoref{thm:calculation-with-local-degree}.
+\begin{proof}
+	If \(f\colon S^n \to S^n\) and we have some \(y\in S^n \) with \(f^{-1} (\{y\})= \{x_1, \ldots , x_m \}\), then
+	we have a nice commutative diagram as follows.
+	\[
+		\begin{tikzcd}
+			{H_n(S^n)} & {H_n(Srn)} \\
+			{\bigoplus\limits_{i=1}^m\mathbb{Z}=H_n(S^n, S^n-\{x_1, \ldots, x_m\})} \\
+			{H_n\left(\coprod\limits_{i=1}^m U_i, \coprod\limits_{i=1}^m(U_i - \{x_i\})\right)} & {H_n(S^n, S^n-\{y\})} \\
+			{\bigoplus\limits_i H_n\left(U_i, U_i - \{x_i\}\right)} & {H_n(V, V-\{y\})} & \bullet \\
+			1 & {\deg(f_\ast)} \\
+			\\
+			\\
+			{(1, 1, \ldots, 1)} & {\deg f = \sum \deg \at{f}{x_i}{}}
+			\arrow["{f_\ast}", from=1-1, to=1-2]
+			\arrow["\cong"', from=1-2, to=3-2]
+			\arrow["\cong", from=4-2, to=3-2]
+			\arrow["{\text{\hyperref[thm:long-exact-sequence-of-a-pair]{LES of pair}}}"', from=1-1, to=2-1]
+			\arrow["\cong"', from=3-1, to=2-1]
+			\arrow["\cong"', from=4-1, to=3-1]
+			\arrow[from=4-1, to=4-2]
+			\arrow[maps to, from=5-1, to=8-1]
+			\arrow[maps to, from=8-1, to=8-2]
+			\arrow[maps to, from=5-1, to=5-2]
+			\arrow["{\text{\hyperref[thm:long-exact-sequence-of-a-pair]{LES of a pair}}}", draw=none, from=1-2, to=3-2]
+			\arrow["{\text{\hyperref[thm:excision]{excision}}}"', draw=none, from=4-2, to=3-2]
+			\arrow["{\text{\hyperref[def:homology-group]{homology} of disjoint union}}", draw=none, from=4-1, to=3-1]
+			\arrow["{\text{\hyperref[thm:excision]{excision}}}", draw=none, from=3-1, to=2-1]
+			\arrow[maps to, from=5-2, to=8-2]
+		\end{tikzcd}
+	\]
+	where we trace around the outside of the diagram at the bottom, which just proves the result.
+\end{proof}
+
+\hr
+
+Let's grab some intuition. \emph{What really is local homology}?
+
+By \hyperref[thm:excision]{excision}, there is an isomorphism \(H_n(S^n, S^n \setminus \{x_i\}) \cong H_n(U, U \setminus \{x_i\})\) for any open
+neighborhood \(U\) of \(x_i\).
+
+The long \hyperref[def:exact-sequence]{exact sequence} of a \hyperref[def:good-pair]{pair} also gives us
+\par
+\adjustbox{scale=0.9,center}{%
+	\begin{tikzcd}[column sep=small]
+		\ldots & {H_k(S^n\setminus\{x_i\})} & {H_k(S^n)} & {H_k(S^n, S^n\setminus\{x_i\})} & {H_{k-1}(S^n\setminus\{x_i\})} & \ldots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow[from=1-4, to=1-5]
+		\arrow[from=1-5, to=1-6]
+	\end{tikzcd}
+}
+
+\par Since \(S^n \setminus \{x_i\}\) is homeomorphic to an open \(n\)-ball, we see that \(H_k(S^n \setminus \{x_i\}) = H_{k - 1}(S^n \setminus \{x_i\}) = 0\).
+With this in mind, \(j_\ast\) is an isomorphism.
+
+We want to think about what \(j_\ast\) does when \(k = n\), i.e., when this is an isomorphism \(\mathbb{\MakeUppercase{z}}\cong H_n(S^n) \to H_n(S^n, S^n \setminus \{x_i\}) \cong \mathbb{Z}\).
+
+We see that \(\Delta_1 - \Delta_2\) generate \(H_n(S^n)\), where \(\Delta_1, \Delta_2\) are the top and bottom hemisphere indicated below.
+\begin{figure}[H]
+	\centering
+	\incfig{les-on-relative-spheres}
+	\label{fig:les-on-relative-spheres}
+\end{figure}
+We then understand that \(j_\ast(\Delta_1 - \Delta_2) = \Delta_1 - \Delta_2 = \Delta_1\) since \(\Delta_2 = 0\) in \(C_n(S^n)/C_n(S^n \setminus \{x_i\})\).
+
+The upshot is that \(H_n(S^n, S^n \setminus \{x\})\) is generated by an \hyperref[def:standard-simplex]{\(n\)-simplex} with \(x\) in its interior.
+
+Suppose \(M\) is an \(n\)-manifold. Then \(H_n(M, M \setminus \{x\}) \cong H_n(U, U \setminus \{x\})\), where \(U\) is a small ball around \(x\).
+Because \(U\) is a ball homeomrphic to \(\mathbb{\MakeUppercase{r}} ^n\), we see that
 \[
-	H_k(X^n, X^{n - 1}) \cong \begin{dcases}
-		0,                                                                    & \text{ if } k\neq n ; \\
-		\langle e_\alpha^n \mid  e_\alpha^n \text{ is an \(n\)-cell} \rangle, & \text{ if } k = n .
-	\end{dcases}
+	H_n(M, M \setminus \{x\}) \cong H_n(U, U \setminus \{x\}) \cong H_n(\mathbb{\MakeUppercase{r}} ^n, \mathbb{\MakeUppercase{r}} ^n \setminus \{x\}).
+\]
+By the long \hyperref[def:exact-sequence]{exact sequence} of a \hyperref[def:good-pair]{pair}
+\[
+	\begin{tikzcd}[column sep=small]
+		{0=H_n(\mathbb{R}^n)} & {H_n(\mathbb{R}^n, \mathbb{R}^n\setminus\{x\})} & {H_{n-1}(\mathbb{R}^n\setminus\{x\})} & {H_{n-1}(\mathbb{R}^n)=0}
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+	\end{tikzcd}
+\]
+And since \(\mathbb{\MakeUppercase{r}}^n \setminus \{x\}\) is \hyperref[def:homotopy-equivalence]{homotopy equivalent} to an \(n - 1\) sphere, this means that
+\(H_n(\mathbb{\MakeUppercase{r}} ^n, \mathbb{\MakeUppercase{r}} ^n \setminus \{x\}) \cong \mathbb{\MakeUppercase{z}} \). By homework, this
+connecting homomorphism is given by taking the \hyperref[def:boundary]{boundary} of a \hyperref[def:relative-cycle]{relative cycle} as below.
+\begin{figure}[H]
+	\centering
+	\incfig{connecting-homomorphism-relative-homology-rn}
+	\label{fig:connecting-homomorphism-relative-homology-rn}
+\end{figure}
+
+We intuitively want to use this idea to compute \hyperref[def:degree]{degree} using this idea. We use naturality of the long \hyperref[def:exact-sequence]{exact sequence},
+namely the fact that where \(f \colon (U_i, U_i \setminus \{x_i\}) \to (V, y)\) is a map of \hyperref[def:good-pair]{pairs}, then the following diagram commutes.
+\[
+	\begin{tikzcd}
+		\ldots & {H_n(U_i, U_i\setminus\{x_i\})} & {H_{n-1}(U_i, U_i\setminus\{x_i\})} & \ldots \\
+		\ldots & {H_n(V, V\setminus\{y\})} & {H_{n-1}(V, V\setminus\{y\})} & \ldots
+		\arrow[from=1-1, to=1-2]
+		\arrow[from=1-2, to=1-3]
+		\arrow[from=1-3, to=1-4]
+		\arrow["{f_\ast}", from=1-3, to=2-3]
+		\arrow[from=2-3, to=2-4]
+		\arrow[from=2-2, to=2-3]
+		\arrow["{f_\ast}", from=1-2, to=2-2]
+		\arrow[from=2-1, to=2-2]
+	\end{tikzcd}
+\]
+By naturality of the long \hyperref[def:exact-sequence]{exact sequence} and the isomorphism discussed above, we can compute the \hyperref[def:local-degree]{local degree}
+of a map \(S^n \to S^n\) at a point \(x\) by computing the \hyperref[def:degree]{degree} of the map
+\[
+	\begin{tikzcd}
+		{H_{n-1}(U\setminus\{x\})} & {H_{n-1}(V-\{y\})}
+		\arrow[from=1-1, to=1-2]
+	\end{tikzcd}
 \]
 
-\begin{definition}[Cellular chain complex]\label{def:cellular-chain-complex}
-	The \emph{cellular chain complex} of \(X\) has chain groups \(H_n(X^n, X^{n - 1})\) with \(X^{-1} = \varnothing\), and the boundary maps at \(n=0\) is given as
+In fact the \hyperref[def:local-degree]{local degree} will be the \hyperref[def:degree]{degree} restricted to a small \(S^{n - 1}\) n the neighborhood \(U\).
+\begin{figure}[H]
+	\centering
+	\incfig{computing-local-homology-idea}
+	\label{fig:computing-local-homology-idea}
+\end{figure}
+
+\begin{eg}
+	Consider
 	\[
 		\begin{split}
-			d_1 : H_1(X^1, X^0)            & \to H_0(X^0)                       \\
-			\langle \text{1-cells} \rangle & \to \langle \text{0-cells} \rangle,
+			\hat{\mathbb{\MakeUppercase{c}}} & \to \hat{\mathbb{\MakeUppercase{c}}}\\
+			z&\mapsto z^n.
 		\end{split}
 	\]
-	which is the usual \hyperref[def:boundary-homomorphism]{simplicial boundary map}. For \(n > 1\), the boundary map \(d_{n}\) are defined as
-	\[
-		d_n(e_\alpha^n) = \sum_\beta d_{\alpha\beta} e_\beta^{n - 1}
-	\]
-	where \(d_{\alpha\beta}\) is the \hyperref[def:degree]{degree} of the map
-	\[
-		\begin{tikzcd}
-			{\partial e^n_\alpha=S^{n-1}_{\alpha}} &&&& {X^{n-1}} &&&& {S^{n-1}_\beta}
-			\arrow["{\text{attaching map}}", from=1-1, to=1-5]
-			\arrow["{\text{quotient by \(\quotient{X^{n-1}}{e^{n-1}_\beta}\)}}", from=1-5, to=1-9]
-		\end{tikzcd}
-	\]
-	In pictures, this is given as the following.
-	\begin{figure}[H]
-		\centering
-		\incfig{cellular-boundary-map}
-		\label{fig:cellular-boundary-map}
-	\end{figure}
-\end{definition}
-
-\begin{definition}[Cellular homology group]\label{def:cellular-homology-group}
-	We define the so-called \emph{cellular homology group} by \hyperref[def:cellular-chain-complex]{cellular chain complex} in our usual way of defining
-	\hyperref[def:homology-group]{homology group}.
-\end{definition}
-
-\begin{theorem}\label{thm:cellular-homology-coincide}
-	The \hyperref[def:cellular-homology-group]{cellular homology groups} coincide with the \hyperref[def:singular-homology-group]{singular homology groups}.
-\end{theorem}
-
-\autoref{thm:cellular-homology-coincide} implies the following.
-\begin{corollary}
-	We have the followings.
-	\begin{itemize}
-		\item \(H_n(X) = 0\) if \(X\) has a \hyperref[def:CW-Complex]{CW complex} structure with no \(n\)-cells.
-		\item If \(X\) has a \hyperref[def:CW-Complex]{CW complex} with \(k\) \(n\)-cells, then \(H_n(X)\) is generated by at most \(k\) elements.
-		\item If \(H_n(X)\) is a group with a minimum of \(k\) generators, then any \hyperref[def:CW-Complex]{CW complex} structure on \(X\) must have at least \(k\) \(n\)-cells.
-		\item If \(X\) has a \hyperref[def:CW-Complex]{CW complex} with no cells in consecutive dimensions, then its homology is
-		      \hyperref[def:free-Abelian-group]{free Abelian} on its \(n\)-cells. For example \(S^n, n \geq 2\) or \(\mathbb{\MakeUppercase{c}} P^n\).
-	\end{itemize}
-\end{corollary}
-
-\begin{eg}
-	\(S^n\) with \(n \geq 2\), using the \hyperref[def:CW-Complex]{CW complex} structure of \(e^n\) attached to a single point \(x_0\). The \hyperref[def:cellular-chain-complex]{cellular chain complex} is given as
-	\[
-		\begin{tikzcd}
-			0 & 0 & {\left<e^n\right>} & 0 & \ldots & 0 & {\left<x_0\right>}
-			\arrow[from=1-1, to=1-2]
-			\arrow[from=1-2, to=1-3]
-			\arrow[from=1-3, to=1-4]
-			\arrow[from=1-4, to=1-5]
-			\arrow[from=1-5, to=1-6]
-			\arrow[from=1-6, to=1-7]
-		\end{tikzcd}
-	\]
-	So then all the boundary maps are zero, and we see that
-	\[
-		H_k(S^n) = \begin{dcases}
-			\mathbb{\MakeUppercase{z}}, & \text{ if } k=0, n ; \\
-			0,                          & \text{ otherwise}.
-		\end{dcases}
-	\]
-\end{eg}
-
-\begin{exercise}
-	Redo this calculation with other \hyperref[def:CW-Complex]{CW complex} structure on \(S^n\), e.g. glue \(2\) \(n\)-cells onto \(S^{n - 1}\) and proceed inductively.
-\end{exercise}
-
-\begin{eg}
-	Let's do this with the torus
-	\begin{figure}[H]
-		\centering
-		\incfig{eg:lec31:CW-complex-torus}
-		\label{fig:eg:lec31:CW-complex-torus}
-	\end{figure}
-
-	The \hyperref[def:cellular-chain-complex]{chain complex} looks like
-	\[
-		\begin{tikzcd}
-			0 & {\left<D\right>} & {\left<a, b\right>} & {\left<x\right>} & 0
-			\arrow[from=1-1, to=1-2]
-			\arrow[from=1-2, to=1-3]
-			\arrow[from=1-3, to=1-4]
-			\arrow[from=1-4, to=1-5]
-		\end{tikzcd}
-	\]
-	Note that \(a \mapsto x - x = 0\) and \(b \mapsto x - x = 0\) and so \(\partial_1 = 0\). Now \(D\) is glued along \(aba^{-1}b^{-1}\), so we look at the composed up map
 
 	\begin{figure}[H]
 		\centering
-		\incfig{eg:cellular-homology-calc-torus}
-		\label{fig:eg:cellular-homology-calc-torus}
+		\incfig{eg:lec31-degree-n}
+		\label{fig:eg:lec31-degree-n}
 	\end{figure}
-	We wind forwards then backwards around $a$, so the \hyperref[def:degree]{degree} is zero. The same thing happens for $b$ so
+
+	We see that
 	\[
-		\partial_2 D = 0 \cdot a + 0 \cdot b = 0.
+		\deg \at{f}{0}{} = n.
 	\]
-
-	This gives a nice \textbf{principle}, namely if a \(2\)-cell \(D\) is glued down via some \hyperref[def:word]{words} \(w\) (this only makes sense for \(2\)-cells), then the
-	coefficient to a letter \(b\) in \(\partial_2 D\) is the sum of the exponents of \(b\) in \(w\).
-
-	Now we just have that the \hyperref[def:cellular-homology-group]{homology groups} are equal to the \hyperref[def:cellular-chain-complex]{chain groups} because the boundary maps are all zero.
-\end{eg}
-
-\begin{eg}
-	A genus \(g\) surface \(\Sigma_g\) has the \hyperref[def:CW-Complex]{CW complex} structure as
-	\begin{itemize}
-		\item \(1\) \(0\)-cell \(x\).
-		\item \(2g\) \(1\)-cells \(a_1, b_1, a_2, b_2, \ldots\).
-		\item \(1\) \(2\)-cell \(D\) glued along \([a_1, b_2][a_2, b_2]\cdots[a_g, b_g]\) (a product of commutators)
-	\end{itemize}
-	We obtain the result
-	\[
-		\partial_1(a_i) = \partial_1(b_i) = x - x = 0.
-	\]
-
-	Furthermore, by the principle discussed above, we know that every \(1\)-cell appears once in the \hyperref[def:word]{word}, and its inverse appears once,
-	so all the coefficients of \(1\)-cells in \(\partial_2(D)\) are zero, so \(\partial_2(D) = 0\). This means we have a \hyperref[def:cellular-chain-complex]{chain complex}
-	\[
-		\begin{tikzcd}
-			0 & {\mathbb{Z}} & {\mathbb{Z}^{2g}} & {\mathbb{Z}} & 0
-			\arrow[from=1-1, to=1-2]
-			\arrow["0", from=1-2, to=1-3]
-			\arrow["0", from=1-3, to=1-4]
-			\arrow[from=1-4, to=1-5]
-		\end{tikzcd}
-	\]
-	And so then we have that
-	\[
-		H_k(\Sigma _{g} ) = \begin{dcases}
-			\mathbb{\MakeUppercase{z}} ,      & \text{ if } k = 0, 2 ; \\
-			\mathbb{\MakeUppercase{z}} ^{2g}, & \text{ if } k = 1;     \\
-			0,                                & \text{ otherwise}.
-		\end{dcases}
-	\]
-\end{eg}
-
-\begin{eg}[Torus example: \(\partial_2\) in more detail]
-	We're going to work through this example a bit more carefully.
-	\begin{figure}[H]
-		\centering
-		\incfig{eg:more-careful-torus-cellular}
-		\label{fig:eg:more-careful-torus-cellular}
-	\end{figure}
-	Let's zoom in on these two preimage points and use \emph{local homology} to compute this:
-	\begin{center}
-		%\includegraphics[scale=0.5]{zoom-torus-cellular-preimage}
-	\end{center}
 \end{eg}

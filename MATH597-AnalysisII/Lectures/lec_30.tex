@@ -1,1 +1,136 @@
 \lecture{30}{25 Mar. 11:00}{}
+\begin{eg}\label{eg:lec30}
+	For an example of \autoref{thm:Jordan-decomposition-theorem}, let \((X, \mathcal{A}, \mu)\) be a \hyperref[def:measure-space]{measure space},
+	\(f \colon X \to \overline{\mathbb{R}}\), and \(\nu(E) = \int_E f \,\mathrm{d} \mu\). Then
+	\begin{align*}
+		\nu^+(E) = \int_E f^+ \,\mathrm{d} \mu &  & \nu^-(E) = \int_E f^- \,\mathrm{d} \mu.
+	\end{align*}
+\end{eg}
+
+\begin{definition}[Total variation]\label{def:total-variation}
+	Let \(\nu\) be a \hyperref[def:signed-measure]{signed measure} on \((X, \mathcal{A})\). The \emph{total variation measure of \(\nu\)} is
+	\(\left\vert \nu \right\vert \coloneqq \nu^+ + \nu^-\).
+\end{definition}
+\begin{remark}
+	This is a \hyperref[def:signed-measure]{positive measure} on $X$.
+\end{remark}
+
+\begin{eg}
+	In the above \hyperref[eg:lec30]{example}, \(\left\vert \nu \right\vert (E) = \int_E \left\vert f \right\vert \,\mathrm{d} \mu\).
+\end{eg}
+
+\begin{lemma}
+	We have the following
+	\begin{enumerate}
+		\item \(\left\vert \nu(E) \right\vert \leq \left\vert \nu \right\vert(E)\).
+		\item \(E\) is \hyperref[def:null-set-for-a-signed-measure]{\(\nu\)-null} if and only if \(E\) is \hyperref[def:null-set-for-a-signed-measure]{\(\left\vert \nu \right\vert\)-null}.
+		\item If \(\kappa\) is another \hyperref[def:signed-measure]{signed measure}, then \(\kappa \perp \nu\)
+		      if and only if \(\kappa \perp \left\vert \nu \right\vert\) if and only if \(\kappa \perp \nu^+\) and \(\kappa \perp \nu^-\).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	\todo{DIY}
+\end{proof}
+
+\begin{definition}[Finite signed measure]\label{def:finite-signed-measure}
+	A \hyperref[def:signed-measure]{signed measure} \(\nu\) is \emph{finite} if \(\left\vert \nu \right\vert\) is a \hyperref[def:finite-measure]{finite measure},
+	and similarly for \hyperref[def:finite-measure]{\(\sigma\)-finite}.
+
+	This holds if and only if \(\nu^+,\nu^-\) are both \hyperref[def:finite-measure]{finite} (resp. \hyperref[def:finite-measure]{\(\sigma\)-finite}) measures.
+\end{definition}
+
+\subsection{Absolutely Continuous Measures}
+\begin{definition}[Absolutely continuous]\label{def:absolutely-continuous}
+	Let \(\mu\) be a \hyperref[def:signed-measure]{positive measure}, \(\nu\) be a \hyperref[def:signed-measure]{signed measure}, both on \((X, \mathcal{A})\). We say that \(\nu\) is
+	\emph{absolutely continuous with respect to \(\mu\)}, denoted as \(\nu \ll \mu\), provided that for all \(E \in \mathcal{A}, \mu(E) = 0\) implies \(\nu(E) = 0\).
+\end{definition}
+\begin{remark}
+	This is equivalent to every \hyperref[def:null-set-for-a-signed-measure]{\(\mu\)-null} set being \hyperref[def:null-set-for-a-signed-measure]{\(\nu\)-null}.
+\end{remark}
+\begin{eg}
+	If \((X ,\mathcal{A}, \mu)\), \(f \colon X \to \overline{\mathbb{R}}\), \(\nu(E) = \int_E f \,\mathrm{d} \mu\), then \(\nu \ll \mu\).
+\end{eg}
+
+\begin{notation}
+	\(\,\mathrm{d} \nu = f \,\mathrm{d} \mu\) means \(\nu\) is a \hyperref[def:signed-measure]{signed measure} defined by
+	\[
+		\nu(E) = \int_E f \,\mathrm{d} \mu.
+	\]
+\end{notation}
+
+\begin{lemma}
+	If \(\mu\) is a \hyperref[def:signed-measure]{positive measure}, \(\nu\) is a \hyperref[def:signed-measure]{signed measure} on \((X, \mathcal{A})\), then
+	\begin{enumerate}
+		\item \(\nu \ll \mu\) if and only if \(\left\vert \nu \right\vert \ll \mu\) if and only if \(\nu^+ \ll \mu\) and \(\nu^- \ll< \mu\).
+		\item \(\nu \ll \mu\) and \(\nu \perp \mu\) implies \(\nu = 0\).
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	\todo{DIY 1.}
+
+	For 2., write \(X = A \cup B\), \(A \cap B = \varnothing\), \(A\) \hyperref[def:null-set-for-a-signed-measure]{\(\mu\)-null}, \(B\) \hyperref[def:null-set-for-a-signed-measure]{\(\nu\)-null}.
+	Then
+	\[
+		\nu(E) = \nu(E \cap A) + \nu(E \cap B) = \nu(E \cap A).
+	\]
+	Then \(E \cap A \subseteq A\), so \(\nu(E \cap A) = 0\). By \hyperref[def:absolutely-continuous]{absolute continuity}, \(\nu(E \cap A) = 0\), thus \(\nu(E) = 0\).
+\end{proof}
+
+\begin{theorem}[Radon-Nikodym theorem]\label{thm:Radon-Nikodym-theorem}
+	Suppose \(\mu\) is a \hyperref[def:finite-signed-measure]{\(\sigma\)-finite positive measure}, \(\nu\) is a \hyperref[def:finite-signed-measure]{\(\sigma\)-finite signed measure},
+	and suppose \(\nu \ll \mu\). Then there exists \(f \colon X \to \overline{\mathbb{R}}\) such that \(\,\mathrm{d} \nu = f \,\mathrm{d} \mu\), in other words \(\nu(E) = \int_E f \,\mathrm{d} \mu\).
+
+	If \(g\) is another such function with \(\,\mathrm{d} \nu = g \,\mathrm{d} \mu\) then \(f = g\) \hyperref[def:mu-almost-everywhere]{\(\mu\)-a.e.}.
+\end{theorem}
+\begin{proof}
+	Next class, we'll prove a more general form called \hyperref[thm:Lebesgue-Radon-Nikodym-theorem]{Lebesgue Radon Nikodym theorem}.
+\end{proof}
+
+\begin{definition}[Randon-Nikodym derivative]\label{def:Radon-Nikodym-derivative}
+	Suppose \(\nu \ll \mu\). The \emph{Radon-Nikodym derivative of \(\nu\) with respect to \(\mu\)} is a function
+	\[
+		\frac{\,\mathrm{d} \nu}{\,\mathrm{d} \mu} \colon X \to \overline{\mathbb{R}}
+	\]
+	such that
+	\[
+		\nu(E) = \int_E \frac{\,\mathrm{d} \nu}{\,\mathrm{d} \mu} \,\mathrm{d} \mu
+	\]
+	for all \(E \in \mathcal{A}\).
+\end{definition}
+\begin{remark}
+	i.e. we have \(\,\mathrm{d} \nu = \frac{\,\mathrm{d} \nu}{\,\mathrm{d} \mu} \,\mathrm{d} \mu\).
+\end{remark}
+\begin{note}
+	By \autoref{thm:Radon-Nikodym-theorem}, such a function exists and is unique up to equivalence \hyperref[def:mu-almost-everywhere]{\(\mu\)-a.e.}
+	in the \hyperref[def:finite-signed-measure]{\(\sigma\)-finite} case.
+\end{note}
+\begin{eg}
+	Say \(F(X) = e^{2x} \colon \mathbb{R} \to \mathbb{R}\). This is continuous and strictly increasing, so we may define a \hyperref[def:Lebesgue-Stieltjes-measure]{Lebesgue-Stieltjes measure}
+	\(\mu_F\) on \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\).
+
+	This is defined to be the unique locally finite measure satisfying \(\mu_F([a,b]) = F(b) - F(a) = e^{2b} - e^{2a}\). Then one can check that
+	\[
+		\mu_F(E) = \int_E 2e^{2x} \,\mathrm{d} x
+	\]
+	by uniqueness and the classical \underline{fundamental theorem of calculus}, since the right-hand side is a locally finite Borel measure, and
+	\(\kappa([a,b]) = e^{2b} - e^{2a}\), thus \(\mu_F = \kappa\).
+
+	Therefore, \(\mu_F \ll m\) and \(\frac{\,\mathrm{d} \mu_F}{\,\mathrm{d} m} = 2e^{2x} = \frac{\,\mathrm{d} F}{\,\mathrm{d} x}\).
+\end{eg}
+
+\begin{eg}
+	Let \(C(X) \colon \mathbb{R} \to \mathbb{R}\) be the \hyperref[sssec:Cantor-Function]{Cantor function}. Then \(C^\prime(x) = 0\) outside the \hyperref[eg:lec8:Cantor-set]{Cantor set}.
+	But we don't always have
+	\[
+		\mu_C(E) \neq \int_E 0 \,\mathrm{d} x.
+	\]
+
+	So the candidate derivative is \(0\), but this fails. In particular,
+	\[
+		C(b) - C(a) \neq \int_a^b C'(x) \,\mathrm{d} x.
+	\]
+	In fact, \(\mu_C \not\ll m\) because \(\mu_C \perp m\) and \(\mu_C \neq 0\).
+
+	Thus, the existence of a derivative \hyperref[def:mu-almost-everywhere]{almost everywhere} and continuity is not enough to guarantee a version of the \underline{fundamental theorem of calculus} holds.
+\end{eg}

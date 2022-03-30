@@ -1,1 +1,120 @@
 \lecture{31}{28 Mar. 11:00}{}
+\begin{lemma}\label{lma:finite-singular}
+	Let \(\mu, \nu\) be \hyperref[def:finite-signed-measure]{finite positive measures} on \((X, \mathcal{A})\). Then either
+	\begin{enumerate}
+		\item \(\nu \perp \mu\).
+		\item There exists an \(\epsilon > 0\), an \(F \in \mathcal{A}\) such that \(\mu(F) > 0\) and \(F\) is a
+		      \hyperref[def:positive-set-for-a-signed-measure]{positive set for the measure} \(\nu - \epsilon \mu\).
+
+		      i.e., for all \(G \subseteq F\), \(\nu(G) \geq \epsilon \mu(G)\).
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	Let \(\kappa_n = \nu - (1/n)\mu\). By \autoref{thm:Hahn-decomposition-theorem} we have \(X = P_n \cup N_n\) for \(P_n\) \hyperref[def:positive-set-for-a-signed-measure]{positive} for \(\kappa_n\),
+	\(N_n\) \hyperref[def:negative-set-for-a-signed-measure]{negative} for \(K_n\).
+
+	Let \(P = \bigcup_n P_n, N = \bigcap_n N_n = X \setminus P\), then \(X = P \cup N\).
+
+	We see that for any \(N\) we have \(\kappa_n(N) \leq 0\) because \(N \subseteq N_n\). Thus,
+	\[
+		0 \leq \nu(N) \leq \frac{1}{n}\mu(N).
+	\]
+	This implies \(\nu(N) = 0\). Because \(\nu\) is \hyperref[def:signed-measure]{positive} for any \(N^\prime  \subseteq N\) we have \(0 \leq \nu(N^\prime ) \leq \nu(N)\),
+	and thus \(\nu(N^\prime ) = 0\). This shows \(N\) is \hyperref[def:null-set-for-a-signed-measure]{null} for \(N\).
+
+	If \(\mu(P) = 0\), then \(\nu \perp \mu\).
+
+	If \(\mu(P) \neq 0\), then we have \(\mu(P_n) > 0\) for some \(n\).
+
+	With \(F = P_n\) and \(\epsilon = 1/n\), then \(F\) is a \hyperref[def:positive-set-for-a-signed-measure]{positive set} for \(\kappa_n = \nu - (1/n)\mu\) as desired.
+\end{proof}
+
+\begin{theorem}[Lebesgue-Radon-Nikodym theorem]\label{thm:Lebesgue-Radon-Nikodym-theorem}
+	Let \(\mu\) be a \hyperref[def:finite-signed-measure]{\(\sigma\)-finite positive measure}, \(\nu\) a \hyperref[def:finite-signed-measure]{\(\sigma\)-finite signed measure}
+	on \((X, \mathcal{A})\).
+
+	Then there are unique \(\lambda,\rho\) \hyperref[def:finite-signed-measure]{\(\sigma\)-finite signed measures} on \((X, \mathcal{A})\) such that \(\lambda \perp \mu\),
+	\(\rho \ll \mu\), \(\nu = \lambda + \rho\).
+
+	Furthermore, there exists a \hyperref[def:measurable-function]{measurable function} \(f \colon X \to \overline{\mathbb{R}}\) such that \(\,\mathrm{d} \rho = f \,\mathrm{d} \mu\) (that is
+	for all \(E \in \mathcal{A}\), \(\rho(E) = \int_E f \,\mathrm{d} \mu\)).
+
+	And if there is another \(g\) such that \(\,\mathrm{d} \rho = g \,\mathrm{d} \mu\), then \(f = g\), \hyperref[def:mu-almost-everywhere]{\(\mu\)-a.e.}.
+
+	Notationally, we may write \(\,\mathrm{d} \nu = \,\mathrm{d} \lambda + f \,\mathrm{d} \mu\), where \(\,\mathrm{d} \lambda\)
+	and \(\,\mathrm{d} \mu\) are \hyperref[def:singular]{singular} to each other.
+\end{theorem}
+
+\begin{proof}
+	We prove it step by step.
+	\begin{enumerate}
+		\item Assume \(\mu, \nu\) are \hyperref[def:finite-signed-measure]{finite positive measures}. Let
+		      \begin{align*}
+			      \mathscr{F} & = \left\{g \colon X \to [0,\infty] \mid \int_E g \,\mathrm{d} \mu \leq \nu(E), \forall E \in \mathcal{A}\right\} \\
+			                  & = \{g \colon X \to [0,\infty] \mid \,\mathrm{d} \nu - g\,\mathrm{d} \mu \text{ is a positive measure}\}.
+		      \end{align*}
+		      This set is nonempty since \(g = 0 \in \mathscr{F}\). Let \(s = \sup\{\int_X g \,\mathrm{d} \mu \mid g \in \mathscr{F}\}\).
+
+		      \paragraph{Claim.} There is an \(f \in \mathscr{F}\) such that \(s = \int_X f \,\mathrm{d} \mu\).
+		      \begin{mdframed}[skipabove=0.1in,skipbelow=0.1in]
+			      If \(g, h \in \mathscr{F}\), we can define \(u(x) = \max\{g(x),h(x)\}\). Then \(u \in \mathscr{F}\). Why? Well let \(A = \{x \mid g(x) \geq h(x)\}\). Then
+			      \begin{align*}
+				      \int_E u \,\mathrm{d} \mu & = \int_{E \cap A} g \,\mathrm{d} \mu + \int_{E \cap A^c} h \,\mathrm{d} \mu \\
+				                                & \leq \nu(E \cap A) + \nu(E \cap A^c) = \nu(E).
+			      \end{align*}
+
+			      There exist \hyperref[def:measurable-function]{measurable functions} \(g_1,g_2,\ldots \in \mathscr{F}\) such that
+			      \[
+				      \lim_{n \to \infty} \int_X g_n \,\mathrm{d} \mu = s.
+			      \]
+
+			      We can replace \(g_2\) by \(\max(g_1,g_2)\), \(g_3\) by \(\max(g_1,g_2,g_3)\), so that we may assume \(0 \leq g_1 \leq g_2 \leq \ldots\).
+
+			      Then we still know that \(\lim_{n \to \infty} \int_X g_n \,\mathrm{d} \mu = s\), as all the relevant integrals are bounded above by \(s\).
+			      Now let \(f(x) = \sup_n g_n(x) = \lim_{n \to \infty} g_n(x)\). By \hyperref[thm:MCT]{Monotone convergence theorem},
+			      \[
+				      \int_E f \,\mathrm{d} \mu = \lim_{n \to \infty} \int_E g_n \,\mathrm{d} \mu \leq \nu(E).
+			      \]
+
+			      Thus, \(f \in \mathscr{F}\). When \(E = X\) we get \(\int_X f \,\mathrm{d} \mu = s\) as desired.
+		      \end{mdframed}
+
+		      Let \(\rho(E) \coloneqq \int_E f \,\mathrm{d} \mu\). We of course have \(\rho \ll \mu\). And also we know
+		      \[
+			      0 \leq \rho(X) = \int_X f \,\mathrm{d} \mu \leq \nu(X) < \infty.
+		      \]
+		      Thus, \(\rho\) is a \hyperref[def:finite-signed-measure]{finite positive measure}. We can define \(\lambda(E) \coloneqq \nu(E) - \rho(E)\). Then
+		      \[
+			      \lambda(E) = \nu(E) - \int_E f \,\mathrm{d} \mu \geq 0
+		      \]
+		      because \(f \in \mathscr{F}\). Thus, \(\lambda\) is also a \hyperref[def:signed-measure]{positive measure}, and \(\lambda(X) \leq \nu(X) < \infty\).
+		      It remains to show the following.
+
+		      \paragraph{Claim.} \(\lambda \perp \mu\).
+		      \begin{mdframed}[skipabove=0.1in,skipbelow=0.1in]
+			      Suppose not, by \autoref{lma:finite-singular}, there exists \(\epsilon > 0\), \(F \in \mathcal{A}\) such that \(\mu(F) > 0\) and \(F\) is a
+			      \hyperref[def:positive-set-for-a-signed-measure]{positive set} for \(\lambda - \epsilon \mu\).
+
+			      Then this says that \(\,\mathrm{d} \lambda - \epsilon \mathbbm{1}_{F} \,\mathrm{d} \mu\) is a \hyperref[def:signed-measure]{positive measure}, that is
+			      \(\,\mathrm{d} \nu - f \,\mathrm{d} \mu - \epsilon \mathbbm{1}_{R} \,\mathrm{d} \mu\) is a \hyperref[def:signed-measure]{positive measure}.
+			      This will break maximality of \(f\).
+
+			      Explicitly, let \(g(x) = f(x) + \epsilon \mathbbm{1}_{F} (x)\). Then for all \(E \in \mathcal{A}\) we have
+			      \[
+				      \begin{split}
+					      \int_E g \,\mathrm{d} \mu & = \int_E f \,\mathrm{d} \mu + \epsilon\mu(E \cap F)                 \\
+					      & = \nu(E) - \lambda(E) + \epsilon \mu(E \cap F)                      \\
+					      & \leq \nu(E) - \lambda(E \cap F) + \epsilon\mu(E \cap F) \leq \nu(E)
+				      \end{split}
+			      \]
+			      since \(\lambda(E \cap F) - \epsilon\mu(E \cap F) \geq 0\). Thus, \(g \in \mathscr{F}\). We then see that
+			      \[
+				      s \geq \int_X g \,\mathrm{d} \mu  = \int_X f \,\mathrm{d} \mu + \int_X \epsilon \mathbbm{1}_{F} \,\mathrm{d} \mu = s + \epsilon\mu(F) > s.
+			      \]
+			      This is a contradiction! Perfect!
+		      \end{mdframed}
+	\end{enumerate}
+	There are now technical things, such as extending to \hyperref[def:finite-signed-measure]{\(\sigma\)-finite measures} and uniqueness. These are relatively easy compared to this part.
+\end{proof}
+

@@ -1,0 +1,176 @@
+\lecture{34}{1 Apr. 10:00}{Proof of \autoref{thm:cellular-homology-agrees-with-singular-homology}}
+We're now going to work towards proving that \hyperref[thm:cellular-homology-agrees-with-singular-homology]{cellular homology agrees with singular homology}.
+First we need some nontrivial preliminaries.
+\begin{lemma}\label{lma:lec-34}
+	We have that
+	\begin{enumerate}
+		\item \(H_k(X^n, X^{n - 1}) = \begin{dcases}
+			      0,                             & \text{ if } k\neq n ; \\
+			      \left< n\text{-cells}\right> , & \text{ if } k=n .
+		      \end{dcases}\)
+		\item \(H_k(X^n) = 0\) for all \(k > n\). If \(X\) is finite dimensional, then \(H_k(X^n) = 0\) for all \(k > \dim X\).
+		\item The inclusion \(X^n \hookrightarrow X\) induces \(H_k(X^n) \to H_k(X)\). Then this map is
+		      \begin{itemize}
+			      \item an isomorphism for \(k < n\)
+			      \item surjective for \(k = n\)
+			      \item zero for \(k > n\).
+		      \end{itemize}
+	\end{enumerate}
+\end{lemma}
+\begin{exercise}
+	Check 2. and 3. directly in the case that the \hyperref[def:CW-Complex]{CW complex} structure is a \hyperref[def:delta-complex]{\(\Delta\)-complex}
+	structure using \hyperref[def:simplicial-chain-group]{simplicial chains}.
+\end{exercise}
+\begin{proof}
+	For 1., we see that
+	\[
+		\quotient{X^n}{X^{n-1}} \cong \text{\hyperref[sssec:Wedge-sum]{wedge} of one \(n\)-sphere for each \(n\)-cell}.
+	\]
+
+	Now we prove 2. and 3., We consider the long \hyperref[def:exact-sequence]{exact sequence} of a \hyperref[def:good-pair]{pair} for fixed \(n\),
+	\[
+		\begin{tikzcd}
+			\ldots & {H_{k+1}(X^n, X^{n-1})} & {H_k(X^{n-1})} \\
+			& {H_k(X^n)} & {H_k(X^n, X^{n-1})} & \ldots
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow["\cong"', from=1-3, to=2-2]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=2-3, to=2-4]
+		\end{tikzcd}
+	\]
+
+	When \(k + 1 < n\) or \(k > n\) then \(H_{k + 1}(X^n, X^{n - 1}) = 0\) and \(H_k(X^n, X^{n - 1}) = 0\), so the above map \(H_k(X^{n - 1}) \to H_k(X^n)\)
+	is an isomorphism. We also get sequences telling us the injective and surjective maps when \(k = n\) or \(k = n - 1\),
+	\[
+		\begin{tikzcd}
+			\ldots & {0=H_{n+1}(X^n, X^{n-1})} & {H_n(X^{n-1})} & {H_n(X^n)} \\
+			& {H_{n}(X^n, X^{n-1})} & {H_{n-1}(X^{n-1})} & {H_{n-1}(X^n)} \\
+			& {H_{n-1}(X^n, X^{n-1})=0} & \ldots
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-4, to=2-2]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=2-3, to=2-4]
+			\arrow[from=2-4, to=3-2]
+			\arrow[from=3-2, to=3-3]
+		\end{tikzcd}
+	\]
+	So the maps \(H_n(X^{n - 1}) \to H_n(X^n)\) is injective, and the map \(H_{n - 1}(X^{n - 1}) \to H_{n - 1}(X^n)\) is surjective.
+
+	Fix \(k\), then we get a pile of maps induced by the inclusions \(X^n \hookrightarrow X^{n + 1}\)
+	\[
+		\begin{tikzcd}
+			{H_k(X^0)} & {H_k(X^1)} & {H_k(X^2)} & \ldots \\
+			& {H_k(X^{k-1})} & {H_k(X^{k})} & {H_k(X^{k+1})} \\
+			& {H_k(X^{k+2})} & {H_k(X^{k+3})} & \ldots
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=1-4, to=2-2]
+			\arrow["{\text{inj.}}", from=2-2, to=2-3]
+			\arrow["{\text{surj.}}", from=2-3, to=2-4]
+			\arrow["\cong"{description}, color={rgb,255:red,214;green,92;blue,92}, from=2-4, to=3-2]
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=3-2, to=3-3]
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=3-3, to=3-4]
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=1-1, to=1-2]
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=1-2, to=1-3]
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=1-3, to=1-4]
+		\end{tikzcd}
+	\]
+	\begin{note}
+		This sequence is not \hyperref[def:exact-sequence]{exact}. Descriptions of maps (in \textcolor{red}{red}) follow
+		from our analysis of the long \hyperref[def:exact-sequence]{exact sequence} of a \hyperref[def:good-pair]{pair} above.
+	\end{note}
+
+	To prove 2.,
+	\begin{itemize}
+		\item \(k = 0\), we do this by hand.
+		\item \(k \geq 1\), then \(H_k(X^0) = 0\), so we have that \(H_k(X^0), \ldots, H_k(X^{k - 1})\) are all zero from the
+		      isomorphisms above. That is the \(k\)-th \hyperref[def:singular-homology-group]{homology} \(H_k(X^n) = H_k(X^n)\)
+		      is zero for every \(n\)-skeleton where \(n < k\), just as desired.
+	\end{itemize}
+	We also have the following collection of maps for fixed \(k\)
+	\[
+		\begin{tikzcd}
+			{H_k(X^k)} & {H_k(X^{k+1})} & {H_k(X^{k+2})} & \ldots
+			\arrow["{\text{surj.}}", color={rgb,255:red,214;green,92;blue,92}, from=1-1, to=1-2]
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=1-2, to=1-3]
+			\arrow["\cong", color={rgb,255:red,214;green,92;blue,92}, from=1-3, to=1-4]
+		\end{tikzcd}
+	\]
+	This implies 3. when \(X\) is finite dimensional. For general \(X\), we use the fact that every \hyperref[def:standard-simplex]{simplex}
+	has image contained in some finite skeleton (since image is compact).
+\end{proof}
+
+\begin{proof}[Proof of \autoref{thm:cellular-homology-agrees-with-singular-homology}]
+	We get some \hyperref[def:exact-sequence]{exact sequences} from our \hyperref[lma:lec-34]{preliminaries},
+	\[
+		\begin{tikzcd}[column sep=small]
+			{0=H_{n+1}(X^n)} & {H_n(X^{n})} & {H_n(X^{n}, X^{n+1})} & {H_{n-1}(X^{n,-1})} \\
+			{H_{n+1}(X^{n+1}, X^n)} & {H_n(X^n)} & {H_n(X^{n+1})} & {H_n(X^{n+1}, X^n)=0}
+			\arrow[from=1-2, to=1-3]
+			\arrow[from=1-3, to=1-4]
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=2-1, to=2-2]
+			\arrow[from=2-2, to=2-3]
+			\arrow[from=2-3, to=2-4]
+		\end{tikzcd}
+	\]
+	These come from the long exact sequences of a pair combined with the things we've deduced in the \hyperref[lma:lec-34]{preliminaries}.
+	We can paste these together into a diagram, we have
+
+	\par
+	\adjustbox{scale=0.8,center}{%
+		\begin{tikzcd}[column sep=small]
+			&&&& {\color{red}0} \\
+			& {\color{red}0} && {\color{red}H_n(X^{n+1})\cong H_n(X)} \\
+			&& {\color{red}H_n(X^n)} \\
+			\ldots & {\color{red}H_{n+1}(X^{n+1}, X^n)} && {\color{red}H_n(X^n, X^{n-1})} && {H_{n-1}(X^{n-1}, X^{n-2})} & \ldots \\
+			&&&& {\color{red}H_{n-1}(X^{n-1})} \\
+			&&& 0
+			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=2-2, to=3-3]
+			\arrow["{\partial_{n+1}}", color={rgb,255:red,214;green,92;blue,92}, from=4-2, to=3-3]
+			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=2-4, to=1-5]
+			\arrow[color={rgb,255:red,214;green,92;blue,92}, from=3-3, to=2-4]
+			\arrow[from=4-6, to=4-7]
+			\arrow["{d_n}"', from=4-4, to=4-6]
+			\arrow["{\partial_n}"', color={rgb,255:red,214;green,92;blue,92}, from=4-4, to=5-5]
+			\arrow["{j_{n-1}}"', from=5-5, to=4-6]
+			\arrow[from=6-4, to=5-5]
+			\arrow["{d_{n+1}}", from=4-2, to=4-4]
+			\arrow["{j_n}", color={rgb,255:red,214;green,92;blue,92}, from=3-3, to=4-4]
+			\arrow[from=4-1, to=4-2]
+		\end{tikzcd}
+	}
+
+	\par Hatcher\cite{hatcher2002algebraic} tells us this diagram commutes, and what we've done here tells us that the two red diagonal pieces
+	crossing at \(H_n(X^n)\) are \hyperref[def:exact]{exact}. We also have \hyperref[def:exact]{exactness} of the bottom right diagonal
+	by just going down a degree.
+
+	Then this has to at least be a \hyperref[def:chain-complex]{chain complex} since the diagram commutes because of Hatcher\cite{hatcher2002algebraic}. We then know that
+	\[
+		d_{n} \circ d_{n+1}  = (j_{n - 1} \circ \underbrace{\partial_n) \circ (j_n}_{0} \circ \partial_{n + 1}) = 0.
+	\]
+
+	By \hyperref[def:exact]{exactness}, we know that if \(\iota_\ast \colon H_n(X^n) \to H_n(X^{n + 1})\) then using the first isomorphism theorem,
+	\[
+		H_n(X) \cong H_n(X^{n + 1}) = \im \iota_\ast \cong  \quotient{H_n(X^n)}{\ker \iota_\ast} = \quotient{H_n(X^n)}{\im \partial_{n + 1}}.
+	\]
+
+	Since \(j_n\) injects by \hyperref[def:exact]{exactness},
+	\begin{align*}
+		j_n : H_n(X^n)       & \xrightarrow{\cong} j_n(H_n(X^n))                                    \\
+		\im \partial_{n + 1} & \xrightarrow{\cong} \im (j_n \circ \partial_{n + 1}) = \im d_{n + 1}
+	\end{align*}
+	\(j_{n - 1}\) must also inject by \hyperref[def:exact]{exactness}, and so applying \hyperref[def:exact]{exactness}:
+	\[
+		\ker d_n = \ker \partial_n = \im j_n.
+	\]
+
+	Then we just do some group theory, the \(n\)-th \hyperref[def:cellular-homology-group]{cellular homology group} is
+	\[
+		\quotient{ker d_n}{\im d_{n + 1}} \cong \quotient{\im j_n}{\im (j_n \circ \partial_{n + 1})} \cong \quotient{H_n(X^n)}{\im \partial_{n + 1}} \cong H_n(X).
+	\]
+
+	There is one thing left to show, namely commutativity of this map. We claim that the differentials \(d_n = j_n \circ \partial_{n + 1}\)
+	satisfy the formula (in terms of degree) that we stated. This is done by direct analysis of definitions of maps; details in Hatcher\cite{hatcher2002algebraic}.
+\end{proof}

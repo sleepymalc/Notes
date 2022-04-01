@@ -1,0 +1,143 @@
+\lecture{35}{1 Apr. 10:00}{}
+\subsection{The Formal Viewpoint: Eilenberg-Steenrod axioms}
+\begin{defn}\label{defn-natural-transformation}
+	Given two functors $F, G : C \to D$, a natural transformation $\eta : F \to G$ is a collection of maps $\eta_X : F(X) \to G(X)$ lying in $D$ for every $X \in C$ so that for any map $f : X \to Y$ we have a commutative diagram:
+	\begin{align*}
+		\xymatrix{
+		F(X) \ar[r]^{\eta_X} \ar[d]_{F(f)} & G(X) \ar[d]^{G(f)} \\
+		F(Y) \ar[r]_{\eta_Y}               & G(Y)
+		}
+	\end{align*}
+\end{defn}
+
+\begin{defn}\label{defn-eilenberg-steenrod}
+	A \ul{homology theory} is a sequence of functors:
+	\begin{align*}
+		H_n : \text{pairs } (X, A) \text{ of spaces} \to \text{abelian groups}
+	\end{align*}
+	Equipped with natural transformations $\partial : H_n(X, A) \to H_{n - 1}(A)$, where $H_{n - 1}(A) := H_{n - 1}(A, \0)$ called the boundary map. Naturality here means that for any map $f : (X, A) \to (Y, B)$ we have a commutative diagram:
+	\begin{align*}
+		\xymatrix{
+		H_n(X, A) \ar[r]^{\partial} \ar[d]_{f_\ast} & H_{n - 1}(A) \ar[d]^{f_\ast} \\
+		H_n(Y, B) \ar[r]^{\partial}                 & H_{n - 1}(B)
+		}
+	\end{align*}
+	These must satisfy these axioms:
+	\begin{enumerate}[(1)]
+		\item (Homotopy) If $f, g : (X, A) \to (Y, B)$ and $f \simeq g$, then $f_\ast = g_\ast$
+		\item (Excision) If $U \subseteq A \subseteq X$ so that $\bar{U} \subseteq \operatorname{Int} (A)$ then $\iota : (X \setminus U, A \setminus U) \hookrightarrow (X, A)$ induces isomorphisms on homology
+		\item  (Dimension) $H_n(\ast) = 0$ for all $n \neq 0$, where $\ast$ denotes some arbitrary point
+		\item (Additivity) $H_n\left(\bigsqcup_\alpha X_\alpha\right) = \bigoplus_\alpha H_n(X_\alpha)$.
+		\item (Exactness) If we have an inclusion $\iota : A \hookrightarrow$ and $j : X \to (X, A)$ induces a long exact sequence on homology:
+		      \begin{align*}
+			      \xymatrix{
+			      \cdots \ar[r] & H_n(A) \ar[r]^-{\iota_\ast} & H_n(X) \ar[r]^-{j_\ast} & H_n(X, A) \ar[r]^{\partial} & H_{n - 1}(A) \ar[r] & \cdots
+			      }
+		      \end{align*}
+	\end{enumerate}
+	If $H_\ast$ satisfies all axioms but dimension, it is called an \ul{extraordinary homology theory}
+	\begin{example}
+		Topological $K$-theory and cobordism.
+	\end{example}
+\end{defn}
+
+\begin{theorem}\label{thm-characterization-of-singular-homology}
+	If $H_n : \text{CW pairs} \to \underline{\operatorname{Ab}}$ is a homology theory and $H_0(\ast) = \ZZ$, then $H_n$ are exactly the singular homology functors up to a natural isomorphism of functors
+
+	More generally, without the assumption that $H_0(\ast) = \ZZ$, then $H_n$ are exactly the singular homology functors with coefficients in the abelian group $H_0(\ast)$.
+\end{theorem}
+
+\begin{proof}
+	Reconstruct the cellular homology groups using the axioms. The exact same argument we did today follows. We then check that the cellular homology groups we just constructed satisfies the degree formula as in our last step. This is a bit more difficult, but we won't get into it.
+\end{proof}
+
+\section{Lefschetz Fixed Point Theorem}
+\subsection{Statement}
+\begin{definition}\label{def:trace-group-homomorphism}
+	Let $\varphi : \mathbb{Z}^n \to \mathbb{Z}^n$ be a group homomorphism, we may represent this with a matrix
+	$A = \{a_{ij}\}$. The \emph{trace} is the sum $a_{11} + \cdots + a_{nn}$.
+
+	For a group homomorphism $\varphi : M \to M$ where $M$ is a finitely generated Abelian group, we define the \emph{trace} of $\varphi$
+	to be the trace of the induced map $\bar{\varphi} : M/M_T \to M/M_T$, where $M_T$ is the torsion subgroup of $M$.
+\end{definition}
+
+\begin{exercise}
+	We have
+	\[
+		\trace(AB) = \trace(BA).
+	\]
+
+	Thus, matrices related by a change of basis have the same trace.
+\end{exercise}
+
+\begin{definition}\label{def:lefschetz-number}
+	Let \(X\) be a space with the assumption that \(\oplus_k H_k(X)\) is finitely generated. That is, each homology group is finitely
+	generated, and there are finitely many nonzero homology groups. For example $X$ could be a finite \hyperref[def:CW-Complex]{CW complex}.
+
+	The \emph{Lefschetz number} \(\tau(f)\) of a map \(f \colon X \to X\) is
+	\[
+		\tau(f) \coloneqq \sum_k (-1)^k \trace(f_\ast : H_k(X) \to H_k(X))
+	\]
+\end{definition}
+
+\begin{eg}
+	When $f \simeq \identity _X$. Then $f_\ast = \identity_{H_k(X)}$ for all $k$. Then $\trace(f_\ast \colon H_k(X) \to H_k(X)) = \rank(H_k(X))$. Therefore,
+	\[
+		\tau(f) = \sum_k \rank(H_k(X)) = \chi(X),
+	\]
+	where \(\chi(X)\) is the \emph{Euler characteristic} (see homework).
+\end{eg}
+
+\begin{theorem}[Lefschetz Fixed Point Theorem]\label{thm-lefschetz-fixed-point}
+	Suppose $X$ admits a finite triangulation (i.e. a finite simplicial complex structure). Or more generally, $X$ is a retract of a finite simplicial complex.
+
+	Then if $f :X \to X$ is a map with $\tau(f) \neq 0$, then $f$ has a fixed point. Note that the converse does not hold.
+\end{theorem}
+
+\begin{theorem}[Hatcher's Appendix A.7]\label{thm-retract-simplicial-complex}
+	If $X$ is a compact, locally contractible space that can embed in $\mathbb{R}^n$ for some $n$, then $X$ is a retract of a finite simplicial complex.
+
+	This includes:
+	\begin{itemize}
+		\item Compact Manifolds
+		\item Finite CW complexes
+	\end{itemize}
+\end{theorem}
+
+\begin{definition}\label{def:lefschetz-number-better}
+	Let $\mathbb{F}$ be a field, and let $H_k(X; \mathbb{F})$ be the $k$-th homology of $X$ with coefficients in $\mathbb{F}$ (see homework).
+	Then $H_k(X; \mathbb{F})$ is always a vector space over $\mathbb{F}$. Define $\tau^{\mathbb{F}}(X)$ be:
+	\begin{align*}
+		\sum_k (-1)^k \trace(f_\ast : H_k(X; \mathbb{F}) \to H_k(X; \mathbb{F}))
+	\end{align*}
+	The Lefschetz fixed point theorem still holds if we replace ``$\tau(x) \neq 0$'' with ``$\tau^{\mathbb{F}} \neq 0$''
+\end{definition}
+
+\begin{eg}
+	Let $f : S^n \to S^n$ be a degree $d$ map. Then $\tau(f)$ is:
+	\begin{align*}
+		(-1)^0\trace(f_\ast : H_0(S^n) \to H_0(S^n)) + (-1)^n\trace(f_\ast : H_n(S^n) \to H_n(S^n))
+	\end{align*}
+	Then $f_\ast : H_0(S^n) \to H_0(S^n)$ is the identity, and $f_\ast : H_n(S^n) \to H_n(S^n)$ is given by the $1 \times 1$ matrix with entry $d$. And then we have:
+	\begin{align*}
+		\tau(f) = 1 + (-1)^n d
+	\end{align*}
+\end{eg}
+
+\begin{corollary}
+	$f$ has a fixed point whenever $1 + (-1)^n \neq 0$. Aka whenever $d \neq (-1)^{n + 1}$. THat is $f$ has a fixed point if its degree is not equal to the degree of the antipodal map.
+\end{corollary}
+
+\begin{exercise}
+	If $f : X \to X$, then $\trace(f_\ast : H_0(X) \to H_0(X))$ is equal to the \# of path-components of $X$ mapped to themselves
+\end{exercise}
+
+\begin{exercise}
+	If $X$ is contractible, then its homology is concentrated in degree zero, so $\tau(f) = 1$.
+
+	If $X$ is a compact manifold or finite CW-complex, every $f$ has a fixed point (in particular, this recovers Brouwer's Fixed Point Theorem)
+\end{exercise}
+
+\begin{eg}
+	If we consider the map $f : \mathbb{R} \to \mathbb{R}$ given by translation by $x \neq 0$, then $\tau(f) = 1$, but $f$ does not have a fixed point. The key here is that $\mathbb{R}$ is not compact.
+\end{eg}

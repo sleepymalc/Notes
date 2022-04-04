@@ -1,143 +1,159 @@
-\lecture{35}{1 Apr. 10:00}{}
-\subsection{The Formal Viewpoint: Eilenberg-Steenrod axioms}
-\begin{defn}\label{defn-natural-transformation}
-	Given two functors $F, G : C \to D$, a natural transformation $\eta : F \to G$ is a collection of maps $\eta_X : F(X) \to G(X)$ lying in $D$ for every $X \in C$ so that for any map $f : X \to Y$ we have a commutative diagram:
-	\begin{align*}
-		\xymatrix{
-		F(X) \ar[r]^{\eta_X} \ar[d]_{F(f)} & G(X) \ar[d]^{G(f)} \\
-		F(Y) \ar[r]_{\eta_Y}               & G(Y)
-		}
-	\end{align*}
-\end{defn}
+\lecture{35}{4 Apr. 10:00}{Eilenberg-Steenrod Axioms}
+\subsection{The Formal Viewpoint: Eilenberg-Steenrod Axioms}
+We can approach the homology theory in an \textbf{axiomatic} way. Specifically, we're interested in the Eilenberg-Steenrod axioms.
+To start with, we first see some definitions.
 
-\begin{defn}\label{defn-eilenberg-steenrod}
-	A \ul{homology theory} is a sequence of functors:
-	\begin{align*}
-		H_n : \text{pairs } (X, A) \text{ of spaces} \to \text{abelian groups}
-	\end{align*}
-	Equipped with natural transformations $\partial : H_n(X, A) \to H_{n - 1}(A)$, where $H_{n - 1}(A) := H_{n - 1}(A, \0)$ called the boundary map. Naturality here means that for any map $f : (X, A) \to (Y, B)$ we have a commutative diagram:
-	\begin{align*}
-		\xymatrix{
-		H_n(X, A) \ar[r]^{\partial} \ar[d]_{f_\ast} & H_{n - 1}(A) \ar[d]^{f_\ast} \\
-		H_n(Y, B) \ar[r]^{\partial}                 & H_{n - 1}(B)
-		}
-	\end{align*}
-	These must satisfy these axioms:
-	\begin{enumerate}[(1)]
-		\item (Homotopy) If $f, g : (X, A) \to (Y, B)$ and $f \simeq g$, then $f_\ast = g_\ast$
-		\item (Excision) If $U \subseteq A \subseteq X$ so that $\bar{U} \subseteq \operatorname{Int} (A)$ then $\iota : (X \setminus U, A \setminus U) \hookrightarrow (X, A)$ induces isomorphisms on homology
-		\item  (Dimension) $H_n(\ast) = 0$ for all $n \neq 0$, where $\ast$ denotes some arbitrary point
-		\item (Additivity) $H_n\left(\bigsqcup_\alpha X_\alpha\right) = \bigoplus_\alpha H_n(X_\alpha)$.
-		\item (Exactness) If we have an inclusion $\iota : A \hookrightarrow$ and $j : X \to (X, A)$ induces a long exact sequence on homology:
-		      \begin{align*}
-			      \xymatrix{
-			      \cdots \ar[r] & H_n(A) \ar[r]^-{\iota_\ast} & H_n(X) \ar[r]^-{j_\ast} & H_n(X, A) \ar[r]^{\partial} & H_{n - 1}(A) \ar[r] & \cdots
-			      }
-		      \end{align*}
+\begin{definition}[Natural transformation]\label{def:natural-transformation}
+	Given two \hyperref[def:functor]{functors}
+	\[
+		F, G \colon \mathscr{C} \to \mathscr{D},
+	\]
+	a \emph{natural transformation} \(\eta \colon F \to G\) is a collection of maps \(\eta_X \colon F(X) \to G(X)\) lying
+	in \(\mathscr{D}\) for every \(X \in \mathscr{C}\) so that for any map \(f \colon X \to Y\), we have a commutative diagram
+	\[
+		\begin{tikzcd}
+			{F(X)} & {G(X)} \\
+			{F(Y)} & {G(Y)}
+			\arrow["{\eta X}", from=1-1, to=1-2]
+			\arrow["{G(f)}", from=1-2, to=2-2]
+			\arrow["{\eta Y}"', from=2-1, to=2-2]
+			\arrow["{F(f)}"', from=1-1, to=2-1]
+		\end{tikzcd}
+	\]
+\end{definition}
+
+\begin{definition}[Homology theory]\label{def:homology-theory}
+	A \emph{homology theory} is a sequence of \hyperref[def:functor]{functors}
+	\[
+		H_n \colon \text{\hyperref[def:good-pair]{pairs} \((X, A)\) of spaces} \to \text{\hyperref[def:Abelian-group]{Abelian groups}}
+	\]
+	equipped with \hyperref[def:natural-transformation]{natural transformations} \(\partial \colon H_n(X, A) \to H_{n - 1}(A)\),
+	where \(H_{n - 1}(A) \coloneqq H_{n - 1}(A, \varnothing)\), is called the \underline{boundary map}.
+
+	Naturality here means that for any map \(f \colon (X, A) \to (Y, B)\) we have a commutative diagram
+	\[
+		\begin{tikzcd}
+			{H_{n}(X, A)} & {H_{n-1}(A)} \\
+			{H_n(Y, B)} & {H_{n-1}(B)}
+			\arrow["{\partial }", from=1-1, to=1-2]
+			\arrow["{f_\ast}", from=1-2, to=2-2]
+			\arrow["{\partial }"', from=2-1, to=2-2]
+			\arrow["{f_\ast}"', from=1-1, to=2-1]
+		\end{tikzcd}
+	\]
+	These must satisfy the following \(5\) axioms.
+	\begin{enumerate}
+		\item (Homotopy) If \(f, g \colon (X, A) \to (Y, B)\) and \(f \simeq g\), then \(f_\ast = g_\ast\).
+		\item (Excision) If \(U \subseteq A \subseteq X\) such that \(\overline{U} \subseteq \operatorname{Int} (A)\), then
+		      \[
+			      \iota \colon (X \setminus U, A \setminus U) \hookrightarrow (X, A)
+		      \]
+		      induces isomorphisms on \(H_n\).
+		\item (Dimension) \(H_n(\ast) = 0\) for all \(n \neq 0\).
+		\item (Additivity) \(H_n\left(\coprod_\alpha X_\alpha\right) = \bigoplus_\alpha H_n(X_\alpha)\).
+		\item (Exactness) If we have an inclusion \(\iota \colon A \hookrightarrow X\)\footnote{Note that we use
+			      \(X\coloneqq (X, \varnothing )\) for every space \(X\).} and \(j \colon X \to (X, A)\) induces a
+		      long \hyperref[def:exact-sequence]{exact sequence}
+		      \[
+			      \begin{tikzcd}[column sep=small]
+				      \ldots & {H_n(A)} & {H_n(X)} & {H_{n}(X, A)} & {H_{n-1}(A)} & \ldots
+				      \arrow[from=1-1, to=1-2]
+				      \arrow["{\iota_\ast}", from=1-2, to=1-3]
+				      \arrow["{j_\ast}", from=1-3, to=1-4]
+				      \arrow["\partial", from=1-4, to=1-5]
+				      \arrow[from=1-5, to=1-6]
+			      \end{tikzcd}
+		      \]
 	\end{enumerate}
-	If $H_\ast$ satisfies all axioms but dimension, it is called an \ul{extraordinary homology theory}
-	\begin{example}
-		Topological $K$-theory and cobordism.
-	\end{example}
-\end{defn}
+\end{definition}
 
-\begin{theorem}\label{thm-characterization-of-singular-homology}
-	If $H_n : \text{CW pairs} \to \underline{\operatorname{Ab}}$ is a homology theory and $H_0(\ast) = \ZZ$, then $H_n$ are exactly the singular homology functors up to a natural isomorphism of functors
+\begin{definition}[Extraordinary homology theory]\label{def:extraordinary-homology-theory}
+	If \(H_\ast\) satisfies all \hyperref[def:homology-theory]{axioms} but dimension, it is called an \emph{extraordinary homology theory}.
+\end{definition}
+\begin{eg}
+	Topological \(K\)-theory, bordism, and cobordism.\footnote{\url{https://en.wikipedia.org/wiki/Cobordism}}
+\end{eg}
 
-	More generally, without the assumption that $H_0(\ast) = \ZZ$, then $H_n$ are exactly the singular homology functors with coefficients in the abelian group $H_0(\ast)$.
+\begin{theorem}\label{thm:characterization-of-singular-homology}
+	If \(H_n \colon \text{\hyperref[def:CW-Complex]{CW} \hyperref[def:good-pair]{pairs}} \to \underline{\mathrm{Ab}}\) is a
+	\hyperref[def:homology-theory]{homology theory} and \(H_0(\ast) = \mathbb{\MakeUppercase{z}}\), then \(H_n\) are exactly
+	the \hyperref[def:singular-homology-group]{singular homology} \hyperref[def:functor]{functors} up to a natural isomorphism of \hyperref[def:functor]{functors}.
+
+	More generally, if \(H_0(\ast) = G\), then \(H_n\) are exactly the
+	\hyperref[def:singular-homology-group]{singular homology} \hyperref[def:functor]{functors} with coefficients in the
+	\hyperref[def:Abelian-group]{Abelian group} \(G\).
 \end{theorem}
-
 \begin{proof}
-	Reconstruct the cellular homology groups using the axioms. The exact same argument we did today follows. We then check that the cellular homology groups we just constructed satisfies the degree formula as in our last step. This is a bit more difficult, but we won't get into it.
+	Given \(H_\ast\), reconstruct the \hyperref[def:cellular-chain-complex]{cellular chain groups} \(H_n(X^n, X^{n-1})\) using the
+	\hyperref[def:homology-theory]{axioms}.
+	\begin{itemize}
+		\item Show the \hyperref[def:homology-theory]{homology} of this \hyperref[def:chain-complex]{chain complex} are
+		      the \hyperref[def:cellular-homology-group]{cellular homology groups} of \(X\).
+		\item Show these agree with \(H_{n} (X^n, X^{n-1})\). The exact same argument in \autoref{thm:cellular-homology-agrees-with-singular-homology} applies.
+	\end{itemize}
+
+	We then check that the \hyperref[def:cellular-homology-group]{cellular homology groups} we just constructed satisfies the
+	\hyperref[thm:calculation-with-local-degree]{degree formula} as in our last step. This is a bit more difficult, but we won't get into it.
 \end{proof}
 
 \section{Lefschetz Fixed Point Theorem}
-\subsection{Statement}
-\begin{definition}\label{def:trace-group-homomorphism}
-	Let $\varphi : \mathbb{Z}^n \to \mathbb{Z}^n$ be a group homomorphism, we may represent this with a matrix
-	$A = \{a_{ij}\}$. The \emph{trace} is the sum $a_{11} + \cdots + a_{nn}$.
+\begin{definition}[Trace]\label{def:trace}
+	Let \(\varphi \colon \mathbb{Z}^n \to \mathbb{Z}^n\) be a group homomorphism, we may represent this with a matrix
+	\(A = \left[a_{ij}\right]_{i, j}\) has \emph{trace}
+	\[
+		\trace{A} \coloneqq a_{11} + \ldots + a_{nn}.
+	\]
 
-	For a group homomorphism $\varphi : M \to M$ where $M$ is a finitely generated Abelian group, we define the \emph{trace} of $\varphi$
-	to be the trace of the induced map $\bar{\varphi} : M/M_T \to M/M_T$, where $M_T$ is the torsion subgroup of $M$.
+	For a group homomorphism \(\varphi \colon M \to M\) where \(M\) is a \hyperref[apx:ssc:finitely-generated-Abelian-group]{finitely generated Abelian group},
+	we define the \emph{trace} of \(\varphi\) to be the \emph{trace} of the induced map \(\overline{\varphi} \colon \quotient{M}{M_T} \to \quotient{M}{M_T}\),
+	where \(M_T\) is the \hyperref[def:torsion-subgroup]{torsion subgroup} of \(M\).
 \end{definition}
 
 \begin{exercise}
 	We have
-	\[
-		\trace(AB) = \trace(BA).
-	\]
+	\begin{enumerate}
+		\item \(\trace(AB) = \trace(BA)\).
+		\item \(\trace(A) = \trace(BAB^{-1})\).
+	\end{enumerate}
 
-	Thus, matrices related by a change of basis have the same trace.
+	Thus, \hyperref[def:trace]{trace} is independent of change of basis of \(\mathbb{\MakeUppercase{z}} ^n\).
 \end{exercise}
 
-\begin{definition}\label{def:lefschetz-number}
-	Let \(X\) be a space with the assumption that \(\oplus_k H_k(X)\) is finitely generated. That is, each homology group is finitely
-	generated, and there are finitely many nonzero homology groups. For example $X$ could be a finite \hyperref[def:CW-Complex]{CW complex}.
+\begin{definition}[Lefschetz number]\label{def:Lefschetz-number}
+	Let \(X\) be a space with the assumption that \(\bigoplus_k H_k(X)\) is finitely generated. That is, each homology group is finitely
+	generated, and there are finitely many nonzero homology groups. For example \(X\) could be a finite \hyperref[def:CW-Complex]{CW complex}.
 
 	The \emph{Lefschetz number} \(\tau(f)\) of a map \(f \colon X \to X\) is
 	\[
-		\tau(f) \coloneqq \sum_k (-1)^k \trace(f_\ast : H_k(X) \to H_k(X))
+		\tau(f) \coloneqq \sum_k (-1)^k \trace(f_\ast \colon H_k(X) \to H_k(X)).
 	\]
 \end{definition}
 
 \begin{eg}
-	When $f \simeq \identity _X$. Then $f_\ast = \identity_{H_k(X)}$ for all $k$. Then $\trace(f_\ast \colon H_k(X) \to H_k(X)) = \rank(H_k(X))$. Therefore,
+	When \(f \simeq \identity _X\). Then \(f_\ast = \identity_{H_k(X)}\) for all \(k\). Then \(\trace(f_\ast \colon H_k(X) \to H_k(X)) = \rank(H_k(X))\).
+	Therefore,
 	\[
 		\tau(f) = \sum_k \rank(H_k(X)) = \chi(X),
 	\]
-	where \(\chi(X)\) is the \emph{Euler characteristic} (see homework).
+	where \(\chi(X)\) is the \emph{Euler characteristic}.
 \end{eg}
 
-\begin{theorem}[Lefschetz Fixed Point Theorem]\label{thm-lefschetz-fixed-point}
-	Suppose $X$ admits a finite triangulation (i.e. a finite simplicial complex structure). Or more generally, $X$ is a retract of a finite simplicial complex.
+\begin{theorem}[Lefschetz Fixed Point Theorem]\label{thm:Lefschetz-fixed-point}
+	Suppose \(X\) admits a finite triangulation (i.e. a finite simplicial complex structure). Or more generally, \(X\) is a
+	\hyperref[def:retraction]{retract} of a finite \hyperref[def:simplicial-complex]{simplicial complex}.
 
-	Then if $f :X \to X$ is a map with $\tau(f) \neq 0$, then $f$ has a fixed point. Note that the converse does not hold.
+	Then if \(f \colon X \to X\) is a map with \(\tau(f) \neq 0\), then \(f\) has a fixed point.
 \end{theorem}
+\begin{note}
+	Note that the converse does not hold.
+\end{note}
+\begin{theorem}[]\label{thm:retract-simplicial-complex}
+	If \(X\) is a compact, locally contractible space that can embed in \(\mathbb{R}^n\) for some \(n\), then \(X\) is a
+	\hyperref[def:retraction]{retract} of a finite \hyperref[def:simplicial-complex]{simplicial complex}.
 
-\begin{theorem}[Hatcher's Appendix A.7]\label{thm-retract-simplicial-complex}
-	If $X$ is a compact, locally contractible space that can embed in $\mathbb{R}^n$ for some $n$, then $X$ is a retract of a finite simplicial complex.
-
-	This includes:
+	This includes
 	\begin{itemize}
-		\item Compact Manifolds
-		\item Finite CW complexes
+		\item Compact Manifolds.
+		\item Finite \hyperref[def:CW-Complex]{CW complexes}.
 	\end{itemize}
 \end{theorem}
-
-\begin{definition}\label{def:lefschetz-number-better}
-	Let $\mathbb{F}$ be a field, and let $H_k(X; \mathbb{F})$ be the $k$-th homology of $X$ with coefficients in $\mathbb{F}$ (see homework).
-	Then $H_k(X; \mathbb{F})$ is always a vector space over $\mathbb{F}$. Define $\tau^{\mathbb{F}}(X)$ be:
-	\begin{align*}
-		\sum_k (-1)^k \trace(f_\ast : H_k(X; \mathbb{F}) \to H_k(X; \mathbb{F}))
-	\end{align*}
-	The Lefschetz fixed point theorem still holds if we replace ``$\tau(x) \neq 0$'' with ``$\tau^{\mathbb{F}} \neq 0$''
-\end{definition}
-
-\begin{eg}
-	Let $f : S^n \to S^n$ be a degree $d$ map. Then $\tau(f)$ is:
-	\begin{align*}
-		(-1)^0\trace(f_\ast : H_0(S^n) \to H_0(S^n)) + (-1)^n\trace(f_\ast : H_n(S^n) \to H_n(S^n))
-	\end{align*}
-	Then $f_\ast : H_0(S^n) \to H_0(S^n)$ is the identity, and $f_\ast : H_n(S^n) \to H_n(S^n)$ is given by the $1 \times 1$ matrix with entry $d$. And then we have:
-	\begin{align*}
-		\tau(f) = 1 + (-1)^n d
-	\end{align*}
-\end{eg}
-
-\begin{corollary}
-	$f$ has a fixed point whenever $1 + (-1)^n \neq 0$. Aka whenever $d \neq (-1)^{n + 1}$. THat is $f$ has a fixed point if its degree is not equal to the degree of the antipodal map.
-\end{corollary}
-
-\begin{exercise}
-	If $f : X \to X$, then $\trace(f_\ast : H_0(X) \to H_0(X))$ is equal to the \# of path-components of $X$ mapped to themselves
-\end{exercise}
-
-\begin{exercise}
-	If $X$ is contractible, then its homology is concentrated in degree zero, so $\tau(f) = 1$.
-
-	If $X$ is a compact manifold or finite CW-complex, every $f$ has a fixed point (in particular, this recovers Brouwer's Fixed Point Theorem)
-\end{exercise}
-
-\begin{eg}
-	If we consider the map $f : \mathbb{R} \to \mathbb{R}$ given by translation by $x \neq 0$, then $\tau(f) = 1$, but $f$ does not have a fixed point. The key here is that $\mathbb{R}$ is not compact.
-\end{eg}

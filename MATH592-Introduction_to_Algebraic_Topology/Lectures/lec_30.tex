@@ -4,7 +4,39 @@ With the definition of \hyperref[def:degree]{degree} and some of its \hyperref[r
 	The sphere \(S^n\) admits a nonvanishing continuous tangent vector field if and only if \(n\) is odd.
 \end{theorem}
 \begin{proof}
-	\todo{HW.}
+	Recall that a \underline{tangent vector field} to the unit sphere \(S^n\subseteq \mathbb{\MakeUppercase{r}} ^{n+1}\) is a continuous map
+	\[
+		v \colon S^n \to \mathbb{\MakeUppercase{r}} ^{n+1}
+	\]
+	such that \(v(x)\) is tangent to \(S^n\) at \(x\), i.e., \(v(x)\) is perpendicular to the vector \(x\) for each \(x\). Let \(v(x)\) be a
+	nonvanishing tangent vector field on the sphere \(S^n\), then we define
+	\[
+		f_t(x) \coloneqq \cos (\pi t) + \sin (\pi t)\left(\frac{v(x)}{\left\lVert v(x)\right\rVert }\right),
+	\]
+	which is a \hyperref[def:homotopy]{homotopy} from the identity map \(\identity_{S^n}\colon S^n \to S^n \) to the antipodal map
+	\(-\identity_{S^n}\colon S^{n}\to S^n\). This simply follows from varying \(t\) from \(0\) to \(1\), where we have
+	\[
+		f_0(x) = \cos (0) x + \sin (0) \left(\frac{v(x)}{\left\lVert v(x)\right\rVert }\right) = x \implies f_0 = \identity_{S^n} ,
+	\]
+	while
+	\[
+		f_1(x) = \cos (\pi )x + \sin (\pi )\left(\frac{v(x)}{\left\lVert v(x)\right\rVert }\right) = - x \implies f_{1} = - \identity_{S^n}.
+	\]
+	The last thing needs to be verified is that \(f_t(x)\) is continuous, but this is trivial.
+
+
+	From the \hyperref[rmk:property-of-degree]{property of degree}, we know that it's a \hyperref[def:homotopy]{homotopy} invariant, hence
+	\[
+		\deg (-\identity_{S^n}) = \deg (\identity_{S^n} ),
+	\]
+	which implies
+	\[
+		(-1)^{n+1} = 1,
+	\]
+	so \(n\) must be odd.
+
+	Conversely, if \(n\) is odd, say \(n=2k-1\), we can define \(v(x_1, x_2, \ldots , x_{2k-1}, x_{2k})= (-x_2, x_1, \ldots , -x_{2k}, x_{2k-1})\).
+	Then \(v(x)\) is orthogonal to \(x\), so \(v\) is a tangent vector field on \(S^n\), and \(\left\vert v(x) \right\vert = 1\) for all \(x\in S^n\).
 \end{proof}
 
 \begin{theorem}[Groups acting on \(S^{2n}\)]\label{thm:actions-on-spheres}
@@ -25,7 +57,7 @@ With the definition of \hyperref[def:degree]{degree} and some of its \hyperref[r
 	(simply take \(\tau_{g^{-1}}\)) for each \(g \in G\). Our note on composites shows this is a homomorphism.
 
 	We want to show that the kernel is trivial, since then by the first isomorphism theorem \(G \cong \im\), and the image is either trivial or
-	\(\quotient{\mathbb{Z}}{2\mathbb{Z}}\). Suppose that \(g\) is a nontrivial element of \(g\), then since \(G\) acts \hyperref[def:free-group]{freely} we know that
+	\(\quotient{\mathbb{Z}}{2\mathbb{Z}}\). Suppose that \(g\) is a nontrivial element of \(G\), then since \(G\) acts \hyperref[def:free-group]{freely} we know that
 	\(\tau_g\) has no fixed points. With this in mind we have
 	\[
 		\deg \tau_g = (-1)^{2n + 1} = - 1.
@@ -34,7 +66,7 @@ With the definition of \hyperref[def:degree]{degree} and some of its \hyperref[r
 \end{proof}
 
 \begin{corollary}
-	\(S^{2n}\) is only the trivial cover \(S^{2n} \to S^{2n}\) or \hyperref[def:degree]{degree} \(2\) cover (for example, \(S^{2n} \to \mathbb{R}P^{2n}\)).
+	\(S^{2n}\) has only the trivial cover \(S^{2n} \to S^{2n}\) or \hyperref[def:degree]{degree} \(2\) cover (for example, \(S^{2n} \to \mathbb{R}P^{2n}\)).
 \end{corollary}
 \begin{proof}
 	This follows since any \hyperref[def:covering-space]{covering space} action acts \hyperref[def:free-group]{freely}.
@@ -54,6 +86,29 @@ With the definition of \hyperref[def:degree]{degree} and some of its \hyperref[r
 		f_\ast \colon \mathbb{Z} \cong H_n(U_i, U_i - \{x_i\}) \to H_n(V, V - \{y\}) \cong \mathbb{Z}.
 	\]
 \end{definition}
+\begin{remark}
+	The homomorphism \(f_\ast\) is a multiplication by an integer, which is the \hyperref[def:local-degree]{local degree} as we just defined,
+	arises from the following natural diagram.
+	\[
+		\begin{tikzcd}
+			& {H_n(U_i, U_i-\{x_i\})} & {H_n(V, V-\{y\})} \\
+			{H_n(S^n,S^n-\{x_i\})} & {H_n(S^n,S^n-f^{-1}(y))} & {H_n(S^n, S^n-\{y\})} \\
+			& {H_n(S^n)} & {H_n(S^n)}
+			\arrow["\cong"', from=1-2, to=2-1]
+			\arrow["\cong", from=3-2, to=2-1]
+			\arrow["j"', from=3-2, to=2-2]
+			\arrow["{k_i}", hook, from=1-2, to=2-2]
+			\arrow["{p_i}"', hook', from=2-2, to=2-1]
+			\arrow["{f_\ast}", from=1-2, to=1-3]
+			\arrow["{f_\ast}", from=2-2, to=2-3]
+			\arrow["{f_\ast}", from=3-2, to=3-3]
+			\arrow["\cong", from=1-3, to=2-3]
+			\arrow["\cong"', from=3-3, to=2-3]
+		\end{tikzcd}
+	\]
+	The two isomorphisms in the upper half come from \hyperref[thm:excision]{excision}, and the lower two isomorphisms come from
+	\hyperref[thm:long-exact-sequence-of-a-pair]{exact sequences of pairs}.
+\end{remark}
 
 \begin{theorem}\label{thm:calculation-with-local-degree}
 	Let \(f \colon  S^n \to S^n\) with \(f^{-1}(y) = \{x_1, \ldots, x_m\}\) as in \autoref{def:local-degree}, then we have
@@ -68,7 +123,7 @@ With the definition of \hyperref[def:degree]{degree} and some of its \hyperref[r
 Let's work with some examples for our edification.
 \begin{eg}
 	Consider \(S^n\) and choose \(m\) disks in \(S^n\). Namely, we first collapse the complement of the \(m\) disks to a point, and then we identify each of
-	the \hyperref[sssec:Wedge-sum]{wedged \(n\)-spheres} with the \(n\)-sphere itself.
+	the \hyperref[CW-complex-wedge-sum]{wedged \(n\)-spheres} with the \(n\)-sphere itself.
 	\begin{figure}[H]
 		\centering
 		\incfig{eg:degree-m-map-disks}
@@ -81,6 +136,9 @@ Let's work with some examples for our edification.
 		\label{fig:eg:degree-m-map-disks-computation}
 	\end{figure}
 	By choosing a good point in the codomain, we get one point for each disk in the preimage, and the map is a local homeomorphism around these
-	points which is orientation preserving. We could likewise compose the maps to \(S^n\) from the \hyperref[sssec:Wedge-sum]{wedge} with a reflection to
+	points which is orientation preserving. We could likewise compose the maps to \(S^n\) from the \hyperref[CW-complex-wedge-sum]{wedge} with a reflection to
 	construct a map of \hyperref[def:degree]{degree} \(-m\).
 \end{eg}
+\begin{remark}
+	We see that from the above construction, we can produce a map \(S^n \to S^n\) in any \hyperref[def:degree]{degree}.
+\end{remark}

@@ -11,6 +11,8 @@
 	\]
 	for \hyperref[def:mu-almost-everywhere]{Lebesgue almost every \(x\)}, where \(\{E_r\}\) \hyperref[def:shrink-nicely]{shrinks nicely} to \(x\).
 \end{prev}
+
+From this, we can easily deduce the following important result.
 \begin{theorem}[Lebesgue differentiation theorem for regular measures]\label{thm:Lebesgue-differentiation-theorem-for-regular-measure}
 	Let \(\nu\) be a \hyperref[def:regular]{regular} Borel \hyperref[def:signed-measure]{signed measure} on \(\mathbb{\MakeUppercase{r}} ^d\).
 	Then \(\,\mathrm{d}\nu = \,\mathrm{d}\lambda + f \,\mathrm{d}m\), \(\lambda \perp m\) by \autoref{thm:Lebesgue-Radon-Nikodym-theorem}.
@@ -24,9 +26,10 @@
 	It must be checked that \(\nu\) \hyperref[def:regular]{regular} implies \(\lambda, f \,\mathrm{d}m\) are \hyperref[def:regular]{regular}.\todo{Check!}
 
 	In particular, since \(f\in L^1_{\mathrm{loc} } \), so from \autoref{thm:Lebesgue-differentiation-theorem} and its corollary (\autoref{col:lec-22-1}, \autoref{col:lec-22-2}),
-	it suffices to show that if \(\lambda \) is \hyperref[def:regular]{regular} and \(\lambda \perp m\), then for Lebesgue \hyperref[def:mu-almost-everywhere]{a.e.} \(x\),
+	we see that it suffices to show that if \(\lambda \) is \hyperref[def:regular]{regular} and \(\lambda \perp m\),
+	then for Lebesgue \hyperref[def:mu-almost-everywhere]{a.e.} \(x\),
 	\[
-		\frac{\lambda (E_{r} )}{m(E_{r} )}\to \text{ as }r\to 0
+		\lim\limits_{r \to 0} \frac{\lambda (E_{r} )}{m(E_{r} )}\to 0
 	\]
 	when \(\{E_{r} \}\) \hyperref[def:shrink-nicely]{shrinks nicely to \(x\)}. It also suffices to take \(E_{r} = B(r, x)\) and to assume that \(\lambda \) is
 	\hyperref[def:signed-measure]{positive}, since for some \(\alpha >0\), we have
@@ -36,77 +39,84 @@
 		\leq \frac{\left\vert \lambda \right\vert(B(r, x)) }{m(E_{r} )}
 		\leq \frac{\left\vert \lambda \right\vert(B(r, x)) }{\alpha m(B(r, x))}.
 	\]
-	The result then follows from \autoref{prop:lec-32}.
+	Therefore, if \(\left\vert \lambda \right\vert(E_{r} ) / m(E_{r} ) \to 0\), so does \(\left\vert \lambda (E_{r} ) / m(E_{r} ) \right\vert \),
+	hence \(\lambda (E_{r} ) / m(E_{r} )\). We see that the result then follows directly from \autoref{prop:lec-32}.
 \end{proof}
 
 \subsection{Monotone Differentiation Theorem}
-\begin{definition}[]\label{def:}
-	For \(F \colon  \mathbb{R} \to \mathbb{R}\) that is monotonically increasing, denote
+We first formalize one ambiguous notation we used long time ago with discussing \hyperref[def:distribution-function]{distribution function}.
+Namely, \(F(x^+), F(x^-)\).
+\begin{definition}[\(F(x^+), F(x^-)\)]\label{def:x-plus}\label{def:x-minus}
+	For \(F \colon  \mathbb{R} \to \mathbb{R}\) that is monotonically increasing, we denote
 	\[
 		F(x^+) = \lim_{y \to x^+} F(y), \quad F(x^-) = \lim_{y \to x^-} F(y).
 	\]
-
-	These exist and are
-	\[
-		\inf_{y > x} F(y),\quad \sup_{y < x} F(y).
-	\]
-
-	So they always exist (being bounded below/above respectively by \(F(x)\)).
 \end{definition}
-
-\begin{lemma}\label{lma:lec-33}
-	If \(F\) is monotonically increasing, then
+\begin{remark}
+	We see that if \(F\) is monotonically increasing, then \(F(x^+), F(x^-)\) exist and are
 	\[
-		D = \{x \mid F \text{ is discontinuous at } x\}
+		\inf_{y > x} F(y),\quad \sup_{y < x} F(y)
+	\]
+	respectively since it's bounded below/above respectively by \(F(x)\).
+\end{remark}
+\begin{lemma}\label{lma:lec-33}
+	If \(F\colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \) is monotonically increasing, then
+	\[
+		D = \{x\in \mathbb{\MakeUppercase{r}}  \mid F \text{ is discontinuous at } x\}
 	\]
 	is a countable set.
 \end{lemma}
-
 \begin{proof}
 	\(x \in D\) if and only if \(F(x^+) > F(x^-)\). For each \(x \in D\), let \(I_x = (F(x^-),F(x^+))\), not empty.
-
-	Also, if \(x,y \in D\), \(x \neq y\), then \(I_x,I_y\) are disjoint. Say if \(x < y\) then
+	Also, if \(x,y \in D\), \(x \neq y\), then \(I_x,I_y\) are disjoint. Now, for \(\left\vert x \right\vert < N\), \(I_x\) lie in the interval
+	\((F(-N), F(N))\). Hence,
 	\[
-		F(x^-) < F(x^+) \leq F(x) \leq F(y) \leq F(y^-) < F(y^+).
+		\sum\limits_{\left\vert x \right\vert < N}\left[F(x^+) - F(x^-)\right] \leq F(N) - F(-N) <\infty,
 	\]
-	Taking a rational number in each interval gives an injective map \(D \to \mathbb{\MakeUppercase{q}}\), so \(D\) is countable.
+	which implies that
+	\[
+		D \cap (-N, N) = \left\{x\in (-N, N) \mid F(x^+) \neq F(x^-)\right\}
+	\]
+	is countable. Since this is true for all \(N\), the result follows.
 \end{proof}
 
 \begin{theorem}[Monotone Differentiation Theorem]\label{thm:monotone-differentiation}
-	Let \(F\) be increasing. Then
+	Let \(F\) be an increasing function, then
 	\begin{itemize}
 		\item \(F\) is differentiable \hyperref[def:mu-almost-everywhere]{Lebesgue almost everywhere}.
-		\item \(G(x) = F(x^+)\) (which is right-continuous) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere}.
+		\item \(G(x) \coloneqq F(x^+)\)\footnote{Observe that \(G\) is increasing and right-continuous.} is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere}.
 		\item \(G^\prime  = F^\prime \) \hyperref[def:mu-almost-everywhere]{almost everywhere}
 	\end{itemize}
 \end{theorem}
 
 \begin{proof}
 	Start with \(G\), which is increasing and right-continuous on \(\mathbb{R}\). There is then a \hyperref[def:Lebesgue-Stieltjes-measure]{Lebesgue-Stieltjes measure}
-	\(\mu_G\) on \(\mathbb{R}\). Thus, it is \hyperref[def:regular]{regular} on \(\mathbb{R}\). We see
+	\(\mu_G\) on \(\mathbb{R}\), thus it is \hyperref[def:regular]{regular} on \(\mathbb{R}\). We see
 	\[
 		\frac{G(x+h) - G(x)}{h} = \begin{dcases}
 			\frac{\mu _{G} ((x, x+h])}{m((x, x+h])}, & \text{ if } h>0 ; \\
 			\frac{\mu _{G} ((x+h, x])}{m((x+h, x])}, & \text{ if } h<0 .
 		\end{dcases}
 	\]
-	These both \hyperref[def:shrink-nicely]{shrink nicely} to \(x\). By \autoref{thm:Lebesgue-differentiation-theorem-for-regular-measure} (since
-	these \hyperref[def:shrink-nicely]{shrink nicely}), we know then that these both converge for \hyperref[def:mu-almost-everywhere]{Lebesgue almost every \(x\)}
-	to some common limit \(f(x)\). Hence, \(G^\prime\) exists \hyperref[def:mu-almost-everywhere]{Lebesgue almost everywhere}.
+	Note that both \(\{(x, x+h]\}\) and \(\{(x+h, x]\}\) \hyperref[def:shrink-nicely]{shrink nicely} to \(x\) as \(\left\vert h \right\vert \to 0\).
+	By \autoref{thm:Lebesgue-differentiation-theorem-for-regular-measure} (since these \hyperref[def:shrink-nicely]{shrink nicely}), we
+	then know that these both converge for \hyperref[def:mu-almost-everywhere]{Lebesgue almost every \(x\)} to some common limit \(f(x)\).
+	Hence, \(G^\prime\) exists \hyperref[def:mu-almost-everywhere]{Lebesgue almost everywhere}. We now show that by defining \(H \coloneqq G - F\),
+	\(H^\prime \) exists and equals zero \hyperref[def:mu-almost-everywhere]{a.e.}
 
-	Define \(H(x) = G(x) - F(x) \geq 0\). We see that
+	Observe that \(H(x) = G(x) - F(x) \geq 0\), and we see that
 	\[
-		\{x \mid H(x) > 0\} \subseteq \{x \mid F \text{ is discontinuous at } x\}
+		\{x \mid H(x) > 0\} \subseteq \{x \mid F \text{ is discontinuous at } x\}.
 	\]
-	This is then countable by \autoref{lma:lec-33}, and we can write \(\{x \mid H(x) > 0\} = \{x_n\}\). Then let
+	The latter set is then countable by \autoref{lma:lec-33}, hence we can write \(\{x \mid H(x) > 0\} = \{x_n\}\). Then let
 	\[
 		\mu \coloneqq \sum_n H(x_n) \delta_{x_n}.
 	\]
-	This is a \hyperref[def:Borel-measure]{Borel measure}, so we check if it is \hyperref[def:locally-finite]{locally finite}. That is we check
+	This is a \hyperref[def:Borel-measure]{Borel measure}, so we check if it is \hyperref[def:locally-finite]{locally finite}. Indeed, since
 	\[
-		\mu((-N,N)) = \sum_{-N < x_n < N} H(x_n) \leq G(N) - F(-N) < \infty
+		\mu((-N,N)) = \sum_{-N < x_n < N} H(x_n) \leq G(N) - F(-N) < \infty,
 	\]
-	checking the inequality just consists of seeing that the intervals \((F(x_n),G(x_n))\) are disjoint and a subset of \((F(-N),G(N))\) so
+	where checking the inequality just consists of seeing that the intervals \((F(x_n), G(x_n))\) are disjoint and is a subset of \((F(-N),G(N))\), so
 	\[
 		\sum_{-N < x_n < N} H(x_n) = \mu\left( \bigcup_n (F(x_n), G(x_n)) \right) \leq \mu((F(-N),G(N))).
 	\]
@@ -123,19 +133,18 @@
 			\end{split}
 		\]
 	\end{remark}
-	Then we have that
+	Also, we have \(\mu \perp m\) since \(m(E) = \mu (E^{c} ) = 0\) where \(E = \{x_n\}\). Then we have that
 	\[
-		\left\vert \frac{H(x + h) - H(x)}{h} \right\vert \leq \frac{H(x + h) + H(x)}{\left\vert h \right\vert} \leq \frac{\mu((x-2h,x+2h))}{\left\vert h \right\vert}.
+		\left\vert \frac{H(x + h) - H(x)}{h} \right\vert \leq \frac{H(x + h) + H(x)}{\left\vert h \right\vert} \leq \frac{\mu((x-2h,x+2h))}{\left\vert h \right\vert},
 	\]
+	which  goes to \(0\) for \hyperref[def:mu-almost-everywhere]{Lebesgue almost every \(x\)} by \autoref{thm:Lebesgue-differentiation-theorem-for-regular-measure}
+	and that \(\mu \perp m\).
 
-	This goes to \(0\) for \hyperref[def:mu-almost-everywhere]{Lebesgue almost every \(x\)} by \autoref{thm:Lebesgue-differentiation-theorem-for-regular-measure}
-	and that \(\mu \perp m\).\todo{Check!}
-
-	Thus, \(H\) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere} and \(H^\prime = 0\) \hyperref[def:mu-almost-everywhere]{almost everywhere}.
-	Thus, \(F\) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere} and \(F^\prime = G^\prime\) \hyperref[def:mu-almost-everywhere]{almost everywhere}.
+	Thus, \(H\) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere} and \(H^\prime = 0\) \hyperref[def:mu-almost-everywhere]{almost everywhere},
+	which implies \(F\) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere} and \(F^\prime = G^\prime\) \hyperref[def:mu-almost-everywhere]{almost everywhere}.
 \end{proof}
 
-\begin{proposition}
+\begin{proposition}\label{prop:FTC-inequality}
 	Suppose \(F\) is an increasing function, then \(F^\prime\) exists \hyperref[def:mu-almost-everywhere]{almost everywhere} and is
 	\hyperref[def:measurable-function]{measurable}, then
 	\[

@@ -12,24 +12,27 @@ We now see one abstract way to define \(\sigma \), which will give us so-called 
 	\]
 \end{definition}
 
-\begin{definition}[Singular chain]\label{def:singular-chain}
-	Let \(C_n(X)\) be the \hyperref[def:free-group]{free group} on \hyperref[def:singular-simplex]{singular \(n\)-simplices} in \(X\), which we
-	call it the \emph{singular \(n\)-chains}.
-\end{definition}
-
 \begin{definition}[Singular chain complex]\label{def:singular-chain-complex}
-	The \hyperref[def:singular-simplex]{singular chains} with \hyperref[def:boundary-homomorphism]{boundary maps}
-	\[
-		\begin{split}
-			\partial_n \colon C_n(X) & \to C_{n - 1}(X)                                                                       \\
-			\sigma              & \mapsto \sum_{i = 1}^n (-1)^i \at{\sigma}{[v_0, \ldots, \widehat{v}_i, \ldots, v_n]}{}
-		\end{split}
-	\]
-	induces a \emph{singular chain complex}.
+	The \hyperref[def:chain-complex]{chain complex} defined with \hyperref[def:singular-chain-group]{singular chain group} and
+	\hyperref[def:singular-boundary-map]{singular boundary map} defined as follows is called \emph{singular chain complex}.
+	\begin{definition}[Singular chain group]\label{def:singular-chain-group}
+		Let \(C_n(X)\) be the \hyperref[def:free-group]{free group} on \hyperref[def:singular-simplex]{singular \(n\)-simplices} in \(X\), which we
+		call it the \emph{singular \(n\)-chain group}.
+	\end{definition}
+	\begin{definition}[Singular boundary map]\label{def:singular-boundary-map}
+		With \(C_\ast\) being the \hyperref[def:singular-chain-group]{singular chain group}, we defined so-called \emph{singular boundary map} \(\partial _n\) as
+		\[
+			\begin{split}
+				\partial_n \colon C_n(X) & \to C_{n - 1}(X)                                                                       \\
+				\sigma              & \mapsto \sum_{i = 1}^n (-1)^i \at{\sigma}{[v_0, \ldots, \widehat{v}_i, \ldots, v_n]}{}.
+			\end{split}
+		\]
+	\end{definition}
 \end{definition}
 
 \begin{definition}[Singular homology group]\label{def:singular-homology-group}
-	The \emph{singular homology groups} are the \hyperref[def:homology-group]{homology groups} of this \hyperref[def:singular-chain]{singular chain complex} given as
+	The \emph{singular homology groups} are the \hyperref[def:homology-group]{homology groups} of this \hyperref[def:singular-chain-complex]{singular chain complex}
+	given as
 	\[
 		H_n(X) = \quotient{\ker \partial_n}{\im \partial_{n + 1}}.
 	\]
@@ -40,7 +43,7 @@ We now see one abstract way to define \(\sigma \), which will give us so-called 
 	\[
 		H_n(X) \coloneqq \quotient{\ker \partial _n}{\im \partial _{n+1}},
 	\]
-	where the difference is what structure we put on \(X\) which induces different \hyperref[def:chain-complex]{chain complex} \(C_{n} (X)\).
+	where the difference is what structure we put on \(X\) which induces different \hyperref[def:chain-complex]{chain complex} \((C_{\ast} (X), \partial _\ast)\).
 	In this case, we have \hyperref[def:singular-homology-group]{singular homology group} since we are considering
 	\hyperref[def:singular-chain-complex]{singular chain complex}, while we can also have
 	\hyperref[def:simplicial-homology-group]{simplicial homology group}.
@@ -51,17 +54,19 @@ always hugely uncountable from its definition, it's almost impossible to compute
 that does not depend on any other structure than the topology of \(X\), making it useful for \underline{developing theory}.
 
 \begin{note}
-	The heuristic is that, we interpret a \hyperref[def:chain-complex]{chain} \(\sigma_1 \pm \sigma_2 \pm \cdots \pm \sigma_k\) as a
+	The heuristic is that, we interpret a \hyperref[def:chain-group]{chain} \(\sigma_1 \pm \sigma_2 \pm \cdots \pm \sigma_k\) as a
 	map from a \hyperref[def:delta-complex]{\(\Delta\)-complex} to \(X\).
 
-	\par For example, with \(\sigma_1 + \sigma_2\) as below,
-	\begin{figure}[H]
-		\centering
-		\incfig{note:chain-as-a-map}
-		\label{fig:note:chain-as-a-map}
-	\end{figure}
-	where we've glued \([v_1, v_2]\) of \(\sigma_1\) to \([v_0, v_2]\) of \(\sigma_2\) if \(\at{\sigma_1}{[v_1, v_2]}{}\) and
-	\(\sigma_{[v_0, v_2]}\) are the same \hyperref[def:singular-chain]{singular \(n\)-chain} with opposite signs.
+	\begin{eg}
+		For example, with \(\sigma_1 + \sigma_2\) as below,
+		\begin{figure}[H]
+			\centering
+			\incfig{note:chain-as-a-map}
+			\label{fig:note:chain-as-a-map}
+		\end{figure}
+		where we've glued \([v_1, v_2]\) of \(\sigma_1\) to \([v_0, v_2]\) of \(\sigma_2\) if \(\at{\sigma_1}{[v_1, v_2]}{}\) and
+		\(\sigma_{[v_0, v_2]}\) are the same \hyperref[def:singular-chain-group]{singular \(n\)-chain} with opposite signs.
+	\end{eg}
 \end{note}
 
 With what we have defined, we now have some \emph{goals}.
@@ -71,27 +76,27 @@ With what we have defined, we now have some \emph{goals}.
 \end{itemize}
 
 \begin{exercise}
-	We see some exercises.
-	\begin{enumerate}
-		\item Check that if \(X\) has \hyperref[def:path]{path} components \(\{X_\alpha\}\) then
-		      \[
-			      H_n(X) \cong \bigoplus_\alpha H_n(X_\alpha).
-		      \]
-		\item If \(X = \{\ast\}\), then
-		      \[
-			      H_n(X) = \begin{dcases}
-				      \mathbb{\MakeUppercase{z}}, & \text{ if } n=0 ;     \\
-				      0,                          & \text{ if } n\geq 1 .
-			      \end{dcases}
-		      \]
-		\item If \(X\) is \hyperref[def:path]{path}-connected, then \(H_0(X) \cong \mathbb{\MakeUppercase{z}}\).
-	\end{enumerate}
-
+	Check that if \(X\) has \hyperref[def:path]{path} components \(\{X_\alpha\}\) then
+	\[
+		H_n(X) \cong \bigoplus_\alpha H_n(X_\alpha).
+	\]
+\end{exercise}
+\begin{exercise}
+	If \(X = \{\ast\}\), then
+	\[
+		H_n(X) = \begin{dcases}
+			\mathbb{\MakeUppercase{z}}, & \text{ if } n=0 ;     \\
+			0,                          & \text{ if } n\geq 1 .
+		\end{dcases}
+	\]
+\end{exercise}
+\begin{exercise}
+	If \(X\) is \hyperref[def:path]{path}-connected, then \(H_0(X) \cong \mathbb{\MakeUppercase{z}}\).
 \end{exercise}
 
 \section{Functoriality and Homotopy Invariance}
-\begin{definition}[Induced map on chains]\label{def:induced-map-on-chains}
-	For a given continuous map \(f \colon X \to Y\), we can consider the \emph{map \(f_{\#}\) induced by \hyperref[def:chain-complex]{chains}} as
+\begin{definition}[Induced map on singular chains]\label{def:induced-map-on-singular-chain}
+	For a given continuous map \(f \colon X \to Y\), we can consider the \emph{map \(f_{\#}\) induced by \hyperref[def:singular-chain-group]{singular chains}} as
 	\[
 		\begin{split}
 			f_{\#} \colon C_n(X)           & \to C_n(Y)                                      \\
@@ -99,6 +104,9 @@ With what we have defined, we now have some \emph{goals}.
 		\end{split}
 	\]
 \end{definition}
+\begin{note}
+	Note that we're considering \hyperref[def:singular-chain-group]{singular chain groups} specifically in this case.
+\end{note}
 \begin{remark}
 	We see that the functoriality doesn't depend on any kind of \hyperref[def:delta-complex]{\(\Delta \)-complex} structure.
 \end{remark}
@@ -127,13 +135,12 @@ With what we have defined, we now have some \emph{goals}.
 \end{definition}
 
 \begin{exercise}
-	We see that
-	\begin{enumerate}
-		\item We have that \(f_{\#} \partial = \partial f_{\#}\). In other words, \(f_{\#}\) is a \hyperref[def:chain-map]{chain map}.
-		      Thus, by the homework \(f_{\#}\) induces a group homomorphism on the \hyperref[def:homology-group]{homology groups}. We write
-		      this as \(f_\ast \colon H_n(X) \to H_n(Y)\) for all \(n\).
-		\item We have \underline{functoriality}, i.e. \((f \circ g)_\ast = f_\ast \circ g_\ast\) and \((\identity_X)_\ast = \identity_{H_n(X)}\).
-	\end{enumerate}
+	We have that \(f_{\#} \partial = \partial f_{\#}\). In other words, \(f_{\#}\) is a \hyperref[def:chain-map]{chain map}.
+	Thus, by the homework \(f_{\#}\) induces a group homomorphism on the \hyperref[def:homology-group]{homology groups}. We write
+	this as \(f_\ast \colon H_n(X) \to H_n(Y)\) for all \(n\).
+\end{exercise}
+\begin{exercise}
+	We have \underline{functoriality}, i.e. \((f \circ g)_\ast = f_\ast \circ g_\ast\) and \((\identity_X)_\ast = \identity_{H_n(X)}\).
 \end{exercise}
 
 \begin{theorem}[Homology group defines a functor]\label{thm:homology-group-defines-a-functor}
@@ -155,3 +162,5 @@ The proof of \autoref{thm:functoriality-is-homotopy-invariant} can be found \hyp
 \begin{exercise}
 	\autoref{thm:homology-group-defines-a-functor} and \autoref{thm:functoriality-is-homotopy-invariant} imply that \(H_{n} \) is a \hyperref[def:homotopy]{homotopy} invariant.
 \end{exercise}
+\todo[inline]{I'm not sure whether the above discussion holds only for \hyperref[def:singular-homology-group]{singular homology group} or
+	can be extended to \hyperref[def:homology-group]{general homology group}. I link them to \hyperref[def:homology-group]{general homology group} anyway.}

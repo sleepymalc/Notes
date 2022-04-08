@@ -40,7 +40,8 @@ We now prove \autoref{prop:outer-measure}.
 			      \mu^{*} (A_n)+\frac{\epsilon}{2^n} \geq \sum\limits_{k=1}^{\infty} \rho(E_{n, k}).
 		      \]
 		      \begin{remark}
-			      This is an important trick! We often set the error term as \(\epsilon / 2^n\) instead of \(\epsilon \) as in above.
+			      This is an important trick! We often set the error term as \(\epsilon / 2^n\) instead of \(\epsilon \) as in above to accommodate the summation over
+			      a countable set.
 		      \end{remark}
 
 		      Then we see that
@@ -67,12 +68,14 @@ We now prove \autoref{prop:outer-measure}.
 \end{proof}
 
 \begin{definition}[Carathéodory measurable]\label{def:C-measurable}
-	Let \(\mu^{*} \) be an \hyperref[def:outer-measure]{outer measure} on \(X\). We say \(A\subset X\) is \emph{Carathéodory measurable (C-measurable) with respect to \(\mu^{*} \)} if
+	Let \(\mu^{*} \) be an \hyperref[def:outer-measure]{outer measure} on \(X\). We say \(A\subset X\) is \emph{Carathéodory measurable with respect to \(\mu^{*} \)} if
 	\[
 		\forall E\subset X,\ \mu^{*} (E) = \mu^{*} \left(E\cap A\right) + \mu^{*} \left(E\setminus A\right).
 	\]
 \end{definition}
-
+\begin{note}
+	We sometimes write \emph{C-measurable} instead of \hyperref[def:C-measurable]{Carathéodory measurable} for convenience.
+\end{note}
 \begin{lemma}\label{lma:disjoint-C-measurable-finite-additive}
 	Let \(\mu^{*} \) be an \hyperref[def:outer-measure]{outer measure} on \(X\). Suppose \(B_1, \ldots , B_N \) are \underline{disjoint} \hyperref[def:C-measurable]{C-measurable} sets.
 	Then,
@@ -135,61 +138,74 @@ We now prove \autoref{prop:outer-measure}.
 				            \end{center}
 			            \end{note}
 			            \begin{itemize}
-				            \item\label{pf:Caratheodory-extension-Thm-1-finite-unions} We show \(\mathcal{A} \) is closed under finite unions.
+				            \item We first show \(\mathcal{A} \) is closed under finite unions.
+				                  \begin{claim}\label{pf:Caratheodory-extension-Thm-1-finite-unions}
+					                  \(A, B\in \mathcal{A} \implies A\cup B\in \mathcal{A}\).
+				                  \end{claim}
+				                  \begin{explanation}
+					                  Fix \(E\subset X\) arbitrary. We need to show that
+					                  \[
+						                  \mu^{*} (E) = \mu^{*} (E\cap (A\cup B)) + \mu^{*} (E\setminus (A\cup B)),
+					                  \]
+					                  i.e.,
+					                  \[
+						                  \mu^{*} (1\cup 2\cup 3\cup 4) = \mu^{*} (1\cup 2\cup 3) + \mu^{*} (4)
+					                  \]
+					                  given \(A, B\in\mathcal{A}\).
+					                  \begin{figure}[H]
+						                  \centering
+						                  \incfig{thm:Caratheodory-extension-Thm-1a}
+						                  \label{fig:thm:Caratheodory-extension-Thm-1a}
+					                  \end{figure}
 
-				            \textbf{Claim.} \(A, B\in \mathcal{A} \implies A\cup B\in \mathcal{A}\).
-				            \par Fix \(E\subset X\) arbitrary. We need to show that
-				            \[
-					            \mu^{*} (E) = \mu^{*} (E\cap (A\cup B)) + \mu^{*} (E\setminus (A\cup B)),
-				            \]
-				            i.e.,
-				            \[
-					            \mu^{*} (1\cup 2\cup 3\cup 4) = \mu^{*} (1\cup 2\cup 3) + \mu^{*} (4)
-				            \]
-				            given \(A, B\in\mathcal{A}\).
-				            \begin{figure}[H]
-					            \centering
-					            \incfig{thm:Caratheodory-extension-Thm-1a}
-					            \label{fig:thm:Caratheodory-extension-Thm-1a}
-				            \end{figure}
-
-				            \begin{itemize}
-					            \item Since \(A\) is \hyperref[def:C-measurable]{C-measurable},
 					                  \begin{itemize}
-						                  \item \(\mu^{*} (1\cup 2\cup 3\cup 4) = \mu^{*} (1\cup 2) + \mu^{*} (3\cup 4)\)
-						                  \item \(\mu^{*} (1\cup 2\cup 3) = \mu^{*} (1\cup 2) + \mu^{*} (3)\)
+						                  \item Since \(A\) is \hyperref[def:C-measurable]{C-measurable},
+						                        \begin{itemize}
+							                        \item \(\mu^{*} (1\cup 2\cup 3\cup 4) = \mu^{*} (1\cup 2) + \mu^{*} (3\cup 4)\)
+							                        \item \(\mu^{*} (1\cup 2\cup 3) = \mu^{*} (1\cup 2) + \mu^{*} (3)\)
+						                        \end{itemize}
+						                  \item Since \(B\) is \hyperref[def:C-measurable]{C-measurable},
+						                        \begin{itemize}
+							                        \item \(\mu^{*} (3\cup 4) = \mu^{*} (3) + \mu^{*} (4)\)
+						                        \end{itemize}
 					                  \end{itemize}
-					            \item Since \(B\) is \hyperref[def:C-measurable]{C-measurable},
-					                  \begin{itemize}
-						                  \item \(\mu^{*} (3\cup 4) = \mu^{*} (3) + \mu^{*} (4)\)
-					                  \end{itemize}
-				            \end{itemize}
-				            Hence, we have
-				            \[
-					            \begin{split}
-						            \mu^{*} (1\cup 2\cup 3\cup 4) &= \mu^{*} (1\cup 2)+\mu^{*} (3\cup 4)\\
-						            &= \mu^{*} (1\cup 2) + \mu^{*} (3) + \mu^{*} (4)\\
-						            &= \mu^{*}(1\cup 2\cup 3) + \mu^{*} (4).
-					            \end{split}
-				            \]
-				            \item We show \(\mathcal{A} \) is closed under countable \underline{disjoint} unions.
+					                  Hence, we have
+					                  \[
+						                  \begin{split}
+							                  \mu^{*} (1\cup 2\cup 3\cup 4) &= \mu^{*} (1\cup 2)+\mu^{*} (3\cup 4)\\
+							                  &= \mu^{*} (1\cup 2) + \mu^{*} (3) + \mu^{*} (4)\\
+							                  &= \mu^{*}(1\cup 2\cup 3) + \mu^{*} (4).
+						                  \end{split}
+					                  \]
+				                  \end{explanation}
+				            \item We now show \(\mathcal{\MakeUppercase{a}} \) is closed under countable \underline{disjoint} unions.
+				                  \begin{claim}
+					                  \(\mathcal{A} \) is closed under countable disjoint unions.
+				                  \end{claim}
+				                  \begin{explanation}
+					                  Let \(A_1, A_2, \ldots \in\mathcal{A}\) and disjoint.
+					                  Fix \(E\subset X\) arbitrary. Since \(\mu^{*} \) is countably subadditive,
+					                  \[
+						                  \mu^{*} (E) \leq  \mu^{*} \left(E\cap \bigcup\limits_{i=1}^{\infty} A_{i}\right) + \mu^{*} \left(E\setminus \bigcup\limits_{i=1}^{\infty} A_{i}\right),
+					                  \]
+					                  hence we only need to show another way around.
 
-				                  \par Let \(A_1, A_2, \ldots \in\mathcal{A}\) and \underline{disjoint}.
-				                  Fix \(E\subset X\) arbitrary. Since \(\mu^{*} \) is countably subadditive,
-				                  \[
-					                  \mu^{*} (E) \leq  \mu^{*} \left(E\cap \bigcup\limits_{i=1}^{\infty} A_{i}\right) + \mu^{*} \left(E\setminus \bigcup\limits_{i=1}^{\infty} A_{i}\right),
-				                  \]
-				                  hence we only need to show another way around.
-
-				                  Fix \(N\in\mathbb{\MakeUppercase{N}} \), we have \(\bigcup\limits_{n=1}^{N} A_{n}\in \mathcal{A} \) since \hyperref[pf:Caratheodory-extension-Thm-1-finite-unions]{\(N\) is finite}, and
-				                  \[
-					                  \begin{split}
-						                  \mu^{*} (E) &= \mu^{*} \left(E\cap \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right) + \mu^{*} \left(E\setminus \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)\\
-						                  &\geq \underbrace{\sum\limits_{n=1}^{N} \mu^{*} (E\cap A_{n})}_{ \overset{\hyperref[lma:disjoint-C-measurable-finite-additive]{!}}{=} \mu^{*} \left(E\cap \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)} + \underbrace{\mu^{*} \left(E\setminus \bigcup\limits_{n=1}^{\infty} A_{n}\right)}_{\leq \mu^{*} \left(E\setminus \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)}.
-					                  \end{split}
-				                  \]
-				                  Now, take \(N\to \infty \) then we are done.
-				            \item We show \(\mathcal{A} \) is closed under countable unions.\todo{DIY}
+					                  Fix \(N\in\mathbb{\MakeUppercase{N}} \), we have \(\bigcup\limits_{n=1}^{N} A_{n}\in \mathcal{A} \) since \hyperref[pf:Caratheodory-extension-Thm-1-finite-unions]{\(N\) is finite}, and
+					                  \[
+						                  \begin{split}
+							                  \mu^{*} (E) &= \mu^{*} \left(E\cap \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right) + \mu^{*} \left(E\setminus \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)\\
+							                  &\geq \underbrace{\sum\limits_{n=1}^{N} \mu^{*} (E\cap A_{n})}_{ \overset{\hyperref[lma:disjoint-C-measurable-finite-additive]{!}}{=} \mu^{*} \left(E\cap \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)} + \underbrace{\mu^{*} \left(E\setminus \bigcup\limits_{n=1}^{\infty} A_{n}\right)}_{\leq \mu^{*} \left(E\setminus \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)}.
+						                  \end{split}
+					                  \]
+					                  Now, take \(N\to \infty \) then we are done.
+				                  \end{explanation}
+				            \item We can then extend this to the case of countable unions.
+				                  \begin{exercise}
+					                  Show \(\mathcal{A} \) is closed under countable unions.
+				                  \end{exercise}
+				                  \begin{answer}
+					                  \todo{DIY}
+				                  \end{answer}
 			            \end{itemize}
 		      \end{enumerate}
 	\end{enumerate}

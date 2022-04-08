@@ -1,0 +1,91 @@
+\lecture{37}{8 Apr. 10:00}{Simplicial Approximation}
+\begin{prev}
+	Recall the definition of \hyperref[def:simplicial-complex]{simplicial complex}.
+\end{prev}
+
+\begin{definition}[Simplicial map]\label{def:simplicial-map}
+	A \emph{simplicial map} \(f \colon K \to L\) is a continuous map that sends each \hyperref[def:standard-simplex]{simplex} of \(K\) to a (possibly smaller dimensional)
+	\hyperref[def:standard-simplex]{simplex} of \(L\) by a linear map in the form of
+	\[
+		\sum t_iv_i \mapsto \sum t_if(v_i).
+	\]
+\end{definition}
+\begin{remark}
+	A \hyperref[def:simplicial-map]{simplicial map} is completely determined by its restriction to the vertex set.
+\end{remark}
+
+\begin{theorem}[Simplicial approximation theorem]\label{thm:simplicial-approximation-theorem}
+	Given any continuous map \(f \colon K \to L\) where \(K\) is a finite \hyperref[def:simplicial-complex]{simplicial complex} and
+	\(L\) is any \hyperref[def:simplicial-complex]{simplicial complex}. Then \(f\) is \hyperref[def:homotopic]{homotopic} to a map
+	that is \hyperref[def:simplicial-map]{simplicial} with respect to some iterated barycentric subdivision of \(K\).
+\end{theorem}
+\begin{eg}[Barycentric subdivision]
+	Here is barycentric subdivision in pictures.
+	\begin{figure}[H]
+		\centering
+		\incfig{eg:barycentric-subdivision}
+		\label{fig:eg:barycentric-subdivision}
+	\end{figure}
+	That is, we add a new vertex to the center of every \hyperref[def:subsimplex]{subsimplex}, filling things in like the above.
+	For an \hyperref[def:standard-simplex]{\(n\)-simplex} we end up with \hyperref[def:standard-simplex]{\((n + 1)!\)-simplices} which replace it.
+\end{eg}
+
+We now have enough tools to prove \autoref{thm:Lefschetz-fixed-point}
+
+\begin{proof}[Proof Outline of \autoref{thm:Lefschetz-fixed-point}]
+	Fix a space \(X\) which is a finite \hyperref[def:simplicial-complex]{simplicial complex} (or a \hyperref[def:retract]{retract}
+	of a finite \hyperref[def:simplicial-complex]{simplicial complex}) and a map \(f \colon X \to X\).
+
+	Then we proceed step by step.
+	\begin{enumerate}
+		\item We first reduce to the case of a finite \hyperref[def:simplicial-complex]{simplicial complex} \(X\). Suppose \(K\) is a finite
+		      \hyperref[def:simplicial-complex]{simplicial complex}, with \(r \colon K \to X\) a \hyperref[def:retraction]{retraction}.
+		      First notice that the following composite of maps
+		      \[
+			      \begin{tikzcd}
+				      K & X & X & K
+				      \arrow["r", from=1-1, to=1-2]
+				      \arrow["f", from=1-2, to=1-3]
+				      \arrow["\iota", from=1-3, to=1-4]
+			      \end{tikzcd}
+		      \]
+		      has the same fixed points as \(f\).
+		      \begin{exercise}
+			      \(r_\ast \colon H_n(K) \to H_n(X)\) is split surjective,\footnote{See \(\iota_\ast\).} and so it has to be a projection onto a direct summand.
+		      \end{exercise}
+
+		      \begin{exercise}
+			      It follows that \(\trace(\iota_\ast \circ f\ast \circ r_\ast) = \trace(f_\ast)\) on \(n^{th}\) \hyperref[def:homology-group]{homology}.
+		      \end{exercise}
+
+		      This implies that \(\tau(f) = \tau(\iota \circ f \circ r)\), therefore if we can prove the result for a
+		      \hyperref[def:simplicial-complex]{simplicial complex} then we are done.
+		\item Let \(X\) be a finite \hyperref[def:simplicial-complex]{simplicial complex}. We show that if \(f \colon X \to X\) has no fixed points, then \(\tau(f) = 0\).
+
+		      The goal now is to find subdivisions \(K, L\) of \(X\) and \(g \colon K \to L\) so that
+		      \begin{itemize}
+			      \item \(g\) is \hyperref[def:simplicial-map]{simplicial}.
+			      \item \(g \simeq f\), \(\tau(f) = \tau(g)\).
+			      \item \(g(\sigma) \cap \sigma = \varnothing \) for all \hyperref[def:standard-simplex]{simplices} \(\sigma\).
+		      \end{itemize}
+
+		      So this becomes a few steps, none of which we'll justify too formally.
+		      \begin{itemize}
+			      \item Choose a metric \(d\) on \(X\).
+			      \item Since \(X\) is compact, and \(f\) has no fixed point, then \(d(x, f(x))\) has some minimum value \(\epsilon > 0\).
+			      \item Subdivide all \hyperref[def:standard-simplex]{simplices} of \(X\) until \hyperref[def:standard-simplex]{simplices} have diameter
+			            smaller than \(\frac{\epsilon }{53}\). Call this subdivision \(L\).
+			      \item Use the \hyperref[thm:simplicial-approximation-theorem]{simplicial approximation theorem} to obtain a map \(g \colon K \to L\),
+			            where \(K\) is a subdivision of \(L\) and \(g \simeq f\).
+			      \item By proof of \hyperref[thm:simplicial-approximation-theorem]{simplicial approximation theorem}, we can construct \(g\) so that for
+			            all \hyperref[def:standard-simplex]{simplices} \(\sigma\), \(g(\sigma)\) is not too far from \(f(\sigma)\).
+			            We can then conclude that \(g(\sigma) \cap \sigma = \varnothing \).
+			      \item So then \(g\) is a cellular map \(K \to K\) that moves every \hyperref[def:cell]{cell}. We can then check that
+			            \[
+				            \tau(f) = \tau(g) = \sum (-1)^n \trace(g_\ast \colon \text{\hyperref[def:cellular-chain-group]{cellular \(n\)-chains}} \to \text{\hyperref[def:cellular-chain-group]{cellular \(n\)-chains}}) = 0
+			            \]
+			            Because each \(g_\ast\) has vanishing diagonal entries.
+		      \end{itemize}
+		      This proves the theorem.
+	\end{enumerate}
+\end{proof}

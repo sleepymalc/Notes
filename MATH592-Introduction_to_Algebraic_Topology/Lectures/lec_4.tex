@@ -57,7 +57,7 @@
 	\[
 		\text{vertex }+ 2 \text{ edges }+2\text{-disks}.
 	\]
-	Specifically, we have
+	Soon, we'll see that above is just
 	\begin{figure}[H]
 		\centering
 		\incfig{eg:constructing-torus-gluing-instr}
@@ -67,65 +67,74 @@
 
 
 \begin{notation}
-	Let \(D^n\) denotes a closed n-disk (or n-ball)
-	\[
-		D^n\simeq \left\{x\in\mathbb{\MakeUppercase{R}} ^n\colon \left\lVert x\right\rVert \leq 1\right\}.
-	\]
-	And let \(S^n\) denotes an \(n\)-sphere
-	\[
-		S^n\simeq \left\{x\in \mathbb{\MakeUppercase{R}}^{n+1}\colon \left\lVert x\right\rVert = 1\right\}.
-	\]
-	Lastly, we call a point as a \emph{0-cell}, and the interior of \(D^n\) \(\mathrm{int}(D^n)\) for \(n\geq 1\) as a \emph{\(n\)-cell}.
+	Let \(D^n\) denotes a closed \(n\)-disk (or \(n\)-ball) \(D^n\simeq \left\{x\in\mathbb{\MakeUppercase{R}} ^n\colon \left\lVert x\right\rVert \leq 1\right\}\),
+	and let \(S^n\) denotes an \(n\)-sphere \(S^n\simeq \left\{x\in \mathbb{\MakeUppercase{R}}^{n+1}\colon \left\lVert x\right\rVert = 1\right\}\).
 \end{notation}
 
 Then, formally, we have the following definition.
 \begin{definition}[CW Complex]\label{def:CW-Complex}
-	A \emph{CW Complex} is a topological space constructed inductively as
-	\begin{enumerate}
-		\item \(X^0\) (the \underline{0-skeleton}) is a set of discrete points.
-		\item We inductively construct the \underline{n-skeleton} \(X^n\) from \(X^{n-1}\) by attaching \(n\)-cells \(e^n_{\alpha}\), where
-		      \(\alpha\) is the index.
-		      \par The gluing instructions glued by an \underline{attaching map} is that \(\forall \alpha\), \(\exists \) continuous map \(\varphi_{\alpha}\)
-		      \[
-			      \varphi_{\alpha}\colon \partial D^n_{\alpha}\to X^{n-1},
-		      \]
-		      then
-		      \[
-			      X^n = \quotient{\left(X^{n-1}\coprod\limits_{\alpha}D^n_\alpha\right)}{x\sim \varphi_{\alpha}(x)}
-		      \]
-		      with identification \(x\sim \varphi_{\alpha}(x)\) for all \(x\in \partial D^n_{\alpha}\) with quotient topology.
-		\item We let \(X\) be defined as
-		      \[
-			      X = \bigcup\limits_{n=0} X^n,
-		      \]
-		      and let \(\overline{w} \) denotes \underline{weak topology} such that
-		      \[
-			      u\subseteq X \text{ is open }\iff \forall n\ u\cap X^n \text{ is open }.
-		      \]
-		      If all cells have dimension less than \(N\) and a \(\exists N\)-cell, then \(X = X^N\) and we call it \emph{\(N\)-dimensional CW complex}.
-	\end{enumerate}
+	A \emph{CW Complex} \(X\) is a topological space constructed inductively as follows. First, we have the basic elements called \hyperref[def:cell]{cells}.
+
+	\begin{definition}[Cell]\label{def:cell}
+		We call a point as a \emph{\(0\)-cell}, and the interior of \(D^n\) \(\Int (D^n)\) for \(n\geq 1\) as an \emph{\(n\)-cell}.
+	\end{definition}
+	Then, we use \hyperref[def:cell]{cells} to build our \hyperref[def:skeleton]{skeletons}.
+
+	\begin{definition}[Skeleton]\label{def:skeleton}
+		\item The \emph{\(0\)-skeleton} \(X^0\) is a set of discrete points, i.e, \hyperref[def:cell]{\(0\)-cell}.
+		\item We inductively construct the \emph{\(n\)-skeleton} \(X^n\) from \(X^{n-1}\) by attaching \hyperref[def:cell]{\(n\)-cells} \(e^n_{\alpha}\), where
+		\(\alpha\) is the index. Specifically, we follow the gluing instructions called \hyperref[def:attaching-map]{attaching maps} defined below and obtain \(X^n\)
+		from \(X^{n-1}\) by
+		\[
+			X^n = \quotient{\left(X^{n-1}\coprod\limits_{\alpha}D^n_\alpha\right)}{x\sim \varphi_{\alpha}(x)}
+		\]
+		with identification \(x\sim \varphi_{\alpha}(x)\) for all \(x\in \partial D^n_{\alpha}\) with quotient topology.
+		\begin{remark}
+			We write \(X^{(n)}\) for \hyperref[def:skeleton]{\(n\)-skeleton} if we need to distinguish from the Cartesian product.
+		\end{remark}
+	\end{definition}
+
+	\begin{definition}[Attaching map]\label{def:attaching-map}
+		The \emph{attaching map} for every \hyperref[def:cell]{cell} \(e^n_\alpha \) is a continuous map \(\varphi_{\alpha}\) such that
+		\[
+			\varphi_{\alpha}\colon \partial D^n_{\alpha}\to X^{n-1}.
+		\]
+	\end{definition}
+
+	Finally, we let \(X\) be defined as
+	\[
+		X = \bigcup\limits_{n=0} X^n,
+	\]
+	equipped with the so-called \hyperref[def:weak-topology]{weak topology} defined below.
+
+	\begin{definition}[Weak topology]\label{def:weak-topology}
+		The \emph{weak topology}, denoted as \(\overline{w} \), contains open set \(u\) such that
+		\[
+			u\subseteq X \text{ is open }\iff \forall n\ u\cap X^n \text{ is open }.
+		\]
+	\end{definition}
+
+	If all \hyperref[def:cell]{cells} have dimension less than \(N\) and there exists an \hyperref[def:cell]{\(N\)-cell}, then
+	\(X = X^N\) and we call it \emph{\(N\)-dimensional CW complex}.
 \end{definition}
-\begin{remark}
-	We write \(X^{(n)}\) for \(n\)-skeleton if we need to distinguish from the Cartesian product.
-\end{remark}
 
 \begin{eg}
 	Let's look at some examples.
 	\begin{enumerate}
 		\item \(0\)-dim \hyperref[def:CW-Complex]{CW complex} is a discrete space.
 		\item \(1\)-dim \hyperref[def:CW-Complex]{CW complex} is a graph.
-		\item A \hyperref[def:CW-Complex]{CW complex} \(X\) is \underline{finite} if it has finitely many cells.
+		\item A \hyperref[def:CW-Complex]{CW complex} \(X\) is \underline{finite} if it has finitely many \hyperref[def:cell]{cells}.
 	\end{enumerate}
 \end{eg}
 
 \begin{definition}[CW subcomplex]\label{def:CW-subcomplex}
-	A \emph{CW subcomplex} \(A\subseteq X\) is a closed subset equal to a union of cells
+	A \emph{CW subcomplex} \(A\subseteq X\) is a closed subset equal to a union of \hyperref[def:cell]{cells}
 	\[
-		e^n_{\alpha} = \mathrm{int}\left(D^n_{\alpha}\right).
+		e^n_{\alpha} = \Int \left(D^n_{\alpha}\right).
 	\]
 \end{definition}
 \begin{remark}
-	This inherits a \hyperref[def:CW-Complex]{CW complex} structure.\todo{Check the images of attaching maps.}
+	This inherits a \hyperref[def:CW-Complex]{CW complex} structure.\todo{Check the images of \hyperref[def:attaching-map]{attaching maps}.}
 \end{remark}
 
 \begin{exercise}

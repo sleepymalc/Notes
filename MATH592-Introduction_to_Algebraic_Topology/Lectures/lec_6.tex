@@ -1,15 +1,21 @@
 \lecture{6}{19 Jan. 10:00}{A Foray into Category Theory}
 \section{Category Theory}
 We start with a definition.
-\begin{definition}[Category, object, morphism]\label{def:category}\label{def:object}\label{def:morphism}
+\begin{definition}[Category]\label{def:category}
 	A \emph{category} \(\mathscr{C} \) is \(3\) pieces of data
 	\begin{itemize}
-		\item A class of \emph{objects} \(\mathrm{Ob}(\mathscr{C})\)
-		\item \(\forall X, Y\in\mathrm{Ob} (\mathscr{C})\) a class of \emph{morphisms} or \underline{arrows},
+		\item A class of \hyperref[def:object]{objects} \(\mathrm{Ob}(\mathscr{C})\).
+		      \begin{definition}[Object]\label{def:object}
+			      An \emph{object} in a \hyperref[def:category]{category} can be realized as a node in a directed diagram.
+		      \end{definition}
+		\item \(\forall X, Y\in\mathrm{Ob} (\mathscr{C})\) a class of \hyperref[def:morphism]{morphisms} or \underline{arrows},
 		      \(\Homomorphism_{\mathscr{C}}(X, Y)\).
+		      \begin{definition}[Morphism]\label{def:morphism}
+			      A \emph{morphism} in a \hyperref[def:category]{category} is just an arrow between \hyperref[def:object]{objects}.
+		      \end{definition}
 		\item \(\forall X, Y, Z\in \Object (\mathscr{C})\), there exists a composition law
 		      \[
-			      \Homomorphism (X, Y)\times \Homomorphism (Y, Z)\to \Homomorphism (X, Z),\quad (f, g)\mapsto g\circ f
+			      \Homomorphism (X, Y)\times \Homomorphism (Y, Z)\to \Homomorphism (X, Z),\quad (f, g)\mapsto g\circ f.
 		      \]
 	\end{itemize}
 	and \(2\) axioms
@@ -24,7 +30,6 @@ We start with a definition.
 	\end{itemize}
 \end{definition}
 
-Let's see some examples.
 \begin{eg}
 	We introduce some common \hyperref[def:category]{category}.
 	\begin{table}[H]
@@ -42,14 +47,14 @@ Let's see some examples.
 			\(\underline{\mathrm{Top}}\)      & Topological spaces                                                                                 & Continuous maps                                                                                                                                               \\
 			\(\underline{\mathrm{Haus}}\)     & Hausdorff Spaces                                                                                   & Continuous maps                                                                                                                                               \\
 			\(\underline{\mathrm{hTop}}\)     & Topological spaces                                                                                 & Homotopy classes of continuous maps                                                                                                                           \\
-			\(\underline{\mathrm{Top}^\ast}\) & Based topological spaces\footnote{Topological spaces with a distinguished base point \(x_0\in X\)} & Based maps\footnote{Continuous maps that presence base point \(f\colon (x, x_0)\to (y, y_0)\) such that \[f\colon X\to Y,\quad f(x_0) = y_0\] is continuous.} \\
+			\(\underline{\mathrm{Top}^\ast}\) & Based topological spaces\footnote{Topological spaces with a distinguished base point \(x_0\in X\)} & Based maps\footnote{Continuous maps that presence base point \(f\colon (X, x_0)\to (Y, y_0)\) such that \(f\colon X\to Y,\quad f(x_0) = y_0\) is continuous.} \\
 			\bottomrule
 		\end{tabular}
 	\end{table}
 \end{eg}
 
 \begin{remark}
-	Any \textbf{diagram} plus composition law.
+	From \autoref{def:category}, we see that a \hyperref[def:category]{category} is just any \textbf{directed diagram} plus composition law and identities.
 	\[
 		\begin{tikzcd}[cells={nodes={}}]
 			\arrow[loop left, distance=1em, start anchor={[yshift=-1ex]west}, end anchor={[yshift=1ex]west}]{}{\identity_{A} } \arrow{r} A
@@ -58,26 +63,32 @@ Let's see some examples.
 	\]
 \end{remark}
 
-\begin{definition}[Monic, epic]\label{def:monic}\label{def:epic}
-	A \hyperref[def:morphism]{morphism} \(f\colon M\to N\) is \emph{monic} if
-	\[
-		\forall g_1, g_2\ f\circ g_1 = f\circ g_2 \implies g_1 = g_2.
-	\]
-	\[
-		\begin{tikzcd}
-			A\ar[r, bend left, "g_1"]\ar[r, bend right, "g_2"']& M \ar[r, "f"]& N
-		\end{tikzcd}
-	\]
-	Dually, \(f\) is \emph{epic} if
-	\[
-		\forall g_1, g_2\ g_{1} \circ f = g_2 \circ f \implies g_1 = g_2.
-	\]
-	\[
-		\begin{tikzcd}
-			M\ar[r, "f"]& N\ar[r, bend left, "g_1"]\ar[r, bend right, "g_2"']& B
-		\end{tikzcd}
-	\]
-\end{definition}
+\begin{definition*}
+	Given a \hyperref[def:morphism]{morphism} \(f\colon M\to N\), then we have the following deifinitions.
+	\begin{definition}[Monic]\label{def:monic}
+		\(f\) is \emph{monic} if
+		\[
+			\forall g_1, g_2\ f\circ g_1 = f\circ g_2 \implies g_1 = g_2.
+		\]
+		\[
+			\begin{tikzcd}
+				A\ar[r, bend left, "g_1"]\ar[r, bend right, "g_2"']& M \ar[r, "f"]& N
+			\end{tikzcd}
+		\]
+	\end{definition}
+
+	\begin{definition}[Epic]\label{def:epic}
+		Dually, \(f\) is \emph{epic} if
+		\[
+			\forall g_1, g_2\ g_{1} \circ f = g_2 \circ f \implies g_1 = g_2.
+		\]
+		\[
+			\begin{tikzcd}
+				M\ar[r, "f"]& N\ar[r, bend left, "g_1"]\ar[r, bend right, "g_2"']& B
+			\end{tikzcd}
+		\]
+	\end{definition}
+\end{definition*}
 
 \begin{lemma}
 	In \(\underline{\mathrm{set}}, \underline{\mathrm{Ab}}, \underline{\mathrm{Top}}, \underline{\mathrm{Gp}}\), a map is \hyperref[def:monic]{monic} if and only
@@ -91,7 +102,7 @@ Let's see some examples.
 	\]
 	hence \(g_1 = g_2\).
 
-	\par Now we prove another direction, with contrapositive. Namely, we assume that \(f\) is \underline{not} injective and show that
+	\par Now we prove another direction, with contrapositive. Namely, we assume that \(f\) is \textbf{not} injective and show that
 	\(f\) is not \hyperref[def:monic]{monic}. Suppose \(f(a) = f(b)\) and \(a\neq b\), we want to show such \(g_{i}\) exists. This is easy by considering
 	\[
 		g_1\colon \ast\mapsto a,\quad g_2\colon \ast\mapsto b.
@@ -99,9 +110,10 @@ Let's see some examples.
 \end{proof}
 
 \subsection{Functor}
-After introducing the \hyperref[def:category]{category}, we then see the most important concept we'll use, a \emph{functor}. Again, we start with the definition.
+After introducing the \hyperref[def:category]{category}, we then see the most important concept we'll use, a \hyperref[def:functor]{functor}.
+Again, we start with the definition.
 \begin{definition}[Functor]\label{def:functor}
-	Given \(\mathscr{C} , \mathscr{D} \) be two \hyperref[def:category]{categories}. A (\underline{covariant}) \emph{functor} \(F\colon \mathscr{C} \to \mathscr{D}\)
+	Given \(\mathscr{C} , \mathscr{D} \) be two \hyperref[def:category]{categories}. A \emph{(covariant) functor} \(F\colon \mathscr{C} \to \mathscr{D}\)
 	is
 	\begin{enumerate}
 		\item a map on \hyperref[def:object]{objects}

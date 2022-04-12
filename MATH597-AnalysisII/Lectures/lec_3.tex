@@ -1,4 +1,5 @@
 \lecture{3}{10 Jan. 11:00}{Construct a Measure}
+After seeing examples of \hyperref[def:measure]{measures}, we now want to construct it from ground up.
 \begin{note}
 	If \(A, B\in \mathcal{A} \) and \(A\subset B\), then
 	\[
@@ -7,17 +8,17 @@
 \end{note}
 
 \begin{theorem}\label{thm:measure-space}
-	Given \((X, \mathcal{A} , \mu)\) be a \hyperref[def:measure-space]{measure space}. Then the followings hold.
-	\begin{enumerate}
+	Given \((X, \mathcal{A} , \mu)\) be a \hyperref[def:measure-space]{measure space}. Then the following hold.
+	\begin{enumerate}[(1)]
 		\item \label{thm:measure-space-monotonicity}Monotonicity.
 		      \[
 			      A, B\in \mathcal{A} , A\subset B \implies \mu(A)\leq \mu(B).
 		      \]
-		\item Countable subadditivity.
+		\item \label{thm:measure-space-countable-subadditivity}Countable subadditivity.
 		      \[
 			      A_1, A_2, \ldots \in \mathcal{A} \implies \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu(A_{i}).
 		      \]
-		\item \label{thm:measure-space-continuity-from-below} Continuity from below/ monotone convergence theorem (MCT) for sets.
+		\item \label{thm:measure-space-continuity-from-below} Continuity from below.
 		      \[
 			      \begin{dcases}
 				      A_1, A_2, \ldots \in \mathcal{A} \\
@@ -36,7 +37,7 @@
 \end{theorem}
 \begin{proof}
 	We prove this theorem one by one.
-	\begin{enumerate}
+	\begin{enumerate}[(1)]
 		\item Since \(A\subset B\), hence we have
 		      \[
 			      \mu(B) = \mu\underset{\text{disjoint} }{\left(\underline{(B\setminus A)}\cup \underline{\vphantom{(B\setminus A)}A}\right)} \overset{\hyperref[def:measure-countable-additivity]{!}}{=} \underbrace{\mu(B\setminus A)}_{\geq 0} + \mu(A) \geq \mu(A).
@@ -72,18 +73,23 @@
 		      \]
 	\end{enumerate}
 \end{proof}
-
-\begin{eg}
-	Given \(\left(\mathbb{\MakeUppercase{N}}, \mathcal{P} (\mathbb{\MakeUppercase{N}}), \text{ \hyperref[eg:counting-measure]{counting measure}}\right)\). Then we see
+\begin{note}
+	Sometimes we also call \hyperref[thm:measure-space-continuity-from-below]{continuity from below} property as \underline{monotone convergence theorem} for sets. We'll later see
+	the important \hyperref[thm:MCT]{monotone convergence theorem} for integral, which is in different content.
+\end{note}
+\begin{remark}[Condition of continuity from above]
+	The condition \(\mu (A_1) < \infty \) in \hyperref[thm:measure-space-continuity-from-above]{continuity from above} is necessary.
+\end{remark}
+\begin{explanation}
+	Given \(\left(\mathbb{\MakeUppercase{N}}, \mathcal{P} (\mathbb{\MakeUppercase{N}}), \mu \right)\) where \(\mu\) is the \hyperref[eg:counting-measure]{counting measure}.
+	Then we see
 	\begin{itemize}
 		\item \(A_{n} = \{n, n+1, n+2, \ldots  \} \implies \mu(A_{n}) = \infty \)
 		\item \(A_1 \supset A_2\supset A_3\supset \ldots  \)
 		\item \(\bigcap\limits_{i=1}^{\infty} A_{i} = \varnothing \implies \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = 0\)
 	\end{itemize}
-	\begin{remark}
-		We see that in this case, since \(\mu(A_1)\nless \infty \), hence \hyperref[thm:measure-space-continuity-from-above]{continuity from above} doesn't hold.
-	\end{remark}
-\end{eg}
+	We see that in this case, since \(\mu(A_1)\nless \infty \), hence \hyperref[thm:measure-space-continuity-from-above]{continuity from above} doesn't hold.
+\end{explanation}
 
 We now try to characterize some properties of a \hyperref[def:measure-space]{measure space}.
 \begin{definition*}
@@ -91,7 +97,7 @@ We now try to characterize some properties of a \hyperref[def:measure-space]{mea
 	\begin{definition}[\(\mu \)-null set]\label{def:mu-null-set}
 		\(A\subset X\) is a \emph{\(\mu\)-null set} if \(A\in \mathcal{A} \) and \(\mu(A) = 0\).
 	\end{definition}
-	\begin{definition}[\(\mu \)-subnull set ]\label{def:mu-subnull-set}
+	\begin{definition}[\(\mu \)-subnull set]\label{def:mu-subnull-set}
 		\(A\subset X\) is a \emph{\(\mu\)-subnull set} if there exists a \hyperref[def:mu-null-set]{\(\mu\)-null set} \(B\)
 		such that \(A\subset B\).
 	\end{definition}
@@ -105,6 +111,14 @@ We now try to characterize some properties of a \hyperref[def:measure-space]{mea
 	We see that for a \hyperref[def:mu-subnull-set]{\(\mu\)-subnull set}, it's not necessary \hyperref[def:measurable-set]{\(\mathcal{A}\)-measurable}
 	if the \hyperref[def:measure-space]{measure space} is not \hyperref[def:complete-measure-space]{complete}.
 \end{note}
+\begin{remark}
+	From the property of \hyperref[def:measure]{measure}, the condition for a \hyperref[def:measure-space]{measure space} \((X, \mathcal{\MakeUppercase{a}} , \mu )\)
+	being \hyperref[def:complete]{complete} is equivalent to saying that every \hyperref[def:mu-subnull-set]{\(\mu \)-subnull set} is a \hyperref[def:mu-null-set]{\(\mu\)-null set}.
+\end{remark}
+\begin{explanation}
+	This follows from the \hyperref[thm:measure-space-monotonicity]{monotonicity} of a \hyperref[def:measure]{measure} and the fact that a \hyperref[def:measure]{measure} is always
+	non-negative. Finally, a \hyperref[def:mu-subnull-set]{\(\mu \)-subnull set} is always in \(\mathcal{\MakeUppercase{a}} \).
+\end{explanation}
 
 There are some useful terminologies we'll use later relating to \hyperref[def:mu-null-set]{\(\mu\)-null}.
 \begin{definition}[Almost everywhere]\label{def:mu-almost-everywhere}
@@ -131,22 +145,23 @@ It's always pleasurable working with finite rather than infinite, hence we give 
 \end{definition*}
 
 \begin{exercise}
-	Every \hyperref[def:measurable-space]{measure space} can be \hyperref[def:complete-measure-space]{\textbf{completed}}. Namely, we can always find a bigger \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} to \hyperref[def:complete-measure-space]{complete} the space.
+	Every \hyperref[def:measurable-space]{measure space} can be \hyperref[def:complete-measure-space]{completed}. Namely, we can always find a bigger \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} to \hyperref[def:complete-measure-space]{complete} the space.
 \end{exercise}
 
 \section{Outer Measures}
-We start by giving a definition.
+As we said before, we're now going to construct a \hyperref[def:measure]{measure}. And a modern way to do this is to start with something called \emph{\hyperref[def:outer-measure]{outer measure}}.
+
 
 \begin{definition}[Outer measure]\label{def:outer-measure}
-	An \emph{outer measure} on \(X\) is a map
+	An \emph{outer measure} on \(X\) is a function
 	\[
 		\mu^{*} \colon \mathcal{P} (X)\to [0, \infty ]
 	\]
 	such that
 	\begin{itemize}
-		\item\label{def:outer-measure-empty-measure} \(\mu^{*} (\varnothing ) = 0\)
-		\item\label{def:outer-measure-montonicity} (monotonicity) \(\mu^{*} (A)\leq \mu^{*} (B)\) if \(A\subset B\)
-		\item\label{def:outer-measure-countable-subadditivity} (countable subadditivity) \(\mu^{*} \left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu^{*} (A_{i})\) for every \(A_{i} \subset X \).
+		\item\label{def:outer-measure-null-empty-set}(null empty set) \(\mu^{*} (\varnothing ) = 0\).
+		\item\label{def:outer-measure-montonicity}(monotonicity) \(\mu^{*} (A)\leq \mu^{*} (B)\) if \(A\subset B\).
+		\item\label{def:outer-measure-countable-subadditivity}(countable subadditivity) \(\mu^{*} \left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu^{*} (A_{i})\) for every \(A_{i} \subset X \).
 	\end{itemize}
 \end{definition}
 

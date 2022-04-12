@@ -1,4 +1,4 @@
-\lecture{34}{5 Apr. 11:00}{Functions of Bounded Variation}
+\lecture{34}{4 Apr. 11:00}{Functions of Bounded Variation}
 \begin{proof}[Proof of \autoref{prop:FTC-inequality}]
 	Let
 	\[
@@ -13,9 +13,7 @@
 	\[
 		g_n(x) = \frac{G(x+1/n)- G(x)}{1/n} \to F^\prime (x)
 	\]
-	for almost every \(x \in [a,b]\). We note that \(g_n(x) \geq 0\).
-
-	\autoref{thm:Fatou-lemma} tells us that
+	for almost every \(x \in [a,b]\). We note that \(g_n(x) \geq 0\). \autoref{thm:Fatou-lemma} tells us that
 	\[
 		\int_a^b F^\prime (x) \,\mathrm{d} x = \int_a^b \liminf_{n \to \infty} g_n(x) \,\mathrm{d} x \leq \liminf_{n \to \infty} \int_a^b g_n(x) \,\mathrm{d} x.
 	\]
@@ -24,8 +22,8 @@
 		\begin{split}
 			\int_a^b g_n(x) &= n\left( \int_{a+1/n}^{b+1/n} G(x) \,\mathrm{d} x - \int_a^b G(x) \,\mathrm{d} x \right)  \\
 			&= n\left( \int_b^{b+1/n} G(x) \,\mathrm{d} x - \int_a^{a+1/n} G(x) \,\mathrm{d} x \right) \\
-			&\leq n\left( G\left( b + \frac{1}{n} \right) \cdot \frac{1}{n} - G(a) \cdot \frac{1}{n}  \right) \\
-			&= F(b) - F(a).
+			&\leq n\left( G\left( b + \frac{1}{n} \right) \cdot \frac{1}{n} - G(a) \cdot \frac{1}{n}  \right)
+			= F(b) - F(a).
 		\end{split}
 	\]
 	Therefore,
@@ -72,7 +70,7 @@
 
 \begin{remark}
 	We see the following.
-	\begin{enumerate}
+	\begin{enumerate}[(1)]
 		\item If \(F\) is of \hyperref[def:bounded-variation]{bounded variation}, then \(F\) is bounded.
 		\item \(F(x) = \sin x\) is not of \hyperref[def:bounded-variation]{bounded variation}, but it is of \hyperref[def:bounded-variation]{bounded variation}
 		      over any \([a,b]\).
@@ -89,29 +87,39 @@
 
 Before we see more properties of \hyperref[def:bounded-variation]{bounded variation} function, we introduce a useful characterization of a function.
 \begin{definition}[Lipschitz]\label{def:Lipschitz}
-	A function \(F \colon [a,b] \to \mathbb{\MakeUppercase{c}} \) is called \emph{Lipschitz} provided that there exists an
-	\(M \geq 0\) such that \(\left\vert F(x) - F(y) \right\vert \leq M \left\vert x - y \right\vert\).
+	A function \(F \colon [a,b] \to \mathbb{\MakeUppercase{c}} \) is called \emph{Lipschitz} if there exists an
+	\(M \geq 0\) such that
+	\[
+		\left\vert F(x) - F(y) \right\vert \leq M \left\vert x - y \right\vert.
+	\]
 \end{definition}
 
 \begin{remark}
 	We have the following.
-	\begin{enumerate}
+	\begin{enumerate}[(1)]
 		\item If \(F,G\) are of \hyperref[def:bounded-variation]{bounded variation}, \(\alpha F + \beta G\) are of \hyperref[def:bounded-variation]{bounded variation}.
 		\item If \(F\) is increasing and bounded, then \(F\) is a function of \hyperref[def:bounded-variation]{bounded variation}.
 		\item If \(F\) is \hyperref[def:Lipschitz]{Lipschitz} on \([a,b]\), then \(F \in BV([a,b])\).
 		\item If \(F\) is differentiable, and \(F^\prime\) is bounded on \([a,b]\), then \(F\) is \hyperref[def:Lipschitz]{Lipschitz} (mean value theorem), so it is in \(BV([a,b])\).
-		\item If \(F(x) = \int_{-\infty}^x f(t) \,\mathrm{d} t\) for \(f \in L^1(\mathbb{R})\), then \(F \in BV\).
-		      Namely,
-		      \[
-			      \begin{split}
-				      \sum_{i=1}^n \left\vert F(x_i) - F(x_{i-1}) \right\vert &= \sum_{i=1}^n \left\vert \int_{x_{i-1}}^{x_i} f(t) \,\mathrm{d} t \right\vert\\
-				      &\leq \sum_{i=1}^n \int_{x_{i-1}}^{x_i} \left\vert f(t) \right\vert \,\mathrm{d} t
-				      = \int_{x_0}^{x_n} \left\vert f(t) \right\vert \,\mathrm{d} t
-				      \leq \int_{-\infty}^\infty \left\vert f(t) \right\vert \,\mathrm{d} t < \infty.
-			      \end{split}
-		      \]
 	\end{enumerate}
 \end{remark}
+
+In particular, we have the following.
+\begin{remark}
+	If \(F(x) = \int_{-\infty}^x f(t) \,\mathrm{d} t\) for \(f \in L^1(\mathbb{R})\), then \(F \in BV\).
+\end{remark}
+\begin{explanation}
+	We see this by
+	\[
+		\begin{split}
+			\sum_{i=1}^n \left\vert F(x_i) - F(x_{i-1}) \right\vert &= \sum_{i=1}^n \left\vert \int_{x_{i-1}}^{x_i} f(t) \,\mathrm{d} t \right\vert
+			\leq \sum_{i=1}^n \int_{x_{i-1}}^{x_i} \left\vert f(t) \right\vert \,\mathrm{d} t
+			= \int_{x_0}^{x_n} \left\vert f(t) \right\vert \,\mathrm{d} t
+			\leq \int_{-\infty}^\infty \left\vert f(t) \right\vert \,\mathrm{d} t,
+		\end{split}
+	\]
+	which is finite since \(f\in L^1(\mathbb{\MakeUppercase{r}} )\).
+\end{explanation}
 
 \begin{lemma}\label{lma:lec34-1}
 	If \(F \in BV\), then \(T_F\) is bounded, increasing, \(T_F(-\infty) = 0\).
@@ -160,7 +168,7 @@ Before we see more properties of \hyperref[def:bounded-variation]{bounded variat
 
 \begin{corollary}[Bounded Variation Differentiation]\label{col:bounded-variation-differentiation}
 	\(F \in BV\) implies that \(F\) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere}. Furthermore,
-	\begin{enumerate}
+	\begin{enumerate}[(1)]
 		\item \(F(x^+),F(x^-)\) exist for all \(x\) as do \(F(-\infty),F(\infty)\).
 		\item The set of discontinuities of \(F\) is countable.
 		\item \(G(x) = F(x^+)\) is differentiable and \(G^\prime = F^\prime\) \hyperref[def:mu-almost-everywhere]{almost everywhere}.

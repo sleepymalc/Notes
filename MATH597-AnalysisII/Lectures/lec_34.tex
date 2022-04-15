@@ -40,7 +40,7 @@
 	\]
 \end{definition}
 
-\begin{lemma}
+\begin{lemma}\label{lma:lec34-1}
 	\(T_F(b)\) is equal to
 	\[
 		T_F(a) + \sup \left\{\sum_{i=1}^n \left\vert F(x_i) - F(x_{i-1}) \right\vert \mid n \in \mathbb{\MakeUppercase{n}}, a = x_0 < x_1 < \ldots < x_n = b\right\}
@@ -97,10 +97,12 @@ Before we see more properties of \hyperref[def:bounded-variation]{bounded variat
 \begin{remark}
 	We have the following.
 	\begin{enumerate}[(1)]
-		\item If \(F,G\) are of \hyperref[def:bounded-variation]{bounded variation}, \(\alpha F + \beta G\) are of \hyperref[def:bounded-variation]{bounded variation}.
+		\item If \(F,G\) are of \hyperref[def:bounded-variation]{bounded variation}, \(\alpha F + \beta G\) are of \hyperref[def:bounded-variation]{bounded variation}
+		      for \(\alpha , \beta \in \mathbb{\MakeUppercase{c}} \).
 		\item If \(F\) is increasing and bounded, then \(F\) is a function of \hyperref[def:bounded-variation]{bounded variation}.
 		\item If \(F\) is \hyperref[def:Lipschitz]{Lipschitz} on \([a,b]\), then \(F \in BV([a,b])\).
-		\item If \(F\) is differentiable, and \(F^\prime\) is bounded on \([a,b]\), then \(F\) is \hyperref[def:Lipschitz]{Lipschitz} (mean value theorem), so it is in \(BV([a,b])\).
+		\item If \(F\) is differentiable, and \(F^\prime\) is bounded on \([a,b]\), then \(F\) is \hyperref[def:Lipschitz]{Lipschitz} from mean value theorem,
+		      so it is in \(BV([a,b])\).
 	\end{enumerate}
 \end{remark}
 
@@ -121,14 +123,19 @@ In particular, we have the following.
 	which is finite since \(f\in L^1(\mathbb{\MakeUppercase{r}} )\).
 \end{explanation}
 
-\begin{lemma}\label{lma:lec34-1}
+\begin{lemma}\label{lma:lec34-2}
 	If \(F \in BV\), then \(T_F\) is bounded, increasing, \(T_F(-\infty) = 0\).
 \end{lemma}
 \begin{proof}
-	\todo{DIY}
+	Fix \(\epsilon > 0\) and for a \(x\in \mathbb{\MakeUppercase{r}} \), there exists \(x_0 < \ldots < x_n = x \) such that
+	\[
+		\sum\limits_{i=1}^{n} \left\vert F(x_{j} ) - F(x_{j-1})\right\vert \geq T_{F} (x) - \epsilon.
+	\]
+	From \autoref{lma:lec34-1}, we see that \(T_{F} (x) - T_{F} (x_0) \geq T_{F} (x) - \epsilon \), and hence
+	\(T_{F} (y) \leq \epsilon \) for \(y\leq x_0\), so \(T_{F} (-\infty ) = 0\).
 \end{proof}
 
-\begin{lemma}\label{lma:lec34-2}
+\begin{lemma}\label{lma:lec34-3}
 	\(F \in BV\), then \(T_F \pm F\) are increasing and bounded and.
 \end{lemma}
 
@@ -141,7 +148,7 @@ In particular, we have the following.
 	\[
 		T_F(y) \geq \sum_{i=1}^n \left\vert F(x_i) - F(x_{i-1}) \right\vert + \left\vert F(y) - F(x) \right\vert .
 	\]
-	Then, since \(\pm(F(y) - F(x)) \leq \left\vert F(y) - F(x) \right\vert \), we have
+	Then, since \(\pm(F(y) - F(x)) \leq \left\vert F(y) - F(x) \right\vert \), we have\footnote{To be precise, we note that \(\pm (F(y) - F(x)) \geq - \left\vert F(y) - F(x) \right\vert \) and proceed.}
 	\[
 		T_F(y) \pm (F(y) - F(x)) \geq \sum_{i=1}^n \left\vert F(x_i) - F(x_{i-1}) \right\vert \geq T_F(x) - \epsilon,
 	\]
@@ -151,22 +158,51 @@ In particular, we have the following.
 	\]
 	Taking \(\epsilon \to 0\) yields the result.
 \end{proof}
-\begin{remark}
-	Thus, any \(F \in BV\) can be written as
+
+With this, we have the following useful decomposition for any \(F\in BV\).
+\begin{definition}[Jordan decomposition]\label{def:Jordan-decomposition}
+	For any \(F \in BV\), the \emph{Jordan decomposition of \(F\)} is
 	\[
-		F = \frac{T_F + F}{2} - \frac{T_F - F}{2}
+		F = \frac{T_F + F}{2} - \frac{T_F - F}{2},
 	\]
 	which is a difference of increasing and bounded functions.
-\end{remark}
 
-\begin{theorem}
+	Specifically, we give special names for the terms in the \hyperref[def:Jordan-decomposition]{Jordan decomposition} of \(F\).
+	\begin{definition}[Positive variation]\label{def:positive-variation-function}
+		The \emph{positive variation of \(F\)} is \(\frac{1}{2}(T_{F} +F)\).
+	\end{definition}
+	\begin{definition}[Negative variation]\label{def:negative-variation-function}
+		The \emph{negative variation of \(F\)} is \(\frac{1}{2}(T_{F} - F)\).
+	\end{definition}
+\end{definition}
+\begin{explanation}
+	It's clear that the above decomposition holds, we just need to check that both terms are increasing and bounded functions. They are
+	increasing from \autoref{lma:lec34-3}. To show they are bounded, for \(y > x\),
+	\[
+		T_F(y)\pm F(y) \geq T_F(x) \pm F(x)
+	\]
+	implies that
+	\[
+		\left\vert F(y) - F(x) \right\vert \leq T_F(y) - T_{F} (x) \leq T_{F} (\infty ) - T_{F} (-\infty ) < \infty,
+	\]
+	so that \(F\), and hence \(T_{F} \pm F\) is all bounded.
+\end{explanation}
+
+\begin{note}
+	Do not be confused between \autoref{def:Jordan-decomposition} and \autoref{thm:Jordan-decomposition-theorem}
+	for \hyperref[def:signed-measure]{signed measure}! Also, the \hyperref[def:positive-variation-function]{positive variation of a function}
+	and \hyperref[def:positive-variation-measure]{positive variation of a measure} is confusing, same for the negative case.
+\end{note}
+
+\begin{theorem}\label{thm:lec-34}
 	\(F\) is of \hyperref[def:bounded-variation]{bounded variation} if and only if \(F = F_1 - F_2\) for \(F_1,F_2\) increasing and bounded.
 \end{theorem}
 \begin{proof}
-	The forward implication is given by the \autoref{lma:lec34-2}. The other direction follows from the examples we gave.\todo{check!}
+	The forward implication is given by \autoref{lma:lec34-3} and \hyperref[def:Jordan-decomposition]{the Jordan decomposition}, and the other
+	direction is easy to check.\todo{Check!}
 \end{proof}
 
-\begin{corollary}[Bounded Variation Differentiation]\label{col:bounded-variation-differentiation}
+\begin{corollary}
 	\(F \in BV\) implies that \(F\) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere}. Furthermore,
 	\begin{enumerate}[(1)]
 		\item \(F(x^+),F(x^-)\) exist for all \(x\) as do \(F(-\infty),F(\infty)\).

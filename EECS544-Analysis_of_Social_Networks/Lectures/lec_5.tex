@@ -1,5 +1,5 @@
-\lecture{5}{15 Sep. 12:30}{Partition a network}
-\section{Partition a network hierarchically}
+\chapter{Partition a Network}
+\lecture{5}{15 Sep. 12:30}{Partition a network Hierarchically}
 We want to partition a network in order to study its structure. We do this in the following ways
 \begin{enumerate}
 	\item Remove bridges and local bridges
@@ -10,10 +10,10 @@ We want to partition a network in order to study its structure. We do this in th
 In what order?
 \end{problem}
 \begin{answer}
-	Assign importance. to local bridges(Girvan-Newman method/algorithm)
+	Assign importance to local bridges (Girvan-Newman method/algorithm).
 \end{answer}
 
-\subsection{Girvan-Newman method}
+\section{Girvan-Newman method}
 \begin{intuition}
 	A brief summary of this algorithm is
 	\begin{enumerate}
@@ -32,13 +32,13 @@ How to rank order local bridges? Can we just \_ with all edges?
 
 \begin{intuition}
 	An edge is more important if more \emph{shortest paths} use it. Notice that a \emph{normalization} is needed:
-	Between pairs of nodes, there should be lots of variation in the number of shortest path and we want to balance these out.
+	Between pairs of nodes, there should be lots of variation in the number of the shortest path and we want to balance these out.
 \end{intuition}
 
-\begin{definition}
-	Betweenness: Imagine that there is a unit flow of water between each (distinct) pair of nodes. If the flow has $k$ different ways
-	to go to(actually not only depends on where can the flow go, but also where were that node added into BFS in the first place), we divide this unit flow into $1/k$.
-	Equally divide this flow amongst shortest paths coming out of the starting node
+\subsection{Betweenness}
+\begin{definition}[Betweenness]
+	Imagine that there is a unit flow of water between each (distinct) pair of nodes. If the flow has $k$ different ways to go to,\footnote{Actually not only depends on where can the flow go, but also where were that node added into BFS in the first place}
+	we divide this unit flow into $1/k$. We then equally divide this flow amongst the shortest paths coming out of the starting node
 \end{definition}
 
 With the definition of betweenness, the Girvan-Newman method becomes
@@ -60,14 +60,13 @@ But how do we calculate betweenness in reality?
 \end{remark}
 
 
-With BFS exploration( $i$: starting point, $m$ is the destination), we have
+With BFS exploration ($i$: starting point, $m$ is the destination), we have
 \[
-	\#\text{ shortest path from $i$ to $m$} =  \#\text{ shortest path from $i$ to $j$} +  \#\text{ shortest path from $i$ to $k$}
+	\#\text{ the shortest path from $i$ to $m$} =  \#\text{ the shortest path from $i$ to $j$} +  \#\text{ the shortest path from $i$ to $k$}
 \]
 while $j, k$ are at same level $n-1$, and $m$ at level $n$, with the fact that there are edges between $j, k$ to $m$. This can be done by adding a \emph{Counter to BFS}.
 
 \subsection{Counter}
-
 From the above equation, we will have
 \[
 	c_{v}^{n+1} = \sum_{v^n}c^n_{v^n}
@@ -76,4 +75,6 @@ where the subscript indicates the node belongs to the counter, and $c_v^{n+1}$ m
 
 The unit flow flows from nodes back from the path it is added into the BFS algorithm needs to keep its own 1, and then distribute.
 
-\textbf{SUMMARY}: An algorithm for calculating the importance of each local bridge, which turns out to be betweenness. And this is accomplished by BFS with a counter.
+\begin{remark}
+	An algorithm for calculating the importance of each local bridge, which turns out to be betweenness. And this is accomplished by BFS with a counter.
+\end{remark}

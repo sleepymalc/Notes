@@ -1,9 +1,9 @@
 \lecture{8}{27 Sep. 12:30}{HITS}
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
-\begin{prev}
-	The diagonalization:
+\begin{prev}[The diagonalization]
+	We see that
 	\begin{enumerate}
-		\item Spectral theorem: For an \(n\times n\)  symmetric matrix \(A = A^{T}\),
+		\item \autoref{thm:spectral-theorem}: For an \(n\times n\) symmetric matrix \(A = A^{T}\),
 		      \[
 			      \det(\lambda I - A) = 0
 		      \]
@@ -38,109 +38,100 @@
 
 \section{Diagonalization}
 \begin{eg}
-	We start with an example.
-	\begin{enumerate}
-		\item \[
-			      A = \begin{pmatrix}
-				      1 & 0 & 0 \\
-				      0 & 2 & 1 \\
-				      0 & a & 2 \\
-			      \end{pmatrix}.
-		      \]
-		      The determinant is
-		      \[
-			      \begin{split}
-				      \det(\lambda I - A)\\
-				      =& \det \left(  \begin{pmatrix}
-					      \lambda - 1 & 0            & 0             \\
-					      0           & \lambda -  2 & 1             \\
-					      0           & 2            & \lambda -   2 \\
-				      \end{pmatrix}\right) \\
-				      =& (\lambda - 1)((\lambda - 2 )^2 - a)\\
-				      =& (\lambda - 1)(\lambda^2 - 4\lambda + 4 - a).
-			      \end{split}
-		      \]
-		      Since \(\vartriangle = 16 - 4(4-a) = 4a\).
-		      \begin{itemize}
-			      \item \(a = -1\), \(\vartriangle = -4 < 0 \implies\) complex roots.
-			            \[
-				            A = \begin{pmatrix}
-					            1 & 0  & 0 \\
-					            0 & 2  & 2 \\
-					            0 & -1 & 2 \\
-				            \end{pmatrix}
-			            \] has complex roots.
-		      \end{itemize}
-		\item Undirected graphs, Laplician: \(L = D - A\), where \(A\) is adjacent matrix, \(D\) is diagonal degree matrix.
-		      Since \[
-			      L^{T} = (D - A)^{T} = D^{T} - A^{T} = D - A = L.
-		      \] We see that the eigenvalues are real. Many incidence matrices \(B\ (V\times  E)\),
-		      \[
-			      L = BB^{T} \text{ for any choices of }B.
-		      \]
-		      \(L\) has non-negative eigenvalues.
-	\end{enumerate}
+	\[
+		A = \begin{pmatrix}
+			1 & 0 & 0 \\
+			0 & 2 & 1 \\
+			0 & a & 2 \\
+		\end{pmatrix}.
+	\]
+	The determinant is
+	\[
+		\begin{split}
+			\det(\lambda I - A) &= \det \left(  \begin{pmatrix}
+				\lambda - 1 & 0            & 0             \\
+				0           & \lambda -  2 & 1             \\
+				0           & 2            & \lambda -   2 \\
+			\end{pmatrix}\right)\\
+			&= (\lambda - 1)((\lambda - 2 )^2 - a) = (\lambda - 1)(\lambda^2 - 4\lambda + 4 - a).
+		\end{split}
+	\]
+	Since \(\vartriangle = 16 - 4(4-a) = 4a\),  \(a = -1\), \(\vartriangle = -4 < 0 \implies\) complex roots. Hence,
+	\[
+		A = \begin{pmatrix}
+			1 & 0  & 0 \\
+			0 & 2  & 2 \\
+			0 & -1 & 2 \\
+		\end{pmatrix}
+	\] has complex roots.
 \end{eg}
 
-\section{Positive definite and Positive Semi-definite}
-\begin{notation}
-	PD: positive definite, PSD: positive semi-definite
-\end{notation}
-
-\begin{definition}
-	PSD: \(A \) is PSD if and only if
-	\[
-		\forall \vec{x} \neq  \vec{0},\quad \vec{x}^{T}A \vec{x} \geq  0.
-	\]
+\begin{definition}[Laplician]
+	For an undirected graph, the \emph{Laplician} is defined as \(L = D - A\), where \(A\) is adjacent matrix, \(D\) is diagonal degree matrix.
 \end{definition}
+\begin{remark}
+	Since \[
+		L^{T} = (D - A)^{T} = D^{T} - A^{T} = D - A = L.
+	\] We see that the eigenvalues are real. Many incidence matrices \(B\ (V\times  E)\),
+	\[
+		L = BB^{T} \text{ for any choices of }B.
+	\]
+	\(L\) has non-negative eigenvalues.
+\end{remark}
 
-\begin{definition}
-	PD: \(A \) is PD if and only if
+\section{Positive Definite and Positive Semi-Definite}
+\begin{definition}[Positive definite]
+	\(A \) is \emph{positive definite} (PD) if and only if
 	\[
 		\forall \vec{x} \neq  \vec{0},\quad \vec{x}^{T}A \vec{x} > 0.
 	\]
 \end{definition}
 
-Now, if \(\lambda\) is a real eigenvalue, then if \(\lambda \geq  0, A \text{ is PSD}\); \(\lambda > 0, A \text{ is PD}\). We see this
-by follows.
+\begin{definition}[Positive semi-definite]
+	\(A \) is \emph{positive semi-definite} (PSD) if and only if
+	\[
+		\forall \vec{x} \neq  \vec{0},\quad \vec{x}^{T}A \vec{x} \geq  0.
+	\]
+\end{definition}
 
-Suppose \(\lambda\) is a real eigenvalue, let \(\vec{u}\) be the eigenvector such that
-\[
-	A \vec{u} = \lambda \vec{u},
-\]
-and
-\[
-	\vec{u}^{T} A \vec{u} = \vec{u}^{T} (\lambda \vec{u}) = \lambda \underbrace{\vec{u}^{T}\vec{u}}_{>0} \geq 0\implies(\text{PSD})
-\]
-also, if \(\lambda \vec{u}^{T} \vec{u} > 0\), then PD.
+\begin{remark}
+	If \(\lambda\) is a real eigenvalue, then if \(\lambda \geq  0, A \text{ is PSD}\); \(\lambda > 0, A \text{ is PD}\).
+\end{remark}
+\begin{explanation}
+	Suppose \(\lambda\) is a real eigenvalue, let \(\vec{u}\) be the eigenvector such that
+	\[
+		A \vec{u} = \lambda \vec{u},
+	\]
+	and
+	\[
+		\vec{u}^{T} A \vec{u} = \vec{u}^{T} (\lambda \vec{u}) = \lambda \underbrace{\vec{u}^{T}\vec{u}}_{>0} \geq 0\implies(\text{PSD})
+	\]
+	also, if \(\lambda \vec{u}^{T} \vec{u} > 0\), then PD.
 
-Then, we have \(A\) is PSD and symmetric \(\iff \exists \vec{B}\) such that \(A = \vec{B} \vec{B}^{T}\),
+	Then, we have \(A\) is PSD and symmetric \(\iff \exists \vec{B}\) such that \(A = \vec{B} \vec{B}^{T}\),
+	\[
+		x^{T} A x = x^{T} \vec{B} \vec{B}^{T} x = (\vec{B}x)^{T} \vec{B}x = y^{T} y \geq 0.
+	\]
 
-\[
-	x^{T} A x = x^{T} \vec{B} \vec{B}^{T} x = (\vec{B}x)^{T} \vec{B}x = y^{T} y \geq 0.
-\]
-
-Laplacian \(L = B B^{T}\)(incidence matrix)
-\[
-	\implies L \text{ is PSD}\implies 0 \leq \lambda_1 \leq \lambda_2 \leq \vdots \leq \lambda_n.
-\]
-But \(\lambda_1 = 0\), \(0\) is coming from
-\[
-	L = D-A, D = \begin{pmatrix}
-		d_1 &        &     \\
-		    & \ddots &     \\
-		    &        & d_n \\
-	\end{pmatrix}
-\]
-\[
-	L \vec{1} = (D - A)\vec{1} = \begin{pmatrix}
-		d_1    \\
-		d_2    \\
-		\vdots \\
-		d_n    \\
-	\end{pmatrix} - A\vec{1} = \vec{0}\implies L \vec{1} = 0 \vec{1}.
-\]
-Hence, \(0\) is an eigenvalue with eigenvector \(\vec{1}\).
+	Laplacian \(L = B B^{T}\) (incidence matrix)
+	\[
+		\implies L \text{ is PSD}\implies 0 \leq \lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_n.
+	\]
+	But \(\lambda_1 = 0\), \(0\) is coming from
+	\[
+		L = D-A, D = \begin{pmatrix}
+			d_1 &        &     \\
+			    & \ddots &     \\
+			    &        & d_n \\
+		\end{pmatrix}\implies L \vec{1} = (D - A)\vec{1} = \begin{pmatrix}
+			d_1    \\
+			d_2    \\
+			\vdots \\
+			d_n    \\
+		\end{pmatrix} - A\vec{1} = \vec{0}\implies L \vec{1} = 0 \vec{1}.
+	\]
+	Hence, \(0\) is an eigenvalue with eigenvector \(\vec{1}\).
+\end{explanation}
 
 \begin{note}
 	Study the multiplicity of \(0\) as an eigenvalue of \(L\)
@@ -150,14 +141,11 @@ Hence, \(0\) is an eigenvalue with eigenvector \(\vec{1}\).
 	where \(a_i\cdots \)
 \end{note}
 
-\begin{definition}
-	Fiedler eigenvalue:
-	Find Laplacian, do the eigen decomposition, find all that are close to zero.
+\begin{definition}[Fiedler eigenvalue]
+	Find Laplacian, do the eigen-decomposition, find all that are close to zero.
 \end{definition}
 
 The eigenvectors can be used to find communities, and community detection algorithm rely on this fact.
-
-\hr
 
 \begin{prev}
 	Givran-Newman algorithm
@@ -169,16 +157,12 @@ Hyper link(directed): How important is the edge?
 	Search seems to rank nodes, not edges.
 \end{answer}
 
-\hr
-
 \begin{problem}
 How does one rank nodes?
 \end{problem}
 \begin{answer}
 	Network Centrality.
 \end{answer}
-
-\hr
 
 \begin{eg}
 	Many examples.
@@ -188,7 +172,7 @@ How does one rank nodes?
 	\end{itemize}
 \end{eg}
 
-\chapter{HITS(Jon Kleinberg)}
+\chapter{HITS (Jon Kleinberg)}
 HITS: hyper-link induced topic search.
 
 Hubs and authorities.

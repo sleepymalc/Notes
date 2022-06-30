@@ -1,31 +1,63 @@
 \chapter{Introduction to Linear Programming}
 \lecture{1}{30 Aug. 08:00}{Introduction}
 \section{General Linear Programming Problem}
-A general linear programming problem is to either minimize or maximize an \emph{objective function} in the form of
-\[
-	c_1 x_1 + c_2 x_2 + \ldots +c_n x_n,
-\]
-where \(x_{i}\) are our variables, \(i = 1, \ldots, n\), and with the constraints
-\[
-	\begin{alignedat}{4}
-		&a_{11} x_1 + &&\ldots + &&a_{1n}x_n &&\gtreqqless b_1\\
-		&a_{21} x_1 + &&\ldots + &&a_{2n}x_n &&\gtreqqless b_2\\
-		&\vdots &&\ddots &&\vdots && \\
-		&a_{n1} x_1 + &&\ldots + &&a_{nn}x_n &&\gtreqqless b_n\\
-	\end{alignedat},
-\]
-which is sometimes called \emph{structured constraints}, and finally with the constraints
-\[
-	x_1 \gtreqqless 0, x_2\gtreqqless 0, \ldots ,x_n\gtreqqless 0,
-\]
-which is called the \emph{signed constraints}.
+Let's start with the definition of a \hyperref[def:general-linear-programming-problem]{linear programming problem}.
+\begin{definition}[General linear programming problem]\label{def:general-linear-programming-problem}
+	A \emph{general linear programming problem} is to either minimize or maximize an \hyperref[def:objective-function]{objective function} with the
+	\hyperref[def:constraints]{constraints} defined as follows.
 
-We called an assignment of values to variable \(x\) as a \emph{solution}, and if this solution satisfies the linear constraints, we say that
-this solution is feasible. And a solution is \emph{optimal} if there is no feasible solution with better objective value. Finally, the set of feasible
-solutions is called \emph{feasible region.}
+	\begin{definition}[Objective function]\label{def:objective-function}
+		An \emph{objective function} is in the form of
+		\[
+			c_1 x_1 + c_2 x_2 + \ldots +c_n x_n,
+		\]
+		where \(x_{i}\) are our variables, \(i = 1, \ldots, n\).
+	\end{definition}
+
+	\begin{definition}[Constraints]\label{def:constraints}
+		The \emph{constraints} are the combination of \hyperref[def:structured-constraints]{structured constraints} and also the \hyperref[def:signed-constraints]{signed constraints}.
+		\begin{definition}[Structured constraints]\label{def:structured-constraints}
+			The so-called \emph{structured constraints} are in the form of
+			\[
+				\begin{alignedat}{4}
+					&a_{11} x_1 + &&\ldots + &&a_{1n}x_n &&\gtreqqless b_1\\
+					&a_{21} x_1 + &&\ldots + &&a_{2n}x_n &&\gtreqqless b_2\\
+					&\vdots &&\ddots &&\vdots && \\
+					&a_{n1} x_1 + &&\ldots + &&a_{nn}x_n &&\gtreqqless b_n\\
+				\end{alignedat}.
+			\]
+		\end{definition}
+		\begin{definition}[Signed constraints]\label{def:signed-constraints}
+			The constraints
+			\[
+				x_1 \gtreqqless 0, x_2\gtreqqless 0, \ldots ,x_n\gtreqqless 0
+			\]
+			is called the \emph{signed constraints}.
+		\end{definition}
+	\end{definition}
+\end{definition}
+
+Given a \hyperref[def:general-linear-programming-problem]{general linear programming problem}, we have the following definitions.
+\begin{definition}[Solution of a general linear programming problem]\label{def:solution-of-a-general-linear-programming-problem}
+	We called an assignment of values to variable \(x\) as a \emph{solution}.
+
+	\begin{definition}[Feasible solution]\label{def:feasible-solution}
+		If this \hyperref[def:solution-of-a-general-linear-programming-problem]{solution} satisfies the \hyperref[def:constraints]{linear constraints}, we say that
+		this \hyperref[def:solution-of-a-general-linear-programming-problem]{solution} is a \emph{feasible solution}.
+	\end{definition}
+
+	\begin{definition}[Feasible region]\label{def:feasible-region}
+		The set of \hyperref[def:feasible-solution]{feasible solutions} is called \emph{feasible region}.
+	\end{definition}
+
+	\begin{definition}[Optimal solution]\label{def:optimal-solution}
+		And a \hyperref[def:solution-of-a-general-linear-programming-problem]{solution} is an \emph{optimal solution} if there is no \hyperref[def:feasible-solution]{feasible solution}
+		with better objective value.
+	\end{definition}
+\end{definition}
 
 \begin{remark}
-	A feasible region is a polyhedron.
+	A \hyperref[def:feasible-region]{feasible region} is a polyhedron.
 \end{remark}
 
 
@@ -57,32 +89,46 @@ We will denote
 	\end{pmatrix}.
 \]
 
-It's convenient to only consider so-called \emph{Standard form problem}, which has the form of
-\begin{align*}
-	\min~ & c^Tx    \\
-	      & Ax = b  \\
-	      & x\geq 0
-\end{align*}
-with the condition that rows of \(A\) are linear independent, which means that no redundant equations  and the system is consistent.
+It's convenient to only consider linear programming in the \hyperref[def:standard-form]{standard form} defined as follows.
 
-\begin{remark}
-	Notice that we only consider finitely many of constrains, since the property that the objective function can attain its extremum only on a compact set, which
-	requires finite dimensional vector space.
+\begin{definition}[Standard form]\label{def:standard-form}
+	The \emph{standard form} linear programming problem has the form of
+	\begin{align*}
+		\min~ & c^Tx    \\
+		      & Ax = b  \\
+		      & x\geq 0
+	\end{align*}
+	with the condition that rows of \(A\) are linear independent, which means that no redundant equations  and the system is consistent.
+\end{definition}
+
+\begin{remark}[Compactness of the solution space]
+	Notice that we only consider finitely many of \hyperref[def:constraints]{constrains}, since the property that the \hyperref[def:objective-function]{objective function}
+	can attain its extremum only on a compact set, which requires finite dimensional vector space.
 \end{remark}
 
-Surprisingly, every linear programming problem can be converted to standard form, we now see how is this done.
-\begin{enumerate}
-	\item Sign:\begin{itemize}
-		      \item If \(x_{j}\leq 0 \implies x_j \to -x_j^-\), where \(x_{j}^- \geq 0\).
-		      \item If \(x_{j}\) is unrestricted \(\implies x_j \to x_j^+ - x_{j}^-\), where \(x_j^{\pm} \geq 0\).
-	      \end{itemize}
-	\item Constraints:\begin{itemize}
-		      \item \(\sum\limits_{j=1}^{n} a_{ij} x_{j} \leq b \implies \sum\limits_{j=1}^{n} a_{ij} x_{j} + s_i = b_{i}\), where \(s_i \geq 0\). This \(s_i\) sometimes called \emph{slack variable}.
-		      \item \(\sum\limits_{j=1}^{n} a_{ij} x_{j} \geq b \implies \sum\limits_{j=1}^{n} a_{ij} x_{j} - s_i = b_{i}\), where \(s_i \geq 0\). This \(s_i\) sometimes called \emph{surplus variable}.
-	      \end{itemize}
-	\item Maximize: \(\max \sum c_{j}x_{j} \implies -\min -\sum c_{j}x_{j}\).
-\end{enumerate}
-
-
-
-
+\begin{remark}[Convert to standard form]
+	Surprisingly, every \hyperref[def:general-linear-programming-problem]{general linear programming problem} can be converted to \hyperref[def:standard-form]{standard form},
+	we now see how is this done.
+\end{remark}
+\begin{explanation}
+	Given a \hyperref[def:general-linear-programming-problem]{general linear programming problem} with our notation, we have the following conversion.
+	\begin{itemize}
+		\item Sign:
+		      \begin{itemize}
+			      \item If \(x_{j}\leq 0 \implies x_j \to -x_j^-\), where \(x_{j}^- \geq 0\).
+			      \item If \(x_{j}\) is unrestricted \(\implies x_j \to x_j^+ - x_{j}^-\), where \(x_j^{\pm} \geq 0\).
+		      \end{itemize}
+		\item Constraints:
+		      \begin{itemize}
+			      \item \(\sum\limits_{j=1}^{n} a_{ij} x_{j} \leq b \implies \sum\limits_{j=1}^{n} a_{ij} x_{j} + s_i = b_{i}\), where \(s_i \geq 0\).
+			            \begin{definition}[Slack variable]\label{def:slack-variable}
+				            This \(s_i\) sometimes called \emph{slack variable}.
+			            \end{definition}
+			      \item \(\sum\limits_{j=1}^{n} a_{ij} x_{j} \geq b \implies \sum\limits_{j=1}^{n} a_{ij} x_{j} - s_i = b_{i}\), where \(s_i \geq 0\).
+			            \begin{definition}[Surplus variable]\label{def:surplus-variable}
+				            This \(s_i\) sometimes called \emph{surplus variable}.
+			            \end{definition}
+		      \end{itemize}
+		\item Maximize: \(\max \sum c_{j}x_{j} \implies -\min -\sum c_{j}x_{j}\).
+	\end{itemize}
+\end{explanation}

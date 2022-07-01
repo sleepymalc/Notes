@@ -1,6 +1,6 @@
 \lecture{23}{01 Dec. 08:00}{Branch and Bound Algorithm}
-\subsection{Branch and Bound Algorithm}
-We first dive into \hyperref[eg:branch-and-bound]{branch and bound algorithm} as we showed.
+\subsection{Branch and Bound Algorithm}\label{subsec:branch-and-bound}
+We first dive into \hyperref[eg:branch-and-bound]{branch and bound algorithm} as we mentioned.
 \begin{prev}
 	The worst case in terms of time complexity for \hyperref[algo:simplex-algorithm]{simplex algorithm} is
 	\[
@@ -12,38 +12,38 @@ We first dive into \hyperref[eg:branch-and-bound]{branch and bound algorithm} as
 
 We now focus on the following integer programming,
 \begin{align*}
-	\max~                   & y^{\top}b                                                                                           \\
+	\max~                   & y^{\top}b(\eqqcolon z)                                                                              \\
 	                        & y^{\top}A\leq c^{\top}                                                                              \\
 	(D_{\mathcal{I} })\quad & y\in\mathbb{\MakeUppercase{R}}^m(y_{i}\in\mathbb{\MakeUppercase{Z}} \text{ for } i\in \mathcal{I}),
 \end{align*}
-where \(\mathcal{I} \subseteq \{1, 2, \ldots , m\}\). By taking the dual, we have
+where \(\mathcal{I} \subseteq \{1, 2, \ldots , m\}\). By taking the \hyperref[def:dual]{dual}, we have
 \begin{align*}
-	\min~    & c^Tx     \\
-	         & Ax = b   \\
+	\min~    & c^{\top}x \\
+	         & Ax = b    \\
 	(P)\quad & x\geq 0.
 \end{align*}
 
 We'll see that the branch and bound algorithm maintains the following:
 \begin{itemize}
-	\item \(\mathcal{L} \): A list \(\mathcal{L} \) of \emph{subproblems} that have the form of \(D_{\mathcal{I} }\).
+	\item \(\mathcal{L} \): A list \(\mathcal{L} \) of \emph{subproblems} that have the form of \((D_{\mathcal{I^\prime } })\) where \(\mathcal{\MakeUppercase{i}} ^\prime \subset \mathcal{\MakeUppercase{i}}\)
 	\item \(\mathrm{LB} \): The current best lower bound on \(z\) such that \(\mathrm{LB}\leq z \).
 	\item \(\overline{y}_{\mathrm{LB}}\): The \(\overline{y}\) corresponds to \(\mathrm{LB}\).
 \end{itemize}
 
 \begin{note}
-	\(\mathrm{LB} \) is the objective value of the best feasible solution to the original problem seen so far. And we'll set
+	\(\mathrm{LB} \) is the objective value of the best \hyperref[def:feasible-solution]{feasible solution} to the original problem seen so far. And we'll set
 	\[
 		\mathrm{LB} \coloneqq  -\infty
 	\]
-	if there is no known feasible solution.
+	if there is no known \hyperref[def:feasible-solution]{feasible solution}.
 \end{note}
 \begin{remark}
-	The key property of \(\mathcal{L} \) is that if there is a feasible solution to the original problem that is better than
-	\(\mathrm{LB} \), it should be feasible for some subproblem on \(\mathcal{L} \).
+	The key property of \(\mathcal{L} \) is that if there is a \hyperref[def:feasible-solution]{feasible solution} to the original problem that is better than
+	\(\mathrm{LB} \), it should be \hyperref[def:feasible-solution]{feasible} for some subproblem on \(\mathcal{L} \).
 
 	\par Initially, we have
 	\[
-		\mathcal{L} \coloneqq \left\{D_{\mathcal{I}}\right\}.
+		\mathcal{L} \coloneqq \left\{D_{\mathcal{I}^\prime }\right\}.
 	\]
 
 	\par And we stop if
@@ -53,88 +53,126 @@ We'll see that the branch and bound algorithm maintains the following:
 	since this implies \(z = \mathrm{LB} \).
 \end{remark}
 
-The general procedure is to take some problem \(\widetilde{D}_{\mathcal{I}}\) from \(\mathcal{L}\) and remove it, and then solve
-its linear programming \(\widetilde{D}\). Then we see
-\begin{itemize}
-	\item If \(\widetilde{D}\) is infeasible, then do nothing.
-	\item Otherwise, let \(\overline{y}\) be its basic optimal solution.
-	      \begin{itemize}
-		      \item If \(\overline{y}^{\top}b\leq \mathrm{LB}\), then do nothing.
-		      \item Otherwise,
-		            \begin{itemize}
-			            \item If \(\overline{y}^{\top}_i\in\mathbb{\MakeUppercase{Z}}\) for \(i\in \mathcal{I}\), then \(\overline{y}\) solves \(\widetilde{D}_{\mathcal{I}}\).
-			                  Let
-			                  \[
-				                  \mathrm{LB} \coloneqq \overline{y}^{\top}b \text{ and } \overline{y}_{\mathrm{LB}}\coloneqq \overline{y}.
-			                  \]
-			            \item If \(\overline{y}^{\top}_{i}\notin \mathbb{\MakeUppercase{Z}}\) for some \(i\in \mathcal{I} \),
-			                  \begin{itemize}
-				                  \item Select \(i\in \mathcal{I} \) such that \(\overline{y}_{i}\notin \mathbb{\MakeUppercase{Z}}\).
-				                  \item Place two \emph{child} problems on \(L\):
+The general procedure is to take some problem \((\widetilde{D}_{\mathcal{I}^\prime })\) from \(\mathcal{L}\) and remove it, and then solve
+its continuous relaxation \((\widetilde{D})\) and proceed. Rigorously, we have the following pseudocode.
 
-				                        \begin{enumerate}
-					                        \item \emph{Down branch}: \(\widetilde{D}_{\mathcal{I}}\) with
-					                              \[
-						                              y_{i}\leq \left\lfloor \overline{y}_{i} \right\rfloor.
-					                              \]
-					                        \item \emph{Up branch}: \(\widetilde{D}_{\mathcal{I}}\) with
-					                              \[
-						                              y_{i}\geq \left\lceil \overline{y}_{i} \right\rceil.
-					                              \]
-					                              \begin{note}
-						                              To match the form, we use \(-y_{i}\leq -\left\lceil \overline{y}_{i}\right\rceil\).
-					                              \end{note}
-				                        \end{enumerate}
-			                  \end{itemize}
-		            \end{itemize}
-	      \end{itemize}
-\end{itemize}
+\par
+\begin{algorithm}[H]\label{algo:branch-and-bound-algorithm}
+	\DontPrintSemicolon
+	\caption{Branch and Bound Algorithm}
+	\SetKwData{result}{result}
+	\KwData{(Mixed) Integer programming \((D_{\mathcal{\MakeUppercase{i}} } )\) with \emph{feasible} \((P)\)\footnote{This makes sure that the \hyperref[def:feasible-region]{feasible region} of the continuous relaxation \((\widetilde{D})\) of any \((\widetilde{D} _{\mathcal{\MakeUppercase{i}} ^\prime })\) is a bounded set, so we can guarantee finite termination.}}
+	\KwResult{\hyperref[def:optimal-solution]{optimal solution} \(\overline{y}\) and \hyperref[def:optimal-solution]{optimal} value, or report \texttt{\((D_{\mathcal{\MakeUppercase{i}} } )\) is infeasible}}
 
-Process: \(\widetilde{D}_{\mathcal{I}}\)(problem chosen from \(\mathcal{L}\))
-\begin{itemize}
-	\item Solve linear programming relaxation \(\widetilde{D}\)
-	      \[
-		      \begin{alignedat}{5}
-			      \max ~&y^{\top}b\qquad\qquad	&&\min~		&&c^{\top}x\\
-			      &y^{\top}A\leq c^{\top} 		&&			&&Ax = b\\
-			      (D)\quad	& 				&&(P)\quad	&&x\geq  0
-		      \end{alignedat}.
-	      \]
-	      What we're really doing is solving \((P)\) by \hyperref[algo:simplex-algorithm]{simplex algorithm}. Let \(\overline{y}^{\top}\coloneqq c^{\top}_{\beta}A^{\top}_{\beta}\).
-	      \begin{itemize}
-		      \item \emph{Down branch}:
-		            \[
-			            \begin{alignedat}{5}
-				            \max ~	&y^{\top}b\qquad\qquad				&&\min~	&&c^{\top}x+\left\lfloor \overline{y}_{i} \right\rfloor x_{down}\\
-				            &y^{\top}A\leq c^{\top} 				&&		&&Ax + e_{i}x_{down} = b\\
-				            (D)\quad& y_{i}\leq \left\lfloor \overline{y}_{i} \right\rfloor	&&(P)\quad&&x\geq 0, x_{down}\geq 0.
-			            \end{alignedat}
-		            \]
-		            The reduced cost of \(x_{down}\) is
-		            \[
-			            \left\lfloor \overline{y}_{i} \right\rfloor - \overline{y}^{\top}e_{i} = \left\lfloor \overline{y}_{i} \right\rfloor - \overline{y}_{i}.
-		            \]
-		            If this is negative, then \(x_{down}\) enters the basis, which happens when \(\overline{y}_{i}\notin\mathbb{\MakeUppercase{Z}}\).
-		      \item \emph{Up branch}:
-		            \begin{align*}
-			            \min~ & c^Tx  - \left\lceil \overline{y}_{i} \right\rceil x_{up} \\
-			                  & Ax - e_{i}x_{up}= b                                      \\
-			                  & x\geq 0, x_{up}\geq 0.
-		            \end{align*}
-		            The reduced cost of \(x_{up}\) is
-		            \[
-			            -\left\lceil \overline{y}_{i} \right\rceil - \overline{y}^{\top}(-e_{i}) = \overline{y}_{i} - \left\lceil \overline{y}_{i} \right\rceil.
-		            \]
-		            If this is negative, then \(x_{up}\) enters the basis.
-	      \end{itemize}
-	      \begin{remark}
-		      In practice,
+	\SetKwFunction{help}{SolveContRelax}
+
+	\BlankLine
+	\(\mathcal{\MakeUppercase{l}} \gets \{D_{\mathcal{\MakeUppercase{i}}^\prime } \colon \mathcal{\MakeUppercase{i}}^\prime  \subseteq \mathcal{\MakeUppercase{i}}  \}\)\;
+	\(\mathrm{LB} \gets -\infty \)\;
+	\(\overline{y} _{\mathrm{LB}}\gets\) random vector\;
+	\;
+	\While{\(\mathcal{\MakeUppercase{l}} \neq \varnothing \)}{
+	\(D_{\mathcal{\MakeUppercase{i}}^\prime}  \gets \) an element in \(\mathcal{\MakeUppercase{l}} \)\Comment*[r]{See \autoref{subsec:node-selection}}
+	\(\mathcal{\MakeUppercase{l}} \gets \mathcal{\MakeUppercase{l}} \setminus \{D_{\mathcal{\MakeUppercase{i}} ^\prime }\}\)\;
+	\(\result\gets\)\help{\(D_{\mathcal{\MakeUppercase{i}}^\prime }\)}\;\label{algo:branch-and-bound-algorithm:line8}
+	\If{\texttt{\(\result\neq\) infeasible}}{
+	\(\overline{y} \gets \result\)\Comment*[r]{Retrieve \hyperref[def:basic-solution]{basic} \hyperref[def:optimal-solution]{optimal solution}}
+	\If{\(\overline{y} ^{\top} b > \mathrm{LB}\)}{
+	\uIf(\Comment*[f]{\(\overline{y}\) solves \(D _\mathcal{\MakeUppercase{i}}\)}){\(\overline{y} _{i} ^{\top} \in \mathbb{\MakeUppercase{z}} \) for \(i\in \mathcal{\MakeUppercase{i}}\)}{
+		\(\mathrm{LB}\gets \overline{y} ^{\top} b \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal} value}
+		\(\overline{y} _\mathrm{LB} \gets \overline{y} \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal solution}}
+	}\Else(\Comment*[f]{\(\overline{y}\) doesn't solve \(D _\mathcal{\MakeUppercase{i}}\), \(\overline{y} _{i} ^{\top} \notin \mathbb{\MakeUppercase{z}} \) for some \(i\in \mathcal{\MakeUppercase{i}}\)}){
+	\(i^{\ast} \gets\) an \(i\in \mathcal{\MakeUppercase{i}} \) such that \(\overline{y} _{i} \notin \mathbb{\MakeUppercase{z}} \)\label{algo:branch-and-bound-algorithm:line16}\Comment*[r]{See \autoref{subsec:branching-variable-selection}}
+	\(D ^\text{u}_{\mathcal{\MakeUppercase{i}} ^\prime }\gets D _{\mathcal{\MakeUppercase{i}}^\prime } \) with \(y_{i^{\ast} }\geq \left\lceil \overline{y}_{i^{\ast} } \right\rceil\)\Comment*[r]{\hyperref[rmk:up-branch]{Up branch}}
+	\(D ^\text{d}_{\mathcal{\MakeUppercase{i}} ^\prime }\gets D _{\mathcal{\MakeUppercase{i}}^\prime } \) with \(y_{i^{\ast} }\leq \left\lfloor \overline{y}_{i^{\ast} } \right\rfloor\)\footnote{To match the form, we use \(-y_{i}\leq -\left\lceil \overline{y}_{i}\right\rceil\).}\Comment*[r]{\hyperref[rmk:down-branch]{Down branch}}
+	\(\mathcal{\MakeUppercase{l}} \gets \mathcal{\MakeUppercase{l}} \cup \{D ^\text{u}_{\mathcal{\MakeUppercase{i}} ^\prime }, D ^\text{d}_{\mathcal{\MakeUppercase{i}} ^\prime }\}\)\;
+	}
+	}
+	}
+	}
+	\;
+	\uIf(){\(\mathrm{LB} = -\infty\) }{
+		\Return{\texttt{infeasible}}\;
+	}\Else{
+		\Return{\(\overline{y} _\mathrm{LB} \), \(\mathrm{LB}\)}\;
+	}
+\end{algorithm}
+
+\begin{remark}[Finite termination]
+	We see that there are only finitely many (though exponential) \(D_{\mathcal{\MakeUppercase{i}} ^\prime}\) can be added into \(\mathcal{\MakeUppercase{l}} \),
+	hence \hyperref[algo:branch-and-bound-algorithm]{branch and bound algorithm} is finitely terminating.
+\end{remark}
+
+Because the above algorithm maintains the key invariant for \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, i.e.,
+every \hyperref[def:feasible-solution]{feasible solution} of \((D_{\mathcal{\MakeUppercase{i}} } )\) with greater objective value
+than \(\mathrm{LB}\) is \hyperref[def:feasible-solution]{feasible} for a problem on the list \(\mathcal{\MakeUppercase{l}} \) we
+have the following result.
+\begin{theorem}\label{thm:lec23-1}
+	Suppose that \((P)\) is feasible. Then at termination of \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, we have
+	\(\mathrm{LB}=-\infty\) if \((\widetilde{D} _\mathcal{\MakeUppercase{i}})\) is infeasible, or with \(\overline{y} _{\mathrm{LB}}\)
+	being an \hyperref[def:optimal-solution]{optimal solution} of \((D_{\mathcal{\MakeUppercase{i}} } )\).
+\end{theorem}
+
+\begin{remark}[Detail of the algorithm]
+	We make some remark on \hyperref[algo:branch-and-bound-algorithm]{branch and bound algorithm} we have above.
+	\begin{itemize}
+		\item When calling \autoref{algo:branch-and-bound-algorithm:line8}, we first obtain the continuous relaxation \((\widetilde{D})\) of
+		      \((D_{\mathcal{\MakeUppercase{i}} ^\prime })\) and its \hyperref[def:primal]{primal} \((\widetilde{P} )\) as follows.
+		      \[
+			      \begin{alignedat}{5}
+				      \max ~&y^{\top}b\qquad\qquad	&&\min~		&&c^{\top}x\\
+				      &y^{\top}A\leq c^{\top} 		&&			&&Ax = b\\
+				      (\widetilde{D})\quad	& 				&&(\widetilde{P})\quad	&&x\geq  0
+			      \end{alignedat}.
+		      \]
+		      Then what we're really doing is solving \((\widetilde{P})\) instead of \((\widetilde{D} )\) by \hyperref[algo:simplex-algorithm]{simplex algorithm}
+		      and get an \hyperref[def:optimal-solution]{optimal} basis \(\beta\), and this give us an \hyperref[def:optimal-solution]{optimal}
+		      \hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}^{\top}\coloneqq c^{\top}_{\beta}A^{-1} _{\beta}\).
+		\item When calling \autoref{algo:branch-and-bound-algorithm:line16}, after choosing \(i^{\ast} \), adding a constraint to \((D_{\mathcal{\MakeUppercase{i}} ^\prime })\)
+		      effectively adds a variable to the corresponding continuous relaxation \((\widetilde{D})\), hence adds a variable to the \hyperref[def:standard-form]{standard form}
+		      problem \((\widetilde{P} )\). So, a \hyperref[def:basic]{basis} for \((\widetilde{P})\) remains \hyperref[def:feasible-solution]{feasible} after we introduce
+		      such a variable.
 		      \begin{itemize}
-			      \item When we solve a child, our best wish is that optimal value \(\leq \mathrm{LB}\).(then we don't have to branch)
-			      \item As we solve the child, we can stop once its objective value is at or below \(\mathrm{LB} \).
+			      \item\label{rmk:down-branch} Down branch: The constraint \(y_{i^{\ast}} \leq \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor\) dualize to a new variable
+			      \(x_{\text{down}}\) in \((\widetilde{P})\), which has a new column \(A_{\text{down}}\coloneqq e_{i^{\ast}}\) and a cost coefficient
+			      \(c_{\text{down}}\coloneqq \left\lfloor \overline{y} _{i^{\ast}}\right\rfloor \).
+			      \[
+				      \begin{alignedat}{5}
+					      \max ~	&y^{\top}b\qquad\qquad				&&\min~	&&c^{\top}x+\left\lfloor \overline{y}_{i^{\ast}} \right\rfloor x_{\text{down}}\\
+					      &y^{\top}A\leq c^{\top} 				&&		&&Ax + e_{i^{\ast}}x_{\text{down}} = b\\
+					      (\widetilde{D})\quad& y_{i^{\ast}}\leq \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor	&&(\widetilde{P})\quad&&x\geq 0, x_{\text{down}}\geq 0.
+				      \end{alignedat}
+			      \]
+			      The \hyperref[def:reduced-cost]{reduced cost} of \(x_{\text{down}}\) is
+			      \[
+				      \overline{c}_{\text{down}}=c_{\text{down}}-\overline{y}^{\top}A_{\text{down}} = \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor - \overline{y}^{\top}e_{i^{\ast}} = \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor - \overline{y}_{i^{\ast}} < 0
+			      \]
+			      since \(\overline{y} _{i^{\ast} }\) is not an integer. Hence, \(x_{\text{down}}\) is eligible to enter the \hyperref[def:basic]{basis}.
+			      \item\label{rmk:up-branch} Up branch: Similarly, we have a new variable \(x_{\text{up}}\) in \((\widetilde{P})\) for the new constraint
+			      \(y_{i^{\ast}} \geq \left\lceil \overline{y} _{i^{\ast}} \right\rceil \).
+			      \[
+				      \begin{alignedat}{5}
+					      \max ~	&y^{\top}b\qquad\qquad				&&\min~	&& c^{\top}x - \left\lceil \overline{y}_{i^{\ast}} \right\rceil x_{\text{up}}\\
+					      &y^{\top}A\leq c^{\top} 				&&		&&Ax - e_{i^{\ast}} x_{\text{up}}= b                                      \\
+					      (\widetilde{D})\quad& y_{i^{\ast}} \geq \left\lceil \overline{y} _{i^{\ast}} \right\rceil	&&(\widetilde{P})\quad&&x\geq 0, x_{\text{up}}\geq 0.
+				      \end{alignedat}
+			      \]
+
+			      The \hyperref[def:reduced-cost]{reduced cost} of \(x_{\text{up}}\) is
+			      \[
+				      -\left\lceil \overline{y}_{i^{\ast}} \right\rceil - \overline{y}^{\top}(-e_{i^{\ast}}) = \overline{y}_{i^{\ast}} - \left\lceil \overline{y}_{i^{\ast}} \right\rceil < 0,
+			      \]
+			      since \(\overline{y} _{i^{\ast} }\) is not an integer. Hence, \(x_{\text{up}}\) is eligible to enter the \hyperref[def:basic]{basis}.
 		      \end{itemize}
-	      \end{remark}
-\end{itemize}
+	\end{itemize}
+\end{remark}
+
+\begin{remark}[Partially solving \(\widetilde{P}\)]
+	In practice, when solving \((\widetilde{P})\) (induced from any \((D_{\mathcal{\MakeUppercase{i}} ^\prime})\)) via \hyperref[algo:simplex-algorithm]{simplex algorithm}, we are
+	generating a sequence of \emph{decreasing objective values} of \((\widetilde{P})\), each one of which is an upper-bound on the \hyperref[def:optimal-solution]{optimal} value of its parent, and it's
+	also a \emph{potential new \(\mathrm{LB}\)}. We see that when the \hyperref[def:optimal-solution]{optimal} value of \((\widetilde{P})\) \(\leq \mathrm{LB}\), we terminate immediately since solving this \((\widetilde{P})\) will not
+	improve \(\mathrm{LB}\).
+\end{remark}
 
 \subsection{Global Upper Bound}
 Since in practice, there are many errors in the data, so we may just want to solve it approximately, which means we only want to get a global upper bound.
@@ -148,15 +186,15 @@ To calculate the set in the \(\max\), whenever children are created, solve their
 \]
 
 \begin{remark}
-	Apparently, we see that we can do this by reordering the algorithm. But for the original algorithm, we don't care about \(\mathrm{UB}\).
+	Apparently, we see that we can do this by reordering the algorithm. But for the \hyperref[algo:branch-and-bound-algorithm]{original algorithm}, we don't care about \(\mathrm{UB}\).
 \end{remark}
 
-\subsection{Node Selection}
+\subsection{Node Selection}\label{subsec:node-selection}
 Node Selection means which problem to select from \(\mathcal{L} \) to process. There are several ways to do this.
 \begin{enumerate}
-	\item FIFO (First In First Out) \(\cong\) BFS(Breadth First Search)
+	\item FIFO (First In First Out) \(\cong\) BFS (Breadth First Search)\footnote{\url{https://en.wikipedia.org/wiki/Breadth-first_search}}
 	      \par New problems go at the end of the list, select from the front. We see that this strategy will \textbf{maximize memory usage}.
-	\item LIFO (Last In First Out) \(\cong\) DFS(Depth First Search)
+	\item LIFO (Last In First Out) \(\cong\) DFS (Depth First Search)\footnote{\url{https://en.wikipedia.org/wiki/Depth-first_search}}
 	      \par New problems go to the first of the list, select from the front. We see that this strategy will \textbf{increase \(\mathrm{LB}\) quickly}.
 	\item Best Bound.
 	      \par Need the LP upper bound for all problems on the list. We see that this strategy will \textbf{decrease \(\mathrm{UB}\) quickly}.
@@ -166,7 +204,7 @@ Node Selection means which problem to select from \(\mathcal{L} \) to process. T
 	For any reasonable solver, it will first do the second strategy for several times, and they exclusively do the third strategy.
 \end{remark}
 
-\subsection{Choosing Branching Variable}
+\subsection{Branching Variable selection}\label{subsec:branching-variable-selection}
 \begin{enumerate}
 	\item Random: Choose randomly among \(y_{i}\) such that \(\overline{y}_{i}\notin\mathbb{\MakeUppercase{Z}}\).
 	\item Biggest Cost: Choose based on the biggest \(c_{i}\).

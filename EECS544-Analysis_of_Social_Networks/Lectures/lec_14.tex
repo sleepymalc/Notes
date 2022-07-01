@@ -24,7 +24,7 @@ Can we be more specific?
 		      \end{itemize}
 		\item Reset
 	\end{itemize}
-	where we restart/reset to a specific node \(v^{*}\in \mathcal{V}\).
+	where we restart/reset to a specific node \(v^{\ast}\in \mathcal{V}\).
 	\begin{remark}
 		Personalizing the restart distribution is what allows this to happen.
 	\end{remark}
@@ -33,19 +33,19 @@ Can we be more specific?
 \begin{definition}
 	\emph{Personalized PageRank} is denoted by
 	\[
-		\pi_{v^{*}}(s).
+		\pi_{v^{\ast}}(s).
 	\]
 \end{definition}
-Collect \(\pi_{v^{*}}(s)\) for all \(v^{*}\in\mathcal{V}\), then if we reset uniformly,
+Collect \(\pi_{v^{\ast}}(s)\) for all \(v^{\ast}\in\mathcal{V}\), then if we reset uniformly,
 \[
-	\pi(s) = \frac{1}{V}\sum\limits_{v^{*}\in\mathcal{V}} \pi_{v^{*}}(s).
+	\pi(s) = \frac{1}{V}\sum\limits_{v^{\ast}\in\mathcal{V}} \pi_{v^{\ast}}(s).
 \]
 
 \begin{remark}
 	Average of all the personalized PageRank, one gets the scaled PageRank. We see this as follows.
 	Similar average with respect to any specific distribution \(\mu\) distributed on \(\mathcal{V}\), then
 	\[
-		\pi_\mu(s) = \sum\limits_{v^{*}\in \mathcal{V}} \mu(v^{*})\pi_{v^{*}}(s).
+		\pi_\mu(s) = \sum\limits_{v^{\ast}\in \mathcal{V}} \mu(v^{\ast})\pi_{v^{\ast}}(s).
 	\]
 
 	Compare to the Scaled PageRank, we see that \(\mu\) is uniformly distributed for Scaled PageRank.
@@ -101,7 +101,7 @@ for \(T\) long.
 \subsection{\(1^{st}\) Estimator for \(\pi_V(s)\)}
 The estimation of \(\pi\) is then
 \[
-	\hat{\pi}^{T}_{V}(s) = \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}}\qquad \forall v\in \mathcal{V}.
+	\hat{\pi}^{\top}_{V}(s) = \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}}\qquad \forall v\in \mathcal{V}.
 \]
 With \(T\to \infty \), we have
 \[
@@ -111,21 +111,21 @@ by SLLN. But this algorithm has two main issues.
 \begin{enumerate}
 	\item Not clear how long we should run this for. Namely, we need to be able to say something about
 	      \[
-		      \expectation{}{\left\vert \hat{\pi}^{T}_V(s) - \pi_V(s) \right\vert^2 }
+		      \expectation{}{\left\vert \hat{\pi}^{\top}_V(s) - \pi_V(s) \right\vert^2 }
 	      \]
 	      in \(T\) to ensure the speed of convergence.
 	\item The estimator is a biased estimator. Recall that an estimator is unbiased if
 	      \[
-		      \mathrm{E}\left[ \hat{\pi}_{V}^{T}(s) \right] = \pi_V(s);
+		      \mathrm{E}\left[ \hat{\pi}_{V}^{\top}(s) \right] = \pi_V(s);
 	      \]
 	      and if it is biased,
 	      \[
-		      \hat{\pi}_{V}^{T}(s) - \pi_V(s)\neq 0
+		      \hat{\pi}_{V}^{\top}(s) - \pi_V(s)\neq 0
 	      \]
-	      for this particular estimator \(\hat{\pi}^{T}_V(s)\). We see that \(\hat{\pi}^{T}_V(s)\) is indeed biased by
+	      for this particular estimator \(\hat{\pi}^{\top}_V(s)\). We see that \(\hat{\pi}^{\top}_V(s)\) is indeed biased by
 	      \[
 		      \begin{split}
-			      \mathrm{E}\left[\hat{\pi}^{T}_V(s)\right] &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \expectation{}{\mathbbm{1}_{\{X_n = v\}}}\\
+			      \mathrm{E}\left[\hat{\pi}^{\top}_V(s)\right] &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \expectation{}{\mathbbm{1}_{\{X_n = v\}}}\\
 			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \probability{}{X_n = v} \\
 			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} (\mu_0 P^n)_v\underset{T\to \infty }{\to }\pi_V(s),
 		      \end{split}
@@ -144,19 +144,19 @@ by SLLN. But this algorithm has two main issues.
 \subsection{\(2^{nd}\) Estimator for \(\pi_V(s)\)}
 Recall that
 \[
-	\widetilde{N}(s) = sN+(1-s)\frac{1}{N}\vec{1}\vec{1}^{T}.
+	\widetilde{N}(s) = sN+(1-s)\frac{1}{N}\vec{1}\vec{1}^{\top}.
 \]
 Notice that \(\pi(s)\) is the left eigenvector of \(\widetilde{N}(s)\) with eigenvalue \(1\). Write
 \[
 	\begin{split}
-		\pi^{T}(s)\widetilde{N}(s) &= \pi^{T}(s) \\
-		&= \pi^{T}(s)sN+(1 - s)\underbrace{\pi^{T}(s)\vec{1}}_{ = 1}\frac{1}{V}\vec{1}^{T}\\
-		&= \pi^{T}(s)sN+(1 - s)\frac{1}{V}\vec{1}^{T},
+		\pi^{\top}(s)\widetilde{N}(s) &= \pi^{\top}(s) \\
+		&= \pi^{\top}(s)sN+(1 - s)\underbrace{\pi^{\top}(s)\vec{1}}_{ = 1}\frac{1}{V}\vec{1}^{\top}\\
+		&= \pi^{\top}(s)sN+(1 - s)\frac{1}{V}\vec{1}^{\top},
 	\end{split}
 \]
-where \(\pi^{T}(s)\vec{1} = 1\) because \(\pi(s)\) is a probability vector, which sums to \(1\). Then
+where \(\pi^{\top}(s)\vec{1} = 1\) because \(\pi(s)\) is a probability vector, which sums to \(1\). Then
 \[
-	\pi^{T}(s)(I - sN) = (1 - s)\frac{1}{V}\vec{1}^{T}.
+	\pi^{\top}(s)(I - sN) = (1 - s)\frac{1}{V}\vec{1}^{\top}.
 \]
 \begin{prev}
 	\[
@@ -166,16 +166,16 @@ where \(\pi^{T}(s)\vec{1} = 1\) because \(\pi(s)\) is a probability vector, whic
 Hence,
 \[
 	\begin{split}
-		\pi^{T}(s) &= (1 - s)\frac{1}{V}\vec{1}^{T}(I - sN)^{-1}\\
-		&= (1 - s)\frac{1}{V}\vec{1}^{T}\left(\sum\limits_{i=0}^{\infty} s^i N^i\right)\\
-		&= \sum\limits_{i=0}^{\infty} s^i (1 - s)\frac{1}{V}\vec{1}^{T}N^i.
+		\pi^{\top}(s) &= (1 - s)\frac{1}{V}\vec{1}^{\top}(I - sN)^{-1}\\
+		&= (1 - s)\frac{1}{V}\vec{1}^{\top}\left(\sum\limits_{i=0}^{\infty} s^i N^i\right)\\
+		&= \sum\limits_{i=0}^{\infty} s^i (1 - s)\frac{1}{V}\vec{1}^{\top}N^i.
 	\end{split}
 \]
 Notice that \(N^0\coloneqq I\).
 
 We now analysis this expression.
 \[
-	\pi^{T}(s) = \sum\limits_{i=0}^{\infty} \underbrace{s^i (1 - s)}_{\tau}\frac{1}{V}\vec{1}^{T}N^i,
+	\pi^{\top}(s) = \sum\limits_{i=0}^{\infty} \underbrace{s^i (1 - s)}_{\tau}\frac{1}{V}\vec{1}^{\top}N^i,
 \]
 where
 \begin{itemize}
@@ -193,9 +193,9 @@ where
 		      \item \(\tau\) is so-called \emph{geometric random variable}.
 	      \end{itemize}
 	      We see that reset happens at time \(N\), hence we look at \textbf{time} \(\bm{N-1}\).
-	\item \(\frac{1}{V}\vec{1}^{T}N^i\)
+	\item \(\frac{1}{V}\vec{1}^{\top}N^i\)
 	      \begin{itemize}
-		      \item \(u = \frac{1}{V}\vec{1}^{T}\) is the uniform distribution on the nodes of the graph.
+		      \item \(u = \frac{1}{V}\vec{1}^{\top}\) is the uniform distribution on the nodes of the graph.
 		      \item \(N^i\) represents random walk repeated \(i\) times.
 	      \end{itemize}
 	      In all, this term represents that we start at a uniformly random node and take \(i\) steps as per random walk. Namely,
@@ -286,7 +286,7 @@ Also, the variance can be derived as
 \subsection{\(3^{rd}\) Estimator for \(\pi_V(s)\)}
 Recall that
 \[
-	\pi(s) = \frac{1 - s}{V}\vec{1}^{T} (I - sN)^{-1}.
+	\pi(s) = \frac{1 - s}{V}\vec{1}^{\top} (I - sN)^{-1}.
 \]
 Define
 \[

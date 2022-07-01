@@ -3,9 +3,9 @@
 \begin{prev}
 	Basic page Rank Algorithm: If the page rank converges, then we must have
 	\[
-		r^{*} = (N^{T})r^{*} \iff (r^{*})^{T} N = (r^{*})^{T},
+		r^{\ast} = (N^{\top})r^{\ast} \iff (r^{\ast})^{\top} N = (r^{\ast})^{\top},
 	\]
-	\(r^{*}\) is a left eigenvector of \(N\) for eigenvalue \(1\).
+	\(r^{\ast}\) is a left eigenvector of \(N\) for eigenvalue \(1\).
 \end{prev}
 \begin{remark}
 	row stochastic property \(\implies\) \(1\) is eigenvalue.
@@ -76,16 +76,16 @@ Come back to Perron-Frobenius Theorem:
 	Let \(A\) be an irreducible non-negative matrix, then the eigenvalue with the \emph{largest magnitude is positive}
 	and has \emph{multiplicity 1}. This eigenvalue is called the \textbf{spectral radius} or the \textbf{Perron-Frobenius eigenvalue},
 	denoted as \(\rho(A)\).
-	Both the right eigenvector(\(\vec{v}, A \vec{v} = \rho(A) \vec{v}\)) and the left eigenvector(\(\vec{w}, \vec{w}^{T}A = \rho(A) \vec{w}^{T}\))
+	Both the right eigenvector(\(\vec{v}, A \vec{v} = \rho(A) \vec{v}\)) and the left eigenvector(\(\vec{w}, \vec{w}^{\top}A = \rho(A) \vec{w}^{\top}\))
 	can be taken to be positive with
 	\[
-		\vec{w}^{T} \vec{v} = 1.
+		\vec{w}^{\top} \vec{v} = 1.
 	\]
 	Furthermore, we have
 	\begin{enumerate}
 		\item The following holds:
 		      \[
-			      \lim_{m \to \infty} \frac{1}{m} \sum\limits_{k=0}^{m-1} \frac{A^k}{(\rho(A))^k} = \vec{v} \vec{w}^{T}_{(n\times n)}.
+			      \lim_{m \to \infty} \frac{1}{m} \sum\limits_{k=0}^{m-1} \frac{A^k}{(\rho(A))^k} = \vec{v} \vec{w}^{\top}_{(n\times n)}.
 		      \]
 		\item The following holds:
 		      \begin{itemize}
@@ -100,7 +100,7 @@ Come back to Perron-Frobenius Theorem:
 		      \end{itemize}
 		\item If, in addition, \(A\) is also \emph{aperiodic}, then
 		      \[
-			      \lim_{m \to \infty} \frac{A^m}{(\rho(A))^m} = \vec{v} \vec{w}^{T}.
+			      \lim_{m \to \infty} \frac{A^m}{(\rho(A))^m} = \vec{v} \vec{w}^{\top}.
 		      \]
 		      This is a stronger statement!
 	\end{enumerate}
@@ -136,17 +136,17 @@ Scaled Page Rank is a modification of Basic Page Rank that gives a matrix \(\wid
 Then we have
 \[
 	\begin{split}
-		r^{new} &= s(N^{T}r^{old})+\frac{1-s}{V}\vec{1}\\
-		&= s(N^{T}r^{old})+\frac{1-s}{V}\vec{1}\cdot 1\\
-		&= s(N^{T}u^{old}) + \frac{1-s}{V}\vec{1} \underbrace{(\vec{1}^{T}r^{odd})}_{\text{add to }1}
-		= \underbrace{(sN + \frac{1-s}{V}\vec{1}\vec{1}^{T})^{T}}_{\widetilde{N}(s)} r^{old}.
+		r^{new} &= s(N^{\top}r^{old})+\frac{1-s}{V}\vec{1}\\
+		&= s(N^{\top}r^{old})+\frac{1-s}{V}\vec{1}\cdot 1\\
+		&= s(N^{\top}u^{old}) + \frac{1-s}{V}\vec{1} \underbrace{(\vec{1}^{\top}r^{odd})}_{\text{add to }1}
+		= \underbrace{(sN + \frac{1-s}{V}\vec{1}\vec{1}^{\top})^{\top}}_{\widetilde{N}(s)} r^{old}.
 	\end{split}
 \]
 Finally, we have the scaled page rank being
 \[
 	\begin{split}
-		&\implies r^{new} = (\widetilde{N}(s))^{T}r^{old}\\
-		&\implies r(k) = (\widetilde{N}(s)^{T})^k r(0).
+		&\implies r^{new} = (\widetilde{N}(s))^{\top}r^{old}\\
+		&\implies r(k) = (\widetilde{N}(s)^{\top})^k r(0).
 	\end{split}
 \]
 
@@ -158,32 +158,32 @@ Finally, we have the scaled page rank being
 		\item strictly positive with all entries at least \(\frac{1-s}{V}\)
 	\end{itemize}
 \end{note}
-\(\rho(\widetilde{N}(s)) = 1\) and irreducible and aperiodic! \(\implies (\widetilde{N}(s))^k \to \vec{v}\vec{w}^{T}\) where
+\(\rho(\widetilde{N}(s)) = 1\) and irreducible and aperiodic! \(\implies (\widetilde{N}(s))^k \to \vec{v}\vec{w}^{\top}\) where
 \(\vec{v}\) is the right eigenvector of \(\widetilde{N}(s)\) and \(\vec{w}\) is the left eigenvector of \(\widetilde{N}(s)\) with
-\(\vec{w}^{T} \vec{v} = 1\).
+\(\vec{w}^{\top} \vec{v} = 1\).
 
 And since \(\widetilde{N}(s)\) is row stochastic, we have \(\vec{v} = \vec{1}\), hence,
 \[
-	\vec{w}^{T}\vec{1} = 1
+	\vec{w}^{\top}\vec{1} = 1
 \]
 which means the sum of all entries is \(1\) and \(\vec{2}\) has all positive entries.
 
 If \((\vec{v}, \vec{w})\) are right and left eigenvectors of \(\widetilde{N}(s) \iff (\vec{w}, \vec{v})\) are the right and left eigenvectors
-of \(\widetilde{N}^{T}(s)\).
+of \(\widetilde{N}^{\top}(s)\).
 
 Scaled Page Rank converges to
 \[
-	r^{*} = (\widetilde{N}(s))^{T}r^{*}.
+	r^{\ast} = (\widetilde{N}(s))^{\top}r^{\ast}.
 \]
 
-We need the right eigenvector of \(\widetilde{N}^{T}(s) \iff \) same as left eigenvector of \(\widetilde{N}(s)\), which is \(\vec{w}(s)\).
+We need the right eigenvector of \(\widetilde{N}^{\top}(s) \iff \) same as left eigenvector of \(\widetilde{N}(s)\), which is \(\vec{w}(s)\).
 
 \begin{remark}
 	\(s \cong 0.8 ~ 0.85\)
 \end{remark}
 
 \begin{prev}
-	HITS: We now start to investigate \(A A^{T}\), where \(A\) is adjacency matrix.
+	HITS: We now start to investigate \(A A^{\top}\), where \(A\) is adjacency matrix.
 	\begin{itemize}
 		\item Non-negative
 		\item largest eigenvalue - Perron-Frobenius eigenvalues

@@ -28,39 +28,38 @@ There is something we need in order to solve the above problem.
 \section{Decomposition Algorithm}
 In this section we describe what is usually known as \textbf{Dantzig-Wolfe Decomposition}. We need
 \begin{enumerate}
-	\item Simplex Algorithm.
-	\item Geometry of Basic feasible solutions and directions.
+	\item \hyperref[algo:simplex-algorithm]{Simplex Algorithm}.
+	\item Geometry of \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solutions} and \hyperref[def:basic-direction]{directions}.
 	\item Duality.
 \end{enumerate}
 
 We first see a useful theorem.
 \subsection{Representation Theorem}
-Let \(P\) be
+Let \((P)\) be
 \begin{align*}
-	\min~ & c^Tx     \\
-	      & Ax = b   \\
-	      & x\geq 0.
+	\min~    & c^Tx     \\
+	         & Ax = b   \\
+	(P)\quad & x\geq 0.
 \end{align*}
 
-\begin{theorem}[Representation theorem]
-	Suppose that \(P\) is feasible. Then let \(\mathcal{X}\) be
+\begin{theorem}[Representation theorem]\label{thm:representation-theorem}
+	Suppose that \((P)\) is feasible. Then let \(\mathcal{X}\) be
 	\[
 		\mathcal{X} \coloneqq \{\hat{x}^j \colon j\in \mathcal{J}\}
 	\]
-	be the set of basic feasible solutions of \(P\). Also, let \(\mathcal{Z}\) be
+	be the set of \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solutionss} of \((P)\). Also, let \(\mathcal{Z}\) be
 	\[
 		\mathcal{Z}\coloneqq \{\hat{z}^k\colon k\in \mathcal{K}\}
 	\]
-	be the set of basic feasible rays of \(P\).
+	be the set of basic feasible \hyperref[def:ray]{rays} of \((P)\).
 
-	Then the feasible region of \(P\) is equal to
+	Then the \hyperref[def:feasible-region]{feasible region} of \((P)\) is equal to
 	\[
 		S^\prime\coloneqq \left\{\sum\limits_{j\in\mathcal{J}} \lambda_{j} \hat{x}^j + \sum\limits_{k\in\mathcal{K}}\mu_k \hat{z}^k\colon \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1;\ \lambda_{j}\geq 0,\ j\in \mathcal{J};\ \mu^k\geq 0,\ k\in \mathcal{K}\right\}.
 	\]
 \end{theorem}
-
 \begin{proof}
-	Let \(S\) be the feasible region of \(P\). We show that \(S = S^\prime\) by showing \(S^\prime\subseteq S\) and \(S^\prime\supseteq S\).
+	Let \(S\) be the \hyperref[def:feasible-region]{feasible region} of \((P)\). We show that \(S = S^\prime\) by showing \(S^\prime\subseteq S\) and \(S^\prime\supseteq S\).
 	\begin{enumerate}
 		\item \(S^\prime\subseteq S\). Since
 		      \[
@@ -81,8 +80,9 @@ Let \(P\) be
 			      Keep in mind that in the above system, \(\hat{x}\) and \(\hat{z}\) are fixed, the variables are the \(\lambda_{j}\) and \(\mu_k\).
 		      \end{note}
 
-		      Now, instead of directly constructing a solution, we use Farkas' Lemma. Namely, we write down a system such that
-		      if this system is infeasible, by Farkas' Lemma, our original system is feasible. Firstly, in Farkas' Lemma, we have
+		      Now, instead of directly constructing a solution, we use \hyperref[lma:Farkas-lemma]{Farkas' Lemma}. Namely, we write down a system such that
+		      if this system is infeasible, by \hyperref[lma:Farkas-lemma]{Farkas' Lemma}, our original system is feasible. Firstly, in
+		      \hyperref[lma:Farkas-lemma]{Farkas' Lemma}, we have
 		      \[
 			      A = \begin{pmatrix}
 				      \hat{x}^1 & \hat{x}^2 & \ldots & \hat{z}^1 & \hat{z}^2 & \hat{z}^3 & \ldots \\
@@ -92,64 +92,64 @@ Let \(P\) be
 				      1       \\
 			      \end{pmatrix}
 		      \]
-		      in \((I)\). Now, denote the dual variables with \(w,\ t\), then we have
+		      in \((I)\). Now, denote the \hyperref[def:dual]{dual} variables with \(w,\ t\), then we have
 		      \[
 			      \begin{split}
 				      \begin{pmatrix}
-					      w^{T} & t \\
+					      w^{\top} & t \\
 				      \end{pmatrix}\begin{pmatrix}
 					      \hat{x} \\
 					      1       \\
 				      \end{pmatrix}&>0\\
 				      \begin{pmatrix}
-					      w^{T} & t \\
+					      w^{\top} & t \\
 				      \end{pmatrix}\begin{pmatrix}
 					      \hat{x}^j \\
 					      1         \\
 				      \end{pmatrix}&\leq 0 \text{ for }j\in\mathcal{J}\\
 				      \begin{pmatrix}
-					      w^{T} & t \\
+					      w^{\top} & t \\
 				      \end{pmatrix}\begin{pmatrix}
 					      \hat{z}^k \\
 					      0         \\
 				      \end{pmatrix}&\leq 0 \text{ for }k\in\mathcal{K}\\
 			      \end{split}
 		      \]
-		      for \((II)\). We only need to show that \(II\) cannot have a solution. This is easy to show. Firstly,
+		      for \((II)\). We only need to show that \((II)\) cannot have a solution. This is easy to show. Firstly,
 		      we see that the above inequalities are equivalent to
 		      \[
 			      \begin{alignedat}{3}
-				      &w^{T}\hat{x}+t&&>0\\
-				      &w^{T}\hat{x}^j + t&&\leq 0\\
-				      &w^{T}\hat{z}^k &&\leq \vec{0}
+				      &w^{\top}\hat{x}+t&&>0\\
+				      &w^{\top}\hat{x}^j + t&&\leq 0\\
+				      &w^{\top}\hat{z}^k &&\leq \vec{0}
 			      \end{alignedat}\iff\begin{alignedat}{3}
-				      &-w^{T}\hat{x}&&<t\\
-				      &-w^{T}\hat{x}^j &&\geq \hat{t} &&\text{ for }j\in\mathcal{J}\\
-				      &-w^{T}\hat{z}^K &&\geq 0 &&\text{ for }k\in\mathcal{K}.
+				      &-w^{\top}\hat{x}&&<t\\
+				      &-w^{\top}\hat{x}^j &&\geq \hat{t} &&\text{ for }j\in\mathcal{J}\\
+				      &-w^{\top}\hat{z}^K &&\geq 0 &&\text{ for }k\in\mathcal{K}.
 			      \end{alignedat}
 		      \]
 		      Now, suppose this does have a solution \(\hat{w}, \hat{t}\). Then, consider
 		      \begin{align*}
-			      \min~ & -\hat{w}^{T}x(<\hat{t}) \\
-			            & Ax = b                  \\
+			      \min~ & -\hat{w}^{\top}x(<\hat{t}) \\
+			            & Ax = b                     \\
 			            & x\geq 0.
 		      \end{align*}
-		      Notice that the objective value of \(\hat{x}\) here is less than \(\hat{t}\) by \(II\). Since we know that
-		      \(Ax = b\), hence this linear programming is feasible. Moreover, from \(-\hat{w}^{T}\hat{x}\leq \hat{t}\) and
-		      \(-\hat{w}^{T}\hat{x}^j\geq \hat{t}\), we see that we have a better solution with respect to the objective function
+		      Notice that the objective value of \(\hat{x}\) here is less than \(\hat{t}\) by \((II)\). Since we know that
+		      \(Ax = b\), hence this linear programming is feasible. Moreover, from \(-\hat{w}^{\top}\hat{x}\leq \hat{t}\) and
+		      \(-\hat{w}^{\top}\hat{x}^j\geq \hat{t}\), we see that we have a better solution with respect to the \hyperref[def:objective-function]{objective function}
 		      among the linear combination of \emph{extreme points} \(\hat{x}^j\). But this is only possible for unbounded linear
 		      programming problem, which needs the positive dot product between rays and the objective vector. But from
 		      \(-\hat{w}\hat{z}^k\geq 0\), we see that this will never happen, hence the theorem is proved.
 		      \begin{figure}[H]
 			      \centering
 			      \incfig{representation-theorem}
-			      \caption{bounded and unbounded case in Simplex Algorithm}
+			      \caption{Bounded and unbounded case in \hyperref[algo:simplex-algorithm]{Simplex Algorithm}}
 			      \label{fig:representation-theorem}
 		      \end{figure}
 	\end{enumerate}
 \end{proof}
 
-With this representation theorem, consider
+With this \hyperref[thm:representation-theorem]{representation theorem}, consider
 \begin{align*}
 	\min~         & c^Tx          \\
 	              & Ex\geq h      \\
@@ -174,16 +174,33 @@ we turn the linear problem into
 
 Furthermore, this is equivalent to
 \begin{align*}
-	\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{T} \hat{z}^k  \right)\mu_k \\
-	         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h \\
-	         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                         \\
+	\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
+	         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h    \\
+	         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                            \\
 	(M)\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
 \end{align*}
-The system is now extremely reduced, but the cost is that we now have huge amount of variables. We call this as the \emph{Master Problem}.
+The system is now extremely reduced, but the cost is that we now have huge amount of variables. We call this as the \hyperref[def:master-problem]{master problem}.
 
-We formalize the above result as so-called Decomposition Theorem.
-\begin{theorem}[The decomposition theorem]
-	\label{Decomposition Theorem}
+\begin{definition}[Master problem]\label{def:master-problem}
+	Given a linear programming problem
+	\begin{align*}
+		\min~         & c^Tx          \\
+		              & Ex\geq h      \\
+		\text{"easy"} & \begin{dcases}
+			                Ax = b \\
+			                x\geq 0,
+		                \end{dcases}
+	\end{align*}
+	the so-called \emph{master problem} is defined as
+	\begin{align*}
+		\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
+		         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h    \\
+		         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                            \\
+		(M)\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
+	\end{align*}
+\end{definition}
+We formalize the above result as so-called \hyperref[thm:decomposition-theorem]{Decomposition Theorem}.
+\begin{theorem}[Decomposition theorem]\label{thm:decomposition-theorem}
 	Let
 	\begin{align*}
 		\min~    & c^Tx      \\
@@ -192,59 +209,58 @@ We formalize the above result as so-called Decomposition Theorem.
 		(Q)\quad & x\geq 0
 	\end{align*}
 	Let \(S\coloneqq \left\{ x\in\mathbb{\MakeUppercase{R}}^n\colon Ax = b, x\geq 0 \right\}\), \(\mathcal{X} \coloneqq \left\{\hat{x}^j\colon j\in\mathcal{J} \right\}\) be
-	the set of basic feasible solution \(S\) and \(\mathcal{Z} \coloneqq \left\{\hat{z}^k\colon k\in\mathcal{K} \right\}\) be the set of basic feasible
-	rays of \(S\). Then \(Q\) is equivalent to the \emph{Master Problem }
+	the set of \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solutions} \(S\) and
+	\(\mathcal{Z} \coloneqq \left\{\hat{z}^k\colon k\in\mathcal{K} \right\}\) be the set of basic feasible \hyperref[def:ray]{rays} of \(S\). Then \(Q\) is equivalent to
+	the \hyperref[def:master-problem]{master problem} \((M)\)
 	\begin{align*}
-		\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{T} \hat{z}^k  \right)\mu_k \\
-		         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h \\
-		         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                         \\
+		\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
+		         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h    \\
+		         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                            \\
 		(M)\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
 	\end{align*}
 \end{theorem}
 
 \begin{remark}
-	We think of \(E\) being a \emph{complicated} constraints matrix, while \(A\) is much easier. Further, the reason why we choose \(\leq \) for \(E\) and \(=\) for \(A\) is not because
-	this makes them complicated or easy, but only for our convenience. In deed, we will soon see that we can turn \(M\) into a standard form problem without increasing complexity.
+	We think of \(E\) being a \emph{complicated} constraint matrix, while \(A\) is much easier. Further, the reason why we choose \(\leq \) for \(E\) and \(=\) for \(A\) is not because
+	this makes them complicated or easy, but only for our convenience. In deed, we will soon see that we can turn \(M\) into a \hyperref[def:standard-form]{standard form} problem
+	without increasing complexity.
 \end{remark}
 
 \section{Solution of the Master Problem via the Simplex Algorithm}
 We now want to solve \(M\). And since we can't write out \(M\) explicitly since there are too many variables. But instead, we can reasonably
-\emph{maintain} a basic solution of \(\overline{M}\), the standard form of \(M\). Furthermore, the only part of the Simplex Algorithm that is
-sensitive to the total number of variables is when we check for variables with negative reduced cost. So we now try to find an indirect way to
-check this rather than find it one by one.
+\emph{maintain} a \hyperref[def:basic-solution]{basic solution} of \(\overline{M}\), the \hyperref[def:standard-form]{standard form} of \(M\).
+Furthermore, the only part of the \hyperref[algo:simplex-algorithm]{simplex algorithm} that is sensitive to the total number of variables is
+when we check for variables with negative \hyperref[def:reduced-cost]{reduced cost}. So we now try to find an indirect way to check this rather than find it one by one.
 
-\hr
-
-Denotes the dual variable of \(M\) as \(y\) and \(\sigma\) with \(y\geq \vec{0}\) and \(\sigma\) unrestricted. We further turn \(M\) into
-the standard form problem, which is just
+Denotes the \hyperref[def:dual]{dual} variable of \(M\) as \(y\) and \(\sigma\) with \(y\geq \vec{0}\) and \(\sigma\) unrestricted. We further turn \(M\) into
+the \hyperref[def:standard-form]{standard form} problem, which is just
 \begin{align*}
-	\min~               & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{T} \hat{z}^k  \right)\mu_k   \\
-	                    & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k - Is = h \\
-	                    & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                           \\
+	\min~               & \sum\limits_{j\in\mathcal{J}}\left(c^T\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
+	                    & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k - Is = h  \\
+	                    & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                            \\
 	(\overline{M})\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_K\geq 0 \text{ for }k\in\mathcal{K}, s\geq 0.
 \end{align*}
 
-Suppose that \(\overline{y}\), \(\overline{\sigma}\) forms a basic dual solution. The reduced cost of \(\lambda_{j}\) associated
-with \(\hat{x}^j\) is
+Suppose that \(\overline{y}\), \(\overline{\sigma}\) forms a \hyperref[def:dual-basic-solution]{basic dual solution}. The \hyperref[def:reduced-cost]{reduced cost}
+of \(\lambda_{j}\) associated with \(\hat{x}^j\) is
 \[
-	(c^{T}\hat{x}^j) - \begin{pmatrix}
-		\overline{y}^{T} & \overline{\sigma} \\
+	(c^{\top}\hat{x}^j) - \begin{pmatrix}
+		\overline{y}^{\top} & \overline{\sigma} \\
 	\end{pmatrix}\begin{pmatrix}
 		E\hat{x}^j \\
 		1          \\
-	\end{pmatrix} = c^{T}\hat{x}^j - \hat{y}^{T}E\hat{x}^j - \overline{\sigma} = (c^{T} - \overline{y}^{T}E)\hat{x}^j - \overline{\sigma}
+	\end{pmatrix} = c^{\top}\hat{x}^j - \hat{y}^{\top}E\hat{x}^j - \overline{\sigma} = (c^{\top} - \overline{y}^{\top}E)\hat{x}^j - \overline{\sigma}
 \]
-since \(\overline{c}_{\eta_{j}} = c_{\eta_{j}} - \overline{y}^{T}A_{\eta_{j}}\).
+since \(\overline{c}_{\eta_{j}} = c_{\eta_{j}} - \overline{y}^{\top}A_{\eta_{j}}\).
 
 \begin{problem}
-Is there a \(\lambda_{j}\) with this reduced cost negative?
+Is there a \(\lambda_{j}\) with this \hyperref[def:reduced-cost]{reduced cost} negative?
 \end{problem}
-
 \begin{answer}
 	Consider
 	\begin{align*}
-		-\sigma + \min~ & (c^{T} - \overline{y}^{T}E)x \\
-		                & Ax = b                       \\
+		-\sigma + \min~ & (c^{\top} - \overline{y}^{\top}E)x \\
+		                & Ax = b                             \\
 		                & x\geq 0.
 	\end{align*}
 \end{answer}

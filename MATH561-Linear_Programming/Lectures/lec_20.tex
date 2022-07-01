@@ -1,87 +1,86 @@
 \lecture{20}{17 Nov. 08:00}{Convergence of Projected Subgradient Optimization Algorithm}
 \begin{prev}
-	We have already shown the algorithm of projected subgradient optimization, and the key is to choose an adequate
+	We have already shown the \hyperref[algo:projected-subgradient-optimization-algorithm]{algorithm of projected subgradient optimization}, and the key is to choose an adequate
 	step size \(\lambda_{k}\). So we now try to give some conditions about how we can choose \(\lambda_{k}\) such
 	that the algorithm converges.
 \end{prev}
 
-\begin{lemma}
-	Let \(y^{*}\) be any maximizer of \(v\) over \(y\geq \vec{0}\). Suppose \(\lambda_{k}>0\) for all \(k\). Then
+\begin{lemma}\label{lma:lec20-1}
+	Let \(y^{\ast}\) be any maximizer of \(v\) over \(y\geq \vec{0}\). Suppose \(\lambda_{k}>0\) for all \(k\). Then
 	\[
-		\left\lVert y^{*} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{*} - \hat{y}^1\right\rVert^2 \leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 - 2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{*}) - v(\hat{y}^i)\right).
+		\left\lVert y^{\ast} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^1\right\rVert^2 \leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 - 2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{\ast}) - v(\hat{y}^i)\right).
 	\]
 \end{lemma}
 \begin{proof}
 	Let \(w^{k+1} \coloneqq \hat{y}^k + \lambda_{k}\hat{\gamma}^k\). Then for \(k\geq 1\),
 	\[
 		\begin{split}
-			\left\lVert y^{*} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{*} - \hat{y}^k\right\rVert^2 &\leq \left\lVert y^{*} - w^{k+1}\right\rVert^2 - \left\lVert \hat{y} - \hat{y}^k\right\rVert^2\\
-			&= \left\lVert (y^{*} - \hat{y}^k) - \lambda_{k}\hat{\gamma}^k\right\rVert^2 - \left\lVert y^{*} - \hat{y}^k\right\rVert^2\\
-			&= \lambda_{k}^{2}\left\lVert \hat{\gamma}^k\right\rVert^2 - 2\lambda_{k}(y^{*} - \hat{y}^k)^{T}\hat{\gamma}^k\\
-			&\leq \lambda_{k}^{2}\left\lVert \hat{\gamma}^k\right\rVert^2 - 2\lambda_{k}(v(y^{*}) - v(\hat{y}^k)),
+			\left\lVert y^{\ast} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^k\right\rVert^2 &\leq \left\lVert y^{\ast} - w^{k+1}\right\rVert^2 - \left\lVert \hat{y} - \hat{y}^k\right\rVert^2\\
+			&= \left\lVert (y^{\ast} - \hat{y}^k) - \lambda_{k}\hat{\gamma}^k\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^k\right\rVert^2\\
+			&= \lambda_{k}^{2}\left\lVert \hat{\gamma}^k\right\rVert^2 - 2\lambda_{k}(y^{\ast} - \hat{y}^k)^{\top}\hat{\gamma}^k
+			\leq \lambda_{k}^{2}\left\lVert \hat{\gamma}^k\right\rVert^2 - 2\lambda_{k}(v(y^{\ast}) - v(\hat{y}^k)),
 		\end{split}
 	\]
 	where the first inequality follows from the triangle inequality, and the last inequality follows from the definition of
-	\hyperref[def:subgradient]{subgradient}. From the argument above, we just do some \emph{telescoping} and see the lemma holds.
+	\hyperref[def:subgradient]{subgradient}. We then do some \emph{telescoping} and see that the result follows.
+	\begin{figure}[H]
+		\centering
+		\incfig{maximizer-lemma-triangle-inequality}
+		\caption{Triangle Inequality for \(\mathrm{Proj}_{\mathbb{\MakeUppercase{R}}^m_+}w^{k+1} = \hat{y}^{k+1}\).}
+		\label{fig:maximizer-lemma-triangle-inequality}
+	\end{figure}
 \end{proof}
-\begin{figure}[H]
-	\centering
-	\incfig{maximizer-lemma-triangle-inequality}
-	\caption{Triangle Inequality for \(\mathrm{Proj}_{\mathbb{\MakeUppercase{R}}^m_+}w^{k+1} = \hat{y}^{k+1}\).}
-	\label{fig:maximizer-lemma-triangle-inequality}
-\end{figure}
 
-Now, denotes \(v^{*}_{k}\coloneqq \max\limits_{i = 1, \ldots , k}\left\{v(\hat{y}^i)\right\}\), which is just the best function value
+Now, denotes \(v^{\ast}_{k}\coloneqq \max\limits_{i = 1, \ldots , k}\left\{v(\hat{y}^i)\right\}\), which is just the best function value
 up to iteration \(k\). Then we have the following result.
-\begin{theorem}
-	Let \(y^{*}\) be any maximizer of \(v\) over \(y\geq \vec{0}\). Assume that we take a basic optimal solution of \(L_{\hat{y}^k}\). We
-	further suppose \(\lambda_{k}>0\), \(\sum\limits_{k=1}^{\infty} \lambda_{k} = +\infty \), \(\sum\limits_{k=1}^{\infty} \lambda_{k}^2< +\infty\).
-	Then
+\begin{theorem}\label{thm:lec20-1}
+	Let \(y^{\ast}\) be any maximizer of \(v\) over \(y\geq \vec{0}\). Assume that we take a \hyperref[def:basic-solution]{basic} \hyperref[def:optimal-solution]{optimal solution}
+	of \(L_{\hat{y}^k}\). We further suppose \(\lambda_{k}>0\), \(\sum\limits_{k=1}^{\infty} \lambda_{k} = +\infty \), \(\sum\limits_{k=1}^{\infty} \lambda_{k}^2< +\infty\). Then
 	\[
-		\lim_{k \to \infty} v^{*}_k = v(y^{*}).
+		\lim_{k \to \infty} v^{\ast}_k = v(y^{\ast}).
 	\]
 \end{theorem}
 \begin{proof}
-	From the previous lemma, the first term of the left-hand side is non-negative, hence we have
+	From the \autoref{lma:lec20-1}, the first term of the left-hand side is non-negative, hence we have
 	\[
-		- \left\lVert y^{*} - \hat{y}^1\right\rVert^2 \leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 - 2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{*}) - v(\hat{y}^i)\right),
+		- \left\lVert y^{\ast} - \hat{y}^1\right\rVert^2 \leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 - 2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{\ast}) - v(\hat{y}^i)\right),
 	\]
 	after rearrangement,
 	\[
-		2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{*}) - v(\hat{y}^i)\right)\leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 + \left\lVert y^{*} - \hat{y}^1\right\rVert^2.
+		2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{\ast}) - v(\hat{y}^i)\right)\leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 + \left\lVert y^{\ast} - \hat{y}^1\right\rVert^2.
 	\]
-	From the definition of \(v^{*}_{k}\), we have
+	From the definition of \(v^{\ast}_{k}\), we have
 	\[
-		2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{*}) - v^{*}_{k}\right)\leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 + \left\lVert y^{*} - \hat{y}^1\right\rVert^2.
+		2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{\ast}) - v^{\ast}_{k}\right)\leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 + \left\lVert y^{\ast} - \hat{y}^1\right\rVert^2.
 	\]
-	And since the \(\left(v(y^{*}) - v^{*}_{k}\right)\) doesn't depend on \(i\) anymore, we can take it out of the summation. We further have
+	And since the \(\left(v(y^{\ast}) - v^{\ast}_{k}\right)\) doesn't depend on \(i\) anymore, we can take it out of the summation. We further have
 	\[
-		0\leq v(y^{*}) - v^{*}_{k}\leq \frac{\sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 + \left\lVert y^{*} - \hat{y}^1\right\rVert^2}{2 \sum\limits_{i=1}^{k} \lambda_{i}}.
+		0\leq v(y^{\ast}) - v^{\ast}_{k}\leq \frac{\sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 + \left\lVert y^{\ast} - \hat{y}^1\right\rVert^2}{2 \sum\limits_{i=1}^{k} \lambda_{i}}.
 	\]
-	We observe that \(\left\lVert y^{*} - \hat{y}^1\right\rVert^2 \) is a constant, denotes it by \(c\). Further, for all \(i\), \(\left\lVert \hat{\gamma}^i\right\rVert^2 \) is bounded, so we can define
+	We observe that \(\left\lVert y^{\ast} - \hat{y}^1\right\rVert^2 \) is a constant, denotes it by \(c\). Further, for all \(i\), \(\left\lVert \hat{\gamma}^i\right\rVert^2 \) is bounded, so we can define
 	\[
 		\Gamma\coloneqq \max\left\{\left\lVert h - Ex\right\rVert^2\colon \text{\(x\) is a basic feasible solution of \(Ax = b\), \(x\geq 0\)  }\right\}.
 	\]
 	With \(\Gamma\), the inequality becomes
 	\[
-		0\leq v(y^{*}) - v^{*}_{k}\leq \frac{\Gamma\sum\limits_{i=1}^{k} \lambda_{i}^{2} + c}{2 \sum\limits_{i=1}^{k} \lambda_{i}}\to 0 \text{ as \(k \to  \infty \) }
+		0\leq v(y^{\ast}) - v^{\ast}_{k}\leq \frac{\Gamma\sum\limits_{i=1}^{k} \lambda_{i}^{2} + c}{2 \sum\limits_{i=1}^{k} \lambda_{i}}\to 0 \text{ as \(k \to  \infty \) }
 	\]
-	since we assume \(\sum \lambda_{i} \to  +\infty \) and \(\sum\limits\lambda_{i}^{2}< +\infty  \). Then we see \(v^{*}_{k} = v(y^{*})\) as \(k \to \infty \) by squeeze theorem.
+	since we assume \(\sum \lambda_{i} \to  +\infty \) and \(\sum\limits\lambda_{i}^{2}< +\infty  \). Then we see \(v^{\ast}_{k} = v(y^{\ast})\) as \(k \to \infty \) by squeeze theorem.
 \end{proof}
 \begin{remark}
 	Suppose we instead choose
 	\[
 		\lambda_{k} = s\in\mathbb{\MakeUppercase{R}}^+
 	\]
-	being just a constant. Then the inequality becomes
+	being just a constant. Then the inequality in the above proof becomes
 	\[
 		\frac{c + s^2 k \Gamma }{2 k s}\to \frac{s \Gamma}{2}.
 	\]
 
-	We see that with different choice \(\lambda_{k}\), we can simply derive the upper-bound of \(v(y^{*}) - v^{*}_{k}\).
+	We see that with different choice \(\lambda_{k}\), we can simply derive the upper-bound of \(v(y^{\ast}) - v^{\ast}_{k}\).
 \end{remark}
 
-\hr
+\section{Cutting-Stock Problem}
 So far we are talking about constraints being just positive, what about in other domain, like in \(\mathbb{\MakeUppercase{N}}^+\)?
 
 Consider
@@ -91,7 +90,7 @@ Consider
 	      & 0\leq x_{i}\leq 1.
 \end{align*}
 This linear programming solution is \(x_1 = x_2 = \ldots  = x_n = \frac{1}{2}\) with the objective value being \(\frac{n}{2}\).
-Denotes \(y\) as the dual variables. The dual is
+Denotes \(y\) as the \hyperref[def:dual]{dual} variables. The \hyperref[def:dual]{dual} is
 \[
 	\begin{alignedat}{3}
 		\min~ & \sum\limits_{i<j}            && y_{ij}                                             \\
@@ -103,6 +102,6 @@ By setting \(y_{ij} = \frac{1}{n-1}\), then the objective value is
 \[
 	\binom{n}{2}\frac{1}{n-1} = \frac{n}{2},
 \]
-hence we confirm that \(x_{i} = \frac{1}{2}\) is really the optimal solution. One can see that if now we let \(x_{i}\in\mathbb{\MakeUppercase{N}}\), then
-the objective solution will be only one of \(x_{i} = 1\), and the other \(x_{j} = 0, j\neq i\). This leads to an optimal value being
-\(1\). This just shows how bad if we just \textbf{round down} the optimal solution when we consider so-called \emph{integer programming}.
+hence we confirm that \(x_{i} = \frac{1}{2}\) is really the \hyperref[def:optimal-solution]{optimal solution}. One can see that if now we let \(x_{i}\in\mathbb{\MakeUppercase{N}}\), then
+the objective solution will be only one of \(x_{i} = 1\), and the other \(x_{j} = 0, j\neq i\). This leads to an \hyperref[def:optimal-solution]{optimal} value being
+\(1\). This just shows how bad if we just \textbf{round down} the \hyperref[def:optimal-solution]{optimal solution} when we consider so-called \emph{integer programming}.

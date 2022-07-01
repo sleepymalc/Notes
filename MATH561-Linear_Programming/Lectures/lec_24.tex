@@ -1,14 +1,14 @@
-\lecture{24}{06 Dec. 08:00}{Cutting Planes}
-\section{Cutting Planes}
+\lecture{24}{06 Dec. 08:00}{Cutting Planes Algorithm}
+\subsection{Cutting Planes Algorithm}
 \begin{prev}
 	We focus on the problem in the form of
 	\begin{align*}
-		\max~                    & y^{T}b                                      \\
-		                         & y^{T}A\leq c^{T}                            \\
+		\max~                    & y^{\top}b                                   \\
+		                         & y^{\top}A\leq c^{\top}                      \\
 		(D_{\mathfrak{X} })\quad & y_{i}\text{ integer for }i = 1, \ldots , m.
 	\end{align*}
 	\begin{note}
-		Compare to what we have seen, now we require all \(y_{i}\) be integer. Further, as before, we also let \(P\) be
+		Compare to what we have seen, now we require all \(y_{i}\) be integer. Further, as before, we also let \((P)\) be
 		\begin{align*}
 			\min~    & c^Tx     \\
 			         & Ax = b   \\
@@ -22,28 +22,28 @@
 
 Now, we choose \(w\in \mathbb{\MakeUppercase{R}}^n\), \(w\geq 0\). Then the constraint becomes
 \[
-	y^{T}(Aw) \leq c^{T}w.
+	y^{\top}(Aw) \leq c^{\top}w.
 \]
 \begin{remark}
 	This valid for all \(y\) such that
 	\[
-		y^{T}A\leq c^{T},
+		y^{\top}A\leq c^{\top},
 	\]
 	no matter it's integer or not.
 \end{remark}
 
 Suppose \(Aw\in\mathbb{\MakeUppercase{Z}}^m\). With the fact that \(y\in \mathbb{\MakeUppercase{Z}}^m\), then for
 \[
-	y^{T}(Aw)\leq c^{T}w,
+	y^{\top}(Aw)\leq c^{\top}w,
 \]
 we can actually get
 \[
-	y^{T}(Aw)\leq \left\lfloor c^{T}w \right\rfloor.
+	y^{\top}(Aw)\leq \left\lfloor c^{\top}w \right\rfloor.
 \]
 \begin{remark}
 	This is valid for all \(y\) that satisfies
 	\[
-		y^{T}(Aw)\leq c^{T}w
+		y^{\top}(Aw)\leq c^{\top}w
 	\]
 	and \(y\in \mathbb{\MakeUppercase{Z}}^m\).
 \end{remark}
@@ -53,9 +53,9 @@ we can actually get
 	\label{fig:Cutting-planes-tighter-bound}
 \end{figure}
 
-We now solve \(P\) and get an optimal basis \(\beta\). Consider
+We now solve \((P)\) and get an optimal basis \(\beta\). Consider
 \[
-	\overline{y}^{T}\coloneqq c_{\beta}^{T}A^{-1}_{\beta}.
+	\overline{y}^{\top}\coloneqq c_{\beta}^{\top}A^{-1}_{\beta}.
 \]
 Notice that if \(\overline{y}\in\mathbb{\MakeUppercase{Z}}^m\), then \(\overline{y}\) solves \(D_{\mathfrak{X}}\). Otherwise, suppose
 \(\overline{y}_{i}\notin \mathbb{\MakeUppercase{Z}}\), then let
@@ -64,32 +64,30 @@ Notice that if \(\overline{y}\in\mathbb{\MakeUppercase{Z}}^m\), then \(\overline
 \]
 where \(r\in\mathbb{\MakeUppercase{Z}}^m\). We then see a theorem.
 \begin{theorem}
-	If \(\overline{y}^{T}\widetilde{b}\notin \mathbb{\MakeUppercase{Z}}\), then
+	If \(\overline{y}^{\top}\widetilde{b}\notin \mathbb{\MakeUppercase{Z}}\), then
 	\[
-		y^{T}\widetilde{b}\leq \left\lfloor \overline{y}^{T}\widetilde{b} \right\rfloor
+		y^{\top}\widetilde{b}\leq \left\lfloor \overline{y}^{\top}\widetilde{b} \right\rfloor
 	\]
 	cuts off \(\overline{y}\).
 \end{theorem}
 \begin{proof}
 	Since
 	\[
-		\overline{y}^{T}\widetilde{b} = \overline{y}^{T}(e_{i}+A_{\beta}r) = \overline{y}_{i}^{T} + \overline{y}^{T}A_{\beta}r = \overline{y}_{i}^{T} +c_{\beta}^{T}A^{-1}_{\beta}A_{\beta}r = \overline{y}_{i}^{T} +c^{T}_{\beta}r
+		\overline{y}^{\top}\widetilde{b} = \overline{y}^{\top}(e_{i}+A_{\beta}r) = \overline{y}_{i}^{\top} + \overline{y}^{\top}A_{\beta}r = \overline{y}_{i}^{\top} +c_{\beta}^{\top}A^{-1}_{\beta}A_{\beta}r = \overline{y}_{i}^{\top} +c^{\top}_{\beta}r
 	\]
-	We see that \(\overline{y}_{i}\notin\mathbb{\MakeUppercase{Z}}\), \(c_{\beta}^{T}, r\in \mathbb{\MakeUppercase{Z}}\), hence we have
+	We see that \(\overline{y}_{i}\notin\mathbb{\MakeUppercase{Z}}\), \(c_{\beta}^{\top}, r\in \mathbb{\MakeUppercase{Z}}\), hence we have
 	\[
-		\overline{y}^{T}\widetilde{b} = \overline{y}_{i}+c^{T}_{\beta}r\notin \mathbb{\MakeUppercase{Z}}.
+		\overline{y}^{\top}\widetilde{b} = \overline{y}_{i}+c^{\top}_{\beta}r\notin \mathbb{\MakeUppercase{Z}}.
 	\]
-	Now, we need to check that \(y^{T}\widetilde{b}\geq \left\lfloor \overline{y}^{T}\widetilde{b} \right\rfloor\) is satisfied by \(\overline{y}\).
+	Now, we need to check that \(y^{\top}\widetilde{b}\geq \left\lfloor \overline{y}^{\top}\widetilde{b} \right\rfloor\) is satisfied by \(\overline{y}\).
 
-	\hr
 	\begin{intuition}
 		Consider if the inequality is
 		\[
-			\vec{0}^{T}y\leq -1,
+			\vec{0}^{\top}y\leq -1,
 		\]
 		then it makes no sense.
 	\end{intuition}
-	\hr
 
 	Let \(H\coloneqq A^{-1}_{\beta}\), then \(H_{\cdot i} = A^{-1}_{\beta}e_{i}\). Further, we let \(w\coloneqq H_{\cdot i}+r\). Since we need
 	\(w\geq \vec{0}\), we can always choose \(r\in \mathbb{\MakeUppercase{Z}}^m\) so that \(w\geq \vec{0}\). Specifically, we choose
@@ -97,25 +95,25 @@ where \(r\in\mathbb{\MakeUppercase{Z}}^m\). We then see a theorem.
 		r_K \geq -\left\lfloor h_{Ki} \right\rfloor
 	\] for \(K = 1, \ldots , m\).
 
-	Instead of considering \(y^{T}A\leq c^{T}\), we consider \(y^{T}A_{\beta}\leq c_{\beta}^{T}\). Then we have
+	Instead of considering \(y^{\top}A\leq c^{\top}\), we consider \(y^{\top}A_{\beta}\leq c_{\beta}^{\top}\). Then we have
 	\[
-		\left(y^{T}A_{\beta}\right)\left(H_{\cdot i}+r\right) \leq c_{\beta}^{T}\left(H_{\cdot i}+r\right).
+		\left(y^{\top}A_{\beta}\right)\left(H_{\cdot i}+r\right) \leq c_{\beta}^{\top}\left(H_{\cdot i}+r\right).
 	\]
 	This is equivalence to
 	\[
-		\left(y^{T}A_{\beta}\right)\left(A^{-1}_{\beta}e_{i}+r\right) \leq c_{\beta}^{T}\left(A^{-1}_{\beta}e_{i}+r\right).
+		\left(y^{\top}A_{\beta}\right)\left(A^{-1}_{\beta}e_{i}+r\right) \leq c_{\beta}^{\top}\left(A^{-1}_{\beta}e_{i}+r\right).
 	\]
 	After expanding, we have
 	\[
-		y_{i}+y^{T}A_{\beta}r\leq \overline{y}_{i}+c_{\beta}^{T}r,
+		y_{i}+y^{\top}A_{\beta}r\leq \overline{y}_{i}+c_{\beta}^{\top}r,
 	\]
 	which can be written as
 	\[
-		y^{T}\left(e_{i}+A_{\beta}r\right) \leq \overline{y}^{T}\left(e_{i}+A_{\beta}r\right)
+		y^{\top}\left(e_{i}+A_{\beta}r\right) \leq \overline{y}^{\top}\left(e_{i}+A_{\beta}r\right)
 	\]
-	since \(\overline{y}^{T} = c_{\beta}^{T}A^{-1}_{\beta}\). Then we see
+	since \(\overline{y}^{\top} = c_{\beta}^{\top}A^{-1}_{\beta}\). Then we see
 	\[
-		y^{T}\widetilde{b}\leq \left\lfloor \overline{y}^{T}\widetilde{b} \right\rfloor.
+		y^{\top}\widetilde{b}\leq \left\lfloor \overline{y}^{\top}\widetilde{b} \right\rfloor.
 	\]
 
 	Lastly, we need \(Aw\) are all integers. This is true since
@@ -126,8 +124,6 @@ where \(r\in\mathbb{\MakeUppercase{Z}}^m\). We then see a theorem.
 
 Revisiting the \hyperref[eg:branch-and-bound]{example}. Now we see that the cutting plane algorithm will need at least \(2k\) steps
 for such a triangle with height \(k\), since it can only cut off one point at a time.
-
-\hr
 
 \begin{eg}
 	Now we see some bad examples for Branch and Bound. Consider the following integer programming problem.

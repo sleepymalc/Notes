@@ -1,127 +1,173 @@
 \lecture{8}{27 Sep. 08:00}{Simplex Algorithm}
 \section{Remaining Problem}
 \begin{prev}
-	Simplex Algorithm:
-	\begin{enumerate}
-		\item Start with a basic feasible partition
-		      \begin{enumerate}
-			      \item \begin{enumerate}
-				            \item Compute \(\overline{x}_{\beta} \coloneqq A^{-1}_{\beta} b \geq 0\)
-				            \item Compute \(\overline{c}_{\eta}^{T} \coloneqq c_{\eta}^{T} - c_{\beta}^{T} A^{-1}_{\beta} A_{\eta}\)
-			            \end{enumerate}
-			      \item If \(\overline{c}_{\eta} \geq 0\), then \emph{STOP}. \(\overline{x}\) is optimal.
-			      \item Otherwise, choose \(\eta_j\) such that \(\overline{c}_{\eta_j} < 0\).
-			      \item Define \(i^{*}\coloneqq \underset{i:\overline{a}_{i, \eta_j}>0}{\arg\min} \{\frac{\overline{x}_{\rho_i}}{\overline{a}_{i, \eta_j}}\} \)
-			      \item If \(i^{*}\) is undefined, then \emph{STOP}. (P) is unbounded.
-		      \end{enumerate}
-		\item Swap \(\beta_i^{*}\) out of \(\beta \) and \(\eta_j\) out of \(\eta \). \emph{GOTO 1}.
-	\end{enumerate}
+	\hyperref[algo:worry-free-simplex-algorithm]{Worry-Free Simplex Algorithm} can also be written as follows.
+
+	\par
+	\begin{algorithm}[H]
+		\DontPrintSemicolon
+		\caption*{Worry-Free Simplex Algorithm}
+		\KwData{\hyperref[def:standard-form]{standard form} \((P)\), \hyperref[def:basic-partition]{basic partition} \(\beta , \eta\) with \(x_{\beta}\geq 0\)}
+		\KwResult{\hyperref[def:optimal-solution]{optimal solutions} \(\overline{x}, \overline{y}\) or report \texttt{\((P)\) is unbounded}}
+		\BlankLine
+
+		\While{True}{
+		\(\overline{x}_{\beta} \gets A^{-1}_{\beta} b(\geq 0)\)\;
+		\(\overline{c}_{\eta}^{\top} \gets c_{\eta}^{\top} - c_{\beta}^{\top} A^{-1}_{\beta} A_{\eta}\)\;
+		\If(\Comment*[f]{\(\overline{x}\) is optimal for \((P)\)}){\(\overline{c}_{\eta} \geq 0\)}{
+		\(\overline{y} \gets c_{\beta}^{\top}A^{-1}_{\beta}\) \Comment*[r]{From \autoref{thm:weak-optimal-basis-theorem}}
+		\Return{\(\overline{x}, \overline{y} \)}
+		}
+		\Else(\Comment*[f]{\hyperref[def:basic-direction]{Basic direction} \(\overline{z}\), then \(c^{\top}\overline{z} = \overline{c}_{\eta_{j}}<0\)}){
+			choose \(\eta_j\) such that \(\overline{c}_{\eta_j} < 0\)\;
+			\If{\(i^{\ast}\coloneqq \underset{i\colon \overline{a}_{i \eta_j}>0}{\arg\min} \{\frac{\overline{x}_{\rho_i}}{\overline{a}_{i \eta_j}}\} \) is undefined}{
+				\Return{\texttt{\((P)\) is unbounded}}
+			}
+			\(i^{\ast}\gets \underset{i:\overline{a}_{i \eta_j}>0}{\arg\min} \{\frac{\overline{x}_{\rho_i}}{\overline{a}_{i \eta_j}}\} \)\;
+			Swap \(\beta_i^{\ast}\) out of \(\beta \) and \(\eta_j\) out of \(\eta \)\;
+		}
+		}
+	\end{algorithm}
 \end{prev}
 
 \begin{problem}
-How do we start with a basic feasible partition?
+How do we start with a \hyperref[def:basic-partition]{basic} feasible partition?
 \end{problem}
-
 \begin{answer}
-	We consider the so-called \emph{Phase One Problem}.
+	We consider the so-called \hyperref[def:phase-one-problem]{phase one problem}.
 \end{answer}
+
 \subsection{Phase one problem}
-\begin{align*}
-	\min~ & c^T x                                \\
-	      & Ax = b                               \\
-	      & x\geq 0                  &  & (P)    \\\\
-	\min~ & x_{n+1}                              \\
-	      & Ax + A_{n+1}x_{n+1} = b              \\
-	      & x\geq 0, x_{n+1} \geq  0 &  & (\Phi)
-\end{align*}
+\begin{definition}[Phase one problem]\label{def:phase-one-problem}
+	Given the \hyperref[def:primal]{primal} \((P)\), the so-called \emph{phase one problem}, denoted as \((\Phi)\) is defined as follows.
+	\[
+		\begin{alignedat}{5}
+			\min~&c^{\top}x\qquad\qquad&&\min~ && x_{n+1}\\
+			&Ax = b 				&&		&&Ax + A_{n+1}x_{n+1} = b              \\
+			(P)\quad	&x\geq  0 	&&(\Phi)\quad&&x\geq 0, x_{n+1} \geq  0.
+		\end{alignedat}
+	\]
+\end{definition}
 
-\begin{enumerate}
-	\item If min value of \(x_{n+1}\) in \(\Phi \) is 0, then we get a feasible solution of (P).
-	\item If min value of \(x_{n+1}\) in \(\Phi \) is \(>0\), then there is no feasible solution of (P).
-	      \begin{itemize}
-		      \item How do we get an initial basic feasible solution for \(\Phi \)
-		      \item Need a basic feasible solution.
-	      \end{itemize}
-\end{enumerate}
+\begin{remark}
+	We see that
+	\begin{enumerate}
+		\item If min value of \(x_{n+1}\) in \((\Phi)\) is 0, then we get a \hyperref[def:feasible-solution]{feasible solution} of \((P)\).
+		\item If min value of \(x_{n+1}\) in \((\Phi)\) is \(>0\), then there is no \hyperref[def:feasible-solution]{feasible solution} of \((P)\).
+	\end{enumerate}
+\end{remark}
 
-Solution:
-\begin{enumerate}
-	\item Start with a basic solution of (P), \(\tilde{\beta}, \tilde{\eta}\) is the basic partition.
-	\item If its feasible(\(\overline{x}_{\tilde{\beta}}\)) then we just use \(\tilde{\beta}\) and \(\tilde{\eta}\) for \(\beta\) and \(\eta\)
-	\item Otherwise, set \(A_{n+1} = -A^{-1}_{\beta}\vec{1}\). If \(\eta_j = n+1\)
-	      \[
-		      \overline{z} : \overline{z}_{\tilde{\eta}} = \begin{pmatrix}
-			      0      \\
-			      0      \\
-			      \vdots \\
-			      1      \\
-		      \end{pmatrix},\qquad \overline{z}_{\beta} \coloneqq -A^{-1}_{\tilde{\beta}}(A_{n+1}) = \vec{1}
-	      \]
-	      and\[
-		      \vec{x} \to \vec{x} + \lambda \vec{z} \geq \vec{0}.
-	      \] \begin{eg}
+We see that by solving \((\Phi)\), we will get a \hyperref[def:feasible-solution]{feasible solution} for \((P)\) or determine whether \((P)\) is solvable in the first place. But
+to solve the linear program \((\Phi)\), we're facing the same problem as \((P)\)...
+\begin{problem}\label{prob:phase-one-problem}
+How do we get an initial \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Phi)\)?
+\end{problem}
+\begin{answer}
+	Thankfully, in this case, we know how to get a \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Phi)\).
+	\begin{enumerate}
+		\item Start with a \hyperref[def:basic-solution]{basic solution} of \((P)\), \(\tilde{\beta}, \tilde{\eta}\) is the \hyperref[def:basic-partition]{basic partition}.
+		\item If \(\overline{x}_{\tilde{\beta}}\) is \hyperref[def:feasible-solution]{feasible} then we just use \(\tilde{\beta}\) and \(\tilde{\eta}\) for \(\beta\) and \(\eta\).
+		\item Otherwise, set \(A_{n+1} = -A^{-1}_{\beta}\vec{1}\). If \(\eta_j = n+1\)
 		      \[
-			      \vec{x}_{\tilde{\beta}} + \lambda \vec{z}_{\tilde{\beta}} = \begin{pmatrix}
-				      7  \\
-				      0  \\
-				      3  \\
-				      -5 \\
-				      6  \\
-				      -8 \\
-			      \end{pmatrix} + \lambda \begin{pmatrix}
-				      1 \\
-				      1 \\
-				      1 \\
-				      1 \\
-				      1 \\
-				      1 \\
-			      \end{pmatrix}
-		      \], then \[
-			      i^{*} = \underset{i:\vec{x}_{\tilde{\beta}} < 0}{\arg\min}\{-\vec{x}_{\tilde{\beta}}\}.
+			      \overline{z} : \overline{z}_{\tilde{\eta}} = \begin{pmatrix}
+				      0      \\
+				      0      \\
+				      \vdots \\
+				      1      \\
+			      \end{pmatrix},\qquad \overline{z}_{\beta} \coloneqq -A^{-1}_{\tilde{\beta}}(A_{n+1}) = \vec{1}
 		      \]
-	      \end{eg}
-\end{enumerate}
-
+		      and\[
+			      \vec{x} \to \vec{x} + \lambda \vec{z} \geq \vec{0}.
+		      \] \begin{eg}
+			      \[
+				      \vec{x}_{\tilde{\beta}} + \lambda \vec{z}_{\tilde{\beta}} = \begin{pmatrix}
+					      7  \\
+					      0  \\
+					      3  \\
+					      -5 \\
+					      6  \\
+					      -8 \\
+				      \end{pmatrix} + \lambda \begin{pmatrix}
+					      1 \\
+					      1 \\
+					      1 \\
+					      1 \\
+					      1 \\
+					      1 \\
+				      \end{pmatrix},
+			      \]
+			      then
+			      \[
+				      i^{\ast} = \underset{i:\vec{x}_{\tilde{\beta}} < 0}{\arg\min}\{-\vec{x}_{\tilde{\beta}}\}.
+			      \]
+		      \end{eg}
+	\end{enumerate}
+\end{answer}
 \begin{problem}
 What if \(x_{n+1} = 0\)?
 \end{problem}
-\begin{intuition}
+\begin{answer}
 	Just stop right before \(x_{n+1} = 0\), let other variable do that.
-\end{intuition}
+\end{answer}
 
-\subsection{Non degeneracy hypothesis}
-\[
-	\begin{split}
-		&\vec{x}_{\beta_i} > 0 \text{ for all \(i\) at every iteration}\\
-		\implies &\overline{\lambda} \neq 0\\
-		\implies &\text{objective value decrease at each iteration.}\\
-		\implies &\text{algorithm must (because a finite \# of basis)}
-	\end{split}
-\]
+\subsection{Perturbed Problem}
+Though we now know how to get \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((P)\) to start our
+\hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, we have one more problem:
 
-\begin{align*}
-	\min~ & c^T x                    \\
-	      & Ax = b + B\begin{pmatrix}
-		                  \epsilon   \\
-		                  \epsilon^2 \\
-		                  \epsilon^3 \\
-		                  \vdots     \\
-		                  \epsilon^m \\
-	                  \end{pmatrix} \\
-	      & x\geq 0
-\end{align*}
-where \(\epsilon \) is an arbitrarily small \emph{indeterminate}.
-\begin{remark}
+\begin{problem}[Degenerate problem]\label{prob:degenerate-problem}
+What if \(\lambda = 0\), i.e. \(x_{\beta _{i} } = 0\) for some \(i\)?
+\end{problem}
+
+We see that we'll need to introduce so-called \hyperref[def:non-degeneracy-hypothesis]{non-degeneracy hypothesis}.
+\begin{definition}[Non-degeneracy hypothesis]\label{def:non-degeneracy-hypothesis}
+	\(x_{\beta _{i} } > 0\) for all \(i\) at every iteration of \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}.
+\end{definition}
+
+\begin{remark}[Termination analysis]
+	With \hyperref[def:non-degeneracy-hypothesis]{non-degeneracy hypothesis}, we see that \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}
+	will certainly terminate.
+\end{remark}
+\begin{explanation}
+	We have
 	\[
-		\epsilon \neq 0.
+		\begin{split}
+			\vec{x}_{\beta_i} > 0 \text{ for all \(i\) at every iteration}
+			\implies &\overline{\lambda} \neq 0\\
+			\implies &\text{ objective value decrease at each iteration.}\\
+			\implies &\text{ \hyperref[algo:worry-free-simplex-algorithm]{algorithm} must terminate}
+		\end{split}
 	\]
+	because there are only finitely many bases.
+\end{explanation}
+
+Though the \hyperref[def:non-degeneracy-hypothesis]{non-degeneracy hypothesis} helps avoid the mess, but since we want to be able to solve any
+\hyperref[def:general-linear-programming-problem]{general LP}, hence we now try to avoid using this hypothesis. We first consider the following problem
+called \hyperref[def:perturbed-problem]{perturbed problem}.
+
+\begin{definition}[Perturbed problem]\label{def:perturbed-problem}
+	Given a \hyperref[def:standard-form]{standard form} problem, the following induced problem is called \emph{perturbed problem}.
+	\begin{align*}
+		\min~ & c^T x                    \\
+		      & Ax = b + B\begin{pmatrix}
+			                  \epsilon   \\
+			                  \epsilon^2 \\
+			                  \epsilon^3 \\
+			                  \vdots     \\
+			                  \epsilon^m \\
+		                  \end{pmatrix} \\
+		      & x\geq 0
+	\end{align*}
+	where \(\epsilon \) is an arbitrarily small \emph{indeterminate}.
+\end{definition}
+
+\begin{remark}
+	Note that \(\epsilon \neq 0\).
 \end{remark}
 
-We observe that polynomials in \(\epsilon \):
-\[
-	\begin{split}
-		&p(\epsilon) = p_0 + p_1\epsilon + p_2 \epsilon^2 + \cdots + p_{m}\epsilon^m.	\\
-		&\vec{x}_{\beta} = A^{-1}_{\beta}\left(b + B\begin{pmatrix}
+\begin{note}
+	We see that
+	\[
+		\vec{x}_{\beta} = A^{-1}_{\beta}\left(b + B\begin{pmatrix}
 				\epsilon   \\
 				\epsilon^2 \\
 				\vdots     \\
@@ -131,11 +177,22 @@ We observe that polynomials in \(\epsilon \):
 			\epsilon^2 \\
 			\vdots     \\
 			\epsilon^m \\
-		\end{pmatrix}
-	\end{split}
-\]
+		\end{pmatrix},
+	\]
+	which is just a \hyperref[def:polynomial-in-epsilon]{polynomial in \(\epsilon\)}.
+\end{note}
 
-\begin{definition}
+\begin{definition}[Polynomial in \(\epsilon \)]\label{def:polynomial-in-epsilon}
+	We denote polynomials in \(\epsilon\) as
+	\[
+		p(\epsilon) = p_0 + p_1\epsilon + p_2 \epsilon^2 + \cdots + p_{m}\epsilon^m,
+	\]
+	where \(p_i\in\mathbb{\MakeUppercase{r}}\).
+\end{definition}
+
+Which suggest the following definitions.
+
+\begin{definition}[Sign of polynomial in \(\epsilon \)]\label{def:sign-of-polynomial-in-epsilon}
 	Let \(K\) be the minimal index with \(p_K \neq 0\).
 	\begin{itemize}
 		\item If \(p_K < 0\), then \(p(\epsilon) < 0\)
@@ -145,66 +202,75 @@ We observe that polynomials in \(\epsilon \):
 \end{definition}
 
 \begin{note}
+	Given
 	\[
 		\begin{split}
-			p(\epsilon) = p_0 + p_1\epsilon + p_2 \epsilon^2 + \cdots + p_{m}\epsilon^m.	\\
-			q(\epsilon) = q_0 + q_1\epsilon + q_2 \epsilon^2 + \cdots + q_{m}\epsilon^m.	\\
-		\end{split}.
+			p(\epsilon) &= p_0 + p_1\epsilon + p_2 \epsilon^2 + \cdots + p_{m}\epsilon^m	\\
+			q(\epsilon) &= q_0 + q_1\epsilon + q_2 \epsilon^2 + \cdots + q_{m}\epsilon^m	\\
+		\end{split}
 	\]
-	with \(K_p\) and \(K_q\). Then \(K_{p+q}\) depends on \(K_p\) and \(K_q\).
-	\[
-		p(\epsilon) - q(\epsilon) \geq 0?\qquad \text{ Then }p(\epsilon) \geq  q(\epsilon).
-	\]
+	with \(K_p\) and \(K_q\). Then \(K_{p+q}\) depends on \(K_p\) and \(K_q\). We then see that if \(p(\epsilon) - q(\epsilon) \geq 0\), then
+	\(p(\epsilon) \geq  q(\epsilon)\).
 \end{note}
 
 \begin{problem}
-Where does this \(\epsilon \) thing links with the Simplex algorithm? (d)
+Where does this \(\epsilon \) thing links with the \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm},
+and how can it solve the \hyperref[prob:degenerate-problem]{degenerate problem}?
 \end{problem}
+\begin{answer}
+	Suppose
+	\[
+		\overbrace{p(\epsilon)}^{\substack{\text{value of}\\ \text{some basic}\\ \text{variable}}} = p_0 + p_1 \epsilon + p_2 \epsilon^2 + \cdots + p_m \epsilon^m.
+	\]
 
-\subsection{Perturbed Problem}
-Suppose
-\[
-	\overbrace{p(\epsilon)}^{\substack{\text{value of}\\ \text{some basic}\\ \text{variable}}} = p_0 + p_1 \epsilon + p_2 \epsilon^2 + \cdots + p_m \epsilon^m.
-\]
+	Feasibility for the \hyperref[def:perturbed-problem]{perturbed problem} means \(p(\epsilon) \geq \vec{0}\) \(\implies p(0) = p_0 \geq 0\).
+	\begin{align*}
+		\min~ & c^Tx                              \\
+		      & Ax = b + \cancel{B\vec{\epsilon}} \\
+		      & x\geq 0.
+	\end{align*}
+	Find an initial feasible basis \(\beta, \eta \) for unperturbed problem, \(B\coloneqq A_{\beta}\),
+	\[
+		\vec{x}_{\beta}
+		= A_{\beta}^{-1}(b + A_{\beta} \vec{\epsilon})
+		= \underbrace{A^{-1}_{\beta}b}_{\geq \vec{0}} + \vec{\epsilon}
+		= \vec{x}_{\beta} + \begin{pmatrix}
+			\epsilon   \\
+			\epsilon^2 \\
+			\epsilon^3 \\
+			\vdots     \\
+			\epsilon^m \\
+		\end{pmatrix} = \begin{pmatrix}
+			\vec{x}_{\beta_1} + \epsilon   \\
+			\vec{x}_{\beta_2} + \epsilon^2 \\
+			\vdots                         \\
+			\vec{x}_{\beta_m} + \epsilon^m \\
+		\end{pmatrix} \geq \vec{0}.
+	\]
 
-Feasible for perturbed problem means \(p(\epsilon) \geq \vec{0}\) \(\implies p(0) = p_0 \geq 0\).
-
-\begin{align*}
-	\min~ & c^Tx                              \\
-	      & Ax = b + \cancel{B\vec{\epsilon}} \\
-	      & x\geq 0
-\end{align*}
-Find an initial feasible basis \(\beta, \eta \) for unperturbed problem, \(B\coloneqq A_{\beta}\),
-\[
-	\vec{x}_{\beta}
-	= A_{\beta}^{-1}(b + A_{\beta} \vec{\epsilon})
-	= \underbrace{A^{-1}_{\beta}b}_{\geq \vec{0}} + \vec{\epsilon}
-	= \vec{x}_{\beta} + \begin{pmatrix}
-		\epsilon   \\
-		\epsilon^2 \\
-		\epsilon^3 \\
-		\vdots     \\
-		\epsilon^4 \\
-	\end{pmatrix} = \begin{pmatrix}
-		\vec{x}_{\beta_1} + \epsilon   \\
-		\vec{x}_{\beta_2} + \epsilon^2 \\
-		\vdots                         \\
-		\vec{x}_{\beta_m} + \epsilon^m \\
-	\end{pmatrix} \geq \vec{0}.
-\]
-
-Claim: Perturbed problem is non-degenerate. \(\implies\) some later basis \(\tilde{\beta}\)
-\[
-	\vec{x}_{\tilde{\beta}} \coloneqq A^{-1}_{\tilde{\beta}}(b + A_{\beta}\vec{\epsilon}) = A^{-1}_{\tilde{\beta}}b + A^{-1}_{\tilde{\beta}}A_{\beta}\vec{\epsilon}
-\]
-(\(\vec{x}_{\tilde{\beta_i}}\overset{?}{=}0\))
-\[
-	i^{\text{th}} \text{ element of }A^{-1}_{\tilde{\beta}}A_{\beta}\begin{pmatrix}
-		\epsilon   \\
-		\epsilon^2 \\
-		\epsilon^3 \\
-		\vdots     \\
-		\epsilon^m \\
-	\end{pmatrix} \implies \underbrace{i^{\text{th}} \text{ row of } A^{-1}_{\tilde{\beta}}A_{\beta}}_{=\vec{0}} \text{ dot }\vec{\epsilon}\ \conta
-\]
-because \(A^{-1}_{\tilde{\beta}}A_{\beta}\) is invertible(\(A^{-1}_{\beta}A_{\tilde{\beta}}\) is the inverse)
+	\begin{claim}
+		\hyperref[def:perturbed-problem]{Perturbed problem} is \hyperref[def:non-degenerate-hypothesis]{non-degenerate}.
+	\end{claim}
+	\begin{explanation}
+		This is equivalent to show that there are no \(i\) in the later basis \(\tilde{\beta}\) such that \(\vec{x}_{\tilde{\beta_i}} = 0\). Suppose there is an \(i\) such that
+		\(\vec{x}_{\tilde{\beta_i}} = 0\). But since
+		\[
+			\vec{x}_{\tilde{\beta}} \coloneqq A^{-1}_{\tilde{\beta}}(b + A_{\beta}\vec{\epsilon}) = A^{-1}_{\tilde{\beta}}b + A^{-1}_{\tilde{\beta}}A_{\beta}\vec{\epsilon},
+		\]
+		if \(\vec{x} _{\widetilde{\beta}_i} = 0\), we must have
+		\[
+			\begin{split}
+				i^{\text{th}} \text{ element of }A^{-1}_{\tilde{\beta}}A_{\beta}\begin{pmatrix}
+					\epsilon   \\
+					\epsilon^2 \\
+					\epsilon^3 \\
+					\vdots     \\
+					\epsilon^m \\
+				\end{pmatrix} = 0
+				&\implies \left< i^{\text{th}} \text{ row of } A^{-1}_{\tilde{\beta}}A_{\beta},\ \vec{\epsilon} \right> = 0\\
+				&\implies i^{\text{th}} \text{ row of } A^{-1}_{\tilde{\beta}}A_{\beta} = \vec{0}\ \conta
+			\end{split}
+		\]
+		because \(A^{-1}_{\tilde{\beta}}A_{\beta}\) is invertible where \(A^{-1}_{\beta}A_{\tilde{\beta}}\) is its inverse.
+	\end{explanation}
+\end{answer}

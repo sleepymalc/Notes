@@ -1,18 +1,19 @@
-\lecture{23}{01 Dec. 08:00}{Branch and Bound}
-\section{Branch and Bound}
+\lecture{23}{01 Dec. 08:00}{Branch and Bound Algorithm}
+\subsection{Branch and Bound Algorithm}
+We first dive into \hyperref[eg:branch-and-bound]{branch and bound algorithm} as we showed.
 \begin{prev}
-	The worst case in terms of time complexity for Simplex Algorithm is
+	The worst case in terms of time complexity for \hyperref[algo:simplex-algorithm]{simplex algorithm} is
 	\[
 		\Theta(2^n - 1)
 	\]
 	for \(n\) variables, but it's efficient in practice. And this is similar to
-	the Branch and Bound Algorithm for the integral programming problem.
+	the \hyperref[eg:branch-and-bound]{branch and bound algorithm} for the integral programming problem.
 \end{prev}
 
 We now focus on the following integer programming,
 \begin{align*}
-	\max~                   & y^{T}b                                                                                              \\
-	                        & y^{T}A\leq c^{T}                                                                                    \\
+	\max~                   & y^{\top}b                                                                                           \\
+	                        & y^{\top}A\leq c^{\top}                                                                              \\
 	(D_{\mathcal{I} })\quad & y\in\mathbb{\MakeUppercase{R}}^m(y_{i}\in\mathbb{\MakeUppercase{Z}} \text{ for } i\in \mathcal{I}),
 \end{align*}
 where \(\mathcal{I} \subseteq \{1, 2, \ldots , m\}\). By taking the dual, we have
@@ -58,15 +59,15 @@ its linear programming \(\widetilde{D}\). Then we see
 	\item If \(\widetilde{D}\) is infeasible, then do nothing.
 	\item Otherwise, let \(\overline{y}\) be its basic optimal solution.
 	      \begin{itemize}
-		      \item If \(\overline{y}^{T}b\leq \mathrm{LB}\), then do nothing.
+		      \item If \(\overline{y}^{\top}b\leq \mathrm{LB}\), then do nothing.
 		      \item Otherwise,
 		            \begin{itemize}
-			            \item If \(\overline{y}^{T}_i\in\mathbb{\MakeUppercase{Z}}\) for \(i\in \mathcal{I}\), then \(\overline{y}\) solves \(\widetilde{D}_{\mathcal{I}}\).
+			            \item If \(\overline{y}^{\top}_i\in\mathbb{\MakeUppercase{Z}}\) for \(i\in \mathcal{I}\), then \(\overline{y}\) solves \(\widetilde{D}_{\mathcal{I}}\).
 			                  Let
 			                  \[
-				                  \mathrm{LB} \coloneqq \overline{y}^{T}b \text{ and } \overline{y}_{\mathrm{LB}}\coloneqq \overline{y}.
+				                  \mathrm{LB} \coloneqq \overline{y}^{\top}b \text{ and } \overline{y}_{\mathrm{LB}}\coloneqq \overline{y}.
 			                  \]
-			            \item If \(\overline{y}^{T}_{i}\notin \mathbb{\MakeUppercase{Z}}\) for some \(i\in \mathcal{I} \),
+			            \item If \(\overline{y}^{\top}_{i}\notin \mathbb{\MakeUppercase{Z}}\) for some \(i\in \mathcal{I} \),
 			                  \begin{itemize}
 				                  \item Select \(i\in \mathcal{I} \) such that \(\overline{y}_{i}\notin \mathbb{\MakeUppercase{Z}}\).
 				                  \item Place two \emph{child} problems on \(L\):
@@ -94,24 +95,24 @@ Process: \(\widetilde{D}_{\mathcal{I}}\)(problem chosen from \(\mathcal{L}\))
 	\item Solve linear programming relaxation \(\widetilde{D}\)
 	      \[
 		      \begin{alignedat}{5}
-			      \max ~&y^{T}b\qquad\qquad	&&\min~		&&c^{T}x\\
-			      &y^{T}A\leq c^{T} 		&&			&&Ax = b\\
+			      \max ~&y^{\top}b\qquad\qquad	&&\min~		&&c^{\top}x\\
+			      &y^{\top}A\leq c^{\top} 		&&			&&Ax = b\\
 			      (D)\quad	& 				&&(P)\quad	&&x\geq  0
 		      \end{alignedat}.
 	      \]
-	      What we're really doing is solving \(P\) by simplex algorithm. Let \(\overline{y}^{T}\coloneqq c^{T}_{\beta}A^{T}_{\beta}\).
+	      What we're really doing is solving \((P)\) by \hyperref[algo:simplex-algorithm]{simplex algorithm}. Let \(\overline{y}^{\top}\coloneqq c^{\top}_{\beta}A^{\top}_{\beta}\).
 	      \begin{itemize}
 		      \item \emph{Down branch}:
 		            \[
 			            \begin{alignedat}{5}
-				            \max ~	&y^{T}b\qquad\qquad				&&\min~	&&c^{T}x+\left\lfloor \overline{y}_{i} \right\rfloor x_{down}\\
-				            &y^{T}A\leq c^{T} 				&&		&&Ax + e_{i}x_{down} = b\\
+				            \max ~	&y^{\top}b\qquad\qquad				&&\min~	&&c^{\top}x+\left\lfloor \overline{y}_{i} \right\rfloor x_{down}\\
+				            &y^{\top}A\leq c^{\top} 				&&		&&Ax + e_{i}x_{down} = b\\
 				            (D)\quad& y_{i}\leq \left\lfloor \overline{y}_{i} \right\rfloor	&&(P)\quad&&x\geq 0, x_{down}\geq 0.
 			            \end{alignedat}
 		            \]
 		            The reduced cost of \(x_{down}\) is
 		            \[
-			            \left\lfloor \overline{y}_{i} \right\rfloor - \overline{y}^{T}e_{i} = \left\lfloor \overline{y}_{i} \right\rfloor - \overline{y}_{i}.
+			            \left\lfloor \overline{y}_{i} \right\rfloor - \overline{y}^{\top}e_{i} = \left\lfloor \overline{y}_{i} \right\rfloor - \overline{y}_{i}.
 		            \]
 		            If this is negative, then \(x_{down}\) enters the basis, which happens when \(\overline{y}_{i}\notin\mathbb{\MakeUppercase{Z}}\).
 		      \item \emph{Up branch}:
@@ -122,7 +123,7 @@ Process: \(\widetilde{D}_{\mathcal{I}}\)(problem chosen from \(\mathcal{L}\))
 		            \end{align*}
 		            The reduced cost of \(x_{up}\) is
 		            \[
-			            -\left\lceil \overline{y}_{i} \right\rceil - \overline{y}^{T}(-e_{i}) = \overline{y}_{i} - \left\lceil \overline{y}_{i} \right\rceil.
+			            -\left\lceil \overline{y}_{i} \right\rceil - \overline{y}^{\top}(-e_{i}) = \overline{y}_{i} - \left\lceil \overline{y}_{i} \right\rceil.
 		            \]
 		            If this is negative, then \(x_{up}\) enters the basis.
 	      \end{itemize}
@@ -153,9 +154,9 @@ To calculate the set in the \(\max\), whenever children are created, solve their
 \subsection{Node Selection}
 Node Selection means which problem to select from \(\mathcal{L} \) to process. There are several ways to do this.
 \begin{enumerate}
-	\item FIFO(First In First Out) \(\cong\) BFS(Breadth First Search)
+	\item FIFO (First In First Out) \(\cong\) BFS(Breadth First Search)
 	      \par New problems go at the end of the list, select from the front. We see that this strategy will \textbf{maximize memory usage}.
-	\item LIFO(Last In First Out) \(\cong\) DFS(Depth First Search)
+	\item LIFO (Last In First Out) \(\cong\) DFS(Depth First Search)
 	      \par New problems go to the first of the list, select from the front. We see that this strategy will \textbf{increase \(\mathrm{LB}\) quickly}.
 	\item Best Bound.
 	      \par Need the LP upper bound for all problems on the list. We see that this strategy will \textbf{decrease \(\mathrm{UB}\) quickly}.

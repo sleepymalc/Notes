@@ -1,13 +1,11 @@
 \lecture{21}{22 Nov. 08:00}{Cutting-Stock Problem}
-\section{Cutting-Stock Problem}
-It's now a good timing to introduce an application of what we have been discussing, namely the \emph{Cutting-Stock Problem}. We'll see
-that it naturally utilize the idea of column generation.
+It's now a good timing to introduce an application of what we have been discussing, namely the \hyperref[prob:cutting-stock-problem]{cutting-stock problem}. We'll see
+that it naturally utilize the idea of column generation. It's an integer programming problem, though contrarily, it can be nicely approximated by \textbf{rounding down}.
 
-\begin{problem}
-Contrarily, \emph{Cutting-Stock Problem} can be nicely approximated by \textbf{rounding down}. Consider we have rolls of paper of width
-\(W\), with the demand widths being \(w_1, w_2, \ldots , w_m < W\) and demands being \(d\), which is usually
+\begin{problem}[Cutting-stock problem]\label{prob:cutting-stock-problem}
+Consider we have rolls of paper of width \(W\), with the demand widths being \(w_1, w_2, \ldots , w_m < W\) and demands being \((D)\), which is usually
 pretty big. The goal is to use as few stock rolls as possible.
-
+\end{problem}
 \begin{answer}
 	One may try to define
 	\[
@@ -28,7 +26,7 @@ pretty big. The goal is to use as few stock rolls as possible.
 		 & \sum\limits_{i=1}^{m} w_{i}a_{i}\leq W                                   \\
 		 & \mathbb{\MakeUppercase{N}}\ni a_{i}\geq 0 \text{ for }i = 1, \ldots , m.
 	\end{align*}
-	Moreover, denotes \(d\) as
+	Moreover, denotes \((D)\) as
 	\[
 		d\coloneqq \begin{pmatrix}
 			d_1    \\
@@ -37,7 +35,7 @@ pretty big. The goal is to use as few stock rolls as possible.
 			d_m    \\
 		\end{pmatrix},
 	\]
-	then the Cutting-Stock problem is simply
+	then we formulate the cutting-stock problem as
 	\begin{align*}
 		z\coloneqq \min~    & \sum\limits_{j} x_{j}                  \\
 		                    & \sum\limits_{j} A_{\cdot j}x_{j}\geq d \\
@@ -53,7 +51,7 @@ pretty big. The goal is to use as few stock rolls as possible.
 		\end{pmatrix}.
 	\]
 
-	Turning \(\mathrm{CSP}\) into a standard form problem and \textbf{drop} the integer constraint, we have
+	Turning \(\mathrm{CSP}\) into a \hyperref[def:standard-form]{standard form} problem and \textbf{drop} the integer constraint, we have
 	\begin{align*}
 		\min~                           & \sum\limits_{j} x_{j}                                                         \\
 		                                & \sum\limits_{j} A_{\cdot j}x_{j} - t = d                                      \\
@@ -65,10 +63,10 @@ pretty big. The goal is to use as few stock rolls as possible.
 		is now gone.
 	\end{note}
 
-	We now want to solve \(\mathrm{\underline{CSP}}\) exactly to get optimum \(\overline{x}, \overline{t}\) with value
+	We now want to solve \(\mathrm{\underline{CSP}}\) exactly to get \hyperref[def:optimal-solution]{optimum} \(\overline{x}, \overline{t}\) with value
 	\(\underline{z} = \sum\limits_{i=1}^{m} \overline{x}_{i}\).
 
-	Firstly, if we round up \(\overline{x}\) to \(\left\lceil \overline{x} \right\rceil \), then it is feasible for \(\mathrm{CSP}\).
+	Firstly, if we round up \(\overline{x}\) to \(\left\lceil \overline{x} \right\rceil \), then it is \hyperref[def:feasible-solution]{feasible} for \(\mathrm{CSP}\).
 	We immediately see
 	\[
 		\sum\limits_{i=1}^{m} \overline{x}_{i} = \underline{z} \leq z \leq \sum\limits_{i=1}^{m} \left\lceil \overline{x}_{i} \right\rceil.
@@ -77,9 +75,9 @@ pretty big. The goal is to use as few stock rolls as possible.
 	\[
 		\left\lceil \sum\limits_{i=1}^{m} \overline{x}_{i} \right\rceil \leq z,
 	\]
-	hence we see that the rounding up solution \(\left\lceil \overline{x} \right\rceil \) is within \(m-1\) of optimum.
+	hence we see that the rounding up solution \(\left\lceil \overline{x} \right\rceil \) is within \(m-1\) of \hyperref[def:optimal-solution]{optimum}.
 
-	Now we consider how to solve \(\mathrm{\underline{CSP}}\) exactly. Denotes the dual variables of \(\mathrm{\underline{CSP}}\) being \(y\)
+	Now we consider how to solve \(\mathrm{\underline{CSP}}\) exactly. Denotes the \hyperref[def:dual]{dual} variables of \(\mathrm{\underline{CSP}}\) being \(y\)
 	such that
 	\[
 		y = \begin{pmatrix}
@@ -88,18 +86,18 @@ pretty big. The goal is to use as few stock rolls as possible.
 			y_{m}  \\
 		\end{pmatrix}.
 	\]
-	Suppose \(\overline{y}\) is a basic dual solution. Then the reduced cost of a variable is:
+	Suppose \(\overline{y}\) is a \hyperref[def:dual-basic-solution]{basic dual solution}. Then the \hyperref[def:reduced-cost]{reduced cost} of a variable is:
 	\begin{itemize}
 		\item \(t_{i}\):
 		      \[
-			      0 - \overline{y}^{T}(-e_{i}) = \overline{y}_{i}.
+			      0 - \overline{y}^{\top}(-e_{i}) = \overline{y}_{i}.
 		      \]
-		      Hence, if \(\overline{y}_{i}<0\), \(t\) can enter the basis.
+		      Hence, if \(\overline{y}_{i}<0\), \(t\) can enter the \hyperref[def:basic]{basis}.
 		\item \(x_{j}\):
 		      \[
-			      1 - \overline{y}^{T}A_{\cdot j} = 1 - \sum\limits_{i=1}^{m} \overline{y}_{i}a_{ij}.
+			      1 - \overline{y}^{\top}A_{\cdot j} = 1 - \sum\limits_{i=1}^{m} \overline{y}_{i}a_{ij}.
 		      \]
-		      If this is \(<0\), then \(x_{j}\) can enter the basis. To drive some quantity negative, we simply set up a minimization problem.
+		      If this is \(<0\), then \(x_{j}\) can enter the \hyperref[def:basic]{basis}. To drive some quantity negative, we simply set up a minimization problem.
 		      Specifically, we set up a linear program such that
 		      \begin{align*}
 			      \min~ & 1 - \sum\limits_{i=1}^{m} \overline{y}_{i}a_{ij} \\
@@ -112,8 +110,8 @@ pretty big. The goal is to use as few stock rolls as possible.
 			                & \sum\limits_{i=1}^{m} w_{i}a_{i}\leq W              \\
 			                & a_{i}\geq 0 \text{ integers for }i = 1, \ldots , m.
 		      \end{align*}
-		      This is just a \emph{Knapsack problem}. Now, let \(f(S)\) being the optimal value for Knapsack of capacity \(S\) such that
-		      \(S = 0, 1, \ldots , W\). We see that
+		      This is known as the \emph{Knapsack problem}\footnote{\url{https://en.wikipedia.org/wiki/Knapsack_problem}}. Now, let \(f(S)\) being the \hyperref[def:optimal-solution]{optimal}
+		      value for knapsack of capacity \(S\) such that \(S = 0, 1, \ldots , W\). We see that
 		      \[
 			      \begin{split}
 				      f(0) &= 0\\
@@ -123,23 +121,20 @@ pretty big. The goal is to use as few stock rolls as possible.
 				      f(W) &= \text{ solution}.\\
 			      \end{split}
 		      \]
-		      The running time is \(\Theta(Wm)\).
-		      \begin{note}
-			      Note that we assume \(W\) and \(w_{i}\) are integer.
-		      \end{note}
+		      The running time is \(\Theta(Wm)\).\footnote{Note that we assume \(W\) and \(w_{i}\) to be integers.}
+
 		      Notice that the above only gives \(f(W)\), which is the objective value, but without information for variables. We can retrieve the
 		      information by keeping tracking of the argument of maximum in each step, namely we record
 		      \[
 			      \begin{split}
-				      i^{*}_{0 }\to f(0) &= 0\\
+				      i^{\ast}_{0 }\to f(0) &= 0\\
 				      &\vdots\\
-				      i^{*}_S \to f(S) &= \max_{i\colon w_{i}\leq S}\left\{ \overline{y}_{i} + f(S - w_{i})\right\}\\
+				      i^{\ast}_S \to f(S) &= \max_{i\colon w_{i}\leq S}\left\{ \overline{y}_{i} + f(S - w_{i})\right\}\\
 				      &\vdots\\
-				      i^{*}_W \to f(W) &= \text{ solution}.\\
+				      i^{\ast}_W \to f(W) &= \text{ solution}.\\
 			      \end{split}
 		      \]
-		      Then we simply \emph{back-track} every \(i^{*}\) from \(i^{*}_W\), and then the next one is simply \(i^{*}_{W - w_{i^{*}_W}}\), and
+		      Then we simply \emph{back-track} every \(i^{\ast}\) from \(i^{\ast}_W\), and then the next one is simply \(i^{\ast}_{W - w_{i^{\ast}_W}}\), and
 		      so on.
 	\end{itemize}
 \end{answer}
-\end{problem}

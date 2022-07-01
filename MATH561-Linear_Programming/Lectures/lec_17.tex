@@ -1,80 +1,83 @@
 \lecture{17}{3 Nov. 08:00}{Large-Scale Linear Optimization}
 \begin{prev}
-	We now focus on one particular problems: What's the conditions for a variable to enter the basis?
+	We now focus on one particular problems: What's the conditions for a variable to enter the \hyperref[def:basic]{basis}?
 	\begin{enumerate}
-		\item What's the reduced coast of \(s_{i}\)?
+		\item What's the \hyperref[def:reduced-cost]{reduced coast} of \(s_{i}\)?
 		      \[
 			      0 - \begin{pmatrix}
-				      \overline{y}^{T} & \overline{\sigma} \\
+				      \overline{y}^{\top} & \overline{\sigma} \\
 			      \end{pmatrix}\begin{pmatrix}
 				      -e_{i} \\
 				      0      \\
 			      \end{pmatrix} = \overline{y}_i.
 		      \]
-		      If \(\overline{y}_i<0\), then \(s_{i}\) can enter the basis.
-		\item What's the reduced cost of \(\lambda_{j}\)?
+		      If \(\overline{y}_i<0\), then \(s_{i}\) can enter the \hyperref[def:basic]{basis}.
+		\item What's the \hyperref[def:reduced-cost]{reduced cost} of \(\lambda_{j}\)?
 		      \[
-			      (c^{T}\hat{x}^j) - \begin{pmatrix}
-				      \overline{y}^{T} & \overline{\sigma} \\
+			      (c^{\top}\hat{x}^j) - \begin{pmatrix}
+				      \overline{y}^{\top} & \overline{\sigma} \\
 			      \end{pmatrix}\begin{pmatrix}
 				      E\hat{x}^j \\
 				      1          \\
-			      \end{pmatrix} = c^{T}\hat{x}^j - \hat{y}^{T}E\hat{x}^j - \overline{\sigma} = (c^{T} - \overline{y}^{T}E)\hat{x}^j - \overline{\sigma}.
+			      \end{pmatrix} = c^{\top}\hat{x}^j - \hat{y}^{\top}E\hat{x}^j - \overline{\sigma} = (c^{\top} - \overline{y}^{\top}E)\hat{x}^j - \overline{\sigma}.
 		      \]
 		      We consider a sub problem
 		      \begin{align*}
-			      -\sigma + \min~     & (c^{T} - \overline{y}^{T}E)x \\
-			                          & Ax = b                       \\
+			      -\sigma + \min~     & (c^{\top} - \overline{y}^{\top}E)x \\
+			                          & Ax = b                             \\
 			      (\mathrm{SUB})\quad & x\geq 0.
 		      \end{align*}
 
-		      If the optimal values\(<0\), then the optimal basic solution \(\hat{x}^j\) has an associated \(\lambda_{j}\) with negative reduced cost, so \(\lambda_{j}\) can
-		      enter the basis  of \(M\). Else if the optimal value \(\geq 0\), then no \(\lambda_{j}\) can enter the basis.
+		      If the \hyperref[def:optimal-solution]{optimal} values\(<0\), then the \hyperref[def:optimal-solution]{optimal} \hyperref[def:basic-solution]{basic solution}
+		      \(\hat{x}^j\) has an associated \(\lambda_{j}\) with negative \hyperref[def:reduced-cost]{reduced cost}, so \(\lambda_{j}\) can
+		      enter the \hyperref[def:basic]{basis} of \((M)\). Else if the \hyperref[def:optimal-solution]{optimal} value \(\geq 0\), then no \(\lambda_{j}\) can enter the
+		      \hyperref[def:basic]{basis}.
 
 		      \begin{note}
-			      We need to include \(-\sigma\) for evaluating the optimal values.
+			      We need to include \(-\sigma\) for evaluating the \hyperref[def:optimal-solution]{optimal} values.
 		      \end{note}
 
 		      \begin{problem}
-		      What if the optimal value is unbounded?
+		      What if the \hyperref[def:optimal-solution]{optimal} value is unbounded?
 		      \end{problem}
-		\item What's the reduced cost of \(\mu^k\)?
+		\item What's the \hyperref[def:reduced-cost]{reduced cost} of \(\mu^k\)?
 		      \[
-			      (c^{T}\hat{z}^k) - \begin{pmatrix}
-				      \overline{y}^{T} & \overline{\sigma} \\
+			      (c^{\top}\hat{z}^k) - \begin{pmatrix}
+				      \overline{y}^{\top} & \overline{\sigma} \\
 			      \end{pmatrix}\begin{pmatrix}
 				      E \hat{z}^k \\
 				      0           \\
-			      \end{pmatrix} =  (c^{T} - \overline{y}^{T}E)\hat{z}^k.
+			      \end{pmatrix} =  (c^{\top} - \overline{y}^{\top}E)\hat{z}^k.
 		      \]
 		      Again, consider a sub problem
 		      \begin{align*}
-			      \min~ & (c^{T} - \overline{y}^{T}E)z \\
-			            & Az = \vec{0}                 \\
+			      \min~ & (c^{\top} - \overline{y}^{\top}E)z \\
+			            & Az = \vec{0}                       \\
 			            & z\geq 0
 		      \end{align*}
 
 		      \begin{remark}
 			      Compare this problem to the previous sub problem \(\mathrm{SUB}\).
 			      \begin{enumerate}
-				      \item Notice that the objective value of this problem will always be \(0\) or unbounded. Since \(0\) is always a feasible solution, or
-				            if once it's negative, we can multiply it by a positive number and make the optimal values smaller.
-				      \item When solving \(\mathrm{SUB}\), the optimal values of \(\mathrm{SUB}\) is
+				      \item Notice that the objective value of this problem will always be \(0\) or unbounded. Since \(0\) is always a \hyperref[def:feasible-solution]{feasible solution},
+				            or if once it's negative, we can multiply it by a positive number and make the \hyperref[def:optimal-solution]{optimal} values smaller.
+				      \item When solving \(\mathrm{SUB}\), the \hyperref[def:optimal-solution]{optimal} values of \(\mathrm{SUB}\) is
 				            \begin{enumerate}
-					            \item negative \(\implies \lambda_{j}\) to enter the basis.
-					            \item \underline{non-negative} \(\implies\) no \(\lambda_{j}\) can enter the basis.
-					            \item unbounded \(\implies\) we get a \(\overline{z}\) that is a basic ray with \(c^{T}\overline{z} <0\), which implies for some \(\hat{z}^k\), \(\mu^k\) with negative reduced cost.
+					            \item negative \(\implies \lambda_{j}\) to enter the \hyperref[def:basic]{basis}.
+					            \item \underline{non-negative} \(\implies\) no \(\lambda_{j}\) can enter the \hyperref[def:basic]{basis}.
+					            \item unbounded \(\implies\) we get a \(\overline{z}\) that is a basic \hyperref[def:ray]{ray} with \(c^{\top}\overline{z} <0\), which implies for
+					                  some \(\hat{z}^k\), \(\mu^k\) with negative \hyperref[def:reduced-cost]{reduced cost}.
 				            \end{enumerate}
 			      \end{enumerate}
 			      \begin{note}
-				      We stop when \(\mathrm{SUB}\) has the optimal values being \(0\).\todo{WHy the optimal values of \(\mathrm{SUB}\) will always be non-positive?}
+				      We stop when \(\mathrm{SUB}\) has the \hyperref[def:optimal-solution]{optimal} values being \(0\).\todo{Why the \hyperref[def:optimal-solution]{optimal} values of \(\mathrm{SUB}\) will always be non-positive?}
 			      \end{note}
 		      \end{remark}
 	\end{enumerate}
 \end{prev}
 
-Now, we know what variable can enter the basis, but we have not yet consider what variable can leave. Recall that the basic matrix \(B\) for \(\overline{M}\) will consists
-the following columns
+Now, we know what variable can enter the \hyperref[def:basic]{basis}, but we have not yet consider what variable can leave. Recall that the basic matrix \(B\) for \(\overline{M}\)
+will have the following columns
 \[
 	\qquad s_{i} = \begin{pmatrix}
 		0      \\
@@ -94,8 +97,8 @@ the following columns
 		\bm{0}      \\
 	\end{pmatrix},
 \]
-where we see that the last entries of \(\lambda_{j}\) will always be \(1\), and at least one of \(\lambda_{j}\) will be in the basis due to the fact that \(B\) is invertible.
-For simplicity, we just consider
+where we see that the last entries of \(\lambda_{j}\) will always be \(1\), and at least one of \(\lambda_{j}\) will be in the \hyperref[def:basic]{basis} due to the fact
+that \(B\) is invertible. For simplicity, we just consider
 \[
 	B = \underset{s_1\ s_2\quad \ldots\ s_k\quad \lambda_1}{
 		\begin{pmatrix}
@@ -107,29 +110,29 @@ For simplicity, we just consider
 \]
 where we get \(\hat{x}^1\) by solving
 \begin{align*}
-	\min~ & e^{T}\hat{x} \\
-	      & Ax = b       \\
+	\min~ & e^{\top}\hat{x} \\
+	      & Ax = b          \\
 	      & x\geq 0
 \end{align*}
 
 If \(E \hat{x}^1\geq h\), then \(\overline{s}\geq \vec{0}\implies\) directly go to Phase II. Then,
 \[
 	\begin{pmatrix}
-		\overline{y}^{T} & \overline{\sigma} \\
+		\overline{y}^{\top} & \overline{\sigma} \\
 	\end{pmatrix} = \begin{pmatrix}
-		(\overline{c}\hat{x}^j) & (c^{T}\hat{z}^k) & 0 \\
+		(\overline{c}\hat{x}^j) & (c^{\top}\hat{z}^k) & 0 \\
 	\end{pmatrix}B^{-1},
 \]
 where \(\overline{c}\hat{x}^j\) initially is
 \[
 	\begin{pmatrix}
-		0 & \ldots & 0 & c^{T}\hat{x}^1 \\
+		0 & \ldots & 0 & c^{\top}\hat{x}^1 \\
 	\end{pmatrix}.
 \]
 
-Recall the ratio test for determining what entry should enter the basis and what should leave. Namely,
+Recall the ratio test for determining what entry should enter the \hyperref[def:basic]{basis} and what should leave. Namely,
 \[
-	\overline{y}^{T} = c_{\beta}^{T} A_{\beta}^{-1},\quad \overline{x}_{\beta} = A_{\beta}^{-1} b = \begin{pmatrix}
+	\overline{y}^{\top} = c_{\beta}^{\top} A_{\beta}^{-1},\quad \overline{x}_{\beta} = A_{\beta}^{-1} b = \begin{pmatrix}
 		\overline{x}_{\beta_1} \\
 		\vdots                 \\
 		\overline{x}_{\beta_m} \\
@@ -141,7 +144,7 @@ Recall the ratio test for determining what entry should enter the basis and what
 \]
 with the ratio being
 \[
-	\min_{i\colon \overline{a}_{i, \eta_{j}}>0}\left\{\frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}}\right\}.
+	\min_{i\colon \overline{a}_{i\eta_{j}}>0}\left\{\frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}}\right\}.
 \]
 
 Now, in our situation, we carry out the ratio test by noting that the basic variable values is just
@@ -164,7 +167,7 @@ and the updated entering column is
 		0           \\
 	\end{pmatrix},
 \]
-which corresponds to \(\lambda_{j}\), \(\mu_k\), \(s_{i}\) is entering the basis, respectively.
+which corresponds to \(\lambda_{j}\), \(\mu_k\), \(s_{i}\) is entering the \hyperref[def:basic]{basis}, respectively.
 
 Then we just do the ratio test. If \(B^{-1}\begin{pmatrix}
 	h \\

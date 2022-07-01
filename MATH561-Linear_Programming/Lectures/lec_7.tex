@@ -1,244 +1,264 @@
-\lecture{7}{22 Sep. 08:00}{Simplex Algorithm}
 \chapter{Simplex Algorithm}
+\lecture{7}{22 Sep. 08:00}{Worry-Free Simplex Algorithm}
 \section{Simplex Algorithm}
-We start with considering the standard form problem
+We start by considering the \hyperref[def:standard-form]{standard form} problem
 \[
 	\begin{alignedat}{5}
-		\min~&c^{T}x\qquad\qquad &&\max ~ &&y^{T}b\\
-		&Ax = b && &&y^{T}A\leq c^{T}\\
+		\min~&c^{\top}x\qquad\qquad &&\max ~ &&y^{\top}b\\
+		&Ax = b && &&y^{\top}A\leq c^{\top}\\
 		(P)\quad&x\geq  0 &&(D)\quad&&
 	\end{alignedat}.
 \]
 
-\begin{definition}
-	Define \emph{dual basic solution} \(\overline{y}\in \mathbb{\MakeUppercase{R}}^m\) as
+\begin{definition}[Dual basic solution]\label{def:dual-basic-solution}
+	The \emph{dual basic solution} \(\overline{y}\in \mathbb{\MakeUppercase{R}}^m\) is defined as
 	\[
-		\overline{y}^{T} = c_{\beta}^{T} A^{-1}_{\beta}.
+		\overline{y}^{\top} = c_{\beta}^{\top} A^{-1}_{\beta}.
 	\]
 \end{definition}
 
-\begin{lemma}
-	If \(\beta, \eta\) is a basic partition, and \(\overline{x}, \overline{y}\) are the associated primal and dual basic solution,
-	then
+\begin{lemma}\label{lma:lec7-1}
+	If \(\beta, \eta\) is a \hyperref[def:basic-partition]{basic partition}, and \(\overline{x}\) is the associated \hyperref[def:basic-solution]{primal basic solution}
+	and \(\overline{y}\) is the associated \hyperref[def:dual-basic-solution]{dual basic solution}, then
 	\[
-		c^{T}\overline{x} = \overline{y}^{T} b.
+		c^{\top}\overline{x} = \overline{y}^{\top} b.
 	\]
 \end{lemma}
 \begin{proof}
 	\[
-		c^{T}\overline{x} = \begin{pmatrix}
-			c^{T}_{\beta} & c^{T}_{\eta} \\
+		c^{\top}\overline{x} = \begin{pmatrix}
+			c^{\top}_{\beta} & c^{\top}_{\eta} \\
 		\end{pmatrix}\begin{pmatrix}
 			\overline{x}_{\beta} \\
 			\overline{x}_{\eta}  \\
-		\end{pmatrix}= c_{\beta}^{T} \overline{x}_{\beta}+ c_{\eta}^{T} \overline{c}_{\eta} = c_{\beta} A^{-1}_{\beta}b = \overline{y}b.
+		\end{pmatrix}= c_{\beta}^{\top} \overline{x}_{\beta}+ c_{\eta}^{\top} \overline{c}_{\eta} = c_{\beta} A^{-1}_{\beta}b = \overline{y}b.
 	\]
 \end{proof}
 
+Recall that
 \begin{prev}
 	\begin{align*}
-		\min~ & c^{T}_{\beta}x_{\beta} + c^{T}_{\eta}x_{\eta} \\
-		      & A_{\beta}x_{\beta} + A_{\eta}x_{\eta} = b     \\
-		      & x_{\beta}\geq 0, x_{\eta}\geq 0
-	\end{align*}, and hence
+		\min~ & c^{\top}_{\beta}x_{\beta} + c^{\top}_{\eta}x_{\eta} \\
+		      & A_{\beta}x_{\beta} + A_{\eta}x_{\eta} = b           \\
+		      & x_{\beta}\geq 0, x_{\eta}\geq 0,
+	\end{align*}
+	and hence
 	\begin{align*}
-		c^{T}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{T} - c_{\beta}^{T}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
-		                                     & A^{-1}_{\beta}A_{\eta}x_{\eta} \leq A^{-1}_{\beta}b          \\
-		                                     & x_{\beta}\geq 0, x_{\eta}\geq 0.
+		c^{\top}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{\top} - c_{\beta}^{\top}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
+		                                        & A^{-1}_{\beta}A_{\eta}x_{\eta} \leq A^{-1}_{\beta}b                \\
+		                                        & x_{\beta}\geq 0, x_{\eta}\geq 0.
 	\end{align*}
 \end{prev}
 
-We now formalize the concept of \emph{reduced cost}.
-\begin{definition}
-	\(\overline{c}_{\eta}\) is called \emph{reduced cost} for non-basic variables, where \(\overline{c}_{\eta}\) is
+We now formalize the concept of \hyperref[note:reduced-cost]{reduced cost}.
+\begin{definition}[Reduced cost]\label{def:reduced-cost}
+	\(\overline{c}_{\eta}\) is called \emph{reduced cost} for \hyperref[def:non-basic]{non-basic} variables, where \(\overline{c}_{\eta}\) is defined as
 	\[
-		\overline{c}_{\eta}^{T} \coloneqq c_{\eta}^{T} - c_{\beta}^{T} A^{-1}_{\beta}A_{\eta} = c_{\eta}^{T} - \overline{y}^{T}A_{\eta}.
+		\overline{c}_{\eta}^{\top} \coloneqq c_{\eta}^{\top} - c_{\beta}^{\top} A^{-1}_{\beta}A_{\eta} = c_{\eta}^{\top} - \overline{y}^{\top}A_{\eta}.
 	\]
 \end{definition}
 
 \subsection{Dual Feasibility}
-\begin{lemma}
-	\(\overline{y}\) is feasible for \(D\) if and only if \(\overline{c}_{\eta}\geq 0\).
+\begin{lemma}\label{lma:lec7-2}
+	\(\overline{y}\) is \hyperref[def:feasible-solution]{feasible} for \((D)\) if and only if \(\overline{c}_{\eta}\geq 0\).
 \end{lemma}
 \begin{proof}
 	\[
-		y^{T}A\leq c^{T} \iff y^{T}\begin{bmatrix}
+		y^{\top}A\leq c^{\top} \iff y^{\top}\begin{bmatrix}
 			A_{\beta} & A_{\eta} \\
 		\end{bmatrix}\leq \begin{pmatrix}
-			c_{\beta}^{T} & c_{\eta}^{T} \\
+			c_{\beta}^{\top} & c_{\eta}^{\top} \\
 		\end{pmatrix}
 	\]
 	since
 	\[
-		\begin{alignedat}{3}
-			&y^{T} A_{\beta}\leq c_{\beta}^{T}\\
-			&y^{T} A_{\eta}\leq c_{\eta}^{T} \implies c_{\eta}^{T} - y^{T}A_{\eta}\geq 0.
-		\end{alignedat}
+		\begin{dcases}
+			y^{\top} A_{\beta} \leq c_{\beta}^{\top} \\
+			y^{\top} A_{\eta}  \leq c_{\eta}^{\top} \implies c_{\eta}^{\top} - y^{\top}A_{\eta}\geq 0.
+		\end{dcases}
 	\]
 \end{proof}
 
-\begin{corollary}
-	If \(\hat{x}\) is feasible for \(P\) and \(\hat{y}\) is feasible for \(D\), and if \(c^{T}\hat{x} = \hat{y}^{T} b\), then \(\hat{x}\) and \(\hat{y}\) are optimal.
+\begin{corollary}\label{col:lec7-1}
+	If \(\hat{x}\) is \hyperref[def:feasible-solution]{feasible} for \((P)\) and \(\hat{y}\) is \hyperref[def:feasible-solution]{feasible} for \((D)\), and if
+	\(c^{\top}\hat{x} = \hat{y}^{\top} b\), then \(\hat{x}\) and \(\hat{y}\) are \hyperref[def:optimal-solution]{optimal}.
 \end{corollary}
 
-\begin{theorem}[Weak optimal basis theorem]
-	Let \(\overline{x}\) and \(\overline{y}\) are basic primal and dual solutions for \(P\) and \(D\). Then if \(\beta\) is a feasible basis and \(\overline{c}_{\eta}\geq 0\), \(\overline{x}\) and
-	\(\overline{y}\) are optimal.
+\begin{theorem}[Weak optimal basis theorem]\label{thm:weak-optimal-basis-theorem}
+	Let \(\overline{x}\) and \(\overline{y}\) are \hyperref[def:basic-solution]{basic primal} and \hyperref[def:dual-basic-solution]{dual solutions} for \((P)\) and \((D)\).
+	Then if \(\beta\) is a feasible \hyperref[def:basic]{basis} and \(\overline{c}_{\eta}\geq 0\), \(\overline{x}\) and \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}.
 \end{theorem}
 \begin{proof}
-	Obvious from the standard problem in the form of
+	Obvious from the \hyperref[def:standard-form]{standard problem} in the form of
 	\begin{align*}
-		c^{T}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{T} - c_{\beta}^{T}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
-		                                     & A^{-1}_{\beta}A_{\eta}x_{\eta} \leq A^{-1}_{\beta}b          \\
-		                                     & x_{\beta}\geq 0, x_{\eta}\geq 0.
+		c^{\top}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{\top} - c_{\beta}^{\top}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
+		                                        & A^{-1}_{\beta}A_{\eta}x_{\eta} \leq A^{-1}_{\beta}b                \\
+		                                        & x_{\beta}\geq 0, x_{\eta}\geq 0.
 	\end{align*}
 \end{proof}
 
 \begin{note}
-	The order of the arguments in text book for weak optimal basis theorem is slightly different.
+	The order of the arguments in text book for \autoref{thm:weak-optimal-basis-theorem} is slightly different.
 \end{note}
 
 \subsection{Naive Algorithmic Approach}
+We see that from the above discussion, we can come up with the following algorithmic approach to find the optimal solution \(\overline{x} \) and \(\overline{y} \) given a
+\hyperref[def:standard-form]{standard form} LP.
 \begin{enumerate}
-	\item[0] Start with a basis partition \(\beta, \eta\) with \(\overline{x}_{\beta}\geq 0\).
-	\item[1] If \(\overline{c}_{\eta}\geq 0\), then \(\overline{x}\) and \(\overline{y}\) are optimal and \emph{STOP}.
-	\item[2] Otherwise, choose \(\eta_j	\) with \(\overline{c}_{\eta_j}<0\). Consider the associated basis direction \(\overline{z}\).(Idea: \(\overline{x}\to \overline{x}+\lambda \overline{z}\) with \(\lambda >0\)) Then
-		\[
-			c^{T}(\overline{x} + \lambda \overline{z}) = c^{T} \overline{x} + \lambda c^{T} \overline{z} = c^{T} \overline{x} + \lambda \overline{c}_{\eta_j},
-		\]
-		where \begin{itemize}
-			\item \(c^{T} \overline{x}\) is the current objective value
-			\item \(c^{T}\overline{z}\) is
-			      \[
-				      \begin{split}
-					      c^{T}\overline{z} &= c_{\eta}^{T} \overline{z}_{\eta}+c_{\beta}^{T} \overline{z}_{\beta}\\
-					      &=c_{\eta}^{T}e_{j} - c_{\beta}^{T}(A^{-1}_{\beta}A_{\eta_j})\\
-					      &=c_{\eta_{j}} - c_{\beta}^{T} A^{-1}_{\beta}A_{\eta_j}\\
-					      &= \overline{c}_{\eta_{j}}
-				      \end{split}
-			      \]
-			\item \(\lambda \overline{c}_{\eta_{j}}\) is the \emph{rate} of change of objective value as we move in direction \(\overline{z}\).
-		\end{itemize}
-	\item[3] Move from \(\overline{x}\) to \(\overline{x}+\overline{\lambda} \overline{z}\), where we let \(\overline{\lambda}\) as large as possible. Operationally, since we need
-		\[
-			\overline{x}_{\beta} + \lambda \overline{z}_{\beta} \geq 0,
-		\]
-		where \(\overline{z}_{\eta} = e_{j},\ \overline{z}_{\beta} = -A^{-1}_{\beta}A_{\eta_{j}}\). We then have
-		\[
-			\begin{alignedat}{3}
-				&\overline{x}_{\beta_{i}} - \lambda \overline{a}_{i, \eta_{j}}\geq 0, &&\text{ for }i = 1, \ldots , m\\
-				& \lambda \leq \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}}, &&\text{ for }i \text{ such that }\overline{a}_{i, \eta_j}>0.
-			\end{alignedat}
-		\]
-		Hence,
-		\[
-			\overline{\lambda} \coloneqq \min_{i: \overline{a}_{i, \eta_{j}}>0} \left\{ \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}} \right\} \geq 0.
-		\]
-		\begin{remark}
-			If \(\overline{a}_{i, \eta_{j}}\leq 0\) for all \(i = 1, \ldots , m\), namely
-			\[
-				\overline{A}_{i, \eta_{j}}\leq 0 \iff -A^{-1}_{\beta}A_{\eta_{j}}\geq 0 \iff \overline{z}\geq 0,
-			\]
-			then \(\overline{z}\) is a ray. This means \(P\) is unbounded below, hence we \emph{STOP}.
-		\end{remark}
+	\item Start with a \hyperref[def:basic-partition]{basis partition} \(\beta, \eta\) with \(\overline{x}_{\beta}\geq 0\).
+	\item If \(\overline{c}_{\eta}\geq 0\), then \(\overline{x}\) and \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal} and \emph{STOP}.
+	\item Otherwise, choose \(\eta_j\) with \(\overline{c}_{\eta_j}<0\). Consider the associated \hyperref[def:basic-direction]{basis direction} \(\overline{z}\).
+	      (Idea: \(\overline{x}\to \overline{x}+\lambda \overline{z}\) with \(\lambda >0\)) Then
+	      \[
+		      c^{\top}(\overline{x} + \lambda \overline{z}) = c^{\top} \overline{x} + \lambda c^{\top} \overline{z} = c^{\top} \overline{x} + \lambda \overline{c}_{\eta_j},
+	      \]
+	      where \begin{itemize}
+		      \item \(c^{\top} \overline{x}\) is the current objective value
+		      \item \(c^{\top}\overline{z}\) is
+		            \[
+			            \begin{split}
+				            c^{\top}\overline{z} &= c_{\eta}^{\top} \overline{z}_{\eta}+c_{\beta}^{\top} \overline{z}_{\beta}\\
+				            &=c_{\eta}^{\top}e_{j} - c_{\beta}^{\top}(A^{-1}_{\beta}A_{\eta_j})\\
+				            &=c_{\eta_{j}} - c_{\beta}^{\top} A^{-1}_{\beta}A_{\eta_j}\\
+				            &= \overline{c}_{\eta_{j}}
+			            \end{split}
+		            \]
+		      \item \(\lambda \overline{c}_{\eta_{j}}\) is the \emph{rate} of change of objective value as we move in direction \(\overline{z}\).
+	      \end{itemize}
+
+	      Then we move from \(\overline{x}\) to \(\overline{x}+\overline{\lambda} \overline{z}\), where we let \(\overline{\lambda}\) as large as possible.
+	      Operationally, since we need
+	      \[
+		      \overline{x}_{\beta} + \lambda \overline{z}_{\beta} \geq 0,
+	      \]
+	      where \(\overline{z}_{\eta} = e_{j},\ \overline{z}_{\beta} = -A^{-1}_{\beta}A_{\eta_{j}}\). We then have
+	      \[
+		      \begin{alignedat}{3}
+			      &\overline{x}_{\beta_{i}} - \lambda \overline{a}_{i, \eta_{j}}\geq 0, &&\text{ for }i = 1, \ldots , m\\
+			      & \lambda \leq \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}}, &&\text{ for }i \text{ such that }\overline{a}_{i, \eta_j}>0.
+		      \end{alignedat}
+	      \]
+	      Hence,
+	      \[
+		      \overline{\lambda} \coloneqq \min_{i: \overline{a}_{i, \eta_{j}}>0} \left\{ \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}} \right\} \geq 0.
+	      \]
+	      \begin{remark}
+		      If \(\overline{a}_{i, \eta_{j}}\leq 0\) for all \(i = 1, \ldots , m\), namely
+		      \[
+			      \overline{A}_{i, \eta_{j}}\leq 0 \iff -A^{-1}_{\beta}A_{\eta_{j}}\geq 0 \iff \overline{z}\geq 0,
+		      \]
+		      then \(\overline{z}\) is a ray. This means \((P)\) is unbounded below, hence we \emph{STOP}.
+	      \end{remark}
 \end{enumerate}
 
 \subsection{Worry-Free Simplex Algorithm}
-Now, we give the very first generation about our simplex algorithm. Consider the standard form problem
+Now, we give the very first version of the simplex algorithm called \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}.
+Consider the \hyperref[def:standard-form]{standard form} problem
 \[
 	\begin{alignedat}{5}
-		\min~&c^{T}x\\
+		\min~&c^{\top}x\\
 		&Ax = b \\
 		(P)\quad&x\geq  0.
 	\end{alignedat}
 \]
-The simplex algorithm is described as follows.
-\begin{enumerate}
-	\item[0.] Start with a basic feasible partition \(\beta, \eta\) and assume that \(x_{\beta}\geq 0\)(\(x\) is a basic feasible solution)
-	\item[1.] \begin{enumerate}
-			\item Compute \(\overline{x}_{\beta} \coloneqq A^{-1}_{\beta} b \geq 0\)
-			\item Compute \(\overline{c}_{\eta}^{T} \coloneqq c_{\eta}^{T} - c_{\beta}^{T} A^{-1}_{\beta} A_{\eta}\)
-		\end{enumerate}
-		If \(\overline{c}_{\eta} \geq 0\), then \emph{STOP}. \(\overline{x}\) is optimal for \(P\). \\(Recall that the dual solution \(\overline{y}\coloneqq c_{\beta}^{T}A^{-1}_{\beta}\) is optimal for \(D\) )
-	\item[2.] Otherwise, choose \(j\) such that \(1\leq j\leq n-m\) for \(\eta_j\) such that \(\overline{c}_{\eta_j} < 0\). (Basic direction \(\overline{z}\), then \(c^{T}\overline{z} = \overline{c}_{\eta_{j}}<0\))
-	\item[3.] Replace \(\overline{x}\) with \(\overline{x} + \lambda \overline{z}\) where
-		\[
-			\lambda \coloneqq \min_{i:\overline{a}_{i, \eta_{j}}>0}\left\{ \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}} \right\}.
-		\]
-		(Largest choice so that \(\overline{x} + \lambda \overline{z} \geq 0\))\\
-		If we can't compute this, namely
-		\[
-			\overline{A}_{\eta_{j}} \leq 0\implies P \text{ is unbounded }\implies \text{ \emph{STOP}}
-		\]
-		Otherwise, \emph{GOTO} 1.
-\end{enumerate}
 
+\par
+\begin{algorithm}[H]\label{algo:worry-free-simplex-algorithm}
+	\DontPrintSemicolon
+	\caption{Worry-Free Simplex Algorithm}
+	\KwData{\hyperref[def:standard-form]{standard form} \((P)\), \hyperref[def:basic-partition]{basic partition} \(\beta , \eta\) with \(x_{\beta}\geq 0\)}
+	\KwResult{\hyperref[def:optimal-solution]{optimal solutions} \(\overline{x}, \overline{y}\) or report \texttt{\((P)\) is unbounded}}
+	\BlankLine
+
+	\While{True}{
+	\(\overline{x}_{\beta} \gets A^{-1}_{\beta} b(\geq 0)\)\;
+	\(\overline{c}_{\eta}^{\top} \gets c_{\eta}^{\top} - c_{\beta}^{\top} A^{-1}_{\beta} A_{\eta}\)\;
+	\If(\Comment*[f]{\(\overline{x}\) is optimal for \((P)\)}){\(\overline{c}_{\eta} \geq 0\)}{
+	\(\overline{y} \gets c_{\beta}^{\top}A^{-1}_{\beta}\) \Comment*[r]{From \autoref{thm:weak-optimal-basis-theorem}}
+	\Return{\(\overline{x}, \overline{y} \)}
+	}
+	\Else(\Comment*[f]{\hyperref[def:basic-direction]{Basic direction} \(\overline{z}\), then \(c^{\top}\overline{z} = \overline{c}_{\eta_{j}}<0\)}){
+	choose \(j\) where \(1\leq j\leq n-m\) such that \(\overline{c}_{\eta_j} < 0\)\;
+	\If(\Comment*[f]{\(\overline{A}_{\eta_{j}} \leq 0\implies (P) \text{ is unbounded}\)}){\(\overline{A}_{\eta_{j}} \leq 0\)}{
+	\Return{\texttt{\((P)\) is unbounded}}
+	}
+	\(\lambda \gets \min_{i\colon\overline{a}_{i \eta_{j}}>0}\left\{ \frac{\overline{x}_{\beta_{i}}}{\overline{a}_{i, \eta_{j}}} \right\}\)\Comment*[r]{Largest choice so that \(\overline{x} + \lambda \overline{z} \geq 0\)}
+	\(\overline{x} \gets \overline{x} + \lambda \overline{z} \)\;
+	Redetermine \(\beta , \eta \)\;
+	}
+	}
+\end{algorithm}
+
+\begin{remark}
+	Note that \(x\) is assumed to be a \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution}.
+\end{remark}
 \begin{problem}
-The problem is that is \(\overline{x}+\lambda \overline{z}\) still a basic solution? And if it is, what is the basic partition that goes with it?
+The problem is that is \(\overline{x}+\lambda \overline{z}\) still a \hyperref[def:basic-solution]{basic solution}? And if it is, what is the \hyperref[def:basic-partition]{basic partition}
+that goes with it?
 \end{problem}
-
 \begin{answer}
-	We see that after one iteration, one of the basic index \(i^{*}\) will become non-basic, namely
+	We see that after one iteration, one of the \hyperref[def:basic]{basic} index \(i^{\ast}\) will become \hyperref[def:non-basic]{non-basic}, namely
 	\[
-		(\overline{x} + \lambda \overline{z})_{\beta_{i^{*}}} = 0;
+		(\overline{x} + \lambda \overline{z})_{\beta_{i^{\ast}}} = 0;
 	\]
-	while one of the non-basic index will need to become basic, since
+	while one of the \hyperref[def:non-basic]{non-basic} index will need to become \hyperref[def:basic]{basic}, since
 	\[
-		(\overline{x} + \lambda \overline{z})_{\beta_{i^{*}}} = \lambda \overline{e}_j.
+		(\overline{x} + \lambda \overline{z})_{\beta_{i^{\ast}}} = \lambda \overline{e}_j.
 	\]
-	Namely
+	Namely,
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{cc|c|c|cc}
 			\toprule
-			                       &           & \(\overline{x}\)            & \(\overline{z}\)                & \(\overline{x} + \lambda \overline{z}\) &                                            \\
+			                          &           & \(\overline{x}\)            & \(\overline{z}\)                & \(\overline{x} + \lambda \overline{z}\) &                                                                         \\
 			\midrule
-			\(\beta_{i^{*}} \to \) & \(\beta\) & \(\overline{x}_{\beta}\)    & \(\overline{z}_{\beta}\)        & \(\to 0\)                               & \emph{\(\beta_{i^{*}}\) becomes non-basic} \\\hline
-			                       & \(\eta\)  & \(\overline{x}_{\eta} = 0\) & \(\overline{x}_{\eta} = e_{j}\) & \(\lambda \overline{e}_j\)              & \emph{\(\eta_{j}\) becomes basic}          \\
+			\(\beta_{i^{\ast}} \to \) & \(\beta\) & \(\overline{x}_{\beta}\)    & \(\overline{z}_{\beta}\)        & \(\to 0\)                               & \emph{\(\beta_{i^{\ast}}\) becomes \hyperref[def:non-basic]{non-basic}} \\\hline
+			                          & \(\eta\)  & \(\overline{x}_{\eta} = 0\) & \(\overline{x}_{\eta} = e_{j}\) & \(\lambda \overline{e}_j\)              & \emph{\(\eta_{j}\) becomes \hyperref[def:basic]{basic}}                 \\
 			\bottomrule
 		\end{tabular}
 	\end{table}
 \end{answer}
 
-Now, suppose \(i^{*}\) is that chosen index, which means \(\overline{a}_{i^{*}, \eta_{j}}>0\) and \(\frac{\overline{x}_{\beta_{i^{*}}}}{\overline{a}_{i^{*}, \eta_{j}}} = \overline{\lambda}\). Then we have
-\(\beta_{i^{*}}\) such that
+Now, suppose \(i^{\ast}\) is that chosen index, which means \(\overline{a}_{i^{\ast} \eta_{j}}>0\) and \(\frac{\overline{x}_{\beta_{i^{\ast}}}}{\overline{a}_{i^{\ast} \eta_{j}}} = \overline{\lambda}\). Then we have
+\(\beta_{i^{\ast}}\) such that
 \[
-	\overline{x} + \lambda \overline{z} \implies \overline{x}_{\beta_{i^{*}}} + \overline{\lambda} \overline{z}_{\beta_{i^{*}}} = \overline{x}_{\beta_{i^{*}}}+\frac{\overline{x}_{\beta_{i^{*}}}}{\overline{a}_{i^{*}, \eta_{j}}}\left( -\overline{a}_{i^{*}, \eta_{j}} \right) = 0.
+	\overline{x} + \lambda \overline{z} \implies \overline{x}_{\beta_{i^{\ast}}} + \overline{\lambda} \overline{z}_{\beta_{i^{\ast}}} = \overline{x}_{\beta_{i^{\ast}}}+\frac{\overline{x}_{\beta_{i^{\ast}}}}{\overline{a}_{i^{\ast} \eta_{j}}}\left( -\overline{a}_{i^{\ast}, \eta_{j}} \right) = 0.
 \]
 
-So we reasonably suspect that there is a new basic partition such that
+So we reasonably suspect that there is a new \hyperref[def:basic-partition]{basic partition} such that
 \[
 	\begin{alignedat}{5}
-		\widetilde{\beta} &\coloneqq ( \beta_1, \beta_2, \ldots , \beta_{i^{*}-1}, &&\eta_{j}, \beta_{i^{*}+1}, \ldots , \beta_m ) \\
+		\widetilde{\beta} &\coloneqq ( \beta_1, \beta_2, \ldots , \beta_{i^{\ast}-1}, &&\eta_{j}, \beta_{i^{\ast}+1}, \ldots , \beta_m ) \\
 		& &&\updownarrow\\
-		\widetilde{\eta} &\coloneqq ( \eta_1, \eta_2, \ldots , \eta_{j - 1}, &&\beta_{i^{*}}, \eta_{j+1}, \ldots , \eta_{n-m} ).
+		\widetilde{\eta} &\coloneqq ( \eta_1, \eta_2, \ldots , \eta_{j - 1}, &&\beta_{i^{\ast}}, \eta_{j+1}, \ldots , \eta_{n-m} ).
 	\end{alignedat}
 \]
 
-The remaining question is that, is \(A_{\widetilde{\beta}}\) still invertible? Namely, is \(\det(A_{\widetilde{\beta}}) \neq 0\)?
-\begin{lemma}
-	\(A_{\widetilde{\beta}}\) is invertible.
+The remaining question is that, is \(A_{\widetilde{\beta}}\) still invertible? Namely, is \(\det (A_{\widetilde{\beta}}) \neq 0\)?
+\begin{lemma}\label{lma:lec7-3}
+	After one iteration of \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, \(A_{\widetilde{\beta}}\) is still invertible.
 \end{lemma}
 \begin{proof}
 	We see that \(A_{\widetilde{\beta}}\) is invertible if and only if \(A^{-1}_{\beta}A_{\widetilde{\beta}}\) is invertible. And since
 	\[
 		A^{-1}_{\beta}A_{\widetilde{\beta}} = \begin{bmatrix}
-			e_1 & e_2 & \ldots & e_{i^{*}-1} & \overline{A}_{\eta_{j}} & e_{i^{*}+1} & \ldots & e_m \\
+			e_1 & e_2 & \ldots & e_{i^{\ast}-1} & \overline{A}_{\eta_{j}} & e_{i^{\ast}+1} & \ldots & e_m \\
 		\end{bmatrix},
 	\]
-	and since \(\det(A^{-1}_\beta A_{\widetilde{\beta}}) = \overline{a}_{i^{*}, \eta_{j}}\), if \(\overline{a}_{i^{*}, \eta_{j}}\neq 0\), then we see that this is indeed invertible. But this is
-	a obvious fact by our choice of \(i^{*}\).
+	and since \(\det(A^{-1}_\beta A_{\widetilde{\beta}}) = \overline{a}_{i^{\ast} \eta_{j}}\), if \(\overline{a}_{i^{\ast} \eta_{j}}\neq 0\), then we see that this is indeed invertible. But this is
+	a obvious fact by our choice of \(i^{\ast}\).
 \end{proof}
 
 \begin{figure}[H]
 	\centering
 	\incfig{pivot-swap}
-	\caption{Pivot Swap in terms of feasible region.}
+	\caption{Pivot Swap in terms of \hyperref[def:feasible-region]{feasible region}.}
 	\label{fig:pivot-swap}
 \end{figure}
 
-Finally, we check that the unique \emph{basic} solution for this basic partition \(\widetilde{\beta},\ \widetilde{\eta}\) are exactly \(\overline{x} + \overline{\lambda}\overline{z}\).
-\begin{lemma}
+Finally, we check that the unique \hyperref[def:basic-solution]{basic solution} for this \hyperref[def:basic-partition]{basic partition}
+\(\widetilde{\beta},\ \widetilde{\eta}\) are exactly \(\overline{x} + \overline{\lambda}\overline{z}\).
+\begin{lemma}\label{lma:lec7-4}
 	The unique solution of \(Ax = b\) having \(x_{\widetilde{\eta}} = 0\) is \(\overline{x} + \overline{\lambda}\overline{z}\).
 \end{lemma}
 \begin{proof}

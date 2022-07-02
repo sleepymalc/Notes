@@ -1,95 +1,153 @@
 \chapter{Page Rank}
 \lecture{10}{4 Oct. 12:30}{Page Rank}
-\begin{prev}
-	Voting procedure - hubs voted authorities, while authorities voted for hubs.
+\section{Page Rank Algorithm}
+\begin{prev}[Voting procedure]
+	The hubs vote authorities, while authorities vote for hubs in \hyperref[algo:HITS-algorithm]{HITS algorithm}.
+
 \end{prev}
 
-But this is not always the case. Rankings that can be collaborated.
-\section{Basic Page Rank Algorithm}
-\begin{enumerate}
-	\item INITIALIZE: For all nodes in \(\mathcal{V}\)(\(\left\vert \mathcal{V} \right\vert = V\)),
-	      set page rank to be \(\frac{1}{V}\).
-	\item SEND: Basic Page Rank updates: Each node divides of its current page rank equally across its outgoing
-	      links and sends the value to the node at the end. If there are no outgoing links, then the node retains its page rank.
-	\item RECEIVE: Each node updates its page rank to be the sum of the values it receives on its incoming links. If
-	      a node has retained its page rank, then it adds it to this value.
-	\item LOOP: Run step 2 for \(L\) steps.
-\end{enumerate}
-\begin{note}
+But this is not always the case. Rankings that can be collaborated as the following new algorithm will show, which will determine
+the importance of a node we called \emph{page rank}.
+\par
+\begin{algorithm}[H]\label{algo:basic-page-rank-algorithm}
+	\DontPrintSemicolon
+	\caption{Basic Page Rank Algorithm}
+	\SetKwData{pg}{pagerank}
+	\SetKwData{pgnew}{pagerankNew}
+	\SetKwData{n}{neighborNum}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(L\)}
+	\KwResult{\pg}
+
+	\BlankLine
+
+	\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:initialize]{Initialize}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+		\(\pg(v) \gets 1 / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \)\;
+	}
+
+	\;
+
+	\For{\(i = 1, \ldots , L\)}{
+		\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:send]{Send}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+			\(\n \gets \left\vert \{v\to u \in \mathcal{\MakeUppercase{e}} \} \right\vert\)\;
+			\uIf(\Comment*[f]{divides \(\pg(v)\) to its (out)neighbor}){\(\n \neq 0\)}{
+				\For(){\(v \to u \in \mathcal{\MakeUppercase{e}}\)}{
+					\(\pgnew(u) \gets \pgnew(u) + \pg(v) / \n\)\;
+				}
+			}\Else(\Comment*[f]{no outgoing links}){
+				\(\pgnew(v)\gets \pgnew(v) + \pg(v)\)\;
+			}
+		}
+		\;
+		\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:receive]{Receive}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+			\(\pg(v)\gets \pgnew(v)\)\Comment*[r]{Update the page rank}
+			\(\pgnew(v) \gets 0\)\Comment*[r]{Clean up for the next iteration's updating}
+		}
+	}
+	\;
+	\Return{\pg}\;
+\end{algorithm}
+
+\begin{remark}[Algorithm explanation]
+	The following is the detailed explanation of the \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}.
+	\begin{enumerate}[(a)]
+		\item\label{algo:basic-page-rank-algorithm:initialize}
+		Initialize: For all nodes in \(\mathcal{V}\), set page rank to be \(1 / \left\vert \mathcal{\MakeUppercase{v}}  \right\vert\).
+		\item\label{algo:basic-page-rank-algorithm:send}
+		Send: Basic page rank updates: each node divides of its current page rank equally across its outgoing
+		links and sends the value to the node at the end. If there are no outgoing links, then the node retains its page rank.
+		\item \label{algo:basic-page-rank-algorithm:receive}
+		      Receive: Each node updates its page rank to be the sum of the values it receives on its incoming links. If
+		      a node has retained its page rank, then it adds it to this value.
+	\end{enumerate}
+\end{remark}
+
+\begin{note}[Conservation of the page rank]
 	Page rank is never lost over gained in the network, it is just passed around. This means no normalization is required,
 	the page ranks always sum to \(1\), with all terms non-negative.
 \end{note}
 
+But then there are some problems we care about.
 \begin{problem}
-Will it converge? To what if it does? Is the final state always interesting?
+Will it converge?
 \end{problem}
 \begin{answer}
-	Fact: \begin{enumerate}
-		\item It will converge in most cases.
-		\item Eigenvector of some eigenvalue of some matrix associated with the graph.
-		\item It may not always be interesting.
-	\end{enumerate}
+	It will converge in most cases.
 \end{answer}
 
 \begin{eg}
-	Consider a cycle graph, with different initial page rank. It will not converge! All values just cycling around.
+	Consider a cycle \hyperref[def:graph]{graph}, with different initial page rank. It will not converge! All values just cycling around.
 \end{eg}
 
-We want
+\begin{problem}
+To what if it does?
+\end{problem}
+\begin{answer}
+	Eigenvector of some eigenvalues of some matrix associated with the network.
+\end{answer}
+
+\begin{problem}
+Is the final state always interesting?
+\end{problem}
+\begin{answer}
+	It may not always be interesting.
+\end{answer}
+
+Our goal is to have
 \begin{enumerate}
-	\item convergence for all starting vectors
-	\item the final vector to be relevant to the graph
+	\item convergence for all starting vectors;
+	\item the final vector to be relevant to the \hyperref[def:graph]{graph}.
 \end{enumerate}
 
-\section{Scaled Page Rank}
-\begin{enumerate}
-	\item INITIALIZE: Denote \(r^{old}\) as the column vector of ranks.
-	\item SEND: if \(d^{out}_i > 0\), then
-	\item \[
-		      \frac{r_{i}^{old}}{d_{i}^{out}}
-	      \]send to neighbor at the end of the outgoing links. If \(d_{i}^{out} = 0\), then \(r_{i}^{old}\) sent to itself.
-	\item RECEIVE: Collect all the page rank values. Therefore,
+\section{Analysis on Page Rank}
+Let's denote the page rank of node \(i\) as \(r_i\) throughout the following discussion.
+\begin{enumerate}[(a)]
+	\item \hyperref[algo:basic-page-rank-algorithm:initialize]{Initialize}: Denote \(r^{\text{old}}\) as the column vector of page ranks.
+	\item \hyperref[algo:basic-page-rank-algorithm:send]{Send}:
+	      \begin{itemize}
+		      \item If \(d^{\text{out}}_i > 0\): then \(\frac{r_{i}^{\text{old}}}{d_{i}^{\text{out}}}\) is sent to neighbor at the end of the outgoing links.
+		      \item If \(d_{i}^{\text{out}} = 0\): then \(r_{i}^{\text{old}}\) sent to itself.
+	      \end{itemize}
+	\item \hyperref[algo:basic-page-rank-algorithm:receive]{Receive}: Collect all the page rank values. Therefore,
 	      \[
-		      r_{i}^{new} = \sum\limits_{j:j\to i}\frac{r_{j}^{old}}{d_{j}^{out}}+\begin{cases}
-			      r_{i}^{old} & , \text{ if }d_{i}^{out} = 0 \\
-			      0           & , \text{ if }d_{i}^{out} > 0 \\
-		      \end{cases} .
+		      r_{i}^{\text{new}} = \sum\limits_{j:j\to i}\frac{r_{j}^{\text{old}}}{d_{j}^{\text{out}}}+\begin{cases}
+			      r_{i}^{\text{old}} & , \text{ if }d_{i}^{\text{out}} = 0; \\
+			      0                  & , \text{ if }d_{i}^{\text{out}} > 0. \\
+		      \end{cases}
+	      \]
+	      We can indeed write it in a more compact form as follows. We have \(r^{\text{new}} = N^{\top} r^{\text{old}}\), where
+	      \[
+		      \begin{alignedat}{3}
+			      &\text{if }i\neq  j,\ (N^{\top})_{ij} = \begin{dcases}
+				      \frac{1}{d_{j}^{\text{out}}} & , \text{ if } A_{ji} = 1; \\
+				      0                            & , \text{ if } A_{ji} = 0, \\
+			      \end{dcases} &&= \begin{dcases}
+				      \frac{A_{ji}}{d_{j}^{\text{out}}} & , \text{ if }d_{j}^{\text{out}}>0; \\
+				      A_{ji}                            & , \text{ otherwise}.               \\
+			      \end{dcases}\\
+			      &\text{if }i = j,\ (N^{\top})_{ij} = \begin{dcases}
+				      1 & , \text{ if } d_{i}^{\text{out}} = 0; \\
+				      0 & , \text{ if } d_{i}^{\text{out}} > 0, \\
+			      \end{dcases} &&= \begin{dcases}
+				      1      & , \text{ if } d_{i}^{\text{out}} = 0; \\
+				      A_{ii} & , \text{ if } d_{i}^{\text{out}} > 0. \\
+			      \end{dcases}
+		      \end{alignedat}
+	      \]
+	      Hence,
+	      \[
+		      N_{ij} = \begin{dcases}
+			      \frac{A_{ij}}{d_{i}^{\text{out}}} & , \text{ if } d_{i}^{\text{out}} > 0;              \\
+			      A_{ij}                            & , \text{ if }d_{i}^{\text{out}} = 0 \land i\neq j; \\
+			      1                                 & , \text{ if }d_{i}^{\text{out}} = 0 \land i= j.    \\
+		      \end{dcases}
 	      \]
 \end{enumerate}
 
-We have \(r^{new} = N^{\top} r^{old}\), where
-\[
-	\begin{alignedat}{3}
-		&\text{if }i\neq  j,\ (N^{\top})_{ij} = \begin{dcases}
-			\frac{1}{d_{j}^{out}} & , \text{ if } A_{ji} = 1 \\
-			0                     & , \text{ if } A_{ji} = 0 \\
-		\end{dcases} &&= \begin{dcases}
-			\frac{A_{ji}}{d_{j}^{out}} & , \text{ if }d_{j}^{out}>0 \\
-			A_{ji}                     & , \text{ otherwise}        \\
-		\end{dcases}\\
-		&\text{if }i = j,\ (N^{\top})_{ij} = \begin{dcases}
-			1 & , \text{ if } d_{i}^{out} = 0 \\
-			0 & , \text{ if } d_{i}^{out} > 0 \\
-		\end{dcases} &&= \begin{dcases}
-			1      & , \text{ if } d_{i}^{out} = 0 \\
-			A_{ii} & , \text{ if } d_{i}^{out} > 0 \\
-		\end{dcases}
-	\end{alignedat}
-\]
-Hence,
-\[
-	N = \begin{dcases}
-		\frac{A_{ij}}{d_{i}^{out}} & , \text{ if } d_{i}^{out}>0                \\
-		A_{ij}                     & , \text{ if }d_{i}^{out} = 0 \land i\neq j \\
-		1                          & , \text{ if }d_{i}^{out} = 0 \land i= j    \\
-	\end{dcases}.
-\]
-
+\subsection{Eigenvalues of \(N\)}
 After \(L\) steps, we have
 \[
 	r(L) = (N^{\top})^L r(0).
 \]
-
 To study what happens as \(L\to \infty\), we suppose there is a convergence vector \(r\) such that
 \[
 	r = (N^{\top})r.
@@ -101,28 +159,23 @@ We see that \(r\) must be an eigenvector for \(N^{\top}\) for eigenvalue \(1\). 
 \]
 \(r\) is a left eigenvector of \(N\) with eigenvalue \(1\).
 \begin{note}
-	\(N\) has an eigenvalue \(1\)(we will show this)
+	\(N\) has an eigenvalue \(1\).
 \end{note}
-To study \(N\),
-\[
-	N_{ij} = \begin{dcases}
-		\frac{A_{ij}}{d_{i}^{out}}, & \text{ if }d_{i}^{out}>0               \\
-		A_{ij},                     & \text{ if }d_{i}^{out}=0\land i\neq  j \\
-		1,                          & \text{ if }d_{i}^{out}=0 \land i = j   \\
-	\end{dcases}.
-\]
-Then
-\[
-	\sum\limits_{j\in\mathcal{V}}N_{ij} = \begin{dcases}
-		\sum\limits_{j\in\mathcal{V}} \frac{A_{ij}}{d_{i}^{out}} = \frac{\sum\limits_{j\in\mathcal{V}} A_{ij} }{d_{i}^{out}} = \frac{d_{i}^{out}}{d_{i}^{out}}= 1 & , \text{ if }d_{i}^{out} > 0 \\\\
-		\underbrace{1}_{j = i} + \underbrace{\sum\limits_{j\neq i} A_{ij}}_{ = d_{i}^{out} = 0} = 1 + 0 = 1                                                       & , \text{ if }d_{i}^{out} = 0 \\
-	\end{dcases}
-\]
-\(N\) is a matrix such that the row sums are always \(1\),
-\[
-	N \vec{1} = \vec{1}.
-\]
-This is an eigenvalue! \(1\) is an eigenvalue of \(N\), with \(\vec{1}\) being a right eigenvector!
+\begin{explanation}
+
+	From what we have derived for \(N_{ij} \), we have
+	\[
+		\sum\limits_{j\in\mathcal{V}}N_{ij} = \begin{dcases}
+			\sum\limits_{j\in\mathcal{V}} \frac{A_{ij}}{d_{i}^{\text{out}}} = \frac{\sum\limits_{j\in\mathcal{V}} A_{ij} }{d_{i}^{\text{out}}} = \frac{d_{i}^{\text{out}}}{d_{i}^{\text{out}}}= 1 & , \text{ if }d_{i}^{\text{out}} > 0; \\\\
+			\underbrace{1}_{j = i} + \underbrace{\sum\limits_{j\neq i} A_{ij}}_{ = d_{i}^{\text{out}} = 0} = 1 + 0 = 1                                                                            & , \text{ if }d_{i}^{\text{out}} = 0. \\
+		\end{dcases}
+	\]
+	Hence, we conclude that \(N\) is a matrix such that the row sums are always \(1\), so
+	\[
+		N \vec{1} = \vec{1},
+	\]
+	which shows that \(1\) is an eigenvalue of \(N\), with \(\vec{1}\) being a right eigenvector!
+\end{explanation}
 
 We can ask about the left eigenvector — it exists. Corresponding to \(\vec{1}\).
 \begin{problem}
@@ -133,52 +186,74 @@ What do we know about the entries?
 	\begin{enumerate}
 		\item Row sums on \(1\)
 		\item Non-negative entries
-		\item Row stochastic matrix(associated with Markov chains)
+		\item Row stochastic matrix (associated with Markov chains)
 	\end{enumerate}
 \end{answer}
 
 \begin{remark}
-	Each row vector is a probability mass function(PMF) on
-	\[
-		\{1, 2, \ldots , V\}.
-	\]
+	Each row vector is a probability mass function (PMF) on \(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \}\).
 \end{remark}
 
+\chapter{Scaled Page Rank}
+\section{Perron-Frobenius Theorem}
+\subsection{Irreducible}
+In the following lectures, we will study so-called \hyperref[thm:Perron-Frobenius-theorem]{Perron-Frobenius theorem}, which is a theorem about non-negative matrices.
+Before this, we need to study \hyperref[def:irreducible]{irreducible} matrix.
 
-\section{Non-negative Matrices}
-In the following lectures, we will study so-called Perron-Frobenius theorem: about non-negative matrices. Before this, we need to study
-\emph{irreducible} matrix.
-
-\begin{definition}[Irreducible]
-	A non-navigate matrix \(A_{n\times n}\) is called \emph{irreducible} if
-	\[
-		\forall i, j\ \exists \underbrace{k(i, j)}_{\in\mathbb{\MakeUppercase{Z}}}>0
-	\]
-	such that
+\begin{definition}[Irreducible]\label{def:irreducible}
+	A non-negative matrix \(A_{n\times n}\) is \emph{irreducible} if for all \(i, j = 1, \ldots , n\), there exists \(k(i, j)\in \mathbb{\MakeUppercase{z}} \)
+	depends on \(i, j\) such that \(k(i, j) > 0\) and
 	\[
 		(A^k)_{ij}>0.
 	\]
 \end{definition}
 
-We have
+\begin{remark}
+	We can express the condition to be \hyperref[def:irreducible]{irreducible} as there exists a \(k > 0\) such that
+	\[
+		\underbrace{A_{im_1} A_{m_{1}m_2} \ldots A_{m_{k-1}j}}_{k\text{ terms}}>0.
+	\]
+\end{remark}
+\begin{explanation}
+	We have
+	\[
+		\begin{split}
+			(A^2)_{ij} &= \sum\limits_{k} A_{ik}A_{kj}\\
+			(A^3)_{ij} &= (A A^2)_{ij} = \sum\limits_{k} A_{ik}(A^2)_{kj} = \sum\limits_{k}\sum\limits_{l} A_{ik} A_{kl}A_{lj}\\
+			&\vdots\\
+			(A^n)_{ij} &= \sum\limits_{k_1}\sum\limits_{k_2}\ldots \sum\limits_{k_n}A_{ik_1}A_{k_1 k_2}A_{k_2 k_3}\ldots A_{k_n j}
+		\end{split}
+	\]
+
+	\(A\) is non-negative so \(A^{n+1}_{ij} > 0\implies \) at least one of the sums \(>0\), by re-indexing we have the result.
+\end{explanation}
+
+We see that the above equivalent condition is still not easy to work with, hence we introduce the following definition.
+
+\begin{definition}[Adjacency matrix of a matrix]\label{def:adjacency-matrix-of-a-matrix}
+	Given a matrix \(A\), we define the \emph{adjacency matrix of \(A\)} as \(\widetilde{A} \) such that
+	\[
+		\widetilde{A}_{ij} = \begin{dcases}
+			1, & \text{ if }A_{ij}>0 \\
+			0, & \text{ if }A_{ij}=0 \\
+		\end{dcases}.
+	\]
+\end{definition}
+
+\begin{note}
+	\(\widetilde{A} \) is an \hyperref[def:adjacency-matrix]{adjacency matrix} of some \hyperref[def:directed-graph]{directed graph} with \(n\) nodes.
+\end{note}
+
+We then see that
 \[
-	\begin{split}
-		(A^2)_{ij} &= \sum\limits_{k} A_{ik}A_{kj}\\
-		(A^3)_{ij} &= (A A^2)_{ij} = \sum\limits_{k} A_{ik}(A^2)_{kj} = \sum\limits_{k}\sum\limits_{l} A_{ik} A_{kl}A_{lj}\\
-		&\vdots\\
-		(A^n)_{ij} &= \sum\limits_{k_1}\sum\limits_{k_2}\ldots \sum\limits_{k_n}A_{ik_1}A_{k_1 k_2}A_{k_2 k_3}\ldots A_{k_n j}
-	\end{split}
+	A_{im_1} A_{m_1 m_2}\ldots A_{m_{k-1} j} > 0 \iff \widetilde{A}_{im_1} = \widetilde{A}_{m_1 m_2} = \ldots = \widetilde{A}_{m_{k-1}j} = 1.
 \]
+This implies the \hyperref[def:irreducible]{irreducibility} of \(A \iff\) \hyperref[def:irreducible]{irreducibility} of \(\widetilde{A}\iff\) \(\mathcal{G}\)
+corresponding to \(\widetilde{A}\) is \hyperref[def:strongly-connected]{strongly connected}, i.e., \(\forall  i, j\) we can find a path on \(\mathcal{G}\).
+\begin{remark}
+	This \hyperref[def:graph]{graph} \(\mathcal{G}\) can be non-\hyperref[def:simple-graph]{simple graph}.
+\end{remark}
 
-\(A\) is non-negative so \(A^{n+1}_{ij} > 0\implies \) at least one of the sums \(>0\).
-
-"Adjacency" matrix associated with \(A\):
-\[
-	\widetilde{A}_{ij} = \begin{dcases}
-		1, & \text{ if }A_{ij}>0 \\
-		0, & \text{ if }A_{ij}=0 \\
-	\end{dcases}.
-\]
-
-Find graph from \(\widetilde{A}, g\) if \((A^{n+1})_{ij}\) is positive \(\iff\) there is a path in \(g\) from
-\(i\) to \(j\).
+We see that to check for a non-negative matrix \(A\), whether \((A^{n+1})_{ij} > 0\) or not, we first
+find the \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}} \) corresponding to \(\widetilde{A}\).
+If \((A^{n+1})_{ij}\) is positive \(\iff\) there is a \hyperref[def:path]{path} in \(\mathcal{\MakeUppercase{g}}\) from \(i\) to \(j\).

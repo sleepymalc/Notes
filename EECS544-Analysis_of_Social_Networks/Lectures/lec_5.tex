@@ -35,14 +35,14 @@ How to rank order \hyperref[def:local-bridge]{local bridges}?
 \end{problem}
 
 \begin{intuition}
-	An edge is more important if more \emph{shortest \hyperref[def:path]{paths}} use it. Notice that a \emph{normalization} is needed:
-	Between pairs of nodes, there should be lots of variation in the number of the shortest \hyperref[def:path]{paths} and we want to balance these out.
+	An edge is more important if more \hyperref[def:shortest-path]{shortest paths} use it. Notice that a \emph{normalization} is needed:
+	Between pairs of nodes, there should be lots of variation in the number of the \hyperref[def:shortest-path]{shortest paths} and we want to balance these out.
 \end{intuition}
 
 \subsection{Betweenness}
 \begin{definition}[Betweenness]\label{def:betweenness}
 	Imagine that there is a unit flow of water between each (distinct) pair of nodes. If the flow has \(k\) different ways to go to,\footnote{Actually not only depends on where can the flow go, but also where were that node added into BFS in the first place}
-	we divide this unit flow into \(1/k\). We then equally divide this flow amongst the shortest \hyperref[def:path]{paths} coming out of the starting node.
+	we divide this unit flow into \(1/k\). We then equally divide this flow amongst the \hyperref[def:shortest-path]{shortest paths} coming out of the starting node.
 \end{definition}
 
 With the definition of \hyperref[def:betweenness]{betweenness}, the Girvan-Newman method becomes
@@ -84,13 +84,13 @@ But how do we calculate \hyperref[def:betweenness]{betweenness} in reality?
 	Use breadth-first search (BFS) in a slight different manner.
 \end{intuition}
 \begin{remark}
-	The key is that any sub-\hyperref[def:path]{path} to destination is also a shortest \hyperref[def:path]{path}.
+	The key is that any sub-\hyperref[def:path]{path} to destination is also a \hyperref[def:shortest-path]{shortest path}.
 \end{remark}
 
 With BFS exploration (\(i\): starting point, \(m\) is the destination), we have
 \[
-	\#\text{ the shortest \hyperref[def:path]{path} from \(i\) to \(m\)} =  \#\text{ the shortest \hyperref[def:path]{path} from \(i\) to \(j\)} +
-	\#\text{ the shortest \hyperref[def:path]{path} from \(i\) to \(k\)}
+	\#\text{ the \hyperref[def:shortest-path]{shortest path} from \(i\) to \(m\)} =  \#\text{ the \hyperref[def:shortest-path]{shortest path} from \(i\) to \(j\)} +
+	\#\text{ the \hyperref[def:shortest-path]{shortest path} from \(i\) to \(k\)}
 \]
 while \(j, k\) are at same level \(n-1\), and \(m\) at level \(n\), with the fact that there are edges between \(j, k\) to \(m\). This can be done by adding a \emph{counter} when
 running BFS.
@@ -100,7 +100,7 @@ From the above equation, we will have
 \[
 	c_{v}^{n+1} = \sum_{v^n}c^n_{v^n}
 \]
-where the subscript indicates the node belongs to the counter, and \(c_v^{n+1}\) maintains the number of shortest \hyperref[def:path]{path} to \(v\), which is just \(n+1\).
+where the subscript indicates the node belongs to the counter, and \(c_v^{n+1}\) maintains the number of \hyperref[def:shortest-path]{shortest path} to \(v\), which is just \(n+1\).
 
 The unit flow flows from nodes back from the \hyperref[def:path]{path} it is added into the BFS algorithm needs to keep its own \(1\), and then distribute.
 

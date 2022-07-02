@@ -1,110 +1,102 @@
-\lecture{12}{11 Oct. 12:30}{PageRank, Markov Chain and Randomness}
-\begin{problem}
-Why doing this?
-\end{problem}
-\begin{answer}
-	They can offer better computational complexity while controlling error.
-\end{answer}
-
-\begin{problem}
+\lecture{12}{11 Oct. 12:30}{Page Rank, Markov Chain and Randomness}
 Recall that we want to measure the centrality of a network. We did this by introducing \autoref{thm:spectral-theorem} and
-\autoref{Perron-Frobenius Theorem}.
+\autoref{thm:Perron-Frobenius-theorem}.
 
 We first look at following two problems.
-\begin{itemize}
-	\item \textbf{Eigenvector Centrality.} For \(A\) be an adjacency matrix, which is a non-negative matrix with \(r(0) = \vec{1}\)and
-	      \[
-		      r(k) = Ar(k - 1), \qquad \forall k = 1\ldots
-	      \]
+\begin{problem}[Eigenvector centrality]
+For \(A\) be an \hyperref[def:adjacency-matrix]{adjacency matrix}, which is a non-negative matrix with \(r(0) = \vec{1}\) and
+\[
+	r(k) = Ar(k - 1), \qquad \forall k = 1\ldots
+\]
 
-	      Then if it is irreducible and aperiodic, then
-	      \[
-		      \lim_{k\to \infty } \frac{r(k)}{(\rho(A))^k} = v(w^{\top} r(0))
-	      \]
-	      where \(\rho(A)\) is the spectral radius, \(v\) is the right eigenvector of \(A\) and \(w\) is the left eigenvector of \(A\), and \(w^{\top}v = 1\) for \(\rho(A)\).
+Then if it is \hyperref[def:irreducible]{irreducible} and \hyperref[def:aperiodic]{aperiodic}, then
+\[
+	\lim_{k\to \infty } \frac{r(k)}{(\rho(A))^k} = v(w^{\top} r(0))
+\]
+where \(\rho(A)\) is the unique \hyperref[def:spectral-radius]{spectral radius}, \(v\) is the right eigenvector of
+\(A\) and \(w\) is the left eigenvector of \(A\), and \(w^{\top}v = 1\) for \(\rho(A)\).
 
-	      We then have
-	      \[
-		      \lim_{k\to \infty}\frac{A^k}{(\rho(A))^k} = vw^{\top}.
-	      \]
+We then have
+\[
+	\lim_{k\to \infty}\frac{A^k}{(\rho(A))^k} = vw^{\top}.
+\]
 
-	      \begin{remark}
-		      Notice that
-		      \begin{itemize}
-			      \item \(v\) would be the eigenvector centrality measure.
-			      \item \(r^k = A r^k\) need not hold because \(1\) need not be an eigenvector.
-			      \item Since
-			            \[
-				            (r(k))_i = \sum\limits_{j} A_{ij}r_{j}(k - 1) = \sum\limits_{j:i\to j} r_j(k-1),
-			            \]
-			            so we see that nodes that either point to many nodes, or important nodes or both, will have higher value.
-		      \end{itemize}
-	      \end{remark}
-	\item \textbf{Katz Centrality.} Again, consider \(r(k) = Ar(k - 1)\), but this time we modify the equation to be
-	      \[
-		      r(k) = \alpha Ar(k - 1) + \beta \vec{1}
-	      \]
-	      where \(\alpha\) is aiming to dampen the degree, and \(\beta\) is aiming to add a constants weight for each node to increase the fairness.
-
-	      Solution will satisfy
-	      \[
-		      r^{\ast} = \alpha Ar^{\ast} + \beta \vec{1}\iff (I - \alpha A)r^{\ast} = \beta \vec{1}
-	      \]
-	      where \(r^{\ast}\) is the \emph{Katz centrality} if it exits. Now, if \(I - \alpha A\) is invertible, then
-	      \[
-		      r^{\ast} = \beta(1 - \alpha A)^{-1} \vec{1}.
-	      \]
-	      Noting that
-	      \[
-		      \det(\lambda I - A) = 0 \iff \det(I - \lambda A) = 0,
-	      \]
-	      which implies \(\alpha\) should not be the inverse of an eigenvalue of \(A\). Also, we also need that \(r^*\) to be positive.
-
-	      \begin{figure}[H]
-		      \centering
-		      \incfig{katz-centrality}
-		      \caption{Katz Centrality}
-		      \label{fig:katz-centrality}
-	      \end{figure}
-
-	      Then for all \(1/\alpha > \rho(A)\), \(\alpha\) can't be the inverse of any eigenvalues of \(A\).
-	      \[
-		      \implies \alpha\rho(A)<1 \iff \rho(\alpha A)<1
-	      \]
-	      where we see that \(\alpha A\) is non-negative with spectral radius \(<1\).
-
-	      Now, if \(\alpha A\) is non-negative with spectral radius strictly less than one, then we have
-	      \[
-		      (I - \alpha A)^{-1} = I + (\alpha A) + (\alpha A)^2 + \ldots
-	      \]
-	      just like the geometry series of \(\frac{1}{1-k}\) for \(\left\vert k \right\vert <1 \).
-
-	      Then, we will have
-	      \[
-		      r^* = \beta\left(\sum\limits_{i=0}^{\infty} (\alpha A)^i\right)\vec{1}.
-	      \]
-
-	      \begin{remark}
-		      Since
+\begin{remark}
+	Notice that
+	\begin{itemize}
+		\item \(v\) would be the eigenvector centrality measure.
+		\item \(r^{\ast} = A r^{\ast}\) need not hold because \(1\) need not be an eigenvalue.
+		\item Since
 		      \[
-			      \rho(A) \leq \text{ the maximum of row sum of }A = \text{ the highest out-degree},
+			      (r(k))_i = \sum\limits_{j} A_{ij}r_{j}(k - 1) = \sum\limits_{j\colon i\to j} r_j(k-1),
 		      \]
-		      we see that
-		      \[
-			      \underline{\alpha \times \text{the highest out-degree}<1}
-		      \]
-		      is a sufficient condition for this to hold.
-	      \end{remark}
+		      so we see that nodes that either point to many nodes, or important nodes or both, will have higher value.
+	\end{itemize}
+\end{remark}
+\end{problem}
 
-	      \begin{remark}
-		      Katz centrality is commonly used.
-	      \end{remark}
-\end{itemize}
+\begin{problem}[Katz centrality]
+Again, consider \(r(k) = Ar(k - 1)\), but this time we modify the equation to be
+\[
+	r(k) = \alpha Ar(k - 1) + \beta \vec{1}
+\]
+where \(\alpha\) is aiming to dampen the degree, and \(\beta\) is aiming to add a constants weight for each node to increase the fairness.
+Similarly, any solution will satisfy
+\[
+	r^{\ast} = \alpha Ar^{\ast} + \beta \vec{1}\iff (I - \alpha A)r^{\ast} = \beta \vec{1}.
+\]
+\begin{definition}[Katz centrality]\label{def:Katz-centrality}
+	The solution \(r^{\ast} \) of \(r^{\ast} = \alpha Ar^{\ast} + \beta \vec{1}\) is called the \emph{Katz centrality} if it exits.
+\end{definition}
+
+Now, if \(I - \alpha A\) is invertible, then
+\[
+	r^{\ast} = \beta(I - \alpha A)^{-1} \vec{1}.
+\]
+Noting that
+\[
+	\det(\lambda I - A) = 0 \iff \det(I - \lambda A) = 0,
+\]
+which implies \(\alpha\) should not be the inverse of an eigenvalue of \(A\). Also, we  need that \(r^{\ast}\) to be positive.
+
+\begin{figure}[H]
+	\centering
+	\incfig{katz-centrality}
+	\caption{Katz Centrality}
+	\label{fig:katz-centrality}
+\end{figure}
+
+Then for all \(1/\alpha > \rho(A) \iff \alpha\rho(A)<1 \iff \rho(\alpha A)<1\), \(\alpha\) can't be the inverse of any eigenvalues of \(A\) since
+we see that \(\alpha A\) is non-negative with \hyperref[def:spectral-radius]{spectral radius} \(<1\).
+
+Now, if \(\alpha A\) is non-negative with \hyperref[def:spectral-radius]{spectral radius} strictly less than one, then we have
+\[
+	(I - \alpha A)^{-1} = I + (\alpha A) + (\alpha A)^2 + \ldots
+\]
+just like the geometry series of \(\frac{1}{1-k}\) for \(\left\vert k \right\vert <1 \). We then have
+\[
+	r^* = \beta\left(\sum\limits_{i=0}^{\infty} (\alpha A)^i\right)\vec{1}.
+\]
+
+\begin{remark}
+	Since
+	\[
+		\rho(A) \leq \text{ the maximum of row sum of }A = \text{ the highest out-degree},
+	\]
+	we see that
+	\[
+		\underline{\alpha \times \text{the highest out-degree}<1}
+	\]
+	is a sufficient condition for this to hold.
+\end{remark}
+
+\begin{note}
+	\hyperref[def:Katz-centrality]{Katz centrality} is commonly used.
+\end{note}
 \end{problem}
 
 
-
-\chapter{Scaled PageRank via Markov Chain}
+\chapter{Scaled Page Rank via Markov Chain}
 \begin{problem}
 What's the motivation?
 \end{problem}

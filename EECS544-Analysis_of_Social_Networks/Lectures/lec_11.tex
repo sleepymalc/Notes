@@ -1,161 +1,225 @@
-\lecture{11}{6 Oct. 12:30}{Page Rank - Scaling}
-\chapter{Scaled Page Rank}
+\lecture{11}{6 Oct. 12:30}{Scaled Page Rank}
 \begin{prev}
-	Basic page Rank Algorithm: If the page rank converges, then we must have
+	\hyperref[algo:basic-page-rank-algorithm]{Basic page rank algorithm}: If the page rank converges,
+	then we must have
 	\[
 		r^{\ast} = (N^{\top})r^{\ast} \iff (r^{\ast})^{\top} N = (r^{\ast})^{\top},
 	\]
-	\(r^{\ast}\) is a left eigenvector of \(N\) for eigenvalue \(1\).
+	where \(r^{\ast}\) is a left eigenvector of \(N\) for eigenvalue \(1\).
 \end{prev}
 \begin{remark}
-	row stochastic property \(\implies\) \(1\) is eigenvalue.
+	Row stochastic property \(\implies\) \(1\) is eigenvalue.
 \end{remark}
 
-\section{Irreducible}
-\par Now, we consider a very useful property of matrix, called \emph{irreducible}.
-\begin{prev}
-	\(A\) is a non-negative \(n\times n\) matrix. We say that \(A\) is irreducible if \(\forall i, j\),
-	\[
-		\exists k>0 \text{ such that }(A^k)_{ij} > 0.
-	\]
-\end{prev}
-\begin{note}
-	We can express the above as
-	\[
-		\underbrace{A_{im_1} A_{m_{1}m_2} \ldots A_{m_{k-1}j}}_{k\text{ terms}}>0.
-	\]
-\end{note}
-Define \(\widetilde{A}\) with entries in \(\{0, 1\}\) such that
-\[
-	\widetilde{A}_{ij} = \begin{dcases}
-		1 & , \text{ if }A_{ij}>0 \\
-		0 & , \text{ otherwise}.
-	\end{dcases}.
-\]
-\(\widetilde{A}\) is an adjacency matrix of same directed graph on \(n\) nodes.
-\[
-	A_{im_1} A_{m_1 m_2}\ldots A_{m_{k-1} j} > 0 \iff \widetilde{A}_{im_1} = \widetilde{A}_{m_1 m_2} = \ldots = \widetilde{A}_{m_{k-1}j} = 1.
-\]
-Then we see that the irreducibility of \(A \iff\) irreducibility of \(\widetilde{A}\iff\) \(\mathcal{G}\) corresponding to \(\widetilde{A}\) is strongly connected such that
-\(\forall  i, j\) we can find a path on \(\mathcal{G}\).
-\begin{remark}
-	This graph \(\mathcal{G}\) can be non-simple graph.
-\end{remark}
-
-\section{Periodicity}
-\begin{definition}[Period]
-	Given \(A\) and \(i\in\{1, \ldots , n\}\), find all \(m>0\) such that
+\subsection{Periodicity}
+\begin{definition}[Period]\label{def:period}
+	Given \(A_{n\times n}\) and \(i\in\{1, \ldots , n\}\), find all \(m>0\) such that
 	\[
 		(A^m)_{ii}>0.
 	\]
 	And the greatest common divisor of them is called the \emph{period of} \(i\).
 \end{definition}
 
-\begin{definition}[Aperiodic]
-	Given \(A\) and \(i\in\{1, \ldots , n\}\), if the period is \(1\) for node \(i\), then\(i\) is said to be \emph{aperiodic}.
+\begin{definition}[Aperiodic]\label{def:aperiodic}
+	Given \(A_{n\times n}\) and \(i\in\{1, \ldots , n\}\), if the \hyperref[def:period]{period} is \(1\) for node \(i\), then \(i\)
+	is said to be \emph{aperiodic}. And \(A\) is said to be \hyperref[def:aperiodic]{aperiodic} all \(i\) are \emph{aperiodic}.
 \end{definition}
+
 \begin{remark}
-	From this definition, we have
+	We see that
 	\begin{itemize}
-		\item A sufficient condition for aperiodic is \(A_{ii} > 0 \implies \) period is \(1\) for \(i\).
-		\item And \(A\) is said to be aperiodic if the period of all nodes is \(1\).
-		\item If \(A\) is a positive matrix(all entries are positive), then we know that
+		\item A sufficient condition for \hyperref[def:aperiodic]{aperiodic} is \(A_{ii} > 0 \) since it implies the \hyperref[def:period]{period} is \(1\) for \(i\).
+		\item If \(A\) is a positive matrix\footnote{All entries are positive}, then we know that
 		      \[
 			      \begin{alignedat}{3}
-				      &\implies A_{ij}>0\ \forall i, j &&\implies \text{irreducible}\\
-				      &\implies A_{ii}>0\ \forall i &&\implies \text{aperiodic}
+				      A_{ij}>0\ &\forall i, j &&\implies \text{\hyperref[def:irreducible]{irreducible}}\\
+				      A_{ii}>0\ &\forall i &&\implies \text{\hyperref[def:aperiodic]{aperiodic}}.
 			      \end{alignedat}
 		      \]
-		      Notice that this is only a simple sufficient condition for a matrix to be irreducible and aperiodic.
+		      Notice that this is only a simple sufficient condition for a matrix to be \hyperref[def:irreducible]{irreducible} and \hyperref[def:aperiodic]{aperiodic}.
 	\end{itemize}
 \end{remark}
 
-\section{Perron-Frobenius Theorem}
-Come back to Perron-Frobenius Theorem:
-\begin{theorem}[Perron-Frobenius theorem]\label{Perron-Frobenius Theorem}
-	Let \(A\) be an irreducible non-negative matrix, then the eigenvalue with the \emph{largest magnitude is positive}
-	and has \emph{multiplicity 1}. This eigenvalue is called the \textbf{spectral radius} or the \textbf{Perron-Frobenius eigenvalue},
-	denoted as \(\rho(A)\).
-	Both the right eigenvector(\(\vec{v}, A \vec{v} = \rho(A) \vec{v}\)) and the left eigenvector(\(\vec{w}, \vec{w}^{\top}A = \rho(A) \vec{w}^{\top}\))
+\subsection{Perron-Frobenius Theorem}
+We now start to study our main theorem, the \hyperref[thm:Perron-Frobenius-theorem]{Perron-Frobenius theorem}. Before that, we introduce a useful definition.
+
+\begin{definition}[Spectral radius]\label{def:spectral-radius}
+	The eigenvalue of \(A\) with the largest absolute value is called the \emph{spectral radius} or the \emph{Perron-Frobenius eigenvalue} of \(A\), denoted as \(\rho(A)\).
+\end{definition}
+
+\begin{theorem}[Perron-Frobenius theorem]\label{thm:Perron-Frobenius-theorem}
+	Let \(A\) be an \hyperref[def:irreducible]{irreducible} non-negative matrix, then the \hyperref[def:spectral-radius]{spectral radius} is positive
+	and has \hyperref[def:multiplicity]{multiplicity} \(1\).
+
+	Both the right eigenvector (\(\vec{v}, A \vec{v} = \rho(A) \vec{v}\)) and the left eigenvector (\(\vec{w}, \vec{w}^{\top}A = \rho(A) \vec{w}^{\top}\))
 	can be taken to be positive with
 	\[
 		\vec{w}^{\top} \vec{v} = 1.
 	\]
 	Furthermore, we have
-	\begin{enumerate}
-		\item The following holds:
+	\begin{enumerate}[(a)]
+		\item The following holds
 		      \[
 			      \lim_{m \to \infty} \frac{1}{m} \sum\limits_{k=0}^{m-1} \frac{A^k}{(\rho(A))^k} = \vec{v} \vec{w}^{\top}_{(n\times n)}.
 		      \]
-		\item The following holds:
+		\item The following holds
 		      \begin{itemize}
 			      \item Row sum bound:
 			            \[
-				            \min_i \sum\limits_{j} A_{ij} \leq \rho(A).\leq \max_i \sum\limits_{j} A_{ij}.
+				            \min_i \sum\limits_{j} A_{ij} \leq \rho(A) \leq \max_i \sum\limits_{j} A_{ij}.
 			            \]
 			      \item Column sum bound:
 			            \[
-				            \min_j \sum\limits_{i} A_{ij} \leq \rho(A).\leq \max_j \sum\limits_{i} A_{ij}.
+				            \min_j \sum\limits_{i} A_{ij} \leq \rho(A) \leq \max_j \sum\limits_{i} A_{ij}.
 			            \]
 		      \end{itemize}
-		\item If, in addition, \(A\) is also \emph{aperiodic}, then
+		\item If \(A\) is also \hyperref[def:aperiodic]{aperiodic}, then
 		      \[
 			      \lim_{m \to \infty} \frac{A^m}{(\rho(A))^m} = \vec{v} \vec{w}^{\top}.
 		      \]
-		      This is a stronger statement!
 	\end{enumerate}
 \end{theorem}
+\begin{proof}
+	We omit the proof, but it's worth checking out. See \href{https://pi.math.cornell.edu/~web6720/Perron-Frobenius_Hannah%20Cairns.pdf}{here} for a short proof.
+\end{proof}
 
-\begin{problem}
-We now see the problem for the basic page rank algorithm:
-\begin{enumerate}
-	\item \(N\) is non-negative and row stochastic \(\implies\) \(\rho(N) = 1\).
-	\item \(N \to \widetilde{A}\): Adjacency matrix of origin
-	\item Irreducibility is not a
-\end{enumerate}
-\end{problem}
+\begin{prev}
+	For the \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}:
+	\begin{enumerate}
+		\item \(N\) is non-negative and row stochastic, so we know \(\rho (N) \leq 1\). But since we already showed \(1\) is one of the eigenvalues of \(N \implies \rho(N) = 1\).
+		\item \(N \to \widetilde{A}\): \hyperref[def:adjacency-matrix]{Adjacency matrix} of original \hyperref[def:graph]{graph} plus self-loops for any nodes with no outgoing links.
+	\end{enumerate}
+\end{prev}
+
+We can now say something about \(N\).
+
+\begin{remark}
+	We don't certainly have that \(N\) is \hyperref[def:irreducible]{irreducible}.
+\end{remark}
+\begin{explanation}
+	Since \(\rho (N) = 1\) but the \hyperref[def:multiplicity]{multiplicity} can be \(> 1\) or eigenvectors may not all be positive.
+	From \autoref{thm:Perron-Frobenius-theorem}, \(N\) cannot be \hyperref[def:irreducible]{irreducible} in both cases.
+\end{explanation}
+
+\begin{remark}
+	We don't certainly have that \(N\) is \hyperref[def:aperiodic]{aperiodic}.
+\end{remark}
+\begin{explanation}
+	Consider the following network:
+	\begin{figure}[H]
+		\centering
+		\incfig{rmk:lec11-1}
+		\label{fig:rmk:lec11-1}
+	\end{figure}
+	For this network, we have
+	\[
+		N=\begin{pmatrix}
+			0 & 1 & 0 \\
+			0 & 0 & 1 \\
+			1 & 0 & 0 \\
+		\end{pmatrix},\quad N^2 = \begin{pmatrix}
+			0 & 0 & 1 \\
+			1 & 0 & 0 \\
+			0 & 1 & 0 \\
+		\end{pmatrix}, \quad N^3 = \begin{pmatrix}
+			1 & 0 & 0 \\
+			0 & 1 & 0 \\
+			0 & 0 & 1 \\
+		\end{pmatrix}
+	\]
+	and for higher power it just repeats. We see that the \hyperref[def:period]{period} for all three nodes	are all \(3\),
+	which means that \(N\) is not \hyperref[def:aperiodic]{aperiodic}.
+\end{explanation}
+This is problematic, since for \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}, we have
+\[
+	r(k) = (N^{\top} )^k r(0),
+\]
+hence we are interested in the case that \((N^{\top})^k\) converges.
 
 \section{Scaled Page Rank}
-Scaled Page Rank is a modification of Basic Page Rank that gives a matrix \(\widetilde{N}(s)\) that is always irreducible and aperiodic with
-\[
-	s\in \left( 0, 1 \right).
-\]
-\begin{enumerate}
-	\item INITIALIZATION: same as Basic Page Rank
-	\item SEND \& RECEIVE: same as Basic Page Rank
-	\item SCALE down all page ranks by \(s\)(multiply by \(s\)) and add \(\frac{1-s}{V}\) to the page ranks of all nodes.
-	\item REPEAT from step 2.
-\end{enumerate}
+Scaled page rank is a modification of page rank that gives a matrix \(\widetilde{N}(s)\) that is always \hyperref[def:irreducible]{irreducible}
+and \hyperref[def:aperiodic]{aperiodic} with \(s\in (0, 1)\). We first give the algorithm to calculate it.
+\par
+\begin{algorithm}[H]\label{algo:scaled-page-rank-algorithm}
+	\DontPrintSemicolon
+	\caption{Scaled Page Rank Algorithm}
+	\SetKwData{pg}{scaledPagerank}
+	\SetKwData{pgnew}{scaledPagerankNew}
+	\SetKwData{n}{neighborNum}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), scale factor \(s\in (0, 1)\), iteration \(L\)}
+	\KwResult{\pg}
 
+	\BlankLine
+
+	\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:initialize]{Initialize}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+		\(\pg(v) \gets 1 / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \)\;
+	}
+
+	\;
+
+	\For{\(i = 1, \ldots , L\)}{
+		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:send]{Send}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+			\(\n \gets \left\vert \{v\to u \in \mathcal{\MakeUppercase{e}} \} \right\vert\)\;
+			\uIf(\Comment*[f]{divides \(\pg(v)\) to its (out)neighbor}){\(\n \neq 0\)}{
+				\For(){\(v \to u \in \mathcal{\MakeUppercase{e}}\)}{
+					\(\pgnew(u) \gets \pgnew(u) + \pg(v) / \n\)\;
+				}
+			}\Else(\Comment*[f]{no outgoing links}){
+				\(\pgnew(v)\gets \pgnew(v) + \pg(v)\)\;
+			}
+		}
+		\;
+		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:receive]{Receive}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+			\(\pg(v)\gets \pgnew(v)\)\Comment*[r]{Update the page rank}
+			\(\pgnew(v) \gets 0\)\Comment*[r]{Clean up for the next iteration's updating}
+		}
+		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:scale]{Scale}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+			\(\pg(v)\gets s\times \pgnew(v)\)\Comment*[r]{Scaled down by \(s\)}
+			\(\pg(v)\gets \frac{1-s}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\)\Comment*[r]{Re-distribute page rank}
+		}
+	}
+	\;
+	\Return{\pg}\;
+\end{algorithm}
+
+\begin{remark}[Algorithm explanation]
+	The following is the detailed explanation of the \hyperref[algo:scaled-page-rank-algorithm]{scaled page rank algorithm}.
+	\begin{enumerate}[(a)]
+		\item \label{algo:scaled-page-rank-algorithm:initialize} Initialization: same as \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}.
+		\item \label{algo:scaled-page-rank-algorithm:send} Send: same as \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}.
+		\item \label{algo:scaled-page-rank-algorithm:receive} Receive: same as \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}.
+		\item \label{algo:scaled-page-rank-algorithm:scale} Scale: Scale down all page ranks by \(s\) (multiply by \(s\)) and
+		      add \((1-s) / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \) to the page ranks of all nodes.
+	\end{enumerate}
+\end{remark}
+
+\section{Analysis on Scaled Page Rank}
+Again, let's denote the scaled page rank of node \(i\) as \(r_i\) throughout the following discussion.
 \[
-	r_{i}^{new} = \left(\sum\limits_{j:A_{ji} = 1} \frac{u_{j}^{old}}{d_{j}^{old}}+\begin{dcases}
-		u_{i}^{old} & , \text{ if }d_{i}^{out} = 0, \\
-		0           & , \text{ otherwise}
-	\end{dcases}\right)+\frac{1-s}{V}
+	r_{i}^{\text{new}} = s\left(\sum\limits_{j\colon A_{ji} = 1} \frac{u_{j}^{\text{old}}}{d_{j}^{\text{old}}}+\begin{dcases}
+		u_{i}^{\text{old}} & , \text{ if }d_{i}^{\text{out}} = 0; \\
+		0                  & , \text{ otherwise};
+	\end{dcases}\right)+\frac{1-s}{\vert \mathcal{V}\vert}.
 \]
 Then we have
 \[
 	\begin{split}
-		r^{new} &= s(N^{\top}r^{old})+\frac{1-s}{V}\vec{1}\\
-		&= s(N^{\top}r^{old})+\frac{1-s}{V}\vec{1}\cdot 1\\
-		&= s(N^{\top}u^{old}) + \frac{1-s}{V}\vec{1} \underbrace{(\vec{1}^{\top}r^{odd})}_{\text{add to }1}
-		= \underbrace{(sN + \frac{1-s}{V}\vec{1}\vec{1}^{\top})^{\top}}_{\widetilde{N}(s)} r^{old}.
+		r^{\text{new}} = s(N^{\top}r^{\text{old}})+\frac{1-s}{\vert \mathcal{V}\vert}\vec{1}
+		= s(N^{\top}u^{\text{old}}) + \frac{1-s}{\vert \mathcal{V}\vert}\vec{1} \underbrace{\vphantom{\left(sN + \frac{1-s}{\vert \mathcal{V}\vert}\vec{1}\vec{1}^{\top}\right)^{\top}}(\vec{1}^{\top}r^{\text{old}})}_{\text{add to }1}
+		= \underbrace{\left(sN + \frac{1-s}{\vert \mathcal{V}\vert}\vec{1}\vec{1}^{\top}\right)^{\top}}_{\widetilde{N}(s)} r^{\text{old}}.
 	\end{split}
 \]
-Finally, we have the scaled page rank being
+Finally, we have the rule of updating scaled page rank being \(r^{\text{new}} = (\widetilde{N}(s))^{\top}r^{\text{old}}\), hence
 \[
-	\begin{split}
-		&\implies r^{new} = (\widetilde{N}(s))^{\top}r^{old}\\
-		&\implies r(k) = (\widetilde{N}(s)^{\top})^k r(0).
-	\end{split}
+	r(k) = \left(\widetilde{N}(s)^{\top}\right)^k r(0).
 \]
 
 \begin{note}
-	\(\widetilde{N}(s)\):
+	We see that \(\widetilde{N}(s)\) is
 	\begin{itemize}
 		\item non-negative
 		\item row-stochastic
-		\item strictly positive with all entries at least \(\frac{1-s}{V}\)
+		\item strictly positive with all entries at least \((1-s) / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \)
 	\end{itemize}
 \end{note}
 \(\rho(\widetilde{N}(s)) = 1\) and irreducible and aperiodic! \(\implies (\widetilde{N}(s))^k \to \vec{v}\vec{w}^{\top}\) where
@@ -166,26 +230,20 @@ And since \(\widetilde{N}(s)\) is row stochastic, we have \(\vec{v} = \vec{1}\),
 \[
 	\vec{w}^{\top}\vec{1} = 1
 \]
-which means the sum of all entries is \(1\) and \(\vec{2}\) has all positive entries.
+which means the sum of all entries is \(1\) and \(\vec{w}\) has all positive entries.
 
 If \((\vec{v}, \vec{w})\) are right and left eigenvectors of \(\widetilde{N}(s) \iff (\vec{w}, \vec{v})\) are the right and left eigenvectors
-of \(\widetilde{N}^{\top}(s)\).
-
-Scaled Page Rank converges to
-\[
-	r^{\ast} = (\widetilde{N}(s))^{\top}r^{\ast}.
-\]
-
-We need the right eigenvector of \(\widetilde{N}^{\top}(s) \iff \) same as left eigenvector of \(\widetilde{N}(s)\), which is \(\vec{w}(s)\).
+of \(\widetilde{N}(s)^{\top}\).
 
 \begin{remark}
-	\(s \cong 0.8 ~ 0.85\)
+	Scaled page rank converges to \(r^{\ast} \) where
+	\[
+		r^{\ast} = \widetilde{N}(s)^{\top}r^{\ast},
+	\]
+	which is the right eigenvector of \(\widetilde{N}(s)^{\top}\). But it's the same as the left eigenvector of \(\widetilde{N}(s)\), which is just
+	\(\vec{w}(s)\).
 \end{remark}
 
-\begin{prev}
-	HITS: We now start to investigate \(A A^{\top}\), where \(A\) is adjacency matrix.
-	\begin{itemize}
-		\item Non-negative
-		\item largest eigenvalue - Perron-Frobenius eigenvalues
-	\end{itemize}
-\end{prev}
+\begin{note}
+	In practice, the scale factor is usually set as \(s \cong 0.8 \sim 0.85\).
+\end{note}

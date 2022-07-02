@@ -1,20 +1,35 @@
-\lecture{8}{27 Sep. 12:30}{HITS}
+
+\lecture{8}{27 Sep. 12:30}{Diagonalization}
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
 \begin{prev}[The diagonalization]
 	We see that
 	\begin{enumerate}
-		\item \autoref{thm:spectral-theorem}: For an \(n\times n\) symmetric matrix \(A = A^{\top}\),
+		\item \autoref{thm:spectral-theorem}: For an \(n\times n\) \hyperref[def:symmetric-matrix]{symmetric matrix} \(A = A^{\top}\), the
+		      characteristic equation is
 		      \[
-			      \det(\lambda I - A) = 0
+			      \det(\lambda I - A) = 0.
 		      \]
-		      as known as the \emph{characteristic equation}.
-		\item \(u\) is invertible.
+		\item Denote \(n\) right eigenvectors by \(u_1, \ldots , u_n\) where \(u_{i} \) corresponds to eigenvalue \(\lambda _i\) such that
 		      \[
-			      u^{\top} = u^{-1}.
+			      \lambda _1 \leq \lambda _2 \leq \ldots  \leq \lambda _n.
 		      \]
-		      If \(u^{\top}u = I\), then
+		      Define \(U\) as
 		      \[
-			      x = u^{\top}u = \begin{pmatrix}
+			      U = \begin{pmatrix}
+				      \mid & \mid &        & \mid \\
+				      u_1  & u_2  & \cdots & u_n  \\
+				      \mid & \mid &        & \mid \\
+			      \end{pmatrix},
+		      \]
+		      we have
+		      \begin{enumerate}[(a)]
+			      \item \(u_i\) are linear independent, and they form a basis in \(\mathbb{\MakeUppercase{r}} ^n\).
+			      \item \(u_{i} ^{\top} u_{j} ( = \left< u_{i} , u_{j}  \right> ) = 0\) for \(i\neq j\).
+			      \item \(u_{i} ^{\top} u_{i} = \sum_{j=1}^{n} u_{ij}^{2} = 1 \) (\emph{length} \(= 1\)).
+		      \end{enumerate}
+		\item \(U\) is invertible. We see that \(U^{-1} = U^{\top} \) since
+		      \[
+			      U^{\top}U = \begin{pmatrix}
 				      \horzbar & u^{\top}_1 & \horzbar \\
 				      \horzbar & u^{\top}_2 & \horzbar \\
 				               & \vdots     &          \\
@@ -23,15 +38,41 @@
 				      \mid & \mid &        & \mid \\
 				      u_1  & u_2  & \cdots & u_n  \\
 				      \mid & \mid &        & \mid \\
-			      \end{pmatrix}
+			      \end{pmatrix} = I.
 		      \]
-		\item \(A = u^{\top} D u\)  where \[
+		\item \(A = U D U^{\top}\)  where \[
 			      D  = \begin{pmatrix}
 				      \lambda_1 &           &        &           \\
 				                & \lambda_2 &        &           \\
 				                &           & \ddots &           \\
 				                &           &        & \lambda_n \\
 			      \end{pmatrix}.
+		      \]
+		      From \(U^{\top} = U^{-1} \), we have \(A U = (U D U^{\top} ) U = U D\) since
+		      \[
+			      \begin{split}
+				      A U = A \begin{pmatrix}
+					      \mid &        & \mid \\
+					      u_1  & \cdots & u_n  \\
+					      \mid &        & \mid \\
+				      \end{pmatrix} &= \begin{pmatrix}
+					      \mid  &        & \mid  \\
+					      A u_1 & \cdots & A u_n \\
+					      \mid  &        & \mid  \\
+				      \end{pmatrix}\\ &= \begin{pmatrix}
+					      \mid           &        & \mid           \\
+					      \lambda _1 u_1 & \cdots & \lambda _n u_n \\
+					      \mid           &        & \mid           \\
+				      \end{pmatrix} = \begin{pmatrix}
+					      \mid &        & \mid \\
+					      u_1  & \cdots & u_n  \\
+					      \mid &        & \mid \\
+				      \end{pmatrix} \begin{pmatrix}
+					      \lambda_1 &        &           \\
+					                & \ddots &           \\
+					                &        & \lambda_n \\
+				      \end{pmatrix} = UD
+			      \end{split}
 		      \]
 	\end{enumerate}
 \end{prev}
@@ -66,158 +107,252 @@
 	\] has complex roots.
 \end{eg}
 
-\begin{definition}[Laplician]
-	For an undirected graph, the \emph{Laplician} is defined as \(L = D - A\), where \(A\) is adjacent matrix, \(D\) is diagonal degree matrix.
+\begin{definition}[Laplician]\label{def:Laplician}
+	For an \hyperref[def:undirected-graph]{undirected graph}, the \emph{Laplician} is defined as \(L \coloneqq D - A\), where \(A\) is the \hyperref[def:adjacency-matrix]{adjacent matrix},
+	\(D\) is diagonal \hyperref[def:degree]{degree} matrix.
 \end{definition}
+
 \begin{remark}
-	Since \[
-		L^{\top} = (D - A)^{\top} = D^{\top} - A^{\top} = D - A = L.
-	\] We see that the eigenvalues are real. Many incidence matrices \(B\ (V\times  E)\),
+	Since
 	\[
-		L = BB^{\top} \text{ for any choices of }B.
+		L^{\top} = (D - A)^{\top} = D^{\top} - A^{\top} = D - A = L,
 	\]
-	\(L\) has non-negative eigenvalues.
+	we see that \(L\) is \hyperref[def:symmetric-matrix]{symmetric}, hence its eigenvalues are real by \autoref{thm:spectral-theorem}.
+	Many incidence matrices \(B_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert \times \left\vert \mathcal{\MakeUppercase{e}} \right\vert }\) which encode the
+	relation between edges and nodes satisfies
+	\[
+		L = BB^{\top}.
+	\]
+	We'll show that \(L\) has non-negative eigenvalues \hyperref[rmk:Laplacian]{later}.
 \end{remark}
 
 \section{Positive Definite and Positive Semi-Definite}
-\begin{definition}[Positive definite]
+\begin{definition}[Positive definite]\label{def:positive-definite}
 	\(A \) is \emph{positive definite} (PD) if and only if
 	\[
 		\forall \vec{x} \neq  \vec{0},\quad \vec{x}^{\top}A \vec{x} > 0.
 	\]
 \end{definition}
 
-\begin{definition}[Positive semi-definite]
+\begin{definition}[Positive semi-definite]\label{def:positive-semi-definite}
 	\(A \) is \emph{positive semi-definite} (PSD) if and only if
 	\[
 		\forall \vec{x} \neq  \vec{0},\quad \vec{x}^{\top}A \vec{x} \geq  0.
 	\]
 \end{definition}
 
-\begin{remark}
-	If \(\lambda\) is a real eigenvalue, then if \(\lambda \geq  0, A \text{ is PSD}\); \(\lambda > 0, A \text{ is PD}\).
-\end{remark}
-\begin{explanation}
-	Suppose \(\lambda\) is a real eigenvalue, let \(\vec{u}\) be the eigenvector such that
+\begin{lemma}\label{lma:lec8-1}
+	If \(\lambda\) is a real eigenvalue, then \(\lambda \geq  0 \iff A\) is \hyperref[def:positive-semi-definite]{positive semi-definite};
+	also, \(\lambda > 0 \iff A\) is \hyperref[def:positive-definite]{positive-definite}.
+\end{lemma}
+\begin{proof}
+	Suppose \(\lambda\) is a real eigenvalue, let \(\vec{u}\) be the eigenvector such that \(A \vec{u} = \lambda \vec{u}\), and
 	\[
-		A \vec{u} = \lambda \vec{u},
+		\vec{u}^{\top} A \vec{u} = \vec{u}^{\top} (\lambda \vec{u}) = \lambda \underbrace{\vec{u}^{\top}\vec{u}}_{>0} \geq 0,
 	\]
-	and
-	\[
-		\vec{u}^{\top} A \vec{u} = \vec{u}^{\top} (\lambda \vec{u}) = \lambda \underbrace{\vec{u}^{\top}\vec{u}}_{>0} \geq 0\implies(\text{PSD})
-	\]
-	also, if \(\lambda \vec{u}^{\top} \vec{u} > 0\), then PD.
+	which implies \(A\) is \hyperref[def:positive-semi-definite]{positive semi-definite}. Similarly, if \(\lambda > 0 \implies \vec{u}^{\top} \vec{u} > 0\),
+	\(A\) is \hyperref[def:positive-definite]{positive definite}. Lastly, the backward direction is obvious.
+\end{proof}
 
-	Then, we have \(A\) is PSD and symmetric \(\iff \exists \vec{B}\) such that \(A = \vec{B} \vec{B}^{\top}\),
+\begin{lemma}\label{lma:lec8-2}
+	\(A\) is \hyperref[def:positive-semi-definite]{positive semi-definite} and \hyperref[def:symmetric-matrix]{symmetric} \(\iff \exists \widetilde{B}\) such
+	that \(A = \widetilde{B} \widetilde{B} ^{\top}\).
+\end{lemma}
+\begin{proof}
+	We see that if \(A = \widetilde{B} \widetilde{B} ^{\top} \), it's clearly \hyperref[def:symmetric-matrix]{symmetric} and
 	\[
-		x^{\top} A x = x^{\top} \vec{B} \vec{B}^{\top} x = (\vec{B}x)^{\top} \vec{B}x = y^{\top} y \geq 0.
+		x^{\top} A x = x^{\top} \widetilde{B} \widetilde{B} ^{\top} x = (\widetilde{B} x)^{\top} \widetilde{B} x = y^{\top} y \geq 0,
 	\]
+	hence \(A\) is \hyperref[def:positive-semi-definite]{positive semi-definite}.
 
-	Laplacian \(L = B B^{\top}\) (incidence matrix)
+	For another direction, from \autoref{thm:spectral-theorem}, since \(A\) is \hyperref[def:symmetric-matrix]{symmetric}, we know that \(A = U D U^{\top}\) where
+	all entries of \(D\) is \(\geq 0\) by \autoref{lma:lec8-1}. We see that we can decompose \(D\) into \(D = C C^{\top} \) where
 	\[
-		\implies L \text{ is PSD}\implies 0 \leq \lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_n.
+		D = \begin{pmatrix}
+			\lambda_1 &           &        &           \\
+			          & \lambda_2 &        &           \\
+			          &           & \ddots &           \\
+			          &           &        & \lambda_n \\
+		\end{pmatrix} = \begin{pmatrix}
+			\sqrt{\lambda_1} &                  &        &                  \\
+			                 & \sqrt{\lambda_2} &        &                  \\
+			                 &                  & \ddots &                  \\
+			                 &                  &        & \sqrt{\lambda_n} \\
+		\end{pmatrix} \begin{pmatrix}
+			\sqrt{\lambda_1} &                  &        &                  \\
+			                 & \sqrt{\lambda_2} &        &                  \\
+			                 &                  & \ddots &                  \\
+			                 &                  &        & \sqrt{\lambda_n} \\
+		\end{pmatrix} \eqqcolon C C^{\top},
 	\]
-	But \(\lambda_1 = 0\), \(0\) is coming from
+	then by defining \(\widetilde{B} \coloneqq UC\), we see that
 	\[
-		L = D-A, D = \begin{pmatrix}
-			d_1 &        &     \\
-			    & \ddots &     \\
-			    &        & d_n \\
-		\end{pmatrix}\implies L \vec{1} = (D - A)\vec{1} = \begin{pmatrix}
+		A = U D U^{\top} = U C C^{\top} U^{\top} = (UC) (UC)^{\top} = \widetilde{B} \widetilde{B} ^{\top}
+	\]
+	as desired.
+\end{proof}
+
+\begin{remark}[Laplacian]\label{rmk:Laplacian}
+	Given a Laplacian \(L = B B^{\top}\), from \autoref{lma:lec8-2}, \(L\) is \hyperref[def:positive-semi-definite]{positive semi-definite},
+	which further implies
+	\[
+		0 \leq \lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_n.
+	\]
+	But \(\lambda_1 = 0\) since we have \(L = D-A\) where \(\diag(d_1, \ldots , d_n)\) being the diagonal \hyperref[def:degree]{degree} matrix,
+	and furthermore,
+	\[
+		L \vec{1} = (D - A)\vec{1} = \begin{pmatrix}
 			d_1    \\
 			d_2    \\
 			\vdots \\
 			d_n    \\
-		\end{pmatrix} - A\vec{1} = \vec{0}\implies L \vec{1} = 0 \vec{1}.
+		\end{pmatrix} - A\vec{1} = \vec{0}
 	\]
-	Hence, \(0\) is an eigenvalue with eigenvector \(\vec{1}\).
-\end{explanation}
-
-\begin{note}
-	Study the multiplicity of \(0\) as an eigenvalue of \(L\)
+	since \(d_{i} = \sum_{j=1}^{n} A_{ij}\) from the \hyperref[def:adjacency-matrix]{definition} of \(A\), so
 	\[
-		\det(\lambda I - A) = (\lambda - a_1)(\lambda - a_2)\cdots (\lambda - a_n)
+		L \vec{1} = 0 \vec{1}.
 	\]
-	where \(a_i\cdots \)
-\end{note}
+	Hence, \(0\) is an eigenvalue with eigenvector \(\vec{1}\), so \(\lambda _1=0\).
+\end{remark}
 
-\begin{definition}[Fiedler eigenvalue]
-	Find Laplacian, do the eigen-decomposition, find all that are close to zero.
+We now study the \hyperref[def:multiplicity]{multiplicity} of an eigenvalue of \(L\). We first introduce the following definition.
+\begin{definition}[Multiplicity]\label{def:multiplicity}
+	We say the eigenvalue \(\lambda ^{\ast} \) of \(A\) has \emph{multiplicity} \(k\) if
+	\[
+		\det(\lambda I - A) = (\lambda - \lambda ^{\ast} )^k g(\lambda )
+	\]
+	where \(g(\cdot)\) is a polynomial in \(\lambda\) with \(g(\lambda ^{\ast} )\neq 0\).
 \end{definition}
 
-The eigenvectors can be used to find communities, and community detection algorithm rely on this fact.
+If the network has two \hyperref[def:connected]{connected} components, we can then relabel the nodes and obtain a concatenation of two
+\hyperref[def:adjacency-matrix]{adjacency matrices} that doesn't intersect
+\[
+	A = \begin{bmatrix}
+		A_1 & 0   \\
+		0   & A_2 \\
+	\end{bmatrix}
+\]
+\begin{figure}[H]
+	\centering
+	\incfig{two-component-graph}
+	\caption{Two \hyperref[def:connected]{connected} components \hyperref[def:graph]{graph}.}
+	\label{fig:two-component-graph}
+\end{figure}
+
+Then we see that we can also represent the \hyperref[def:Laplician]{Laplician} in block matrix form as
+\[
+	L = \begin{bmatrix}
+		D_{1} - A_{1} & 0         \\
+		0             & D_2 - A_2 \\
+	\end{bmatrix} \eqqcolon \begin{bmatrix}
+		L_{1} & 0   \\
+		0     & L_2 \\
+	\end{bmatrix}.
+\]
+We then see that the characteristic equation of \(L\) is\footnote{Detailed derivation is omitted. It's essentially followed from the block structure.}
+\[
+	\det(\lambda I - L) = \det(\lambda I_1 - L_2)\det(\lambda  I_2 - L_2)
+\]
+Then, as we just \hyperref[rmk:Laplacian]{remarked}, both \(L_1\) and \(L_2\) has an eigenvalue being \(0\), which implies that \(0\) is an eigenvalue of \(L\) with
+\hyperref[def:multiplicity]{multiplicity} \(2\).
+
+We see that \hyperref[def:multiplicity]{multiplicity} of eigenvalue of \hyperref[def:Laplician]{Laplician} can help us find communities.
+This suggests the following definition.
+
+\begin{definition}[Fiedler eigenvalue]\label{def:Filder-eigenvalue}
+	The \emph{Fiedler eigenvalue} of a \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}}\) is the second-smallest eigenvalue
+	(neglect \hyperref[def:multiplicity]{multiplicity}) of the \hyperref[def:Laplician]{Laplacian} of \(\mathcal{\MakeUppercase{g}}\).
+\end{definition}
+
+We see that by first doing the eigen-decomposition on \hyperref[def:Laplician]{Laplacian} and find all eigenvalues that are close to zero, which can be
+used to find communities, and nearly all community detection algorithms rely on this fact.
 
 \begin{prev}
-	Givran-Newman algorithm
+	Turning back to \hyperref[algo:Girvan-Newman-algorithm]{Givran-Newman algorithm}, though it works at social network, but what about other tasks like
+	internet?
+	\begin{problem}
+	Hyperlinks (directed): How important is the edge?
+	\end{problem}
+	\begin{answer}
+		Internet search seems to rank nodes, not edges. (the website itself is the point?)
+	\end{answer}
+
+	An immediate question arises.
+
+	\begin{problem}
+	How does one rank nodes?
+	\end{problem}
+	\begin{answer}
+		Network centrality.
+	\end{answer}
 \end{prev}
-\begin{problem}
-Hyper link(directed): How important is the edge?
-\end{problem}
-\begin{answer}
-	Search seems to rank nodes, not edges.
-\end{answer}
-
-\begin{problem}
-How does one rank nodes?
-\end{problem}
-\begin{answer}
-	Network Centrality.
-\end{answer}
-
-\begin{eg}
-	Many examples.
+\begin{eg}[Network centrality]
+	There are many examples of methods to quantify network centrality, e.g.,
 	\begin{itemize}
-		\item Degree. Ranks nodes by edges
-		\item Eigen centrality. \(A\): adjacency matrix, finds an eigenvector and use its entries.
+		\item Degree. Ranks nodes by edges.
+		\item Eigen-centrality. \hyperref[def:adjacency-matrix]{Adjacency matrix}, finds an eigenvector and use its entries.
 	\end{itemize}
 \end{eg}
 
-\chapter{HITS (Jon Kleinberg)}
-HITS: hyper-link induced topic search.
+We now study this in depth.
 
-Hubs and authorities.
+\chapter{HITS Algorithm}
+HITS is a hyperlinks-induced topic search algorithm proposed by \href{https://en.wikipedia.org/wiki/Jon_Kleinberg}{John Kleinberg}, whose backbones are the
+idea of \textbf{hubs} and \textbf{authorities}.
 \begin{itemize}
-	\item Hubs: nodes that \emph{aggregate}
+	\item Hubs: nodes that \emph{aggregate}.
 	\item Authorities: nodes that are \emph{important}.
 \end{itemize}
 
-Key ideas:
+The key idea is that
 \begin{enumerate}
-	\item If many websites (nodes) point to it, then this website is important (authority property)
+	\item If many websites (nodes) point to it, then this website is important (authority property).
 	\item If a node points to many authority nodes, then it is important as well.
 \end{enumerate}
+Then by iteratively identifying hubs and authorities, we can rank the nodes in the network. We now describe in detailed how this algorithm works.
 
-Iteratively identity hubs \& authorities, then repeat.
+\section{HITS Algorithm}
+The pseudocode of the algorithm is as follows.
 
-Each node \(v\) has two scores.
-\begin{enumerate}
-	\item \(\texttt{auth}(v)\)
-	\item \(\texttt{hub}(v)\)
-\end{enumerate}
 
-\section{HITS-Algorithm}
-\begin{enumerate}
-	\item Initialize: \(\texttt{auth}(v) = \texttt{hub}(v) \equiv 1, \forall v\in V\)
-	\item Authority updates:
-	      \begin{itemize}
-		      \item \(\texttt{auth}(v) = \) sum of this hub scores of the nodes that point to it
-	      \end{itemize}
-	\item Hub updates:
-	      \begin{itemize}
-		      \item \(\texttt{hub}(v) = \) sum of all authority scores of the nodes that it points to.
-	      \end{itemize}
-	\item Normalize the scores:
-	      \begin{itemize}
-		      \item \(\texttt{hub}(v) = \frac{\texttt{hub}(v)}{\sum\limits_{u\in V} \texttt{hub}(u) }\)
-		      \item \(\texttt{auth}(v) = \frac{\texttt{auth}(v)}{\sum\limits_{u\in V} \texttt{auth}(u) }\)
-	      \end{itemize}
-	\item Repeat from 2(as many times, hoping for a convergence)
-\end{enumerate}
+\par
+\begin{algorithm}[H]\label{algo:HITS-algorithm}
+	\DontPrintSemicolon
+	\caption{HITS Algorithm}
+	\SetKwData{h}{hub}
+	\SetKwData{a}{auth}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \)}
+	\KwResult{\h, \a}
+
+	\BlankLine
+
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+		\(\a(v)\gets 1\)\;
+		\(\h(v)\gets 1\)\;
+	}
+	\;
+	\While{not converge}{
+		\For(\Comment*[f]{\a update}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
+			\(\a(v) \gets \sum_{u\in \mathcal{\MakeUppercase{v}} \colon u\to v\in \mathcal{\MakeUppercase{e}}} \h(u)\)\;
+		}
+		\For(\Comment*[f]{\h update}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
+			\(\h(v) \gets \sum_{u\in \mathcal{\MakeUppercase{v}} \colon v\to u\in \mathcal{\MakeUppercase{e}}} \a(u)\)\;
+		}
+		\;
+		\For(\Comment*[f]{\a normalize}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
+			\(\a(v) \gets \a(v) / \sum_{u\in \mathcal{\MakeUppercase{v}} } \a(u) \)\;
+		}
+		\For(\Comment*[f]{\h normalize}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
+			\(\h(v) \gets \h(v) / \sum_{u\in \mathcal{\MakeUppercase{v}}} \h(u) \)\;
+		}
+	}
+	\Return{\h, \a}\;
+\end{algorithm}
 
 \begin{note}
 	There are two facts are worth noting.
 	\begin{enumerate}
-		\item \(\texttt{hub}(v)\) \& \(\texttt{auth}(v)\) will converge as long as initial score are positive.
+		\item \(\mathtt{hub(\mathnormal{v})}\) and \(\mathtt{auth(\mathnormal{v})}\) will converge as long as initial score are positive.
 		\item Final scores will be independent of the initial scores.
 	\end{enumerate}
 \end{note}

@@ -1,28 +1,22 @@
 \lecture{9}{29 Sep. 12:30}{Analyze HITS}
-\begin{notation}
-	We denote \texttt{auth(i)} as \texttt{a(i)}, and \texttt{hub(i)} as \texttt{h(i)}.
-\end{notation}
-
 \begin{itemize}
-	\item Authority update:\[
-		      \begin{split}
-			      \mathtt{a_k(i)} & = \sum\limits_{j\in \mathcal{V}: j\to i\in \mathcal{E}}\mathtt{h_{k-1}(j)}\\
-			      &=\sum\limits_{j\in\mathcal{V}\colon A_{ji} = 1}\mathtt{h_{k-1}(j)}\\
-			      &=\sum\limits_{j\in\mathcal{V}}A_{ji}\mathtt{h_{k-1}(j)}\\
-			      &= \left(A^{\top} \mathtt{h_{k-1}}\right)_i.
-		      \end{split}
+	\item Authority update:
+	      \[
+		      \mathtt{a_k(\mathnormal{i})}  = \sum\limits_{j\in \mathcal{V}\colon j\to i\in \mathcal{E}}\mathtt{h_{k-1}(\mathnormal{j})}
+		      =\sum\limits_{j\in\mathcal{V}\colon A_{ji} = 1}\mathtt{h_{k-1}(\mathnormal{j})}
+		      =\sum\limits_{j\in\mathcal{V}}A_{ji}\mathtt{h_{k-1}(\mathnormal{j})}
+		      = \left(A^{\top} \mathtt{h_{k-1}}\right)_i.
 	      \]
 	      We see that
 	      \[
 		      \mathtt{a_k} = A^{\top}\mathtt{h_{k-1}}.
 	      \]
-	\item Hub update:\[
-		      \begin{split}
-			      \mathtt{h_k(j)} &= \sum\limits_{j\in\mathcal{V}: i\to j\in\mathcal{E}} \mathtt{a_k(j)}\\
-			      &= \sum\limits_{j\in\mathcal{V}} \mathtt{a_k(j)}\\
-			      &= \sum\limits_{j\in\mathcal{V} }A_{ij}\mathtt{a_k(j)}\\
-			      &= \left(A\mathtt{a_k}\right)_i.
-		      \end{split}
+	\item Hub update:
+	      \[
+		      \mathtt{h_k(\mathnormal{j})} = \sum\limits_{j\in\mathcal{V}\colon i\to j\in\mathcal{E}} \mathtt{a_k(\mathnormal{j})}
+		      = \sum\limits_{j\in\mathcal{V}} \mathtt{a_k(\mathnormal{j})}
+		      = \sum\limits_{j\in\mathcal{V} }A_{ij}\mathtt{a_k(\mathnormal{j})}
+		      = \left(A\mathtt{a_k}\right)_i.
 	      \]
 	      We see that
 	      \[
@@ -33,92 +27,98 @@
 		      \mathtt{h_k} = A\mathtt{a_k}\implies \mathtt{h_k}= A\mathtt{a_k} = A(A^{\top}\mathtt{h_{k-1}}) = A A^{\top} \mathtt{h_{k-1}}.
 	      \]
 \end{itemize}
-We ignore the normalization now, then
+If we ignore the normalization for now, then
 \[
 	\mathtt{h_k} = A A^{\top}\mathtt{h_{k-1}} = (A A^{\top})A A^{\top} h_{k-2} = \cdots = (A A^{\top})^k \mathtt{h_0}.
 \]
-Hence, we need to study \(A A^{\top}\).
-\begin{itemize}
-	\item PSD
-	\item Symmetric
-\end{itemize}
+Hence, we need to study \(A A^{\top}\). Firstly, from \autoref{lma:lec8-2}, we see that \(A A^{\top} \) is \hyperref[def:positive-semi-definite]{positive semi-definite}
+and \hyperref[def:symmetric-matrix]{symmetric}. Furthermore, from \autoref{thm:spectral-theorem}, since \(A A^{\top} \) is symmetric, all eigenvalues are real. Then
+from \autoref{lma:lec8-1}, we see that all eigenvalue of \(A A^{\top} \) are positive, i.e.,
 \[
-	0 \leq \lambda_1 \leq \lambda_2 \leq \cdots \leq \lambda_V.
+	0 \leq \lambda_1 \leq \lambda_2 \leq \cdots \leq \lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } .
 \]
 
-From the Spectral Theorem, let the eigenvector be \(u_1, \ldots , u_V\), then
+From the \autoref{thm:spectral-theorem}, let the eigenvectors of \(A A^{\top} \) be \(u_1, \ldots , u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } \), then
 \[
-	\mathtt{h_0} = \sum\limits_{i=1}^{V} \alpha_i u_{i}
+	\mathtt{h_0} = \sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } \alpha_i u_{i}
 \]
-where \(\alpha_{i}\) are unique and
+where \(\alpha_{i}\) are unique since \(\{u_{i}\} \) form a basis, and
 \[
-	\alpha_{i} = u_{i}^{\top}\mathtt{h_0} = \sum\limits_{j=1}^{V} \alpha_{j}u_{i}^{\top}u_{j} = \alpha_{i}
+	\alpha_{i} = u_{i}^{\top}\mathtt{h_0} = \sum\limits_{j=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } \alpha_{j}u_{i}^{\top}u_{j}.
 \]
-where \(u_{i}\) are the eigenvectors of \(A A^{\top}\).
-
-Moreover,
+Moreover, we have
 \[
 	\begin{split}
-		\mathtt{h_1} &= (A A^{\top})\mathtt{h_0} = \sum\limits_{i=1}^{V} \alpha_{i} \lambda_{i}u_{i}\\
-		\vdots\\
-		\mathtt{h_k} &= (A A^{\top})^k\mathtt{h_0} = \sum\limits_{i=1}^{V} \alpha_{i} \lambda_{i}^k u_{i}\\
+		\mathtt{h_1} = (A A^{\top})\mathtt{h_0} &= \sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } \alpha_{i} \lambda_{i}u_{i};\\
+		&\vdots\\
+		\mathtt{h_k} = (A A^{\top})^k\mathtt{h_0} &= \sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } \alpha_{i} \lambda_{i}^k u_{i}.\\
 	\end{split}
 \]
-
 With the above formula, we now consider
 \[
-	0 \leq \lambda_1 \leq \lambda_2 \leq \cdots \leq \underbrace{\lambda_V}_{\text{largest}}.
+	0 \leq \lambda_1 \leq \lambda_2 \leq \cdots \leq \underbrace{\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert}}_{\text{largest}}.
 \]
 \begin{enumerate}
-	\item[Case i.] Unique largest eigenvalue: \(\lambda_V > \lambda_{V-1} \geq \cdots \geq \lambda_{1}\geq 0\), then the term \(\lambda^k\)
-		will dominate, namely
+	\item[Case i.] Unique largest eigenvalue:
+		\(\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } > \lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert -1} \geq \cdots \geq \lambda_{1}\geq 0\),
+		then the term \(\lambda^k\)	will dominate, namely
 		\[
-			\mathtt{h_k} = \sum\limits_{i=1}^{V} \alpha_{i}\lambda_{i}^k u_{i}.
+			\mathtt{h_k} = \sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } \alpha_{i}\lambda_{i}^k u_{i}.
 		\]
-		Dividing both sides by \(\lambda_{V}^k\), we have
+		Dividing both sides by \(\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }^k\), we have
 		\[
-			\frac{\mathtt{h_{k}}}{\lambda_{V}^k} = \sum\limits_{i=1}^{V - 1}\alpha_{i}\left(\frac{\lambda_{i}}{\lambda_{V}}\right)^k u_{i} + \alpha_{V}u_{V}.
+			\frac{\mathtt{h_{k}}}{\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }^k}
+			= \sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert  - 1}\alpha_{i}
+			\left(\frac{\lambda_{i}}{\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }}\right)^k u_{i}
+			+ \alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }.
 		\]
-		Then since \(\lambda_{i}/\lambda_{V}< 1\) for \(1\leq i\leq V-1\), hence when \(k\to \infty \), all terms in the sum will converge to \(0\), leaving us with
+		Then since \(\lambda_{i}/\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }< 1\) for \(1\leq i\leq \left\vert \mathcal{\MakeUppercase{v}} \right\vert -1\),
+		hence when \(k\to \infty\), all terms in the sum will converge to \(0\), leaving us with
 		\[
-			\lim_{k \to \infty} \frac{\mathtt{h_k}}{\lambda_V^k}= \alpha_V u_V.
+			\lim_{k \to \infty} \frac{\mathtt{h_k}}{\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }^k}= \alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }.
 		\]
 
-		Since \(u_V\) is a non-zero vector, we consider the following two cases:
+		Since \(u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\) is a non-zero vector, we consider the following two cases:
 		\begin{enumerate}
 			\item All terms are non-negative with one positive.
+			      Firstly, suppose \(\mathtt{h_0}= x>0\) such that \(u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }^{\top}x = \alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } >0\).
+			      Then we have
+			      \[
+				      \lim\limits_{h \to \infty} \frac{\left(A A^{\top}\right)^k x}{\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }^k} = \alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }.
+			      \]
+			      We see that the left-hand side is greater or equal to \(0\), and stays in positive for every \(k\implies \) the limit is also positive. Now, since
+			      \(\alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }>0\), we can conclude that \(u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\geq 0\).
+			      In other words, \(\mathtt{h_0}\) can be any vector with all coefficients positive and then
+			      \(\alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } = u^{\top}_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\mathtt{h_0}>0\).
 			\item At least one term is positive.
+			      \(\mathtt{h_0} = x > 0\) such that \(u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }^{\top}x>0\).
 		\end{enumerate}
-		Firstly, suppose \(\mathtt{h_0}= x>0\) such that \(u_{V}^{\top}x = \alpha_{V} >0\). Then we have
-		\[
-			\lim\limits_{h \to \infty} \frac{\left(A A^{\top}\right)^k x}{\lambda_{V}^k} = \alpha_{V}u_{V}.
-		\]
-		We see that the left-hand side is greater or equal to \(0\), and stays in positive for every \(k\implies \) the limit is also positive. Now, since \(\alpha_{V}>0\),
-		we can conclude that \(u_{V}\geq 0\). In other words, \(\mathtt{h_0}\) can be any vector with all coefficients positive and then \(\alpha_{V} = u^{\top}_{V}\mathtt{h_0}>0\).
-
-		At least one term is positive. \(\mathtt{h_0} = x > 0\) such that \(u_{v}^{\top}x>0\).
 
 		\begin{remark}
-			To rank nodes, all we need is the vector \(u_{V}\). And the limiting value of \(u_{V}\) is called the \textbf{hub score}.
+			To rank nodes, all we need is the vector \(u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\).
+			And the limiting value of \(u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\) is called the \textbf{hub score}.
 		\end{remark}
 	\item[Case ii.] Non-unique largest eigenvalues: For discussion, we assume that the largest eigenvalue has algebraic multiplicity of \(2\). Namely
 		\[
-			\lambda_V = \lambda_{V-1} \geq \cdots \geq \lambda_{1}\geq 0.
+			\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } = \lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert -1} \geq \cdots \geq \lambda_{1}\geq 0.
 		\]
 		Again, from the same discussion, we see that
 		\[
-			\mathtt{h_{0}} = \sum\limits_{i=1}^{V} \alpha_{i}u_{i}.
+			\mathtt{h_{0}} = \sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } \alpha_{i}u_{i}.
 		\]
 		Furthermore, we see that
 		\[
-			\frac{\left(A A^{\top}\right)^k h_0}{\lambda_{V}^k} = \sum\limits_{i=1}^{V - 2} \alpha_{i}\left(\frac{\lambda_{i}}{\lambda_{V}}\right)^k u_{i} + \alpha_{V-1}u_{V-1}+\alpha_{V} u_{V}.
+			\frac{\left(A A^{\top}\right)^k h_0}{\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }^k}
+			= \sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert - 2} \alpha_{i}\left(\frac{\lambda_{i}}{\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }}\right)^k u_{i}
+			+ \alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert -1}u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert -1}+\alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }.
 		\]
-		Since \(\lambda_{i}/\lambda_{V}< 1\) for \(1\leq i\leq V-2\), hence when \(k\to \infty \), all terms in the sum will converge to \(0\), leaving us with
+		Since \(\lambda_{i}/\lambda_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }< 1\) for \(1\leq i\leq V-2\), hence when \(k\to \infty \), all terms in the sum will converge to \(0\), leaving us with
 		\[
-			\lim_{k \to \infty} \frac{(A A^{\top})^{k}\mathtt{h_0}}{\lambda_V^k} = \alpha_{V-1}u_{V-1} + \alpha_V u_V.
+			\lim_{k \to \infty} \frac{(A A^{\top})^{k}\mathtt{h_0}}{\lambda_V^k} = \alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert -1}u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert -1}
+			+ \alpha_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert } u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }.
 		\]
 		\begin{remark}
-			Convergence still holds but it may not be \(u_{V}\).
+			It still converges but it may not be \(u_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\).
 		\end{remark}
 \end{enumerate}
 

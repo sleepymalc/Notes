@@ -1,8 +1,8 @@
 \chapter{Partition a Network}
-\lecture{5}{15 Sep. 12:30}{Partition a network Hierarchically}
+\lecture{5}{15 Sep. 12:30}{Partition Networks Hierarchically}
 We want to partition a network in order to study its structure. We do this in the following ways
 \begin{enumerate}
-	\item Remove bridges and local bridges
+	\item Remove \hyperref[def:bridge]{bridges} and \hyperref[def:local-bridge]{local bridge}
 	\item Assign importance for each node
 \end{enumerate}
 
@@ -10,71 +10,101 @@ We want to partition a network in order to study its structure. We do this in th
 In what order?
 \end{problem}
 \begin{answer}
-	Assign importance to local bridges (Girvan-Newman method/algorithm).
+	Assign importance to \hyperref[def:local-bridge]{local bridge}.
 \end{answer}
+
+This idea is the backbone of the Girvan-Newman method/algorithm.
 
 \section{Girvan-Newman method}
 \begin{intuition}
 	A brief summary of this algorithm is
 	\begin{enumerate}
-		\item Rank all local bridges.
-		\item Remove the highest ranked one - yields a partition
-		\item Re-calculate ranking
-		\item Repeat from 2 until no edges remain
+		\item Rank all \hyperref[def:local-bridge]{local bridges}.
+		\item Remove the highest ranked one, which yields a partition.
+		\item Re-calculate ranking.
+		\item Repeat from 2. until no edges remain.
 	\end{enumerate}
 \end{intuition}
 
-At the end all nodes become isolated
+\begin{note}
+	At the end all nodes become isolated.
+\end{note}
 
 \begin{problem}
-How to rank order local bridges? Can we just \_ with all edges?
+How to rank order \hyperref[def:local-bridge]{local bridges}?
 \end{problem}
 
 \begin{intuition}
-	An edge is more important if more \emph{shortest paths} use it. Notice that a \emph{normalization} is needed:
-	Between pairs of nodes, there should be lots of variation in the number of the shortest path and we want to balance these out.
+	An edge is more important if more \emph{shortest \hyperref[def:path]{paths}} use it. Notice that a \emph{normalization} is needed:
+	Between pairs of nodes, there should be lots of variation in the number of the shortest \hyperref[def:path]{paths} and we want to balance these out.
 \end{intuition}
 
 \subsection{Betweenness}
-\begin{definition}[Betweenness]
-	Imagine that there is a unit flow of water between each (distinct) pair of nodes. If the flow has $k$ different ways to go to,\footnote{Actually not only depends on where can the flow go, but also where were that node added into BFS in the first place}
-	we divide this unit flow into $1/k$. We then equally divide this flow amongst the shortest paths coming out of the starting node
+\begin{definition}[Betweenness]\label{def:betweenness}
+	Imagine that there is a unit flow of water between each (distinct) pair of nodes. If the flow has \(k\) different ways to go to,\footnote{Actually not only depends on where can the flow go, but also where were that node added into BFS in the first place}
+	we divide this unit flow into \(1/k\). We then equally divide this flow amongst the shortest \hyperref[def:path]{paths} coming out of the starting node.
 \end{definition}
 
-With the definition of betweenness, the Girvan-Newman method becomes
-\begin{enumerate}
-	\item Calculate the betweenness of all edges
-	\item Find edge(s) with the highest value of betweenness and remove them simultaneously.
-	\item If any edges remain, then recalculate betweenness and go to step 2
-	\item Stop
-\end{enumerate}
-Run time analysis: $O(\ln n)$
+With the definition of \hyperref[def:betweenness]{betweenness}, the Girvan-Newman method becomes
 
-But how do we calculate betweenness in reality?
-\subsection{Calculate betweenness}
-\begin{intuition}
-	Use BFS in a slight different manner
-\end{intuition}
+
+\par
+\begin{algorithm}[H]\label{algo:Girvan-Newman-algorithm}
+	\DontPrintSemicolon
+	\caption{Girvan-Newman Algorithm}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \)}
+	\BlankLine
+	\SetKwFunction{calb}{Betweenness}
+	\SetKwData{b}{between}
+
+	\For{\(e\in \mathcal{\MakeUppercase{e}} \)}{
+		\(\b_e\gets 0\)\Comment*[r]{Initialize \hyperref[def:betweenness]{betweenness} variable for every edge}
+	}
+	\;
+	\While{\(\mathcal{\MakeUppercase{e}} \neq \varnothing \)}{
+	\calb{\(\mathcal{\MakeUppercase{g}}\), \(\{\b_e\}_{e\in \mathcal{\MakeUppercase{e}}}\) }\Comment*[r]{Calculate \hyperref[def:betweenness]{betweenness} of all remaining edges}
+	\(\b_{\text{highest}}\gets \max_{e\in \mathcal{\MakeUppercase{e}} } \b_e\)\;
+	\(\mathcal{\MakeUppercase{e}}_{\text{highest} } \gets \{e\in \mathcal{\MakeUppercase{e}} \colon \b_e = \b_{\text{highest} }\}\)\;
+	\(\mathcal{\MakeUppercase{e}} \gets \mathcal{\MakeUppercase{e}} \setminus \mathcal{\MakeUppercase{e}} _{\text{highest} }\)\;
+	\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{e}}]\)\;
+	}
+	\Return{}\;
+\end{algorithm}
+
 \begin{remark}
-	The key is that any sub-path to destination is also a shortest path.
+	Run time analysis: \(O(\ln n)\).
 \end{remark}
 
+\begin{problem}
+But how do we calculate \hyperref[def:betweenness]{betweenness} in reality?
+\end{problem}
 
-With BFS exploration ($i$: starting point, $m$ is the destination), we have
+\subsection{Calculate Betweenness}
+\begin{intuition}
+	Use breadth-first search (BFS) in a slight different manner.
+\end{intuition}
+\begin{remark}
+	The key is that any sub-\hyperref[def:path]{path} to destination is also a shortest \hyperref[def:path]{path}.
+\end{remark}
+
+With BFS exploration (\(i\): starting point, \(m\) is the destination), we have
 \[
-	\#\text{ the shortest path from $i$ to $m$} =  \#\text{ the shortest path from $i$ to $j$} +  \#\text{ the shortest path from $i$ to $k$}
+	\#\text{ the shortest \hyperref[def:path]{path} from \(i\) to \(m\)} =  \#\text{ the shortest \hyperref[def:path]{path} from \(i\) to \(j\)} +
+	\#\text{ the shortest \hyperref[def:path]{path} from \(i\) to \(k\)}
 \]
-while $j, k$ are at same level $n-1$, and $m$ at level $n$, with the fact that there are edges between $j, k$ to $m$. This can be done by adding a \emph{Counter to BFS}.
+while \(j, k\) are at same level \(n-1\), and \(m\) at level \(n\), with the fact that there are edges between \(j, k\) to \(m\). This can be done by adding a \emph{counter} when
+running BFS.
 
 \subsection{Counter}
 From the above equation, we will have
 \[
 	c_{v}^{n+1} = \sum_{v^n}c^n_{v^n}
 \]
-where the subscript indicates the node belongs to the counter, and $c_v^{n+1}$ maintains the number of shortest path to $v$, which is just $n+1$.
+where the subscript indicates the node belongs to the counter, and \(c_v^{n+1}\) maintains the number of shortest \hyperref[def:path]{path} to \(v\), which is just \(n+1\).
 
-The unit flow flows from nodes back from the path it is added into the BFS algorithm needs to keep its own 1, and then distribute.
+The unit flow flows from nodes back from the \hyperref[def:path]{path} it is added into the BFS algorithm needs to keep its own \(1\), and then distribute.
 
 \begin{remark}
-	An algorithm for calculating the importance of each local bridge, which turns out to be betweenness. And this is accomplished by BFS with a counter.
+	An algorithm for calculating the importance of each \hyperref[def:local-bridge]{local bridge}, which turns out to be \hyperref[def:betweenness]{betweenness}.
+	And this is accomplished by BFS with a counter.
 \end{remark}

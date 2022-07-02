@@ -1,62 +1,79 @@
 \lecture{4}{13 Sep. 12:30}{Network Properties}
-\begin{eg}
-	The number of triangles can be used to quantify the connectedness of a network. For example, the \emph{triadic closure}.
+We now try to further characterize the connectedness of a network. We first give a common notion.
+\begin{definition}[Complete graph]\label{def:complete-graph}
+	A \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) is \emph{complete} if \(\mathcal{\MakeUppercase{e}} \)
+	contains every possible edges.
+\end{definition}
+
+\begin{notation}
+	We often denote a \hyperref[def:complete-graph]{complete graph} with \(n\) nodes as \(K_n\).
+\end{notation}
+
+\begin{eg}[Triadic closure]
+	The \emph{triadic closure} says that if a network has this property, then given \(a, b, c\in \mathcal{\MakeUppercase{v}}\), if
+	\(\{a, b\}, \{b, c\}\in \mathcal{\MakeUppercase{e}} \), it's very likely that \(\{a, c\} \in \mathcal{\MakeUppercase{e}} \) as well.
+	\begin{figure}[H]
+		\centering
+		\incfig{triadic-closure}
+		\label{fig:triadic-closure}
+	\end{figure}
 \end{eg}
 
-\begin{definition}[Clustering coefficient]
-	For each node \(i\), define
+This motivates us that the number of triangles maybe can be used to quantify the connectedness of a network.
+
+\begin{definition}[Clustering coefficient]\label{def:clustering-coefficient}
+	For each node \(i\), define the \emph{clustering coefficient}
 	\[
-		c_{i} = \dfrac{\#\text{ of triangles in the graph that include node }i}{\frac{d_{i}(d_{i}-1)}{2}},
+		c_{i} = \dfrac{\#\text{ of triangles in the \hyperref[def:graph]{graph} that include node }i}{d_{i}(d_{i}-1) / 2},
 	\]
-	where \(c_{i}\) is called \emph{clustering coefficient}.
+	where \(d_i\) is the \hyperref[def:degree]{degree}\footnote{We assume our network is an \hyperref[def:undirected-graph]{undirected} for simplicity.} of \(i\).
 \end{definition}
+
 \begin{remark}
-	We have, for any node \(i\), \(c_{i}\in \left[ 0, 1 \right].\) If \(\forall i\ c_{i} = 1\), then this graph is complete. If \(\forall i\ c_{i} = 0\), then
-	this graph is a tree.
+	We have, for any node \(i\), \(c_{i}\in \left[ 0, 1 \right].\) If \(\forall i\ c_{i} = 1\), then this \hyperref[def:graph]{graph} is \hyperref[def:complete-graph]{complete}.
+	If \(\forall i\ c_{i} = 0\), then this \hyperref[def:graph]{graph} is a tree.
 \end{remark}
 
 \subsection{Bridges and Local Bridges}
-\begin{definition}[Bridge]
-	A \emph{bridge} is the only edge that connects together two subgraphs that are themselves connected.
+\begin{definition}[Bridge]\label{def:bridge}
+	A \emph{bridge} is the only edge that connects together two \hyperref[def:subgraph]{subgraphs} that are themselves \hyperref[def:connected]{connected}.
 \end{definition}
 
 \begin{remark}
-	Deleting a bridge may change the distance between two nodes from some finite value to \(\infty\).
+	Deleting a bridge may change the distance between two nodes from some finite value to \(\infty\). (disconnects those two nodes)
 \end{remark}
 
-\begin{definition}[Local bridge]
-	An edge \((i, j)\) is said to be a \emph{local bridge} if \(i, j\) have no neighbors in common. Equivalently, a local bridge is an edge that is not included in any
-	triangles.
+\begin{definition}[Local bridge]\label{def:local-bridge}
+	An edge \((i, j)\) is said to be a \emph{local bridge} if \(i, j\) have no neighbors in common.
 \end{definition}
 
+\begin{note}
+	Equivalently, a \hyperref[def:local-bridge]{local bridge} is an edge that is not included in any triangles.
+\end{note}
+
 \begin{remark}
-	If \((i, j)\) is a local bridge, then we have
+	If \((i, j)\) is a \hyperref[def:local-bridge]{local bridge}, then we have
 	\[
 		d_{\mathcal{G}}(i, j) \geq  3
 	\]
-	after removing this local bridge. Furthermore, a bridge must also be a local bridge by definition.
+	after removing this \hyperref[def:local-bridge]{local bridge}. Furthermore, a \hyperref[def:bridge]{bridge} must also be a
+	\hyperref[def:local-bridge]{local bridge} by definition.
 \end{remark}
 
 \begin{definition}[Span of a local bridge]
-	The \emph{span of a local bridge} \((i, j)\) is defined as
-	\[
-		d_{\mathcal{G}\mid_{(i, j)\text{ is removed from the graph}}}.
-	\]
+	The \emph{span of a \hyperref[def:local-bridge]{local bridge}} \(b\) is defined as \(d_{\mathcal{G}[\mathcal{\MakeUppercase{e}} \setminus \{b\}]}\).
 \end{definition}
 
 \section{Triadic closure and Overlapping Triangles}
-\begin{intuition}[David Easley, Jon Kleinberg, 2010 pp.62]
-	If two people in a social network have a friend in common, then there is an increased likelihood
-	that they will become friends themselves at some point in the future.
+\begin{intuition}[\cite{easley2010networks} pp.62]
+	If two people in a social network have a friend in common, then there is an increased likelihood that they will become friends themselves at some point in the future.
 \end{intuition}
 
-\begin{definition}[Strong triadic closure property]
+\begin{definition}[Strong triadic closure]\label{def:strong-triadic-closure}
 	If \(a\) is a node and there are two nodes \(b, c\) such that \((a, b)\) and \((a, c)\) are strong ties, then \((b, c)\) will form an edge.
 	If for any nodes \(a, b, c\) in this graph \(\mathcal{G}\) satisfy this property, then we say this graph has \emph{strong triadic closure property} (STC).
 \end{definition}
 
-\begin{definition}[Embeddedness]
+\begin{definition}[Embeddedness]\label{def:embeddedness}
 	The \emph{embeddedness} of an edge is defined as the number of common neighbors shared by the end points.
 \end{definition}
-
-

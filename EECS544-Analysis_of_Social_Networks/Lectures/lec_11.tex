@@ -25,7 +25,7 @@
 	is said to be \emph{aperiodic}. And \(A\) is said to be \hyperref[def:aperiodic]{aperiodic} all \(i\) are \emph{aperiodic}.
 \end{definition}
 
-\begin{remark}
+\begin{remark}\label{rmk:lec11-1}
 	We see that
 	\begin{itemize}
 		\item A sufficient condition for \hyperref[def:aperiodic]{aperiodic} is \(A_{ii} > 0 \) since it implies the \hyperref[def:period]{period} is \(1\) for \(i\).
@@ -143,8 +143,8 @@ and \hyperref[def:aperiodic]{aperiodic} with \(s\in (0, 1)\). We first give the 
 \begin{algorithm}[H]\label{algo:scaled-page-rank-algorithm}
 	\DontPrintSemicolon
 	\caption{Scaled Page Rank Algorithm}
-	\SetKwData{pg}{scaledPagerank}
-	\SetKwData{pgnew}{scaledPagerankNew}
+	\SetKwData{pg}{scaledPageRank}
+	\SetKwData{pgnew}{scaledPageRankNew}
 	\SetKwData{n}{neighborNum}
 	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), scale factor \(s\in (0, 1)\), iteration \(L\)}
 	\KwResult{\pg}
@@ -218,18 +218,23 @@ Finally, we have the rule of updating scaled page rank being \(r^{\text{new}} = 
 	We see that \(\widetilde{N}(s)\) is
 	\begin{itemize}
 		\item non-negative
-		\item row-stochastic
+		\item row stochastic
 		\item strictly positive with all entries at least \((1-s) / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \)
 	\end{itemize}
 \end{note}
-\(\rho(\widetilde{N}(s)) = 1\) and irreducible and aperiodic! \(\implies (\widetilde{N}(s))^k \to \vec{v}\vec{w}^{\top}\) where
-\(\vec{v}\) is the right eigenvector of \(\widetilde{N}(s)\) and \(\vec{w}\) is the left eigenvector of \(\widetilde{N}(s)\) with
+Firstly, since \(\widetilde{N} (s)\) is non-negative and is row-stochastic, we see that \(\widetilde{N} (s)\vec{1} = \vec{1} \), hence
+\(\rho(\widetilde{N}(s)) = 1\).
+
+Moreover, since \(\widetilde{N} (s)\) is strictly positive, from the \hyperref[rmk:lec11-1]{remark}, we have that \(\widetilde{N} (s)\) is
+both \hyperref[def:irreducible]{irreducible} and \hyperref[def:aperiodic]{aperiodic}. With the non-negativity, we can then apply
+\autoref{thm:Perron-Frobenius-theorem} (c) to get
+\[
+	\lim\limits_{m \to \infty} \frac{(\widetilde{N} (s))^m}{(\rho (\widetilde{N} (s)))^m} = \lim\limits_{m \to \infty} (\widetilde{N} (s))^m = \vec{v} \vec{w} ^{\top},
+\]
+where \(\vec{v}\) is the right eigenvector of \(\widetilde{N}(s)\) and \(\vec{w}\) is the left eigenvector of \(\widetilde{N}(s)\) with
 \(\vec{w}^{\top} \vec{v} = 1\).
 
-And since \(\widetilde{N}(s)\) is row stochastic, we have \(\vec{v} = \vec{1}\), hence,
-\[
-	\vec{w}^{\top}\vec{1} = 1
-\]
+And since \(\widetilde{N}(s)\) is row stochastic, we have \(\vec{v} = \vec{1}\), hence \(\vec{w}^{\top}\vec{1} = 1\),
 which means the sum of all entries is \(1\) and \(\vec{w}\) has all positive entries.
 
 If \((\vec{v}, \vec{w})\) are right and left eigenvectors of \(\widetilde{N}(s) \iff (\vec{w}, \vec{v})\) are the right and left eigenvectors

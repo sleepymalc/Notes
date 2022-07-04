@@ -1,114 +1,159 @@
 
 \lecture{8}{27 Sep. 12:30}{Diagonalization}
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
-\begin{prev}[The diagonalization]
-	We see that
-	\begin{enumerate}
-		\item \autoref{thm:spectral-theorem}: For an \(n\times n\) \hyperref[def:symmetric-matrix]{symmetric matrix} \(A = A^{\top}\), the
-		      characteristic equation is
-		      \[
-			      \det(\lambda I - A) = 0.
-		      \]
-		\item Denote \(n\) right eigenvectors by \(u_1, \ldots , u_n\) where \(u_{i} \) corresponds to eigenvalue \(\lambda _i\) such that
-		      \[
-			      \lambda _1 \leq \lambda _2 \leq \ldots  \leq \lambda _n.
-		      \]
-		      Define \(U\) as
-		      \[
-			      U = \begin{pmatrix}
-				      \mid & \mid &        & \mid \\
-				      u_1  & u_2  & \cdots & u_n  \\
-				      \mid & \mid &        & \mid \\
-			      \end{pmatrix},
-		      \]
-		      we have
-		      \begin{enumerate}[(a)]
-			      \item \(u_i\) are linear independent, and they form a basis in \(\mathbb{\MakeUppercase{r}} ^n\).
-			      \item \(u_{i} ^{\top} u_{j} ( = \left< u_{i} , u_{j}  \right> ) = 0\) for \(i\neq j\).
-			      \item \(u_{i} ^{\top} u_{i} = \sum_{j=1}^{n} u_{ij}^{2} = 1 \) (\emph{length} \(= 1\)).
-		      \end{enumerate}
-		\item \(U\) is invertible. We see that \(U^{-1} = U^{\top} \) since
-		      \[
-			      U^{\top}U = \begin{pmatrix}
-				      \horzbar & u^{\top}_1 & \horzbar \\
-				      \horzbar & u^{\top}_2 & \horzbar \\
-				               & \vdots     &          \\
-				      \horzbar & v^{\top}_n & \horzbar \\
-			      \end{pmatrix}\begin{pmatrix}
-				      \mid & \mid &        & \mid \\
-				      u_1  & u_2  & \cdots & u_n  \\
-				      \mid & \mid &        & \mid \\
-			      \end{pmatrix} = I.
-		      \]
-		\item \(A = U D U^{\top}\)  where \[
-			      D  = \begin{pmatrix}
-				      \lambda_1 &           &        &           \\
-				                & \lambda_2 &        &           \\
-				                &           & \ddots &           \\
-				                &           &        & \lambda_n \\
-			      \end{pmatrix}.
-		      \]
-		      From \(U^{\top} = U^{-1} \), we have \(A U = (U D U^{\top} ) U = U D\) since
-		      \[
-			      \begin{split}
-				      A U = A \begin{pmatrix}
-					      \mid &        & \mid \\
-					      u_1  & \cdots & u_n  \\
-					      \mid &        & \mid \\
-				      \end{pmatrix} &= \begin{pmatrix}
-					      \mid  &        & \mid  \\
-					      A u_1 & \cdots & A u_n \\
-					      \mid  &        & \mid  \\
-				      \end{pmatrix}\\ &= \begin{pmatrix}
-					      \mid           &        & \mid           \\
-					      \lambda _1 u_1 & \cdots & \lambda _n u_n \\
-					      \mid           &        & \mid           \\
-				      \end{pmatrix} = \begin{pmatrix}
-					      \mid &        & \mid \\
-					      u_1  & \cdots & u_n  \\
-					      \mid &        & \mid \\
-				      \end{pmatrix} \begin{pmatrix}
-					      \lambda_1 &        &           \\
-					                & \ddots &           \\
-					                &        & \lambda_n \\
-				      \end{pmatrix} = UD
-			      \end{split}
-		      \]
-	\end{enumerate}
-\end{prev}
+\section{Eigen Decomposition}
+From \hyperref[thm:spectral-theorem]{spectral theorem}, we can \textbf{diagonalize} a \hyperref[def:symmetric-matrix]{symmetric matrix} \(A\)
+via so-called \hyperref[thm:eigen-decomposition]{eigen decomposition} as follows.
 
-\section{Diagonalization}
+\begin{theorem}[Eigen decomposition]\label{thm:eigen-decomposition}
+	For a \hyperref[def:symmetric-matrix]{symmetric matrix} \(A\), we can always write
+	\[
+		A = U D U^{\top},
+	\]
+	where \(U\) is the \hyperref[def:eigenvalue]{eigenvalues} matrix, and \(D\) is the diagonal matrix of \hyperref[def:eigenvalue]{eigenvalues}. W
+\end{theorem}
+\begin{proof}
+	Firstly, from \autoref{thm:spectral-theorem}, denote \(n\) right \hyperref[def:eigenvector]{eigenvectors} of \(A\) by \(u_1, \ldots , u_n\) where \(u_{i} \)
+	corresponds to eigenvalue \(\lambda _i\) such that
+	\[
+		\lambda _1 \leq \lambda _2 \leq \ldots  \leq \lambda _n.
+	\]
+	Corresponding to this order, we define \(U\) as
+	\[
+		U = \begin{pmatrix}
+			\mid & \mid &        & \mid \\
+			u_1  & u_2  & \cdots & u_n  \\
+			\mid & \mid &        & \mid \\
+		\end{pmatrix},
+	\]
+	then we have
+	\begin{enumerate}[(a)]
+		\item \(u_i\) are linear independent, and they form a basis in \(\mathbb{\MakeUppercase{r}} ^n\).
+		\item \(u_{i} ^{\top} u_{j} ( = \left< u_{i} , u_{j}  \right> ) = 0\) for \(i\neq j\).
+		\item \(u_{i} ^{\top} u_{i} = \sum_{j=1}^{n} u_{ij}^{2} = 1 \) (\emph{length} \(= 1\)).
+	\end{enumerate}
+	\begin{remark}[\(U\) is invertible]
+		We see that \(U\) is invertible. Indeed, we have \(U^{-1} = U^{\top} \) since
+		\[
+			U^{\top}U = \begin{pmatrix}
+				\horzbar & u^{\top}_1 & \horzbar \\
+				\horzbar & u^{\top}_2 & \horzbar \\
+				         & \vdots     &          \\
+				\horzbar & v^{\top}_n & \horzbar \\
+			\end{pmatrix}\begin{pmatrix}
+				\mid & \mid &        & \mid \\
+				u_1  & u_2  & \cdots & u_n  \\
+				\mid & \mid &        & \mid \\
+			\end{pmatrix} = I.
+		\]
+	\end{remark}
+	Then, we claim that we can write \(A\) as \(A = U D U^{\top}\) where \[
+		D  = \begin{pmatrix}
+			\lambda_1 &           &        &           \\
+			          & \lambda_2 &        &           \\
+			          &           & \ddots &           \\
+			          &           &        & \lambda_n \\
+		\end{pmatrix}.
+	\]
+	To see this, from \(U^{\top} = U^{-1} \), we have \(A U = (U D U^{\top} ) U = U D\) since
+	\[
+		\begin{split}
+			A U = A \begin{pmatrix}
+				\mid &        & \mid \\
+				u_1  & \cdots & u_n  \\
+				\mid &        & \mid \\
+			\end{pmatrix} &= \begin{pmatrix}
+				\mid  &        & \mid  \\
+				A u_1 & \cdots & A u_n \\
+				\mid  &        & \mid  \\
+			\end{pmatrix}\\ &= \begin{pmatrix}
+				\mid           &        & \mid           \\
+				\lambda _1 u_1 & \cdots & \lambda _n u_n \\
+				\mid           &        & \mid           \\
+			\end{pmatrix} = \begin{pmatrix}
+				\mid &        & \mid \\
+				u_1  & \cdots & u_n  \\
+				\mid &        & \mid \\
+			\end{pmatrix} \begin{pmatrix}
+				\lambda_1 &        &           \\
+				          & \ddots &           \\
+				          &        & \lambda_n \\
+			\end{pmatrix} = UD
+		\end{split}
+	\]
+	Hence we're done.
+\end{proof}
+
 \begin{eg}
+	Find the \hyperref[def:eigenvalue]{eigenvalue} of
+	\[
+		A = \begin{pmatrix}
+			1 & 0 & 0 \\
+			0 & 2 & 1 \\
+			0 & 1 & 2 \\
+		\end{pmatrix}.
+	\]
+\end{eg}
+\begin{explanation}
+	The \hyperref[note:characteristic-equation]{characteristic equation} of \(A\) is
+	\[
+		\begin{split}
+			\det(\lambda I - A) &= \det \left(  \begin{pmatrix}
+				\lambda - 1 & 0            & 0             \\
+				0           & \lambda -  2 & -1            \\
+				0           & -1           & \lambda -   2 \\
+			\end{pmatrix}\right)\\
+			&= (\lambda - 1)((\lambda - 2 )^2 - 1)\\
+			&= (\lambda - 1)(\lambda - 2 - 1)(\lambda - 2 + 1)\\
+			&= (\lambda - 1)(\lambda - 3)(\lambda - 1) = 0.
+		\end{split}
+	\]
+	We see that the roots of the \hyperref[note:characteristic-equation]{characteristic equation} are \(1, 1, 3\) with
+	\(1\) has \hyperref[def:multiplicity]{multiplicity} \(2\).
+\end{explanation}
+
+\begin{eg}
+	Give an example of \(a\) where \(A\) defined as
 	\[
 		A = \begin{pmatrix}
 			1 & 0 & 0 \\
 			0 & 2 & 1 \\
 			0 & a & 2 \\
-		\end{pmatrix}.
+		\end{pmatrix}
 	\]
-	The determinant is
+	has complex \hyperref[def:eigenvalue]{eigenvalues}.
+\end{eg}
+\begin{explanation}
+	The \hyperref[note:characteristic-equation]{characteristic equation} of \(A\) is
 	\[
 		\begin{split}
 			\det(\lambda I - A) &= \det \left(  \begin{pmatrix}
 				\lambda - 1 & 0            & 0             \\
-				0           & \lambda -  2 & 1             \\
-				0           & 2            & \lambda -   2 \\
+				0           & \lambda -  2 & -1            \\
+				0           & -a           & \lambda -   2 \\
 			\end{pmatrix}\right)\\
-			&= (\lambda - 1)((\lambda - 2 )^2 - a) = (\lambda - 1)(\lambda^2 - 4\lambda + 4 - a).
+			&= (\lambda - 1)((\lambda - 2 )^2 - a)\\
+			&= (\lambda - 1)(\lambda^2 - 4\lambda + 4 - a) = 0
 		\end{split}
 	\]
-	Since \(\vartriangle = 16 - 4(4-a) = 4a\),  \(a = -1\), \(\vartriangle = -4 < 0 \implies\) complex roots. Hence,
+	Clearly, there is a root \(1\) for \(\lambda - 1 = 0\), as for the quadratic \(\lambda^2 - 4\lambda + (4 - a) = 0\),
+	\(\vartriangle = 16 - 4(4-a) = 4a\).
+	We see that for \(a = -1\), \(\vartriangle = -4 < 0 \implies\) the quadratic has complex roots. Hence,
 	\[
 		A = \begin{pmatrix}
 			1 & 0  & 0 \\
 			0 & 2  & 2 \\
 			0 & -1 & 2 \\
 		\end{pmatrix}
-	\] has complex roots.
-\end{eg}
+	\]
+	has a complex \hyperref[def:eigenvalue]{eigenvalue}.
+\end{explanation}
 
-\begin{definition}[Laplician]\label{def:Laplician}
-	For an \hyperref[def:undirected-graph]{undirected graph}, the \emph{Laplician} is defined as \(L \coloneqq D - A\), where \(A\) is the \hyperref[def:adjacency-matrix]{adjacent matrix},
+\section{Network Decomposition}\label{sec:network-decomposition}
+Now comes to our main goal, i.e., to do the network decomposition. First, let's define a matrix which capture the \hyperref[def:graph]{graph}
+structure.
+\begin{definition}[Laplacian]\label{def:Laplacian}
+	For an \hyperref[def:undirected-graph]{undirected graph}, the \emph{Laplacian} is defined as \(L \coloneqq D - A\), where \(A\) is the \hyperref[def:adjacency-matrix]{adjacent matrix},
 	\(D\) is diagonal \hyperref[def:degree]{degree} matrix.
 \end{definition}
 
@@ -117,16 +162,15 @@
 	\[
 		L^{\top} = (D - A)^{\top} = D^{\top} - A^{\top} = D - A = L,
 	\]
-	we see that \(L\) is \hyperref[def:symmetric-matrix]{symmetric}, hence its eigenvalues are real by \autoref{thm:spectral-theorem}.
+	we see that \(L\) is \hyperref[def:symmetric-matrix]{symmetric}, hence its \hyperref[def:eigenvalue]{eigenvalues} are real by \autoref{thm:spectral-theorem}.
 	Many incidence matrices \(B_{\left\vert \mathcal{\MakeUppercase{v}} \right\vert \times \left\vert \mathcal{\MakeUppercase{e}} \right\vert }\) which encode the
 	relation between edges and nodes satisfies
 	\[
 		L = BB^{\top}.
 	\]
-	We'll show that \(L\) has non-negative eigenvalues \hyperref[rmk:Laplacian]{later}.
+	We'll show that \(L\) has non-negative \hyperref[def:eigenvalue]{eigenvalues} \hyperref[rmk:property-of-Laplacian]{later}.
 \end{remark}
-
-\section{Positive Definite and Positive Semi-Definite}
+\subsection{Positive Definite and Positive Semi-Definite}
 \begin{definition}[Positive definite]\label{def:positive-definite}
 	\(A \) is \emph{positive definite} (PD) if and only if
 	\[
@@ -142,11 +186,11 @@
 \end{definition}
 
 \begin{lemma}\label{lma:lec8-1}
-	If \(\lambda\) is a real eigenvalue, then \(\lambda \geq  0 \iff A\) is \hyperref[def:positive-semi-definite]{positive semi-definite};
+	If \(\lambda\) is a real \hyperref[def:eigenvalue]{eigenvalue}, then \(\lambda \geq  0 \iff A\) is \hyperref[def:positive-semi-definite]{positive semi-definite};
 	also, \(\lambda > 0 \iff A\) is \hyperref[def:positive-definite]{positive-definite}.
 \end{lemma}
 \begin{proof}
-	Suppose \(\lambda\) is a real eigenvalue, let \(\vec{u}\) be the eigenvector such that \(A \vec{u} = \lambda \vec{u}\), and
+	Suppose \(\lambda\) is a real \hyperref[def:eigenvalue]{eigenvalue}, let \(\vec{u}\) be the \hyperref[def:eigenvector]{eigenvector} such that \(A \vec{u} = \lambda \vec{u}\), and
 	\[
 		\vec{u}^{\top} A \vec{u} = \vec{u}^{\top} (\lambda \vec{u}) = \lambda \underbrace{\vec{u}^{\top}\vec{u}}_{>0} \geq 0,
 	\]
@@ -192,7 +236,7 @@
 	as desired.
 \end{proof}
 
-\begin{remark}[Laplacian]\label{rmk:Laplacian}
+\begin{remark}[Properties of Laplacian]\label{rmk:property-of-Laplacian}
 	Given a Laplacian \(L = B B^{\top}\), from \autoref{lma:lec8-2}, \(L\) is \hyperref[def:positive-semi-definite]{positive semi-definite},
 	which further implies
 	\[
@@ -212,12 +256,12 @@
 	\[
 		L \vec{1} = 0 \vec{1}.
 	\]
-	Hence, \(0\) is an eigenvalue with eigenvector \(\vec{1}\), so \(\lambda _1=0\).
+	Hence, \(0\) is an \hyperref[def:eigenvalue]{eigenvalue} with \hyperref[def:eigenvector]{eigenvector} \(\vec{1}\), so \(\lambda _1=0\).
 \end{remark}
 
-We now study the \hyperref[def:multiplicity]{multiplicity} of an eigenvalue of \(L\). We first introduce the following definition.
+We now study the \hyperref[def:multiplicity]{multiplicity} of an \hyperref[def:eigenvalue]{eigenvalue} of \(L\). We first introduce the following definition.
 \begin{definition}[Multiplicity]\label{def:multiplicity}
-	We say the eigenvalue \(\lambda ^{\ast} \) of \(A\) has \emph{multiplicity} \(k\) if
+	We say the \hyperref[def:eigenvalue]{eigenvalue} \(\lambda ^{\ast} \) of \(A\) has \emph{multiplicity} \(k\) if
 	\[
 		\det(\lambda I - A) = (\lambda - \lambda ^{\ast} )^k g(\lambda )
 	\]
@@ -239,7 +283,7 @@ If the network has two \hyperref[def:connected]{connected} components, we can th
 	\label{fig:two-component-graph}
 \end{figure}
 
-Then we see that we can also represent the \hyperref[def:Laplician]{Laplician} in block matrix form as
+Then we see that we can also represent the \hyperref[def:Laplacian]{Laplacian} in block matrix form as
 \[
 	L = \begin{bmatrix}
 		D_{1} - A_{1} & 0         \\
@@ -249,23 +293,24 @@ Then we see that we can also represent the \hyperref[def:Laplician]{Laplician} i
 		0     & L_2 \\
 	\end{bmatrix}.
 \]
-We then see that the characteristic equation of \(L\) is\footnote{Detailed derivation is omitted. It's essentially followed from the block structure.}
+We then see that the \hyperref[note:characteristic-equation]{characteristic equation} of \(L\) is\footnote{Detailed derivation is omitted. It's essentially followed from the block structure.}
 \[
 	\det(\lambda I - L) = \det(\lambda I_1 - L_2)\det(\lambda  I_2 - L_2)
 \]
-Then, as we just \hyperref[rmk:Laplacian]{remarked}, both \(L_1\) and \(L_2\) has an eigenvalue being \(0\), which implies that \(0\) is an eigenvalue of \(L\) with
-\hyperref[def:multiplicity]{multiplicity} \(2\).
+Then, as we just \hyperref[rmk:property-of-Laplacian]{remarked}, both \(L_1\) and \(L_2\) has an \hyperref[def:eigenvalue]{eigenvalue} being \(0\), which implies that \(0\) is
+an \hyperref[def:eigenvalue]{eigenvalue} of \(L\) with \hyperref[def:multiplicity]{multiplicity} \(2\).
 
-We see that \hyperref[def:multiplicity]{multiplicity} of eigenvalue of \hyperref[def:Laplician]{Laplician} can help us find communities.
+We see that \hyperref[def:multiplicity]{multiplicity} of \hyperref[def:eigenvalue]{eigenvalue} of \hyperref[def:Laplacian]{Laplacian} can help us find communities.
 This suggests the following definition.
 
 \begin{definition}[Fiedler eigenvalue]\label{def:Filder-eigenvalue}
-	The \emph{Fiedler eigenvalue} of a \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}}\) is the second-smallest eigenvalue
-	(neglect \hyperref[def:multiplicity]{multiplicity}) of the \hyperref[def:Laplician]{Laplacian} of \(\mathcal{\MakeUppercase{g}}\).
+	The \emph{Fiedler \hyperref[def:eigenvalue]{eigenvalue}} of a \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}}\) is the second-smallest eigenvalue
+	(neglect \hyperref[def:multiplicity]{multiplicity}) of the \hyperref[def:Laplacian]{Laplacian} of \(\mathcal{\MakeUppercase{g}}\).
 \end{definition}
 
-We see that by first doing the eigen-decomposition on \hyperref[def:Laplician]{Laplacian} and find all eigenvalues that are close to zero, which can be
-used to find communities, and nearly all community detection algorithms rely on this fact.
+We see that by first doing the \hyperref[thm:eigen-decomposition]{eigen-decomposition} on \hyperref[def:Laplacian]{Laplacian} and find all
+\hyperref[def:eigenvalue]{eigenvalues} that are close to zero, which can be used to find communities, and nearly all community detection
+algorithms rely on this fact.
 
 \begin{prev}
 	Turning back to \hyperref[algo:Girvan-Newman-algorithm]{Givran-Newman algorithm}, though it works at social network, but what about other tasks like
@@ -290,13 +335,13 @@ used to find communities, and nearly all community detection algorithms rely on 
 	There are many examples of methods to quantify network centrality, e.g.,
 	\begin{itemize}
 		\item Degree. Ranks nodes by edges.
-		\item Eigen-centrality. \hyperref[def:adjacency-matrix]{Adjacency matrix}, finds an eigenvector and use its entries.
+		\item Eigen-centrality. \hyperref[def:adjacency-matrix]{Adjacency matrix}, finds an \hyperref[def:eigenvector]{eigenvector} and use its entries.
 	\end{itemize}
 \end{eg}
 
 We now study this in depth.
 
-\chapter{HITS Algorithm}
+\chapter{HITS}
 HITS is a hyperlinks-induced topic search algorithm proposed by \href{https://en.wikipedia.org/wiki/Jon_Kleinberg}{John Kleinberg}, whose backbones are the
 idea of \textbf{hubs} and \textbf{authorities}.
 \begin{itemize}

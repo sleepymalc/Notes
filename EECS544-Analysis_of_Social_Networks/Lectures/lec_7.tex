@@ -1,10 +1,59 @@
 \chapter{Diagonalization}
 \lecture{7}{22 Sep. 12:30}{Spectral Theorem}
-We now want to study a very useful theorem called \hyperref[thm:spectral-theorem]{spectral theorem}. Before this, we need to study \emph{eigenvalue}.
-\section{Matrices with Real Eigenvalues}
-Need to rely on some structural properties.
+Our goal is to do network partition, and to do so, we now develop a power tool to decompose a matrix. Later, we'll see that by decomposing a
+special matrix called \hyperref[def:Laplacian]{Laplacian} which characterize a network, we'll get a corresponding decomposition on the network
+in an insightful way.
 
-\subsection{Symmetric matrices}
+\section{Eigenvalue and Eigenvector}
+We now want to study a very useful theorem called \hyperref[thm:spectral-theorem]{spectral theorem}. Before this, we need to study \hyperref[def:eigenvalue]{eigenvalue}.
+
+\begin{definition*}
+	For a matrix \(A\), if \(v\) is a nonzero vector such that we can write
+	\[
+		Av = \lambda v,
+	\]
+	then we call \(v\) the \hyperref[def:eigenvector]{eigenvector} while \(\lambda\) the \hyperref[def:eigenvalue]{eigenvalue}.
+	\begin{definition}[Eigenvalue]\label{def:eigenvalue}
+		The \emph{eigenvalue} is the scalar multiple \(\lambda \) as described above.
+	\end{definition}
+
+	\begin{definition}[Eigenvector]\label{def:eigenvector}
+		The \emph{eigenvector} is the nonzero vector \(v\) as described above.
+	\end{definition}
+\end{definition*}
+
+\begin{remark}
+	Indeed, \hyperref[def:eigenvector]{eigenvector} and \hyperref[def:eigenvalue]{eigenvalue} is defined in a more general sense, i.e., for linear transformation \(T\) such that
+	\[
+		T(u) = \lambda u.
+	\]
+	This is a generalization since a linear transformation can come from an infinite-dimensional vector space, which don't have a vector representation in this case.
+\end{remark}
+
+\begin{note}[Left eigenvector]
+	The notion of \hyperref[def:eigenvector]{eigenvector} is indeed also called a \emph{right \hyperref[def:eigenvector]{eigenvector}}. As for the
+	\emph{left \hyperref[def:eigenvector]{eigenvector}}, it's the similar definition but with transpose. Rigorously, for a matrix \(A\), the
+	\emph{left \hyperref[def:eigenvector]{eigenvector}} is the nonzero vector \(v\) which satisfies
+	\[
+		v^{\top} A = \lambda v^{\top}.
+	\]
+	But for simplicity, we do not make this into a definition.
+\end{note}
+
+
+\begin{note}[Characteristic equation]\label{note:characteristic-equation}
+	To find \hyperref[def:eigenvalue]{eigenvalues} of a matrix \(A\), this is equivalent to solve \(Av = \lambda v\) where \(v\) is undetermined. We can indeed use
+	the so-called \emph{characteristic equation}
+	\[
+		\det(\lambda I - A) = 0
+	\]
+	to help us solve for \(\lambda \).
+\end{note}
+
+\section{Spectral Theorem}
+With some assumption on structural properties of a matrix, we can say something about its eigenvalue. Hence, we start with the so-called
+\hyperref[def:symmetric-matrix]{symmetric matrices}.
+
 \begin{definition}[Symmetric matrix]\label{def:symmetric-matrix}
 	A \emph{symmetric matrix} is a square matrix such that
 	\[
@@ -12,18 +61,20 @@ Need to rely on some structural properties.
 	\]
 \end{definition}
 
+With this assumption, we have the following strong theorem which we'll heavily rely on.
+
 \begin{theorem}[Spectral Theorem]\label{thm:spectral-theorem}
-	If \(A\) is a \hyperref[def:symmetric-matrix]{symmetric matrix}, then all eigenvalues are real. Furthermore, the left and right
-	eigenvectors are the same, and they construct an orthonormal basis.
+	If \(A\) is a \hyperref[def:symmetric-matrix]{symmetric matrix}, then all \hyperref[def:eigenvalue]{eigenvalues} are real. Furthermore, the left and right
+	\hyperref[def:eigenvector]{eigenvectors} are the same, and they construct an orthonormal basis.
 \end{theorem}
 \begin{proof}
-	We verify the second part of the theorem.  If we have \(A\) is \hyperref[def:symmetric-matrix]{symmetric}, then suppose \(\vec{x} \) is a right eigenvector,
-	we have
+	We verify the second part of the theorem.  If we have \(A\) is \hyperref[def:symmetric-matrix]{symmetric}, then suppose \(\vec{x} \) is a
+	right \hyperref[def:eigenvector]{eigenvectors}, we have
 	\[
 		A \vec{x} = \lambda \vec{x}\Rightarrow
 		(A \vec{x})^{\top} = \lambda \vec{x}^{\top}\Rightarrow
 		\vec{x}^{\top} A^{\top} = \lambda\vec{x}^{\top}\Rightarrow
 		\vec{x}^{\top} A = \lambda\vec{x}^{\top},
 	\]
-	where we see that \(\vec{x}\) is just left eigenvector, hence the left and right eigenvectors are the same.
+	where we see that \(\vec{x}\) is just left \hyperref[def:eigenvector]{eigenvector}, hence the left and right \hyperref[def:eigenvector]{eigenvectors} are the same.
 \end{proof}

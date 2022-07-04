@@ -1,76 +1,90 @@
-\lecture{13}{20 Oct. 12:30}{Markov Chain}
-\begin{eg}
-	Some example for stochastic process.
-	\begin{enumerate}
-		\item Let \(X_i\sim \mathrm{Beronulli}(p)\), where \(X_{i}\in\{0, 1\}\) and
-		      \[
-			      \probability{}{X_{i} = 1} = p.
-		      \]
-		      \begin{intuition}
-			      Biased coin toss.
-		      \end{intuition}
-		\item Let \(X_i\sim \mathrm{Uniform}(\{1, 2, 3, 4, 5, 6\})\), where \(X_{i}\in\{1, 2, 3, 4, 5, 6\}\) and
-		      \[
-			      \probability{}{X_{i} = j} = \frac{1}{6}.
-		      \]
-		      \begin{intuition}
-			      Random tosses of dice.
-		      \end{intuition}
-		\item Let \(X_i\sim \mathrm{Uniform}(\left[ 0, 1 \right] )\), where \(X_{i}\in\left[ 0, 1 \right] \).
-		\item Let \(X_i\sim \mathrm{exp}(\lambda)\), then
-		      \[
-			      \probability{}{X_{i}>u} = e^{-\lambda u}\qquad \forall u\geq 0.
-		      \]
-		\item Let \(X_i\sim \mathcal{N}(\mu, \sigma^2)\). This is so-called normal distribution with \emph{Gaussian mean} \(\mu\) and variance \(\sigma^2\).
-	\end{enumerate}
+\lecture{13}{20 Oct. 12:30}{Stochastic Process and Markov Chain}
+Let's first see some examples of \hyperref[def:i.i.d.]{i.i.d.} \hyperref[def:stochastic-process]{stochastic process}, where \(i\) is the time index unspecified.
+\begin{eg}[Biased coin toss]
+	For all \(i\), let \(X_{i}\in\{0, 1\}\) and
+	\[
+		\probability{}{X_{i} = 1} = p.
+	\]
+	We denote this as \(X_i\sim \mathrm{Beronulli}(p)\).
 \end{eg}
 
-\subsection{i.i.d. Sequence}
+\begin{eg}[Dice toss]
+	For all \(i\), let \(X_{i}\in\{1, 2, 3, 4, 5, 6\}\) and
+	\[
+		\probability{}{X_{i} = j} = \frac{1}{6}.
+	\]
+	We denote this as \(X_i\sim \mathrm{Uniform}(\{1, 2, 3, 4, 5, 6\})\).
+\end{eg}
+
+\begin{eg}[Uniform distribution]
+	For all \(i\), let \(X_i\sim \mathrm{Uniform}(\left[ 0, 1 \right] )\), where \(X_{i}\in\left[ 0, 1 \right] \).
+\end{eg}
+
+\begin{eg}[Exponential distirbution]
+	For all \(i\), let \(X_i\sim \mathrm{exp}(\lambda)\), then
+	\[
+		\probability{}{X_{i}>u} = e^{-\lambda u}\qquad \forall u\geq 0.
+	\]
+\end{eg}
+
+\begin{eg}[Normal distribution]
+	For all \(i\), let \(X_i\sim \mathcal{N}(\mu, \sigma^2)\).
+\end{eg}
+
 \begin{remark}
-	Notice that our discussion will focus on \(\expectation{X_i} < +\infty \).
+	Notice that our discussion will focus on \(\expectation{}{X_i} < +\infty \).
 \end{remark}
 
-\begin{note}
-	The core property of i.i.d. sequence is \textbf{strong law of large numbers}(SLLN). Namely,
+The main reason we study \hyperref[def:i.i.d.]{i.i.d.} \hyperref[def:stochastic-process]{stochastic process} is because of the following theorem.
+\begin{theorem}[Strong law of large numbers]\label{thm:SLLN}
+	For an \hyperref[def:i.i.d.]{i.i.d.} sequence \(\{X_i\}\) , it follows that
 	\[
-		\lim_{n \to \infty} \frac{1}{n}\sum\limits_{i=1}^{n} x_{i}\to \expectation{X}.
+		\lim_{n \to \infty} \frac{1}{n}\sum\limits_{i=1}^{n} X_{i} = \expectation{}{X}.
 	\]
-\end{note}
+	This is so-called the \emph{strong law of large numbers} (SLLN).
+\end{theorem}
 
-In general, we let \(Y_{i} = \mathbbm{1}_{\{X_{i}\in B\}}\)(indicator function), where
-\[
-	\mathbbm{1}_{\{X_{i}\in B\}}(\omega) = \begin{dcases}
-		0, & \text{ if }X_{i}(\omega)\in B \\
-		1, & \text{ otherwise},
-	\end{dcases}
-\]
-hence \(y_{i}\sim \mathrm{Bernoulli}(p = \probability{}{X_{i}\in B})\).
-
-\begin{note}
-	Markov chains will not be i.i.d. sequence of random variables since there will be dependence. But still, the SLLN will hold under conditions.
-\end{note}
+\begin{eg}[Coin toss]
+	If an unfair coin will face up with probability \(p\), then \hyperref[thm:SLLN]{strong law of large numbers} tells us that
+	\[
+		\frac{\# \mathrm{H} }{\# \mathrm{H} + \# \mathrm{T} } \cong p
+	\]
+	with many enough tosses. Mathematically, we let \(Y_{i} = \mathbbm{1}_{\{X_{i}\in B\}}\), where
+	\[
+		\mathbbm{1}_{\{X_{i}\in B\}}(\omega) = \begin{dcases}
+			0, & \text{ if }X_{i}(\omega)\in B; \\
+			1, & \text{ otherwise},
+		\end{dcases}
+	\]
+	hence \(y_{i}\sim \mathrm{Bernoulli}(p = \probability{}{X_{i}\in B})\). Then we can use the \hyperref[def:i.i.d.]{i.i.d.} sequence \(Y_i\) to
+	describe a series of coin tosses.
+\end{eg}
 
 \subsection{Conditional Property}
 \begin{prev}
-	We first note that if \(\probability{}{A\cap B} = \probability{}{A} \probability{}{B} \), then \(A\) and \(B\) are independent.
+	We first note that if \(\probability{}{A\cap B} = \probability{}{A} \probability{}{B} \), then \(A\) and \(B\) are \hyperref[def:independent]{independent}.
 \end{prev}
 
-\begin{definition}[Conditional probability]
-	Let \(\probability(B)>0\), then we can define so-called \emph{conditional probability} between event \(A\) and \(B\) as
+Now, if \(A\) and \(B\) are dependent, then given \(B\) is happened, we should be able to say something about the probability under the current condition.
+This suggests the following definition.
+
+\begin{definition}[Conditional probability]\label{def:conditional-probability}
+	Let \(\probability{}{B}>0\), then the \emph{conditional probability} of event \(A\) under condition \(B\) is defined as
 	\[
-		\frac{\probability{}{A\cap B}}{\probability{}{B}} \eqqcolon \probability{}{A \mid B}.
+		\probability{}{A \mid B}\coloneqq \frac{\probability{}{A\cap B}}{\probability{}{B}}.
 	\]
 \end{definition}
 
-\begin{definition}[Conditional expectation]
-	Similarly, we can have so-called \emph{conditional expectation} defined as
+Similarly, we have the \hyperref[def:conditional-expectation]{conditional expectation}
+\begin{definition}[Conditional expectation]\label{def:conditional-expectation}
+	The \emph{conditional expectation} is defined as
 	\[
 		\expectation{}{X \mid X\in A} = \expectation{}{X \mid A}.
 	\]
 \end{definition}
 
 \begin{eg}
-	We look at an example for discrete random variable \(X\). Let \(X\in \Omega\), then
+	We look at an example for discrete \hyperref[def:random-variable]{random variable} \(X\). Let \(X\in \Omega\), then
 	\[
 		\begin{split}
 			\expectation{}{X \mid X\in A} &= \sum\limits_{\omega\in \Omega} \omega\probability{}{X = \omega \mid X\in A}\\
@@ -81,22 +95,21 @@ hence \(y_{i}\sim \mathrm{Bernoulli}(p = \probability{}{X_{i}\in B})\).
 	\]
 \end{eg}
 
-We also have so-called conditional independence.
-\begin{definition}[Conditionally independent]
-	Let \(A, B, C\) be events. Then
-	\[
-		\probability{}{X\in A, X\in B, X\in C} = \probability{}{X\in A\cap B\cap C}.
-	\]
-	Then if \(A, B,  C\) are independent, then we further have
-	\[
-		\probability{}{X\in A\cap B\cap C}= \probability{}{X\in A}\probability{}{X\in B}\probability{}{X\in C}
-	\]
-	as we have seen. If they are dependent, given \(\probability{}{X\in C}>0\), then
-	\[
-		\probability{}{X\in A, X\in B, X\in C} = \probability{}{X\in A, X\in B \mid X\in C}\probability{}{X\in C}.
-	\]
-
-	Now, if
+Now, consider three events \(A, B, C\), then we have
+\[
+	\probability{}{X\in A, X\in B, X\in C} \coloneqq \probability{}{X\in A\cap B\cap C}.
+\]
+Then if \(A, B,  C\) are \hyperref[def:independent]{independent}, then we further have
+\[
+	\probability{}{X\in A\cap B\cap C}= \probability{}{X\in A}\probability{}{X\in B}\probability{}{X\in C}
+\]
+as we have seen. If they are dependent, given \(\probability{}{X\in C}>0\), then
+\[
+	\probability{}{X\in A, X\in B, X\in C} = \probability{}{X\in A, X\in B \mid X\in C}\probability{}{X\in C}.
+\]
+This suggests the notion of \hyperref[def:conditionally-independent]{conditional independence} as follows to help us further factorize the above equation.
+\begin{definition}[Conditionally independent]\label{def:conditionally-independent}
+	For events \(A, B, C\), if
 	\[
 		\probability{}{X\in A, X\in B \mid X\in C} = \probability{}{X\in A \mid X\in C}\probability{}{X\in B \mid X\in C},
 	\]
@@ -104,40 +117,39 @@ We also have so-called conditional independence.
 \end{definition}
 
 \section{Markov Chain}
-Markov Chains are dependent processes but with a specific form of conditional independence.
+We now formally define \hyperref[def:Markov-chain]{Markov chain}.
+\begin{definition}[Markov chain]\label{def:Markov-chain}
+	A \emph{Markov chain} is a dependent \hyperref[def:stochastic-process]{stochastic process} with a specific form of \hyperref[def:conditionally-independent]{conditional independence}
+	defined as follows. Consider a \hyperref[def:random-variable]{random variables} sequence
+	\[
+		X_1, X_2, X_3, \ldots
+	\]
+	with discrete time index \(1, 2, 3, \ldots \).\footnote{Noting that they lie on a \underline{discrete space}, like real number, labels, etc.}
+	At time \(n>1\), we have \(X_n = a_n\) where \(a_n\) takes values in a discrete set. Then
+	\[
+		\begin{split}
+			&\probability{}{X_1 = a_1, X_2 = a_2,  \ldots X_{n-1} = a_{n-1}, X_{n+1} = a_{n+1},\ldots , X_{n+m} = a_{n+m}  \mid X_n = a_n }\\
+			=&\probability{}{X_1 = a_1, X_2 = a_2,  \ldots X_{n-1} = a_{n-1}\mid X_n = a_n }\\
+			&\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad\cdot \probability{}{X_{n+1} = a_{n+1},\ldots , X_{n+m} = a_{n+m}  \mid X_n = a_n}.
+		\end{split}
+	\]
+\end{definition}
 
-Consider random variables sequence
-\[
-	X_1, X_2, X_3, \ldots
-\]
-with discrete time index \(1, 2, 3, \ldots \). Noting that they lie on a \underline{discrete space}, like number, labels, etc.
-
-\begin{note}[Conditional Independence properties]
-	Knowing the present, the past and the future are \emph{conditionally independent}.
-\end{note}
-
-Say we are at time \(n>1\), then
-\[
-	X_n = a_n
-\]
-where \(a_n\) is taking values in a discrete set. Then
-\[
-	\begin{split}
-		&\probability{}{X_1 = a_1, X_2 = a_2,  \ldots X_{n-1} = a_{n-1}, X_{n+1} = a_{n+1},\ldots , X_{n+m} = a_{n+m}  \mid X_n = a_n }\\
-		=&\probability{}{X_1 = a_1, X_2 = a_2,  \ldots X_{n-1} = a_{n-1}\mid X_n = a_n }\\
-		&\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad\cdot \probability{}{X_{n+1} = a_{n+1},\ldots , X_{n+m} = a_{n+m}  \mid X_n = a_n}.
-	\end{split}
-\]
-
-\begin{intuition}
-	Knowing where we are, the progress in the future is conditionally independent of how we got to the present.
+\begin{intuition}[Conditional independence property of Markov chains]
+	Knowing where we are, the progress in the future is \hyperref[def:conditionally-independent]{conditionally independent} of how we got to the present, i.e.,
+	knowing the present, the past and the future are \hyperref[def:conditionally-independent]{conditionally independent}.
 \end{intuition}
 
-\section{Time Homogeneous Markov Chain}
+\begin{note}
+	\hyperref[def:Markov-chain]{Markov chains} will not be \hyperref[def:i.i.d.]{i.i.d.} sequences of \hyperref[def:random-variable]{random variables}
+	since there will be dependence. But still, the \hyperref[thm:SLLN]{strong law of large number} will hold under conditions.
+\end{note}
+
+\subsection{Time Homogeneous Markov Chain}
 We need to know two things:
 \begin{itemize}
-	\item Initial distribution. \(X_0 \sim \mu\)(or \(X_1\sim \mu\))
-	\item One-step transition matrix.
+	\item initial distribution \(X_0 \sim \mu\) (or \(X_1\sim \mu\))
+	\item one-step transition matrix
 	      \[
 		      P_{ij} \coloneqq \probability{}{X_{n+1} = j \mid X_n = i}\qquad \forall i, j.
 	      \]
@@ -178,7 +190,7 @@ We need to know two things:
 	      \[
 		      \pi^{\top} P = \pi^{\top}.
 	      \]
-	      We see that the left eigenvector is a distribution. We have \(P\) is irreducible and \(\Omega\) is finite, then
+	      We see that the left \hyperref[def:eigenvector]{eigenvector} is a distribution. We have \(P\) is irreducible and \(\Omega\) is finite, then
 	      \[
 		      \lim_{n\to \infty } \frac{1}{n}\underline{\sum\limits_{m=1}^{n}  \mathbbm{1}_{\left\{ X_m = i \right\} }} = \pi_i
 	      \]
@@ -189,50 +201,3 @@ Refinement with aperiodic \(P\),
 \[
 	\lim_{n\to \infty }\probability{}{X_n = i} = \pi_i
 \]
-
-\section{Connection with Basic Page Rank}
-\begin{prev}
-	The \(r(n)\) is updated by the equation
-	\[
-		r(n+1) = N^{\top}r(n) \iff r^{\top}(n+1) = r^{\top}(n)N.
-	\]
-	Further, recall that \(N\) is a row stochastic matrix, so compare to Markov Chain,
-	\[
-		\probability{}{X_n = \cdot}^{\top} = \mu^{\top}P^n = \mu^{\top}P^{n-1}P = \probability{}{X_{n-1} = \cdot}^{\top}P
-	\]
-	where \(\mu\sim \probability{}{X_0 = \cdot}\).
-
-	We see that the above two equations are the same! With
-	\[
-		r(0)\coloneqq \begin{pmatrix}
-			1/V    \\
-			\vdots \\
-			1/V    \\
-		\end{pmatrix}.
-	\]
-\end{prev}
-
-Recall that \(N_{ij}\) is defined as
-\[
-	N_{ij} = \begin{dcases}
-		\frac{1}{d_i^{out}}, & \text{ if }A_{ij}\geq 1 \\
-		0,                   & \text{ otherwise}.
-	\end{dcases}
-\]
-We pick every outgoing neighbors uniformly at random, but no one else.
-
-\section{Random Walker}
-\begin{intuition}
-	At location \(i\), regardless of how the random walker came to \(i\), pick the next destination uniformly at random from outgoing neighbors.
-\end{intuition}
-
-\begin{figure}[H]
-	\centering
-	\incfig{random-walker}
-	\caption{Random Walker}
-	\label{fig:random-walker}
-\end{figure}
-
-\begin{note}
-	If \(d_i^{out} = 0\), then the random walker get stuck.
-\end{note}

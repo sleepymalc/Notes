@@ -1,255 +1,324 @@
-\chapter{Game Theory}
+\chapter{Game Theory}\label{ch:game-theory}
 \lecture{18}{8 Nov. 12:30}{Game Theory}
-The goal is to analyze situations with rational agents who want to maximize their won rewards under a game with a particular structure.
+We now turn to a new topic, game theory. The goal is to analyze situations with \hyperref[rationality]{rational} \hyperref[def:player]{agents}
+who want to maximize their won \hyperref[def:reward]{rewards} under a particular structured \hyperref[def:game]{game}.
 
-\section{Game Structure}
-We restrict a game with the following structure.
-\begin{enumerate}
-	\item Players/Agents: \textbf{finite} or infinite
-	\item Strategies/Actions: Each player has a set of strategies/actions to choose from - \textbf{finite} or infinite, homogeneous or inhomogeneous
-	\item Payoff/Utility/Rewards: Return for each agent based on the action or strategy of all agents(including self).
-\end{enumerate}
+\section{Game}
+We restrict a \hyperref[def:game]{game} with the following structure.
+\begin{definition}[Game]\label{def:game}
+	A \emph{game} has \hyperref[def:player]{players}, and each \hyperref[def:player]{player} has a set of \hyperref[def:strategy]{strategies} and
+	a \hyperref[def:reward]{reward} function.
 
-Besides the game structure, we also have some assumption for the player in the game.
-\begin{itemize}
-	\item Common knowledge: All agents know all players' strategy set and payoffs. Basically means each player knows everything about the structure of the game.
-	\item Rationality: All agents are fully rational and self utility maximizer. As a result of common knowledge, everyone knows that all
-	      agents are rational.
-\end{itemize}
+	\begin{definition}[Player]\label{def:player}
+		\emph{Players}, also called \emph{agents}, are the participants of the \hyperref[def:game]{game}.
+	\end{definition}
 
-\begin{note}
-	By above two assumptions, players succeed in selecting optimal strategies, and our goal is to understand these optimal strategies.
+	\begin{definition}[Strategy]\label{def:strategy}
+		\emph{Strategies}, also called \emph{actions}, are a set of choices a \hyperref[def:player]{player} can perform in a \hyperref[def:game]{game}.
+	\end{definition}
+
+	\begin{definition}[Reward]\label{def:reward}
+		\emph{Rewards}, also called \emph{utilities} or \emph{payoffs}, is the return for each \hyperref[def:player]{player} based on the played
+		\hyperref[def:strategy]{strategies} of all \hyperref[def:player]{players} (including self).
+	\end{definition}
+\end{definition}
+\begin{note}[Assumptions of a game]
+	We make some assumptions of a \hyperref[def:game]{game}.
+	\begin{itemize}
+		\item There are (\textbf{finite}, infinite) number of \hyperref[def:player]{players}.
+		\item Each player has a (\textbf{finite}, infinite) set of \hyperref[def:strategy]{strategies} to choose from, homogeneous or inhomogeneous
+	\end{itemize}
 \end{note}
 
+Besides the assumptions of \hyperref[def:game]{game} structure, we also have some assumptions for the \hyperref[def:player]{player}.
+\begin{note}[Assumptions of players]
+	We make some assumptions of \hyperref[def:player]{players}.
+	\begin{itemize}
+		\item\label{common-knowledge} Common knowledge: All \hyperref[def:player]{agents} know all other players' \hyperref[def:strategy]{strategy}
+		set and \hyperref[def:reward]{payoffs}. Basically means each \hyperref[def:player]{player} knows everything about the structure of the \hyperref[def:game]{game}.
+		\item\label{rationality} Rationality: All \hyperref[def:player]{agents} are fully \emph{rational} and self utility maximizer.
+	\end{itemize}
+\end{note}
+\begin{remark}
+	As a result of \hyperref[common-knowledge]{common knowledge}, everyone knows that all \hyperref[def:player]{agents} are \hyperref[rationality]{rational}.
+\end{remark}
+
+By above two assumptions, \hyperref[def:player]{players} succeed in selecting optimal \hyperref[def:strategy]{strategies}, and our goal is to understand
+these optimal \hyperref[def:strategy]{strategies}.
+
 \section{Normal Form, One-Shot Games}
-For simplicity, we assume that the number of players and the size of the actions set per player and also the payoffs are all finite.
+For simplicity, we also assume the \hyperref[def:reward]{payoffs} are finite, but this is nearly all the case, so we just assumed it.
 
-\begin{definition}
-	We call a game a \emph{One-Shot Game} if players will simultaneously and independently choose their actions, and they do
-	so only once in this game.
+\begin{definition}[One-shot game]\label{def:one-shot-game}
+	A \hyperref[def:game]{game} is a \emph{one-shot Game} if \hyperref[def:player]{players} will simultaneously and \hyperref[def:independent]{independently}
+	choose their \hyperref[def:strategy]{actions}, and they do so only once in this game.
 \end{definition}
 
-We note that contrarily, there are games called \emph{dynamic game}.
-\begin{definition}[Dynamic game]
-	We call a game a \emph{dynamic game} if actions can be played sequentially over time for players in the game.
+We note that contrarily, there are games called \hyperref[def:dynamic-game]{dynamic game}.
+\begin{definition}[Dynamic game]\label{def:dynamic-game}
+	A \hyperref[def:game]{game} is a \emph{dynamic game} if \hyperref[def:strategy]{actions} can be played sequentially over time for \hyperref[def:player]{players}
+	in the \hyperref[def:game]{game}.
 \end{definition}
 
-\begin{eg}
-	We first see some examples for one-shot games describing in \emph{normal form}\footnote{\url{https://en.wikipedia.org/wiki/Normal-form_game}}.
-	\begin{enumerate}
-		\item \textbf{Prisoner's Dilemma}. Assume that two people are taken for investigation of a crime. They're interrogated simultaneously and in different rooms so
-		      they can't communicate. Each of them is offered the choice to confess or not.
+Now, we see some examples which are all \hyperref[def:one-shot-game]{one-shot game} and is in \href{https://en.wikipedia.org/wiki/Normal-form_game}{normal form}, i.e.,
+can be described in a matrix.
+
+\begin{definition}[Payoff matrix]\label{def:payoff-matrix}
+	If we tabulate all combinations of \hyperref[def:player]{players}' \hyperref[def:strategy]{strategies} and the corresponding \hyperref[def:reward]{payoffs} in a
+	form of matrix, then we call the matrix the \emph{payoff matrix}. We'll soon see lots of examples.
+\end{definition}
+
+\begin{remark}
+	A \hyperref[def:game]{game} is in \href{https://en.wikipedia.org/wiki/Normal-form_game}{normal form} simply means if we can write out its corresponding
+	\hyperref[def:payoff-matrix]{payoff matrix}. But we'll see that describing a \hyperref[def:game]{game} in such a way will lose some information.
+\end{remark}
+
+Before we see the examples, we make the following notions about characterizing \hyperref[def:strategy]{strategy}.
+\begin{definition}[Dominant strategy]\label{def:dominant-strategy}
+	The \emph{(strictly) dominant strategy} is the optimal response to every others' \hyperref[def:strategy]{strategy} of the other \hyperref[def:player]{players}
+	in the sense that the \hyperref[def:reward]{payoffs} of this \hyperref[def:strategy]{strategy} is strictly better in any cases.
+\end{definition}
+\begin{definition}[Weakly dominant strategy]\label{def:weakly-dominant-strategy}
+	The \emph{weakly dominant strategy} is the optimal response to every others' \hyperref[def:strategy]{strategy} of the other \hyperref[def:player]{players}
+	in the sense that the \hyperref[def:reward]{payoffs} of this \hyperref[def:strategy]{strategy} is better in any cases.
+\end{definition}
+
+\begin{remark}
+	Comparison between \hyperref[def:dominant-strategy]{strictly} and \hyperref[def:weakly-dominant-strategy]{weakly dominant strategy}:
+	\begin{itemize}
+		\item \hyperref[def:dominant-strategy]{Strictly dominant strategy}: The \hyperref[def:reward]{payoff} is strictly higher in all cases.
+		\item \hyperref[def:weakly-dominant-strategy]{Weakly dominant strategy}: This \hyperref[def:strategy]{strategy} is always in the best \hyperref[def:strategy]{action} set.
+		      but in some cases, some other \hyperref[def:strategy]{strategies} will give you the same \hyperref[def:reward]{payoff}.
+	\end{itemize}
+\end{remark}
+
+\begin{eg}[Prisoner's dilemma]\label{eg:prisoner-dilemma}
+	Assume that two people are taken for investigation of a crime. They're interrogated simultaneously and in different rooms, so
+	they can't communicate. Each of them is offered the choice to confess or not.
+	\begin{itemize}
+		\item Two \hyperref[def:player]{players}.
+		\item \hyperref[def:strategy]{Actions} set: \(\left\{\text{confess} (\mathrm{C}), \text{not confess} (\mathrm{NC})\right\}\).
+		\item \hyperref[def:reward]{Payoffs}: There are four possibilities:
 		      \begin{itemize}
-			      \item Two players.
-			      \item Action Set: \(\left\{\text{confess}(\mathrm{C}), \text{not confess}(\mathrm{NC})\right\}\).
-			      \item Payoffs: There are four possibilities:
-			            \begin{itemize}
-				            \item If you confess and partner doesn't, then you are released and partner gets \(10\) years in jail.
-				            \item If you don't confess and partner confess, then you'll get \(10\) years and partner released.
-				            \item If both confess, both get \(4\) years.
-				            \item If both do not confess, both get charges on minor crime, which will let them get \(1\) year.
-			            \end{itemize}
-			            We can then define so-called \emph{payoff matrix},
-			            \begin{table}[H]
-				            \centering
-				            \setlength{\extrarowheight}{2pt}
-				            \begin{tabular}{cc|c|c|}
-					                                      & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                                       \\
-					                                      & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{NC}$} & \multicolumn{1}{c}{$\mathrm{C}$} \\\cline{3-4}
-					            \multirow{2}*{Player $1$} & $\mathrm{NC}$        & $(-1, -1)$                        & $(-10, 0)$                       \\\cline{3-4}
-					                                      & $\mathrm{C}$         & $(0, -10)$                        & $(-4, -4)$                       \\\cline{3-4}
-				            \end{tabular}
-			            \end{table}
+			      \item If you confess and partner doesn't, then you are released and partner gets \(10\) years in jail.
+			      \item If you don't confess and partner confess, then you'll get \(10\) years and partner released.
+			      \item If both confess, both get \(4\) years.
+			      \item If both do not confess, both get charges on minor crime, which will let them get \(1\) year.
 		      \end{itemize}
-		      \begin{problem}
-		      How will you react?
-		      \end{problem}
-		      \begin{answer}
-			      We first see what action should suspect \(1\) plays based on rational analysis.
-
-			      \textbf{Suspect 1's reasoning}
-			      \begin{itemize}
-				      \item If suspect \(2\) confess \(\to \) since \(-4>-10 \implies\) best action is to confess.
-				      \item If suspect \(2\) don't confess \(\to \) since \(0>-1 \implies\) best action is to confess.
-			      \end{itemize}
-			      Since this problem is symmetric, namely the strategy for both suspects are the same, so both of them will confess, leading to an equilibrium.
-		      \end{answer}
-		      \begin{remark}
-			      We see that
-			      \begin{itemize}
-				      \item No hidden payoffs other than what we have in payoff matrix.
-				      \item Both not confessing is better as a pair(if we sum the payoffs). We see that utilize sum is not maximized, which means this action is not \emph{efficient}.
-				      \item Confessing is the best option of the other suspect's choice. In this case, confessing is a \emph{dominant strategy}. Where \emph{dominant strategy} is
-				            the best response to every other strategy of the other player.
-			      \end{itemize}
-		      \end{remark}
-		\item \textbf{Golden ball} example. Two players have two options, one is split, and another is steal. And there are \(x\) amounts of money in total. If both players choose split, then they
-		      can both get half of the money; if one chooses split and another chooses steal, the player chooses steal can get all the money while another player get nothing. If both choose steal, then they both get
-		      nothing.
-		      \begin{itemize}
-			      \item Two players.
-			      \item Action Set: \(\left\{\text{split}, \text{ steal}\right\}\).
-			      \item Payoff: Assume the total rewards is \(x\).
-			            \begin{enumerate}
-				            \item (split, split): \(\frac{x}{2}\) for both.
-				            \item (split, steal): player who plays steal gets \(x\), steal gets \(0\)
-				            \item (steal, steal): \(0\) for both.
-			            \end{enumerate}
-			            The payoff matrix for Golden Ball is
-			            \begin{table}[H]
-				            \centering
-				            \setlength{\extrarowheight}{2pt}
-				            \begin{tabular}{cc|c|c|}
-					                                      & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                                              \\
-					                                      & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{split}$} & \multicolumn{1}{c}{$\mathrm{steal}$} \\\cline{3-4}
-					            \multirow{2}*{Player $1$} & $\mathrm{split}$     & $(x/2, x/2)$                         & $(0, x)$                             \\\cline{3-4}
-					                                      & $\mathrm{steal}$     & $(x, 0)$                             & $(0, 0)$                             \\\cline{3-4}
-				            \end{tabular}
-			            \end{table}
-		      \end{itemize}
-
-		      \textbf{Player 1's reasoning}
-		      \begin{itemize}
-			      \item If player \(2\) chooses to split \(\to \) since \(x>\frac{x}{2}\), the best action is to steal.
-			      \item If player \(2\) chooses to steal \(\to \) since \(0=0\), the best action is \emph{undetermined}.
-		      \end{itemize}
-
-		      We see that stealing is a \emph{weakly dominant strategy}.
-
-		      \begin{remark}
-			      Comparison between strictly and weakly dominant strategy:
-			      \begin{itemize}
-				      \item Strictly dominant strategy: payoff is strictly higher in all cases.
-				      \item Weakly dominant strategy: Strategy is always in the best action set. In some cases, some other strategies will give you the same payoff.
-			      \end{itemize}
-		      \end{remark}
-		\item Consider again the prisoner's dilemma, but with different payoff matrix.
+		      We can then define so-called \hyperref[def:payoff-matrix]{payoff matrix},
 		      \begin{table}[H]
 			      \centering
 			      \setlength{\extrarowheight}{2pt}
 			      \begin{tabular}{cc|c|c|}
-				                                & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                                       \\
-				                                & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{NC}$} & \multicolumn{1}{c}{$\mathrm{C}$} \\\cline{3-4}
-				      \multirow{2}*{Player $1$} & $\mathrm{NC}$        & $(-1, -1)$                        & $(-3, -2)$                       \\\cline{3-4}
-				                                & $\mathrm{C}$         & $(-2, -3)$                        & $(-4, -4)$                       \\\cline{3-4}
+				                                                     & \multicolumn{1}{c}{} & \multicolumn{2}{c}{\hyperref[def:player]{Player} 2}                                    \\
+				                                                     & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{NC}$}                   & \multicolumn{1}{c}{$\mathrm{C}$} \\\cline{3-4}
+				      \multirow{2}*{\hyperref[def:player]{Player} 1} & $\mathrm{NC}$        & $(-1, -1)$                                          & $(-10, 0)$                       \\\cline{3-4}
+				                                                     & $\mathrm{C}$         & $(0, -10)$                                          & $(-4, -4)$                       \\\cline{3-4}
 			      \end{tabular}
 		      \end{table}
-		      With the same analysis, we see that the equilibrium is not confessing, namely \((\mathrm{NC}, \mathrm{NC})\) is a dominant strategy equibrilium, furthermore, it's a
-		      strictly dominant strategy.
-		\item \textbf{Two firms} game. There are two firms competing with each other. They both have options to produce lower-priced products or upscale product. And we simply assume that
-		      their goal is to maximize the market share. We further assume that in the whole market, there are \(60\%\) of population will only buy low-priced products, and other \(40\%\)
-		      of population will only buy upscale products.
-		      \begin{itemize}
-			      \item Two firms.
-			      \item Action Set: \(\left\{\text{low-priced}, \text{upscales}\right\}\)
-			      \item Payoff:
-			            \begin{table}[H]
-				            \centering
-				            \setlength{\extrarowheight}{2pt}
-				            \begin{tabular}{cc|c|c|}
-					                                    & \multicolumn{1}{c}{} & \multicolumn{2}{c}{firm $2$}                                          \\
-					                                    & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{Lp}$} & \multicolumn{1}{c}{$\mathrm{Uc}$} \\\cline{3-4}
-					            \multirow{2}*{firm $1$} & $\mathrm{Lp}$        & $(0.48, 0.12)$                    & $(0.6, 0.4)$                      \\\cline{3-4}
-					                                    & $\mathrm{Uc}$        & $(0.4, 0.6)$                      & $(0.32, 0.08)$                    \\\cline{3-4}
-				            \end{tabular}
-			            \end{table}
-		      \end{itemize}
-		      \textbf{Firm 1's reasoning}
-		      \begin{itemize}
-			      \item \(\mathrm{Lp}\) is strictly dominant strategy
-		      \end{itemize}
+	\end{itemize}
+	\begin{problem}
+	How will you react?
+	\end{problem}
+	\begin{answer}
+		We first see what \hyperref[def:strategy]{action} should suspect 1 plays based on \hyperref[rationality]{rational} analysis. Suspect 1's reasoning
+		should be as follows:
+		\begin{itemize}
+			\item If suspect 2 confess \(\to \) since \(-4> -10 \implies\) the best \hyperref[def:strategy]{action} is to confess.
+			\item If suspect 2 don't confess \(\to \) since \(0>-1 \implies\) the best \hyperref[def:strategy]{action} is to confess.
+		\end{itemize}
+		Since this problem is symmetric, namely the \hyperref[def:strategy]{strategy} for both suspects are the same, so both of them will confess, leading to an equilibrium.
+	\end{answer}
+	\begin{remark}
+		We see that
+		\begin{itemize}
+			\item No hidden \hyperref[def:reward]{payoffs} other than what we have in \hyperref[def:payoff-matrix]{payoff matrix}.
+			\item Both not confessing is better as a pair (in the sense that if we sum the \hyperref[def:reward]{payoffs}). We see that utilize sum is not
+			      maximized, which means this action is not \emph{efficient}.
+			\item Confessing is the best option of the other suspect's choice. In this case, confessing is a \hyperref[def:dominant-strategy]{dominant strategy}.
+		\end{itemize}
+	\end{remark}
+\end{eg}
 
-		      \textbf{Firm 2's reasoning}
-		      \begin{itemize}
-			      \item If firm \(1\) choose \(\mathrm{Lp} \to \mathrm{Uc}\)
-			      \item If firm \(1\) choose \(\mathrm{Uc} \to \mathrm{Lp}\)
-		      \end{itemize}
-
-		      We see that with common knowledge and rationality assumptions, firm \(2\) will assume that firm \(1\) will play its dominant strategy.
-		      As a result, firm \(2\) will play \(\mathrm{Uc}\). Hence, \((\mathrm{Lp}, \mathrm{Uc})\) is the equibrilium point, and it's also efficient.
-		\item Two firms game, but with three actions. The payoff matrix now becomes
+\begin{eg}[Golden ball]\label{eg:golden-ball}
+	Two \hyperref[def:player]{players} have two options, one is split, and another is steal. And there are \(x\) amounts of money in total. If both \hyperref[def:player]{players}
+	choose split, then they can both get half of the money; if one chooses split and another chooses steal, the \hyperref[def:player]{player} chooses steal can get all the money
+	while another \hyperref[def:player]{player} get nothing. If both choose steal, then they both get nothing.
+	\begin{itemize}
+		\item Two \hyperref[def:player]{players}.
+		\item \hyperref[def:strategy]{Actions} set: \(\left\{\text{split}, \text{ steal}\right\}\).
+		\item \hyperref[def:reward]{Payoffs}: Assume the total \hyperref[def:reward]{rewards} is \(x\).
+		      \begin{enumerate}
+			      \item \((\text{split}, \text{split})\): \(\frac{x}{2}\) for both.
+			      \item \((\text{split}, \text{steal})\): \hyperref[def:player]{player} who plays steal gets \(x\), steal gets \(0\).
+			      \item \((\text{steal}, \text{steal})\): \(0\) for both.
+		      \end{enumerate}
+		      The \hyperref[def:payoff-matrix]{payoff matrix} is
 		      \begin{table}[H]
 			      \centering
 			      \setlength{\extrarowheight}{2pt}
-			      \begin{tabular}{cc|c|c|c|}
-				                              & \multicolumn{1}{c}{} & \multicolumn{3}{c}{firm $2$}                                                     \\
-				                              & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}      & \multicolumn{1}{c}{$B$} & \multicolumn{1}{c}{$C$} \\\cline{3-5}
-				      \multirow{3}*{firm $1$} & $A$                  & $(4, 4)$                     & $(0, 2)$                & $(0, 2)$                \\\cline{3-5}
-				                              & $B$                  & $(0, 0)$                     & $(1, 1)$                & $(0, 2)$                \\\cline{3-5}
-				                              & $C$                  & $(0, 0)$                     & $(0, 2)$                & $(1, 1)$                \\\cline{3-5}
+			      \begin{tabular}{cc|c|c|}
+				                                                     & \multicolumn{1}{c}{} & \multicolumn{2}{c}{\hyperref[def:player]{Player} 2}                                      \\
+				                                                     & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\text{split}$}                  & \multicolumn{1}{c}{$\text{steal}$} \\\cline{3-4}
+				      \multirow{2}*{\hyperref[def:player]{Player} 1} & $\text{split}$       & $(x/2, x/2)$                                        & $(0, x)$                           \\\cline{3-4}
+				                                                     & $\text{steal}$       & $(x, 0)$                                            & $(0, 0)$                           \\\cline{3-4}
 			      \end{tabular}
 		      \end{table}
+	\end{itemize}
 
-		      \textbf{Best Response}
-		      \begin{enumerate}
-			      \item For firm \(1\):
-			            \begin{itemize}
-				            \item If firm \(2\) play \(A\to \) pick \(A\)
-				            \item If firm \(2\) play \(B\to \) pick \(B\)
-				            \item If firm \(2\) play \(C\to \) pick \(C\)
-			            \end{itemize}
-			      \item For firm \(2\):
-			            \begin{itemize}
-				            \item If firm \(1\) play \(A\to \) pick \(A\)
-				            \item If firm \(1\) play \(B\to \) pick \(C\)
-				            \item If firm \(1\) play \(C\to \) pick \(B\)
-			            \end{itemize}
-		      \end{enumerate}
-		      We see that there are no dominant strategy. But \((A, A)\) is the equilibrium point, which we will call it as \emph{Nash equilibrium}.
-	\end{enumerate}
+	The \hyperref[def:player]{player} 1's reasoning should be as follows:
+	\begin{itemize}
+		\item If \hyperref[def:player]{player} 2 chooses to split \(\to \) since \(x>\frac{x}{2}\), the best \hyperref[def:strategy]{action} is to steal.
+		\item If \hyperref[def:player]{player} 2 chooses to steal \(\to \) since \(0=0\), the best \hyperref[def:strategy]{action} is \emph{undetermined}.
+	\end{itemize}
+
+	We see that stealing is a \hyperref[def:weakly-dominant-strategy]{weakly dominant strategy} since it does not strictly outperform in every case.
+\end{eg}
+
+\begin{eg}[Prisoner's dilemma ver. 2]\label{eg:prisoner-dilemma-ver2}
+	Consider again the \hyperref[eg:prisoner-dilemma]{prisoner's dilemma}, but with different \hyperref[def:reward]{payoff} matrix.
+	\begin{table}[H]
+		\centering
+		\setlength{\extrarowheight}{2pt}
+		\begin{tabular}{cc|c|c|}
+			                          & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Player $2$}                                       \\
+			                          & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{NC}$} & \multicolumn{1}{c}{$\mathrm{C}$} \\\cline{3-4}
+			\multirow{2}*{Player $1$} & $\mathrm{NC}$        & $(-1, -1)$                        & $(-3, -2)$                       \\\cline{3-4}
+			                          & $\mathrm{C}$         & $(-2, -3)$                        & $(-4, -4)$                       \\\cline{3-4}
+		\end{tabular}
+	\end{table}
+	With the same analysis, we see that the equilibrium is not confessing, namely \((\mathrm{NC}, \mathrm{NC})\) is a dominant strategy equibrilium, furthermore, it's a
+	strictly dominant strategy.
+\end{eg}
+
+\begin{eg}[Two firms]\label{eg:two-firms}
+	There are two firms competing with each other. They both have options to produce lower-priced products or upscale product. And we simply assume that
+	their goal is to maximize the market share. We further assume that in the whole market, there are \(60\%\) of population will only buy low-priced products, and other \(40\%\)
+	of population will only buy upscale products.
+	\begin{itemize}
+		\item Two firms.
+		\item \hyperref[def:strategy]{Actions} set: \(\left\{\text{low-priced} (\mathrm{Lp}), \text{upscales}\right\} (\mathrm{Uc} )\)
+		\item \hyperref[def:reward]{Payoffs}:
+		      \begin{table}[H]
+			      \centering
+			      \setlength{\extrarowheight}{2pt}
+			      \begin{tabular}{cc|c|c|}
+				                            & \multicolumn{1}{c}{} & \multicolumn{2}{c}{Firm 2}                                            \\
+				                            & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$\mathrm{Lp}$} & \multicolumn{1}{c}{$\mathrm{Uc}$} \\\cline{3-4}
+				      \multirow{2}*{Firm 1} & $\mathrm{Lp}$        & $(0.48, 0.12)$                    & $(0.6, 0.4)$                      \\\cline{3-4}
+				                            & $\mathrm{Uc}$        & $(0.4, 0.6)$                      & $(0.32, 0.08)$                    \\\cline{3-4}
+			      \end{tabular}
+		      \end{table}
+	\end{itemize}
+	We see that firm 1's reasoning should be as follows:
+	\begin{itemize}
+		\item \(\mathrm{Lp}\) is a \hyperref[def:dominant-strategy]{strictly dominant strategy}.
+	\end{itemize}
+
+	We also see that firm 2's reasoning should be as follows:
+	\begin{itemize}
+		\item If firm 2 choose \(\mathrm{Lp} \to \mathrm{Uc}\)
+		\item If firm 2 choose \(\mathrm{Uc} \to \mathrm{Lp}\)
+	\end{itemize}
+
+	We see that with \hyperref[common-knowledge]{common knowledge} and \hyperref[rationality]{rationality} assumptions,
+	firm 2 will assume that firm 2 will play its \hyperref[def:dominant-strategy]{dominant strategy}.
+	As a result, firm 2 will play \(\mathrm{Uc}\), hence, \((\mathrm{Lp}, \mathrm{Uc})\) is the \emph{equibrilium point}, and it's also \emph{efficient}.
+\end{eg}
+
+\begin{eg}[Two firms ver. 2]\label{eg:two-firms-ver2}
+	Consider the \hyperref[eg:two-firms]{two firms game}, but with three \hyperref[def:strategy]{actions}. The \hyperref[def:reward]{payoff} matrix now becomes
+	\begin{table}[H]
+		\centering
+		\setlength{\extrarowheight}{2pt}
+		\begin{tabular}{cc|c|c|c|}
+			                      & \multicolumn{1}{c}{} & \multicolumn{3}{c}{Firm 2}                                                     \\
+			                      & \multicolumn{1}{c}{} & \multicolumn{1}{c}{$A$}    & \multicolumn{1}{c}{$B$} & \multicolumn{1}{c}{$C$} \\\cline{3-5}
+			\multirow{3}*{Firm 1} & $A$                  & $(4, 4)$                   & $(0, 2)$                & $(0, 2)$                \\\cline{3-5}
+			                      & $B$                  & $(0, 0)$                   & $(1, 1)$                & $(0, 2)$                \\\cline{3-5}
+			                      & $C$                  & $(0, 0)$                   & $(0, 2)$                & $(1, 1)$                \\\cline{3-5}
+		\end{tabular}
+	\end{table}
+
+	To see the best response, we see that
+	\begin{itemize}
+		\item For firm 1:
+		      \begin{itemize}
+			      \item If firm 2 play \(A\to \) pick \(A\).
+			      \item If firm 2 play \(B\to \) pick \(B\).
+			      \item If firm 2 play \(C\to \) pick \(C\).
+		      \end{itemize}
+		\item For firm \(2\):
+		      \begin{itemize}
+			      \item If firm 1 play \(A\to \) pick \(A\).
+			      \item If firm 1 play \(B\to \) pick \(C\).
+			      \item If firm 1 play \(C\to \) pick \(B\).
+		      \end{itemize}
+	\end{itemize}
+	We see that there are no \hyperref[def:dominant-strategy]{dominant strategy}. But \((A, A)\) is the \emph{equilibrium point}, which we will call it the \emph{Nash equilibrium}.
 \end{eg}
 
 \begin{note}
-	One may notice that we are using normal form to describe one-shot games. Contrarily, we will use so-called \emph{Extensive form} to describe a
-	dynamic game.
+	One may notice that we are using \href{https://en.wikipedia.org/wiki/Normal-form_game}{normal form} to describe \hyperref[def:one-shot-game]{one-shot games}.
+	Contrarily, we will use so-called \emph{extensive form} to describe a \hyperref[def:dynamic-game]{dynamic game}.
 \end{note}
 
 \section{Nash Equilibrium}
-\begin{definition}
-	Nash Equilibrium.
-	\begin{itemize}
-		\item A set of action when each player doesn't have an incitement to \textbf{unilaterally deviate} is called a \emph{Nash Equilibrium}.
-		\item Comparison between pure or mixed strategy:
-		      \begin{itemize}
-			      \item Pure Strategy: Pick exactly one strategy deterministically.
-			      \item Mixed Strategy: Play strategy with some probability.
-		      \end{itemize}
-	\end{itemize}
+We now have seen some examples of equilibrium, and we can now formalize it.
+\begin{definition}[Nash equilibrium]\label{def:Nash-equilibrium}
+	A set of players played \hyperref[def:strategy]{actions} is called a \emph{Nash Equilibrium}
+	when each \hyperref[def:player]{player} doesn't have an incitement to \textbf{unilaterally deviate}.
 \end{definition}
 
-We then define a game structure mathematically in the following way.
-\begin{definition}
-	Denote the set of player \(\mathcal{I}\), with the number of the player being \(I\coloneqq \left\vert \mathcal{I} \right\vert \).
-	Assume that each player has a finite set \(\mathcal{S}_i\) of actions to choose from with size \(\left\vert \mathcal{S}_i \right\vert \).
-	Then, we can define a \emph{strategy vector}, which denotes the action chosen by all players such that
+We further make two more useful definitions we'll later use. These notions generalize the notion of \hyperref[def:strategy]{strategy}.
+
+\begin{definition}[Pure strategy]\label{def:pure-strategy}
+	We say a \hyperref[def:strategy]{strategy} is \emph{pure} if the \hyperref[def:player]{player} will play exactly one \hyperref[def:strategy]{strategy} deterministically.
+\end{definition}
+
+\begin{definition}[Mixed strategy]\label{def:mixed-strategy}
+	We say a \hyperref[def:strategy]{strategy} is \emph{mixed} if the \hyperref[def:player]{player} will play \hyperref[def:strategy]{strategies} with some probability.
+\end{definition}
+\begin{intuition}
+	Basically \autoref{def:strategy} is the same as \autoref{def:pure-strategy}, and \autoref{def:mixed-strategy} says that the \hyperref[def:player]{player} will
+	play with some randomness.
+\end{intuition}
+
+We then define a \hyperref[def:game]{game} structure mathematically in the following way.
+\begin{definition}[Mathematical game]\label{def:mathematical-game}
+	Denote the set of \hyperref[def:player]{player} as \(\mathcal{I}\), with the number of the player being \(I\coloneqq \left\vert \mathcal{I} \right\vert \).
+	Assume that each \hyperref[def:player]{player} \(i\) has a finite set \(\mathcal{S}_i\) of \hyperref[def:strategy]{actions} to choose from with size
+	\(\left\vert \mathcal{S}_i \right\vert<\infty  \). Then, we can define a \hyperref[def:strategy]{strategy} vector \(s\), which denotes the
+	\hyperref[def:strategy]{action} chosen by all \hyperref[def:player]{players} such that
 	\[
 		s\coloneqq (s_1, \ldots , s_I)
 	\]
-	with dimension being \(I\) for every player \(i\). We also define the vector of opponents' strategy \(s_{-i}\) such that
+	with dimension being \(I\). We also define the vector of opponents' \hyperref[def:strategy]{strategy} \(s_{-i}\) such that
 	\[
 		s_{-i}\coloneqq (s_1,\ldots,s_{i - 1},s_{i + 1} ,\ldots,s_I)
 	\]
-	with dimension being \(I - 1\).
-
-	Finally, the utility function for player \(i\) is
+	with dimension being \(I - 1\) for \hyperref[def:player]{player} \(i\).
+	Finally, the \hyperref[def:reward]{utility} function for \hyperref[def:player]{player} \(i\) is
 	\[
 		u_{i} \coloneqq \prod\limits_{j = 1}^{I} \mathcal{S}_j \to \mathbb{\MakeUppercase{R}},
 	\]
 	where \(u_{i}(s) = u_{i}(s_1, \ldots , s_I) = u_{i}(s_{i}, s_{-i})\).
 \end{definition}
 
-\begin{definition}
-	Given the strategies of all other players, the subset of \(s_{i}\) that maximize the payoff of player \(i\) is called the \emph{Best response correspondence}.
-	Let
-	\[
-		\mathrm{BR}_i(s_{-i})
-	\]
-	denotes the \emph{best response} for player \(i\) when the other player is \(s_{-i}\). Note that
-	\[
-		\mathrm{BR}_i(s_{-i}) \subseteq \mathcal{S}_i
-	\]
-	such that
+\begin{definition}[Best response]\label{def:best-response}
+	Given the \hyperref[def:strategy]{strategies} of all other \hyperref[def:player]{players}, the subset of \(s_{i}\) that maximize the \hyperref[def:reward]{payoff}
+	of \hyperref[def:player]{player} \(i\) is called the \emph{best response}, or \emph{best response correspondence}, denotes as \(\mathrm{BR}_i(s_{-i})\).
+\end{definition}
+
+\begin{intuition}
+	\(\mathrm{BR}_i(s_{-i})\) can be though as follows: For \hyperref[def:player]{player} \(i\), given every other \hyperref[def:player]{players}'
+	\hyperref[def:strategy]{strategies} they will play, find the optimal response. And since there may be several \hyperref[def:strategy]{strategies} can achieve
+	the optimal \hyperref[def:reward]{reward}, so it's should be a set.
+\end{intuition}
+
+\begin{remark}
+	Note that mathematically, \(\mathrm{BR}_i(s_{-i}) \subseteq \mathcal{S}_i\) such that
 	\[
 		\mathrm{BR}_i(s_{-i})= \underset{s_{i}\in\mathcal{S}_i}{\arg\max}\ u_{i}(s_{i}, s_{-i}).
 	\]
-\end{definition}
+\end{remark}

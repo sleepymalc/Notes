@@ -1,13 +1,9 @@
 \lecture{23}{01 Dec. 12:30}{Bayesian Nash Equilibrium}
-\begin{prev}
-	The \(1^{st}\) price auction.
-\end{prev}
-
-Now we look at the expected utility of agent \(i\) over other agents' valuation and bids. From the monotonically increasing property
-of \(\sigma(\cdot)\), the expected utility of \(i\) is
+Now we look at the expected \hyperref[def:reward]{utility}  of \hyperref[def:player]{agent} \(i\) over other \hyperref[def:player]{agents}' valuation and bids.
+From the monotonically increasing property of \(\sigma(\cdot)\), the expected \hyperref[def:reward]{utility}  of \(i\) is
 \[
 	\begin{split}
-		&\expectation{-i}{u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))}\\
+		\expectation{-i}{u_{i}(v_{i}, \sigma_{i}(v_{i}), v_{-i}, \sigma_{-i}(v_{-i}))}
 		= &\expectation{-i}{(v_{i} - \sigma_{i}(v_{i})) \prod\limits_{j\in -i}\mathbbm{1}_{\{ \sigma_{i}(v_{i})\geq \sigma_{j}(v_{j}) \}}}\\
 		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{}{\sigma_{j}(v_{j})\leq \sigma_{i}(v_{i})}\\
 		= &(v_{i} - \sigma_{i}(v_{i}))\prod\limits_{j\in -i}\probability{}{v_{j}\leq v_{i}}\\
@@ -16,58 +12,55 @@ of \(\sigma(\cdot)\), the expected utility of \(i\) is
 	\end{split}
 \]
 
-\hr
-
-Now the question is how should an agent bid? Namely, how to find \(\sigma_{i}(\cdot)\)?
+Now the question is how should an \hyperref[def:player]{agent} bid? Namely, how to find \(\sigma_{i}(\cdot)\)?
 \subsection{Reason of Response}
 To reason about the bidding strategy, we first see an important principle.
-\begin{theorem}
-	\label{Revelation-Principle}
-	Revelation Principle. Let \(\sigma\) be the equilibrium bidding function. Then any deviation can be decomposed into two steps:
-	\begin{enumerate}
-		\item \(v_{i}\to v\): Map value to same \emph{false} value.
-		\item Apply \(\sigma\) to the \emph{false} value, so that the bid is \(\sigma(v)\).
+\begin{theorem}[Revelation Principle]\label{thm:revelation-principle}
+	Let \(\sigma\) be the \hyperref[def:Nash-equilibrium]{equilibrium} bidding function. Then any deviation can be decomposed into two steps:
+	\begin{enumerate}[(a)]
+		\item \(v_{i}\to v\): Map value to same \textbf{false} value.
+		\item Apply \(\sigma\) to the \textbf{false} value, so that the bid is \(\sigma(v)\).
 	\end{enumerate}
 \end{theorem}
 
 \begin{intuition}
-	This principle simply tells us that we don't need to perturb \(\sigma\) itself to analyze incentive of deviation, we can simply perturb \(v\) to achieve
-	the same result.
+	\autoref{thm:revelation-principle} simply tells us that we don't need to perturb \(\sigma\) itself to analyze incentive of deviation,
+	we can simply perturb \(v\) to achieve the same result.
 \end{intuition}
 
-\begin{remark}
-	The \emph{Equilibrium bidding} is
+\begin{remark}[Equilibrium bidding]\label{rmk:equilibrium-bidding}
+	The \emph{\hyperref[def:Nash-equilibrium]{equilibrium} bidding} is
 	\begin{itemize}
 		\item Step 1: \(v_{i}\to v_{i}\): identical mapping.
 		\item Step 2: The same, so bid is \(\sigma(v_{i})\).
 	\end{itemize}
 \end{remark}
 
-Assume a deviation of \(v_{i}\to v\) and the bid is \(\sigma(v)\). Then the utility becomes
+Assume a deviation of \(v_{i}\to v\) and the bid is \(\sigma(v)\). Then the \hyperref[def:reward]{utility}  becomes
 \[
 	\begin{split}
 		u_{i} &= (v_{i} - \sigma(v))\probability{}{ \text{Winning with bid } \sigma(v)}\\
 		&= (v_{i} - \sigma(v))\prod\limits_{j\in -i}\probability{}{\sigma(v_{j})\leq \sigma(v)}\\
 		&= (v_{i} - \sigma(v))F^{I-1}(v)\\
-		&= (v_{i} - \sigma(v))v^{I-1} \eqqcolon f_{\sigma}(v; v_{i}).
+		&= (v_{i} - \sigma(v))v^{I-1}\\
+		&\eqqcolon f_{\sigma}(v; v_{i}).
 	\end{split}
 \]
 
-Then the best response calculation for \(i\) is as follows. Given a \(\sigma\), maximize utility by properly choosing \(v\) for each \(v_{i}\).
-We simply differentiate the function and set the value be zero
+Then the \hyperref[def:best-response]{best response} calculation for \(i\) is as follows. Given a \(\sigma\), maximize \hyperref[def:reward]{utility}
+by properly choosing \(v\) for each \(v_{i}\). We simply differentiate the function and set the value be zero
 \[
 	\frac{\mathrm{d}}{\mathrm{d}v}f_{\sigma}(v;v_{i}) = v_{i}(I - 1)v^{I-2} - (I - 1)v^{I-2}\sigma(v) - \sigma^1(v)v^{I-1} \coloneqq 0
 \]
-for the \textbf{first order condition}. It's equivalent to solve the following O.D.E.
+for the \underline{first order condition}. It's equivalent to solve the following O.D.E.:
 \[
 	v_{i}(I - 1)v^{I-2} = \frac{\mathrm{d}}{\mathrm{d}v} (\sigma(v)v^{I-1}).
 \]
 
-We see that \(\sigma(v)\leq v_{i}\) is needed as you never bid higher than your valuation in a first-price auction.
+We see that \(\sigma(v)\leq v_{i}\) is needed as you never bid higher than your valuation in a \hyperref[eg:first-price-auction]{first-price auction}.
 
-\hr
-
-For the equilibrium bidding \(v_{i}\to v_{i}\), the maximizer should be \(v_{i}\) itself. For the equilibrium bidding function \(\sigma^{\ast}\),
+For the \hyperref[rmk:equilibrium-bidding]{equilibrium bidding} \(v_{i}\to v_{i}\), the maximizer should be \(v_{i}\) itself. For the
+\hyperref[rmk:equilibrium-bidding]{equilibrium bidding} function \(\sigma^{\ast}\),
 \[
 	\at{\frac{\mathrm{d}}{\mathrm{d}v} f_{\sigma^{\ast}}(v;v_{i})}{v = v_{i}}{} = 0.
 \]
@@ -82,7 +75,7 @@ By setting \(v = v_{i}\), we should get zero!
 \]
 This equation has to hold for every \(v_{i}\) in \([0, 1]\).
 
-\par Now, for a \(\overline{v}\), \(\sigma^{\ast}(\overline{v})\) should be
+Now, for a \(\overline{v}\), \(\sigma^{\ast}(\overline{v})\) should be
 \[
 	(I - 1)v_{i}^{I-1} = \frac{\mathrm{d}}{\mathrm{d}v_{i}} \left(v_{i}^{I-1}\sigma^{\ast}(v_{i})\right).
 \]
@@ -99,18 +92,19 @@ Hence,
 \[
 	\sigma^{\ast}(\overline{v}) = \frac{I-1}{I}\overline{v} = (1 - \frac{1}{I})\overline{v},
 \]
-which means that agent bids \(\frac{I - 1}{I}\) times the value who estimate!
+which means that \hyperref[def:player]{agent} bids \(\frac{I - 1}{I}\) times the value who estimate!
 
 \begin{note}
 	We see that
 	\begin{itemize}
-		\item Agents will shade their bid, hence it's not truthful.
-		\item The good goes to the agent with the highest valuation, hence it's a social-welfare maximizer.
+		\item \hyperref[def:player]{Agents} will shade their bid, hence it's not truthful.
+		\item The good goes to the \hyperref[def:player]{agent} with the highest valuation, hence it's a \hyperref[def:social-welfare]{social-welfare} maximizer.
 	\end{itemize}
 \end{note}
 
 \begin{remark}
-	If an agent whose valuation is zero, then from the function, we see that he would bid zero, hence the utility is zero as well.
+	If an \hyperref[def:player]{agent} whose valuation is zero, then from the function, we see that he would bid zero, hence the \hyperref[def:reward]{utility}
+	is zero as well.
 \end{remark}
 
 \subsection{Revenue of the Auctioneer}
@@ -119,74 +113,80 @@ The expected revenue for the auctioneer is equal to
 	\frac{I - 1}{I}\expectation{}{\widetilde{v}_I} = \frac{I - 1}{I}\frac{I}{I+1} = \frac{I - 1}{I+1}.
 \]
 
-\begin{remark}
-	Recall that the expected revenue for \(2^{nd}\) price auction for the auctioneer is \(\expectation{}{\widetilde{v}_{I-2}} = \frac{I-1}{I+1}\).
-	We see that both auctions give the same expected revenue.
-\end{remark}
-
 \begin{note}
-	If two auctions implement the same outcome in Bayesian Nash Equilibrium, and agent with value \(0\) bid \(0\), then the expected
-	revenue will be the same. This is so-called \emph{Revenue Equivalence}. And this equivalence relation holds for more general kinds of
-	auctions, namely under some conditions of auctions, the revenue for auctioneer is always the same. We'll come back to this
-	relation soon.
+	Recall that the expected revenue for \hyperref[eg:second-price-auction]{second-price auction} for the auctioneer is also
+	\[
+		\expectation{}{\widetilde{v}_{I-2}} = \frac{I-1}{I+1}.
+	\]
+	We see that both auctions give the same expected revenue.
 \end{note}
 
-\section{Mechanism Design of Auctions}
-After seeing two kinds of auctions, we now try to give a general framework of auctions and try to design a mechanism of such games.
-Assume that the auctioneer doesn't know values of agent. How the auction will be conducted?
-\begin{itemize}
-	\item For every \(b_1, \ldots , b_I\):
-	      \begin{enumerate}
-		      \item Who wins the auction
-		      \item What that person pays
-	      \end{enumerate}
-\end{itemize}
+\begin{remark}[Revenue equivalence]\label{rmk:revenue-equivalence}
+	If two auctions implement the same outcome in \hyperref[def:mathematical-Bayesian-game]{Bayesian} \hyperref[def:Nash-equilibrium]{Nash equilibrium},
+	and \hyperref[def:player]{agents} with value \(0\) will bid \(0\), then the expected revenue will be the same.
+	This is so-called \emph{revenue equivalence}. And this equivalence relation holds for more general kinds of
+	auctions, namely under some conditions of auctions, the revenue for auctioneer is always the same. We'll come back to this
+	relation soon.
+\end{remark}
 
-\begin{eg}
-	We first see an example.
-	\begin{itemize}
-		\item \textbf{All-pay auction}. For bids \(b_1, \ldots , b_I\),
-		      \begin{itemize}
-			      \item The highest bidder wins.
-			      \item Everyone pays their bid.
-		      \end{itemize}
-	\end{itemize}
-\end{eg}
+\section{Mechanism Design of Auctions}
+After seeing two kinds of auctions, we now try to give a general framework of auctions and try to design a mechanism of such \hyperref[def:mathematical-Bayesian-game]{games}.
+Assume that the auctioneer doesn't know values of \hyperref[def:player]{agents}.
+
+\begin{problem}
+How the auction will be conducted?
+\end{problem}
+\begin{answer}
+	Given \(b_1, \ldots , b_I\), we need to answer the following two questions:
+	\begin{enumerate}[(a)]
+		\item Who wins the auction?
+		\item What that person pays?
+	\end{enumerate}
+	The mechanism design of auctions can be though as answering these two questions.
+
+	\begin{eg}[All-pay auction]
+		We first see an example called \emph{all-pay auction}. For bids \(b_1, \ldots , b_I\),
+		\begin{itemize}
+			\item The highest bidder wins.
+			\item Everyone pays their bid.
+		\end{itemize}
+	\end{eg}
+\end{answer}
 
 For a general auction, the bids are just messages. Auctioneer is specifying two things.
 \begin{itemize}
-	\item Allocation rule: \((x_1, \ldots , x_I)\), where \(x_{i}\) is the amount of good goes to agent \(i\).
-	\item Payment rule: \((p_1, \ldots , p_I)\), where \(p_{i}\) to be paid by agent \(i\).
+	\item Allocation rule: \((x_1, \ldots , x_I)\), where \(x_{i}\) is the amount of good goes to \hyperref[def:player]{agent} \(i\).
+	\item Payment rule: \((p_1, \ldots , p_I)\), where \(p_{i}\) to be paid by \hyperref[def:player]{agent} \(i\).
 \end{itemize}
 
-\begin{definition}
+This suggests the following definition.
+\begin{definition}[Direct mechanism]\label{def:direct-mechanism}
 	In the specification, if the messages are in the same space as values, then we call such a mechanism as a \emph{direct mechanism}.
 \end{definition}
 
-\begin{prev}
-	From \hyperref[Revelation-Principle]{Revelation Principle}, \emph{direct mechanisms} are sufficient. Since bids are messages, which can be anything, hence
-	it suffices to consider messages to be in the same space as the values.
-\end{prev}
+\begin{remark}
+	From \hyperref[thm:revelation-principle]{revelation principle}, \hyperref[def:direct-mechanism]{direct mechanisms} are sufficient. Since bids
+	are messages, which can be anything, hence it suffices to consider messages to be in the same space as the values.
+\end{remark}
 
-\hr
-
-We assume that the message space is the same as value space, namely we are designing a direct mechanism. For every message vector, specifies the
-allocation rule and the payment rule. Furthermore, we let
+Hence, we assume that the message space is the same as value space, namely we are designing a \hyperref[def:direct-mechanism]{direct mechanism}.
+For every message vector, specifies the allocation rule and the payment rule. Furthermore, we let
 \[
-	\text{Utility} = \text{Value} - \text{Payment},
+	\text{\hyperref[def:reward]{utility}} = \text{Value} - \text{Payment},
 \]
-which turns out to be so-called Quasilinear utility\footnote{\url{https://en.wikipedia.org/wiki/Quasilinear_utility}}.
+which turns out to be so-called \href{https://en.wikipedia.org/wiki/Quasilinear_utility}{quasilinear utility}.
 
 \begin{note}
 	There are things that a mechanism designer may want.
 	\begin{itemize}
-		\item Incentive Compatible(IC)
-		\item Individual rationality(IR)
+		\item \hyperref[rmk:incentive-compatible]{Incentive compatible} (IC).
+		\item \hyperref[rmk:voluntary-participation]{Individual rationality} (IR).
 	\end{itemize}
+
 	Also, a mechanism designer may have a goal in mind.
 	\begin{itemize}
-		\item Social welfare maximization(Efficiency)
-		\item Revenue maximization
+		\item \hyperref[def:social-welfare]{Social welfare} maximization (Efficiency).
+		\item Revenue maximization.
 		\item Budget-Balance: Payments should sum to \(0\).
 	\end{itemize}
 
@@ -195,25 +195,24 @@ which turns out to be so-called Quasilinear utility\footnote{\url{https://en.wik
 	\end{remark}
 \end{note}
 
-Assume every agent \(i\) values \(v_1, \ldots , v_{I}\), and bids \(b_1, \ldots , b_{I}\) respectively. With the specification being
+Assume every \hyperref[def:player]{agent} \(i\) values \(v_1, \ldots , v_{I}\), and bids \(b_1, \ldots , b_{I}\) respectively. With the specification being
 \[
 	\begin{split}
-		\text{Allocations}&: x_1, \ldots , x_I\\
+		\text{Allocations}&: x_1, \ldots , x_I;\\
 		\text{Payments}&:p_1, \ldots , p_I,
 	\end{split}
 \]
-where all are functions of \(b_{i}\). Then the utility is
+where all are functions of \(b_{i}\). Then the \hyperref[def:reward]{utility} is
 \[
 	u_{i}(v_{i}, n_{i}(\vec{v})) - p_{i}(\vec{v}).
 \]
-With interim set-up, we average across all other agents.
-
-Now, we assume that \(x_{i}(\vec{v})\in\{0, 1\}\) and will allow multiple agents to get
+With \hyperref[def:interim]{interim} setup, we average across all other \hyperref[def:player]{agents}.
+Now, assume that \(x_{i}(\vec{v})\in\{0, 1\}\) and will allow multiple \hyperref[def:player]{agents} to get
 \[
 	x_{i}(\vec{v}) = 1.
 \]
 
-If \(x_{i}(\vec{v})=1\), then utility is \(v_{i}\), else \(0\). We then see that
+If \(x_{i}(\vec{v})=1\), then \hyperref[def:reward]{utility}  is \(v_{i}\), else \(0\). We then see that
 \[
 	u_{i}(v_{i}, x_{i}(\vec{v})) = v_{i}x_{i}(\vec{v}) - p_{i}(\vec{v}).
 \]
@@ -227,13 +226,13 @@ Then the expected value is
 \]
 
 Now we see a theorem.
-\begin{theorem}
-	Bayesian Nash Equilibrium characterization. When the types are drawn from a continuous joint distribution \(\vec{F}\) with independent types,
-	strategies
+\begin{theorem}[Bayesian Nash equilibrium characterization]\label{thm:Bayesian-Nash-equilibrium-characterization}
+	When the \hyperref[def:type]{types} are drawn from a continuous joint distribution \(\vec{F}\) with \hyperref[def:independent]{independent} \hyperref[def:type]{types},
+	\hyperref[def:strategy]{strategies}
 	\[
 		\vec{\sigma}^{\ast} = (\sigma^{\ast}_1, \sigma^{\ast}_2, \ldots , \sigma^{\ast}_I)\qquad (b_{i} = \sigma^{\ast}_{i}(v_{i}))
 	\]
-	are in a Bayesian Nash Equilibrium if and only if
+	are in a \hyperref[def:mathematical-Bayesian-game]{Bayesian} \hyperref[def:Nash-equilibrium]{Nash equilibrium} if and only if
 	\begin{itemize}
 		\item Monotonicity. \(\overline{x}_{i}(v_{i})\) is monotonically non-decreasing.
 		\item Payment identity.
@@ -242,5 +241,5 @@ Now we see a theorem.
 		      \]
 		      where often \(\overline{p}_{i}(0) = 0\).
 	\end{itemize}
-	If the strategy profile is onto, the converse is true as well.
+	If the \hyperref[def:strategy]{strategy} profile is onto, the converse is true as well.
 \end{theorem}

@@ -1,241 +1,349 @@
+\chapter{Page Rank and Markov Chain}
 \lecture{14}{25 Oct. 12:30}{Random Walker and Monte Carlo Estimator}
-\section{Personalized Page Rank}
-\begin{prev}
-	Recall that we want to associate Page Rank with random walker.
-	\begin{itemize}
-		\item Basic PageRank: Random walker on the graph.
-		\item Scaled PageRank: Random walker with reset to a uniformly chosen node.
-	\end{itemize}
-	This is a good view point for the \emph{population as a whole} user surfing the webs.
-\end{prev}
+\section{Basic and Scaled Page Rank via Markov Chain}
+Recall that the basic page rank \(r(n)\) is updated by the equation \(r(n+1) = N^{\top}r(n)\), i.e.,
+\[
+	r^{\top}(n+1) = r^{\top}(n)N
+\]
+where \(N\) is a row stochastic matrix. On the other hand, compare to \hyperref[def:Markov-chain]{Markov Chain},
+\[
+	\probability{}{X_n = \cdot}^{\top} = \mu^{\top}P^n = \mu^{\top}P^{n-1}P = \probability{}{X_{n-1} = \cdot}^{\top}P
+\]
+with \(\mu\sim \probability{}{X_0 = \cdot}\). We see that the above two equations are the same with
+\[
+	r(0)\coloneqq \begin{pmatrix}
+		1/V    \\
+		\vdots \\
+		1/V    \\
+	\end{pmatrix}.
+\]
 
-Across population reset is to a randomly chosen webpage. We can rank webpages across the population.
+\begin{remark}
+	It turns out that basic page rank is looking at a \hyperref[def:Markov-chain]{Markov chain}! Recall that \(N_{ij}\) is defined as
+	\[
+		N_{ij} = \begin{dcases}
+			\frac{1}{d_i^{out}}, & \text{ if }A_{ij}= 1; \\
+			0,                   & \text{ otherwise}.
+		\end{dcases}
+	\]
+	We pick an outgoing neighbor uniformly at random, but no one else.
+\end{remark}
+
+This is indeed the idea of a \hyperref[def:random-walker]{random walker}, and we formalize it as follows.
+\begin{definition}[Random walker]\label{def:random-walker}
+	Given a \hyperref[def:graph]{graph}, a \emph{random walker} will traverse the \hyperref[def:graph]{graph} following some rule
+	with randomness.
+\end{definition}
+
+In this case, our \hyperref[def:random-walker]{random walker} will follow the \hyperref[def:simple-random-walk]{simple random walk} rule
+defined as follows.
+\begin{definition}[Simple random walk]\label{def:simple-random-walk}
+	Suppose the \hyperref[def:random-walker]{random walker} is now at location (node) \(i\), then regardless of how he came to \(i\),
+	he'll pick the next destination uniformly at random from outgoing neighbors of \(i\).
+	\begin{figure}[H]
+		\centering
+		\incfig{random-walker}
+		\label{fig:random-walker}
+	\end{figure}
+\end{definition}
+
+\begin{note}
+	If \(d_i^{\text{out}} = 0\), then the \hyperref[def:random-walker]{random walker} following \hyperref[def:simple-random-walk]{simple random walk}
+	will get stuck.
+\end{note}
+
+Now, just like in the basic page rank cases, we have
+\[
+	\widetilde{N} (s) = s N + \frac{1-s}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\vec{1} \vec{1} ^{\top}
+\]
+for scaled page rank update equation.
+
+\begin{intuition}
+	Compare to basic page rank, scaled page rank can be thought as follows. When a \hyperref[def:random-walker]{random walker}
+	at location \(i\), we toss a biased coin with \(\probability{}{\{\mathrm{H} \}} = s\). If we get heads, then we follow
+	the \hyperref[def:simple-random-walk]{simple random walk rule}. Otherwise,
+	if we get tails, we pick any node on the network at random as the next destination.
+\end{intuition}
+
+\section{Personalized Page Rank via Markov Chain}
+\begin{prev}
+	Recall that we want to associate page rank with \hyperref[def:random-walker]{random walker}.
+	\begin{itemize}
+		\item Basic page rank: \hyperref[def:random-walker]{random walker} on the \hyperref[def:graph]{graph}.
+		\item Scaled page rank: \hyperref[def:random-walker]{random walker} with reset to a uniformly chosen node.
+	\end{itemize}
+\end{prev}
+This is a good view point for the \textbf{population as a whole user} surfing the webs. Across population reset is to a randomly chosen webpage.
+We can rank webpages across the population.
 
 \begin{problem}
 Can we be more specific?
 \end{problem}
-
 \begin{answer}
-	With the help of reset, one can make this happen:
-	\begin{itemize}
-		\item Starting point of random walk
-		      \begin{itemize}
-			      \item Random Walk
-		      \end{itemize}
-		\item Reset
-	\end{itemize}
-	where we restart/reset to a specific node \(v^{\ast}\in \mathcal{V}\).
+	With the help of reset, yes.
 	\begin{remark}
-		Personalizing the restart distribution is what allows this to happen.
+		Personalizing the restart distribution is what allows this.
 	\end{remark}
 \end{answer}
 
-\begin{definition}
-	\emph{Personalized PageRank} is denoted by
-	\[
-		\pi_{v^{\ast}}(s).
-	\]
-\end{definition}
-Collect \(\pi_{v^{\ast}}(s)\) for all \(v^{\ast}\in\mathcal{V}\), then if we reset uniformly,
-\[
-	\pi(s) = \frac{1}{V}\sum\limits_{v^{\ast}\in\mathcal{V}} \pi_{v^{\ast}}(s).
-\]
+Algorithmically, we have the following.
+\par
+\begin{algorithm}[H]\label{algo:personalized-page-rank-scheme}
+	\DontPrintSemicolon
+	\caption{Personalized Page Rank Scheme}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(T\), \(v^{\ast} \in \mathcal{\MakeUppercase{v}} \)}
+	\SetKwFunction{RW}{RandomWalk}
+	\BlankLine
 
-\begin{remark}
-	Average of all the personalized PageRank, one gets the scaled PageRank. We see this as follows.
-	Similar average with respect to any specific distribution \(\mu\) distributed on \(\mathcal{V}\), then
-	\[
-		\pi_\mu(s) = \sum\limits_{v^{\ast}\in \mathcal{V}} \mu(v^{\ast})\pi_{v^{\ast}}(s).
-	\]
-
-	Compare to the Scaled PageRank, we see that \(\mu\) is uniformly distributed for Scaled PageRank.
-\end{remark}
-
+	\For(){\(i = 1, \ldots, T\)}{
+		\RW{\(v\)}\Comment*[r]{Perform a random walk starting at \(v\)}
+	}
+	\Return{}\;
+\end{algorithm}
 \begin{figure}[H]
 	\centering
 	\incfig{personalized-pagerank}
-	\caption{Random Walk for personalized PageRank}
+	\caption{Random Walk for personalized page rank}
 	\label{fig:personalized-pagerank}
 \end{figure}
 
-\section{Monte Carlo Algorithm}
+We denote the personalized page rank at \(v^{\ast} \) as \(\pi_{v^{\ast}}(s)\). Collect \(\pi_{v^{\ast}}(s)\) for all \(v^{\ast}\in\mathcal{V}\),
+then if we reset uniformly,
+\[
+	\pi_{\mathcal{\MakeUppercase{v}}} (s) = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\sum\limits_{v^{\ast}\in\mathcal{V}} \pi_{v^{\ast}}(s).
+\]
+
+\begin{remark}
+	Average of all the personalized page rank, one can get the scaled page rank
+	since averaging with respect to any specific distribution \(\mu\) distributed on \(\mathcal{V}\), we have
+	\[
+		\pi_\mu(s) = \sum\limits_{v^{\ast}\in \mathcal{V}} \mu(v^{\ast})\pi_{v^{\ast}}(s).
+	\]
+	We see that if \(\mu\) is uniformly distributed, we get scaled page rank.
+\end{remark}
+
+\section{Markov Chain via Monte Carlo Algorithm}
+In this section, we'll see some simulation-based algorithms which can help us estimate page rank empirically. This kind of simulation-based algorithm which
+estimate some kind of randomness is called \emph{Monte Carlo algorithm}. We'll analyze the corresponding estimators' quality in terms of their bias, variance,
+and so on. Let's start with the first one.
+
+\subsection{First Page Rank Estimator}
+We now introduce the first simulation-based algorithm to estimate page rank. The very first one we should do is the \hyperref[algo:random-walk-algorithm]{random walk}
+where we essentially implement \hyperref[def:simple-random-walk]{simple random walk}.
+
+\par
+\begin{algorithm}[H]\label{algo:random-walk-algorithm}
+	\DontPrintSemicolon
+	\caption{Random Walk}
+	\SetKwData{result}{result}
+	\SetKwData{arrival}{arrival}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), steps \(T\), \(s\)}
+	\KwResult{A list \arrival, ending node \(v\in \mathcal{\MakeUppercase{v}}\)}
+	\SetKwFunction{random}{random}
+	\SetKwFunction{toss}{TossCoin}
+	\SetKw{Continue}{continue}
+
+	\BlankLine
+
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+		\(\arrival(v)\gets 0\)\;
+	}
+	\(v\gets \)\random{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{select a uniformly random node to start}
+	\(\arrival(v)\gets 1\)\;
+	\;
+	\For(){\(i = 1, \ldots, T\)}{
+	\(\result\gets\)\toss{\(s\)}\Comment*[r]{Toss a biased coin with \(\probability{}{\{\mathrm{H} \}} = s\), \(\probability{}{\{\mathrm{T} \}} = 1 - s\)}
+	\uIf(\Comment*[f]{If heads}){\(\result = \mathrm{H}\) }{
+	\lIf(\Comment*[f]{Go to \(v\)'s neighbor randomly}){\(d_i^{\text{out}}\neq 0\)}{\(v\gets\) \random{\(N_i^{\text{out}}\)}}
+	}\Else(\Comment*[f]{If tails}){
+		\(v\gets \)\random{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{reset to a uniformly random node}
+	}
+	\(\arrival(v)\gets \arrival(v) + 1\)\Comment*[r]{Record arrival at \(v\)}
+	}
+	\Return{\(\arrival\), \(v\)}\;
+\end{algorithm}
 \begin{note}
-	This is a simulation-based algorithm.
+	The result of \hyperref[algo:random-walk-algorithm]{random walk} records the time the \hyperref[def:random-walker]{random walker}
+	arrives \(v\) for all \(v\in \mathcal{\MakeUppercase{v}} \) throughout the simulation.
 \end{note}
 
-The basic algorithm is
-\begin{enumerate}
-	\item[0.] Start at a uniformly random node.
-	\item[1.] First toss a biased coin such that
-		\[
-			\probability{}{\text{heads}} = s,\qquad \probability{}{\text{tails}} = 1 - s.
-		\]
-		\begin{itemize}
-			\item If Heads, then perform random walk if possible(namely when \(d_i^{out}=0\)).
-			\item If Tails, then reset to a uniformly chosen node.
-		\end{itemize}
-	\item[2.] \textbf{GOTO 1.}(Repeat \(T\) times).
-\end{enumerate}
-
-We can describe this algorithm as Markov Chain. Let
-\[
-	\left\{ X_n \right\}_{n\geq 0}
-\]
-where \(X_n\) is the location of the random walker at time \(n\). We see that
+We can describe \hyperref[algo:random-walk-algorithm]{random walk} as a \hyperref[def:Markov-chain]{Markov chain}. Consider
+\(\left\{ X_n \right\}_{n\geq 0}\) where \(X_n\) is the location of the \hyperref[def:random-walker]{random walker} at time \(n\). We see that
 \[
 	\begin{split}
-		X_0 &\sim \mathrm{uniform}(\{1, 2, \ldots , V\})\\
-		X_0 &=\begin{dcases}
-			\mathrm{uniform}(\{1, 2, \ldots , V\}) & \text{ with probability }1 - s \\
-			\mathrm{NextHop}(x_0)                  & \text{ with probability }s     \\
+		X_0 &\sim \mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{V}} \right\vert\})\\
+		X_1 &=\begin{dcases}
+			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{V}} \right\vert \}), & \text{ with probability }1 - s; \\
+			\mathrm{NextHop}(x_0),                                                                    & \text{ with probability }s,     \\
 		\end{dcases}\\
-		\mathrm{NextHop}(i)&=\begin{dcases}
-			\mathrm{uniform}(\{N^{out}_i\}), & \text{ if }d^{out}_i>0   \\
-			i,                               & \text{ if }d^{out}_i = 0
+		&\vdots\\
+		X_t &=\begin{dcases}
+			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{V}} \right\vert\}), & \text{ with probability }1 - s; \\
+			\mathrm{NextHop}(x_{t-1}),                                                               & \text{ with probability }s      \\
 		\end{dcases}
-	\end{split}.
+	\end{split}
 \]
-This is irreducible and aperiodic. And by the SLLN property, we now analyze this algorithm by Markov Chain. Let run Monte Carlo Algorithm
-for \(T\) long.
-
-\subsection{\(1^{st}\) Estimator for \(\pi_V(s)\)}
-The estimation of \(\pi\) is then
+with \(\mathrm{NextHop}(\cdot)\) being
 \[
-	\hat{\pi}^{\top}_{V}(s) = \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}}\qquad \forall v\in \mathcal{V}.
+	\mathrm{NextHop}(i)=\begin{dcases}
+		\mathrm{uniform}(\{N^{\text{out}}_i\}), & \text{ if }d^{\text{out}}_i > 0; \\
+		i,                                      & \text{ if }d^{\text{out}}_i = 0.
+	\end{dcases}
 \]
-With \(T\to \infty \), we have
-\[
-	\lim_{T\to \infty}\frac{1}{T} \sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}} = \pi_V(s)
-\]
-by SLLN. But this algorithm has two main issues.
-\begin{enumerate}
-	\item Not clear how long we should run this for. Namely, we need to be able to say something about
-	      \[
-		      \expectation{}{\left\vert \hat{\pi}^{\top}_V(s) - \pi_V(s) \right\vert^2 }
-	      \]
-	      in \(T\) to ensure the speed of convergence.
-	\item The estimator is a biased estimator. Recall that an estimator is unbiased if
-	      \[
-		      \mathrm{E}\left[ \hat{\pi}_{V}^{\top}(s) \right] = \pi_V(s);
-	      \]
-	      and if it is biased,
-	      \[
-		      \hat{\pi}_{V}^{\top}(s) - \pi_V(s)\neq 0
-	      \]
-	      for this particular estimator \(\hat{\pi}^{\top}_V(s)\). We see that \(\hat{\pi}^{\top}_V(s)\) is indeed biased by
-	      \[
-		      \begin{split}
-			      \mathrm{E}\left[\hat{\pi}^{\top}_V(s)\right] &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \expectation{}{\mathbbm{1}_{\{X_n = v\}}}\\
-			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} \probability{}{X_n = v} \\
-			      &= \frac{1}{T}\sum\limits_{n=0}^{T-1} (\mu_0 P^n)_v\underset{T\to \infty }{\to }\pi_V(s),
-		      \end{split}
-	      \]
-	      where \(P\) is the \emph{one step trransform matrix}. We see that this only converges when \(T\to \infty \) by Perron-Frobenius Theorem(\autoref{Perron-Frobenius Theorem})
-	      since aperiodicity.
-\end{enumerate}
+\begin{note}
+	This is \hyperref[def:irreducible]{irreducible} and \hyperref[def:aperiodic]{aperiodic}.
+\end{note}
 
+Suppose we run the \hyperref[algo:random-walk-algorithm]{random walk} for \(T\) iterations, we now analyze our first version of
+\hyperref[algo:random-walk-algorithm]{random walk} by \hyperref[def:Markov-chain]{Markov Chain} with the help of
+the \hyperref[thm:SLLN]{strong law of large numbers}. A naive estimation of \(\pi_v \) suggests by \hyperref[algo:random-walk-algorithm]{random walk}
+is
+\[
+	\hat{\pi}^{\top}_{v}(s)
+	= \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}}\qquad \forall v\in \mathcal{V}.
+\]
+When \(T\to \infty \), we have
+\[
+	\lim_{T\to \infty}\frac{1}{T} \sum\limits_{n=0}^{T-1} \mathbbm{1}_{\{X_n = v\}} = \pi_v(s) \qquad \forall v\in \mathcal{V}
+\]
+guaranteed by \hyperref[thm:SLLN]{SLLN} almost surely.
 \begin{figure}[H]
 	\centering
 	\incfig{Monte-Carlo-Estimator-1}
-	\caption{First Monte Carlo Estimator}
+	\caption{First Estimator with \(\hat{\pi}_i(s) = 9/T\).}
 	\label{fig:Monte-Carlo-Estimator-1}
 \end{figure}
 
-\subsection{\(2^{nd}\) Estimator for \(\pi_V(s)\)}
-Recall that
+But this estimator has two main issues.
+\begin{problem}[Speed of convergence]
+Not clear how long we should run this for. Namely, we need to be able to say something about
 \[
-	\widetilde{N}(s) = sN+(1-s)\frac{1}{N}\vec{1}\vec{1}^{\top}.
+	\expectation{}{\left\vert \hat{\pi}^{\top}_v(s) - \pi_v(s) \right\vert^2 }
 \]
-Notice that \(\pi(s)\) is the left eigenvector of \(\widetilde{N}(s)\) with eigenvalue \(1\). Write
+in \(T\) to ensure the speed of convergence.
+\end{problem}
+
+\begin{problem}[Biased]
+The estimator is a \textbf{biased} estimator. Recall that this estimator is unbiased if
 \[
-	\begin{split}
-		\pi^{\top}(s)\widetilde{N}(s) &= \pi^{\top}(s) \\
-		&= \pi^{\top}(s)sN+(1 - s)\underbrace{\pi^{\top}(s)\vec{1}}_{ = 1}\frac{1}{V}\vec{1}^{\top}\\
-		&= \pi^{\top}(s)sN+(1 - s)\frac{1}{V}\vec{1}^{\top},
-	\end{split}
+	\mathrm{E}\left[ \hat{\pi}_{v}^{\top}(s) \right] = \pi_v(s);
 \]
-where \(\pi^{\top}(s)\vec{1} = 1\) because \(\pi(s)\) is a probability vector, which sums to \(1\). Then
+and if it is biased,
 \[
-	\pi^{\top}(s)(I - sN) = (1 - s)\frac{1}{V}\vec{1}^{\top}.
+	\hat{\pi}_{v}^{\top}(s) - \pi_v(s)\neq 0.
 \]
-\begin{prev}
-	\[
-		(I - A)^{-1} = I + A + A^2 + \ldots .
-	\]
-\end{prev}
+We see that \(\hat{\pi}^{\top}_v(s)\) is indeed biased since
+\[
+	\mathrm{E}\left[\hat{\pi}^{\top}_v(s)\right] = \frac{1}{T}\sum\limits_{n=0}^{T-1} \expectation{}{\mathbbm{1}_{\{X_n = v\}}}
+	= \frac{1}{T}\sum\limits_{n=0}^{T-1} \probability{}{X_n = v}
+	= \frac{1}{T}\sum\limits_{n=0}^{T-1} (\mu_0 P^n)_v\underset{T\to \infty }{\to }\pi_v(s),
+\]
+where \(P\) is the \underline{one-step transformation matrix}. This only converges when \(T\to \infty \) by
+\hyperref[thm:Perron-Frobenius-theorem]{Perron-Frobenius theorem} since the \hyperref[def:aperiodic]{aperiodicity}.
+\end{problem}
+
+\subsection{Second Page Rank Estimator}\label{subsec:second-page-rank-estimator}
+We now try to improve \hyperref[algo:random-walk-algorithm]{random walk} we just proposed. Recall that
+\[
+	\widetilde{N}(s) = sN+(1-s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\vec{1}\vec{1}^{\top}.
+\]
+Notice that \(\pi(s)\) is the left \hyperref[def:eigenvector]{eigenvector} of \(\widetilde{N}(s)\) with \hyperref[def:eigenvalue]{eigenvalue} \(1\), i.e.,
+\[
+	\pi^{\top}(s)\widetilde{N}(s) = \pi^{\top}(s).
+\]
+Therefore,
+\[
+	\pi ^{\top} (s)
+	= \pi^{\top}(s)sN+(1 - s)\underbrace{\pi^{\top}(s)\vec{1}}_{ = 1}\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}\right\vert}\vec{1}^{\top}
+	= \pi^{\top}(s)sN+(1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top},
+\]
+where we group \(\pi^{\top}(s)\vec{1} = 1\) because \(\pi(s)\) is a probability vector, which sums to \(1\). Then
+\[
+	\pi^{\top}(s)(I - sN) = (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}.
+\]
 Hence,
 \[
-	\begin{split}
-		\pi^{\top}(s) &= (1 - s)\frac{1}{V}\vec{1}^{\top}(I - sN)^{-1}\\
-		&= (1 - s)\frac{1}{V}\vec{1}^{\top}\left(\sum\limits_{i=0}^{\infty} s^i N^i\right)\\
-		&= \sum\limits_{i=0}^{\infty} s^i (1 - s)\frac{1}{V}\vec{1}^{\top}N^i.
-	\end{split}
+	\pi^{\top}(s) = (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}(I - sN)^{-1}
+	= (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}\left(\sum\limits_{i=0}^{\infty} s^i N^i\right)
+	= \sum\limits_{i=0}^{\infty} s^i (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}N^i
 \]
-Notice that \(N^0\coloneqq I\).
+where \(N^0\coloneqq I\).
+\begin{prev}
+	We have \((I - A)^{-1} = I + A + A^2 + \ldots\).
+\end{prev}
 
-We now analysis this expression.
+We now analysis the expression
 \[
-	\pi^{\top}(s) = \sum\limits_{i=0}^{\infty} \underbrace{s^i (1 - s)}_{\tau}\frac{1}{V}\vec{1}^{\top}N^i,
+	\pi^{\top}(s) = \sum\limits_{i=0}^{\infty} \underbrace{s^i (1 - s)}_{\tau}\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}N^i.
 \]
-where
+Firstly, the term \(s^i(1-s) \coloneqq \tau\) is the so-called geometric \hyperref[def:random-variable]{random variable}.
+\begin{intuition}[Geometric random variable]\label{int:geometric-random-variable}
+	We can think of \(\tau\) as the probability of tossing a series of \hyperref[def:independent]{independent} biased coins until first tail occurs,
+	since we have
+	\[
+		\probability{}{\tau = 0} = 1 - s,\quad
+		\probability{}{\tau = 1} = s(1 - s), \ldots,
+		\probability{}{\tau = i} = s^i(1 - s).
+	\]
+\end{intuition}
+\begin{remark}
+	We see that reset happens at time \(N\), hence we look at time \(N-1\).
+\end{remark}
+
+Next, we analyze the term \(\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}N^i\), where
 \begin{itemize}
-	\item \(\tau\)
-	      \begin{itemize}
-		      \item Tossing a series of independent biased coins until first tail occurs.
-		            \[
-			            \begin{split}
-				            \probability{}{\tau = 0} &= 1 - s\\
-				            \probability{}{\tau = 1} &= s(1 - s)\\
-				            &\vdots\\
-				            \probability{}{\tau = i} &= s^i(1 - s).
-			            \end{split}
-		            \]
-		      \item \(\tau\) is so-called \emph{geometric random variable}.
-	      \end{itemize}
-	      We see that reset happens at time \(N\), hence we look at \textbf{time} \(\bm{N-1}\).
-	\item \(\frac{1}{V}\vec{1}^{\top}N^i\)
-	      \begin{itemize}
-		      \item \(u = \frac{1}{V}\vec{1}^{\top}\) is the uniform distribution on the nodes of the graph.
-		      \item \(N^i\) represents random walk repeated \(i\) times.
-	      \end{itemize}
-	      In all, this term represents that we start at a uniformly random node and take \(i\) steps as per random walk. Namely,
-	      \begin{center}
-		      \textbf{Distribution of locations of the random walk after \(i\) steps}.
-	      \end{center}
+	\item \(u = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}\) is the uniform distribution on the nodes of the graph.
+	\item \(N^i\) represents random walk repeated \(i\) times.
 \end{itemize}
 
-\hr
+\begin{intuition}
+	In all, this term represents that we start at a uniformly random node and take \(i\) steps as per random walk. Namely,
+	this term represents the distribution of locations of the random walk after \(i\) steps.
+\end{intuition}
 
-Now, the algorithm becomes
-\begin{enumerate}
-	\item[0.] Toss a geometric random variable \(\tau\) such that
-		\[
-			\probability{}{\tau = i} = s^i(1 - s).
-		\]
-	\item[1.] Pick a random node of the graph and run random walk \(\tau\) times to find where we end up.
-	\item[2.] \textbf{GOTO 1.}(Repeat \(K\) times)
-\end{enumerate}
+Now, the suggested algorithm becomes follows.
+\par
+\begin{algorithm}[H]\label{algo:Monte-Carlo-algorithm-2}
+	\DontPrintSemicolon
+	\caption{Estimate Page Rank ver.2}
+	\SetKwData{arrival}{arrival}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(K\), \(s\)}
+	\KwResult{A list \arrival}
+	\SetKwFunction{RW}{\hyperref[algo:random-walk-algorithm]{RandomWalk}}
+	\SetKwFunction{random}{random}
+	\SetKwFunction{geo}{\hyperref[int:geometric-random-variable]{GeoRandom}}
 
-Denote those \(K\) random variables \(\tau\) as
-\[
-	\tau_1, \tau_2, \ldots , \tau_K
-\]
-and the associated \(X_{\tau}\) as
-\[
-	X_{\tau_1}, X_{\tau_2}, \ldots , X_{\tau_K}.
-\]
+	\BlankLine
 
-We see that
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+		\(\arrival(v)\gets 0\)\;
+	}
+	\;
+	\For(){\(i = 1, \ldots, K\)}{
+		\(\tau \gets \) \geo{\(s\)}\Comment*[r]{Toss a \hyperref[int:geometric-random-variable]{geometric random variable}}
+		\(v\gets \)\random{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{select a uniformly random node}
+		\(\_, v\gets\)\RW{\(v\), \(\tau \), \(s\)}\Comment*[r]{\hyperref[algo:random-walk-algorithm]{Random walk} starting at \(v\) with \(\tau \) steps}
+		\(\arrival(v)\gets \arrival(v) + 1\)\Comment*[r]{Record where the \hyperref[def:random-walker]{random walker} ends up at}
+	}
+	\Return{\arrival}\;
+\end{algorithm}
+\begin{note}
+	The result of \hyperref[algo:Monte-Carlo-algorithm-2]{the above algorithm} records the time the \hyperref[def:random-walker]{random walker}
+	\textbf{ends up} at \(v\) for all \(v\in \mathcal{\MakeUppercase{v}} \) in every \hyperref[algo:random-walk-algorithm]{random walk}.
+\end{note}
+
+Denote those \(K\) \hyperref[def:random-variable]{random variables} \(\tau\) as \(\tau_1, \tau_2, \ldots , \tau_K\)
+and the associated \(X_{\tau}\) as \(X_{\tau_1}, X_{\tau_2}, \ldots , X_{\tau_K}\). We see that
 \[
-	\hat{\pi}_V^K(s) = \frac{1}{K}\sum\limits_{k=1}^{K} \mathbbm{1}_{\{X_{\tau_k} = v\}}.
+	\hat{\pi}_v^K(s) = \frac{1}{K}\sum\limits_{k=1}^{K} \mathbbm{1}_{\{X_{\tau_k} = v\}}.
 \]
 This is an unbiased estimator since
 \[
-	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \probability{}{x_{\tau_k} = v} = \pi_v(s).
+	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \probability{}{X_{\tau_k} = v} = \pi_v(s).
 \]
 Also, the variance can be derived as
 \[
-	\variance{}{\hat{\pi}_V^K(s)} = \frac{\pi_v(s)(1 - \pi_v(s))}{K}\leq \frac{1}{4K}.
+	\variance{}{\hat{\pi}_v^K(s)} = \frac{\pi_v(s)(1 - \pi_v(s))}{K}\leq \frac{1}{4K}.
 \]
 
 \begin{remark}
@@ -245,25 +353,23 @@ Also, the variance can be derived as
 \begin{figure}[H]
 	\centering
 	\incfig{Monte-Carlo-Estimator-2}
-	\caption{Second Monte Carlo Estimator}
+	\caption{Second Estimator with \(X_{\tau-1}\sim\pi(s)\)}
 	\label{fig:Monte-Carlo-Estimator-2}
 \end{figure}
 
-
-\hr
-
 \begin{note}
-	We note that the empirical mean is unbiased while the empirical variance is biased. Let \(X_1, X_2, \ldots  ,X_N\) are i.i.d. with mean \(\mu\) and variance \(\sigma^2\).
+	We note that the empirical mean is unbiased while the empirical variance is biased. Let \(X_1, X_2, \ldots  ,X_N\)
+	are \hyperref[def:i.i.d.]{i.i.d.} with mean \(\mu\) and variance \(\sigma^2\).
 	\begin{itemize}
-		\item We see that \(\hat{\mu}_N\) is the empirical mean which is defined as
-		      \[
-			      \hat{\mu}_N \coloneqq  \frac{1}{N}\sum\limits_{i=1}^{N} X_i
-		      \]
-		      with
-		      \[
-			      \expectation{}{\hat{\mu}_N} = \frac{1}{N}\sum\limits_{i=1}^{N} \expectation{}{X_i} = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
-		      \]
-		      which implies this is an unbiased estimator.
+		\item\(\hat{\mu}_N\) is the empirical mean which is defined as
+		\[
+			\hat{\mu}_N \coloneqq  \frac{1}{N}\sum\limits_{i=1}^{N} X_i
+		\]
+		with
+		\[
+			\expectation{}{\hat{\mu}_N} = \frac{1}{N}\sum\limits_{i=1}^{N} \expectation{}{X_i} = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
+		\]
+		which implies this is an unbiased estimator.
 		\item Denote \(\hat{\mathrm{Var}}(N)\) as the empirical variance estimator. It's defined as
 		      \[
 			      \hat{\mathrm{Var}}(N) \coloneqq \frac{1}{N}\sum\limits_{i=1}^{N} (X_i - \hat{\mu}_N)^2.
@@ -276,66 +382,88 @@ Also, the variance can be derived as
 		      \[
 			      \overline{\mathrm{Var}}(N) \coloneqq  \frac{1}{N-1}\sum\limits_{i=1}^{N} (X_{i-\hat{\mu}_N})^2
 		      \]
-		      with
-		      \[
-			      \expectation{}{\overline{\mathrm{Var}}(N)} = \sigma^2.
-		      \]
+		      with \(\expectation{}{\overline{\mathrm{Var}}(N)} = \sigma^2\).
 	\end{itemize}
 \end{note}
 
-\subsection{\(3^{rd}\) Estimator for \(\pi_V(s)\)}
+\subsection{Third Page Rank Estimator}\label{subsec:third-page-rank-estimator}
 Recall that
 \[
-	\pi(s) = \frac{1 - s}{V}\vec{1}^{\top} (I - sN)^{-1}.
+	\pi(s) = \frac{1 - s}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top} (I - sN)^{-1}.
 \]
-Define
+Now, we define
 \[
 	Z \coloneqq (I - sN)^{-1} = \sum\limits_{i=0}^{\infty} s^i N^i
 \]
 with \(s^0\coloneqq 1\) and \(N^0\coloneqq I\). \(Z\) is a non-negative matrix since \(Z_{ij}\geq 0\).
-Let
-\[
-	\sigma_{ij}\coloneqq (1 - s)Z_{ij} , \qquad \left(\Sigma\right)_{ij}\coloneqq \sigma_{ij}
-\]
-where \(\sigma_{i\cdot}\) is the row of \(\Sigma\) corresponding to node \(i\). We then modify the algorithm as
-\begin{enumerate}
-	\item[0.] PageRank corresponding to reset distribution where we always reset to node \(i\).
-	\item[1.] Start at node \(i\).
-		\begin{itemize}
-			\item Find geometric length \(\tau^i\).
-			\item Run random walk until \(\tau^i\) steps to find the node that we end up with.
-		\end{itemize}
-	\item[2.] \textbf{GOTO 1.}(Repeat \(M\) times for every \(i\))
-\end{enumerate}
+We further define \(\sigma_{ij}\coloneqq (1 - s)Z_{ij}\) with a matrix \(\Sigma \) whose entries are defined as
+\(\left(\Sigma\right)_{ij}\coloneqq \sigma_{ij}\) and \(\sigma_{i\cdot}\) is the row of \(\Sigma\) corresponding
+to node \(i\).
+
+\begin{remark}
+	We see that \(\lambda _{i\cdot}\) is the page rank corresponding to the reset distribution where we always reset to node \(i\).
+\end{remark}
+
+Then, we proposed the following algorithm.
+\par
+\begin{algorithm}[H]\label{algo:Monte-Carlo-algorithm-3}
+	\DontPrintSemicolon
+	\caption{Estimate Page Rank ver.3}
+	\SetKwData{arrival}{arrival}
+	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(M\), \(s\)}
+	\KwResult{A list \arrival}
+	\SetKwFunction{RW}{\hyperref[algo:random-walk-algorithm]{RandomWalk}}
+	\SetKwFunction{geo}{\hyperref[int:geometric-random-variable]{GeoRandom}}
+
+	\BlankLine
+
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+		\(\arrival(v)\gets 0\)\;
+	}
+	\;
+	\For(){\(i\in \mathcal{\MakeUppercase{v}}\)}{
+		\For(){\(j\in 1, \ldots, M\)}{
+			\(\tau^i \gets \) \geo{\(s\)}\Comment*[r]{Toss a \hyperref[int:geometric-random-variable]{geometric random variable}}
+			\(\_, v \gets\)\RW{\(i\), \(\tau ^i\) }\Comment*[r]{\hyperref[algo:random-walk-algorithm]{random walk} starting at \(i\) with steps \(\tau ^i\)}
+			\(\arrival(v)\gets \arrival(v) + 1\)\Comment*[r]{Record where the \hyperref[def:random-walker]{random walker} ends up at}
+		}
+	}
+	\Return{\arrival}\;
+\end{algorithm}
+\begin{note}
+	The result of \hyperref[algo:Monte-Carlo-algorithm-3]{the above algorithm} records the time the \hyperref[def:random-walker]{random walker}
+	\textbf{ends up} at \(v\) for all \(v\in \mathcal{\MakeUppercase{v}} \) in every \hyperref[algo:random-walk-algorithm]{random walk}.
+\end{note}
 
 If we only take one walk, namely \(M = 1\), then
 \[
-	\pi_V(s) = \frac{1}{V}\sum\limits_{i\in\mathcal{V}}\sigma_{iv}(s).
+	\pi_v(s) = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\sum\limits_{i\in\mathcal{V}}\sigma_{iv}(s).
 \]
 
-Now, for every node \(i\) in the network, we run \(M\) times with
+Now, for every node \(i\) in the network, we run \(M\) times with \(\tau^i_1, \tau^i_2, \ldots , \tau^i_M\) and
+\(X_{\tau_1}^i, X_{\tau_2}^i, \ldots , X_{\tau_M}^i\) and count the number of arrivals in node \(v\) and find the average.
+Explicitly, we have
 \[
-	\tau^i_1, \tau^i_2, \ldots , \tau^i_M
-\]
-and
-\[
-	X_{\tau_1}^i, X_{\tau_2}^i, \ldots , X_{\tau_M}^i.
-\]
-
-We count the number of arrivals in node \(v\) and find the average. More explicitly, we have
-\[
-	\hat{\pi}_V(s) = \frac{1}{V}\sum\limits_{i=1}^{V} \frac{1}{M}\sum\limits_{m=1}^{M} \mathbbm{1}_{\{X^i_{\tau^i_m} = v\}} = \frac{1}{VM}\sum\limits_{i=1}^{V} \sum\limits_{m=1}^{M} \mathbbm{1}_{\{X^i_{\tau^i_m} = v\}} .
+	\hat{\pi}_v(s)
+	= \frac{1}{\left\vert \mathcal{\MakeUppercase{v}} \right\vert}\sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}}\right\vert} \frac{1}{M}\sum\limits_{m=1}^{M} \mathbbm{1}_{\left\{X^i_{\tau^i_m} = v\right\}}
+	= \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert M}\sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert} \sum\limits_{m=1}^{M} \mathbbm{1}_{\left\{X^i_{\tau^i_m} = v\right\}}.
 \]
 
-This is another unbiased estimator for the same reason given in the second estimator, but we see that this converges faster and with smaller variance. Specifically, we have
+This is another unbiased estimator for the same reason given in the \hyperref[subsec:second-page-rank-estimator]{second estimator},
+but we see that this converges faster and with smaller variance. Specifically, we have
 \[
-	\variance{}{\hat{\pi}_V(s)} = \frac{1}{VM}\left(\pi_{j} - \frac{\sum\limits_{i=1}^{V} \sigma_{ij}^2}{V}\right).
+	\variance{}{\hat{\pi}_v(s)} = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert M}\left(\pi_{j} - \frac{\sum_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert} \sigma_{ij}^2}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\right)
 \]
-We see that this is a better estimator.
+for all \(v\in \mathcal{\MakeUppercase{v}} \). Hence, this is a better estimator.
 
 \begin{figure}[H]
 	\centering
 	\incfig{Monte-Carlo-Estimator-3}
-	\caption{Third Monte Carlo Estimator}
+	\caption{Third Page Rank Estimator with \(X^i_{\tau_j - 1}\sim\sigma_i(s)\)}
 	\label{fig:Monte-Carlo-Estimator-3}
 \end{figure}
+
+\begin{problem}
+Although the estimator found by \hyperref[algo:Monte-Carlo-algorithm-3]{this algorithm} is better than the other two,
+but it still has its flaws.  The main thing is, it throws away so much data, which means, which means it will converge slower.
+\end{problem}

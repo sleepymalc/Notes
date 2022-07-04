@@ -13,8 +13,8 @@ Then if it is \hyperref[def:irreducible]{irreducible} and \hyperref[def:aperiodi
 \[
 	\lim_{k\to \infty } \frac{r(k)}{(\rho(A))^k} = v(w^{\top} r(0))
 \]
-where \(\rho(A)\) is the unique \hyperref[def:spectral-radius]{spectral radius}, \(v\) is the right eigenvector of
-\(A\) and \(w\) is the left eigenvector of \(A\), and \(w^{\top}v = 1\) for \(\rho(A)\).
+where \(\rho(A)\) is the unique \hyperref[def:spectral-radius]{spectral radius}, \(v\) is the right \hyperref[def:eigenvector]{eigenvector} of
+\(A\) and \(w\) is the left \hyperref[def:eigenvector]{eigenvector} of \(A\), and \(w^{\top}v = 1\) for \(\rho(A)\).
 
 We then have
 \[
@@ -24,8 +24,8 @@ We then have
 \begin{remark}
 	Notice that
 	\begin{itemize}
-		\item \(v\) would be the eigenvector centrality measure.
-		\item \(r^{\ast} = A r^{\ast}\) need not hold because \(1\) need not be an eigenvalue.
+		\item \(v\) would be the \hyperref[def:eigenvector]{eigenvector} centrality measure.
+		\item \(r^{\ast} = A r^{\ast}\) need not hold because \(1\) need not be an \hyperref[def:eigenvalue]{eigenvalue}.
 		\item Since
 		      \[
 			      (r(k))_i = \sum\limits_{j} A_{ij}r_{j}(k - 1) = \sum\limits_{j\colon i\to j} r_j(k-1),
@@ -57,7 +57,7 @@ Noting that
 \[
 	\det(\lambda I - A) = 0 \iff \det(I - \lambda A) = 0,
 \]
-which implies \(\alpha\) should not be the inverse of an eigenvalue of \(A\). Also, we  need that \(r^{\ast}\) to be positive.
+which implies \(\alpha\) should not be the inverse of an \hyperref[def:eigenvalue]{eigenvalue} of \(A\). Also, we  need that \(r^{\ast}\) to be positive.
 
 \begin{figure}[H]
 	\centering
@@ -66,7 +66,7 @@ which implies \(\alpha\) should not be the inverse of an eigenvalue of \(A\). Al
 	\label{fig:katz-centrality}
 \end{figure}
 
-Then for all \(1/\alpha > \rho(A) \iff \alpha\rho(A)<1 \iff \rho(\alpha A)<1\), \(\alpha\) can't be the inverse of any eigenvalues of \(A\) since
+Then for all \(1/\alpha > \rho(A) \iff \alpha\rho(A)<1 \iff \rho(\alpha A)<1\), \(\alpha\) can't be the inverse of any \hyperref[def:eigenvalue]{eigenvalues} of \(A\) since
 we see that \(\alpha A\) is non-negative with \hyperref[def:spectral-radius]{spectral radius} \(<1\).
 
 Now, if \(\alpha A\) is non-negative with \hyperref[def:spectral-radius]{spectral radius} strictly less than one, then we have
@@ -95,141 +95,176 @@ just like the geometry series of \(\frac{1}{1-k}\) for \(\left\vert k \right\ver
 \end{note}
 \end{problem}
 
-
-\chapter{Scaled Page Rank via Markov Chain}
-\begin{problem}
-What's the motivation?
-\end{problem}
-
-\begin{answer}
-	\(\widetilde{N}(s)\) is formed in a way such that
+\chapter{Stochastic Process}
+The motivation is simple: we want to understand the scaled page rank via another viewpoint, i.e., via \hyperref[def:Markov-chain]{Markov chain}.
+\begin{prev}
+	We have seen that \(\widetilde{N}(s)\) is formed in a way such that
 	\[
-		\widetilde{r}(k) = \widetilde{N}^{\top}(s)\widetilde{r}(k - 1)
+		\widetilde{r}(k) = \widetilde{N}(s)^{\top}\widetilde{r}(k - 1)
 	\]
-	with \(\widetilde{r}(0) = \frac{1}{V}\vec{1}\), where \(\widetilde{r}(k)\) is the vector form of the scaled page rank.
-
-	Further,
+	with \(\widetilde{r}(0) = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\vec{1}\), where \(\widetilde{r}(k)\) is the vector
+	form of the scaled page rank. Then, we have
 	\[
-		\widetilde{r}(k) = \left(\widetilde{N}^{\top}(s)\right)^k r(0).
+		\widetilde{r}(k) = \left(\widetilde{N}(s)^{\top}\right)^k r(0),
 	\]
-
-	This is so-called \emph{Power iteration} or \emph{Power Method}. This provides a uniform decrease in the relative error of the entries.
-
-	Now, let \(v\) be the left eigenvalues, then we have
+	which suggests that an \textbf{iterated algorithm} known as \emph{power iteration} or \emph{power method}. We see that this will provide
+	a uniform decrease in the relative error of the entries. Specifically, let \(v\) be the left \hyperref[def:eigenvalue]{eigenvalues}, then we have
 	\[
 		\max_{i\in \mathcal{V}}\left\vert (r(k))_i - v_i\right\vert \leq c_0 s^k
 	\]
-	where \(s\) is the scaled PageRank factor. Then, by using this, if we set the error tolerance as \(\epsilon\)(RHS \(\leq \epsilon\)), we have
+	where \(s\) is the scaled page rank factor. Then, by using this, if we set the error tolerance as \(\epsilon\), i.e., we want the right-hand
+	side to be less than \(\epsilon \), we have
 	\[
 		\#\text{iteration} = \frac{\log(\epsilon)}{\log(s)}\times \mathrm{nnz}(N),
 	\]
 	where \(\mathrm{nnz}(N)\) is the number of non-zero elements in \(N\).
 	\begin{remark}
-		A sparse graph like Internet will typically have
+		A sparse \hyperref[def:graph]{graph} like Internet will typically have
 		\[
 			\mathrm{nnz}(N)\sim\Theta(n^2),
 		\]
 		where \(n\) is the number of the nodes.
 	\end{remark}
-\end{answer}
+\end{prev}
 
 
 \section{Probability}
-We first look at some definition.
-\begin{definition}
+To introduce \hyperref[def:Markov-chain]{Markov chain}, we start with probability.
+\begin{prev}[Probaility review]
 	We let
 	\begin{itemize}
 		\item \(\Sigma\) being our sample space.
-		\item \(\mathcal{F}\) being the \(\sigma\)-algebra (field). This is essentially just a collection of events subsets of the sample space.
-		\item \(\mathbb{\MakeUppercase{P}}\) is the probability.
+		\item \(\mathcal{F}\) being the \(\sigma\)-algebra (\(\sigma \)-field). This is essentially just a collection of events subsets of the sample space.
+		\item \(\mathbb{\MakeUppercase{P}}\colon \mathcal{\MakeUppercase{f}} \to [0, 1]\) is the probability with values in \([0, 1]\) assigned to events.
 	\end{itemize}
-\end{definition}
+	For further and rigorous review, see \href{https://www.pbb.wtf/posts/Notes#real-analysis-math597-umich}{Real Analysis note (MATH 597)}.
+\end{prev}
 
-\begin{eg}
-	Skip\ldots Enough Ve401\ldots
+We first see some examples of discrete cases.
+\begin{eg}[Coin toss]
+	Let \(\Omega = \{\mathrm{H}, \mathrm{T}\}\) corresponding to coin toss, where \(\mathrm{H}\) is head, \(\mathrm{T}\) is tail. We see that
+	\[
+		\mathcal{\MakeUppercase{f}} = \{\varnothing , \{\mathrm{H} \}, \{\mathrm{T} \}, \{\mathrm{H} , \mathrm{T} \}\}.
+	\]
+	If we let the probability of event \(\mathrm{H} \) as \(p\), then we have
+	\[
+		\probability{}{\varnothing } = 0,\quad \probability{}{\{\mathrm{H}\}} = p,\quad \probability{}{\{\mathrm{T} \}} = 1 - p,\quad \probability{}{\{\mathrm{H} , \mathrm{T} \}} = 1.
+	\]
 \end{eg}
 
-\subsection{Properties and Notions}
-\begin{enumerate}
-	\item Mutually disjoint sets. Let \(A\) and \(B\in\mathcal{F}\) and \(A\cap B = \varnothing\). Then we have
-	      \[
-		      \probability{}{A\cup B} = \probability{}{A} + \probability{}{B}.
-	      \]
-	      This can be easily generalized to any finite collection of mutually disjoint subsets
-	      \[
-		      A_1, A_2, \ldots , A_n
-	      \]
-	      such that
-	      \[
-		      A_i \cup A_j = \begin{dcases}
-			      A_i,         & \text{ if }i = j    \\
-			      \varnothing, & \text{ if }i\neq j.
-		      \end{dcases}
-	      \]
-	      We then have \[
-		      \probability{}{\bigcup\limits_{i = 1}^n A_{i}} = \sum\limits_{i=1}^{n} \probability{}{A_{i}}.
-	      \]
-	      \begin{remark}
-		      Axioms of probability says that this extends to countably infinity collections. Namely, consider mutually disjoint sets
-		      \[
-			      A_1, A_2, \ldots
-		      \]
+\begin{eg}[Dice toss]
+	Let \(\Omega = \{1, 2, 3, 4, 5, 6\}\) corresponding to faces of a die. Then \(\mathcal{\MakeUppercase{f}} \) is the power set of \(\Omega \). If the die is fair, then
+	\(\mathbb{\MakeUppercase{p}} \) is so-called uniform distribution, which assign a equal value to every event in \(\Omega \). For example,
+	\[
+		\probability{}{\{1, 2, 3\}} = \frac{\left\vert \{1, 2, 3\} \right\vert }{6} = \frac{3}{6} = \frac{1}{2}.
+	\]
+\end{eg}
 
-		      Then
-		      \[
-			      \probability{}{\bigcup\limits_{i=1}^{\infty} A_{i}} = \sum\limits_{i=1}^{\infty} \probability{}{A_{i}} = \lim_{n \to \infty} \sum\limits_{i=1}^{\infty} \probability{}{A_{i}}.
-		      \]
-	      \end{remark}
-	\item Let \(\Omega\) be the sample space, then we have
-	      \[
-		      \probability{}{\Omega} = 1.
-	      \]
-	      This implies
-	      \[
-		      \probability{}{\varnothing } = 0.
-	      \]
+For continuous cases, we have the following examples.
+\begin{eg}[Uniform distribution]
+	Let \(\Omega = [0, 1]\), and \(\mathcal{\MakeUppercase{f}}\) is the Borel\footnote{Borel usually means usual topology on Euclidean space.} \(\sigma \)-algebra which includes all intervals in \([0, 1]\).
+	If we let \(\mathbb{\MakeUppercase{p}} \) be the uniform distribution on \([0, 1]\), for every \(x\in [0, 1]\), we have
+	\[
+		\probability{}{[0, x]} = x.
+	\]
+	If we define \(F(x)\coloneqq \probability{}{[0, x]} \), this is known as the cumulative distribution function, of CDF in short.
+\end{eg}
 
-	      Further, if \(A\in\mathcal{F}\), then \(A^{c}\in\mathcal{F}\) and \(A\cap A^{c}= \varnothing \). We then see
-	      \[
-		      \probability{}{\Omega} = 1 = \probability{}{A\cup A^{c}} = \probability{}{A} + \probability{}{A^{c}} \implies \probability{}{A^{c}} = 1 - \probability{}{A}.
-	      \]
+\begin{eg}[Exponential distribution]
+	Let \(\Omega = [0, \infty )\), and let \(\mathcal{\MakeUppercase{f}} \) be the Borel \(\sigma \)-algebra with \(\mathbb{\MakeUppercase{p}} \) the
+	exponential distribution with parameter \(\lambda \in (0, \infty )\). Then for all \(x\in [0, \infty )\), the CDF is defined as
+	\[
+		F(x) = \probability{}{[0, x]} = 1 - e^{-\lambda x}.
+	\]
+\end{eg}
 
-	      Notice that \(\varnothing  = \Omega^{c}\).
-	\item Mutually independent sets. We say that \(A\), \(B\) are independent if
-	      \[
-		      \probability{}{A\cap B} = \probability{}{A}\probability{}{B}.
-	      \]
-	      Also, we have similar definition for countably infinite collections of sets. We call a countably infinite collection mutually independent if \emph{any finite sub-collection}
-	      is independent. Namely, for any index set \(K\subsetneq \mathbb{\MakeUppercase{N}}\),
-	      \[
-		      \probability{}{\bigcap\limits_{k\in K} A_k } = \prod_{k\in K} \probability{}{A_k}.
-	      \]
-\end{enumerate}
+\begin{eg}[Normal distribution]
+	Let \(\Omega = \mathbb{\MakeUppercase{r}} = (-\infty , +\infty )\), and \(\mathcal{\MakeUppercase{f}} \) be the Borel \(\sigma \)-algebra with \(\mathbb{\MakeUppercase{p}} \)
+	be the normal distribution with mean \(\mu \) and variance \(\sigma ^{2} \). Then for all \(x\in (-\infty , +\infty )\), the CDF is defined as
+	\[
+		F(x) = \probability{}{(-\infty , x]} = \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi \sigma ^{2} } } e^{- \frac{(x^\prime  - \mu )^{2} }{2 \sigma ^{2} }} \,\mathrm{d}x^\prime.
+	\]
+	Since this is an important distribution, we denote the normal distribution with mean \(\mu\) and variance \(\sigma ^{2} \) as \(\mathcal{\MakeUppercase{n}} (\mu , \sigma ^{2} )\).
+\end{eg}
+
+There are some important properties of probability. Firstly, for two mutually disjoint sets \(A\) and \(B\in\mathcal{F}\) such that \(A\cap B = \varnothing\), we have
+\[
+	\probability{}{A\cup B} = \probability{}{A} + \probability{}{B}.
+\]
+This can be easily generalized to any finite collection of mutually disjoint subsets
+\[
+	A_1, A_2, \ldots , A_n
+\]
+such that
+\[
+	A_i \cup A_j = \begin{dcases}
+		A_i,         & \text{ if }i = j    \\
+		\varnothing, & \text{ if }i\neq j.
+	\end{dcases}
+\]
+We then have \[
+	\probability{}{\bigcup\limits_{i = 1}^n A_{i}} = \sum\limits_{i=1}^{n} \probability{}{A_{i}}.
+\]
+\begin{remark}
+	Axioms of probability says that this extends to countably infinity collections of mutually disjoint sets. Namely, consider mutually disjoint sets
+	\[
+		A_1, A_2, \ldots,
+	\]
+	we have
+	\[
+		\probability{}{\bigcup\limits_{i=1}^{\infty} A_{i}} = \sum\limits_{i=1}^{\infty} \probability{}{A_{i}} = \lim_{n \to \infty} \sum\limits_{i=1}^{\infty} \probability{}{A_{i}}.
+	\]
+
+	Another important property is that \(\mathcal{F}\) is closed under (countably many) intersections.
+\end{remark}
+
+Also, Let \(\Omega\) be the sample space, then we have \(\probability{}{\Omega} = 1\). This implies
+\[
+	\probability{}{\varnothing } = 0.
+\]
+
+Further, if \(A\in\mathcal{F}\), then \(A^{c}\in\mathcal{F}\) and \(A\cap A^{c}= \varnothing \). We then see
+\[
+	\probability{}{\Omega} = 1 = \probability{}{A\cup A^{c}} = \probability{}{A} + \probability{}{A^{c}} \implies \probability{}{A^{c}} = 1 - \probability{}{A}.
+\]
+
+\begin{note}
+	Notice that \(\varnothing  = \Omega^{c}\) in our convention.
+\end{note}
+
+Lastly, we have the following definition.
+\begin{definition}[Mutually independent]\label{def:mutually-independent}
+	We say two sets \(A\), \(B\) are \emph{mutually independent} sets if
+	\[
+		\probability{}{A\cap B} = \probability{}{A}\probability{}{B}.
+	\]
+	Also, we have similar definition for countably infinite collections of sets. We say a countably infinite collection of sets is mutually independent if
+	any finite sub-collection is independent. Namely, for any finite index set \(K\subsetneq \mathbb{\MakeUppercase{N}}\) with \(\left\vert K \right\vert < \infty \),
+	\[
+		\probability{}{\bigcap\limits_{k\in K} A_k } = \prod_{k\in K} \probability{}{A_k}.
+	\]
+\end{definition}
 
 \subsection{Random Variable}
-A random variable is essentially just a mappings(functions) from the sample space to real number. Typically, we let
+Let's start with a definition.
+\begin{definition}[Random variable]\label{def:random-variable}
+	A \emph{random variable} is just a mappings (functions) from the sample space to real number \(\mathbb{\MakeUppercase{r}} \).
+\end{definition}
+
+Typically, we let \(X\colon \Omega\to \mathbb{\MakeUppercase{R}}\) be measurable and denote the Borel \(\sigma\)-algebra on \(\mathbb{\MakeUppercase{r}} \)
+as \(\mathcal{B}(\mathbb{\MakeUppercase{R}})\). In particular, we have \((-\infty , x] \in \mathcal{B}(\mathbb{\MakeUppercase{R}})\), or more generally,
+for all \(x\in (-\infty , +\infty )\), \(\left\{\omega\colon X(\omega)\leq x\right\}\in\mathcal{F}\). This allows us to define the cumulative density
+function of \(x\). In particular,
 \[
-	X\colon \Omega\to \mathbb{\MakeUppercase{R}} \text{ with measurability}.
-\]
-And we denote the Borel \(\sigma-\)algebra as \(\mathcal{B}(\mathbb{\MakeUppercase{R}})\). In particular, we have
-\[
-	(-\infty , x] \in \mathcal{B}(\mathbb{\MakeUppercase{R}}),
-\]
-or more generally,
-\[
-	\left\{\omega\colon X(\omega)\leq x\right\}\in\mathcal{F}\quad \forall x\in(-\infty , +\infty ).
+	\probability{X}{(-\infty , x)} = \probability{}{\left\{\omega\colon X(\omega)\leq x\right\}}.
 \]
 
-Above allows us to define the cumulative density function\((\mathrm{CDF})\) of \(x\). In particular,
-\[
-	\probability{X}{(-\infty , x)} = \probability{}{\underbrace{\left\{\omega\colon X(\omega)\leq \right\}}_{\mathcal{F}}}.
-\]
-
-Same as probability, we can define \textbf{mutual independence} of a collection of random variables.
-\begin{definition}[Independent]
-	Let \(X\) and \(Y\) being two random variables. We say \(X, Y\) are \emph{independent} if
+Same as probability, we can define \hyperref[def:independent]{independence} of a collection of \hyperref[def:random-variable]{random variables}.
+\begin{definition}[Independent]\label{def:independent}
+	Let \(X\) and \(Y\) be two \hyperref[def:random-variable]{random variables}. We say \(X, Y\) are \emph{independent} if
+	for all \(A, B\in \mathcal{\MakeUppercase{b}} (\mathbb{\MakeUppercase{r}} )\),
 	\[
-		\probability{}{\left\{x\in A\right\}\cap \left\{y\in B\right\}} = \probability{}{\left\{x\in A\right\}}\probability{}{\left\{y\in B\right\}}\quad \forall A, B \text{ in }\mathcal{B}(\mathbb{\MakeUppercase{R}}).
+		\probability{}{\left\{x\in A\right\}\cap \left\{y\in B\right\}} = \probability{}{\left\{x\in A\right\}}\probability{}{\left\{y\in B\right\}}.
 	\]
 \end{definition}
 \begin{remark}
@@ -242,56 +277,55 @@ Same as probability, we can define \textbf{mutual independence} of a collection 
 	\[
 		\left\{\omega\in \Omega\colon X(\omega)\in A\right\}\in\mathcal{F} \text{ and }\left\{\omega\in \Omega\colon Y(\omega)\in B\right\}\in\mathcal{F}.
 	\]
-
-	Another important property is that \(\mathcal{F}\) is closed under (countably many) intersections.
 \end{remark}
 
-We can also view this from the probability density function \(f(x)\). We have
-\[
-	\expectation{}{f(x)} \coloneqq \begin{dcases}
-		\sum\limits_{i=1}^{n} f(x_i)\probability{}{x = x_i} \\
-		\int_{-\infty }^{\infty }f(x)\,\mathrm{d}\underbrace{F_x(x)}_{\mathrm{CDF}}
-	\end{dcases}
-\]
-where \(f_x(x)\) is probability density function.
+\begin{note}[Independence via expectation]
+	We can also view \hyperref[def:independent]{independence} from the probability density function \(f_X(x)\). We have
+	\[
+		\expectation{}{f(x)} \coloneqq \begin{dcases}
+			\sum\limits_{i=1}^{n} f_X(x_i)\probability{}{x = x_i} \\
+			\int_{-\infty }^{\infty }f_X(x)\,\mathrm{d}\underbrace{F_X(x)}_{\mathrm{CDF}}
+		\end{dcases}
+	\]
+	where \(f_X(x)\) is probability density function. Then in this case, we say \(X\) and \(Y\) are \hyperref[def:independent]{independent} if for any \(f\) and \(g\),
+	\[
+		\expectation{}{f(x)g(y)} = \expectation{}{f(x)}\expectation{}{g(y)}.
+	\]
+\end{note}
 
-The in this case, we say \(X\) and \(Y\) are independent if for any \(f\) and \(g\),
-\[
-	\expectation{}{f(x)g(y)} = \expectation{}{f(x)}\expectation{}{g(y)}.
-\]
 \begin{eg}
-	Let \(f(x) = x^2\) and \(g(y) = y^3\). Then
+	Let \(f_X(x) = x^2\) and \(g_Y(y) = y^3\). Then if \(X\) and \(Y\) are \hyperref[def:independent]{independent}, we will have
 	\[
 		\expectation{}{x^2 y^3} = \expectation{}{x^2} \expectation{}{y^3}.
 	\]
 \end{eg}
 
-Again, we have similar definition for countably infinite collection of random variables being independent. Let random variables being
-\[
-	X_1, X_2, \ldots
-\]
-associated with the probability density function
-\[
-	f_1, f_2, \ldots
-\]
+\begin{remark}
+	Again, we have similar definition for countably infinite collection of \hyperref[def:random-variable]{random variables} being \hyperref[def:independent]{independent}.
+	Let \hyperref[def:random-variable]{random variables} being
+	\[
+		X_1, X_2, \ldots
+	\]
+	associated with the probability density function \(f_1, f_2, \ldots\). Then, we say this collection of \hyperref[def:random-variable]{random variables} is \hyperref[def:independent]{independent}
+	if for any finite sub-collection is \hyperref[def:independent]{independent}. Namely, for any finite index set \(K\subsetneq\mathbb{\MakeUppercase{N}}\) such that \(\left\vert K \right\vert < \infty \),
+	\[
+		\expectation{}{\prod\limits_{k\in K} f_k(x_k)} = \prod\limits_{k\in K} \expectation{}{f_k(x_k)}.
+	\]
+\end{remark}
 
-Then, we say this collection of random variables is independent if for any finite sub-collection is independent. Namely, for any index set \(K\subsetneq\mathbb{\MakeUppercase{N}}\),
-\[
-	\expectation{}{\prod\limits_{k\in K} f_k(x_k)} = \prod\limits_{k\in K} \expectation{}{f_k(x_k)}.
-\]
+\section{Stochastic Process}
+We now define
+\begin{definition}[Stochastic process]\label{def:stochastic-process}
+	\emph{Stochastic process}\footnote{Sometimes random process}, is a collection of \hyperref[def:random-variable]{random variable} induced by a discrete (time) index
+	\[
+		X_1, X_2, X_3, \ldots.
+	\]
+	In a compact way, we can write \(\{X_i\}_{i = 1}^{\infty }\).
+\end{definition}
 
+Similarly to the \hyperref[def:independent]{independent} in probability, there is an analogous definition.
 
-\section{Stochastic Process(Random Process)}
-This is essentially a collection of random variable induced by a discrete (time) index
-\[
-	X_1, X_2, X_3, \ldots
-\]
-or
-\[
-	\{X_i\}_{i = 1}^{\infty }.
-\]
-
-\begin{intuition}[Stochastic process]
-	A stochastic process is essentially just a collection of (mutually) \underline{independent and identical} (i.i.d) distinct random variables.
-\end{intuition}
-
+\begin{definition}[i.i.d.]\label{def:i.i.d.}
+	A stochastic process is said to be \emph{i.i.d.} if its collection of \hyperref[def:random-variable]{random variable} are all \hyperref[def:independent]{independent}
+	and identically distributed.
+\end{definition}

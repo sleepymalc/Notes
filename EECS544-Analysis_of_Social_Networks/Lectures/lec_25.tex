@@ -1,23 +1,27 @@
 \lecture{25}{08 Dec. 12:30}{Perfect Matching}
-\begin{problem}
 We now want to solve the following questions.
-\begin{enumerate}
-	\item Given a bipartite graph, can we check if there is a perfect matching?
-	      \begin{answer}
-		      Yes, by Hopcroft-Karp algorithm, which is an \emph{asymmetric BFS algorithm}.
-	      \end{answer}
-	\item Market-clearing prices. Do they exist, can we find them?
-	      \begin{answer}
-		      Yes. We can find it in polynomial time by Hungarian algorithm.
-	      \end{answer}
-	\item Social welfare maximizing. Connection of market clearing prices.
-	\item VCG principle. To obtain specific market clearing prices.
-\end{enumerate}
+\begin{problem}
+Given a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}, can we check if there is a \hyperref[def:perfect-matching]{perfect matching}?
+\end{problem}
+\begin{answer}
+	Yes, by \hyperref[sec:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}, which is an \underline{asymmetric BFS algorithm}.
+\end{answer}
+
+\begin{problem}[Market clearing prices]
+Given a market, do the \hyperref[note:market-clearing-prices]{market clearing prices} exist? If they do, can we find them?
+\end{problem}
+\begin{answer}
+	Yes. We can find it in polynomial time by Hungarian algorithm. Also, by using \hyperref[thm:VCG]{VCG principle},
+	we can obtain specific \hyperref[note:market-clearing-prices]{market clearing prices}.
+\end{answer}
+
+\begin{problem}[Social welfare]
+Connection between \hyperref[note:market-clearing-prices]{market clearing prices} and \hyperref[def:social-welfare]{social welfare}
+maximizing.
 \end{problem}
 
-\section{Hopcroft–Karp Algorithm}
-\label{Hopcroft-Karp Algorithm}
-To answer the first question, we need to use Kőnig-Hall Maximize theorem.
+\section{Hopcroft-Karp Algorithm}\label{sec:Hopcroft-Karp-algorithm}
+To answer the first question, we need to use \autoref{thm:Konig-Hall-maximize-theorem}.
 \begin{intuition}
 	It's essentially an asymmetric BFS with labels.
 \end{intuition}
@@ -36,6 +40,43 @@ and also edges such that
 \]
 
 Then the algorithm can be described as follows.
+
+\par
+\begin{algorithm}[H]\label{algo:Hopcroft-Karp-algo}
+	\DontPrintSemicolon
+	\caption{Hopcroft-Karp Algorithm}
+	\KwData{\(p\in (0, 1)\), \(V\), \(\{d_i\}_{i=1}^V\)}
+	\KwResult{\(\mathcal{\MakeUppercase{g}} \)}
+	\SetKwFunction{TC}{TossCoin}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{randW}{randWithWeight}
+	\SetKwData{result}{result}
+	\SetKwData{up}{unpaired}
+	\SetKwData{region}{region}
+	\BlankLine
+
+	\(\mathcal{\MakeUppercase{v}} \gets \{1, 2, \ldots , V\}\)\;
+	\(\mathcal{\MakeUppercase{e}} \gets \varnothing\)\;
+	\(\mathcal{\MakeUppercase{g}} \gets (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) \Comment*[r]{Initialize}
+	\;
+	\For(\Comment*[f]{Assume nodes arrive in order}){\(i = 1, \ldots  , V\) }{
+	\(\up\gets \{1, 2, \ldots , i-1 \}\)\Comment*[r]{Unpaired nodes earlier to \(i\)}
+	\For(){\(e = 1, \ldots, d^{\text{out}}_i\) }{
+	\(\result\gets\) \TC{\(p\) }\Comment*[r]{\(\probability{}{\{\mathrm{H} \}}=p \), \(\probability{}{\{\mathrm{T} \}}\eqqcolon q = 1 - p\)}
+	\uIf(\Comment*[f]{If heads}){\(\result = \mathrm{H}\) }{
+		\(j\gets\)\rand{\(\up\) }
+	}\Else(\Comment*[f]{If tails}){
+	\(j\gets \)\randW{\(\up\), \(\{d_k^{\text{in}}\}_{k\in \up}\) }\footnote{In this case, we choose one of the unpaired nodes in \textbf{proportion} to their incoming edges.}\;
+	}
+	\;
+	\(\mathcal{\MakeUppercase{e}} \gets \mathcal{\MakeUppercase{e}} + \{i \to j\}\)\Comment*[r]{Add the edge \(i\to t\) to \(\mathcal{\MakeUppercase{g}} \)}
+	\(\up\gets \up \setminus \{j\}\)\Comment*[r]{\(j\) is now paired with \(i\)}
+	}
+	}
+
+	\Return{\(\mathcal{\MakeUppercase{g}} \)}\;
+\end{algorithm}
+
 \begin{enumerate}
 	\item[0.] All nodes and edges are marked as free.
 	\item[1.] Initial step. Pick some matching and go through free buyers and match to free sellers they are connected to.
@@ -66,10 +107,11 @@ Then the algorithm can be described as follows.
 	\end{itemize}
 \end{remark}
 
-We then state a fundamental theorem about the \textbf{only} constraint when constructing a perfect matching, without proving it
-\begin{theorem}
-	If no exhausted buyer nodes, then we have a perfect matching. Otherwise, if there are exhausted buyer nodes, then we
-	can find constricted sets.
+We then state a fundamental theorem about the \textbf{only} constraint when constructing a \hyperref[def:perfect-matching]{perfect matching},
+without proving it.
+\begin{theorem}\label{thm:lec25-1}
+	If there are no exhausted buyer nodes, then we have a \hyperref[def:perfect-matching]{perfect matching}. Otherwise, if there are exhausted buyer nodes, then we
+	can find some \hyperref[def:constricted-set]{constricted sets}.
 \end{theorem}
 \begin{note}
 	In the first scenario, we will obtain it using matched edges. Also, in the second scenario, we will only obtain a maximal matching
@@ -77,39 +119,40 @@ We then state a fundamental theorem about the \textbf{only} constraint when cons
 \end{note}
 
 \begin{remark}
-	This theorem essentially tells us that the only obstacle one will meet when constructing a perfect matching is the existence of
-	constricted set.
+	\autoref{thm:lec25-1} essentially tells us that the only obstacle one will meet when constructing a \hyperref[def:perfect-matching]{perfect matching}
+	is the existence of \hyperref[def:constricted-set]{constricted set}.
 \end{remark}
 
 \section{Market Clearing Prices}
-We now come back to market clearing prices problem.
+We now come back to \hyperref[note:market-clearing-prices]{market clearing prices} problem.
 
 \begin{problem}
-Given valuation matrix \(V\) and price vector \(p\), is it always the case that a market clearing price exists?
+Given \hyperref[def:valuation-matrix]{valuation matrix} \(V\) and price vector \(p\), is it always the case that a
+\hyperref[note:market-clearing-prices]{market clearing price} exists?
 \end{problem}
-
 \begin{answer}
-	Yes, and we can find it in polynomial time.(Hungarian algorithm do it in \(O(n^{3})\), which is strongly polynomial time)
+	Yes, and we can find it in polynomial time. (\href{https://en.wikipedia.org/wiki/Hungarian_algorithm}{Hungarian algorithm}
+	do it in \(O(n^{3})\), which is strongly polynomial time)
 \end{answer}
 
-Without loss of generality. Assume that \(V_{1}>V_{2}>V_{3}\geq \ldots \geq V_{N}\). Then we easily see that if
+Without loss of generality, as assume that \(V_{1}>V_{2}>V_{3}\geq \ldots \geq V_{N}\). Then we easily see that if
 \begin{itemize}
-	\item \(p = (V_{1}, 0, \ldots , 0 )\), then a perfect matching exists.
+	\item \(p = (V_{1}, 0, \ldots , 0 )\), then a \hyperref[def:perfect-matching]{perfect matching} exists.
 	      \begin{note}
-		      This is essentially a first price auction.
+		      This is essentially a \hyperref[eg:first-price-auction]{first price auction}.
 	      \end{note}
-	\item \(p = (V_{2}, 0, \ldots , 0 )\), then a perfect matching exists as well.
+	\item \(p = (V_{2}, 0, \ldots , 0 )\), then a \hyperref[def:perfect-matching]{perfect matching} exists as well.
 	      \begin{note}
-		      This is essentially a second price auction.
+		      This is essentially a \hyperref[eg:second-price-auction]{second price auction}.
 	      \end{note}
 	      Furthermore, if
 	      \begin{itemize}
-		      \item \(p_{1}>V_{1}\), then no perfect matching exists.
-		      \item \(p_{1}<V_{2}\), then no perfect matching exists as well.
+		      \item \(p_{1}>V_{1}\), then no \hyperref[def:perfect-matching]{perfect matching} exists.
+		      \item \(p_{1}<V_{2}\), then no \hyperref[def:perfect-matching]{perfect matching} exists as well.
 	      \end{itemize}
 \end{itemize}
 
-We claim that market clearing prices always exists, and will follow so-called \emph{Lattice structure}. Says if
+We claim that \hyperref[note:market-clearing-prices]{market clearing prices} always exists, and will follow so-called \emph{Lattice structure}. Says if
 \(p^{1}\) and \(p^{2}\) are both market clearing prices, then
 \[
 	\begin{split}
@@ -117,16 +160,16 @@ We claim that market clearing prices always exists, and will follow so-called \e
 		p^{1}\land p^{2} &\coloneqq \text{element-wise min}\\
 	\end{split}
 \]
-are also market clearing prices, where
+are also \hyperref[note:market-clearing-prices]{market clearing prices}, where
 \begin{itemize}
-	\item Max market clearing price is by taking the maximum in all components.
-	\item Min market clearing price is by taking the minimum in all components.
+	\item Max \hyperref[note:market-clearing-prices]{market clearing price} is by taking the maximum in all components.
+	\item Min \hyperref[note:market-clearing-prices]{market clearing price} is by taking the minimum in all components.
 \end{itemize}
 
 
 \begin{remark}
-	There is a nice property for market clearing prices: It's always social-welfare maximizing, respect to the utility of all buyers
-	and the sum of prices(seller made).
+	There is a nice property for \hyperref[note:market-clearing-prices]{market clearing prices}: It's always \hyperref[def:social-welfare]{social welfare}
+	maximizing, respect to the \hyperref[def:reward]{utility} of all buyers and the sum of prices (seller made).
 \end{remark}
 
 We can actually formulate the above question as a linear programming. Define \(x_{ij} \in [0, 1]\) as the part of
@@ -157,19 +200,38 @@ If we further restrict the fractional assignment property, then we have the inte
 \begin{remark}
 	We see that
 	\begin{itemize}
-		\item Perfect matching is the only possible solution.
-		\item Solving the LP leads to an integer solution.
-		\item The market clearing price induced by perfect matching will achieve \(V^{\ast}\) in the IP, which is social welfare maximizing.
+		\item \hyperref[def:perfect-matching]{Perfect matching} is the only possible solution.
+		\item Solving the linear programming leads to an integer solution.
+		\item The \hyperref[note:market-clearing-prices]{market clearing price} induced by \hyperref[def:perfect-matching]{perfect matching}
+		      will achieve \(V^{\ast}\) in the integer programming, which is \hyperref[def:social-welfare]{social welfare} maximizing.
 	\end{itemize}
 \end{remark}
 
-\section{Demange-Gale-Sotomayor(DGS) Algorithm}
-Given an English auction for multiple goods, with valuations and prices being all in integers. Then by running the following DGS algorithm, we'll have
-a set of market clearing prices.
+\section{Demange-Gale-Sotomayor Algorithm}
+Given an \hyperref[eg:English-auction]{English auction} for multiple goods, with valuations and prices being all in integers, we can run the
+so-called \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{Demange-Gale-Sotomayor (DGS) algorithm} and get a set of
+\hyperref[note:market-clearing-prices]{market clearing prices}.
+
+\par
+\begin{algorithm}[H]\label{algo:Demange-Gale-Sotomayor-algorithm}
+	\DontPrintSemicolon
+	\caption{Demange-Gale-Sotomayor Algorithm}
+	\KwData{\(p\in (0, 1)\), \(V\), \(\{d_i\}_{i=1}^V\)}
+	\KwResult{\(\mathcal{\MakeUppercase{g}} \)}
+	\SetKwFunction{TC}{TossCoin}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{randW}{randWithWeight}
+	\SetKwData{result}{result}
+	\SetKwData{up}{unpaired}
+	\SetKwData{region}{region}
+	\BlankLine
+
+\end{algorithm}
+
 \begin{enumerate}
 	\item Set initial price to \(p = (0, 0, \ldots , 0 )\)
 	\item At \(p\) fixed the preferred sellers bipartite graph.
-	\item Check if there is a perfect matching.(Can be done by \hyperref[Hopcroft-Karp Algorithm]{Hopcroft-Karp Algorithm})
+	\item Check if there is a \hyperref[def:perfect-matching]{perfect matching}.(Can be done by \hyperref[sec:Hopcroft-Karp-algorithm]{Hopcroft-Karp Algorithm})
 	      \begin{itemize}
 		      \item If yes, then end.
 		      \item Otherwise, determine a constricted set of buyers \(B\), namely find a \(B\) such that
@@ -190,54 +252,54 @@ a set of market clearing prices.
 	This algorithm will terminate in finite-time, further, it's actually a polynomial time algorithm.
 \end{remark}
 
-If one carefully enough for choosing \(S\), he will always terminate in the minimum market clearing prices.
+If one carefully enough for choosing \(S\), he will always terminate in the minimum \hyperref[note:market-clearing-prices]{market clearing prices}.
 
 \section{VCG Principle}
-Consider a \(2^{nd}\) price auction. There is only \(1\) item to be sold with \(N\) buyers with valuation \(V_{1}, V_{2}, \ldots , V_{N}\). We
-further let
+Consider a \hyperref[eg:second-price-auction]{second price auction}. There is only \(1\) item to be sold with \(N\) buyers with valuation
+\(V_{1}, V_{2}, \ldots , V_{N}\). We further let
 \[
 	V_{1}>V_{2}>V_{3}\geq \ldots V_{N}.
 \]
 
-In this case, we see that agent \(1\) gets the good with price \(V_{2}\). We denote the utility as \(\Delta\coloneqq V_{1}-V_{2}>0\).
+In this case, we see that \hyperref[def:player]{agent} \(1\) gets the good with price \(V_{2}\). We denote the \hyperref[def:reward]{utility}
+as \(\Delta\coloneqq V_{1}-V_{2}>0\).
 
 \begin{problem}
-What's the utility of other players?
+What's the \hyperref[def:reward]{utility} of other \hyperref[def:player]{players}?
+\end{problem}
 \begin{answer}
 	\(0\).
 \end{answer}
-\end{problem}
 
-\hr
-
-We now conduct a thought experiment. If we remove agent \(1\) and replace him with a dummy agent, says \(\tilde{1}\), then we see that agent \(2\) will
-get the good with price \(V_{3}\). Further, we see that the sum of the values obtained by agents other than \(\tilde{1}\) is \(V_{2}\), since now agent \(2\) gets
+We now conduct a thought experiment. If we remove \hyperref[def:player]{agent} \(1\) and replace him with a dummy \hyperref[def:player]{agent},
+says \(\tilde{1}\), then we see that \hyperref[def:player]{agent} \(2\) will get the good with price \(V_{3}\). Further, we see that the sum of
+the values obtained by \hyperref[def:player]{agents} other than \(\tilde{1}\) is \(V_{2}\), since now \hyperref[def:player]{agent} \(2\) gets
 the good and his valuation is \(V_{2}\).
 
-\hr
-
-We see that by the appearance of agent \(1\), other agents collectively lost \(V_{2}\) values. We call such collectively lost values as \emph{Externality} agent \(1\) imposes.
+We see that by the appearance of \hyperref[def:player]{agent} \(1\), other \hyperref[def:player]{agents} collectively lost \(V_{2}\) values.
+We call such collectively lost values as \emph{externality} \hyperref[def:player]{agent} \(1\) imposes.
 
 With this view point to view a second price auction, we see the following principle.
-\begin{theorem}
-	VCG Principle. Charge a price to an agent as the externality agent imposes on others.
+\begin{theorem}[Vickrey-Clarke-Groves principle]\label{thm:VCG}
+	Charge a price to an \hyperref[def:player]{agent} as the externality \hyperref[def:player]{agent} imposes on others.
 \end{theorem}
 \begin{eg}
 	We see that for
 	\begin{itemize}
-		\item Agent \(1\) should be charged with price \(V_2\)
-		\item Agent \(2\) should be charged with:
-		      \par In the original auction, the value of all other agents are \(V_{1}\). Now, replace agent \(2\) by a dummy agent \(\tilde{2}\), then the value of all agents other
+		\item \hyperref[def:player]{Agent} \(1\) should be charged with price \(V_2\)
+		\item \hyperref[def:player]{Agent} \(2\) should be charged with:
+		      \par In the original auction, the value of all other \hyperref[def:player]{agents} are \(V_{1}\). Now, replace \hyperref[def:player]{agent}
+		      \(2\) by a dummy \hyperref[def:player]{agent} \(\tilde{2}\), then the value of all \hyperref[def:player]{agents} other
 		      than \(\tilde{2}\) is \(V_{1}\). Hence, the difference is
 		      \[
 			      \Delta_{2} = V_{1} - V_{1} = 0,
 		      \]
-		      namely by VCG principle, we charge agent \(2\) with price \(0\).
+		      namely by \hyperref[thm:VCG]{VCG principle}, we charge \hyperref[def:player]{agent} \(2\) with price \(0\).
 	\end{itemize}
 \end{eg}
 
-To apply VCG principle in a matching market problem mathematically, we first denote the total set of sellers as \(S\), and the total set of buyers as \(B\). Recall
-the definition of \(V^{\ast}\), we further specify it by adding the superscript and subscript as
+To apply \hyperref[thm:VCG]{VCG principle} in a matching market problem mathematically, we first denote the total set of sellers as \(S\), and the total
+set of buyers as \(B\). Recall the definition of \(V^{\ast}\), we further specify it by adding the superscript and subscript as
 \[
 	V^{*, S}_{B}
 \]
@@ -246,31 +308,34 @@ maximize social welfare. Now, consider the \emph{reduced problem}, namely calcul
 \[
 	V^{*, S-j^{\ast}(i)}_{B-i},
 \]
-which stands for the value of everyone else when agent \(i\) is not present.
+which stands for the value of everyone else when \hyperref[def:player]{agent} \(i\) is not present.
 
-Lastly, we consider the \emph{alternate problem}, where we need to calculate the value that everyone else gets if \(i\) is not present, namely we
+Lastly, we consider the \underline{alternate problem}, where we need to calculate the value that everyone else gets if \(i\) is not present, namely we
 calculate
 \[
 	V^{*, S}_{\widetilde{B}}
 \]
-where \(\widetilde{B} \coloneqq B - i + \varnothing \), where \(\varnothing \) stands for a dummy agent \(\widetilde{i} \).
+where \(\widetilde{B} \coloneqq B - i + \varnothing \), where \(\varnothing \) stands for a dummy \hyperref[def:player]{agent} \(\widetilde{i} \).
 
-Combining the reduced problem and the alternate problem, together with the VCG principle, we see that the auctioneer should charge buyer \(i\)
+Combining the reduced problem and the alternate problem, together with the \hyperref[thm:VCG]{VCG principle}, we see that the auctioneer should charge buyer \(i\)
 \[
-	p_{i}^\mathrm{VCG} = V_{\widetilde{B} }^{*, S} - V_{B-i}^{*, S-j^{\ast} (i)}.
+	p_{i}^\mathrm{VCG} = V_{\widetilde{B} }^{*, S} - V_{B-i}^{\ast, S-j^{\ast} (i)}.
 \]
 
 We now simply let
 \[
 	p_{j^{\ast} (i)} = p_{i}^\mathrm{VCG},
 \]
-namely we make the price as posted price.
+namely we make the price as \hyperref[rmk:posted]{posted price}.
 
 \begin{remark}
 	We finally note that
 	\begin{itemize}
-		\item It's market clearing price, furthermore, it's actually the minimum market clearing price.
-		\item There is a conceptual difference between the VCG approach and the DGS algorithm approach. One is posted, one is not. We see that in VCG approach, we determine
-		      the prices for each agent by their valuation, while this is not the case in DGS algorithm approach.
+		\item It's a \hyperref[note:market-clearing-prices]{market clearing price}, furthermore, it's actually the minimum
+		      \hyperref[note:market-clearing-prices]{market clearing price}.
+		\item There is a conceptual difference between the \hyperref[thm:VCG]{VCG} approach and the \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{DGS algorithm}
+		      approach. One is \hyperref[rmk:posted]{posted}, one is not. We see that in \hyperref[thm:VCG]{VCG} approach, we determine
+		      the prices for each \hyperref[def:player]{agent} by their valuation, while this is not the case in
+		      \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{DGS algorithm} approach.
 	\end{itemize}
 \end{remark}

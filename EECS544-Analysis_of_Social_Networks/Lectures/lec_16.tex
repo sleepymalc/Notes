@@ -1,308 +1,370 @@
 \lecture{16}{1 Nov. 12:30}{Random Graph}
-\section{Erdős-Rényi Random Graphs Family}
-We introduce two main models for generating random graphs.
+\section{Erdős-Rényi Random Graphs Family}\label{sec:Erdos-Renyi-random-graphs-family}
+We introduce two main models for generating random \hyperref[def:graph]{graphs}.
 \begin{itemize}
-	\item Erdős-Rényi. The random graph is given by \(G(n, M)\). A graph is chosen uniformly at random from the collection of \textbf{all graphs with \(n\) nodes and \(M\) edges}.
-	\item Edward Gilbert. The random graph is given by \(G(n, p)\). The graph is constructed by connecting nodes randomly, with each edge is included in the graph with probability \(p\) \textbf{independently}.
+	\item Erdős-Rényi. The random \hyperref[def:graph]{graph} is given by \(G(n, M)\).
+	      A \hyperref[def:graph]{graph} is chosen uniformly at random from the collection
+	      of all \hyperref[def:graph]{graphs} with \(n\) nodes and \(M\) edges.
+	\item Edward-Gilbert. The random \hyperref[def:graph]{graph} is given by \(G(n, p)\).
+	      The \hyperref[def:graph]{graph} is constructed by connecting nodes randomly, with
+	      each edge is included in the \hyperref[def:graph]{graph} with probability \(p\) \hyperref[def:independent]{independently}.
 \end{itemize}
 
 \begin{remark}
 	We compare these two models.
 	\begin{itemize}
-		\item The number of expected edges in \(G(n, p)\) is \(\binom{n}{2}p\). Hence, by SLLN, nearly all graphs in \(G(n, p)\) will have \(\binom{n}{2}p\) edges. Then if
-		      \(pn^{2} \to \infty \) and \(M = \binom{n}{2}p\), then as \(n\) grows, the behavior of \(G(n, p)\) should be similar with \(G(n, M)\).
-		\item The most commonly used model is \(G(n, p)\) since the independent property of edges simplifies lots of analysis.
+		\item The number of expected edges in \(G(n, p)\) is \(\binom{n}{2}p\). Hence, by \hyperref[thm:SLLN]{SLLN}, nearly all \hyperref[def:graph]{graphs}
+		      in \(G(n, p)\) will have \(\binom{n}{2}p\) edges. Then if \(pn^{2} \to \infty \) and \(M = \binom{n}{2}p\), then as \(n\) grows, the behavior of
+		      \(G(n, p)\) should be similar with \(G(n, M)\).
+		\item The most commonly used model is \(G(n, p)\) since the \hyperref[def:independent]{independent} property of edges simplifies lots of analysis.
 	\end{itemize}
 \end{remark}
 
-\hr
+We first focus on Erdős-Rényi random \hyperref[def:graph]{graphs} family.
+\subsection{Uniform and Undirected Model}\label{subsec:Uniform-and-Undirected-model}
+In this case, the \hyperref[def:adjacency-matrix]{adjacency matrix} \(A\) is \hyperref[def:symmetric-matrix]{symmetric}.
+This can be seen from constructing the \hyperref[def:adjacency-matrix]{adjacency matrix} \(A\) such that
+\[
+	A = \begin{pmatrix}
+		0 &        & U \\
+		  & \ddots &   \\
+		L &        & 0 \\
+	\end{pmatrix},
+\]
+where we need to specify the upper triangular part \(U\), and the lower triangular part \(L\) can then be obtained by \hyperref[def:symmetric-matrix]{symmetry}.
 
-We first focus on Erdős-Rényi random graphs family.
-\begin{itemize}
-	\item Uniform undirected case. \(A\) is symmetric. Construct the adjacency matrix \(A\) such that
-	      \[
-		      A = \begin{pmatrix}
-			      0 &   &        &   &   \\
-			        & 0 &        & U &   \\
-			        &   & \ddots &   &   \\
-			        & L &        & 0 &   \\
-			        &   &        &   & 0 \\
-		      \end{pmatrix},
-	      \]
-	      where we need to specify the upper triangular part \(U\), and the lower triangular part \(L\) can then be obtained by symmetry.
+Now, let \(V\) denotes the number of nodes of the \hyperref[def:graph]{graph} we're going to generate,
+also let \(p\in(0, 1)\), we have the following algorithm to generate a random \hyperref[def:graph]{graph}.
 
-	      Let \(V\) denotes the nodes \(\{1, 2, \ldots , V\}\) and let \(p\in(0, 1)\), we have the following algorithm to generate a random graph:
-	      \begin{enumerate}
-		      \item For node \(i = 1, 2, \ldots , V - 1\),
-		            \begin{enumerate}
-			            \item For \(j = i+1, \ldots , V\)
-			                  \begin{enumerate}
-				                  \item Generate an independent \(\mathrm{Bernoulli}(p)\) random variable, and set \(A_{ij}\) to be that random variable with
-				                        \[
-					                        \probability{}{A_{ij} = 1} = p, \qquad \probability{}{A_{ij} = 0} = 1-p  .
-				                        \]
-			                  \end{enumerate}
-		            \end{enumerate}
-	      \end{enumerate}
-	      Soon, we will study some properties as \(V\to \infty\).
-	\item Non-uniform undirected graph. With \(P = P^{\top}\), where \(P\) is the probability matrix with diagonal entries being \(0\). Then, we have the following algorithm to
-	      generate a random graph:
-	      \begin{enumerate}
-		      \item For node \(i = 1, 2, \ldots , V - 1\),
-		            \begin{enumerate}
-			            \item For \(j = i+1, \ldots , V\)
-			                  \begin{enumerate}
-				                  \item Generate a \(\mathrm{Bernoulli}(p)\) random variable. Set \(A_{ij}\) to be that random variable with
-				                        \[
-					                        \probability{}{A_{ij} = 1} = p, \qquad \probability{}{A_{ij} = 0} = 1-p  .
-				                        \]
-				                        Namely,
-				                        \[
-					                        A_{ij} = \mathrm{Bernoulli}(P_{ij}).
-				                        \]
-			                  \end{enumerate}
-		            \end{enumerate}
-	      \end{enumerate}
-	\item Uniform directed graph. Again, with \(p\in(0, 1)\), and
-	      \[
-		      \underset{i, j}{\forall}\ i\neq j\quad A_{ij}= \mathrm{Bernoulli}(p) \text{ chosen independently}.
-	      \]
-	      And because of independence, \(A_{ij}\neq A_{ji}\) can occur and
-	      \[
-		      \probability{}{A_{ij} = A_{ji} = 1} = \probability{}{A_{ij} = 1} \probability{}{ A_{ji} = 1} = p^2.
-	      \]
-	      Compared to undirected case, we see that
-	      \[
-		      \probability{}{A_{ij} = A_{ji} = 1} = p
-	      \]
-	      in an undirected graph.
-	\item Non-uniform directed graph. Denote \(P\) as the probability matrix with diagonal entries being \(0\). Then
-	      \[
-		      \underset{i, j}{\forall}\ i\neq j\quad A_{ij} = \mathrm{Bernoulli}(P_{ij})\text{ chosen independently}.
-	      \]
-	      \begin{remark}
-		      To summarize, we have
+\par
+\begin{algorithm}[H]\label{algo:uniform-and-undirected-model-algo}
+	\DontPrintSemicolon
+	\caption{Uniform and Undirected Random Graph Generator}
+	\SetKwData{t}{t}
+	\KwData{\(p\in(0, 1)\), \(V\)}
+	\KwResult{\hyperref[def:adjacency-matrix]{Adjacency matrix} \(A\)}
+	\SetKwFunction{bern}{Bernoulli}
+	\BlankLine
+
+	\(A_{V\times V} = 0_{V \times V}\) \Comment*[r]{Initialize}
+	\;
+	\For(){\(i= 1, \ldots  , V-1\)}{
+		\For(){\(j=i+1, \ldots  , V\)}{
+			\(A_{ij} \gets \)\bern{\(p\)}\Comment*[r]{\(\probability{}{A_{ij} = 1} = p\), \(\probability{}{A_{ij} = 0} = 1-p\)}
+		}
+	}
+	\Return{\(A\)}\;
+\end{algorithm}
+
+Soon, we will study some properties as \(V\to \infty\).
+
+\subsection{Non-Uniform and Undirected Model}\label{subsec:non-uniform-and-undirected-model}
+Given a non-uniform distribution matrix \(P\) with \(P = P^{\top}\), where \(P\) is the probability matrix with diagonal entries being \(0\).
+Then, we have the following algorithm to generate a random \hyperref[def:graph]{graph}.
+\par
+\begin{algorithm}[H]\label{algo:non-uniform-and-undirected-model-algo}
+	\DontPrintSemicolon
+	\caption{Non-Uniform and Undirected Random Graph Generator}
+	\SetKwData{t}{t}
+	\KwData{\(P\), \(V\)}
+	\KwResult{\hyperref[def:adjacency-matrix]{Adjacency matrix} \(A\)}
+	\SetKwFunction{bern}{Bernoulli}
+	\BlankLine
+
+	\(A_{V\times V} = 0_{V \times V}\) \Comment*[r]{Initialize}
+	\;
+	\For(){\(i= 1, \ldots  , V-1\)}{
+	\For(){\(j=i+1, \ldots  , V\)}{
+	\(A_{ij} \gets \)\bern{\(P_{ij}\)}\Comment*[r]{\(\probability{}{A_{ij} = 1} = P_{ij}\), \(\probability{}{A_{ij} = 0} = 1-P_{ij}\)}
+	}
+	}
+	\Return{\(A\)}\;
+\end{algorithm}
+
+\subsection{Uniform and Directed Model}\label{subsec:uniform-and-directed-model}
+Again, with \(p\in(0, 1)\), we have the following algorithm to generate a random \hyperref[def:graph]{graph}.
+\par
+\begin{algorithm}[H]\label{algo:uniform-and-directed-model-algo}
+	\DontPrintSemicolon
+	\caption{Uniform and Directed Random Graph Generator}
+	\SetKwData{t}{t}
+	\KwData{\(p\in(0, 1)\), \(V\)}
+	\KwResult{\hyperref[def:adjacency-matrix]{Adjacency matrix} \(A\)}
+	\SetKwFunction{bern}{Bernoulli}
+	\BlankLine
+
+	\(A_{V\times V} = 0_{V \times V}\) \Comment*[r]{Initialize}
+	\;
+	\For(){\(i= 1, \ldots  , V-1\)}{
+		\For(){\(j=1, \ldots  , V\)}{
+			\(A_{ij} \gets \)\bern{\(p\)}\Comment*[r]{\(\probability{}{A_{ij} = 1} = p\), \(\probability{}{A_{ij} = 0} = 1-p\)}
+		}
+	}
+	\Return{\(A\)}\;
+\end{algorithm}
+
+We see that for all \(i \neq j\),
+\[
+	i\neq j\quad A_{ij}= \mathrm{Bernoulli}(p)
+\]
+chosen \hyperref[def:independent]{independently}. And because of \hyperref[def:independent]{independence},
+\(A_{ij}\neq A_{ji}\) can occur and
+\[
+	\probability{}{A_{ij} = A_{ji} = 1} = \probability{}{A_{ij} = 1} \probability{}{ A_{ji} = 1} = p^2.
+\]
+Compared to \hyperref[subsec:Uniform-and-Undirected-model]{undirected} case, we see that
+\[
+	\probability{}{A_{ij} = A_{ji} = 1} = p
+\]
+in an \hyperref[def:undirected-graph]{undirected graph}.
+
+\subsection{Non-Uniform and Directed Model}\label{subsec:non-uniform-and-directed-model}
+Denote \(P\) as the probability matrix with diagonal entries being \(0\). Then we have the following algorithm to
+generate a random \hyperref[def:graph]{graph}.
+
+\par
+\begin{algorithm}[H]\label{algo:non-uniform-and-directed-model-algo}
+	\DontPrintSemicolon
+	\caption{Non-Uniform and Directed Random Graph Generator}
+	\SetKwData{t}{t}
+	\KwData{\(P\), \(V\)}
+	\KwResult{\hyperref[def:adjacency-matrix]{Adjacency matrix} \(A\)}
+	\SetKwFunction{bern}{Bernoulli}
+	\BlankLine
+
+	\(A_{V\times V} = 0_{V \times V}\) \Comment*[r]{Initialize}
+	\;
+	\For(){\(i= 1, \ldots  , V-1\)}{
+	\For(){\(j= 1, \ldots  , V\)}{
+	\(A_{ij} \gets \)\bern{\(P_{ij}\)}\Comment*[r]{\(\probability{}{A_{ij} = 1} = P_{ij}\), \(\probability{}{A_{ij} = 0} = 1-P_{ij}\)}
+	}
+	}
+	\Return{\(A\)}\;
+\end{algorithm}
+
+We see that for all \(i\neq j\),
+\[
+	A_{ij} = \mathrm{Bernoulli}(P_{ij})
+\]
+chosen \hyperref[def:independent]{independently}.
+
+\begin{eg}[Stochastic block model]
+	We consider a specific model called \emph{stochastic block model} (SBM) with the probability matrix being:
+	\[
+		P = \substack{V_1 \\ \\ V_2}\overset{V_1\qquad V_2}{\begin{bmatrix}
+				P_{11} & P_{12} \\
+				P_{21} & P_{22} \\
+			\end{bmatrix}}
+	\]
+	with \(P_{12} = P_{21}^{\top}\), \(P_{11} = P_{11}^{\top}\) and \(P_{22} = P_{22}^{\top}\). In particular,
+	\[
+		\begin{split}
+			P_{11} = p_{11}\begin{pmatrix}
+				0      & 1      & \ldots & 1      & 1      \\
+				1      & 0      & \ldots & 1      & 1      \\
+				\vdots & \vdots & \ddots & \vdots & \vdots \\
+				1      & 1      & \ldots & 0      & 1      \\
+				1      & 1      & \ldots & 1      & 0      \\
+			\end{pmatrix}_{V_1 \times V_1}, &
+			P_{22} = p_{22}\begin{pmatrix}
+				0      & 1      & \ldots & 1      & 1      \\
+				1      & 0      & \ldots & 1      & 1      \\
+				\vdots & \vdots & \ddots & \vdots & \vdots \\
+				1      & 1      & \ldots & 0      & 1      \\
+				1      & 1      & \ldots & 1      & 0      \\
+			\end{pmatrix}_{V_2 \times V_2}\\
+			P_{12} = p_{12}\begin{pmatrix}
+				1      & 1      & \ldots & 1      & 1      \\
+				1      & 1      & \ldots & 1      & 1      \\
+				\vdots & \vdots & \ddots & \vdots & \vdots \\
+				1      & 1      & \ldots & 1      & 1      \\
+				1      & 1      & \ldots & 1      & 1      \\
+			\end{pmatrix}_{V_1 \times V_2}, &
+			P_{21} = p_{21}\begin{pmatrix}
+				1      & 1      & \ldots & 1      & 1      \\
+				1      & 1      & \ldots & 1      & 1      \\
+				\vdots & \vdots & \ddots & \vdots & \vdots \\
+				1      & 1      & \ldots & 1      & 1      \\
+				1      & 1      & \ldots & 1      & 1      \\
+			\end{pmatrix}_{V_2 \times V_1},
+		\end{split}
+	\]
+	where each block matrix is uniform within the block. In the typical set up, we will have \(p_{11}, p_{22} \gg p_{12}\).
+	This creates a community structure such that
+	\begin{itemize}
+		\item \(p_{11}\) governs connectivity in community \(1\).
+		\item \(p_{22}\) governs connectivity in community \(2\).
+		\item \(p_{12}\) governs the \emph{cross} connectivity structure.
+	\end{itemize}
+
+	\begin{remark}[Bipartite graph generalization]
+		If we instead set
+		\[
+			p_{12}\gg p_{11}, p_{22},
+		\]
+		The generated random \hyperref[def:graph]{graph} generalizes to multiple communities by an appropriate block structure.
+
+		\begin{figure}[H]
+			\centering
+			\incfig{bipartite-graph-generalization}
+			\caption{For \(p_{12}=0\) and \(p_{12}, p_{22}>0\)}
+			\label{fig:bipartite-graph-generalization}
+		\end{figure}
+
+		Also, this relates to the community detection algorithm. We look at the \hyperref[def:Laplacian]{Laplacian} \(L = D - A\)
+		and find \hyperref[thm:eigen-decomposition]{spectral decomposition} and find the smallest \hyperref[def:eigenvalue]{eigenvalues}
+		and \hyperref[def:eigenvector]{eigenvectors} to study community structure. See \autoref{sec:network-decomposition} for detailed
+		discussion.
+	\end{remark}
+\end{eg}
+
+\section{Analysis of Erdős-Rényi Random Graphs Family}
+\begin{prev}
+	To summarize all cases we have seen, we have
+	\begin{itemize}
+		\item Uniform case. With \(p\in(0, 1)\),
 		      \begin{itemize}
-			      \item Uniform case. With \(p\in(0, 1)\) such that
-			            \begin{itemize}
-				            \item \(p = 0\) - \(V\) has isolated nodes.
-				            \item \(p = 1\) - Complete graph.
-			            \end{itemize}
-			      \item Non-uniform case. Some values can be \(1\) or \(0\), but not all.
+			      \item \(p = 0\) - \(V\) has isolated nodes.
+			      \item \(p = 1\) - \hyperref[def:complete-graph]{Complete graph}.
 		      \end{itemize}
-	      \end{remark}
-	\item Particular case of non-uniform and directed graph. This is called Stochastic Block Model(SBM) with the probability matrix being:
+		\item Non-uniform case. Some values can be \(1\) or \(0\), but not all.
+	\end{itemize}
+\end{prev}
+
+Now, let's look at the properties follows the above discussion. In particular, we consider the
+\hyperref[subsec:uniform-and-directed-model]{uniform directed} case with \(p\in(0, 1)\). We then see that each \hyperref[def:undirected-graph]{undirected}
+edge is chosen with probability \(p\). For node \(i\), we have
+\begin{itemize}
+	\item The \hyperref[def:degree]{degree} is associated with
+	      \(\mathrm{Binomial}(V-1, p)\) such that
 	      \[
-		      P = \substack{V_1 \\ \\ V_2}\overset{V_1\qquad V_2}{\begin{bmatrix}
-				      P_{11} & P_{12} \\
-				      P_{21} & P_{22} \\
-			      \end{bmatrix}}
+		      \probability{}{\deg(i) = k} = \binom{V-1}{k}p^k (1 - p)^{V-1-k}.
 	      \]
-	      with \(P_{12} = P_{21}^{\top}\), \(P_{11} = P_{11}^{\top}\) and \(P_{22} = P_{22}^{\top}\). In particular,
-	      \[
-		      \begin{alignedat}{3}
-			      P_{11} &= p_{11}\begin{pmatrix}
-				      0      & 1      & \ldots & 1      & 1      \\
-				      1      & 0      & \ldots & 1      & 1      \\
-				      \vdots & \vdots & \ddots & \vdots & \vdots \\
-				      1      & 1      & \ldots & 0      & 1      \\
-				      1      & 1      & \ldots & 1      & 0      \\
-			      \end{pmatrix}_{V_1 \times V_1}&& \text{uniform within the block}\\
-			      P_{22} &= p_{22}\begin{pmatrix}
-				      0      & 1      & \ldots & 1      & 1      \\
-				      1      & 0      & \ldots & 1      & 1      \\
-				      \vdots & \vdots & \ddots & \vdots & \vdots \\
-				      1      & 1      & \ldots & 0      & 1      \\
-				      1      & 1      & \ldots & 1      & 0      \\
-			      \end{pmatrix}_{V_2 \times V_2}\\
-			      P_{12} &= p_{12}\begin{pmatrix}
-				      1      & 1      & \ldots & 1      & 1      \\
-				      1      & 1      & \ldots & 1      & 1      \\
-				      \vdots & \vdots & \ddots & \vdots & \vdots \\
-				      1      & 1      & \ldots & 1      & 1      \\
-				      1      & 1      & \ldots & 1      & 1      \\
-			      \end{pmatrix}_{V_1 \times V_2}\\
-			      P_{21} &= p_{21}\begin{pmatrix}
-				      1      & 1      & \ldots & 1      & 1      \\
-				      1      & 1      & \ldots & 1      & 1      \\
-				      \vdots & \vdots & \ddots & \vdots & \vdots \\
-				      1      & 1      & \ldots & 1      & 1      \\
-				      1      & 1      & \ldots & 1      & 1      \\
-			      \end{pmatrix}_{V_2 \times V_1}\\
-		      \end{alignedat}
-	      \]
-	      where in the typical set up, we will have \(p_{11}, p_{22} \gg p_{12}\). This creates a community structure such that
-	      \begin{itemize}
-		      \item \(p_{11}\) governs connectivity in community \(1\).
-		      \item \(p_{22}\) governs connectivity in community \(2\).
-		      \item \(p_{12}\) governs the \emph{cross} connectivity structure.
-	      \end{itemize}
-
-	      \begin{remark}
-		      Bipartite graph generalization, which happens when
-		      \[
-			      p_{12}\gg p_{11}, p_{22}.
-		      \]
-		      This generalizes to multiple communities by an appropriate block structure.
-
-		      \begin{figure}[H]
-			      \centering
-			      \incfig{bipartite-graph-generalization}
-			      \label{fig:bipartite-graph-generalization}
-		      \end{figure}
-
-		      Also, this is related to the community detection algorithm. We look at the graph Laplacian
-		      \[
-			      L = D - A
-		      \]
-		      and find spectral decomposition and find the smallest eigenvalues and eigenvectors to study community structure.
-	      \end{remark}
+	\item The mean \hyperref[def:degree]{degree} is just \((V-1)p\).
+	\item The total number of edges is associated with \(\mathrm{Binomial}\left(\frac{V(V-1)}{2}, p\right)\).
+	\item The mean number of edges is \(\frac{V(V-1)}{2}p\).
 \end{itemize}
 
-Let's look at the properties from follows the above discussion. In particular, we consider the uniform directed case with \(p\in(0, 1)\).
-\begin{enumerate}
-	\item Each undirected edge is chosen with probability \(p\). For node \(i\), we have
-	      \begin{itemize}
-		      \item The degree is associated with
-		            \(\mathrm{Binomial}(V-1, p)\) such that
-		            \[
-			            \probability{}{\deg = k} = \binom{V-1}{k}p^k (1 - p)^{V-1-k}.
-		            \]
-		      \item The mean degree is just \((V-1)p\).
-		      \item The total number of edges is associated with \(\mathrm{Binomial}(\frac{V(V-1)}{2}, p)\).
-		      \item The mean number of edges is \(\frac{V(V-1)}{2}p\).
-	      \end{itemize}
-	\item Extremely sparse regime. With \(p = \min(\frac{c}{V}, 1)\) for some \(c>0\). Now, for node \(i\), we have
-	      \begin{itemize}
-		      \item The degree is associated with \(\mathrm{Binomial}(V - 1, \frac{c}{V}) \to \mathrm{Poisson}(c) \) as \(V\to \infty \).
-		      \item The mean degree is
-		            \[
-			            c \frac{V-1}{V}\to c\qquad \text{ as }V\to \infty.
-		            \]
-		            \begin{note}
-			            Recall the Poisson distribution.
-			            \[
-				            \probability{}{ \mathrm{Poisson}(c)=k } = e^{-c} \frac{c^k}{k!}, \qquad k = 0, 1, \ldots
-			            \]
-			            We can have isolated nodes with
-			            \[
-				            \probability{}{ \deg=0} = e^{-c} > 0.
-			            \]
-			            As \(V\to \infty \), \(e^{-c}\) fraction of nodes will be isolated since
-			            \[
-				            \probability{}{ \text{isolated nodes}} = (1 - p)^{V - 1} = (1 - \frac{c}{v})^{V-1} \to e^{-c},
-			            \]
-			            where
-			            \[
-				            \lim_{n \to \infty} (1 - \frac{1}{x})^x = e^{-1}.
-			            \]
-		            \end{note}
-		      \item The total number of edges is associated with \(\mathrm{Binomial}(\frac{V(V-1)}{2}, \frac{c}{V})\).
-		      \item The mean number of edges is \(\frac{V(V - 1)}{2}\frac{c}{V} = \frac{c(V - 1)}{2}\sim \Theta(\frac{c}{2}V)\), which is linear in \(V\).
-	      \end{itemize}
+Now, we can discuss different regimes.
+\subsection{Extremely Sparse Regime}\label{subsec:extremely-sparse-regime}
+With \(p = \min\left\{c / V, 1\right\}\) for some \(c>0\). Then for node \(i\), we have
+\begin{itemize}
+	\item The \hyperref[def:degree]{degree} is associated with \(\mathrm{Binomial}(V - 1, \frac{c}{V}) \to \mathrm{Poisson}(c) \) as \(V\to \infty \).
+	\item The mean \hyperref[def:degree]{degree} is \(c \frac{V-1}{V}\to c\) as \(V\to \infty.\)
+	      \begin{note}[Poisson distribution]
+		      Recall the Poisson distribution is defined as
+		      \[
+			      \probability{}{ \mathrm{Poisson}(c)=k } = e^{-c} \frac{c^k}{k!}, \qquad k = 0, 1, \ldots
+		      \]
+	      \end{note}
+	      We see that for an isolated node \(i\), \(\probability{}{ \deg(i) =0} = e^{-c} > 0\), hence
+	      as \(V\to \infty \), \(e^{-c}\) fraction of nodes will be isolated since
+	      \[
+		      \probability{}{ \text{isolated nodes}} = (1 - p)^{V - 1} = \left(1 - \frac{c}{v}\right)^{V-1} \to e^{-c},
+	      \]
+	      where \(\lim_{n \to \infty} \left(1 - \frac{1}{x}\right)^x = e^{-1}\).
+	\item The total number of edges is associated with \(\mathrm{Binomial}\left(\frac{V(V-1)}{2}, \frac{c}{V}\right)\).
+	\item The mean number of edges is \(\frac{V(V - 1)}{2}\frac{c}{V} = \frac{c(V - 1)}{2}\sim \Theta(\frac{c}{2}V)\), which is linear in \(V\).
+\end{itemize}
 
-	      We can further divide this cases into following sub-cases:
-	      \begin{enumerate}
-		      \item Sub-critical regime with \(0<c<1\). Essentially "isolated nodes." The largest connected component will have size \(O(\log V)\) as \(V\to \infty \). And the
-		            number of connected components will be
-		            \[
-			            \Omega(\frac{V}{\log V}) \qquad \text{ as }V\to \infty.
-		            \]
-		            \begin{figure}[H]
-			            \centering
-			            \incfig{sub-critical-regime}
-			            \caption{Sub-critical Regime.}
-			            \label{fig:sub-critical-regime}
-		            \end{figure}
-		      \item Super-critical regime with \(c>1\). This essentially leads to a (Single) Giant component. There will exist a \(c_1\) associated
-		            with the largest component such that
-		            \[
-			            \left\vert c_1 \right\vert \sim f(c_1)V, \qquad f\in(0, 1)
-		            \]
-		            where \(f\) is an increasing function of \(c\) with \(f(0) = 0\) and \(\lim\limits_{c\to \infty }f(c) = 1\).
-		            And since \(e^{-c}>0\), so isolated nodes exist.
-
-		            Further, the second-largest component will have
-		            \[
-			            \left\vert c_2 \right\vert \sim O(\log V),
-		            \]
-		            while all other components are very small.
-		            \begin{figure}[H]
-			            \centering
-			            \incfig{super-critical-regime}
-			            \caption{Super-critical Regime.}
-			            \label{fig:super-critical-regime}
-		            \end{figure}
-		      \item Critical case such that \(c = 1\). We see that
-		            \[
-			            \left\vert c_1 \right\vert \sim \Theta(V^{\frac{2}{3}}), \qquad \left\vert c_2 \right\vert O(\log V).
-		            \]
-	      \end{enumerate}
-	      \begin{remark}[Branching processes]
-		      These analyses are using so-called \emph{Branching Processes}.\footnote{\url{https://en.wikipedia.org/wiki/Branching_process}}
+\begin{remark}
+	We can further divide this cases into following sub-cases:
+	\begin{enumerate}
+		\item Sub-critical regime with \(0<c<1\). Essentially \textbf{isolated nodes}.
+		      The largest \hyperref[def:connected]{connected} component will have size \(O(\log V)\) as \(V\to \infty \), and the
+		      number of \hyperref[def:connected]{connected} components will be
+		      \[
+			      \Omega\left(\frac{V}{\log V}\right)
+		      \]
+		      as \(V\to \infty \).
 		      \begin{figure}[H]
 			      \centering
-			      \incfig{branching-processes}
-			      \caption{Branching processes.}
-			      \label{fig:branching-processes}
+			      \incfig{sub-critical-regime}
+			      \caption{Sub-critical regime, at least some islands are \(O(\log V)\) size}
+			      \label{fig:sub-critical-regime}
 		      \end{figure}
+		\item Super-critical regime with \(c>1\). This essentially leads to a (single) \hyperref[def:giant-component]{giant component}.
+		      There will exist a \(c_1\) associated with the largest component such that
+		      \[
+			      \left\vert c_1 \right\vert \sim f(c_1)V, \qquad f\in(0, 1)
+		      \]
+		      where \(f\) is an increasing function of \(c\) with \(f(0) = 0\) and \(\lim\limits_{c\to \infty }f(c) = 1\).
+		      And since \(e^{-c}>0\), so isolated nodes exist. Further, the second-largest component will have
+		      \[
+			      \left\vert c_2 \right\vert \sim O(\log V),
+		      \]
+		      while all other components are very small.
+		      \begin{figure}[H]
+			      \centering
+			      \incfig{super-critical-regime}
+			      \caption{Super-critical regime, \(e^{-c}>0\), so isolated nodes exist}
+			      \label{fig:super-critical-regime}
+		      \end{figure}
+		\item Critical regime such that \(c = 1\). We see that \(\left\vert c_1 \right\vert \sim \Theta(V^{\frac{2}{3}})\), \(\left\vert c_2 \right\vert O(\log V)\).
+	\end{enumerate}
+	\begin{remark}[Branching processes]
+		These analyses are using so-called \href{https://en.wikipedia.org/wiki/Branching_process}{\emph{branching process}}.
+		\begin{figure}[H]
+			\centering
+			\incfig{branching-processes}
+			\caption{Branching processes.}
+			\label{fig:branching-processes}
+		\end{figure}
 
-		      Let \(c\) be the mean number of children. Then we have
-		      \begin{itemize}
-			      \item \(c<1\): dies out fast
-			      \item \(c>1\): can keep growing
-			      \item \(c=1\): critical - dies out but goes much further compare to the first case
-		      \end{itemize}
-	      \end{remark}
-	\item Sparse regime(Connectivity regime) with \(p = \frac{c\log V + a}{V}\) where \(a\in\mathbb{\MakeUppercase{R}}\) and \(c>0\).
-	      More precisely,
+		Let \(c\) be the mean number of children. Then we have
+		\begin{itemize}
+			\item \(c<1\): dies out fast
+			\item \(c>1\): can keep growing
+			\item \(c=1\): This is the critical case: dies out but goes much further compare to the first case
+		\end{itemize}
+	\end{remark}
+\end{remark}
+
+\subsection{Sparse Regime}\label{subsec:sparse-regime}
+This is also known as connectivity regime. With \(p = \frac{c\log V + a}{V}\) where \(a\in\mathbb{\MakeUppercase{R}}\) and \(c>0\),
+more precisely, we have
+\[
+	p\sim \frac{c\log V + a}{V} \text{ as }V\to \infty.
+\]
+
+Asymptotically, as \(V\to \infty \), node \hyperref[def:degree]{degrees} go to infinity (not necessarily for all nodes). Now, for node \(i\), we have
+\begin{itemize}
+	\item The mean \hyperref[def:degree]{degree} is
 	      \[
-		      p\sim \frac{c\log V + a}{V} \text{ as }V\to \infty.
+		      (V - 1)p = \frac{V-1}{V}(c\log V + a)\sim c\log V + a = \Theta(\log V).
 	      \]
+	\item The number of edges is
+	      \[
+		      \frac{V(V-1)}{2}p = (V - 1)(c\log V + a) = \Theta(V\log V).
+	      \]
+\end{itemize}
 
-	      Asymptotically, as \(V\to \infty \), node degrees go to infinity(not necessarily for all nodes). Now, for node \(i\), we have
-	      \begin{itemize}
-		      \item The mean degree is
-		            \[
-			            (V - 1)p = \frac{V-1}{V}(c\log V + a)\sim c\log V + a = \Theta(\log V).
-		            \]
-		      \item The number of edges is
-		            \[
-			            \frac{V(V-1)}{2}p = (V - 1)(c\log V + a) = \Theta(V\log V).
-		            \]
-	      \end{itemize}
-
-	      Now consider following regimes.
-	      \begin{enumerate}
-		      \item \(0<c<1\): As \(V\to \infty \), there will always be isolated nodes. There will be one giant component with almost all nodes.
-		      \item \(c>1\): As \(V\to \infty \), the graph is \textbf{always connected}.
-		      \item \(c = 1\):
-		            \begin{itemize}
-			            \item With probability \(e^{-e^{-a}}\), there are isolated nodes.
-			            \item With probability \(1 - e^{-e^{-a}}\), the graph is connected.
-		            \end{itemize}
-	      \end{enumerate}
-	      \begin{remark}
-		      For these graphs, isolated nodes are the ones stopping, preventing connectivity. Moment you eliminate isolated nodes,
-		      connectivity emerges.
-	      \end{remark}
-	\item Extremely dense and connected graphs with \(p\sim \Omega(\frac{\log V}{V})\).
-	      \begin{remark}
+\begin{remark}
+	Now consider following sub-cases.
+	\begin{enumerate}
+		\item \(0<c<1\): As \(V\to \infty \), there will always be isolated nodes. There will be one \hyperref[def:giant-component]{giant component} with almost all nodes.
+		\item \(c>1\): As \(V\to \infty \), the \hyperref[def:graph]{graph} is \textbf{always connected}.
+		\item \(c = 1\):
 		      \begin{itemize}
-			      \item Generally, we say a graph is sparse when the number of edges is linear with respect to \(V\), namely
-			            \[
-				            E\sim \Theta(V).
-			            \]
-			            And we say a graph is dense when the number of edges is quadratic with respect to \(V\), namely
-			            \[
-				            E\sim \Theta(V^2),
-			            \]
-			            note that this case is not so common.
-			      \item We can also see this by considering the number of triangles. In the connectivity regime, the number of edges is
-			            \[
-				            \Theta(V\log V),
-			            \]
-			            which is small relative to what's observed in real0world graphs.
+			      \item With probability \(e^{-e^{-a}}\), there are isolated nodes.
+			      \item With probability \(1 - e^{-e^{-a}}\), the \hyperref[def:graph]{graph} is \hyperref[def:connected]{connected}.
 		      \end{itemize}
-	      \end{remark}
-\end{enumerate}
+	\end{enumerate}
+	For these \hyperref[def:graph]{graphs}, isolated nodes are the ones stopping, preventing \hyperref[def:connected]{connectivity}.
+	The moment you eliminate isolated nodes, connectivity emerges.
+\end{remark}
+
+\subsection{Extremely Dense Regime}\label{subsec:extremely-dense-regime}
+Now, if \(p\sim \Omega(\frac{\log V}{V})\), the \hyperref[def:graph]{graph} is extremely dense with \hyperref[def:connected]{connectivity}. In this case,
+the \hyperref[def:degree]{degree} distributions as Poisson
+\[
+	\probability{}{\mathrm{Poisson}(c) > k} \sim e^{-g(c)k},
+\]
+which drop exponentially or geometrically in \(k\) since its has geometric tail.
+\begin{remark}
+	In practice, we have
+	\[
+		\probability{}{\deg(i) > k} \sim \frac{1}{k^\alpha }
+	\]
+	for \(\alpha > 1\), which has only power-law tail.
+\end{remark}

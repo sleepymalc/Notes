@@ -21,87 +21,158 @@ maximizing.
 \end{problem}
 
 \section{Hopcroft-Karp Algorithm}\label{sec:Hopcroft-Karp-algorithm}
-To answer the first question, we need to use \autoref{thm:Konig-Hall-maximize-theorem}. We first define buyer nodes such that
-\[
-	\text{Buyer nodes}\in \{\text{free}, \text{matched}, \text{exhausted}   \}
-\]
-and seller nodes such that
-\[
-	\text{Seller nodes}\in \{\text{free}, \text{matched}\},
-\]
-and also edges such that
-\[
-	\text{Edges}\in \{\text{free}, \text{matched}\}.
-\]
+To answer the first question, since we already have the powerful \autoref{thm:Konig-Hall-maximize-theorem} which characterize the existence of a
+\hyperref[def:perfect-matching]{perfect matching}, a simple way to idea is to check whether a \hyperref[def:constricted-set]{constricted set}
+exists or not. But a brute-force approach will require we to check for all subsets of \(\{1, 2, \ldots , N \}\), which is exponential.
 
-Then the algorithm can be described as follows.
+Hence, another simple idea is to find a maximum matching and check whether it's \hyperref[def:perfect-matching]{perfect}, i.e.,
+whether a maximum matching has size \(N\). Note that we'll have to use \autoref{thm:Konig-Hall-maximize-theorem}. We first see some definitions which is important to
+understand the algorithm.
 
-\par\todo{Make this into formal pseudo-code}
-\begin{algorithm}[H]\label{algo:Hopcroft-Karp-algo}
-	\DontPrintSemicolon
-	\caption{Hopcroft-Karp Algorithm}
-	\KwData{}
-	\KwResult{}
-	\SetKwFunction{TC}{TossCoin}
-	\SetKwFunction{rand}{rand}
-	\SetKwFunction{randW}{randWithWeight}
-	\SetKwData{result}{result}
-	\SetKwData{up}{unpaired}
-	\SetKwData{region}{region}
-	\BlankLine
+\begin{definition}[Augmenting path]\label{def:augmenting-path}
+	Let \(M\) be a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite} matching in \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} = L \bigsqcup  R, \mathcal{\MakeUppercase{E}})\).
+	Then we say that a \hyperref[def:simple-path]{simple path} \(P\) in \(\mathcal{\MakeUppercase{g}} \) is an \emph{augmenting path} w.r.t. \(M\)
+	if it starts at an unmatched vertex in \(L\), ends at an unmatched vertex in \(R\) with its edges belong alternately to \(M\) and \(E - M\).
+\end{definition}
 
-\end{algorithm}
-
-\begin{enumerate}
-	\item[0.] All nodes and edges are marked as free.
-	\item[1.] Initial step. Pick some matching and go through free buyers and match to free sellers they are connected to.
-		After match labels of buyers, sellers and edge to matched. If any buyers is not able to be matched, let it be free for now.
-	\item[2.] If after this initial step, there are no free buyers, then we're done and perfect match is obtained.
-	\item[3.] Otherwise, there are some free buyers left.
-		\begin{itemize}
-			\item Pick one of these free buyers, connect it to all \textbf{matched} sellers that this free buyers has edges with(all edges here are free)
-			\item For each \textbf{matched} sellers, go to the other side using the \textbf{matched} edges, we'll end up at matched buyers.
-			\item For each \textbf{matched} buyers, use free edges to connect to the other side, which is seller.
-			\item Return to the buyers side from any \textbf{matched} sellers using their \textbf{matched} edges.
-		\end{itemize}
-	\item[4.] Repeat until no exploration can be done.
-		\begin{itemize}
-			\item Matched buyer has no free edges.
-			\item All new sellers are free.
-		\end{itemize}
-\end{enumerate}
+\begin{note}
+	\autoref{def:augmenting-path} s related to, but different from, an augmenting path in a flow network algorithm like
+	\href{https://en.wikipedia.org/wiki/Ford%E2%80%93Fulkerson_algorithm}{Ford-Fulkerson algorithm}.
+\end{note}
 
 \begin{intuition}
-	It's essentially an asymmetric BFS with labels.
+	To find an \hyperref[def:augmenting-path]{augmenting path}, we utilize the idea of breadth-first search since it'll build up a level graphs
+	in its nature, and in the case of a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}, with some checking, we can
+	build up a level graph which the end points of edges alternating between matched and unmatched vertices.
 \end{intuition}
 
-\begin{remark}
+Then, we'll see that in the \hyperref[algo:Hopcroft-Karp-algorithm]{algorithm} we're going to develop, we'll need to find the
+shortest \hyperref[def:augmenting-path]{augmenting paths}, and this is done by using depth-first search.
+
+
+\par
+\begin{algorithm}[H]\label{algo:Hopcroft-Karp-algorithm}
+	\DontPrintSemicolon
+	\caption{Hopcroft-Karp Algorithm}
+	\SetKwRepeat{Do}{do}{while}
+	\KwData{A \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph} \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} = L \bigsqcup  R, \mathcal{\MakeUppercase{e}} )\)}
+	\KwResult{A maximum matching \(M\)}
+	\BlankLine
+
+	\(M\gets \varnothing \)\Comment*[r]{Initialize}
+	\Do{\(\mathcal{\MakeUppercase{P}}  \neq \varnothing \)}{
+	\(\mathcal{\MakeUppercase{P}} \gets \{P_i\}_{i=1}^k\)\Comment*[r]{Maximal set of \hyperref[def:vertex-independent]{disjoint} shortest \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\)}\label{algo:Hopcroft-Karp-algorithm:line3}
+	\(M = M \oplus (\bigcup_{i=1}^{k} P_i)\)\Comment*[r]{\(A \oplus B \coloneqq (A-B)\cup (B - A)\)}\label{algo:Hopcroft-Karp-algorithm:line4}
+	}
+	\Return{\(M\)}
+\end{algorithm}
+
+\begin{intuition}
 	We see that
 	\begin{itemize}
-		\item At termination, if there is a path from a \textbf{free} buyer to a \textbf{free} seller, then it has to have alternating labels. We
-		      call such a path an \emph{augmenting path}, since we can augment the total size of the matching by \(1\) by altering this path.
-		\item Specifically, if an augmenting path exists, then flip all the labels of the edges, and label the free buyers and sellers to matched. This
+		\item If there is an \hyperref[def:augmenting-path]{augmenting path}, we can augment the total size of the matching by
+		      \(1\) by altering this \hyperref[def:path]{path}. Specifically, if an \hyperref[def:augmenting-path]{augmenting path}
+		      exists, then flip all the labels of the edges, and label the free buyers and sellers to matched. This
 		      will increase the size of the matching by \(1\).
-		\item If for a free buyer node, no augmenting paths are found, then label it as exhausted. Repeat through all free buyers nodes, until none remain.
 		\item This is a polynomial time algorithm, since we will only explore every node once.
 	\end{itemize}
+\end{intuition}
+
+
+
+We now analyze the \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} rigorously. We first prove that the correctness of
+\hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
+
+\subsection{Correctness Analysis}
+We first see an important lemma which characterizes the behavior of \autoref{algo:Hopcroft-Karp-algorithm:line3} and \autoref{algo:Hopcroft-Karp-algorithm:line4}.
+\begin{lemma}\label{lma:lec25-1}
+	If \(M\) is a matching and \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M\), then the symmetric difference
+	\(M\oplus P\) is a matching and \(\left\vert M\oplus P \right\vert = \left\vert M \right\vert + 1\). Furthermore, if
+	\(P_1, P_2, \ldots  , P_k\) are \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths}
+	w.r.t. \(M\), then the symmetric difference
+	\[
+		M\oplus(P_1 \cup P_2 \cup  \ldots  \cup  P_k  )
+	\]
+	is a matching with cardinality \(\left\vert M \right\vert + k\).
+\end{lemma}
+\begin{proof}
+	Suppose \(M\) is a matching and \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M\), then \(P\) consists of \(k\) edges in \(M\)
+	and \(k+1\) edges not in \(M\) by the \hyperref[def:augmenting-path]{definition}\footnote{Specifically, the first edge of \(P\) touches an unmatched vertex in \(L\),
+		so it cannot be in \(M\) Similarly, the last edge in \(P\) touches an unmatched vertex in \(R\), so the last edge cannot be in \(M\). Since
+		the edges alternate being in or not in \(M\), there must be exactly one more edge not in \(M\) than in \(M\).}.
+
+	This implies that
+	\[
+		\left\vert M\oplus P \right\vert = \left\vert M \right\vert + \left\vert P \right\vert - 2k = \left\vert M \right\vert + 2k + 1 - 2k = \left\vert M \right\vert + 1,
+	\]
+	since we must remove each edge of \(M\) within is in \(P\) from both \(M\) and \(P\). Now suppose \(P_1, P_2, \ldots  , P_k\) are
+	\hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths}
+	w.r.t. \(M\). Let \(k_i\) be the number of edges in \(P_{i} \) which are in \(M\), so that \(\left\vert P_{i}  \right\vert = 2k + i + 1\).
+	Then we have
+	\[
+		M \oplus (P_1 \cup P_2 \cup  \ldots  \cup P_k)= \left\vert M \right\vert + \left\vert P_1 \right\vert + \ldots  + \left\vert P_k \right\vert
+		- 2k_1 - 2k_2 - \ldots  - 2k_k = \left\vert M \right\vert + k.
+	\]
+
+	To see that we in fact get a matching, suppose that there was some vertex \(v\) which had at least \(2\) incident edges \(e\) and \(e^\prime \).
+	They cannot both come from \(M\) since \(M\) is a matching. They cannot both come from \(P\) since \(P\) is \hyperref[def:simple-path]{simple}
+	and every other edge of \(P\) is removed. Thus, \(e\in M\) and \(e^\prime \in P\setminus M\). However, if
+	\(e\in M\), then \(e\in P\), so \(e \notin M\oplus P\), a contradiction. A similar argument gives the case of \(M\oplus (P_1 \cup \ldots \cup P_k )\).
+\end{proof}
+
+We see that \autoref{lma:lec25-1} ensures that \(M\) is always a matching, also, \(M\) will increase \(k\) at each iteration. We now analyze why
+whenever there are no \hyperref[def:augmenting-path]{augmenting paths}, i.e., \(\mathcal{\MakeUppercase{p}} = \varnothing \), \(M\) is
+optimal\footnote{Note that optimal doesn't mean \hyperref[def:perfect-matching]{perfect}, just maximum.}.
+
+\begin{theorem}\label{thm:lec25-1}
+	If a matching \(M\) is not optimal, then there exists at least one \hyperref[def:augmenting-path]{augmenting path}.
+\end{theorem}
+\begin{proof}
+	Suppose that a matching \(M\) is not optimal, and let \(P\) be the symmetric difference \(M\oplus M^{\ast} \) where \(M^{\ast} \) is an optimal
+	matching. Since \(M\) and \(M^{\ast} \) are both matchings, every vertex has \hyperref[def:degree]{degree} at most \(2\) in \(P\). So \(P\)
+	must form a collection of disjoint cycles, of \hyperref[def:path]{paths} with an equal number of matched and unmatched edges in \(M\) of
+	\hyperref[def:augmenting-path]{augmenting paths} for \(M\), and of \hyperref[def:augmenting-path]{augmenting paths} for \(M^{\ast} \).
+	But the latter is impossible because \(M^{\ast} \) is optimal.
+
+	Now, the cycles and the \hyperref[def:path]{paths} with equal numbers of matched and unmatched vertices do not contribute to the difference in
+	size between \(M\) and \(M^{\ast} \), so this difference is equal to the number of \hyperref[def:augmenting-path]{augmenting paths} for \(M\)
+	in \(P\). Thus, whenever there exists a matching \(M^{\ast} \) larger than the current matching \(M\), there must also exist an
+	\hyperref[def:augmenting-path]{augmenting path}.
+\end{proof}
+
+Hence, with \autoref{thm:lec25-1}, we see that \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} terminate with the desired
+result. We now want to know its time complexity.
+\begin{remark}[Finite termination]
+	Before doing a formal time complexity analysis, we note that just from \autoref{lma:lec25-1} and \autoref{thm:lec25-1}, we already have
+	finite termination guarantee for \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}. It's because that A maximum
+	matching \(M^{\ast} \) is always finite since we only consider a finite \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph},
+	and from \autoref{lma:lec25-1}, at each iteration before termination, we must find at least one \hyperref[def:augmenting-path]{augmenting path} \(P\),
+	and from \autoref{lma:lec25-1}, the corresponding new matching \(M\oplus P\) has cardinality increased at least by \(1\), hence we see that
+	we're guaranteed for a finite termination.
 \end{remark}
 
-We then state a fundamental theorem about the \textbf{only} constraint when constructing a \hyperref[def:perfect-matching]{perfect matching},
-without proving it.
-\begin{theorem}\label{thm:lec25-1}
+\subsection{Time Complexity Analysis}
+
+\subsection{An Alternated Approach}
+Another way to answer whether a given market has \hyperref[def:perfect-matching]{perfect matching} is as follows.
+We first define a new label called \(\mathtt{exhausted}\)\footnote{Note that we only have \(\mathtt{matched}\) or \(\mathtt{free}\) before.},
+which means that for a free buyer node, no \hyperref[def:augmenting-path]{augmenting paths} are found.
+Then, with the notion of \hyperref[def:constricted-set]{constricted set}, we state a fundamental theorem about the \textbf{only} constraint when constructing
+a \hyperref[def:perfect-matching]{perfect matching}, without proving it.
+\begin{theorem}\label{thm:lec25-2}
 	If there are no exhausted buyer nodes, then we have a \hyperref[def:perfect-matching]{perfect matching}. Otherwise, if there are exhausted buyer nodes, then we
 	can find some \hyperref[def:constricted-set]{constricted sets}.
 \end{theorem}
-\begin{note}
-	In the first scenario, we will obtain it using matched edges. Also, in the second scenario, we will only obtain a maximal matching
-	using the matched edges.
-\end{note}
 
 \begin{remark}
-	\autoref{thm:lec25-1} essentially tells us that the only obstacle one will meet when constructing a \hyperref[def:perfect-matching]{perfect matching}
-	is the existence of \hyperref[def:constricted-set]{constricted set}.
+	\autoref{thm:lec25-2} essentially tells us that the only obstacle one will meet when constructing a \hyperref[def:perfect-matching]{perfect matching}
+	is the existence of \hyperref[def:constricted-set]{constricted set}. Compare to \autoref{thm:Konig-Hall-maximize-theorem}, this is an even stronger
+	result in the sense that it gives us a useful characterization of \hyperref[def:constricted-set]{constricted set} when we want to actually check the
+	condition given in \autoref{thm:Konig-Hall-maximize-theorem} algorithmically.
 \end{remark}
+
+Now, we simply run a modified version of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} with the special label \(\mathtt{exhausted}\) and
+utilizing \autoref{thm:lec25-2}. But it's essentially just the same thing, hence we omit it here.
 
 \section{Market Clearing Prices}
 We now come back to \hyperref[note:market-clearing-prices]{market clearing prices} problem.
@@ -165,7 +236,7 @@ good \(j\) in assigned to buyer \(i\), namely we allow fractional assignment. Th
 	We see that
 	\begin{itemize}
 		\item The first constraint says that buyer want one good.
-		\item The second constraint says that seller has one good for type \(j\).
+		\item The second constraint says that seller has one good for \hyperref[def:type]{type} \(j\).
 	\end{itemize}
 \end{intuition}
 
@@ -192,49 +263,58 @@ Given an \hyperref[eg:English-auction]{English auction} for multiple goods, with
 so-called \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{Demange-Gale-Sotomayor (DGS) algorithm} and get a set of
 \hyperref[note:market-clearing-prices]{market clearing prices}.
 
-\par\todo{Make this into formal pseudo-code}
+\par
 \begin{algorithm}[H]\label{algo:Demange-Gale-Sotomayor-algorithm}
 	\DontPrintSemicolon
 	\caption{Demange-Gale-Sotomayor Algorithm}
-	\KwData{}
-	\KwResult{}
-	\SetKwFunction{TC}{TossCoin}
-	\SetKwFunction{rand}{rand}
-	\SetKwFunction{randW}{randWithWeight}
-	\SetKwData{result}{result}
-	\SetKwData{up}{unpaired}
-	\SetKwData{region}{region}
+	\SetKwRepeat{Do}{do}{while}
+	\SetKwData{own}{owner}
+	\SetKwData{null}{null}
+	\SetKwFunction{prefer}{\hyperref[def:preferred-sellers-list]{PreferredSeller}Graph}
+	\SetKwFunction{HK}{\hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp}}
+	\SetKwFunction{FC}{Find\hyperref[def:constricted-set]{ConstrictedSet}}
+	\SetKwFunction{rand}{randSubset}
+	\KwData{\hyperref[def:valuation-matrix]{valuation matrix} \(V_{N\times N}\)}
+	\KwResult{A \hyperref[def:perfect-matching]{perfect matching} \(M\), Final price \(p\)}
 	\BlankLine
 
+	\For(\Comment*[f]{Initialize}){\(j = 1, \ldots  , N\) }{
+		\(p_j\gets 0\)\;
+	}
+	\;
+	\Do{\(\mathtt{True}\)}{
+		\(\mathcal{\MakeUppercase{g}} \gets\) \prefer{\(p\)}\Comment*[r]{Get the \hyperref[def:preferred-sellers-list]{preferred sellers} \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}}
+		\(M\gets\) \HK{\(\mathcal{\MakeUppercase{g}} \)}\Comment*[r]{Get a maximum matching of \(\mathcal{\MakeUppercase{g}} \)}
+		\uIf(\Comment*[f]{If \(M\) is \hyperref[def:perfect-matching]{perfect}}){\(\left\vert M \right\vert = N\)}{
+			\Return{\(M\), \(p\)}\;
+		}\Else(){
+			\(N\gets\) \FC{\(\mathcal{\MakeUppercase{g}} \), \(M\)}\Comment*[r]{Find \(B^\prime \subseteq B\) s.t. \(\left\vert N(B^\prime) \right\vert < \left\vert B^\prime \right\vert\)}
+			\(S\gets\)\rand{\(N\)} \Comment*[r]{Pick any \(S\subseteq N(B)\) s.t. \(S \neq \varnothing \)}
+			\For(){\(i=1, \ldots  , N\)}{
+				\(p_i\gets p_i + 1\)\;
+			}
+		}
+	}
 \end{algorithm}
-
-\begin{enumerate}
-	\item Set initial price to \(p = (0, 0, \ldots , 0 )\)
-	\item At \(p\) fixed the preferred sellers bipartite graph.
-	\item Check if there is a \hyperref[def:perfect-matching]{perfect matching}.(Can be done by \hyperref[sec:Hopcroft-Karp-algorithm]{Hopcroft-Karp Algorithm})
-	      \begin{itemize}
-		      \item If yes, then end.
-		      \item Otherwise, determine a constricted set of buyers \(B\), namely find a \(B\) such that
-		            \[
-			            \left\vert N(B) \right\vert < \left\vert B \right\vert.
-		            \]
-
-		            Pick any non-empty subset \(S\) of \(N(B)\) and increase the price of the goods in \(S\) all by \(1\).
-	      \end{itemize}
-	\item \textbf{GOTO 2}.
-\end{enumerate}
 
 \begin{intuition}
 	If there is more demand and less supply, then we increase the price.
 \end{intuition}
 
-\begin{remark}
-	This algorithm will terminate in finite-time, further, it's actually a polynomial time algorithm.
+\begin{remark}[Polynomial time]
+	This algorithm will terminate in finite-time, further, it's actually a polynomial time algorithm since finding a \hyperref[def:constricted-set]{constricted set}
+	in this case is not exponential anymore with a maximum matching \(M\) given, and the fact that \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}
+	is a polynomial time algorithm, we have the desired result.
 \end{remark}
 
 If one carefully enough for choosing \(S\), he will always terminate in the minimum \hyperref[note:market-clearing-prices]{market clearing prices}.
 
-\section{VCG Principle}
+\begin{note}
+	Note that it's easy to extend to the case that the market is not \hyperref[def:balance]{balance}, since
+	\hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} can deal with \hyperref[def:balance]{unbalance} market.
+\end{note}
+
+\section{Vickrey-Clarke-Groves Principle}
 Consider a \hyperref[eg:second-price-auction]{second price auction}. There is only \(1\) item to be sold with \(N\) buyers with valuation
 \(V_{1}, V_{2}, \ldots , V_{N}\). We further let
 \[

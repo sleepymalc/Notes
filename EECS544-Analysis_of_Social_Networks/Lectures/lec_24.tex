@@ -92,35 +92,38 @@ By symmetry, the payment rules will be identical in each auction, hence the reve
 
 \chapter{Matching Market}
 Beyond the current setup of \hyperref[ch:auctions]{auctions}, we can see a more general setup. Specifically, we introduce so-called
-\textbf{Matching Market}. The comparison is as follows.
-\begin{itemize}
-	\item One good to many buyers: Auctions.
-	\item Many goods to many buyers: Matching Market.
-\end{itemize}
+\textbf{Matching Market}.
 
-\begin{eg}[Ad-auctions]
-	We first see an example of matching market in terms of a general form of auction, namely \emph{ad-auctions}. Specifically, consider a
-	particular keyword searching result, the ads related to which may show up in the following order:
+\begin{note}
+	The comparison between auctions and matching market is as follows.
 	\begin{itemize}
-		\item AD1 with \(r_1\)
-		\item AD2 with \(r_2\)
-		\item AD3 with \(r_3\)
-		\item AD4 with \(r_4\)
-		\item \(\vdots\)
+		\item One good to many buyers: Auctions.
+		\item Many goods to many buyers: Matching Market.
 	\end{itemize}
-	where \(r_i\) is so-called the \href{https://en.wikipedia.org/wiki/Click-through_rate}{\underline{click-through rate}} for ad location \(i\). We see that the location of ads matter.
+\end{note}
 
-	\begin{note}
-		We see that
-		\begin{itemize}
-			\item \href{https://en.wikipedia.org/wiki/Click-through_rate}{Click-through rate} is location dependent. Person needs to click on ad and then buy the product the ad is about.
-			\item Often, \(r_i < r_j\) for \(i > j\).
-		\end{itemize}
-	\end{note}
-\end{eg}
+\section{Ads Auctions}
+We first see an example of matching market in terms of a general form of auction, namely \emph{ad-auctions}. Specifically, consider a
+particular keyword searching result, the ads related to which may show up in the following order:
+\begin{itemize}
+	\item AD1 with \(r_1\)
+	\item AD2 with \(r_2\)
+	\item AD3 with \(r_3\)
+	\item AD4 with \(r_4\)
+	\item \(\vdots\)
+\end{itemize}
+where \(r_i\) is so-called the \href{https://en.wikipedia.org/wiki/Click-through_rate}{\underline{click-through rate}} for ad location \(i\). We see that the location of ads matter.
+
+\begin{note}
+	We see that
+	\begin{itemize}
+		\item \href{https://en.wikipedia.org/wiki/Click-through_rate}{Click-through rate} is location dependent. Person needs to click on ad and then buy the product the ad is about.
+		\item Often, \(r_i < r_j\) for \(i > j\). (i.e., people prefer to click on ads on the top)
+	\end{itemize}
+\end{note}
 
 We see that there is a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{\underline{bipartite structure}}. On the one side of the \hyperref[def:graph]{graph} contains buyers,
-and the other side contains sellers (Ad positions). Now, assuming for each buyer's good, the cost is \(b_i\). Then the expected revenue to advertiser \(i\) is
+and the other side contains sellers (Ad positions). Now, assuming for each buyer's good \(i\), the cost is \(b_i\). Then the expected revenue to advertiser \(i\) is
 \[
 	b_i r_j
 \]
@@ -128,12 +131,13 @@ if one purchase the location \(j\). Now, let \(v_{ij} \coloneqq b_{i}r_{i}\), wh
 Then we have the so-called \hyperref[def:valuation-matrix]{valuation matrix} \(V\) defined as follows.
 
 \begin{definition}[Valuation matrix]\label{def:valuation-matrix}
-	The \emph{(rank one) valuation matrix} given \(r_{i} \) and \(b_{i} \) is defined as
-	\[
-		V\coloneqq \vec{r}^{\top}\vec{b}.
-	\]
+	The \emph{valuation matrix} \(V\) is matrix with element \(V_{ij}\) being the amount that bidder \(i\) values good \(j\).
 \end{definition}
 
+We see that in our case, i.e., ads-auctions, our \hyperref[def:valuation-matrix]{valuation matrix} can be defined as
+\[
+	V \coloneqq \vec{r} ^{\top} \vec{b}.
+\]
 If \(V_{ij}\geq 0\) and beyond rank-one imply good allocation here. Note that we allow the sellers to set prices to goods.
 \begin{remark}
 	There are different types of prices.
@@ -293,10 +297,18 @@ How does a buyer \(i\) react to this? Assuming \(i\) knows his valuation, and ea
 \end{remark}
 
 \section{Perfect Matching}
-Now, the task is that for any given price, find the \hyperref[def:preferred-sellers-list]{preferred sellers} \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}
-and perform matching. Furthermore, we try to maximize the matching in terms of size. In other words, we are trying to satisfy as many buyers as possible.
+We now discuss a general matching problem.
 
-This suggests the following definition.
+\begin{remark}
+	Note that the discussion about ad-auctions is indeed general enough to be considered as a general market matching problem since
+	if we neglect the meaning of \(V\) under the content of ads-auctions, instead just interpret \(V_{ij} \) as in the original
+	\hyperref[def:valuation-matrix]{definition}, then it's just a general matching problem.
+\end{remark}
+
+The task is that for any given price and the \hyperref[def:valuation-matrix]{valuation matrix} \(V\), find the
+\hyperref[def:preferred-sellers-list]{preferred sellers} \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph} and perform matching.
+Furthermore, we try to maximize the matching in terms of size. In other words, we are trying to satisfy as many buyers as possible. This suggests the
+following definition.
 \begin{definition}[Perfect matching]\label{def:perfect-matching}
 	We call a matching is a \emph{perfect matching} if the size of the maximum matching is \(N\).
 \end{definition}

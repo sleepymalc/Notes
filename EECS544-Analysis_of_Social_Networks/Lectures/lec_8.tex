@@ -259,7 +259,7 @@ structure.
 	Hence, \(0\) is an \hyperref[def:eigenvalue]{eigenvalue} with \hyperref[def:eigenvector]{eigenvector} \(\vec{1}\), so \(\lambda _1=0\).
 \end{remark}
 
-We now study the \hyperref[def:multiplicity]{multiplicity} of an \hyperref[def:eigenvalue]{eigenvalue} of \(L\). We first introduce the following definition.
+Now we study the \hyperref[def:multiplicity]{multiplicity} of an \hyperref[def:eigenvalue]{eigenvalue} of \(L\). We first introduce the following definition.
 \begin{definition}[Multiplicity]\label{def:multiplicity}
 	We say the \hyperref[def:eigenvalue]{eigenvalue} \(\lambda ^{\ast} \) of \(A\) has \emph{multiplicity} \(k\) if
 	\[
@@ -341,9 +341,13 @@ algorithms rely on this fact.
 
 We now study this in depth.
 
-\chapter{HITS}
-HITS is a hyperlinks-induced topic search algorithm proposed by \href{https://en.wikipedia.org/wiki/Jon_Kleinberg}{John Kleinberg}, whose backbones are the
-idea of \textbf{hubs} and \textbf{authorities}.
+\chapter{Page Rank}
+In this chapter, we still try to analyze a given network, but now we're focusing on nodes-importance rather than links-importance. Our goal is
+to develop the so-called \textbf{page rank}, which is inspired by the following algorithm.
+
+\section{HITS Algorithm}
+\hyperref[algo:HITS-algorithm]{HITS} is a hyperlinks-induced topic search algorithm proposed by \href{https://en.wikipedia.org/wiki/Jon_Kleinberg}{John Kleinberg},
+whose backbones are the idea of \textbf{hubs} and \textbf{authorities} and the \textbf{voting mechanism}.
 \begin{itemize}
 	\item Hubs: nodes that \emph{aggregate}.
 	\item Authorities: nodes that are \emph{important}.
@@ -355,9 +359,7 @@ The key idea is that
 	\item If a node points to many authority nodes, then it is important as well.
 \end{enumerate}
 Then by iteratively identifying hubs and authorities, we can rank the nodes in the network. We now describe in detailed how this algorithm works.
-
-\section{HITS Algorithm}
-The pseudocode of the algorithm is as follows.
+We first see the pseudocode of the \hyperref[algo:HITS-algorithm]{algorithm}.
 
 \par
 \begin{algorithm}[H]\label{algo:HITS-algorithm}
@@ -366,7 +368,7 @@ The pseudocode of the algorithm is as follows.
 	\SetKwData{h}{hub}
 	\SetKwData{a}{auth}
 	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \)}
-	\KwResult{\h, \a}
+	\KwResult{\(\h\), \(\a\)}
 
 	\BlankLine
 
@@ -376,21 +378,21 @@ The pseudocode of the algorithm is as follows.
 	}
 	\;
 	\While{not converge}{
-		\For(\Comment*[f]{\a update}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
+		\For(\Comment*[f]{\a update}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
 			\(\a(v) \gets \sum_{u\in \mathcal{\MakeUppercase{v}} \colon u\to v\in \mathcal{\MakeUppercase{e}}} \h(u)\)\;
 		}
-		\For(\Comment*[f]{\h update}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
+		\For(\Comment*[f]{\h update}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
 			\(\h(v) \gets \sum_{u\in \mathcal{\MakeUppercase{v}} \colon v\to u\in \mathcal{\MakeUppercase{e}}} \a(u)\)\;
 		}
 		\;
-		\For(\Comment*[f]{\a normalize}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
+		\For(\Comment*[f]{\a normalize}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
 			\(\a(v) \gets \a(v) / \sum_{u\in \mathcal{\MakeUppercase{v}} } \a(u) \)\;
 		}
-		\For(\Comment*[f]{\h normalize}){\(v\in \mathcal{\MakeUppercase{v}} \) }{
-			\(\h(v) \gets \h(v) / \sum_{u\in \mathcal{\MakeUppercase{v}}} \h(u) \)\;
+		\For(\Comment*[f]{\h normalize}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+			\(\h(v) \gets \h(v) / \sum_{u\in \mathcal{\MakeUppercase{v}}} \h(u)\)\;
 		}
 	}
-	\Return{\h, \a}\;
+	\Return{\(\h\), \(\a\)}\;
 \end{algorithm}
 
 \begin{note}

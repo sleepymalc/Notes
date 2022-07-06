@@ -1,36 +1,52 @@
-\lecture{6}{20 Sep. 12:30}{Homophily}
-\section{Shortest Path Algorithm}
-We want to develop some algorithms similar to BFS to find the distance between nodes. We first make the notion of distance between nodes rigorous.
+\lecture{6}{20 Sep. 12:30}{Girvan-Newman Algorithm Analysis}
+\begin{problem}
+But how do we calculate \hyperref[def:betweenness]{betweenness} in reality?
+\end{problem}
+\begin{answer}
+	We see that the only obstacle we're facing is the fact that we don't know how to calculate the number of \hyperref[def:shortest-path]{shortest paths}.
+	And to calculate how many shortest paths are there between nodes, this can be done by using \hyperref[algo:BFS]{breadth-first search} in a slightly different manner.
+\end{answer}
 
-\begin{definition}[Shortest path]\label{def:shortest-path}
-	Given a \hyperref[def:graph]{graph}, a \emph{shortest path} between two nodes \(u, v\) is a \hyperref[def:path]{path} whose end nodes are
-	\(u, u\) while the sum of the weights\footnote{We only discuss unweighted \hyperref[def:graph]{graph} so far, where we treat the weight as \(1\) for all edges.}
-	of its constituent edges is minimized.
-\end{definition}
-
-\begin{definition}[Distance between nodes]\label{def:distance-between-nodes}
-	We usually let the length of the \hyperref[def:shortest-path]{shortest path} between two nodes in a \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}}\)
-	be the \emph{distance between these two nodes}, denotes as
-	\[
-		d_{\mathcal{G}}(\cdot, \cdot),
-	\]
-	which takes two input for two corresponding nodes.
-\end{definition}
-
-Something like
+The key is that any sub-\hyperref[def:path]{path} to destination is also a \hyperref[def:shortest-path]{shortest path}. To calculate this
+with an algorithmic procedure, we use \hyperref[algo:BFS]{BFS}. In the \hyperref[algo:BFS]{BFS} exploration from \(v^{\ast} \) to \(u^{\ast} \), we have
 \[
-	d_{\mathcal{\MakeUppercase{g}} } (i, j) = 1 + \min_{k\in N_{\mathcal{\MakeUppercase{g}} } (j)} d_{\mathcal{\MakeUppercase{g}} } (i, k).
+	\#\text{\hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(u^{\ast}\)} =  \#\text{\hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(j\)} +
+	\#\text{\hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(k\)} + \ldots
 \]
+suppose that there are edges between \(j, k, \ldots  \) to \(u^{\ast} \).
 
-\subsection{Dynamic programming}
-There are many approaches to calculate the distance between nodes, one way is \emph{Djikstra's algorithm}.
+\begin{remark}
+	In this case, \(j, k\) are at same level \(n-1\), and \(u^{\ast} \) is at level \(n\) if the \hyperref[def:distance-between-nodes]{distance}
+	between \(v^{\ast} \) and \(u^{\ast} \) is \(n\).
+\end{remark}
+
+Finally, to calculate this, we can add \emph{another} counter when running \hyperref[algo:BFS]{BFS}. This is certainly a different type of counter from \(c\), which
+we call it \(d\). This time, the counter \(d\) is induced by the above equation, and that implies the updating rule being
+\[
+	d_{v}^{n} = \sum_{(u, v)\in \mathcal{\MakeUppercase{e}} }d^{n-1}_{u}
+\]
+where \(d_{v}^{n}\) maintains the number of \hyperref[def:shortest-path]{shortest path} to \(v\) where \(v\) is at
+layer \(n\), i.e., \(d_{\mathcal{\MakeUppercase{g}}}(v^{\ast} , v)=n\).\footnote{Note that only those \(d_v^n\) such that \(n=d_{\mathcal{\MakeUppercase{g}} }(v^{\ast} , v)=n \)
+is defined. It's nonsense to define \(d_v^{n^\prime }\) where \(d_{\mathcal{\MakeUppercase{g}} }(v^{\ast} , v)\neq n^\prime\) from the meaning we're trying to put on \(d\) and maintained.}
+
+The unit flow flows from nodes back from the \hyperref[def:path]{path} it is added into the \hyperref[algo:BFS]{BFS} algorithm needs to keep its own \(1\), and then distribute.
+
+\begin{remark}
+	By adding this counter \(d\), in the end, \(d_v\) (regardless of the supscript, since only one such \(d_v^{n^\prime }\) for any \(n^\prime \) will be defined) is
+	the number of shortest path from \(v^{\ast} \) to \(v\). Then we can just calculate the \hyperref[def:betweenness]{betweenness} from its definition.
+\end{remark}
 
 \section{Homophily}
 Links in a (social) network are formed between people that are \emph{similar}. This is an important feature that leads to
 the formation of communities.
 
-\subsection{Define \emph{Like} and \emph{Opposite}}
-Consider a network with two types of individuals:
+\begin{problem}
+How can we define the notion of \emph{like} and \emph{opposite}?
+\end{problem}
+\begin{answer}
+	Consider a network with two types of individuals.
+\end{answer}
+
 \begin{eg}[Middle school]
 	Consider a school of boys and girls. Suppose the fraction of boy is $p$ and the fraction of girls is $q = 1 - p$. We have
 	\[
@@ -44,7 +60,7 @@ Consider a network with two types of individuals:
 	If the fraction of cross connection $\ll 2pq$, homophily is considered likely. Otherwise, if the fraction $\gg 2pq$, inverse-homophily is likely to occur.
 \end{eg}
 
-We see that some social implications arise from this
+We see that some social implications arise from this\todo{This part is unclear, need to polish.}
 \begin{enumerate}
 	\item schelling model
 	\item parameters

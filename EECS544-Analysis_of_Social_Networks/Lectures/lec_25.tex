@@ -4,7 +4,7 @@ We now want to solve the following questions.
 Given a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}, can we check if there is a \hyperref[def:perfect-matching]{perfect matching}?
 \end{problem}
 \begin{answer}
-	Yes, by \hyperref[sec:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}, which is an \underline{asymmetric BFS algorithm}.
+	Yes, by \hyperref[sec:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}, which is an \underline{asymmetric \hyperref[algo:BFS]{BFS} algorithm}.
 \end{answer}
 
 \begin{problem}[Market clearing prices]
@@ -80,15 +80,15 @@ shortest \hyperref[def:augmenting-path]{augmenting paths}, and this is done by u
 
 \begin{remark}[Finding maximal set of disjoing shortest augmenting paths w.r.t. \(M\)]\label{rmk:lec25-1}
 	We see that it's not entirely clear how should we find \(P_i\) in \autoref{algo:Hopcroft-Karp-algorithm:line3} at the first glance. It's basically just a
-	combination of BFS and DFS as we'll see.
+	combination of \hyperref[algo:BFS]{BFS} and \hyperref[rmk:DFS]{DFS} as we'll see.
 \end{remark}
 \begin{explanation}
-	For each unmatched vertex in \(L\), we perform a modified BFS to find the length of the shortest path to an unmatched vertex in \(R\). Modify the BFS
+	For each unmatched vertex in \(L\), we perform a modified \hyperref[algo:BFS]{BFS} to find the length of the shortest path to an unmatched vertex in \(R\). Modify the \hyperref[algo:BFS]{BFS}
 	to ensure that we only traverse an edge if it causes the \hyperref[def:path]{path} to alternate between an edge in \(M\) and an edge in \(E\setminus M\).
 	The first time an unmatched vertex in \(R\) is reached we know the length \(k\) of a shortest \hyperref[def:augmenting-path]{augmenting path}.
 
 	We can use this to stop our search early if at any point we have traversed more than that number of edges. To find disjoint \hyperref[def:path]{paths},
-	start at the vertices of \(R\) which were found at distance \(k\) in the BFS. Run a DFS backwards from these, which maintains the property that the
+	start at the vertices of \(R\) which were found at distance \(k\) in the \hyperref[algo:BFS]{BFS}. Run a DFS backwards from these, which maintains the property that the
 	next vertex we pick has distance one fewer, and the edges alternate between being in \(M\) and \(E\setminus M\).
 	As we build up a \hyperref[def:path]{path}, mark the vertices as used so that we never traverse them again.
 \end{explanation}

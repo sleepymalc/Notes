@@ -1,4 +1,4 @@
-# Lecture Notes @umich
+# Notes @umich
 
 <p align="center"><b><i>
 	The source code of my LaTeX lecture notes.

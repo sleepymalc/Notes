@@ -10,12 +10,11 @@
 
 ## Abstract
 
-This repo contains all $\LaTeX$ source codes of the lecture notes I took in UMich. You can find the original website [here](https://www.pbb.wtf/posts/Notes).
+This repo contains all $\LaTeX$ source codes of the lecture notes I took in @umich.
+> [Here](https://www.pbb.wtf/posts/Notes) is a more readable version.
 
 The [`header.tex`](https://github.com/sleepymalc/Academic-Template/blob/main/Notes/header.tex) can be found in [Academic Template](https://github.com/sleepymalc/Academic-Template), together with a simple, but complete [demo](https://github.com/sleepymalc/Academic-Template/tree/main/Notes/master.pdf).
 > **You need to include this header to compile any of my notes!** The particular compile environment should be not that relevant since the packages this environment depends on are quite straightforward and minimal, hence a simple *pdflatex* should do the job. As for Inkscape figures, please look into [VSCode-LaTeX-Inkscape](https://github.com/sleepymalc/VSCode-LaTeX-Inkscape) for detailed configuration.
-
-Feel free to submit pull requests if you find typos and want to fix them.
 
 ## About Honor Code
 

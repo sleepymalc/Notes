@@ -1,7 +1,11 @@
 # Notes @umich
 
+<p align="center">
+	<img src="https://github.com/sleepymalc/Notes/blob/main/preview.png"/>
+</p>
+
 <p align="center"><b><i>
-	The source code of my LaTeX lecture notes.
+	The Source Code of my LaTeX Lecture Notes.
 </i></b></p>
 
 ## Abstract

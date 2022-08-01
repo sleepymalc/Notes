@@ -1,7 +1,7 @@
-# Lecture Notes @University of Michigan
+# Lecture Notes @umich
 
 <p align="center"><b><i>
-	The source code of my LaTeX lecture notes I took in UMich.
+	The source code of my LaTeX lecture notes.
 </i></b></p>
 
 ## Abstract

@@ -1,0 +1,204 @@
+\lecture{3}{10 Jan. 11:00}{Construct a Measure}
+After seeing examples of \hyperref[def:measure]{measures}, we now want to construct it from ground up.
+\begin{note}
+	If \(A, B\in \mathcal{A} \) and \(A\subset B\), then
+	\[
+		\mu(B\setminus A) + \mu(A) = \mu(B) \implies \mu(B \setminus A) = \mu(B) - \mu(A) \text{ if }\mu(A)<\infty.
+	\]
+\end{note}
+
+\begin{theorem}\label{thm:measure-space}
+	Given \((X, \mathcal{A} , \mu)\) be a \hyperref[def:measure-space]{measure space}. Then the following hold.
+	\begin{enumerate}[(1)]
+		\item \label{thm:measure-space-monotonicity}Monotonicity.
+		      \[
+			      A, B\in \mathcal{A} , A\subset B \implies \mu(A)\leq \mu(B).
+		      \]
+		\item \label{thm:measure-space-countable-subadditivity}Countable subadditivity.
+		      \[
+			      A_1, A_2, \ldots \in \mathcal{A} \implies \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu(A_{i}).
+		      \]
+		\item \label{thm:measure-space-continuity-from-below} Continuity from below.
+		      \[
+			      \begin{dcases}
+				      A_1, A_2, \ldots \in \mathcal{A} \\
+				      A_1\subset A_2\subset A_3\subset \ldots
+			      \end{dcases} \implies \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+		\item \label{thm:measure-space-continuity-from-above}Continuity from above.
+		      \[
+			      \begin{dcases}
+				      A_1, A_2, \ldots \in \mathcal{A}        \\
+				      A_1\supset A_2\supset A_3\supset \ldots \\
+				      \mu(A_1) < \infty
+			      \end{dcases} \implies \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	We prove this theorem one by one.
+	\begin{enumerate}[(1)]
+		\item Since \(A\subset B\), hence we have
+		      \[
+			      \mu(B) = \mu\underset{\text{disjoint} }{\left(\underline{(B\setminus A)}\cup \underline{\vphantom{(B\setminus A)}A}\right)} \overset{\hyperref[def:measure-countable-additivity]{!}}{=} \underbrace{\mu(B\setminus A)}_{\geq 0} + \mu(A) \geq \mu(A).
+		      \]
+		\item This should be trivial from \hyperref[def:measure-countable-additivity]{countable additivity} with the fact that \(\mu(A)\geq 0\) for all \(A\). \todo{DIY!}
+		\item Let \(B_1 = A_1\), \(B_{i} = A_{i} \setminus A_{i-1}\) for \(i\geq 2\), then
+		      \[
+			      \bigcup\limits_{i=1}^{\infty} A_{i} = \bigcup\limits_{i=1}^{\infty} B_{i}
+		      \]
+		      are a disjoint union and \(B_{i}\in \mathcal{A}\), hence we see that
+		      \[
+			      \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \sum\limits_{i=1}^{\infty} \mu(B_{i}) = \lim\limits_{n \to \infty} \sum\limits_{i=1}^{n} \mu(B_{i}).
+		      \]
+		      With \(\mu\left(\bigcup\limits_{i=1}^{n} B_{i}\right) = \mu(A_{n})\), we have
+		      \[
+			      \mu\left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) = \lim\limits_{n \to \infty} \sum\limits_{i=1}^{n} \mu(B_{i}) = \lim\limits_{n \to \infty} \mu\left(\bigcup\limits_{i=1}^{n} B_{i}\right) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+		\item Let \(E_{i} = A_{1} \setminus A_{i} \implies E_{i}\in \mathcal{A}\), \(E_1\subset E_2\subset \ldots\). We then have
+		      \[
+			      \bigcup\limits_{i=1}^{\infty} E_{i} = \bigcup\limits_{i=1}^{\infty} \left(A_1 \setminus A_{i}\right) = A_1 \setminus \left(\bigcap\limits_{i=1}^{\infty} A_{i}\right),
+		      \]
+		      which implies
+		      \[
+			      \bigcap\limits_{i=1}^{\infty} A_{i} = A_1 \setminus \left(\bigcup\limits_{i=1}^{\infty} E_{i}\right) \implies \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \mu(A_1) - \mu\left(\bigcup\limits_{i=1}^{\infty} E_{i}\right)
+		      \]
+		      since \(\mu\left(\bigcup\limits_{i=1}^{\infty} E_{i}\right) \leq \mu(A_1) < \infty \). Then from \hyperref[thm:measure-space-continuity-from-below]{continuity from below}, we further have
+		      \[
+			      \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \mu(A_1) - \lim\limits_{n \to \infty} \mu(E_{n}) = \mu(A_1) - \lim\limits_{n \to \infty} \left(\mu(A_1) - \mu(A_{n})\right).
+		      \]
+		      From \hyperref[thm:measure-space-monotonicity]{monotonicity}, we see that \(\mu(A_{n})\leq \mu(A_1) < \infty\), hence we can split the limit and further get
+		      \[
+			      \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = \mu(A_1) - \mu(A_1) + \lim\limits_{n \to \infty} \mu(A_{n}) = \lim\limits_{n \to \infty} \mu(A_{n}).
+		      \]
+	\end{enumerate}
+\end{proof}
+\begin{note}
+	Sometimes we also call \hyperref[thm:measure-space-continuity-from-below]{continuity from below} property as \underline{monotone convergence theorem} for sets. We'll later see
+	the important \hyperref[thm:MCT]{monotone convergence theorem} for integral, which is in different content.
+\end{note}
+\begin{remark}[Condition of continuity from above]
+	The condition \(\mu (A_1) < \infty \) in \hyperref[thm:measure-space-continuity-from-above]{continuity from above} is necessary.
+\end{remark}
+\begin{explanation}
+	Given \(\left(\mathbb{\MakeUppercase{N}}, \mathcal{P} (\mathbb{\MakeUppercase{N}}), \mu \right)\) where \(\mu\) is the \hyperref[eg:counting-measure]{counting measure}.
+	Then we see
+	\begin{itemize}
+		\item \(A_{n} = \{n, n+1, n+2, \ldots  \} \implies \mu(A_{n}) = \infty \)
+		\item \(A_1 \supset A_2\supset A_3\supset \ldots  \)
+		\item \(\bigcap\limits_{i=1}^{\infty} A_{i} = \varnothing \implies \mu\left(\bigcap\limits_{i=1}^{\infty} A_{i}\right) = 0\)
+	\end{itemize}
+	We see that in this case, since \(\mu(A_1)\nless \infty \), hence \hyperref[thm:measure-space-continuity-from-above]{continuity from above} doesn't hold.
+\end{explanation}
+
+We now try to characterize some properties of a \hyperref[def:measure-space]{measure space}.
+\begin{definition*}
+	Given \((X, \mathcal{A} , \mu)\), we have the following.
+	\begin{definition}[\(\mu \)-null set]\label{def:mu-null-set}
+		\(A\subset X\) is a \emph{\(\mu\)-null set} if \(A\in \mathcal{A} \) and \(\mu(A) = 0\).
+	\end{definition}
+	\begin{definition}[\(\mu \)-subnull set]\label{def:mu-subnull-set}
+		\(A\subset X\) is a \emph{\(\mu\)-subnull set} if there exists a \hyperref[def:mu-null-set]{\(\mu\)-null set} \(B\)
+		such that \(A\subset B\).
+	\end{definition}
+	\begin{definition}[Complete measure space]\label{def:complete-measure-space}
+		\((X, \mathcal{A} , \mu)\) is a \emph{complete \hyperref[def:measure-space]{measure space}} if every
+		\hyperref[def:mu-subnull-set]{\(\mu\)-subnull set} is \hyperref[def:measurable-set]{\(\mathcal{A}\)-measurable}.
+	\end{definition}
+\end{definition*}
+
+\begin{note}
+	We see that for a \hyperref[def:mu-subnull-set]{\(\mu\)-subnull set}, it's not necessary \hyperref[def:measurable-set]{\(\mathcal{A}\)-measurable}
+	if the \hyperref[def:measure-space]{measure space} is not \hyperref[def:complete-measure-space]{complete}.
+\end{note}
+\begin{remark}
+	From the property of \hyperref[def:measure]{measure}, the condition for a \hyperref[def:measure-space]{measure space} \((X, \mathcal{\MakeUppercase{a}} , \mu )\)
+	being \hyperref[def:complete]{complete} is equivalent to saying that every \hyperref[def:mu-subnull-set]{\(\mu \)-subnull set} is a \hyperref[def:mu-null-set]{\(\mu\)-null set}.
+\end{remark}
+\begin{explanation}
+	This follows from the \hyperref[thm:measure-space-monotonicity]{monotonicity} of a \hyperref[def:measure]{measure} and the fact that a \hyperref[def:measure]{measure} is always
+	non-negative. Finally, a \hyperref[def:mu-subnull-set]{\(\mu \)-subnull set} is always in \(\mathcal{\MakeUppercase{a}} \).
+\end{explanation}
+
+There are some useful terminologies we'll use later relating to \hyperref[def:mu-null-set]{\(\mu\)-null}.
+\begin{definition}[Almost everywhere]\label{def:mu-almost-everywhere}
+	Given \((X, \mathcal{A} , \mu)\), a statement \(P(x)\), \(x\in X\) holds \emph{\(\mu\)-almost everywhere (a.e.)} if
+	the set
+	\[
+		\left\{x\in X\colon P(x) \text{ does not hold} \right\}
+	\]
+	is \hyperref[def:mu-null-set]{\(\mu\)-null}.
+\end{definition}
+
+It's always pleasurable working with finite rather than infinite, hence we give the following definition.
+\begin{definition*}
+	Given \((X, \mathcal{A} , \mu)\), we have the following.
+	\begin{definition}[Finite measure]\label{def:finite-measure}
+		\(\mu\) is a \emph{finite measure} if \(\mu(X)<\infty \).
+	\end{definition}
+
+	\begin{definition}[\(\sigma \)-finite measure]\label{def:sigma-finite-measure}
+		\(\mu\) is a \emph{\(\sigma\)-finite measure} if \(X = \bigcup_{n=1}^{\infty} X_{n}\),
+		\(X_{n}\in \mathcal{A} \), \(\mu(X_{n})<\infty \).
+	\end{definition}
+
+\end{definition*}
+
+\begin{exercise}
+	Every \hyperref[def:measurable-space]{measure space} can be \hyperref[def:complete-measure-space]{completed}. Namely, we can always find a bigger \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} to \hyperref[def:complete-measure-space]{complete} the space.
+\end{exercise}
+
+\section{Outer Measures}
+As we said before, we're now going to construct a \hyperref[def:measure]{measure}. And a modern way to do this is to start with something called \emph{\hyperref[def:outer-measure]{outer measure}}.
+
+
+\begin{definition}[Outer measure]\label{def:outer-measure}
+	An \emph{outer measure} on \(X\) is a function
+	\[
+		\mu^{\ast} \colon \mathcal{P} (X)\to [0, \infty ]
+	\]
+	such that
+	\begin{itemize}
+		\item\label{def:outer-measure-null-empty-set}(null empty set) \(\mu^{\ast} (\varnothing ) = 0\).
+		\item\label{def:outer-measure-montonicity}(monotonicity) \(\mu^{\ast} (A)\leq \mu^{\ast} (B)\) if \(A\subset B\).
+		\item\label{def:outer-measure-countable-subadditivity}(countable subadditivity) \(\mu^{\ast} \left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu^{\ast} (A_{i})\) for every \(A_{i} \subset X \).
+	\end{itemize}
+\end{definition}
+
+\begin{eg}
+	For \(A\subset\mathbb{\MakeUppercase{R}} \),
+	\[
+		\mu^{\ast} (A) = \inf \left\{\sum\limits_{i=1}^{\infty} (b_{i} - a_{i}) \colon \bigcup\limits_{i=1}^{\infty} (a_{i}, b_{i})\supset A\right\}
+	\]
+	is an \hyperref[def:outer-measure]{outer measure}.
+\end{eg}
+\begin{explanation}
+	This follows directly from the \autoref{prop:outer-measure} we're going to show.
+\end{explanation}
+
+\begin{remark}
+	We see that an \hyperref[def:outer-measure]{outer measure} need not be a \hyperref[def:measure]{measure}.
+\end{remark}
+
+\begin{proposition}\label{prop:outer-measure}
+	Let \(\mathcal{E} \subset \mathcal{P} (X)\) such that \(\varnothing, X \in  \mathcal{E} \). Let
+	\[
+		\rho\colon \mathcal{E} \to [0, \infty ]
+	\]
+	such that \(\rho(\varnothing ) = 0\). Then
+	\[
+		\mu^{\ast} (A) \coloneqq \inf\left\{\sum\limits_{i=1}^{\infty} \rho(E_{i})\colon \underset{i\in \mathbb{\MakeUppercase{N}} }{\forall}E_{i}\in \mathcal{E},\ \bigcup\limits_{i=1}^{\infty} E_{i}\supset A\right\}
+	\]
+	is an \hyperref[def:outer-measure]{outer measure} on \(X\).
+\end{proposition}
+
+\begin{theorem}[Tonelli's Theorem for series]\label{thm:Tonelli-theorem-for-series}
+	Recall the Tonelli's Theorem\footnote{\url{https://en.wikipedia.org/wiki/Fubini\%27s_theorem}} for series, i.e., if
+	\(a_{ij}\in [0, \infty ]\), \(\forall i, j\in \mathbb{\MakeUppercase{N}} \), then
+	\[
+		\sum\limits_{(i, j)\in\mathbb{\MakeUppercase{N}} ^2}a_{ij} = \sum\limits_{i=1}^{\infty} \sum\limits_{j=1}^{\infty} a_{ij} = \sum\limits_{j=1}^{\infty} \sum\limits_{i=1}^{\infty} a_{ij}.
+	\]
+\end{theorem}
+\begin{proof}
+	Read Tao\cite{tao2013introduction} Theorem 0.0.2.
+\end{proof}

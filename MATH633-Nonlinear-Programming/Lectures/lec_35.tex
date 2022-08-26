@@ -1,0 +1,114 @@
+\lecture{35}{6 Apr. 11:00}{Continue on Functions of Bounded Variation}
+\begin{definition}[Normalized bounded variation]\label{def:normalized-bounded-variation}
+	A function \(G \in BV\) is said to have \emph{normalized bounded variation}, denoted as \(G \in NBV\) provided that \(G\) is right continuous and \(G(-\infty) = 0\).
+\end{definition}
+
+\begin{eg}
+	If \(F\) is increasing and bounded, \(F\) right continuous, \(F(-\infty) = 0\).
+
+	\(F(x) = \int_{-\infty}^x f(t) \,\mathrm{d}t, f \in L^1(\mathbb{R})\). Midterm gave \(F\) is uniformly continuous.
+\end{eg}
+
+\begin{lemma}
+	If \(F \in BV\) is right continuous, then \(T_F \in NBV\).
+\end{lemma}
+\begin{proof}
+	\(T_F\) is bounded, increasing, and satisfies \(T_F(-\infty) = 0\) by \autoref{lma:lec34-2}. Thus, \(T_F \in BV\).
+	Hence, we just need to check that \(T_F\) is right continuous. Suppose not, then there is a point \(a \in \mathbb{R}\) such that \(c \coloneqq T_F(a^+) - T_F(a) > 0\)
+	since \(T_{F} \) is increasing.
+
+	Fix \(\epsilon > 0\), since \(F(x)\) and \(g(x) \coloneqq T_F(x^+)\) are right continuous, there exists a \(\delta > 0\) such that for \(y \in (a,a+\delta]\) we have
+	\(\left\vert F(y) - F(a) \right\vert < \epsilon\) and \(\left\vert g(y) - g(a) \right\vert < \epsilon\). We then have that
+	\[
+		T_F(y) - T_F(a^+) \leq \underbrace{T_F(y^+) - T_F(a^+)}_{\left\vert g(y) - g(a) \right\vert } < \epsilon.
+	\]
+	There exist \(a = x_0 < x_1 < \cdots < x_n = a + \delta\) such that
+	\[
+		\sum_{i=1}^n \abs{F(x_i) - F(x_{i-1})}  \geq T_F(a + \delta) - T_F(a) - \frac{c}{4} \geq T_F(a^+) - T_F(a) - \frac{c}{4} = \frac{3c}{4}.
+	\]
+	From \(\left\vert F(x_1) - F(a) \right\vert < \epsilon \), we have
+	\[
+		\sum_{i=2}^n \abs{F(x_i) - F(x_{i-1})} \geq \frac{3}{4}c - \epsilon.
+	\]
+	From the same reason, there exist \(a = t_0 < \cdots < t_k = x_1\) such that
+	\[
+		\sum_{i=1}^k \left\vert F(t_i) - F(t_{i-1}) \right\vert \geq T_F(x_1) - T_F(a) - \frac{c}{4} \geq \frac{3}{4}c
+	\]
+	since \(T_{F} \) is increasing and \(x_1 > a\) strictly. Then as \([a,a+\delta] = [a,x_1] \cup [x_1,a+\delta]\) we see that
+	\[
+		T_F(a + \delta) - T_F(a) \geq \sum_{j=1}^k \left\vert F(t_j) - F(t_{j-1}) \right\vert + \sum_{i=2}^n \left\vert F(x_i) - F(x_{i-1}) \right\vert \geq \frac{3}{4}c + \left(\frac{3}{4}c - \epsilon\right)= \frac{3}{2}c - \epsilon.
+	\]
+
+	Combine these all together, we get
+	\[
+		\epsilon + c  \geq \underbrace{T_F(a + \delta) - T_F(a^+)}_{\leq \epsilon} + \underbrace{T_F(a^+) - T_F(a)}_{\leq c} = \underbrace{T_F(a + \delta) - T_F(a)}_{\text{above}} \geq \frac{3}{2}c - \epsilon
+		\implies c \leq 4 \epsilon.
+	\]
+	By taking \(\epsilon \to 0\) yields \(c = 0\), which is a contradiction.
+\end{proof}
+
+\begin{corollary}\label{col:lec-35}
+	\(F \in NBV\) if and only if \(F = F_1 - F_2\), \(F_1,F_2 \in NBV\) and increasing.
+\end{corollary}
+\begin{proof}
+	Consider the \hyperref[def:Jordan-decomposition]{Jordan decomposition}
+	\[
+		F = \frac{T_{F} +F}{2} - \frac{T_{F} - F}{2}
+	\]
+	and proceed similar as in \autoref{thm:lec-34}.
+\end{proof}
+
+\begin{theorem}\label{thm:nbv-measures}
+	We have the following.
+	\begin{enumerate}[(1)]
+		\item Suppose that \(\mu\) is a \hyperref[def:finite-signed-measure]{finite signed \hyperref[def:Borel-measure]{Borel measure}}
+		      on \(\mathbb{R}\), then \(F(x) = \mu((-\infty, x]) \in NBV\).
+		\item \(F \in NBV\) implies that there exists a unique \hyperref[def:finite-signed-measure]{finite signed \hyperref[def:Borel-measure]{Borel measure}}
+		      on \(\mathbb{R}\) satisfying \(\mu_F((-\infty,x]) = F(x)\).
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	We prove this one by one.
+	\begin{enumerate}[(1)]
+		\item Let \(\mu = \mu^+ - \mu^-\), then \(F = F^+ - F^-\), where \(F^{\pm}(x) = \mu^{\pm}((-\infty,x])\), which are bounded,
+		      right continuous and \(F^{\pm}(-\infty) = 0\), so \(F^{\pm} \in NBV\).
+		\item Let \(F \in NBV\), then \(F = F_1 - F_2\), \(F_1,F_2 \in NBV\) and increasing from \autoref{col:lec-35}. Then define \(\mu_{F_1},\mu_{F_2}\) as the
+		      \hyperref[def:Lebesgue-Stieltjes-measure]{Lebesgue-Stieltjes measure} correspond to \(F_1\) and \(F_2\), and set
+		      \(\mu_F \coloneqq \mu_{F_1} - \mu_{F_2}\).\todo{Uniqueness is shown in \autoref{pf:thm:nbv-measures-uniqueness}.}
+	\end{enumerate}
+\end{proof}
+\begin{remark}[Jordan decomposition]
+	We see that why both \(\mu ^\pm\) and \(F^\pm\) all has the name \emph{Jordan decomposition} from the above proof of \((1)\).
+\end{remark}
+
+The next natural arising question is the following.
+\begin{problem}
+Which functions in \(NBV\) correspond to \hyperref[def:measure]{measures} \(\mu\) such that \(\mu \perp m\) or \(\mu \ll m\)?
+\end{problem}
+
+One answer is given in the following proposition.
+
+\begin{proposition}\label{prop:nbv-ftoc}
+	We have the following.
+	\begin{enumerate}[(1)]
+		\item If \(F \in NBV\), then \(F\) is differentiable \hyperref[def:mu-almost-everywhere]{almost everywhere} and \(F^\prime  \in L^1(\mathbb{R},m)\).
+		\item \(\,\mathbb{d}\mu_F + \,\mathbb{d}\lambda + F^\prime \,\mathbb{d}m\) for some measure \(\lambda\) satisfying \(\lambda \perp m\).
+		\item \(\mu_F \perp m\) if and only if \(F^\prime = 0\) Lebesgue \hyperref[def:mu-almost-everywhere]{almost everywhere}.
+		\item \(\mu_F \ll m\) if and only if \(\int_{-\infty}^x F^\prime (t) \,\mathbb{d}t = F(x) - F(-\infty) = F(x)\).
+	\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+	\todo{Check (1), (2), (3)}
+
+	For (4), we have
+	\[
+		\begin{split}
+			\mu_F \ll m & \iff \lambda = 0 \\
+			&\iff \,\mathbb{d}\mu_F = F^\prime \,\mathbb{d}m                                          \\
+			& \iff \mu_F(E) = \int_E F^\prime  \,\mathbb{d}m \;\; \forall \text{ \hyperref[def:Borel-set]{Borel} } E                               \\
+			& \iff F(x) = \mu_F((-\infty,x]) = \int_{-\infty}^x F^\prime (t) \,\mathbb{d}t,\quad \forall x \in \mathbb{R}.
+		\end{split}
+	\]
+	The last converse comes from the uniqueness of \autoref{thm:nbv-measures} above.
+\end{proof}

@@ -1,0 +1,146 @@
+\lecture{13}{4 Feb. 11:00}{Integration of Complex Functions}
+\section{Integration of Complex Functions}
+As usual, we start with a definition.
+\begin{definition}[Integrable]\label{def:integrable}
+	Let \((X, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space} and let \(f\colon X\to \overline{\mathbb{\MakeUppercase{r}} }\) and \(g\colon X\to \mathbb{\MakeUppercase{c}} \)
+	be \hyperref[def:measurable-function]{measurable}.\footnote{Recall that for a complex-valued function like \(g\), this means that both \(\Re g\) and \(\Im g\) are \hyperref[def:measurable-function]{measurable}.}
+
+	\par Then \(f, g\) are called \emph{integrable} if \(\int \left\vert f \right\vert < \infty \) and \(\int \left\vert g \right\vert < \infty \), and we define
+	\[
+		\int f = \int \hyperref[def:positive-part]{f^+} - \int \hyperref[def:negative-part]{f^-},\quad \int g = \int \Re g + i \int \Im g.
+	\]
+	Furthermore, for \(f\colon X\to \overline{\mathbb{\MakeUppercase{r}} }\), we define
+	\[
+		\int f = \begin{dcases}
+			\infty ,  & \text{ if }  \int \hyperref[def:positive-part]{f^+} = \infty , \int \hyperref[def:negative-part]{f^-} < \infty ; \\
+			-\infty , & \text{ if }  \int \hyperref[def:positive-part]{f^+} < \infty , \int \hyperref[def:negative-part]{f^-} = \infty .
+		\end{dcases}
+	\]
+\end{definition}
+
+We now see a lemma.
+\begin{lemma}\label{lma:lec-13-1}
+	Let \(f, g\colon X\to \overline{\mathbb{\MakeUppercase{r}} }\) or \(\mathbb{\MakeUppercase{c}} \) \hyperref[def:integrable]{integrable}. Assume that \(f(x) + g(x)\) is well-defined
+	for all \(x\in X\).\footnote{That is, we never see \(\infty + (-\infty )\) or \((-\infty ) + \infty \).} Then we have
+	\begin{enumerate}[(1)]
+		\item \(f+g\), \(cf\) for all \(c\in \mathbb{\MakeUppercase{c}} \) are \hyperref[def:integrable]{integrable}.
+		      \item\label{lma:linearity-of-integral} \(\int f + g = \int f + \int g\). This is not trivial since \((f+g)^+ \neq f^+ + g^+\).
+		\item \(\left\vert \int f \right\vert \leq \int \left\vert f \right\vert \).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	Check \cite{folland1999real} page 53.
+\end{proof}
+
+\begin{lemma}\label{lma:lec-13-2}
+	Let \((X, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space} and let \(f\) be an \hyperref[def:integrable]{integrable} function on \(X\).
+	Then
+	\begin{enumerate}[(1)]
+		\item \(f\) is finite \hyperref[def:mu-almost-everywhere]{a.e.}. i.e., \(\{x\in X \mid \left\vert f(x) \right\vert = \infty \}\) is a \hyperref[def:mu-null-set]{null set}.
+		\item The set \(\{x\in X \mid f(x)\neq 0\}\) is \hyperref[def:finite-measure]{\(\sigma \)-finite}.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	\todo{HW 5 Q8 by \autoref{lma:Markov-inequality}}
+\end{proof}
+
+\begin{proposition}\label{prop:lec-13}
+	Let \((X, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space}, then
+	\begin{enumerate}[(1)]
+		\item If \(h\) is \hyperref[def:integrable]{integrable} on \(X\), then
+		      \[
+			      \underset{E\in \mathcal{\MakeUppercase{a}} }{\forall }\ \int_E h = 0 \iff \int \left\vert h \right\vert = 0 \iff h = 0\ \hyperref[def:mu-almost-everywhere]{a.e.}
+		      \]
+		\item If \(f, g\) are \hyperref[def:integrable]{integrable} on \(X\), then
+		      \[
+			      \underset{E\in \mathcal{\MakeUppercase{a}} }{\forall }\ \int _E f = \int _E g \iff f = g\ \hyperref[def:mu-almost-everywhere]{a.e.}
+		      \]
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	We prove this one by one.
+	\begin{enumerate}[(1)]
+		\item We see that the second equivalence is done in \autoref{prop:lec12-1}, hence we prove the first equivalence only.
+		      Since we have
+		      \[
+			      \int \left\vert h \right\vert = 0 \implies \left\vert \int _E h \right\vert \leq \int _E \left\vert h \right\vert \leq \int \left\vert h \right\vert = 0,
+		      \]
+		      which shows one implication. Now assume that \(\int _E h = 0\) for all \(E\in \mathcal{\MakeUppercase{a}} \), then we can write \(h\) as
+		      \[
+			      h = u + iv = (u^+ - u^-) + i (v^+ - v^-).
+		      \]
+		      Let \(B\coloneqq \{x\in X \mid u^+(x)>0\}\), then by assumption, we have
+		      \[
+			      0 = \int _B h = \Re \int _B h = \int _B u = \int _B u^+ = \int _B u^+ + \int _{B^{c}} u^+ = \int u^+,
+		      \]
+		      hence \(u^+ = 0\) \hyperref[def:mu-almost-everywhere]{almost everywhere}. Similarly, we have \(u^-, v^+, v^-\) are all zero \hyperref[def:mu-almost-everywhere]{almost everywhere}.
+		      This gives us that \(h\) is zero  \hyperref[def:mu-almost-everywhere]{almost everywhere} as desired.
+		\item \todo{DIY}
+	\end{enumerate}
+\end{proof}
+
+\begin{theorem}[Dominated Convergence Theorem]\label{thm:dominated-convergence-theorem}
+	Let \((X, \mathcal{\MakeUppercase{a}} , \mu )\) be a \hyperref[def:measure-space]{measure space}, and
+	\begin{itemize}
+		\item Let \(f_{n}\) be \hyperref[def:integrable]{integrable} on \(X\).
+		\item \(\lim\limits_{n \to \infty} f_{n}(x) = f(x)\) \hyperref[def:mu-almost-everywhere]{almost everywhere}.
+		\item There is a \(g\colon X\to [0, \infty ]\) such that \(g\) is \hyperref[def:integrable]{integrable} and
+		      \[
+			      \underset{n\in\mathbb{\MakeUppercase{n}} }{\forall }\ \left\vert f_{n}(x) \right\vert \leq g(x)\ \hyperref[def:mu-almost-everywhere]{a.e.}
+		      \]
+	\end{itemize}
+	Then we have
+	\[
+		\lim\limits_{n \to \infty} \int f_{n} = \int f = \int \lim\limits_{n \to \infty} f_{n}.
+	\]
+\end{theorem}
+\begin{proof}
+	Let \(F\) be the countable union of \hyperref[def:mu-null-set]{null set} on which the three conditions may fail. Then we see that after modifying the definition of \(f_{n}, f\) and \(g\) on \(F\),
+	we may assume that all three conditions hold everywhere since modifying on a \hyperref[def:mu-null-set]{null set} does not change the integral.
+
+	\par We now consider the \(\overline{\mathbb{\MakeUppercase{r}} }\)-valued case only.\todo{Check \(\mathbb{\MakeUppercase{c}} \)-valued case} Note that the second and the third conditions
+	imply that \(f\) is \hyperref[def:integrable]{integrable} since \(\left\vert f \right\vert \leq g(x)\). We then see that \(g + f_{n}\geq 0\) and \(g - f_{n}\geq 0\) because \(-g\leq f_{n}\leq g\).
+	From \autoref{thm:Fatou-lemma}, we have
+	\[
+		\int g + f \leq \liminf_{n \to \infty} \int g + f_{n},\quad \int g - f\leq \liminf_{n \to \infty} \int g - f_{n}.
+	\]
+	From the \hyperref[lma:linearity-of-integral]{linearity of integral}, we have
+	\[
+		\int g + \int f\leq \int g + \liminf_{n \to \infty} \int f_{n},\quad \int g - \int f \leq \int g - \liminf_{n \to \infty} \int f_{n}.
+	\]
+	Now, since \(\int g<\infty \), we can cancel it, which gives
+	\[
+		\int f \leq \liminf_{n \to \infty} \int f_{n},\quad -\int f \leq \liminf_{n \to \infty} \int -f_{n} = - \limsup_{n \to \infty} \int f_{n},
+	\]
+	which implies
+	\[
+		\int f \leq \liminf_{n \to \infty} f_{n}\leq \limsup_{n \to \infty} \int f_{n}\leq \int f.
+	\]
+	This shows that the limit exists, and the desired result indeed holds.
+\end{proof}
+
+\begin{corollary}[Tonelli's theorem for series and integrals]\label{col:Tonelli-theorem-for-series-and-integrals}
+	Suppose \(f_{n}\) are \hyperref[def:integrable]{integrable} functions such that
+	\[
+		\sum\limits_{n=1}^{\infty} \int \left\vert f_{n} \right\vert < \infty,
+	\]
+	then we have
+	\[
+		\int \sum\limits_{n=1}^{\infty} f_{n} = \sum\limits_{n=1}^{\infty} \int f_{n}.
+	\]
+\end{corollary}
+\begin{proof}
+	Take \(G(x)\) to be
+	\[
+		G(x) \coloneqq \sum\limits_{n=1}^{\infty} \left\vert f_{n}(x) \right\vert,
+	\]
+	then we see \(G(x) \geq \left\vert F_{N}(x) \right\vert\) where \(F_{N}(x) \coloneqq \sum\limits_{n=1}^{N} f_{n}(x)\).
+	By \autoref{col:Tonelli-theorem-for-nonnegative-series-and-integrals}, we have
+	\[
+		\int G(x) = \sum\limits_{n=1}^{\infty} \left\vert f_{n}(x) \right\vert < \infty .
+	\]
+	Lastly, from \autoref{thm:dominated-convergence-theorem}, the result follows.
+\end{proof}
+\begin{remark}
+	Compare to \autoref{col:Tonelli-theorem-for-nonnegative-series-and-integrals}, we see that we further generalize the result!
+\end{remark}

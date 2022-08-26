@@ -1,0 +1,90 @@
+\lecture{21}{25 Feb. 11:00}{Hardy-Littlewood Maximal Function and Inequality}
+\begin{notation}
+	We let
+	\[
+		\int _E f \,\mathrm{d} m = \int _E f(x) \,\mathrm{d} x.
+	\]
+\end{notation}
+
+The problem we're working on is
+\[
+	\frac{1}{m(B(w, r))}\int _{B(x, r)}f(y)\,\mathrm{d} y \overset{r\to 0}{\underset{?}{\longrightarrow}}f(x).
+\]
+\begin{definition}[Locally integrable]\label{def:locally-integrable}
+	Given \(f\colon \mathbb{\MakeUppercase{r}} ^d \to \mathbb{\MakeUppercase{c}} \) be \hyperref[def:Lebesgue-measurable-function]{Lebesgue measurable}
+	function. Then we say \(f\) is \emph{locally integrable} if for every compact \(K\subset \mathbb{\MakeUppercase{r}} ^d\),
+	\[
+		\int _K \left\vert f \right\vert \,\mathrm{d} m < \infty.
+	\]
+	In this case, we write \(f\in L^1_{\text{loc} }(\mathbb{\MakeUppercase{r}} ^d)\).
+\end{definition}
+
+\begin{definition}[Hardy-Littlewood maximal function]\label{def:HL-maximal-function}
+	Given \(f\in L^1_{\text{loc} }(\mathbb{\MakeUppercase{r}} ^d)\), the \emph{Hardy-Littlewood maximal function} for \(f\) is defined as
+	\[
+		\mathrm{H}f(x) \coloneqq \sup \left\{\mathrm{A}_r(x)\mid r > 0\right\},
+	\]
+	where
+	\[
+		\mathrm{A}_r(x) \coloneqq \frac{1}{m(B(x, r))}\int _{B(x, r)} \left\vert f(y) \right\vert \,\mathrm{d}y.
+	\]
+\end{definition}
+\begin{note}
+	We note that \(\mathrm{A}_r(\cdot) \) means \emph{averaging function} over an open ball with radius being \(r\).
+\end{note}
+\begin{lemma}\label{lma:lec21}
+	Let \(f\in L^1_{\text{loc} }(\mathbb{\MakeUppercase{r}} ^d)\), then
+	\begin{enumerate}[(1)]
+		\item \(\mathrm{A}_r(x)\) is jointly continuous for \((x, r)\in \mathbb{\MakeUppercase{r}} ^d \times (0, \infty )\).
+		\item \(\mathrm{H}f(x) \) is \hyperref[def:Borel-measurable-function]{Borel measurable}.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	We outline the proof.
+	\begin{enumerate}[(1)]
+		\item Let \((x, r)\to (x^\ast, r^\ast)\implies \mathrm{A}_r(x)\to \mathrm{A}_{r^\ast}(x^\ast)\). Let \((x_{n} , r_{n} )\) be any sequence which converges to
+		      \(x^\ast, r^\ast\), then we consider \(\lim\limits_{n \to \infty} \mathrm{A}_{r_{n} }(x_{n} )\) and we can calculate
+		      \[
+			      \int\underbrace{\left\vert f(y) \right\vert \mathbbm{1}_{B(x_{n} , r_{n} )} (y)}_{\coloneqq h_{n} (y)},
+		      \]
+		      then we apply \autoref{thm:dominated-convergence-theorem} to \(h_{n} \).
+		\item Observe that
+		      \[
+			      (\mathrm{H}f)^{-1} (\underbrace{(a, \infty )}_{\text{open} }) = \bigcup\limits_{r>0} \mathrm{A}_{r} ^{-1} \left((a, \infty )\right)
+		      \]
+		      is open, since \(\mathrm{A} _{r} ^{-1} \left((a, \infty )\right)\) is open from the 1. Note that the equality comes from the fact that \(\mathrm{H}f = \sup_{r} \mathrm{A} _{r} \).
+	\end{enumerate}
+\end{proof}
+
+\begin{theorem}[Hardy-Littlewood maximal inequality]\label{thm:HL-maximal-inequality}
+	There exists \(C_{d} >0\) such that for every \(f\in L^1(\mathbb{\MakeUppercase{r}} ^d)\),
+	\[
+		\underset{\alpha >0}{\forall }\ m\left(\left\{x\in \mathbb{\MakeUppercase{r}} ^d\mid \mathrm{H}f(x) > \alpha  \right\}\right) \leq \frac{C_{d} }{\alpha }\int \left\vert f(x) \right\vert \,\mathrm{d} x.
+	\]
+\end{theorem}
+\begin{proof}
+	We first fix \(f\in L^1\) and \(\alpha >0\). We define
+	\[
+		E\coloneqq \left\{x\mid \mathrm{H}f (x) > \alpha \right\},
+	\]
+	which is a \hyperref[def:measurable-set]{Borel measurable set} by \autoref{lma:lec21}. Then
+	\[
+		x\in E\implies \underset{r_{x} >0}{\exists } \ \mathrm{A} _{r_{x} }(x)> \alpha \implies m(B(x, r_{x} ))< \frac{1}{\alpha }\int _{B(x, r_{x} )}\left\vert f(y) \right\vert \,\mathrm{d} y.
+	\]
+	From \hyperref[thm:inner-regularity]{inner regularity}, we have
+	\[
+		m(E) = \sup \left\{m(K)\mid \text{compact }K\subset E \right\}.
+	\]
+	Let \(K\subset E\) be compact, then
+	\[
+		K\subset \bigcup\limits_{x\in K}B(x, r_{x} ) \overset{K \text{ compact} }{\implies } K\subset \bigcup\limits_{i=1}^{N} B_{i} \overset{\hyperref[lma:Vitali-type-covering-lemma]{!}}{\implies} K\subset \bigcup\limits_{i=1}^{m} \left\{3 B_{j} ^\prime \right\}.
+	\]
+	From here, we further have
+	\[
+		m(K) \leq \sum\limits_{i=1}^{m} m(3 B_{j} ^\prime ) = 3^d \sum\limits_{j=1}^{m} m(B_{j} ^\prime ) \leq \frac{3^d}{\alpha }\sum\limits_{j=1}^{m} \int _{B_{j} ^\prime }\left\vert f(y) \right\vert \,\mathrm{d}y.
+	\]
+	Now, since \(B^\prime _{i} , \ldots , B^\prime _{m}  \) are disjoint, hence we finally have
+	\[
+		m(K) \leq \frac{3^d}{\alpha }\int _{\mathbb{\MakeUppercase{r}} ^d}\left\vert f(y) \right\vert \,\mathrm{d} y.
+	\]
+\end{proof}

@@ -1,0 +1,248 @@
+\lecture{4}{12 Jan. 11:00}{Carathéodory Extension Theorem}
+\begin{prev}
+	Last time we skip the proof of \autoref{prop:outer-measure}, which is a quite important theorem for building a \hyperref[def:measure]{measure}.
+	To see this, we note that from \autoref{prop:outer-measure}, given a positive function \(\rho \) defined on a subset of the power set of \(X\)
+	with \(\rho (\varnothing ) = 0\), we can induce an \hyperref[def:outer-measure]{outer measure} from \(\rho \).
+\end{prev}
+
+\begin{note}
+	We'll see later that how can we further induce a natural \hyperref[def:measure]{measure} from the induced \hyperref[def:outer-measure]{outer measure}.
+\end{note}
+
+We now prove \autoref{prop:outer-measure}.
+\begin{proof}[Proof of \autoref{prop:outer-measure}]
+	We need to prove the following.
+
+	\begin{claim}
+		\(\mu ^{\ast} \) is well-defined, i.e., \(\inf\) is taken over a non-empty set.
+	\end{claim}
+	\begin{explanation}
+		This is trivial since \(X\in \mathcal{E}\) and \(X\supset A\) for any \(A\in \mathcal{E}\).
+	\end{explanation}
+
+	\begin{claim}
+		\hyperref[def:outer-measure-null-empty-set]{Null empty set} holds, i.e., \(\mu ^{\ast} (\varnothing ) = 0\).
+	\end{claim}
+	\begin{explanation}
+		Since \(\varnothing \in \mathcal{E}\) and
+		\[
+			\mu^{\ast} (\varnothing ) = \inf \left\{\sum\limits_{i=1}^{\infty} \rho(E_{i})\colon \underset{i\in \mathbb{\MakeUppercase{N}} }{\forall}E_{i}\in \mathcal{E} , \bigcup\limits_{i=1}^{\infty} E_{i}\supset \varnothing \right\} = 0
+		\]
+		since \(\rho(\varnothing ) = 0\) for all \(i\) and further, by Squeeze Theorem, we see that \(\lim\limits_{n \to \infty} \sum\limits_{i=1}^{n} \rho(\varnothing) = 0\).
+	\end{explanation}
+
+	\begin{claim}
+		\hyperref[def:outer-measure-montonicity]{Monotonicity} holds, i.e., \(A\subset B\implies \mu^{\ast} (A)\leq \mu^{\ast} (B)\).
+	\end{claim}
+	\begin{explanation}
+		We show this by contradiction. Suppose \(A\subset B\) and \(\mu^{\ast} (A)>  \mu^{\ast} (B)\), then by
+		definition of \(\mu^{\ast} \), we have
+		\[
+			\begin{split}
+				\mu^{\ast} (A) &= \inf\left\{\sum\limits_{i=1}^{\infty} \rho(E_{i})\colon \underset{i\in\mathbb{\MakeUppercase{N}}}{\forall}E_{i}\in \mathcal{E},\bigcup\limits_{i=1}^{\infty} E_{i}\supset A \right\}\\
+				&>\inf\left\{\sum\limits_{i=1}^{\infty} \rho(E_{i})\colon \underset{i\in\mathbb{\MakeUppercase{N}}}{\forall}E_{i}\in \mathcal{E},\bigcup\limits_{i=1}^{\infty} E_{i}\supset B \right\} = \mu^{\ast} (B).
+			\end{split}
+		\]
+		Now, let \(B \eqqcolon (B\setminus A)\cup A\), then we have
+		\[
+			\begin{split}
+				\mu^{\ast} (A) &= \inf\left\{\sum\limits_{i=1}^{\infty} \rho(E_{i})\colon \underset{i\in\mathbb{\MakeUppercase{N}}}{\forall}E_{i}\in \mathcal{E},\bigcup\limits_{i=1}^{\infty} E_{i}\supset A \right\}\\
+				&>\inf\left\{\sum\limits_{i=1}^{\infty} \rho(E_{i})\colon \underset{i\in\mathbb{\MakeUppercase{N}}}{\forall}E_{i}\in \mathcal{E},\bigcup\limits_{i=1}^{\infty} E_{i}\supset (B\setminus A)\cup A \right\} = \mu^{\ast} (B).
+			\end{split}
+		\]
+		Now, since \(B\setminus A\supseteq \varnothing \), then this inequality can't hold, hence a contradiction\conta.
+	\end{explanation}
+
+	\begin{claim}
+		\hyperref[def:outer-measure-countable-subadditivity]{Countable subadditivity} holds, i.e., \(\mu^{\ast} \left(\bigcup\limits_{i=1}^{\infty} A_{i}\right) \leq \sum\limits_{i=1}^{\infty} \mu^{\ast} (A_{i})\) for every \(A_{i} \subset X \).
+	\end{claim}
+	\begin{explanation}
+		Let \(A_1, A_2, \ldots \in X \). If one of \(\mu^{\ast} (A_{n}) = \infty \), then result holds.
+		So we may assume \(\mu^{\ast} (A_n)<\infty \) for all \(n\in \mathbb{\MakeUppercase{N}} \). Now, fix any \(\epsilon >0\),
+		we will show that
+		\[
+			\mu^{\ast} \left(\bigcup\limits_{n=1}^{\infty} A_n\right)\leq \sum\limits_{n=1}^{\infty} \mu^{\ast} (A_n)+\epsilon.
+		\]
+		For each \(n\in\mathbb{\MakeUppercase{N}} \), \(\exists E_{n, 1}, E_{n, 2}, \ldots \in \mathcal{E}\) such that
+		\(\bigcup\limits_{k=1}^{\infty} E_{n, k}\supset A_n\) and \(\mu^{\ast} (A_n) + \epsilon /2^n \geq \sum\limits_{k=1}^{\infty} \rho(E_{n, k})\).
+		\begin{remark}
+			This is an important trick! We often set the error term as \(\epsilon / 2^n\) instead of \(\epsilon \) as in above to accommodate the summation over
+			a countable set.
+		\end{remark}
+
+		Then we see that
+		\[
+			\bigcup\limits_{k=1}^{\infty} A_n \subset \bigcup\limits_{n=1}^{\infty} \bigcup\limits_{k=1}^{\infty} E_{k, n} = \bigcup\limits_{(n, k)\in\mathbb{\MakeUppercase{N}} ^2} E_{k, n},
+		\]
+		which implies
+		\[
+			\mu^{\ast} \left(\bigcup\limits_{n=1}^{\infty} A_{n}\right)
+			\leq \sum\limits_{(n, k)\in\mathbb{\MakeUppercase{N}} ^2} \rho\left(E_{k, n}\right)
+			\overset{\hyperref[thm:Tonelli-theorem-for-series]{\text{!}}}{=} \sum\limits_{n=1}^{\infty} \sum\limits_{k=1}^{\infty} \rho(E_{k, n})
+			\leq \sum\limits_{n=1}^{\infty} \left(\mu^{\ast} (A_n) + \frac{\epsilon}{2^n}\right)
+		\]
+		from the inequality just derived. Now, since the last term is just
+		\[
+			\sum\limits_{n=1}^{\infty} \left(\mu^{\ast} (A_n) + \frac{\epsilon}{2^n}\right) = \sum\limits_{n=1}^{\infty} \mu^{\ast} (A_n)+\epsilon,
+		\]
+		hence we finally have
+		\[
+			\mu^{\ast} \left(\bigcup\limits_{n=1}^{\infty} A_{n}\right)\leq \sum\limits_{n=1}^{\infty} \mu^{\ast} (A_n)+\epsilon
+		\]
+		for arbitrarily small fixed \(\epsilon >0\), hence the subadditivity is proved.
+	\end{explanation}
+\end{proof}
+
+\begin{definition}[Carathéodory measurable]\label{def:C-measurable}
+	Let \(\mu^{\ast} \) be an \hyperref[def:outer-measure]{outer measure} on \(X\). We say \(A\subset X\) is \emph{Carathéodory measurable with respect to \(\mu^{\ast} \)} if
+	\[
+		\forall E\subset X,\ \mu^{\ast} (E) = \mu^{\ast} \left(E\cap A\right) + \mu^{\ast} \left(E\setminus A\right).
+	\]
+\end{definition}
+\begin{note}
+	We sometimes write \emph{C-measurable} instead of \hyperref[def:C-measurable]{Carathéodory measurable} for convenience.
+\end{note}
+\begin{lemma}\label{lma:disjoint-C-measurable-finite-additive}
+	Let \(\mu^{\ast} \) be an \hyperref[def:outer-measure]{outer measure} on \(X\). Suppose \(B_1, \ldots , B_N \) are \underline{disjoint} \hyperref[def:C-measurable]{C-measurable} sets.
+	Then,
+	\[
+		\forall E\subset X,\ \mu^{\ast} \left(E\cap \left(\bigcup\limits_{i=1}^{N} B_{i}\right)\right) = \sum\limits_{i=1}^{N} \mu^{\ast} \left(E\cap B_i\right).
+	\]
+\end{lemma}
+\begin{proof}
+	Since we have
+	\[
+		\begin{split}
+			\mu^{\ast} \left(E\cap \left(\bigcup\limits_{i=1}^{N} B_{i}\right)\right)
+			&= \mu^{\ast} \left( E^\prime  \cap B_1\right) + \mu^{\ast} \left(E ^\prime \setminus B_1\right)\\
+			&= \mu^{\ast} \left(E\cap \left(\bigcup\limits_{i=1}^{N} B_{i}\cap B_1\right)\right) + \mu^{\ast} \left(E\cap \left(\bigcup\limits_{i=1}^{N} B_{i}\right)\cap B^{c}_1\right)\\
+			&= \mu^{\ast} (E\cap B_1) + \mu^{\ast} \left(E\cap \left(\bigcup\limits_{i=2}^{N} B_{i}\right)\right)
+		\end{split}
+	\]
+	where the equality comes from the fact that \(B_1 \) is \hyperref[def:C-measurable]{C-measurable} and disjoint from \(B_{i}\), \(i\neq 1\). Then, we simply iterate this argument
+	and have the result. Note that in the first inequality, we define \(E ^\prime\coloneqq E\cap \left(\bigcup\limits_{i=1}^{N} B_{i}\right)\) for the simplicity of notation.
+\end{proof}
+\begin{remark}
+	This implies that if we restrict an \hyperref[def:outer-measure]{outer measure} on a \hyperref[def:C-measurable]{C-measurable} set, then it becomes \underline{finite additive}.
+\end{remark}
+
+\begin{theorem}[Carathéodory extension Theorem]\label{thm:Caratheodory-extension-Thm}
+	Let \(\mu^{\ast} \) be an \hyperref[def:outer-measure]{outer measure} on \(X\). Let \(\mathcal{A} \) be the collection of \hyperref[def:C-measurable]{C-measurable} sets (with respect to \(\mu^{\ast} \)).
+	Then,
+	\begin{enumerate}[(1)]
+		\item \(\mathcal{A}\) is a \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} on \(X\).
+		\item \(\mu = \at{\mu^{\ast} }{\mathcal{A} }{}\) is a \hyperref[def:measure]{measure} on \((X, \mathcal{A})\).
+		\item \((X, \mathcal{A} , \mu)\) is a \hyperref[def:complete-measure-space]{complete measure space}.
+	\end{enumerate}
+\end{theorem}
+
+\begin{proof}\let\qed\relax
+	We divide the proof in several steps.
+	\begin{enumerate}[(1)]
+		\item We show \(\mathcal{A}\) is a \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} by showing
+		      \begin{itemize}
+			      \item We first show \(\varnothing \in \mathcal{\MakeUppercase{a}} \).
+			            \begin{claim}
+				            \(\varnothing \in \mathcal{A} \).
+			            \end{claim}
+			            \begin{explanation}
+				            To show this, we simply check that \(\varnothing \) is \hyperref[def:C-measurable]{C-measurable}. We see that
+				            \[
+					            \underset{E\subset X}{\forall}\ \mu^{\ast} (E) = \mu^{\ast} (E\cap \varnothing ) + \mu^{\ast} (E \setminus \varnothing ) = \mu^{\ast} (E),
+				            \]
+				            which just shows \(\varnothing \in \mathcal{A}\).
+			            \end{explanation}
+			      \item Then we show \(\mathcal{\MakeUppercase{a}} \) is closed under complements.
+			            \begin{claim}
+				            \(\mathcal{A} \) closed under complements.
+			            \end{claim}
+			            \begin{explanation}
+				            This is equivalent to say that if \(A\) is \hyperref[def:C-measurable]{C-measurable}, so is \(A^{c}\).
+				            We see that if \(A\) is \hyperref[def:C-measurable]{C-measurable}, then for every \(E\subset X\),
+				            \[
+					            \mu^{\ast} (E) = \mu^{\ast} (E\cap A) + \mu^{\ast} (E\setminus A).
+				            \]
+				            Observing that \(E\cap A = E\setminus A^{c} \) and \(E\setminus A = E\cap A^{c} \), hence
+				            \[
+					            \mu^{\ast} (E) = \mu^{\ast} (E\setminus A^{c} ) + \mu^{\ast} (E\cap A^{c} ).
+				            \]
+
+				            We immediately see that above implies \(A^{c} \in\mathcal{A} \).
+			            \end{explanation}
+			      \item We now show \(\mathcal{\MakeUppercase{a}} \) is closed under countable unions.
+			            \begin{note}
+				            To show \(\mathcal{A} \) closed under countable unions, we show that \(\mathcal{A}\) is closed under:
+				            \begin{center}
+					            finite unions \(\overset{\text{then}}{\implies}\) countable \underline{disjoint} unions \(\overset{\text{then}}{\implies}\) countable unions.
+				            \end{center}
+			            \end{note}
+			            Hence, we first show \(\mathcal{A} \) is closed under finite unions.
+			            \begin{claim}\label{pf:Caratheodory-extension-Thm-1-finite-unions}
+				            \(A, B\in \mathcal{A} \implies A\cup B\in \mathcal{A}\).
+			            \end{claim}
+			            \begin{explanation}
+				            Fix \(E\subset X\) arbitrary. We need to show that
+				            \[
+					            \mu^{\ast} (E) = \mu^{\ast} (E\cap (A\cup B)) + \mu^{\ast} (E\setminus (A\cup B)),
+				            \]
+				            i.e.,
+				            \(\mu^{\ast} (1\cup 2\cup 3\cup 4) = \mu^{\ast} (1\cup 2\cup 3) + \mu^{\ast} (4)\) given \(A, B\in\mathcal{A}\) and the following figure.
+				            \begin{figure}[H]
+					            \centering
+					            \incfig{thm:Caratheodory-extension-Thm-1a}
+					            \label{fig:thm:Caratheodory-extension-Thm-1a}
+				            \end{figure}
+
+				            \begin{itemize}
+					            \item Since \(A\) is \hyperref[def:C-measurable]{C-measurable},
+					                  \begin{itemize}
+						                  \item \(\mu^{\ast} (1\cup 2\cup 3\cup 4) = \mu^{\ast} (1\cup 2) + \mu^{\ast} (3\cup 4)\)
+						                  \item \(\mu^{\ast} (1\cup 2\cup 3) = \mu^{\ast} (1\cup 2) + \mu^{\ast} (3)\)
+					                  \end{itemize}
+					            \item Since \(B\) is \hyperref[def:C-measurable]{C-measurable},
+					                  \begin{itemize}
+						                  \item \(\mu^{\ast} (3\cup 4) = \mu^{\ast} (3) + \mu^{\ast} (4)\)
+					                  \end{itemize}
+				            \end{itemize}
+				            Hence, we have
+				            \[
+					            \begin{split}
+						            \mu^{\ast} (1\cup 2\cup 3\cup 4) &= \mu^{\ast} (1\cup 2)+\mu^{\ast} (3\cup 4)\\
+						            &= \mu^{\ast} (1\cup 2) + \mu^{\ast} (3) + \mu^{\ast} (4)
+						            = \mu^{\ast}(1\cup 2\cup 3) + \mu^{\ast} (4).
+					            \end{split}
+				            \]
+			            \end{explanation}
+			            We now show \(\mathcal{\MakeUppercase{a}} \) is closed under countable \underline{disjoint} unions.
+			            \begin{claim}
+				            \(\mathcal{A} \) is closed under countable disjoint unions.
+			            \end{claim}
+			            \begin{explanation}
+				            Let \(A_1, A_2, \ldots \in\mathcal{A}\) and disjoint.
+				            Fix \(E\subset X\) arbitrary. Since \(\mu^{\ast} \) is countably subadditive,
+				            \[
+					            \mu^{\ast} (E) \leq  \mu^{\ast} \left(E\cap \bigcup\limits_{i=1}^{\infty} A_{i}\right) + \mu^{\ast} \left(E\setminus \bigcup\limits_{i=1}^{\infty} A_{i}\right),
+				            \]
+				            hence we only need to show another way around.
+
+				            Fix \(N\in\mathbb{\MakeUppercase{N}} \), we have \(\bigcup\limits_{n=1}^{N} A_{n}\in \mathcal{A} \) since \hyperref[pf:Caratheodory-extension-Thm-1-finite-unions]{\(N\) is finite}, and
+				            \[
+					            \begin{split}
+						            \mu^{\ast} (E) &= \mu^{\ast} \left(E\cap \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right) + \mu^{\ast} \left(E\setminus \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)\\
+						            &\geq \underbrace{\sum\limits_{n=1}^{N} \mu^{\ast} (E\cap A_{n})}_{ \overset{\hyperref[lma:disjoint-C-measurable-finite-additive]{!}}{=} \mu^{\ast} \left(E\cap \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)} + \underbrace{\mu^{\ast} \left(E\setminus \bigcup\limits_{n=1}^{\infty} A_{n}\right)}_{\leq \mu^{\ast} \left(E\setminus \left(\bigcup\limits_{n=1}^{N} A_{n}\right)\right)}.
+					            \end{split}
+				            \]
+				            Now, take \(N\to \infty \) then we are done.
+			            \end{explanation}
+			            We can then extend this to the case of countable unions.
+			            \begin{exercise}
+				            Show \(\mathcal{A} \) is closed under countable unions.
+			            \end{exercise}
+			            \begin{answer}
+				            \todo{DIY}
+			            \end{answer}
+		      \end{itemize}
+		      Above shows that \(\mathcal{\MakeUppercase{a}} \) is a \hyperref[def:sigma-algebra]{\(\sigma\)-algebra}.
+	\end{enumerate}
+	\emph{The proof will be \hyperref[pf:Caratheodory-extension-Thm-cont]{continued}\ldots}
+\end{proof}

@@ -1,0 +1,157 @@
+\lecture{32}{30 Mar. 11:00}{Lebesgue Differentiation Theorem for Regular Borel Measures}
+We now do an example to illustrate \autoref{thm:Lebesgue-Radon-Nikodym-theorem}.
+\begin{eg}
+	Let \(\mu = m\), \(\nu = \mu_F\) (\hyperref[def:Lebesgue-Stieltjes-measure]{Lebesgue-Stieltjes measure} for \(F\)). We'll define \(F(x)\) by
+	\[
+		F(x) = \begin{dcases}
+			e^{3x}, & \text{ if } x\leq 0 ;   \\
+			1,      & \text{ if } 0 < x < 1 ; \\
+			5,      & \text{ if } x \geq 1 .
+		\end{dcases}
+	\]
+	Then we have
+	\[
+		\mu_F(E) = \int_{E \cap \mathbb{R}_{< 0}} 3e^{3x} \,\mathrm{d}x + 4 \delta_1(E).
+	\]
+\end{eg}
+\begin{explanation}
+	It is enough to check on \((-\infty,x]\) because these are \hyperref[def:locally-finite]{locally finite} \hyperref[def:Borel-measure]{Borel measures} on \(\mathbb{R}\).
+	Then we have
+	\[
+		\mu_F = \,\mathrm{d}\rho + \,\mathrm{d}\lambda = f\,\mathrm{d}m + \,\mathrm{d}\lambda
+	\]
+	where \(f = \mathbbm{1}_{\mathbb{R}_{< 0}}3e^{3x}\) and \(\lambda = 4\delta_1\), \(\lambda \perp m\).
+\end{explanation}
+
+Specifically, we call such a decomposition \emph{Lebesgue decomposition} of \(\nu \) with respect to \(\mu \). Now, with the condition \(\nu \ll \mu \), \autoref{thm:Lebesgue-Radon-Nikodym-theorem}
+implies that \(\,\mathrm{d} \nu = f \,\mathrm{d} \mu \) for some \(f\), which is exactly the statement of \autoref{thm:Radon-Nikodym-theorem}. And, it should
+be clear now that the definition of \hyperref[def:Radon-Nikodym-derivative]{Radon Nikodym derivative} of \(\nu \) with respect to \(\mu \), denoted as
+\(\,\mathrm{d} \nu / \,\mathrm{d} \mu \), is just \(f\) in this case.
+
+\begin{prev}
+	If \(\nu = \nu^+ - \nu^-\), we defined the \hyperref[def:total-variation]{total variation} \(\left\vert \nu \right\vert = \nu^+ + \nu^-\).
+	Then we have \(\left\vert \nu(E) \right\vert \leq \left\vert \nu \right\vert(E)\).
+\end{prev}
+
+\section{Lebesgue Differentiation Theorem for Regular Borel Measures}
+\begin{definition}[Regular]\label{def:regular}
+	A Borel \hyperref[def:signed-measure]{signed measure} \(\nu\) on \(\mathbb{R}^d\) is called \emph{regular} if
+	\begin{itemize}
+		\item\label{def:regular-compact-finite} (compact finite) \(\left\vert \nu \right\vert(K) < \infty\) for all compact \(K\).
+		\item\label{def:regular-outer-regularity} (outer regularity) We have \hyperref[thm:regularity]{outer regularity}
+		\[
+			\left\vert \nu \right\vert(E) = \inf\{\left\vert \nu \right\vert(U) \mid \text{ open } U \supseteq E\}
+		\]
+		for every \hyperref[def:Borel-set]{Borel set} \(E\).
+	\end{itemize}
+\end{definition}
+
+\begin{eg}
+	We see that
+	\begin{enumerate}[(1)]
+		\item Any \hyperref[def:Lebesgue-Stieltjes-measure]{Lebesgue-Stieltjes measure} on \(\mathbb{R}\) has this property from \autoref{thm:regularity},
+		      so is the difference between two of them (at least if one of them is \hyperref[def:finite-signed-measure]{finite}).
+		\item The \hyperref[def:Lebesgue-measure]{Lebesgue measure} on \(\mathbb{R}^d\) is \hyperref[def:regular]{regular}.
+	\end{enumerate}
+\end{eg}
+
+\begin{note}
+	From \hyperref[def:regular-compact-finite]{compact finiteness}, if \(\nu\) is \hyperref[def:regular]{regular} then it is
+	\hyperref[def:finite-signed-measure]{\(\sigma\)-finite}.
+\end{note}
+
+\begin{lemma}
+	\(f \in L^1_{\mathrm{loc}}(\mathbb{R}^d)\) if and only if \(\,\mathrm{d}\nu = f \,\mathrm{d}m\) is \hyperref[def:regular]{regular}.
+\end{lemma}
+\begin{proof}
+	We prove this in two directions.
+	\paragraph{\((\impliedby)\)}
+	Suppose \(\,\mathrm{d} \nu = f \,\mathrm{d} m\) is \hyperref[def:regular]{regular}. Then
+	\[
+		\left\vert \nu \right\vert(K) = \int_K \left\vert f \right\vert \,\mathrm{d}m < \infty
+	\]
+	for all compact \(K\), thus \(f \in L^1_{\mathrm{loc}}(\mathbb{R}^d)\).
+
+	\paragraph{\((\implies)\)}
+	Suppose \(f\in L^1_{\mathrm{loc}(\mathbb{\MakeUppercase{r}} ^d) }\). This condition is clearly equivalent to
+	\hyperref[def:regular-compact-finite]{compact finiteness}. If this holds, then the \hyperref[def:regular-outer-regularity]{outer regularity}
+	may be verified directly as follows. Suppose that \(E\) is a bounded \hyperref[def:Borel-set]{Borel set}. Given \(\delta > 0\), by \autoref{thm:lec-20},
+	there is a bounded open \(U \supset E\) such that \(m(U) < m(E)+ \delta \) and hence \(m(U\setminus E)< \delta \). But then, given \(\epsilon >0\), there
+	is\footnote{This follows from \cite{folland1999real} Corollary 3.6.} an open \(U \supset E\) such that
+	\[
+		\int _{U\setminus E}f\,\mathrm{d} m < \epsilon
+	\]
+	and hence
+	\[
+		\int _U f\,\mathrm{d} m < \int _E f\,\mathrm{d} m + \epsilon.
+	\]
+	The case of unbounded \(E\) follows easily by writing \(E = \bigcup_{j=1}^{\infty} E_{j}\)
+	where \(E_{j} \) is bounded and finding an open \(U_{j} \supset E_{j} \) such that
+	\[
+		\int _{U_{j} \setminus E_{j} }f \,\mathrm{d} m < \epsilon 2^{-j}.
+	\]
+\end{proof}
+
+\begin{prev}
+	Recall the \hyperref[thm:Lebesgue-differentiation-theorem]{Lebesgue differentiation theorem}, here we had that if \(f \in L^1_{\mathrm{loc}}(\mathbb{R}^d)\)
+	implies that for Lebesgue \hyperref[def:mu-almost-everywhere]{almost every} \(x\),
+	\[
+		\lim_{r \to 0} \frac{1}{m(E_r)} \int_{E_r} f(y) \,\mathrm{d}y = f(x)
+	\]
+	for any \(\{E_r\}\) \hyperref[def:shrink-nicely]{shrinks nicely} to \(x\).
+\end{prev}
+
+\begin{corollary}
+	Let \(\rho\) be a \hyperref[def:regular]{regular} \hyperref[def:signed-measure]{signed Borel measure} on \(\mathbb{R}^d\). Suppose \(\rho \ll m\). Then
+	\(\,\mathrm{d}\rho = f\,\mathrm{d}m\) for some \(f \in L^1_{\mathrm{loc}}(\mathbb{R}^d)\), so then for Lebesgue \hyperref[def:mu-almost-everywhere]{almost every} \(x\)
+	we have
+	\[
+		\lim_{r \to 0} \frac{1}{m(E_r)} \int_{E_r} f(y) \,\mathrm{d}y = f(x).
+	\]
+	Writing this nicely, using established notation, this is
+	\[
+		\lim_{r \to 0} \frac{\rho(E_r)}{m(E_r)} = \frac{\,\mathrm{d}\rho}{\,\mathrm{d}m}(x)
+	\]
+	for every \(\{E_r\}\) \hyperref[def:shrink-nicely]{shrinks nicely} to \(x\).
+\end{corollary}
+
+\begin{proposition}\label{prop:lec-32}
+	Let \(\lambda\) be a \hyperref[def:regular]{regular} \hyperref[def:signed-measure]{positive Borel measure} on \(\mathbb{R}^d\). Suppose \(\lambda \perp m\).
+	Then for \hyperref[def:Lebesgue-measure]{Lebesgue} \hyperref[def:mu-almost-everywhere]{almost every} \(x\), we have
+	\[
+		\lim_{r \to 0} \frac{\lambda(E_r)}{m(E_r)} = 0
+	\]
+	for every \(\{E_r\}\) \hyperref[def:shrink-nicely]{shrinking to \(x\) nicely} (equivalently, \hyperref[def:shrink-nicely]{shrinking to \(0\) nicely}).
+\end{proposition}
+
+\begin{proof}
+	It is enough to consider \(E_r = B(x,r)\). We wish to prove that
+	\[
+		G \coloneqq \left\{x \mid \limsup_{r \to 0} \frac{\lambda(E_r)}{m(E_r)} \neq 0\right\}  = \bigcup_{n = 1}^\infty G_n
+	\]
+	where
+	\[
+		G_n \coloneqq \left\{x \mid \limsup_{r \to 0} \frac{\lambda(E_r)}{m(E_r)} > \frac{1}{n}\right\}
+	\]
+	such that \(m(G) = 0\). We see that it suffices to show \(m(G_n) = 0\) for all \(n\). Since \(\lambda \perp m\), so we know there exists \(A, B\) such that
+	\(\mathbb{R}^d = A \cup B\) disjoint with \(\lambda(A) = 0\), \(m(B) = 0\). Thus, it suffices to show \(m(G_n \cap A) = 0\).
+	\begin{note}
+		Alternatively, we can simply define \(G_{n} \) over \(A\) instead of \(\mathbb{\MakeUppercase{r}} ^d\), as in Folland\cite{folland1999real}.
+	\end{note}
+
+	\begin{claim}
+		Given a \(A\) and \(B\) defined above induced from \autoref{thm:Lebesgue-Radon-Nikodym-theorem}, \(m(G_n \cap A) = 0\) for all \(n\)
+	\end{claim}
+	\begin{explanation}
+		Fix \(\epsilon> 0\), since \(\lambda\) is \hyperref[def:regular]{regular}, there exists an open set \(U \supseteq A\) such that \(\lambda(U) \leq \lambda(A) + \epsilon= \epsilon \).
+		We see that for every \(x \in G_n \cap A\), there is an \(r_x > 0\) such that \(\lambda(B(x,r_x))/m(B(x,r_x)) > 1/n\) where \(B(x,r_x) \subseteq U\).
+
+		Let \(K \subseteq G_n \cap A\), compact. Then \(K \subseteq \bigcup_{x \in K} B(x,r_x)\). By compactness, we can take a finite sub-cover, and then use
+		\autoref{lma:Vitali-type-covering-lemma} to find  disjoint \(B_1,B_2,\ldots,B_N\) such that each of \(B_{i} \) is in the form of \(B(x_i,r_{x_i})\) and
+		\(K \subseteq \bigcup_i 3B_i\). Therefore,
+		\[
+			m(K) \leq 3^d \sum_{i=1}^N m(B_i) \leq 3^dn\sum_{i=1}^N \lambda(B_i) = 3^d n\lambda\left( \bigcup_{i=1}^N B_i \right) \leq 3^dn\lambda(U) = 3^dn \epsilon .
+		\]
+		By \hyperref[thm:inner-regularity]{inner regularity}, \(m(G_n \cap A) \leq 3^d n\epsilon\) for any \(\epsilon> 0\). Taking \(\epsilon\to 0\) yields \(m(G_n \cap A) = 0\), so then \(m(G_n) = 0\) as desired.
+	\end{explanation}
+\end{proof}

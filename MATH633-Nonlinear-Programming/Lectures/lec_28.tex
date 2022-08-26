@@ -1,0 +1,173 @@
+\chapter{Signed and Complex Measures}\label{ch:Signed-and-Complex-Measures}
+\lecture{28}{21 Mar. 11:00}{Signed Measure}
+\begin{prev}
+	Suppose \(f \colon X \to [0,\infty]\) is a \hyperref[def:measurable-function]{measurable function} on \((X, \mathcal{A}, \mu)\).
+
+	We can define \(\nu(E) = \int_E f \,\mathrm{d} \mu\)  for \(E \in \mathcal{A}\), and \(\nu\) is a \hyperref[def:measure]{measure} on \((X, \mathcal{A})\).
+	This gives a map from the set of non-negative \hyperref[def:measurable-function]{measurable functions} on \(X\) to measures on \(X\). This is
+	injective if we identify functions which are equal \hyperref[def:mu-almost-everywhere]{almost everywhere}. But it is not necessarily surjective.
+	We can then think of \hyperref[def:measure]{measures} as a generalization of functions.
+
+	For an example, think of a \hyperref[eg:Dirac-Delta measure]{Dirac-Delta measure} on \(\mathbb{R}\). This is not the \hyperref[def:integrable]{Lebesgue integral}
+	of any non-negative \hyperref[def:measurable-function]{measurable function}.
+\end{prev}
+
+What if instead we took \(f \colon X \to \mathbb{R}\), \(\overline{\mathbb{R}}\) or \(\mathbb{C}\)? We could take the same construction to get
+\(\nu(E) = \int_E f \,\mathrm{d} \mu\), but this is no longer a \hyperref[def:measure]{measure} as it can take \(\mathbb{R}\), \(\overline{\mathbb{R}}\) or \(\mathbb{C}\) values.
+
+\section{Signed Measures}
+\begin{definition}\label{def:signed-measure}
+	Let \((X, \mathcal{A})\) be a \hyperref[def:measurable-space]{measurable space}. A \emph{signed measure} is a function
+	\[
+		\nu \colon \mathcal{A} \to [-\infty,\infty)\text{ or } \nu \colon \mathcal{\MakeUppercase{a}} \to  (-\infty, \infty]
+	\]
+	such that
+	\begin{itemize}
+		\item \(\nu(\varnothing ) = 0\).
+		\item If \(A_1,A_2,\ldots \in \mathcal{A}\) are disjoint then
+		      \[
+			      \nu\left( \bigcup_{i=1}^\infty A_i \right) = \sum_{i=1}^\infty \nu(A_i)
+		      \]
+		      where the series on the right-hand side converges absolutely if \(\nu\left( \bigcup_{i=1}^\infty A_{i} \right) \in (-\infty,\infty)\).
+		      \begin{remark}
+			      This means the series does not depend on rearrangement if our function \(\nu \) takes finite value on the set \(\bigcup_i A_{i} \).
+		      \end{remark}
+	\end{itemize}
+\end{definition}
+
+\begin{eg}
+	Consider
+	\begin{enumerate}[(1)]
+		\item \(\nu\) is a \hyperref[def:signed-measure]{positive measure} (i.e., \hyperref[def:measure]{measure}), then \(\nu\) is a \hyperref[def:signed-measure]{signed measure}.
+		\item If we have \hyperref[def:signed-measure]{positive measures} \(\mu_1,\mu_2\) such that either \(\mu_1(X) < \infty\) or \(\mu_2(X) < \infty\), then \(\nu = \mu_1 - \mu_2\) is a \hyperref[def:signed-measure]{signed measure}.
+		\item If \(f \colon X \to \overline{\mathbb{R}}\) on a \hyperref[def:measure-space]{measure space} \((X,\mathcal{A},\mu)\) such that \(\int_X f^+ \,\mathrm{d} \mu < \infty\) or \(\int_X f^- \,\mathrm{d} \mu < \infty\), we can define
+		      \[
+			      \nu(E) = \int_E f \,\mathrm{d} \mu
+		      \]
+		      and this will be a \hyperref[def:signed-measure]{signed measure}.
+	\end{enumerate}
+\end{eg}
+
+\begin{note}
+	The following weird things happen with \hyperref[def:signed-measure]{signed measures}.
+	\begin{enumerate}[(1)]
+		\item \(A \subseteq B\) does not imply \(\nu(A) \leq \nu(B)\), as \(\nu(B) = \nu(A) + \nu(B \setminus A)\), and \(\nu(B \setminus A)\) may be negative.
+		\item If \(A \subseteq B\) and \(\nu(A) = \infty\), then \(\nu(B) = \infty\), because \(\nu(B \setminus A) \in (-\infty,\infty]\).
+		\item Similarly, if \(A \subseteq B\) and \(\nu(A) = -\infty\) then \(\nu(B) = -\infty\).
+	\end{enumerate}
+\end{note}
+
+\begin{lemma}\label{lemma:signed-cont-above-below}
+	If \(\nu\) is a \hyperref[def:signed-measure]{signed measure} on \((X, \mathcal{A})\), then we have the following.
+	\begin{enumerate}[(1)]
+		\item\label{lma:signed-continuity-from-below} Continuity from below. If \(E_n \in \mathcal{A}\) and \(E_1 \subseteq E_2 \subseteq \cdots\) then
+		\[
+			\nu\left( \bigcup_{n=1}^\infty E_n \right)  = \lim_{N \to \infty} \nu(E_N).
+		\]
+		\item\label{lma:signed-continuity-from-above} Continuity from above. If \(E_n \in \mathcal{A}\), \(E_1 \supseteq E_2 \supseteq \cdots\),
+		and \(-\infty < \nu(E_1) < \infty\) then
+		\[
+			\nu\left( \bigcap_{n=1}^\infty E_n \right)  = \lim_{N \to \infty} \nu(E_N).
+		\]
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	Read \cite{folland1999real}.
+\end{proof}
+\begin{definition*}
+	Let \(\nu\) be a \hyperref[def:signed-measure]{signed measure} on \((X, \mathcal{A})\). Let \(E \in \mathcal{A}\), then we say that
+	\begin{definition}[Positive set for a signed measure]\label{def:positive-set-for-a-signed-measure}
+		\(E\) is \emph{positive for \(\nu\)} if for all \(F \subseteq E\), \(\nu(F) \geq 0\).
+	\end{definition}
+	\begin{definition}[Negative set for a signed measure]\label{def:negative-set-for-a-signed-measure}
+		\(E\) is \emph{negative for \(\nu\)} if for all \(F \subseteq E\), \(\nu(F) \leq 0\).
+	\end{definition}
+	\begin{definition}[Null set for a signed measure]\label{def:null-set-for-a-signed-measure}
+		\(E\) is \emph{null for \(\nu\)} if for all \(F \subseteq E\), \(\nu(F) = 0\).
+	\end{definition}
+\end{definition*}
+
+\begin{note}
+	We see that
+	\begin{enumerate}[(1)]
+		\item If \(E\) is a \hyperref[def:positive-set-for-a-signed-measure]{positive set}, \(F \subseteq E\), then \(\nu(F) \leq \nu(E)\).
+		\item If \(E\) is a \hyperref[def:negative-set-for-a-signed-measure]{negative set}, \(F \subseteq E\), then \(\nu(F) \geq \nu(E)\).
+	\end{enumerate}
+\end{note}
+
+\begin{lemma}\label{lma:lec28-1}
+	Let \(\nu\) be a \hyperref[def:signed-measure]{signed measure} on \((X, \mathcal{A})\), then
+	\begin{enumerate}[(1)]
+		\item If \(E\) is \hyperref[def:positive-set-for-a-signed-measure]{positive}, \(G \subseteq E\) is \hyperref[def:measurable-set]{measurable},
+		      then \(G\) is \hyperref[def:positive-set-for-a-signed-measure]{positive}.
+		\item If \(E\) is \hyperref[def:negative-set-for-a-signed-measure]{negative}, \(G \subseteq E\) is \hyperref[def:measurable-set]{measurable},
+		      then \(G\) is \hyperref[def:negative-set-for-a-signed-measure]{negative}.
+		\item If \(E\) is \hyperref[def:null-set-for-a-signed-measure]{null}, \(G \subseteq E\) is \hyperref[def:measurable-set]{measurable},
+		      then \(G\) is \hyperref[def:null-set-for-a-signed-measure]{null}.
+		\item \(E_1,E_2,\ldots\) are \hyperref[def:positive-set-for-a-signed-measure]{positive} sets,
+		      then \(\bigcup_{i=1}^\infty E_i\) is \hyperref[def:positive-set-for-a-signed-measure]{positive}.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	The first three are trivial from their definition. For 4., if \(E_1, \ldots \) are \hyperref[def:positive-set-for-a-signed-measure]{positive sets},
+	let \(F_{n} \coloneqq E_n \setminus \bigcup\limits_{j=1}^{n-1} E_j\). Then \(F_n \subset E_n\), so \(F_n\) is \hyperref[def:positive-set-for-a-signed-measure]{positive sets}
+	from 1., hence if \(E\subset \bigcup\limits_{j=1}^{\infty} E_{j} \), then
+	\[
+		\nu (E) = \sum\limits_{j=1}^{\infty} \nu (E \cap F_{j} )\geq 0
+	\]
+	as desired.
+\end{proof}
+
+\begin{lemma}\label{lma:lec28-2}
+	Suppose that \(\nu\) is a \hyperref[def:signed-measure]{signed measure} with \(\nu \colon \mathcal{A} \to [-\infty, \infty)\).
+	Suppose \(E \in \mathcal{A}\) and \(0 < \nu(E) < \infty\), then there exists a \hyperref[def:measurable-set]{measurable} \(A \subseteq E\)
+	such \(A\) is a \hyperref[def:positive-set-for-a-signed-measure]{positive set} and \(\nu(A) > 0\).
+\end{lemma}
+\begin{proof}
+	If \(E\) is \hyperref[def:positive-set-for-a-signed-measure]{positive}, we're done. Otherwise, there exist \hyperref[def:measurable-set]{measurable} subsets with
+	\hyperref[def:negative-set-for-a-signed-measure]{negative} measure. Let \(n_1 \in \mathbb{N}\) be the least such \(n_1\) such that there exists
+	\(E_1 \subseteq E\) with \(\nu(E_1) < -1/n_1\).
+
+	If \(E \setminus E_1\) is \hyperref[def:positive-set-for-a-signed-measure]{positive}, we're done. Else we can inductively define \(n_2,n_3,\ldots\) as well as \(E_2,E_3,\ldots\).
+
+	Explicitly, if \(E \setminus \bigcup_{i=1}^{k-1} E_i\) is not \hyperref[def:positive-set-for-a-signed-measure]{positive}, let \(n_k\) be the least such that there
+	exists \(E_k \subseteq E \setminus \bigcup_{i=1}^{k-1} E_i\) with \(\nu(E_k) < -1/n_k\).
+
+	Note then that if \(n_k \geq 2\), for all \(B \subseteq E \setminus \bigcup_{i=1}^{k-1}E_i\) we have that \(\nu(B) \geq -\frac{1}{n_k - 1}\).
+
+	Now let \(A = E \setminus \bigcup_{i=1}^\infty E_i\). Since \(E = A \cup \left(\bigcup_i E_i\right)\) we have by \hyperref[def:measure-countable-additivity]{countable additivity} that
+	\[
+		0 < \nu(E) = \nu(A) + \sum_{k=1}^\infty \nu(E_k) < \nu(A).
+	\]
+	Furthermore, \(\nu(E),\nu(A)\) are both in \((0,\infty)\), and we see that
+	\[
+		0 < \nu(E) \leq \nu(A) - \sum_{k=1}^\infty \frac{1}{n_k}.
+	\]
+	Therefore, the sum on the right-hand side must converge, meaning that \(1/n_k \to 0\) as \(k \to \infty\). That is \(\lim\limits_{k \to \infty} n_k = \infty\).
+
+	Now if \(B \subseteq A\), then \(B \subseteq E \setminus \bigcup_{i=1}^\infty E_i\). Therefore, \(B \subseteq  E \setminus \bigcup_{i=1}^{k-1} E_i\). By the note above,
+	for large enough \(k\) such that \(n_k \geq 2\) we have
+	\[
+		\nu(B) \geq \frac{-1}{n_k - 1},
+	\]
+	then taking \(k \to \infty\) we have \(\nu(B) \geq 0\), and so \(A\) is a \hyperref[def:positive-set-for-a-signed-measure]{positive} set as desired.
+\end{proof}
+\begin{remark}
+	Notice that the same is true for \(-\infty < \nu (E) < 0\).
+\end{remark}
+
+\begin{theorem}[Hahn decomposition theorem]\label{thm:Hahn-decomposition-theorem}
+	If \(\nu\) is a \hyperref[def:signed-measure]{signed measure} on \((X, \mathcal{A})\), then there exist \(P, N \in \mathcal{A}\) such that
+	\[
+		P \cap N = \varnothing, \quad P \cup N = X,
+	\]
+	where \(P\) is \hyperref[def:positive-set-for-a-signed-measure]{positive for \(\nu\)}, \(N\) is \hyperref[def:negative-set-for-a-signed-measure]{negative for \(\nu\)}.
+
+	Furthermore, if \(P^\prime ,N^\prime\) are another such pair, then \(P \triangle P^\prime (= N \triangle N^\prime)\) is \hyperref[def:mu-null-set]{null} for \(\nu\).
+	\begin{figure}[H]
+		\centering
+		\incfig{thm:Hahn-decomposition-theorem}
+		\label{fig:thm:Hahn-decomposition-theorem}
+	\end{figure}
+\end{theorem}

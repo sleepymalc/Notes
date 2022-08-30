@@ -1,7 +1,108 @@
-\chapter{Combinatorial Optimization}
-\lecture{1}{29 Aug. 10:30}{Introduction}
-\section{Overview}
+\chapter{Introduction}
+\lecture{1}{29 Aug. 10:30}{Overview, Set Cover}
+
+\section{Computational Problem}
 
 
+We're interested in the following optimization problem: Given a problem with an input, we want to either maximize or minimize some objectives. This suggests the following definition.
 
+\begin{definition}[Computational problem]\label{def:computational-problem}
+	A \emph{computational problem} \(P\) is a function from input \(I\) to \((X, f)\), where \(X\) is the feasible set of \(I\) and \(f\) is the objective function.
+\end{definition}
 
+We see that by replacing \(f\) with \(-f\), we can unify the notion and only consider either minimization or maximization, but we will not bother to do this.
+
+\begin{eg}[\(s\)-\(t\) shortest path]\label{eg:s-t-path}
+	The \emph{\(s\)-\(t\) shortest path} problem \(P\) can be formalized as follows. Given input \(I\), it defines
+	\begin{itemize}
+		\item Input: Graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and two vertices \(s, t\in \mathcal{\MakeUppercase{v}} \).
+		\item Feasible set: \(X=\left\{ \text{set of all (simple) paths \(s\) to \(t\)} \right\}\).
+		\item Objective function: \(f\colon X\to \mathbb{\MakeUppercase{r}} \) where \(f(x) = \mathop{\mathrm{length}}(\# \text{ of edges of \(x\)})\).
+	\end{itemize}
+	The output of \(P\) should be some \(x\in X\) (i.e., some valid \(s\)-\(t\) paths) such that it minimizes \(f(x)\).
+\end{eg}
+
+We see that the \hyperref[def:computational-problem]{computational problem} we focus on is an optimization problem, and more specifically, we're interested in \hyperref[def:combinatorial-optimization]{combinatorial optimization}.
+
+\begin{definition}[Combinatorial optimization]\label{def:combinatorial-optimization}
+	A \emph{combinatorial optimization} problem is a \hyperref[def:computational-problem]{problem} where the feasible set \(X\) is a finite set.
+\end{definition}
+
+\begin{eg}[\(s\)-\(t\) shortest path]
+	The \hyperref[eg:s-t-path]{\(s\)-\(t\) shortest path} problem is an \hyperref[def:combinatorial-optimization]{combinatorial optimization} problem since given a graph \(\mathcal{\MakeUppercase{g}} \) with \(n = \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \), \(m = \left\vert \mathcal{\MakeUppercase{e}}  \right\vert \), there are at most \(n!\) different paths, i.e., \(\left\vert X \right\vert \leq n! < \infty\).
+\end{eg}
+
+\begin{note}
+	We'll also look into some continuous optimization problem, where \(X\) is now infinite (or even uncountable). For example, find \(x\in \mathbb{\MakeUppercase{r}} \) that minimizes \(f(x)=x^{2} +2x + 1\). In this case, \(X = \mathbb{\MakeUppercase{r}} \) which is uncountable (hence infinite).
+\end{note}
+
+\section{Efficient Algorithms}
+
+Given a \hyperref[def:computational-problem]{problem} \(P\), we want to solve it fast with \hyperref[def:algorithm]{algorithms}. Before we characterize the speed of an \hyperref[def:algorithm]{algorithm}, we should first define what exactly an algorithm is.
+
+\begin{definition}[Algorithm]\label{def:algorithm}
+	Given a \hyperref[def:computational-problem]{problem} \(P\) and input \(I\) (which defines \(X\) and \(f\)), an \emph{algorithm} \(A\) outputs solution \(y = A(I)\) such that \(y\in X\) and \(y = \underset{x\in X}{\mathop{\arg\ \max}} f(x)\) or \(\underset{x\in X}{\mathop{\arg\ \min}} \), depending on \(I\).
+\end{definition}
+
+\begin{definition}[Efficient]\label{def:efficient}
+	We say that an \hyperref[def:algorithm]{algorithm} \(A\) is \emph{efficient} if it runs in \textbf{polynomial time}.
+\end{definition}
+
+\begin{remark}[Runtime parametrization]
+	The \emph{runtime} of an \hyperref[def:algorithm]{algorithm} \(A\) should be parametrized by the size of input \(I\). Formally, given input \(I\) represented in \(s\) bits, runtime of \(A\) on \(I\) should be \(\mathop{\mathrm{poly}}(s)\) for \(A\) to be \hyperref[def:efficient]{efficient}.
+\end{remark}
+
+\begin{note}
+	In most cases, there are \(1\) or \(2\) parameters that essentially define the size of input.
+
+	\begin{eg}[Graph]
+		A natural representation of a graph with \(n\) vertices and \(m\) edges are
+		\begin{enumerate}[(a)]
+			\item Adjacency matrix: \(n ^{2} \) numbers.
+			\item Adjacency list: \(O(m+n)\) numbers.
+		\end{enumerate}
+	\end{eg}
+
+	\begin{eg}[Set system]
+		A set system with \(n\) elements and \(m\) sets has a natural representation which uses \(O(nm)\) numbers.
+	\end{eg}
+\end{note}
+
+\begin{eg}
+	If an input \(I\) can be represented by \(s\) bits, then the runtime of an \hyperref[def:algorithm]{algorithm} can be \(O(s \log s)\), \(O(s ^{2} )\), or \(O(s^{100} )\), which are considered as \hyperref[def:efficient]{efficient}. On the other hand, something like \(2^s\) or \(s!\) are not.
+\end{eg}
+
+Hence, our goal is to get \(\mathop{\mathrm{poly}}((n, m))\)-time \hyperref[def:algorithm]{algorithm}!
+
+\section{Approximation Algorithms}
+
+We first note that many interesting \hyperref[def:combinatorial-optimization]{combinatorial optimization problems} are \textsc{NP}-hard, hence it's impossible to find optimum in polynomial time unless \textsc{P} is \textsc{NP}. This suggests one problem: \emph{How well can we do in polynomial time?}
+
+In normal cases, we may assume that objective function value is always positive, i.e., \(f\colon X \to \mathbb{\MakeUppercase{r}} ^* \cup \left\{ 0 \right\} \). Then, we have the following definition which characterize the \emph{slackness}.
+
+\begin{definition}[Approximation algorithm]\label{def:approximation-algorithm}
+	Given an \hyperref[def:algorithm]{algorithm} \(A\), we say \(A\) is an \emph{\(\alpha\)-approximation algorithm} for a \hyperref[def:computational-problem]{problem} \(P\) if for every input \(I\) of \(P\),
+	\begin{itemize}
+		\item Min: \(f(A(I)) \leq \alpha \cdot \OPT (I)\) for \(\alpha \geq 1\)
+		\item Max: \(f(A(I)) \geq \alpha \cdot \OPT (I)\) for \(\alpha \leq 1\)
+	\end{itemize}
+	where we define \(\OPT(I)\) as \(\max _{x\in X}f(x)\) for maximization, \(\min _{x\in X}f(x)\) if minimization.
+\end{definition}
+
+We see that \(\alpha \) characterizes the slackness allowed for our \hyperref[def:algorithm]{algorithm} \(A\). Now, we're ready to look at some interesting \hyperref[def:combinatorial-optimization]{problems}. Broadly, there are around \(10\) classes of them which are actively studied:
+
+\begin{itemize}
+	\item We'll see: \hyperref[ch:covering]{Covering}, \hyperref[ch:clustering]{Clustering}, \hyperref[ch:network-design]{Network design}, \hyperref[ch:constraint-satisfaction]{Constraint satisfaction}.
+	\item We'll not see: graph cuts, Packing, Scheduling, String, etc.
+\end{itemize}
+
+The above list is growing! For example, applications of continuous optimization in \hyperref[def:combinatorial-optimization]{combinatorial optimization} is getting attention recently. Also, there are around \(8\) techniques developed, e.g., greedy, local search, LP rounding, SDP rounding, primal-dual, cuts and metrics, etc.
+
+\section{Hardness}
+
+For most problems we saw, we can even say that getting an \(\alpha\)-approximation is \textsc{NP}-hard for some \(\alpha > 1\). This bound is sometimes tight, but not always, and we'll focus on this part in the second half of this course.
+
+\chapter{Covering}\label{ch:covering}
+
+\section{Set Cover}
+Let's first consider the classical problem called set cover.

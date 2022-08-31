@@ -86,10 +86,8 @@ We now prove the correctness and \autoref{algo:set-cover-LP-rounding}'s approxim
 	\[
 		\OPT \leq \sum_{S_i\in \mathcal{\MakeUppercase{S}} ^\prime }w_i \leq d \sum_{S_i\in \mathcal{\MakeUppercase{S}} ^\prime }w_{i} x_{i} \leq d\cdot \OPT_\text{LP} \leq d\cdot \OPT,
 	\]
-	which implies
-	\[
-		\frac{\OPT}{d}\leq \OPT_\text{LP} \leq \OPT.
-	\]
+	which implies \(\OPT / d\leq \OPT_\text{LP} \leq \OPT\).
+
 	\begin{note}
 		Note that \(\OPT\) is assumed to be \(\OPT_{\text{IP}}\), i.e., the optimum of the original IP formulation of \autoref{prb:set-cover}.
 	\end{note}
@@ -139,11 +137,14 @@ Now, the question is, how is this \(\mathcal{\MakeUppercase{S}} ^\prime \)'s qua
 \begin{proof}
 	We bound \(\Pr(\overline{\text{\(e\) is covered}})\) instead. Say \(S_1, \ldots  , S_d\) are the sets containing \(e\), then we see that
 	\[
-		\Pr(\overline{\text{\(e\) is covered}}) = \prod\limits_{i=1}^{d} (1 - x_i)\leq \prod\limits_{i=1}^{d} e^{- x_i} = e^{- (x_1 + \ldots x_d)} \leq e^{-1}.
+		\Pr(\overline{\text{\(e\) is covered}}) = \prod\limits_{i=1}^{d} (1 - x_i)\leq \prod\limits_{i=1}^{d} e^{- x_i} = e^{- (\overbrace{x_1 + \ldots x_d}^{\geq 1})} \leq e^{-1}.
 	\]
+	\begin{note}
+		For every \(x\), we have \(1 + x \leq e^x\), and this approximation is close when \(\left\vert x \right\vert \) is small.
+	\end{note}
 \end{proof}
 
-A standard way to boost the correctness of a randomized algorithm is just to run it multiple time. Hence, we have hte following.
+A standard way to boost the correctness of a randomized algorithm is to run it multiple time, which leads to the following.
 
 \par
 \begin{algorithm}[H]\label{algo:set-cover-randomized-LP-rounding-multi-time}
@@ -164,30 +165,39 @@ A standard way to boost the correctness of a randomized algorithm is just to run
 	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
 \end{algorithm}
 
-\begin{theorem}
-	With \(\alpha = 2\ln n\), \(\mathcal{\MakeUppercase{S}} ^\prime\) is a \hyperref[def:covering]{covering} w.p. at least \(1 - \frac{1}{n}\).
-\end{theorem}
+\begin{lemma}\label{lma:lec2-2}
+	With \(\alpha = 2\ln n\), \(\mathcal{\MakeUppercase{S}} ^\prime\) returned from \autoref{algo:set-cover-randomized-LP-rounding-multi-time} is a \hyperref[def:covering]{covering} w.p. at least \(1 - \frac{1}{n}\).
+\end{lemma}
 \begin{proof}
 	We have \(\Pr(\text{\(e\) is not covered}) \leq e ^{- \alpha }\) from independence of each run. Let \(\alpha = 2\ln n\), then \(\Pr(\text{\(e\) is not covered}) \leq e ^{- \alpha } = 1 / n^{2}\). By union bound,
 	\[
 		\Pr(\text{some elements is not covered} ) \leq \sum_{e\in U}\Pr(\text{\(e\) not covered} )\leq n\cdot \frac{1}{n^{2} } = \frac{1}{n}.
 	\]
-	This implies w.p. \(\geq 1 - 1/n\), \(\mathcal{\MakeUppercase{S}} ^\prime \) is a \hyperref[def:covering]{covering}.
+	This implies w.p. at least \(1 - 1/n\), \(\mathcal{\MakeUppercase{S}} ^\prime \) is a \hyperref[def:covering]{covering}.
 \end{proof}
 
-\begin{theorem}
-	With \(\alpha = 2 \ln n\), \autoref{algo:set-cover-randomized-LP-rounding-multi-time} is a -approximation algorithm w.p. at least
-\end{theorem}
+In other words, with \(\alpha = 2 \ln n\), \autoref{algo:set-cover-randomized-LP-rounding-multi-time} is correct with probability at least \(1 - 1 / n\).
+
+\begin{lemma}\label{lma:lec2-3}
+	With \(\alpha = 2 \ln n\), \(\mathcal{\MakeUppercase{S}} ^\prime \) returned from \autoref{algo:set-cover-randomized-LP-rounding-multi-time} has an approximation ratio \((4 \ln n)\).\footnote{Note that \(\mathcal{\MakeUppercase{S}} ^\prime \) is not necessary a \hyperref[def:covering]{covering}.}
+\end{lemma}
 \begin{proof}
-	Since \(\expectation{}{w(\mathcal{\MakeUppercase{S}} ^\prime )} \leq \alpha \sum_{i}w_{i} x_{i} = \alpha \OPT_{\text{LP} }\), we have
-	\[
-		\Pr(w(\mathcal{\MakeUppercase{S}} ^\prime )\geq 2\cdot \alpha \OPT_{\text{LP} })\leq \frac{1}{2}
-	\]
-	from Markov inequality. Now, we see that w.p. \(\geq 1 / 2\),
+	Since \(\expectation{}{w(\mathcal{\MakeUppercase{S}} ^\prime )} \leq \alpha \sum_{i}w_{i} x_{i} = \alpha \OPT_{\text{LP} }\), we have \(\Pr(w(\mathcal{\MakeUppercase{S}} ^\prime )\geq 2\cdot \alpha \OPT_{\text{LP} })\leq 1 / 2\) from Markov inequality. Now, we see that w.p. \(\geq 1 / 2\),
 	\[
 		w(\mathcal{\MakeUppercase{S}} ^\prime )\leq 2\cdot 2\ln n\cdot \OPT_{\text{LP} } \leq 4 \ln n\OPT.
 	\]
 \end{proof}
+
+\begin{theorem}\label{thm:lec2-2}
+	By running \autoref{algo:set-cover-randomized-LP-rounding-multi-time} many times, we get a \((4\ln n)\)-approximation algorithm with high probability.\footnote{Note that we still need to choose \(\mathcal{\MakeUppercase{S}}^\prime \).}
+\end{theorem}
+\begin{proof}
+	Together with \autoref{lma:lec2-2} and \autoref{lma:lec2-3} and using the union bound, the probability of \(\mathcal{\MakeUppercase{S}} ^\prime \) not being a \hyperref[def:covering]{covering} or with weight higher than \(4\ln n\OPT\) is at most \(\frac{1}{n} + \frac{1}{2}\), which is less than \(1\). Hence, by running \autoref{algo:set-cover-randomized-LP-rounding-multi-time} many times (independently), the failing possibility is exponential small.
+\end{proof}
+
+\begin{note}
+	With \autoref{thm:lec2-2}, we still need to find a valid \hyperref[def:covering]{covering} with the lowest cost, where a valid \hyperref[def:covering]{covering} with low enough weight is guaranteed to exist with high probability. Note that this is still a polynomial time algorithm since we know that checking \(\mathcal{\MakeUppercase{S}} ^\prime \) is a \hyperref[def:covering]{covering} is just linear.
+\end{note}
 
 \begin{remark}
 	Indeed, with some smarter algorithm modified from \autoref{algo:set-cover-randomized-LP-rounding-multi-time}, we can get a \(H_k\) approximation ratio.

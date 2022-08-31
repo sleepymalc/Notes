@@ -1,0 +1,194 @@
+\lecture{2}{31 Aug. 10:30}{Linear Programming with Set Covers}
+
+\subsection{Linear Programming Rounding}
+
+To get a \(d\)-approximation algorithm, instead of seeing the greedy algorithm, we first see the LP\footnote{See \href{https://www.pbb.wtf/posts/Notes\#linear-programming-math561ioe510to518-umich}{MATH561} for a complete reference.} dual method, which turns out to be exactly the same as the greedy algorithm.
+
+\begin{prev}
+	Both linear programming and convex programming can be solved in polynomial time.
+\end{prev}
+
+Notice that it's more natural to define \hyperref[prb:set-cover]{set cover} in terms of ILP (integer LP). Define our integer variables \(\left\{ x_i \right\} _{i\in [n]}\) such that
+\[
+	x_i = \begin{dcases}
+		1, & \text{ if } S_i\in \mathcal{\MakeUppercase{S}} ^\prime  ; \\
+		0, & \text{ otherwise}.
+	\end{dcases}
+\]
+
+In this way, we have the following ILP formulation for \hyperref[prb:set-cover]{set cover} as
+
+\begin{align*}
+	\min~            & \sum_{i} w_i \cdot x_i                           \\
+	                 & \sum_{S_i\ni e}x_{i} \geq 1     & \forall i\in U \\
+	(\text{IP})\quad & x_{i} \in \left\{ 0, 1 \right\} & \forall i.
+\end{align*}
+
+But we know that this is an NP-hard problem, so we relax it to be
+
+\begin{align*}
+	\min~            & \sum_{i} w_i \cdot x_i                       \\
+	                 & \sum_{S_i\ni e}x_{i} \geq 1 & \forall i\in U \\
+	(\text{LP})\quad & x_{i} \geq 0                & \forall i.
+\end{align*}
+
+Write it in a more compact form, we have
+\begin{align*}
+	\min~ & \left\langle w, x \right\rangle \\
+	      & Ax \geq \mathbbm{1}             \\
+	      & x\geq 0
+\end{align*}
+where \(A\in \mathbb{\MakeUppercase{r}} ^{n\times m}\) such that
+\[
+	A_{ij} = \begin{dcases}
+		1, & \text{ if } e_i\in S_j ; \\
+		0, & \text{ otherwise}.
+	\end{dcases}
+\]
+
+\begin{note}
+	Note when we do relaxation, we want \(x\in \mathop{\mathrm{fes}}(\text{IP}) \implies x\in \mathop{\mathrm{fea}}(\text{LP})\), i.e., \(\mathop{\mathrm{fes}}(\text{LP})\supseteq \mathop{\mathrm{fes}}(\text{IP})\). Note that in this case, for a minimization problem, we have
+	\[
+		f(x) = \OPT_\text{LP} \leq \OPT_\text{IP}.
+	\]
+\end{note}
+
+In this case, we see that the most natural way to get an integer solution from the fractional solution obtained from the relaxed LP is to \textbf{round} \(x\) to integral solution. This leads to the following \hyperref[algo:set-cover-LP-rounding]{algorithm}.
+
+\par
+\begin{algorithm}[H]\label{algo:set-cover-LP-rounding}
+	\DontPrintSemicolon
+	\caption{LP Rounding -- \hyperref[prb:set-cover]{set cover}}
+	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}})\)}
+	\KwResult{A \hyperref[def:covering]{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \)}
+	\BlankLine
+	\(x\gets\mathop{\mathrm{solve}}(\text{LP})\)\Comment*[r]{Solve the relaxed (LP)}
+	\(\mathcal{\MakeUppercase{S}} ^\prime \gets \left\{ S_i \colon x_{i} \geq 1 / d \right\}\)\;
+	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
+\end{algorithm}
+
+We now prove the correctness and \autoref{algo:set-cover-LP-rounding}'s approximation ratio.
+\begin{lemma}
+	\(\mathcal{\MakeUppercase{S}} ^\prime \) is a covering.
+\end{lemma}
+\begin{proof}
+	Fix \(e\in U\), let \(S_1, \ldots  , S_d\) be the sets containing \(e\). We see that
+	\[
+		\sum_{i=1}^{d} x_{i} \geq 1\implies \exists j\in[d] \text{ s.t. } x_j \geq \frac{1}{d} \implies S_j\in \mathcal{\MakeUppercase{S}} ^\prime.
+	\]
+\end{proof}
+
+\begin{theorem}\label{thm:lec2-1}
+	\autoref{algo:set-cover-LP-rounding} is \(d\)-approximation algorithm.
+\end{theorem}
+\begin{proof}
+	By comparing \(w(\mathcal{\MakeUppercase{S}} ^\prime )\) and \(\OPT_\text{LP} = \sum_{i=1}^{m} x_{i} w_{i}\), we see that
+	\[
+		\OPT \leq \sum_{S_i\in \mathcal{\MakeUppercase{S}} ^\prime }w_i \leq d \sum_{S_i\in \mathcal{\MakeUppercase{S}} ^\prime }w_{i} x_{i} \leq d\cdot \OPT_\text{LP} \leq d\cdot \OPT,
+	\]
+	which implies
+	\[
+		\frac{\OPT}{d}\leq \OPT_\text{LP} \leq \OPT.
+	\]
+	\begin{note}
+		Note that \(\OPT\) is assumed to be \(\OPT_{\text{IP}}\), i.e., the optimum of the original IP formulation of \autoref{prb:set-cover}.
+	\end{note}
+\end{proof}
+
+\begin{definition}[Intgrality gap]\label{def:integrality-gap}
+	The \emph{integrality gap} as
+	\[
+		\sup _{\text{input } I}\frac{\OPT(I)}{\OPT_{\text{LP} }(I)}.
+	\]
+\end{definition}
+
+\begin{remark}
+	We see that the \hyperref[def:integrality-gap]{integrality gap} of \autoref{algo:set-cover-LP-rounding} is \(d\) from \autoref{thm:lec2-1}.
+\end{remark}
+
+\subsection{Randomized Linear Programming Rounding}
+
+And indeed, we can use a more natural way to do the rounding, i.e., respect to the \(x_i\) value.
+
+\begin{intuition}
+	If \(x_i\) is close to \(1\), it's reasonable to include it, vice versa.
+\end{intuition}
+
+We see that algorithm first.
+\par
+\begin{algorithm}[H]\label{algo:set-cover-randomized-LP-rounding}
+	\DontPrintSemicolon
+	\caption{Randomized LP Rounding -- \hyperref[prb:set-cover]{set cover}}
+	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}})\)}
+	\KwResult{A (possible) \hyperref[def:covering]{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \)}
+	\BlankLine
+
+	\(x\gets\mathop{\mathrm{solve}}(\text{LP})\)\Comment*[r]{Solve the relaxed (LP)}
+	\(\mathcal{\MakeUppercase{S}} \gets \varnothing \)\;
+	\For(){\(i= 1, \ldots  , m\) }{
+		add \(S_i\) to \(\mathcal{\MakeUppercase{S}} ^\prime \) w.p. \(x_i\)\Comment*[r]{independently}
+	}
+	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
+\end{algorithm}
+
+Now, the question is, how is this \(\mathcal{\MakeUppercase{S}} ^\prime \)'s quality? In other words, fix \(e\in U\), what's \(\Pr(\text{\(e\) is covered})\)?
+
+\begin{lemma}
+	\(\Pr(\text{\(e\) is covered})\geq 1 - 1/e\approx 0.63\).
+\end{lemma}
+\begin{proof}
+	We bound \(\Pr(\overline{\text{\(e\) is covered}})\) instead. Say \(S_1, \ldots  , S_d\) are the sets containing \(e\), then we see that
+	\[
+		\Pr(\overline{\text{\(e\) is covered}}) = \prod\limits_{i=1}^{d} (1 - x_i)\leq \prod\limits_{i=1}^{d} e^{- x_i} = e^{- (x_1 + \ldots x_d)} \leq e^{-1}.
+	\]
+\end{proof}
+
+A standard way to boost the correctness of a randomized algorithm is just to run it multiple time. Hence, we have hte following.
+
+\par
+\begin{algorithm}[H]\label{algo:set-cover-randomized-LP-rounding-multi-time}
+	\DontPrintSemicolon
+	\caption{Multi-time Randomized LP Rounding -- \hyperref[prb:set-cover]{set cover}}
+	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}})\), \(\alpha \)}
+	\KwResult{A (possible) \hyperref[def:covering]{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \)}
+	\BlankLine
+
+
+	\(x\gets\mathop{\mathrm{solve}}(\text{LP})\)\Comment*[r]{Solve the relaxed (LP)}
+	\(\mathcal{\MakeUppercase{S}} \gets \varnothing \)\;
+	\For(\Comment*[f]{independently}){\(t = 1, \ldots  , \alpha \)}{
+		\For(){\(i= 1, \ldots  , m\) }{
+			add \(S_i\) to \(\mathcal{\MakeUppercase{S}} ^\prime \) w.p. \(x_i\)\Comment*[r]{independently}
+		}
+	}
+	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
+\end{algorithm}
+
+\begin{theorem}
+	With \(\alpha = 2\ln n\), \(\mathcal{\MakeUppercase{S}} ^\prime\) is a \hyperref[def:covering]{covering} w.p. at least \(1 - \frac{1}{n}\).
+\end{theorem}
+\begin{proof}
+	We have \(\Pr(\text{\(e\) is not covered}) \leq e ^{- \alpha }\) from independence of each run. Let \(\alpha = 2\ln n\), then \(\Pr(\text{\(e\) is not covered}) \leq e ^{- \alpha } = 1 / n^{2}\). By union bound,
+	\[
+		\Pr(\text{some elements is not covered} ) \leq \sum_{e\in U}\Pr(\text{\(e\) not covered} )\leq n\cdot \frac{1}{n^{2} } = \frac{1}{n}.
+	\]
+	This implies w.p. \(\geq 1 - 1/n\), \(\mathcal{\MakeUppercase{S}} ^\prime \) is a \hyperref[def:covering]{covering}.
+\end{proof}
+
+\begin{theorem}
+	With \(\alpha = 2 \ln n\), \autoref{algo:set-cover-randomized-LP-rounding-multi-time} is a -approximation algorithm w.p. at least
+\end{theorem}
+\begin{proof}
+	Since \(\expectation{}{w(\mathcal{\MakeUppercase{S}} ^\prime )} \leq \alpha \sum_{i}w_{i} x_{i} = \alpha \OPT_{\text{LP} }\), we have
+	\[
+		\Pr(w(\mathcal{\MakeUppercase{S}} ^\prime )\geq 2\cdot \alpha \OPT_{\text{LP} })\leq \frac{1}{2}
+	\]
+	from Markov inequality. Now, we see that w.p. \(\geq 1 / 2\),
+	\[
+		w(\mathcal{\MakeUppercase{S}} ^\prime )\leq 2\cdot 2\ln n\cdot \OPT_{\text{LP} } \leq 4 \ln n\OPT.
+	\]
+\end{proof}
+
+\begin{remark}
+	Indeed, with some smarter algorithm modified from \autoref{algo:set-cover-randomized-LP-rounding-multi-time}, we can get a \(H_k\) approximation ratio.
+\end{remark}

@@ -1,1 +1,181 @@
-\lecture{3}{07 Sep. 14:30}{}
+\lecture{3}{06 Sep. 14:30}{Banach, Inner Product Spaces}
+\begin{eg}[Banach spaces]
+	We already showed spaces \(\ell _1\) and \(\ell _{\infty }\) are Banach spaces.
+\end{eg}
+
+We now want to generalize to \(\ell _p\) with \(1 < p < \infty \). For \(x = \left\{ x_n, n\geq 1 \right\}\in \ell _p \) and if \(\sum_{n=1}^{\infty} \left\vert x_n \right\vert ^p < \infty \), for \(\left\lVert x\right\rVert _p = \left( \sum_{n=1}^{\infty} \left\vert x_n \right\vert ^p \right)^{1 / p}\), we want to show that \(x \to \left\lVert x\right\rVert _p\) satisfies properties of a \hyperref[def:norm]{norm}. The first two properties of a \hyperref[def:norm]{norm} is easy check. As for triangle inequality, we have the following.
+
+\begin{lemma}[Minkowski inequality]\label{lma:Minkowski-ineq}
+	Let \(1 \leq p < \infty \), for \(x, y\in \ell _p\),
+	\[
+		\left\lVert x + y\right\rVert _p \leq \left\lVert x\right\rVert _p + \left\lVert y\right\rVert _p.
+	\]
+\end{lemma}
+\begin{proof}
+	Recall that from \autoref{lma:trig-ineq-unit-ball-convex}, we only need to show that \(B(0, 1)\) is \hyperref[def:convex-function]{convex}, where
+	\[
+		B(0, 1) = \left\{ x = \left\{ x_n\colon n\geq 1 \right\}\mid f(x) = \sum_{n=1}^{\infty} \left\vert x_n \right\vert ^p\leq 1  \right\}.
+	\]
+	But \(f(x)\) is \hyperref[def:convex-function]{convex} since \(x\mapsto \left\vert x \right\vert ^p\), \(x\in \mathbb{\MakeUppercase{r}} \) is \hyperref[def:convex-set]{convex} if \(p\geq 1\), we're done. Hence, \(\left\lVert x+y\right\rVert _p \leq \left\lVert x\right\rVert _p + \left\lVert y\right\rVert _p\), i.e.,
+	\[
+		\left( \sum_{j=1}^{\infty} \left\vert x_j + y_j \right\vert ^p \right) ^{1 / p} \leq \left( \sum_{j=1}^{\infty} \left\vert x_{j}  \right\vert^p  \right) ^{1 / p} \left( \sum_{j=1}^{\infty} \left\vert y_{j}  \right\vert^p  \right)^{1 / p}.
+	\]
+\end{proof}
+
+\begin{lemma}[Hölder's inequality]\label{lma:Holder-ineq}
+	Let \(1<p<\infty \), for \(x\in \ell _p\), \(y\in \ell _q\), we have
+	\[
+		\left\lVert x\cdot y\right\rVert_1 \leq \left\lVert x\right\rVert _p \left\lVert y\right\rVert _q
+	\]
+	where \(1 / p + 1 / q = 1\).
+\end{lemma}
+\begin{proof}
+	Note first that we can assume without loss of generality, \(\sum_{j=1}^{\infty} \left\vert x_{j}  \right\vert ^p = \sum_{j=1}^{\infty} \left\vert y_{j}  \right\vert ^{q} = 1\). Then, result follows from the \href{https://en.wikipedia.org/wiki/Young's_inequality_for_products}{Young's inequality},
+	\[
+		xy \leq \frac{x^p}{p} + \frac{y^q}{q}
+	\]
+	for \(x, y> 0\), \(x, y\in \mathbb{\MakeUppercase{r}} \).
+	\begin{remark}[Legendre transform and the inequality]
+		\href{https://en.wikipedia.org/wiki/Young's_inequality_for_products}{Young's inequality} is a special case of the inequality
+		\[
+			xy \leq f(x) + \mathcal{\MakeUppercase{l}} f(y)
+		\]
+		where \(\mathcal{\MakeUppercase{l}} f(\cdot)\) is the \href{https://en.wikipedia.org/wiki/Legendre_transformation}{\emph{Legendre transform}} of \(f(\cdot)\), i.e., \(\mathcal{\MakeUppercase{l}} f(y) = \sup _x \left[ xy - f(x) \right]\).
+
+		If \(f\) is \hyperref[def:convex-function]{convex}, then the function \(xy\mapsto xy - f(x)\) is concave so has unique maximum. And \(\mathcal{\MakeUppercase{l}} f(\cdot)\) always \hyperref[def:convex-function]{convex} even if \(f(\cdot)\) is not. In particular, if \(f(x) = x^p / p\), then \(\mathcal{\MakeUppercase{l}} f(y) = y^q / q\).
+	\end{remark}
+\end{proof}
+
+\begin{note}
+	\hyperref[lma:Minkowski-ineq]{Minkowski inequality} is usually proved via the \hyperref[lma:Holder-ineq]{Hölder's inequality}. To show this, since
+	\[
+		\sum_{j=1}^{\infty} \left\vert x_j + y_j \right\vert ^p \leq \sum_{j=1}^{\infty} \left\vert x_{j}  \right\vert \left\vert x_{j} +y_{j}  \right\vert ^{p - 1} + \sum_{j=1}^{\infty} \left\vert y_{j}  \right\vert \left\vert x_{j} +y_{j}  \right\vert ^{p-1}.
+	\]
+	Then \hyperref[lma:Holder-ineq]{Holder inequality} implies
+	\[
+		\sum_{j=1}^{\infty} \left\vert x_{j}  \right\vert \left\vert x_{j} y_{j}  \right\vert ^{p-1}\leq \left( \sum_{j=1}^{\infty} \left\vert x_{j}  \right\vert^p \right) ^{1 / p} \left( \sum_{j=1}^{\infty} \left\vert x_{j} +y_{j}  \right\vert^{(p - 1)q}  \right) ^{1 / q},
+	\]
+	and we're done.\footnote{Note that \((p-1)q = p\).}
+\end{note}
+
+\begin{remark}
+	The above argument applies to more general spaces of \(p\) integrable functions. Let \((\Omega , \Sigma , \mu )\) be a measure space and \(L_p(\Omega , \Sigma , \mu )\) where all \(\Sigma \) measure functions \(f\colon \Omega \to \mathbb{\MakeUppercase{r}} \) (or \(\mathbb{\MakeUppercase{c}} \)) such that \(\int _\Omega \left\vert f \right\vert ^p \,\mathrm{d} \mu < \infty \). Then, \(L_p(\Omega , \Sigma , \mu )\) is a \hyperref[def:normed-vector-space]{normed space} with \hyperref[def:norm]{norm}
+	\[
+		\left\lVert f\right\rVert _p = \left( \int _\Omega \left\vert f \right\vert ^p \,\mathrm{d} \mu  \right) ^{1 / p}.
+	\]
+\end{remark}
+
+It's more tricky to show that \(L^p\) is a \hyperref[def:Banach-space]{Banach space}, but it's indeed still the case.
+\begin{theorem}
+	The \(p\)-integrable space \(L_p(\Omega , \Sigma , \mu )\) is a \hyperref[def:Banach-space]{Banach space}.
+\end{theorem}
+\begin{proof}
+	Let \(\left\{ f_n\colon n\geq 1 \right\} \) be an \hyperref[def:absolutely-summable]{absolutely summable} sequence in \(L^p\). Then the \hyperref[def:norm]{norm} satisfies
+	\[
+		\left\lVert \sum_{k=1}^{N} f_k\right\rVert _p \overset{\hyperref[lma:Minkowski-ineq]{\text{!}}}{\leq} \sum_{k=1}^{N} \left\lVert f_k\right\rVert _p \leq C.
+	\]
+	Hence, \(\int _\Omega \left\vert \sum_{k=1}^{N} f_k \right\vert^p \,\mathrm{d} \mu  \leq C^p\).
+	\begin{itemize}
+		\item Assume all \(f_k\) are non-negative. From \href{https://en.wikipedia.org/wiki/Monotone_convergence_theorem}{monotone convergence theorem}, we have
+		      \[
+			      \lim\limits_{N \to \infty} \int _\Omega \left( \sum_{k=1}^{N} f_k \right) ^p \,\mathrm{d} \mu = \int _\Omega \left( \sum_{k=1}^{\infty} f_k \right)^p \,\mathrm{d} \mu \leq C^p.
+		      \]
+		      Hence, \(g = \sum_{k=1}^{\infty} f_k\in L_p\). We now want to show that \(\sum_{k=1}^{N} f_k \to g\) in \(L_p\). Set \(r_n = \sum_{k=n+1}^{\infty} f_k\) where \(r_n\) is a decreasing sequence where \(r_n \to 0\) a.e. and also
+		      \[
+			      \int _\Omega r_1^p\,\mathrm{d} \mu < \infty.
+		      \]
+		      This means that \(\lim\limits_{n \to \infty} \left\lVert r_n\right\rVert _p = 0\) by \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{dominate convergence theorem}.
+		\item For arbitrary \(f_k\colon \Omega \to \mathbb{\MakeUppercase{r}} \), write \(f_k = f^+_k + f^-_k\) where \(f^+_k = \sup (f_k, 0)\) and \(f_k^- = \inf (f_k, 0)\). The sequence \(\left\{ f_k^+\colon k\geq 1 \right\} \) are \hyperref[def:absolutely-summable]{absolutely summable}, and we just proceed as before. Similarly, if \(f_k\colon \Omega \to \mathbb{\MakeUppercase{c}} \).
+	\end{itemize}
+\end{proof}
+
+\chapter{Inner Product Spaces}
+\section{Introduction}
+\begin{definition}[Inner product]\label{def:inner-product}
+	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space} over \(\mathbb{\MakeUppercase{c}} \). An \emph{inner product} \(\left\langle \cdot, \cdot \right\rangle \colon E \times E \to \mathbb{\MakeUppercase{c}} \) is a function which has the following properties:
+	\begin{enumerate}[(a)]
+		\item \(\left\langle x, x \right\rangle \geq 0\) and \(\left\langle x, x \right\rangle = 0\) if and only if \(x = 0\).
+		\item \(\left\langle ax + by, z \right\rangle = a\left\langle x, z \right\rangle + b \left\langle y, z \right\rangle  \) for \(a, b\in \mathbb{\MakeUppercase{c}} \).
+		\item \(\left\langle x, y \right\rangle = \overline{\left\langle y, x \right\rangle }\).
+	\end{enumerate}
+\end{definition}
+
+\begin{remark}[Real inner product]
+	We can also define inner products of spaces over \(\mathbb{\MakeUppercase{r}} \) with no extra conjugation in the last property.
+\end{remark}
+
+\begin{definition}[Inner product space]\label{def:inner-product-space}
+	An \emph{inner product space} is a \hyperref[def:linear-vector-space]{linear space} \(E\) with an \hyperref[def:inner-product]{inner product} \(\left\langle \cdot, \cdot \right\rangle \colon E\times E\to \mathbb{\MakeUppercase{c}} \).
+\end{definition}
+\begin{definition}[Orthogonal]\label{def:orthogonal}
+	Given a \hyperref[def:linear-vector-space]{linear space} \(E\), \(x, y\in E\) are \emph{orthogonal} if \(\left\langle x, y \right\rangle = 0\), denote as \(x\perp y\).
+\end{definition}
+
+\begin{theorem}[Cauchy-Schwarz inequality]\label{thm:Cauchy-Schwarz-ineq}
+	Let \(x, y\in E\) and an \hyperref[def:inner-product]{inner product} \(\left\langle \cdot, \cdot \right\rangle \), then
+	\[
+		\left\vert \left\langle x, y \right\rangle  \right\vert \leq \left\langle x, y \right\rangle ^{\frac{1}{2}}\left\langle y, y \right\rangle ^{\frac{1}{2}}.
+	\]
+\end{theorem}
+\begin{proof}
+	Define \(Q(t)\) by \(Q(t) = \left\langle x+ty, x+ty \right\rangle = \left\langle y, y \right\rangle t^{2} + 2t \Re\left\langle x, y \right\rangle + \left\langle x,x \right\rangle\) if \(t\in \mathbb{\MakeUppercase{r}} \). Then we see that \(Q(t) \geq 0\) with \(t\in \mathbb{\MakeUppercase{r}} \) and the equation \(Q(t) = 0\) has no real roots, implying \((\Re\left\langle x, y \right\rangle) ^{2} \leq \left\langle x, x \right\rangle \left\langle y, y \right\rangle\). Finally, the result follows by choosing \(\theta \in \mathbb{\MakeUppercase{r}} \) such that
+	\[
+		\left\langle x, y \right\rangle = \Re\left\langle x e^{i\theta}, y \right\rangle.
+	\]
+\end{proof}
+
+\begin{corollary}
+	The function \(x\mapsto \left\lVert x\right\rVert \coloneqq \left\langle x, x \right\rangle ^{\frac{1}{2}}\) is a \hyperref[def:norm]{norm} on \(E\).
+\end{corollary}
+\begin{proof}
+	The triangle inequality is a consequence of \autoref{thm:Cauchy-Schwarz-ineq} such that
+	\[
+		\left\lVert x+y\right\rVert ^{2} = \left\langle x+y, x+y \right\rangle = \left\lVert x\right\rVert ^{2} + 2\Re\left\langle x, y \right\rangle + \left\lVert y\right\rVert ^{2} \overset{\hyperref[thm:Cauchy-Schwarz-ineq]{\text{!}}}{\leq} \left\lVert x\right\rVert ^{2} + 2\left\lVert x\right\rVert \left\lVert y\right\rVert + \left\lVert y\right\rVert ^{2} = \left\langle \left\lVert x\right\rVert + \left\lVert y\right\rVert  \right\rangle ^{2} .
+	\]
+\end{proof}
+
+\begin{eg}
+	The space \(\ell _2\) of square summable sequences \(x=(x_1, x_2, \ldots  )\) and \(y=(y_1, y_2, \ldots  )\),
+	\[
+		\left\langle x, y \right\rangle \coloneqq \sum_{j=1}^{\infty} x_j \overline{y} _j.
+	\]
+\end{eg}
+
+\begin{eg}
+	The space \(L_2(\Omega , \Sigma , \mu )\) of \(f, g\in L_2(\Omega , \Sigma , \mu )\),
+	\[
+		\left\langle f, g \right\rangle = \int _\Omega f(x) \overline{g} (x)\,\mathrm{d} \mu (x).
+	\]
+\end{eg}
+
+\begin{eg}
+	The space of \(m \times n\) matrices \(A = (a_{ij} )\), \(1 \leq i\leq m, 1 \leq j\leq n\). Then
+	\[
+		\left\langle A, B \right\rangle = \Tr A B^{\ast},
+	\]
+	where \(B^{\ast} \) is the \href{https://en.wikipedia.org/wiki/Hermitian_adjoint}{Hermitian adjoint} of \(B\), i.e., for \(B = (b_{ij})\), then \(B^{\ast} = (b^{\ast} _{ij})\) for \(b^{\ast} _{ij} = \overline{b}_{ji}\).
+
+	\begin{remark}[Hilbert-Schmidt norm]
+		Specifically, the \hyperref[def:norm]{norm} corresponding to this \hyperref[def:inner-product]{inner product} is
+		\[
+			\left\lVert A\right\rVert _{\mathrm{HS} }\coloneqq \sum_{i, j}^{\infty} \left(\left\vert a_{ij}  \right\vert ^{2} \right)^{1 / 2},
+		\]
+		which is known as the \href{https://en.wikipedia.org/wiki/Hilbert%E2%80%93Schmidt_operator}{\emph{Hilbert-Schmidt}} \hyperref[def:norm]{norm}.
+	\end{remark}
+\end{eg}
+
+For an \hyperref[def:inner-product-space]{inner product space}, the \hyperref[def:inner-product]{inner product} can be expressed in terms of the \hyperref[def:norm]{norm}. This is because both \hyperref[lma:parallelogram-law]{parallelogram law} and \hyperref[lma:polatization-identity]{polarization identity} hold.
+
+\begin{lemma}[Parallelogram law]\label{lma:parallelogram-law}
+	Given \(E\) an \hyperref[def:inner-product-space]{inner product space}, we have
+	\[
+		\left\lVert x+y\right\rVert ^{2} + \left\lVert x-y\right\rVert ^{2} = 2\left\lVert x\right\rVert ^{2} + 2\left\lVert y\right\rVert ^{2}
+	\]
+\end{lemma}
+
+\begin{lemma}[Polarization identity]\label{lma:polatization-identity}
+	Given \(E\) an \hyperref[def:inner-product-space]{inner product space}, we have
+	\[
+		\left\langle x, y \right\rangle = \frac{1}{4}\left\{ \left\lVert x+y\right\rVert ^{2} - \left\lVert x-y\right\rVert ^{2} + i \left\lVert x+iy\right\rVert ^{2} - i\left\lVert x-iy\right\rVert ^{2}  \right\}
+	\]
+\end{lemma}

@@ -39,7 +39,7 @@ Given a set system \((U, \mathcal{\MakeUppercase{S}} )\), we want to find the la
 	A dual LP with \(A, b, c \geq 0\) is called a \emph{packing LP}.
 \end{definition}
 
-We now give another LP formulation for \hyperref[prb:set-cover]{set cover}. Given \(\mathcal{\MakeUppercase{S}} = \left\{ S_1, \ldots , S_m  \right\} \), \(U = \left\{ e_1, \ldots , e_n  \right\} \) and define \(A\in \mathbb{\MakeUppercase{r}} ^{n\times m}\) such that
+We now give another LP formulation for the unweighted \hyperref[prb:set-cover]{set cover}. Given \(\mathcal{\MakeUppercase{S}} = \left\{ S_1, \ldots , S_m  \right\} \), \(U = \left\{ e_1, \ldots , e_n  \right\} \) and define \(A\in \mathbb{\MakeUppercase{r}} ^{n\times m}\) such that
 \[
 	A_{ij} = \begin{dcases}
 		1, & \text{ if } e_i\in S_j ; \\
@@ -63,18 +63,33 @@ We see that if we restrict \(y_i\in \left\{ 0, 1 \right\} \), we see that the du
 \]
 And indeed, if we look at the weighted version, we have \(\sum_{i\colon e_i\in s_j} y_{i} \leq w(S_j)\).
 
-Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{i} \leq \frac{w_{j} }{k - i + 1}\). We see that the \(y_{i} \) are just the dual variables in our setup. Additionally, we have the following lemma.
+Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{i} \leq \frac{w(S_{j})}{k - i + 1}\). We see that the \(y_{i} \) are just the dual variables in our setup. Additionally, we have the following lemma.
 \begin{lemma}\label{lma:lec3-1}
-	\(y/H_k\) is dual-feasible for \((D)\).
+	The variable \(y^\prime \coloneqq y/H_k\) is dual-feasible, i.e., it's feasible for \((D)\).
 \end{lemma}
 \begin{proof}
-	We see that \(y_{i} \geq 0\) trivially, so we only need to show that \(\sum_{i=1}^{n} A_{ij}y_{i} \leq w_{j}\) for \(j\in [n]\). But this is trivial since given a set \(S_j\in \mathcal{\MakeUppercase{S}} \), for every \(e_i\in S_j\) for \(i = 1, \ldots , k \), we pay at most \(w_j / i\) for them, hence we're done.
+	We see that \(y_{i} \geq 0\) trivially, so we only need to show that
+	\[
+		\sum_{i=1}^{n} A_{ij}y^\prime = \sum_{i=1}^{n} A_{ij}\frac{y_{i}}{H_k} \leq w(S_{j})
+	\]
+	for \(j\in [m]\). But this is trivial by plugging in \(y_i \leq \frac{w(S_j)}{k - i + 1}\) as shown in \autoref{thm:set-cover-k-approx} as
+	\[
+		\sum_{i=1}^{n} A_{ij} \frac{y_{i} }{H_k} \leq \frac{1}{H_k}\sum_{i=1}^{n} A_{ij} \frac{w(S_j) }{k - i + 1} \leq \frac{1}{H_k}\sum_{i=1}^{k} \frac{w(S_j)}{k - i + 1} = w(S_j),
+	\]
+	hence we're done.
 \end{proof}
 
 With \autoref{lma:lec3-1}, we simply run \autoref{algo:set-cover-greedy} while maintaining \(y_e\) for every \(e\), and we're done.
 
+\begin{theorem}
+	\autoref{algo:set-cover-greedy} is an \(H_k\)-approximation algorithm in the view of its dual.
+\end{theorem}
+\begin{proof}
+	Same as \autoref{thm:set-cover-k-approx}, but now we have different interpretation. Specifically, if \(y^\prime = y / H_k\) is dual-feasible, we know that the corresponding objective value of \(y^\prime \) is at most \(\OPT_{\mathrm{LP}_D} = \OPT_{\mathrm{LP}_P}\), which is at most \(\OPT_{\mathrm{SC}}\) further. Now, since we're dealing with LP, everything is linear includes the objective value, i.e., \(y\) is at most \(H_k\cdot \OPT_{\mathrm{SC}}\).
+\end{proof}
+
 \begin{remark}[Dual fitting]\label{rmk:dual-fitting}
-	The above method is called \emph{dual fitting}. The way to do this is the following.
+	The above method is called \emph{dual fitting}, which is universal as one can easily see. The way to do this is the following.
 	\begin{enumerate}
 		\item Given an algorithm, distribute the algorithm to \(\left\{ y_i \right\}\).
 		\item Prove that \(y / \alpha \) is dual-feasible.

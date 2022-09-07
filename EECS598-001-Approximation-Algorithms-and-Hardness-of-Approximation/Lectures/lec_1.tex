@@ -92,7 +92,7 @@ In normal cases, we may assume that objective function value is always positive,
 We see that \(\alpha \) characterizes the slackness allowed for our \hyperref[def:algorithm]{algorithm} \(A\). Now, we're ready to look at some interesting \hyperref[def:combinatorial-optimization]{problems}. Broadly, there are around \(10\) classes of them which are actively studied:
 
 \begin{itemize}
-	\item We'll see: \hyperref[ch:covering]{Covering}, \hyperref[ch:clustering]{Clustering}, \hyperref[ch:network-design]{Network design}, \hyperref[ch:constraint-satisfaction]{Constraint satisfaction}.
+	\item We'll see cover, clustering, network design, and constraint satisfaction problems.
 	\item We'll not see: graph cuts, Packing, Scheduling, String, etc.
 \end{itemize}
 
@@ -102,7 +102,9 @@ The above list is growing! For example, applications of continuous optimization 
 
 For most problems we saw, we can even say that getting an \(\alpha\)-approximation is \textsc{NP}-hard for some \(\alpha > 1\). This bound is sometimes tight, but not always, and we'll focus on this part in the second half of this course.
 
-\chapter{Covering}\label{ch:covering}
+\chapter{Set Cover}\label{ch:covering}
+
+\section{Covering}
 
 Before we jump into any problem formulations, we define a fundamental object in combinatorial optimization, the \hyperref[def:set-system]{set system}.
 
@@ -139,8 +141,6 @@ Finally, we have the following.
 	A \emph{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \subseteq \mathcal{\MakeUppercase{S}} \) of \((\Omega , \mathcal{\MakeUppercase{S}} )\) is a (sub)collection of subsets such that \(\bigcup_{S\in \mathcal{\MakeUppercase{S}} ^\prime }S = \Omega\).
 \end{definition}
 
-
-\section{Set Cover}\label{sec:set-cover}
 Let's first consider the classical problem called \hyperref[prb:set-cover]{set cover}.
 
 \begin{problem}[Set cover]\label{prb:set-cover}
@@ -149,10 +149,10 @@ Given a finite \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUpperca
 
 Assuming there always exists at least one \hyperref[def:covering]{covering}, we can in fact get two types of non-comparable approximation ratio in terms of \(k\) and \(d\). Specifically, we get \(\log k\) and \(d\)-approximation ratio via either greedy, LP rounding or dual-methods.
 
-\subsection{Greedy}
+\section{Greedy Method}
 We first see the algorithm when \(w(S) = 1\) for all \(S\in \mathcal{\MakeUppercase{S}} \).
 
-\begin{algorithm}[H]\label{algo:set-cover-greedy-I}
+\begin{algorithm}[H]\label{algo:set-cover-greedy}
 	\DontPrintSemicolon
 	\caption{Greedy I -- \hyperref[prb:set-cover]{set cover}}
 	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}})\)}
@@ -163,24 +163,26 @@ We first see the algorithm when \(w(S) = 1\) for all \(S\in \mathcal{\MakeUpperc
 	\While(\Comment*[f]{\(O(n)\)}){\(U \neq \varnothing \)}{
 		Choose \(S_i\) with maximum \(\left\vert U \cap S_i \right\vert\)\Comment*[r]{\(O(mn)\)}
 		\(\mathcal{\MakeUppercase{S}} ^\prime \gets \mathcal{\MakeUppercase{S}} ^\prime \cup \left\{ S_i \right\} \)\;
-		\(U\gets U\setminus S_i\)\;\label{line5:algo:set-cover-greedy-I}
+		\(U\gets U\setminus S_i\)\;\label{line5:algo:set-cover-greedy}
 		\For(){\(e\in U \cap S_i\) }{
-			\(y_e \gets 1 / \left\vert U \cap S_i \right\vert \)\Comment*[r]{Average costs}
+			\(y_e \gets w(S_{i}) / \left\vert U \cap S_i \right\vert \)\Comment*[r]{Average costs}
 		}
 		\(i\gets i+1\)\;
 	}
 	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
 \end{algorithm}
 
+We focus on the case that \(w(S) = 1\) for all \(S\).
+
 \begin{remark}
-	It's clear that \autoref{algo:set-cover-greedy-I} is a polynomial time algorithm, also, the output \(\mathcal{\MakeUppercase{S}} ^\prime \) is always a valid \hyperref[def:covering]{covering}.
+	It's clear that \autoref{algo:set-cover-greedy} is a polynomial time algorithm, also, the output \(\mathcal{\MakeUppercase{S}} ^\prime \) is always a valid \hyperref[def:covering]{covering}.
 \end{remark}
 
-\begin{theorem}
-	\autoref{algo:set-cover-greedy-I} is an \(H_k\)-approximation\footnote{\(H_k\) is the so-called \emph{harmonic number}, which is defined as \(\sum_{i=1}^{k} 1 / i \leq \ln k + 1\).} algorithm.
+\begin{theorem}\label{thm:set-cover-k-approx}
+	\autoref{algo:set-cover-greedy} is an \(H_k\)-approximation\footnote{\(H_k\) is the so-called \emph{harmonic number}, which is defined as \(\sum_{i=1}^{k} 1 / i \leq \ln k + 1\).} algorithm.
 \end{theorem}
 \begin{proof}
-	Denote the \(\OPT\) as \(\mathcal{\MakeUppercase{S}} ^{\ast} \coloneqq \left\{ S_1^{\ast} , \ldots , S_{\ell}^{\ast} \right\}\), and first note that the average cost \(y_e\) essentially maintains \(\sum_{e\in U} y_e = \left\vert \mathcal{\MakeUppercase{S}} ^\prime  \right\vert\), hence we just need to bound \(y_e\) w.r.t. \(S^{\ast}\). To do this, for any \(S^{\ast} \in \mathcal{\MakeUppercase{S}} ^{\ast} \), say \(S_1^{\ast} \eqqcolon \left\{ e_1, \ldots , e_k  \right\} \) where we number \(e_i\) in terms of the order of which being deleted, i.e., \(e_1\) is deleted first from \(U\) (\autoref{line5:algo:set-cover-greedy-I}), etc.
+	Denote the \(\OPT\) as \(\mathcal{\MakeUppercase{S}} ^{\ast} \coloneqq \left\{ S_1^{\ast} , \ldots , S_{\ell}^{\ast} \right\}\), and first note that the average cost \(y_e\) essentially maintains \(\sum_{e\in U} y_e = \left\vert \mathcal{\MakeUppercase{S}} ^\prime  \right\vert\), hence we just need to bound \(y_e\) w.r.t. \(S^{\ast}\). To do this, for any \(S^{\ast} \in \mathcal{\MakeUppercase{S}} ^{\ast} \), say \(S_1^{\ast} \eqqcolon \left\{ e_1, \ldots , e_k  \right\} \) where we number \(e_i\) in terms of the order of which being deleted, i.e., \(e_1\) is deleted first from \(U\) (\autoref{line5:algo:set-cover-greedy}), etc.
 
 	\begin{note}
 		\(S_1^{\ast} \) can have less than \(k\) element, but in that case similar argument will follow. Also, if some elements are deleted at the same time, we just order them arbitrarily.
@@ -188,18 +190,18 @@ We first see the algorithm when \(w(S) = 1\) for all \(S\in \mathcal{\MakeUpperc
 
 	Then, we have the following claim.
 
-	\begin{claim}
+	\begin{claim}\label{clm:set-cover-cost}
 		For all \(e_i\), \(y_{e_i} \leq  \frac{1}{k - i + 1}\).
 	\end{claim}
 	\begin{explanation}
-		Consider the iteration when \(e_i\) was picked by \(S^\prime\), i.e., \(\left\vert U \cap S^\prime  \right\vert \geq \left\vert U \cap S_1 ^{\ast} \right\vert \geq k - i + 1\), then by definition (\autoref{line5:algo:set-cover-greedy-I}) we have \(y_{e_i} = \frac{1}{\vert U \cap S^\prime  \vert } \leq \frac{1}{\vert U \cap  S_1 ^{\ast} \vert} \leq \frac{1}{k - i + 1}\).
+		Consider the iteration when \(e_i\) was picked by \(S^\prime\), i.e., \(\left\vert U \cap S^\prime  \right\vert \geq \left\vert U \cap S_1 ^{\ast} \right\vert \geq k - i + 1\), then by definition (\autoref{line5:algo:set-cover-greedy}) we have \(y_{e_i} = \frac{1}{\vert U \cap S^\prime  \vert } \leq \frac{1}{\vert U \cap  S_1 ^{\ast} \vert} \leq \frac{1}{k - i + 1}\).
 	\end{explanation}
 
-	We immediately see that whenever the optimal solution pays \(1\) (for choosing \(S_1^{\ast}\) for instance), \autoref{algo:set-cover-greedy-I} pays at most \(H_k\) since \(\sum_{e_i\in S_1^{\ast} }y_{e_i} \leq \sum_{i=1}^{k} \frac{1}{k-i+1} = H_k\), or more formally,
+	We immediately see that whenever the optimal solution pays \(1\) (for choosing \(S_1^{\ast}\) for instance), \autoref{algo:set-cover-greedy} pays at most \(H_k\) since \(\sum_{e_i\in S_1^{\ast} }y_{e_i} \leq \sum_{i=1}^{k} \frac{1}{k-i+1} = H_k\), or more formally,
 	\[
 		\left\vert \mathcal{\MakeUppercase{S}} ^\prime  \right\vert = \sum_{e\in U}y_e \leq \sum_{S_i^{\ast} \in \mathcal{\MakeUppercase{S}} ^{\ast} }\underbrace{\sum_{e\in S_i^{\ast} }y_e}_{\leq H_k} \leq \ell \cdot H_k = H_k\cdot \left\vert \OPT \right\vert,
 	\]
 	which finishes the proof.
 \end{proof}
 
-In all, observe that \(H_k \leq \ln k + 1\), we see that \autoref{algo:set-cover-greedy-I} is a \((\ln k)\)-approximation algorithm.
+In all, observe that \(H_k \leq \ln k + 1\), we see that \autoref{algo:set-cover-greedy} is a \((\ln k)\)-approximation algorithm. Also, the weighted version can be easily derived by replacing \(1\) with the corresponding weight.

@@ -1,0 +1,130 @@
+\lecture{3}{7 Sep. 10:30}{Covering-Packing Duality and Primal-Dual Method}
+\section{Covering-Packing Duality}
+We first define some useful notions.
+\begin{definition}[Strongly independent]\label{def:strongly-independent}
+	Given a set system \((U, \mathcal{\MakeUppercase{S}} )\), we say \(C\subseteq U\) is \emph{strongly independent} if there does not exist \(S\in \mathcal{\MakeUppercase{S}} \) such that \(\left\vert C \cap S \right\vert \geq 2\).
+\end{definition}
+
+\begin{remark}
+	Then for any \hyperref[def:strongly-independent]{strongly independent} set \(C\subseteq U\), we know that \(\OPT_{\mathrm{SC}} \geq \left\vert C \right\vert\).\footnote{\(\mathrm{SC}\) denotes \hyperref[prb:set-cover]{set cover}.}
+\end{remark}
+
+Now, we're trying to find the \textbf{strongest witness} of \hyperref[def:strongly-independent]{strongly independent set}, which suggests we define the following problem.
+
+\begin{problem}[Maximum strongly independent set]\label{prb:max-strongly-independent-set}
+Given a set system \((U, \mathcal{\MakeUppercase{S}} )\), we want to find the largest \hyperref[def:strongly-independent]{strongly independent set}.
+\end{problem}
+
+\begin{remark}
+	For any set system, we have \(\OPT_{\mathrm{SIS}}\leq \OPT_{\mathrm{SC}}\).\footnote{\(\mathrm{SIS}\) denotes \hyperref[prb:max-strongly-independent-set]{maximum strongly independent set}.}
+\end{remark}
+
+\begin{prev}[LP dual]
+	Recall how we get the dual of a given LP:
+	\[
+		\begin{alignedat}{5}
+			\min~&c^{\top}x\qquad\qquad&&\max ~&&y^{\top} b\\
+			&Ax \geq b 				&&		&&y^{\top} A\leq c^{\top} \\
+			(P)\quad	&x\geq  0 	&&(D)\quad&& y\geq 0.
+		\end{alignedat}
+	\]
+	Also, recall the weak duality (\(\OPT_{P} \geq \OPT_D\)) and strong duality (\(\OPT_P = \OPT_D\)).
+\end{prev}
+
+\begin{definition}[Covering LP]\label{def:covering-LP}
+	A primal LP with \(A, b, c \geq 0\) is called a \emph{covering LP}.
+\end{definition}
+
+\begin{definition}[Packing LP]\label{def:packing-LP}
+	A dual LP with \(A, b, c \geq 0\) is called a \emph{packing LP}.
+\end{definition}
+
+We now give another LP formulation for \hyperref[prb:set-cover]{set cover}. Given \(\mathcal{\MakeUppercase{S}} = \left\{ S_1, \ldots , S_m  \right\} \), \(U = \left\{ e_1, \ldots , e_n  \right\} \) and define \(A\in \mathbb{\MakeUppercase{r}} ^{n\times m}\) such that
+\[
+	A_{ij} = \begin{dcases}
+		1, & \text{ if } e_i\in S_j ; \\
+		0, & \text{ otherwise}.
+	\end{dcases}
+\]
+
+Then our LP is defined as
+
+\[
+	\begin{alignedat}{5}
+		\min~&\sum_{j=1}^{m} x_j\qquad\qquad&&\max ~&&\sum_{i =1}^{n} y_i\\
+		&Ax \geq \bm{1} 				&&		&&y^{\top}A\leq \bm{1}\\
+		(P)\quad	&x\geq  0 	&&(D)\quad&& y \geq 0.
+	\end{alignedat}
+\]
+
+We see that if we restrict \(y_i\in \left\{ 0, 1 \right\} \), we see that the dual \((D)\) is just \autoref{prb:max-strongly-independent-set}. This can be seen via writing the constraint explicitly:
+\[
+	\sum_{i=1}^{n} A_{ij} y_{i} \leq 1 \iff \sum_{i\colon e_i\in S_j} y_{i} \leq 1 \text{ for } j\in[m].
+\]
+And indeed, if we look at the weighted version, we have \(\sum_{i\colon e_i\in s_j} y_{i} \leq w(S_j)\).
+
+Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{i} \leq \frac{w_{j} }{k - i + 1}\). We see that the \(y_{i} \) are just the dual variables in our setup. Additionally, we have the following lemma.
+\begin{lemma}\label{lma:lec3-1}
+	\(y/H_k\) is dual-feasible for \((D)\).
+\end{lemma}
+\begin{proof}
+	We see that \(y_{i} \geq 0\) trivially, so we only need to show that \(\sum_{i=1}^{n} A_{ij}y_{i} \leq w_{j}\) for \(j\in [n]\). But this is trivial since given a set \(S_j\in \mathcal{\MakeUppercase{S}} \), for every \(e_i\in S_j\) for \(i = 1, \ldots , k \), we pay at most \(w_j / i\) for them, hence we're done.
+\end{proof}
+
+With \autoref{lma:lec3-1}, we simply run \autoref{algo:set-cover-greedy} while maintaining \(y_e\) for every \(e\), and we're done.
+
+\begin{remark}[Dual fitting]\label{rmk:dual-fitting}
+	The above method is called \emph{dual fitting}. The way to do this is the following.
+	\begin{enumerate}
+		\item Given an algorithm, distribute the algorithm to \(\left\{ y_i \right\}\).
+		\item Prove that \(y / \alpha \) is dual-feasible.
+		\item This shows the algorithm is \(\alpha\)-approximation algorithm.
+	\end{enumerate}
+\end{remark}
+
+\section{Primal-Dual Method}
+
+We first see the general description of the so-called \emph{primal-dual method}.
+
+\begin{enumerate}
+	\item Maintain \(x\) (primal solution) and \(y\) (dual solution) where \(x\) is integral and infeasible, while \(y\) is fractional and feasible. Start from \(x = y = 0\).
+	\item \textbf{Somehow} increase \(y\) until some dual constraints get tight.
+	\item \textbf{Choose} primal variables correspond to tight dual constraints, and update input accordingly.
+\end{enumerate}
+
+\begin{remark}
+	We're using dual variables to get a certificate of the lower bound of the optimal problem we're solving.
+\end{remark}
+
+In terms of \hyperref[prb:set-cover]{set cover}, we have the following.
+
+\begin{algorithm}[H]\label{algo:set-cover-PD}
+	\DontPrintSemicolon
+	\caption{Primal-Dual -- \hyperref[prb:set-cover]{set cover}}
+	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}})\)}
+	\KwResult{A \hyperref[def:covering]{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \)}
+	\BlankLine
+
+	\(\mathcal{\MakeUppercase{S}} ^\prime \gets \varnothing\), \(y \gets 0\)\;
+	\While(){\(U \neq \varnothing \)}{
+		Choose any \(e\in U\)\;
+		Raise \(y_e\) until some constraints get tight\;
+		\(\mathcal{\MakeUppercase{S}} ^\prime \gets \mathcal{\MakeUppercase{S}} ^\prime \cup \left\{ \text{sets corresponding to tight dual constraints} \right\} \)\;
+		Update \(U\)\Comment*[r]{Remove newly covered element in \(U\)}
+	}
+	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
+\end{algorithm}
+
+\begin{remark}
+	\autoref{algo:set-cover-PD} is correct and can be implemented efficiently.
+\end{remark}
+
+\begin{theorem}
+	\autoref{algo:set-cover-PD} is a \(d\)-approximation algorithm.
+\end{theorem}
+\begin{proof}
+	Firstly, \(y\) is feasible. And we see that
+	\[
+		w(\mathcal{\MakeUppercase{S}} ^\prime ) = \sum_{S\in \mathcal{\MakeUppercase{S}} ^\prime } w(S) = \sum_{S\in \mathcal{\MakeUppercase{S}} ^\prime }\sum_{e\in S}y_e \leq d\cdot \sum_{e\in U} y_e \leq d\cdot \OPT_{\mathrm{LP}_{D}} = d\cdot \OPT_{\mathrm{LP}_P}\leq d\cdot \OPT_{\mathrm{SC} }.
+	\]
+\end{proof}

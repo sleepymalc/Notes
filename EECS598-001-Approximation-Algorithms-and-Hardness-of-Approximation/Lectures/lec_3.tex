@@ -63,20 +63,20 @@ We see that if we restrict \(y_i\in \left\{ 0, 1 \right\} \), we see that the du
 \]
 And indeed, if we look at the weighted version, we have \(\sum_{i\colon e_i\in s_j} y_{i} \leq w(S_j)\).
 
-Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{i} \leq \frac{w(S_{j})}{k - i + 1}\). We see that the \(y_{i} \) are just the dual variables in our setup. Additionally, we have the following lemma.
+Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{e_i} \leq \frac{w(S_{j})}{k - i + 1}\). We see that the \(y_{e_i} \) are just the dual variables in our setup. Additionally, with the observation that we can do this for any set \(S = \left\{ e_1, \ldots , e_k\right\} \in \mathcal{\MakeUppercase{S}}\), we have the following lemma.
 \begin{lemma}\label{lma:lec3-1}
 	The variable \(y^\prime \coloneqq y/H_k\) is dual-feasible, i.e., it's feasible for \((D)\).
 \end{lemma}
 \begin{proof}
-	We see that \(y_{i} \geq 0\) trivially, so we only need to show that
+	We see that \(y_{e_i} \geq 0\) (and hence \(y_i\)) trivially, so we only need to show that
 	\[
-		\sum_{i=1}^{n} A_{ij}y^\prime = \sum_{i=1}^{n} A_{ij}\frac{y_{i}}{H_k} \leq w(S_{j})
+		\sum_{i=1}^{n} A_{ij}y^\prime = \sum_{i=1}^{n} A_{ij}\frac{y_{e_i}}{H_k} \leq w(S_{j})
 	\]
-	for \(j\in [m]\). But this is trivial by plugging in \(y_i \leq \frac{w(S_j)}{k - i + 1}\) as shown in \autoref{thm:set-cover-k-approx} as
+	for \(j\in [m]\). But this is trivial by plugging in \(y_{e_i} \leq \frac{w(S_j)}{k - i + 1}\) as shown in \autoref{thm:set-cover-k-approx}, hence
 	\[
-		\sum_{i=1}^{n} A_{ij} \frac{y_{i} }{H_k} \leq \frac{1}{H_k}\sum_{i=1}^{n} A_{ij} \frac{w(S_j) }{k - i + 1} \leq \frac{1}{H_k}\sum_{i=1}^{k} \frac{w(S_j)}{k - i + 1} = w(S_j),
+		\sum_{i=1}^{n} A_{ij} \frac{y_{e_i} }{H_k} \leq \frac{1}{H_k}\sum_{i=1}^{n} A_{ij} \frac{w(S_j) }{k - i + 1} \leq \frac{1}{H_k}\sum_{i=1}^{k} \frac{w(S_j)}{k - i + 1} = w(S_j),
 	\]
-	hence we're done.
+	and we're done.\footnote{Note that in the above derivation, \(i\) is kind of overloading, i.e., \(e_i\) corresponding to only some \(i\) (confusing, but it's how it is...).}
 \end{proof}
 
 With \autoref{lma:lec3-1}, we simply run \autoref{algo:set-cover-greedy} while maintaining \(y_e\) for every \(e\), and we're done.

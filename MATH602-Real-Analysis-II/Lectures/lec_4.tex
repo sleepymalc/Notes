@@ -1,0 +1,188 @@
+\lecture{4}{08 Sep. 14:30}{}
+\begin{prev}
+	Recall the \hyperref[lma:parallelogram-law]{parallelogram law} and \hyperref[lma:polatization-identity]{polarization identity}. The proof is just to expand the right-hand side in terms of \hyperref[def:inner-product]{inner product}.\todo{Check it!}
+\end{prev}
+
+\begin{remark}
+	\hyperref[lma:polatization-identity]{Polarization identity} shows that the function \(x\mapsto \left\lVert x\right\rVert ^{2} \) determines the \hyperref[def:inner-product]{inner product}.
+\end{remark}
+
+\section{Hilbert Spaces}
+\begin{definition}[Hilbert space]\label{def:Hilbert-space}
+	A complete \hyperref[def:inner-product-space]{inner product space} is called a \emph{Hilbert space}.
+\end{definition}
+
+\begin{eg}
+	We have seen that \(\ell _2\) and \(L^2(\Omega , \Sigma , \mu )\) are complete, hence are \hyperref[def:Hilbert-space]{Hilbert space}.
+\end{eg}
+
+We'll soon see that the key notion in \hyperref[def:Hilbert-space]{Hilbert space} theory is orthogonality.
+\begin{definition}[Orthogonal complement]\label{def:orthogonal-complement}
+	Let \(A \subseteq \mathcal{\MakeUppercase{h}} \) where \(\mathcal{\MakeUppercase{h}}\) is a \hyperref[def:Hilbert-space]{Hilbert space}. Then the \emph{orthogonal complement} \(A^\perp\) of \(A\) is
+	\[
+		A^\perp \coloneqq \left\{ x\in \mathcal{\MakeUppercase{h}} \colon \left\langle x, y \right\rangle = 0 \text{ for } y\in A \right\}.
+	\]
+\end{definition}
+
+\begin{remark}
+	\(A^\perp\) is also a \hyperref[def:Hilbert-space]{Hilbert space}.
+\end{remark}
+\begin{explanation}
+	Since \(A^\perp\) is closed \hyperref[def:linear-vector-space]{linear subspace} of \(\mathcal{\MakeUppercase{h}} \), where the closure follows from the continuity of the function \(x\mapsto \left\langle x, y \right\rangle \) for \(x\in \mathcal{\MakeUppercase{h}} \) by looking at the inverse image of \(\left\{ 0 \right\}\).
+\end{explanation}
+
+\begin{theorem}[Orthogonality principle]\label{thm:orthogonality-principle}
+	Assume \(E\subseteq \mathcal{\MakeUppercase{h}} \) is a closed \hyperref[def:linear-vector-space]{linear subspace} of the \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) and \(x\in \mathcal{\MakeUppercase{h}} \). Then we have the following.
+	\begin{enumerate}[(a)]
+		\item Then there exists a unique closest point \(y = P_E x\in E\) to \(x\), i.e., \(\left\lVert x - P_E x\right\rVert = \inf _{y^\prime \in E} \left\lVert x - y^\prime \right\rVert \).
+		\item The point \(y = P_E x\in E\) is the unique vector such that \(x - y\in E^{\perp}\).
+	\end{enumerate}
+	\begin{figure}[H]
+		\centering
+		\incfig{orthogonality-principle}
+	\end{figure}
+\end{theorem}
+\begin{proof}
+	Note that the function \(y^\prime \mapsto \left\lVert x - y^\prime \right\rVert \) for \(y^\prime \in E\) is \hyperref[def:convex-function]{convex}. We expect a minimizer \(y^\prime \).
+
+	\begin{note}
+		To show this exists, we typically need
+		\begin{enumerate}
+			\item Compactness properties
+			\item Non-degeneracy properties for uniqueness
+		\end{enumerate}
+	\end{note}
+
+	\begin{enumerate}[(a)]
+		\item Here by using \hyperref[lma:parallelogram-law]{parallelogram law}, we don't need compactness. Let \(y_n\in E\) for \(n = 1, 2, \ldots  \) be a minimizing sequence, i.e.,
+		      \[
+			      \lim\limits_{n \to \infty} \left\lVert x - y_n\right\rVert = \inf _{y^\prime \in E}\left\lVert x - y^\prime \right\rVert = d.
+		      \]
+		      From \hyperref[lma:parallelogram-law]{parallelogram law}, we have
+		      \[
+			      \left\lVert y_{n} - y_{m} \right\rVert^{2} + 4 \left\lVert x - \frac{1}{2}(y_{n} + y_{m} )\right\rVert ^{2} = 2\left\lVert x - y_{n} \right\rVert ^{2} + 2\left\lVert x- y_{m} \right\rVert ^{2}.
+		      \]
+		      As \(n, m\to \infty \), the right-hand side goes to \(4d^{2} \). But since \(\frac{1}{2}(y_{n} + y_{m} )\in E\), we have \(\left\lVert x - \frac{1}{2}(y_{n} - y_{m} )\right\rVert \geq d\), so
+		      \[
+			      \lim\limits_{m \to \infty} \sup _{m \geq n}\left\lVert y_{n} - y_{m} \right\rVert^{2} = 0,
+		      \]
+		      which further implies \(\left\{ y_{n}  \right\} \) is a Cauchy sequence. As \(\mathcal{\MakeUppercase{h}} \) is complete, we see that \(y_{n} \to y_{\infty }\in E\), with \(\left\lVert x - y_{\infty }\right\rVert=d \).
+
+		      Now, with the fact that \(E\) is closed, we set \(y_\infty = P_E x\) where \(y_\infty \) is unique since if \(\left\lVert x - y_\infty \right\rVert = \left\lVert x - y^\prime _\infty \right\rVert = d \), again by the \hyperref[lma:parallelogram-law]{parallelogram law} where we now plug in \(y_\infty \) and \(y_\infty ^\prime \) instead of \(y_{n} \) and \(y_{m} \) as above, we see that \(\left\lVert y_\infty - y^\prime _\infty \right\rVert = 0\). In all, \(P_E x \in E\) is uniquely defined.
+
+		\item We now shoe \(P_E x\) is the unique vector \(y\in E\) such that \(x - y\perp E\), i.e., \(x-y\in E^\perp\). Let \(y^\prime \in E\) and let \(Q(t)\) be the quadratic
+		      \[
+			      Q(t)\coloneqq \left\langle x-P_E x + ty^\prime , x - P_E x + ty^\prime  \right\rangle = \left\lVert x - P_E x + ty^\prime \right\rVert ^{2}.
+		      \]
+		      Since \(t\mapsto Q(t)\) has a \textbf{strict} minimum at \(t = 0\), which implies \(Q^\prime (0) = 0\), i.e., \(\Re \left( x-P_E x, y^\prime  \right) = 0\) for all \(y^\prime \in E\), which further implies \(\left\langle x-P_E x, y^\prime  \right\rangle= 0\) for all \(y^\prime \in E\). This shows that \(x - P_E x\in E^{\perp}\). Finally, we need to show \(P_E x\in E\) is the unique vector such \(x - P_E x\in E^\perp\). This can be seen from \(Q(t)=\left\lVert x - P_E x\right\rVert^{2} + t^{2} \left\lVert y^\prime \right\rVert^{2}\) for any \(y^\prime \in E\).
+	\end{enumerate}
+\end{proof}
+
+\begin{remark}
+	\autoref{thm:orthogonality-principle} shows that the minimizer for the function \(y^\prime \mapsto \left\lVert x - y^\prime \right\rVert \) for \(y^\prime \in E\) is characterized by the orthogonality condition, i.e., \(x - y\perp E\) for some \(y\in E\).
+\end{remark}
+
+\begin{definition}[Orthogonal projection]\label{def:orthogonal-projection}
+	Let \(\mathcal{\MakeUppercase{h}} \) be a \hyperref[def:Hilbert-space]{Hilbert space} ad let \(E\subseteq \mathcal{\MakeUppercase{h}} \) be a closed subspace. The \emph{orthogonal projection operator} \(P_E\colon \mathcal{\MakeUppercase{h}} \to E\) is given by \(x \mapsto P_E x\) where \(P_E x\) is defined uniquely via \(x - P_E x\in E^\perp\).
+\end{definition}
+
+\begin{definition}[Bounded linear map]\label{def:bounded-linear-map}
+	Given a mapping \(A\colon \mathcal{\MakeUppercase{b}} \to \mathcal{\MakeUppercase{b}} \) on a \hyperref[def:Banach-space]{Banach space} \(\mathcal{\MakeUppercase{b}} \), we say it's a \emph{bounded linear map} if it's \hyperref[def:bounded-map]{bounded} and \hyperref[def:linear-map]{linear}.
+
+	\begin{definition}[Linear map]\label{def:linear-map}
+		The operator \(A\) is \emph{linear} if for \(x, y\in \mathcal{\MakeUppercase{b}} \), \(a, b\in \mathbb{\MakeUppercase{c}} \),
+		\[
+			A(ax + by) = a A(x) + b B(y).
+		\]
+	\end{definition}
+
+	\begin{definition}[Bounded map]\label{def:bounded-map}
+		The operator \(A\) is \emph{bounded} if
+		\[
+			\left\lVert A\right\rVert \coloneqq \sup _{\left\lVert x\right\rVert = 1} \left\lVert Ax\right\rVert < \infty.
+		\]
+	\end{definition}
+\end{definition}
+
+\begin{remark}
+	Note that \(\left\lVert Ax\right\rVert \leq \left\lVert A\right\rVert \left\lVert x\right\rVert \) for \(x\in \mathcal{\MakeUppercase{b}} \).
+\end{remark}
+
+We see that \(P_E x\) is a \hyperref[def:bounded-linear-map]{bounded linear operator} \(P_E\colon \mathcal{\MakeUppercase{h}} \to E\) with the properties \(P^{2} _E g P_E\) and \(\left\lVert x\right\rVert ^{2} = \left\lVert P_E x\right\rVert ^{2} + \left\lVert (I - P_E)x\right\rVert ^{2} \) since \((I - P_E)x\perp P_E x\). The latter property shows that
+\[
+	\left\lVert P_E\right\rVert \leq 1,\quad \left\lVert (I - P_E)\right\rVert \leq 1,
+\]
+and fact, \(\left\lVert P_E\right\rVert = \left\lVert I-P_E\right\rVert = 1\). Also, \(I - P_E\) is also an \hyperref[def:orthogonal-projection]{orthogonal projection} onto \(E^\perp\).
+
+\subsection{Orthogonal Systems}
+
+We first give the definition.
+
+\begin{definition}[Orthogonal system]\label{def:orthogonal-system}
+	A sequence \(\left\{ x_{k} \colon k\geq 1 \right\} \) of non-zero vectors in a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) is \emph{orthogonal} if \(\left\langle x_{k} , x_{\ell} \right\rangle = 0\) for all \(\ell \neq k\).
+\end{definition}
+
+\begin{definition}[Orthonormal system]\label{def:orthonormal-system}
+	A \hyperref[def:orthogonal-system]{orthogonal system} is called an \emph{orthonormal system} if in addition, we have \(\left\lVert x_{k} \right\rVert= 1 \) for \(k = 1, 2, \ldots  \).
+\end{definition}
+
+\begin{remark}[Equivalence definition of orthonormal system]
+	\(\left\{ x_{k} \colon k\geq 1 \right\} \) is \hyperref[def:orthonormal-system]{orthonormal} if \(\left\langle x_{k} , x_{\ell } \right\rangle = \delta _{k, \ell } \) where \(\delta \) is the \href{https://en.wikipedia.org/wiki/Kronecker_delta}{Kronecker delta}.
+\end{remark}
+
+We now see some examples.
+
+\begin{eg}
+	\(x_{k} = (0, 0, \ldots , \delta , 0, \ldots , 0 )\in \ell _2\) for \(k = 1, 2, \ldots  \) is \hyperref[def:orthonormal-system]{orthonormal sequence} in \(\ell _2\).
+\end{eg}
+
+\begin{eg}[Fourier basis]
+	For \(L_2([-\pi , \pi ])\),
+	\[
+		e_k(t) = \frac{1}{\sqrt{2\pi } }e^{i k t}
+	\]
+	for \(k\in \mathbb{\MakeUppercase{r}} \) is \hyperref[def:orthonormal-system]{orthonormal}. In addition, this is the Fourier basis associated with the Fourier series
+	\[
+		f(t) = \sum_{k=-\infty }^{\infty} a_k \frac{1}{\sqrt{2\pi } }e^{ikt}
+	\]
+	where
+	\[
+		a_k = \frac{1}{\sqrt{2\pi } }\int _{-\pi}^\pi f(t) e^{-ikt}\,\mathrm{d} t.
+	\]
+\end{eg}
+
+\begin{remark}
+	We can further generalize Fourier series to any \hyperref[def:Hilbert-space]{Hilbert space} by letting \(\left\{ x_{k} \colon k\geq 1 \right\} \) be an \hyperref[def:orthonormal-system]{orthonormal} set in \(\mathcal{\MakeUppercase{h}} \). For \(n = 1, 2, \ldots  \), we define \(S_{n} \colon \mathcal{\MakeUppercase{h}} \to E_{n} \) such that
+	\[
+		S_n (x)= \sum_{k=1}^{n} \left\langle x, x_{k}  \right\rangle x_{k}
+	\]
+	for \(x\in \mathcal{\MakeUppercase{h}} \) where \(E_{n} = \mathop{\mathrm{span}}\left\{ x_1, \ldots , x_{n}\right\}\). We see that \(S_n\) is a \hyperref[def:linear-map]{linear operator} and \(S_n= P_{E_n}\) is the \hyperref[def:orthogonal-projection]{orthogonal projection} onto \(E_n\) since \(\left\langle x -S_n(x), x_k \right\rangle = 0\) for \(k = 1, \ldots  , n\) and \(S_{n} (x)\in E_{n}\), \(x-S_n(x)\perp E_n\).
+\end{remark}
+
+\begin{remark}[Bessel's inequality]\label{rmk:Bessel-ineq}
+	Additionally,
+	\[
+		\left\lVert S_n (x)\right\rVert ^{2} = \sum_{k=1}^{n} \left\vert \left\langle x, x_{k}  \right\rangle \right\vert ^{2},
+	\]
+	with \(S_n = P_{E_n}\) and \(\left\lVert P_{E_n} x \right\rVert^{2} \leq \left\lVert x\right\rVert ^{2}\), we have
+	\[
+		\sum_{k=1}^{n} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert ^{2} \leq \left\lVert x\right\rVert ^{2}
+	\]
+	for \(x\in \mathcal{\MakeUppercase{h}} \). This is the so-called \emph{Bessel's inequality}.
+\end{remark}
+
+
+\begin{theorem}
+	Let \(\left\{ x_{k} \colon k\geq 1 \right\} \) be an \hyperref[def:orthonormal-system]{orthonormal} sequence in a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \). Then the corresponding Fourier expansion \(S_n(x) = \sum_{k=1}^{n} \left\langle  x, x_{k} \right\rangle  x_{k}\) converges, i.e., \(\lim\limits_{n \to \infty} S_{n} (x) = S_{\infty }(x)\) exists for \(x\in \mathcal{\MakeUppercase{h}} \).
+\end{theorem}
+\begin{proof}
+	We show that the sequence \(S_n(x)\) for \(n = 1, 2, \ldots\) is Cauchy. This is because
+	\[
+		\left\lVert S_n(x) - S_m(x)\right\rVert ^{2} = \sum_{k=m+1}^{n} \left\vert \left\langle x, x_{k}\right\rangle  \right\vert ^{2},
+	\]
+	and \hyperref[rmk:Bessel-ineq]{Bessel's inequality} implies \(\sum_{k=1}^{\infty} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert ^{2} \leq \left\lVert x\right\rVert ^{2} \). Hence, for any \(\epsilon > 0\), there exists \(m(\epsilon )\) such that
+	\[
+		\sum_{k=m(\epsilon )+1}^{\infty} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert ^{2} < \epsilon,
+	\]
+	which implies \(\left\lVert S_n(x) - S_m(x)\right\rVert ^{2} < \epsilon \) if \(n > m(\epsilon )\), hence \(\left\{ S_{n} (x)\colon n\geq 1 \right\}\) is Cauchy, and \(\lim\limits_{n \to \infty} S_n(x)= S_\infty (x)\in \mathcal{\MakeUppercase{h}} \). Also, \(S_\infty = P_{E_\infty }\) where \(E_\infty \) is the closure of the \hyperref[def:linear-vector-space]{linear space} generated by the sequence \(\left\{ x_{k} \colon k \geq 1 \right\} \).
+\end{proof}

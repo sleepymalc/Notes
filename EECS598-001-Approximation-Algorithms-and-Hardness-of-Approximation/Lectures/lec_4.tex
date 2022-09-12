@@ -1,0 +1,203 @@
+\lecture{4}{12 Sep. 10:30}{Feedback Vertex Set}
+\section{Feedback Vertex Set}
+
+\subsection{Introduction}
+We consider the following problem.
+
+\begin{problem}[Feedback vertex set]\label{prb:feedback-vertex-set}
+Given a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a weight function \(c\colon \mathcal{\MakeUppercase{v}} \to \mathbb{\MakeUppercase{r}} ^+\), we want to find \(F\subseteq \mathcal{\MakeUppercase{v}} \) with \(\min c(F)\) such that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) has no cycle.\footnote{This is equivalent as saying that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) is a forest.}
+\end{problem}
+
+\begin{note}[Edge version]
+	The \emph{edge version} of \autoref{prb:feedback-vertex-set} can be solved by letting \(T\subseteq \mathcal{\MakeUppercase{e}} \) be the maximum weight forest, and let \(F \coloneqq \mathcal{\MakeUppercase{e}} \setminus T\).
+\end{note}
+
+\begin{notation}
+	In this lecture, when talking about cycle, we're referring to the vertices in which. But the meaning can vary from context to context.
+\end{notation}
+
+\begin{remark}
+	This is a \emph{special case} of \autoref{prb:set-cover}.
+\end{remark}
+\begin{explanation}
+	Let \(\mathcal{\MakeUppercase{C}} \coloneqq \left\{ \text{set of all (simple) cycles}  \right\}\) and consider \autoref{prb:set-cover} on the set system \((\mathcal{\MakeUppercase{C}} , \mathcal{\MakeUppercase{v}} )\), i.e., we want to find \(F\subseteq \mathcal{\MakeUppercase{v}} \) such that \(\forall C\in \mathcal{\MakeUppercase{C}} \), \(\left\vert F \cap C \right\vert \geq 1\).
+\end{explanation}
+
+\begin{note}
+	The naive algorithm by directly applying methods discussed for \autoref{prb:set-cover}, we see that since \(\min (\log k, d) = \Omega (n)\) for \(k\) being the maximum set size (which is \(2^{\Omega (n)}\)) and \(d = n\), the approximation ratio we can get is \(O(\log n)\), which depends on the size of the input.
+\end{note}
+
+Now, the goal in this section is to show the following.
+\begin{theorem}\label{thm:lec4-1}
+	There exists a \(4\)-approximation algorithm for \autoref{prb:feedback-vertex-set}.
+\end{theorem}
+
+\begin{remark}
+	Actually, there exists a \(2\)-approximation algorithm.
+\end{remark}
+
+We also have a hardness of \autoref{prb:feedback-vertex-set}.
+\begin{theorem}
+	A \((2 - \epsilon )\)-approximation algorithm doesn't exist for all \(\epsilon > 0\) assuming some conjecture.
+\end{theorem}
+
+\subsection{Cycle Covering and Density LP}
+The most natural LP which models \autoref{prb:feedback-vertex-set} is the so-called \emph{cycle covering LP}, which can be defined as
+\begin{align*}
+	\min~ & \sum_{v\in \mathcal{\MakeUppercase{V}} } c(v) x_v                                                               \\
+	      & \sum_{v\in C} x_v \geq 1                         \quad \forall \text{ cycle } C \in \mathcal{\MakeUppercase{C}} \\
+	      & x \geq 0,
+\end{align*}
+with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v}} }\) such that \(x_{v} = \mathbbm{1}_{v\in F}\).
+
+A more sophisticated LP is the so-called \emph{density LP}, defined as
+\begin{align*}
+	\min~ & \sum_{v\in \mathcal{\MakeUppercase{v}} } c(v) x_v                                                                                                  \\
+	      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1\quad \forall S\subseteq \mathcal{\MakeUppercase{v}} \\
+	      & x\geq 0
+\end{align*}
+with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v}} }\).
+
+\begin{notation}
+	The \(E(S)\) denotes the edge set in the induced graph \(\mathcal{\MakeUppercase{g}} [S] = (S, E(S))\), while \(d_v^S\) denotes the degree of \(v\) in \(\mathcal{\MakeUppercase{g}} [S]\).
+\end{notation}
+
+\begin{intuition}
+	The constraint is equivalent as that for every \(S\subseteq \mathcal{\MakeUppercase{v}} \),
+	\[
+		\left\vert E(S) \right\vert - \sum_{v\in S} x_v(d_v^S)\leq \left\vert S \right\vert - \sum_{v\in S}x_v - 1,
+	\]
+	which is same as saying that for every induced graph, \(\# e \leq \# v - 1\), i.e., we require it to be a forest.
+\end{intuition}
+
+We see that the above LP is not exactly a \hyperref[def:covering-LP]{covering LP} since the coefficients can be negative if a set \(S\) is not \hyperref[def:irreducible]{irreducible}.
+
+\begin{definition}[Irreducible]\label{def:irreducible}
+	The set \(S\subseteq \mathcal{\MakeUppercase{v}} \) is \emph{irreducible} if for all \(v\in S\), \(v\) belongs to some cycles in \(G[S]\).
+\end{definition}
+
+Now, it's clear that by looking at \(\mathcal{\MakeUppercase{S}} = \left\{ S\subseteq \mathcal{\MakeUppercase{v}} \mid S \text{ is \hyperref[def:irreducible]{irreducible}}\right\} \), we have a \hyperref[def:covering-LP]{covering LP} defined as
+\begin{align*}
+	\min~ & \sum_{v\in \mathcal{\MakeUppercase{v}} } c(v) x_v                                                                                                          \\
+	      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1 \eqqcolon b_S\quad \forall S\in \mathcal{\MakeUppercase{S}} \\
+	      & x\geq 0.
+\end{align*}
+
+We first see why this LP models \autoref{prb:feedback-vertex-set}.
+
+\begin{lemma}\label{lma:lec4-1}
+	The integer version of density LP (denote as IP) is equivalent to \autoref{prb:feedback-vertex-set}.
+\end{lemma}
+\begin{proof}
+	If \(x\) is feasible for \autoref{prb:feedback-vertex-set}, then \(x\) is feasible for the IP. On the other hand, if \(x\) is feasible for IP, then for every cycle \(S\in \mathcal{\MakeUppercase{C}} \), \(x\) deletes at least \(1\) \(v + x\).\todo{Fix this}
+\end{proof}
+
+\subsection{Primal-Dual Method}
+
+Now we're ready to solve this LP via primal-dual method. Denote the dual variables as \(\left\{ y_S \right\} _{S\in \mathcal{\MakeUppercase{S}} }\), then the dual is
+\begin{align*}
+	\max~ & \sum_{S\in \mathcal{\MakeUppercase{S}} } y_S b_S                                      \\
+	      & \sum_{S\ni v}(d_{v} ^S - 1)y_S \leq c_v\quad \forall v\in \mathcal{\MakeUppercase{v}} \\
+	      & y\geq 0.
+\end{align*}
+
+We now have the following algorithm. Assuming \(v\in \mathcal{\MakeUppercase{S}} \). \par
+
+\begin{algorithm}[H]\label{algo:feedback-vertex-set-PD}
+	\DontPrintSemicolon
+	\caption{Primal-Dual -- \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
+	\KwData{A graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
+	\KwResult{A \hyperref[prb:feedback-vertex-set]{feedback vertex set} \(F\)}
+	\SetKwFunction{reduce}{reduce}
+	\BlankLine
+
+	\(S\gets \mathcal{\MakeUppercase{v}} \), \(c^\prime = c\), \(y\gets 0\)\;
+	\While(){\(S \neq \varnothing \)}{
+		\(\alpha \gets \min _{v\in S} c^\prime _v / (d_v^S - 1)\)\;
+		\(y_S\gets \alpha \)\;
+		\(c^\prime _v\gets c^\prime _v - \alpha (d_v^S - 1)\)\;
+		\(Z\gets \left\{ v\in S\colon c^\prime _v = 0 \right\} \)\;
+		\(F\gets F\cup Z\)\;
+		\(S\gets S \setminus Z\)\;
+		\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{\MakeUppercase{G}} [S]\right\}\)}
+	}
+	\Return{\(F\)}\;
+\end{algorithm}
+
+\begin{note}
+	\(F\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} and \(y\) is dual-feasible.
+\end{note}
+
+We see that we want to compare \(\sum_{S\in \mathcal{\MakeUppercase{S}} }y_S b_S\) and
+\[
+	c(F) = \sum_{v\in F}c_v = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{\MakeUppercase{S}}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1).
+\]
+If we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S c 1)\) and \(b_S\) for every \(S\), we're done.
+
+\begin{lemma}\label{lma:lec4-2}
+	For all \(S\in \mathcal{\MakeUppercase{S}} \), if \(F\) is \emph{minimal} in \(S\),\footnote{i.e., in \(\mathcal{\MakeUppercase{g}} [S]\), no \(F^\prime \subsetneq F \cap S\) in \hyperref[prb:feedback-vertex-set]{feedback vertex set}.} then we have
+	\[
+		\sum_{v\in S \cap F}(d_{v} ^S - 1) \leq 4\cdot b_S = 4(\left\vert E(S) \right\vert - \left\vert S \right\vert + 1).
+	\]
+\end{lemma}
+\begin{proof}
+	Let's first see a simple case.
+	\begin{intuition}
+		If the graph is \(3\)-regular, then we see that the left-hand side is \(\leq 2\cdot \left\vert S \right\vert \), while the right-hand side is \(2\cdot \left\vert S \right\vert + 1\).
+	\end{intuition}
+
+	Let \(A\) be the set of degree \(2\) vertices, and \(B\) be the set of vertices with degree larger than \(3\). Now, consider line segment in the graph. If \(\ell \) is a line segment,
+	\begin{enumerate}[(a)]
+		\item \(\left\vert F \cap  \ell  \right\vert \leq 1\)
+		\item If \(F\) contains one of the endpoints of \(\ell \), then \(\left\vert F \cap \ell  \right\vert = 0\)
+	\end{enumerate}
+
+	Since \(F\) is minimal, the left-hand side is
+	\[
+		\left\vert A \cap  F \right\vert + \sum_{v\in B \cap F}(d_{v} ^S - 1) \leq \sum_{v\in B \setminus F} d_{v} ^S / 2 + \sum_{v\in B \cap F}(d_{v} ^S - 1) \leq \sum_{v\in B}(d_{v}^S - 1 ),
+	\]
+	while the right-hand side is
+	\[
+		\left\vert E(S) \right\vert - \left\vert S \right\vert = \sum_{v\in S}(d_{v} ^S / 2 - 1) = \sum_{v\in B} (d_{v} ^S / 2 - 1).
+	\]
+	It's clear that since \(\forall v\in B\), \(d_v^S - 1 \leq 4 (d_{v} ^S / 2 - 1)\), rearranging this inequality gives the result.
+\end{proof}
+
+We see that to show \autoref{thm:lec4-1}, it's enough to construct a minimal \(F\) and the result follows form \autoref{lma:lec4-1}. This is done by turning \(F\) into a minimal \(F^\prime \) via the following algorithm.\par
+
+\begin{algorithm}[H]\label{algo:feedback-vertex-set-PD-ii}
+	\DontPrintSemicolon
+	\caption{Minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
+	\KwData{\(F = \left\{ v_1, \ldots , v_{\ell }  \right\} \),\footnote{Where \(v_1\) is deleted first, \(v_{\ell}\) is deleted last}}
+	\KwResult{A minimal \(F^\prime \)}
+	\BlankLine
+	\(F^\prime \gets F\)\;
+	\For(){\(i = \ell , \ldots  , 1\)}{
+		\If(){\(F^\prime \setminus \left\{ v_i \right\}\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} for \(\mathcal{\MakeUppercase{g}} \) }{
+			\(F^\prime \gets F^\prime \setminus \left\{ v_i \right\} \)\;
+		}
+	}
+	\Return{\(F^\prime \)}\;
+\end{algorithm}
+\begin{note}
+	Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}.
+\end{note}
+
+The minimality of \(F^\prime \) is guaranteed by the following lemma.
+
+\begin{lemma}\label{lma:lec4-3}
+	\(F^\prime \) is minimal in every \(S_i\), where \(S_i = S\) when \(v_i\) is deleted.
+\end{lemma}
+\begin{proof}
+	Suppose this is not the case. Then there exists \(v_j\in F^\prime \) such that in \(\mathcal{\MakeUppercase{g}} [S_i]\), \(b_S= \cap S_i\setminus \left\{ v_{j}  \right\}\) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. This means \(\left\vert F \cap S_j \right\vert \setminus \left\{ v_{j}  \right\}  \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} [S_j]\).
+
+	Observe that there are no \(C\ni v_j\) such that \(C\setminus S_j\) is disjoint from \(F\), which further implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD-ii}.
+\end{proof}
+
+Finally, we see that we can prove \autoref{thm:lec4-1}.
+
+\begin{proof}[Proof of \autoref{thm:lec4-1}]
+	By designing an algorithm which runs \autoref{algo:feedback-vertex-set-PD} and \autoref{algo:feedback-vertex-set-PD-ii} sequentially, we get a \(4\)-approximation of the density IP guaranteed by \autoref{lma:lec4-2} and \autoref{lma:lec4-3}.
+
+	From \autoref{lma:lec4-1}, \autoref{prb:feedback-vertex-set} and this density IP is equivalent, proving the theorem.
+\end{proof}

@@ -147,12 +147,18 @@ We now have the following algorithm.\par
 	\Return{\(F^\prime \)}\;
 \end{algorithm}
 
+We see that in \autoref{algo:feedback-vertex-set-PD}, we first use primal-dual method to obtain a feasible \hyperref[prb:feedback-vertex-set]{feedback vertex set}, and then run a \hyperref[rmk:reversed-greedy]{reversed greedy} algorithm to further ensure we get a good approximation ratio.
+
 \begin{claim}
 	\(F\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} and \(y\) is dual-feasible.
 \end{claim}
 \begin{explanation}
 	It should be clear that why \(F\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. As for the reason why \(y\) is dual-feasible, observe that we have one constraint for each \(v\). After raising \(y_S\) for chosen \(v\) in \autoref{algo:feedback-vertex-set-PD:line6} and deduce \(c^\prime (v)\) in \autoref{algo:feedback-vertex-set-PD:line7}, \(v\) will get removed so the constraint corresponding to \(v\) will be satisfied throughout.
 \end{explanation}
+
+\begin{remark}[Reversed greedy]\label{rmk:reversed-greedy}
+	The method we turn \(F\) into its minimal is called \emph{reversed greedy}. This just checks that if we remove a vertex \(v\) from \(F^\prime \) while \(F^\prime \) is still feasible, then we just do it. Additionally, we iterate through \(v\) in the \textbf{reversed} order w.r.t. how \(v\) is being added into.
+\end{remark}
 
 We want to compare the primal cost and the dual cost. The primal cost is
 \[
@@ -249,10 +255,6 @@ To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the resu
 
 	This implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD} since such a problematic cycle can't exist,\footnote{Explicitly, if this exists, then delete \(v_j\) will make \(F^\prime\) fail to intersect such a cycle.} which contradicts with the minimality of \(F^\prime\).
 \end{proof}
-
-\begin{remark}[Reversed greedy]\label{rmk:reversed-greedy}
-	In \autoref{algo:feedback-vertex-set-PD}, the method we turn \(F\) into its minimal is called \emph{reversed greedy}. This is just checking that if we remove a vertex \(v\) from \(F^\prime \) while \(F^\prime \) is still feasible, then we just do it. Additionally, we iterate through \(v\) in the \textbf{reversed} order w.r.t. how \(v\) is being added into.
-\end{remark}
 
 Finally, we see that we can prove \autoref{thm:lec4-1}.
 

@@ -137,8 +137,9 @@ We now have the following algorithm.\par
 		\(F\gets F\cup Z\), \(S\gets S \setminus Z\)\;
 	}
 	\;
-	\(F^\prime \gets F\)\Comment*[r]{Compute a minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
-	\For(){\(i = \ell , \ldots  , 1\)}{
+	\Comment{Compute a minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
+	\(F^\prime \gets F = \left\{ v_1, \ldots , v_{\ell} \right\} \)\Comment*[r]{\(v_1\) is deleted first, \(v_{\ell}\) is deleted last}
+	\For(\label{algo:feedback-vertex-set-PD:for}\Comment*[f]{\hyperref[rmk:reversed-greedy]{reversed greedy}}){\(i = \ell , \ldots  , 1\)}{
 		\If(){\(F^\prime \setminus \left\{ v_i \right\}\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} for \(\mathcal{\MakeUppercase{g}} \) }{
 			\(F^\prime \gets F^\prime \setminus \left\{ v_i \right\} \)\;
 		}
@@ -191,34 +192,70 @@ while the dual cost is \(\sum_{S\in \mathcal{\MakeUppercase{S}} }y_S b_S\).
 
 	Let \(A\) be the set of degree \(2\) vertices, and \(B\) be the set of vertices with degree larger than \(3\). Now, consider line segment in the graph. If \(\ell \) is a line segment,
 	\begin{enumerate}[(a)]
-		\item \(\left\vert F \cap  \ell  \right\vert \leq 1\)
-		\item If \(F\) contains one of the endpoints of \(\ell \), then \(\left\vert F \cap \ell  \right\vert = 0\)
+		\item \(\left\vert F \cap  \ell  \right\vert \leq 1\), i.e., we delete at most one point in \(\ell \).
+		\item If \(F\) contains one of the endpoints of \(\ell \), then \(\left\vert F \cap \ell  \right\vert = 0\).
 	\end{enumerate}
 
 	Since \(F\) is minimal, the left-hand side is
 	\[
 		\left\vert A \cap  F \right\vert + \sum_{v\in B \cap F}(d_{v} ^S - 1) \leq \sum_{v\in B \setminus F} d_{v} ^S / 2 + \sum_{v\in B \cap F}(d_{v} ^S - 1) \leq \sum_{v\in B}(d_{v}^S - 1 ),
 	\]
-	while the right-hand side is
+	where the first inequality comes from the fact that if we delete vertices in \(A\), i.e., in the line segment, then we know we don't delete its end points, and by \emph{distributed} that \(1\) cost into its two end points, each \(1 / 2\).
+	\begin{figure}[H]
+		\centering
+		\incfig{FBV-line-segment}
+		\caption{Distribute the cost of \(F\).}
+		\label{fig:FBV-line-segment}
+	\end{figure}
+	Similarly, in the right-hand side, the crucial term is
 	\[
-		\left\vert E(S) \right\vert - \left\vert S \right\vert = \sum_{v\in S}(d_{v} ^S / 2 - 1) = \sum_{v\in B} (d_{v} ^S / 2 - 1).
+		\left\vert E(S) \right\vert - \left\vert S \right\vert = \sum_{v\in S}(d_{v} ^S / 2 - 1) = \sum_{v\in B} (d_{v} ^S / 2 - 1)
 	\]
-	It's clear that since \(\forall v\in B\), \(d_v^S - 1 \leq 4 (d_{v} ^S / 2 - 1)\), rearranging this inequality gives the result.
+	where the last equality holds since for \(v\in A\), the summand is just \(2 / 2 - 1 = 0\). It's clear that since \(\forall v\in B\), \(d_v^S - 1 \leq 4 (d_{v} ^S / 2 - 1)\), rearranging this inequality gives the result.
 \end{proof}
 
 To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the result follows form \autoref{lma:lec4-1}. Hence, after obtaining \(F\), \autoref{algo:feedback-vertex-set-PD} further convert \(F\) into \(F^\prime \) and  try to obtain a minimal version of \(F\). Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}, and the minimality of \(F^\prime \) is guaranteed by the following lemma.
 
 \begin{lemma}\label{lma:lec4-3}
-	\(F^\prime \) is minimal in every \(S_i\), where \(S_i = S\) when \(v_i\) is deleted.
+	\(F^\prime \) is minimal in every \(S_i\), where \(S_i\) is the corresponding \(S\) in \autoref{algo:feedback-vertex-set-PD} when \(v_i\) is deleted.
 \end{lemma}
 \begin{proof}
-	Suppose this is not the case. Then there exists \(v_j\in F^\prime \) such that in \(\mathcal{\MakeUppercase{g}} [S_i]\), \(b_S= \cap S_i\setminus \left\{ v_{j}  \right\}\) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. This means \(\left\vert F \cap S_j \right\vert \setminus \left\{ v_{j}  \right\}  \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} [S_j]\).
+	Suppose this is not the case. Then there exists \(v_j\in F^\prime \) such that in \(\mathcal{\MakeUppercase{g}} [S_i]\), \((F \cap S_i) \setminus \left\{ v_{j}  \right\}\) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} [S_j]\). Notice that we only need to consider the case that \(i = j\) since \(v_{j}\in S_i\) means \(i \geq j\) from how we order them. In this case, \(S_j \subseteq S_i\), hence to check the minimality of \(F^\prime \) it's enough to just consider the case that \(i = j\). Hence, we consider \((F \cap S_j) \setminus \left\{ v_{j}  \right\}\) instead.
 
-	Observe that there are no \(C\ni v_j\) such that \(C\setminus S_j\) is disjoint from \(F\), which further implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD}.
+	\begin{note}
+		Here we only consider \(G[S_j]\), i.e., we want to say that if \(v_j\) is not minimal in \(G[S_j]\), then \(v_j\) should really be deleted even w.r.t. the whole graph.
+	\end{note}
+
+	Now, observe the following picture in step \(j\) of \autoref{algo:feedback-vertex-set-PD:for} with cycles contained \(v_j\):
+	\begin{figure}[H]
+		\centering
+		\incfig{FBV-minimality}
+	\end{figure}
+
+	Observe that the middle cycles in \(G[S_j]\) must exist from our assumption of \((F \cap S_j) \setminus \left\{ v_{j}  \right\}\) being still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}, i.e., if a cycle exists in \(G[S_j]\), then it must contain another nodes other than \(v_j\) that's also in \(F^\prime \). But we see that when we consider cycles outside \(G[S_j]\), we have the following.
+	\begin{claim}
+		No vertices outside \(S_j\) which is also in \(F\setminus F^\prime \) at step \(j\) of \autoref{algo:feedback-vertex-set-PD:for}
+	\end{claim}
+	\begin{explanation}
+		Since \(S_j\) is growing, i.e., for \(i \leq j\), \(S_i \leq S_j\), and we just can't delete something we haven't considered.
+	\end{explanation}
+
+	\begin{claim}
+		There are no cycles \(C\ni v_j\) such that \(C\setminus S_j\) is disjoint from \(F\).
+	\end{claim}
+	\begin{explanation}
+		Observe that there are only two ways for a vertex being deleted from the graph, either \(v\in Z\), i.e., its dual constraint is tight, or \(v\in S\) is deleted since it prevent \(S\) being \hyperref[def:irreducible]{irreducible}. Only the latter case will make \(v \notin F\), we see that there's no way such a cycle \(C\) exists with all vertices outside \(S_j\) are preventing \(s\) being \hyperref[def:irreducible]{irreducible}, since this cycle \(C\) itself is a cycle...
+	\end{explanation}
+
+	This implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD} since such a problematic cycle can't exist,\footnote{Explicitly, if this exists, then delete \(v_j\) will make \(F^\prime\) fail to intersect such a cycle.} which contradicts with the minimality of \(F^\prime\).
 \end{proof}
+
+\begin{remark}[Reversed greedy]\label{rmk:reversed-greedy}
+	In \autoref{algo:feedback-vertex-set-PD}, the method we turn \(F\) into its minimal is called \emph{reversed greedy}. This is just checking that if we remove a vertex \(v\) from \(F^\prime \) while \(F^\prime \) is still feasible, then we just do it. Additionally, we iterate through \(v\) in the \textbf{reversed} order w.r.t. how \(v\) is being added into.
+\end{remark}
 
 Finally, we see that we can prove \autoref{thm:lec4-1}.
 
 \begin{proof}[Proof of \autoref{thm:lec4-1}]
-	Firstly, \autoref{algo:feedback-vertex-set-PD} gives a \(4\)-approximation of the density IP guaranteed by \autoref{lma:lec4-2} and \autoref{lma:lec4-3}. Finally, from \autoref{lma:lec4-1}, we see that \ autoref{prb:feedback-vertex-set} and the density IP is equivalent, proving the theorem.
+	Firstly, \autoref{algo:feedback-vertex-set-PD} gives a \(4\)-approximation of the density IP guaranteed by \autoref{lma:lec4-2} and \autoref{lma:lec4-3}. Finally, from \autoref{lma:lec4-1}, we see that \autoref{prb:feedback-vertex-set} and the density IP is equivalent, proving the theorem.
 \end{proof}

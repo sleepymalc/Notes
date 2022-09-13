@@ -1,6 +1,8 @@
 \lecture{4}{12 Sep. 10:30}{Feedback Vertex Set}
 \section{Feedback Vertex Set}
 
+Following the discussion on primal-dual method, we see another \hyperref[def:covering]{covering} problem.
+
 \subsection{Introduction}
 We consider the following problem.
 
@@ -8,8 +10,12 @@ We consider the following problem.
 Given a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a weight function \(c\colon \mathcal{\MakeUppercase{v}} \to \mathbb{\MakeUppercase{r}} ^+\), we want to find \(F\subseteq \mathcal{\MakeUppercase{v}} \) with \(\min c(F)\) such that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) has no cycle.\footnote{This is equivalent as saying that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) is a forest.}
 \end{problem}
 
+\begin{note}[Feedback]
+	The name \emph{feedback} comes from the fact that if there's a cycle in \(\mathcal{\MakeUppercase{g}} \), then it kind of creates \emph{feedback}.
+\end{note}
+
 \begin{note}[Edge version]
-	The \emph{edge version} of \autoref{prb:feedback-vertex-set} can be solved by letting \(T\subseteq \mathcal{\MakeUppercase{e}} \) be the maximum weight forest, and let \(F \coloneqq \mathcal{\MakeUppercase{e}} \setminus T\).
+	The \emph{edge version} of \autoref{prb:feedback-vertex-set} can be solved by finding \(T\subseteq \mathcal{\MakeUppercase{e}} \) be the maximum weight forest,\footnote{This can be found exactly in polynomial time.} and let \(F \coloneqq \mathcal{\MakeUppercase{e}} \setminus T\).
 \end{note}
 
 \begin{notation}
@@ -24,7 +30,7 @@ Given a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \ma
 \end{explanation}
 
 \begin{note}
-	The naive algorithm by directly applying methods discussed for \autoref{prb:set-cover}, we see that since \(\min (\log k, d) = \Omega (n)\) for \(k\) being the maximum set size (which is \(2^{\Omega (n)}\)) and \(d = n\), the approximation ratio we can get is \(O(\log n)\), which depends on the size of the input.
+	The naive algorithm by directly applying methods discussed for \autoref{prb:set-cover}, we see that since \(\min (\log k, d) = \Omega (n)\) for \(k\) being the maximum set size (which is \(2^{\Omega (n)}\)) and \(d = n\), the approximation ratio we can get is \(\Omega (n)\), which depends on the size of the input.
 \end{note}
 
 Now, the goal in this section is to show the following.
@@ -41,7 +47,7 @@ We also have a hardness of \autoref{prb:feedback-vertex-set}.
 	A \((2 - \epsilon )\)-approximation algorithm doesn't exist for all \(\epsilon > 0\) assuming some conjecture.
 \end{theorem}
 
-\subsection{Cycle Covering and Density LP}
+\subsection{Cycle Covering LP}
 The most natural LP which models \autoref{prb:feedback-vertex-set} is the so-called \emph{cycle covering LP}, which can be defined as
 \begin{align*}
 	\min~ & \sum_{v\in \mathcal{\MakeUppercase{V}} } c(v) x_v                                                               \\
@@ -49,6 +55,12 @@ The most natural LP which models \autoref{prb:feedback-vertex-set} is the so-cal
 	      & x \geq 0,
 \end{align*}
 with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v}} }\) such that \(x_{v} = \mathbbm{1}_{v\in F}\).
+
+\begin{remark}
+	We see that this cycle covering LP has \(2^{\Omega (n)}\) constraints. But we can actually solve this and get an \(O(\log n)\)-approximation ratio by smartly rounding the solution. And we can show that this approximation ratio is optimal in terms of this particular LP.
+\end{remark}
+
+\subsection{Density LP}
 
 A more sophisticated LP is the so-called \emph{density LP}, defined as
 \begin{align*}
@@ -63,11 +75,11 @@ with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v
 \end{notation}
 
 \begin{intuition}
-	The constraint is equivalent as that for every \(S\subseteq \mathcal{\MakeUppercase{v}} \),
+	The constraint is equivalent as  saying that for every induced graph, \(\# e \leq \# v - 1\), i.e., we require it to be a forest. Explicitly, \(S\subseteq \mathcal{\MakeUppercase{v}} \),
 	\[
-		\left\vert E(S) \right\vert - \sum_{v\in S} x_v(d_v^S)\leq \left\vert S \right\vert - \sum_{v\in S}x_v - 1,
+		\left\vert E(S) \right\vert - \sum_{v\in S} x_v d_v^S\leq \left\vert S \right\vert - \sum_{v\in S}x_v - 1.
 	\]
-	which is same as saying that for every induced graph, \(\# e \leq \# v - 1\), i.e., we require it to be a forest.
+	Note that in the constraint, the right-hand side is just a lower-bound of \(\# e\).
 \end{intuition}
 
 We see that the above LP is not exactly a \hyperref[def:covering-LP]{covering LP} since the coefficients can be negative if a set \(S\) is not \hyperref[def:irreducible]{irreducible}.
@@ -89,39 +101,50 @@ We first see why this LP models \autoref{prb:feedback-vertex-set}.
 	The integer version of density LP (denote as IP) is equivalent to \autoref{prb:feedback-vertex-set}.
 \end{lemma}
 \begin{proof}
-	If \(x\) is feasible for \autoref{prb:feedback-vertex-set}, then \(x\) is feasible for the IP. On the other hand, if \(x\) is feasible for IP, then for every cycle \(S\in \mathcal{\MakeUppercase{C}} \), \(x\) deletes at least \(1\) \(v + x\).\todo{Fix this}
+	If \(x\) is feasible for \autoref{prb:feedback-vertex-set}, then \(x\) is feasible for the IP. On the other hand, if \(x\) is feasible for IP, then for every cycle \(C\in \mathcal{\MakeUppercase{C}} \), \(x\) deletes at least \(1\) vertex from \(C\).
 \end{proof}
 
 \subsection{Primal-Dual Method}
-
 Now we're ready to solve this LP via primal-dual method. Denote the dual variables as \(\left\{ y_S \right\} _{S\in \mathcal{\MakeUppercase{S}} }\), then the dual is
 \begin{align*}
-	\max~ & \sum_{S\in \mathcal{\MakeUppercase{S}} } y_S b_S                                      \\
-	      & \sum_{S\ni v}(d_{v} ^S - 1)y_S \leq c_v\quad \forall v\in \mathcal{\MakeUppercase{v}} \\
+	\max~ & \sum_{S\in \mathcal{\MakeUppercase{S}} } y_S b_S                                       \\
+	      & \sum_{S\ni v}(d_{v} ^S - 1)y_S \leq c(v)\quad \forall v\in \mathcal{\MakeUppercase{v}} \\
 	      & y\geq 0.
 \end{align*}
 
-We now have the following algorithm. Assuming \(v\in \mathcal{\MakeUppercase{S}} \). \par
+\begin{note}
+	For the density LP and its dual, the constraint is still exponentially many, and no one knows how to solve this. But the power of primal-dual method is that we don't really solve this, rather, we just maintain two sets of solutions for both primal and dual. Moreover, we can maintain the primal solution in integral, while the dual solution in fractional.
+\end{note}
+
+We now have the following algorithm.\par
 
 \begin{algorithm}[H]\label{algo:feedback-vertex-set-PD}
 	\DontPrintSemicolon
-	\caption{Primal-Dual -- \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
+	\caption{\hyperref[prb:feedback-vertex-set]{Feedback vertex set} -- Primal-Dual}
 	\KwData{A graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
-	\KwResult{A \hyperref[prb:feedback-vertex-set]{feedback vertex set} \(F\)}
+	\KwResult{A minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set} \(F^\prime \)}
 	\SetKwFunction{reduce}{reduce}
 	\BlankLine
 
-	\(S\gets \mathcal{\MakeUppercase{v}} \), \(c^\prime = c\), \(y\gets 0\)\;
+	\(S\gets \mathcal{\MakeUppercase{v}} \), \(c^\prime = c\), \(y\gets 0\)\Comment*[r]{\(c^\prime \in \mathbb{\MakeUppercase{r}} ^n\) keeps track of slackness of \(c\)}
+	\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{\MakeUppercase{G}} [S]\right\}\)}
+	\;
 	\While(){\(S \neq \varnothing \)}{
-		\(\alpha \gets \min _{v\in S} c^\prime _v / (d_v^S - 1)\)\;
-		\(y_S\gets \alpha \)\;
-		\(c^\prime _v\gets c^\prime _v - \alpha (d_v^S - 1)\)\;
-		\(Z\gets \left\{ v\in S\colon c^\prime _v = 0 \right\} \)\;
-		\(F\gets F\cup Z\)\;
-		\(S\gets S \setminus Z\)\;
-		\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{\MakeUppercase{G}} [S]\right\}\)}
+		\(\alpha \gets \min _{v\in S} c^\prime (v) / (d_v^S - 1)\)\Comment*[r]{time for \(y_S\) gets tight by increasing unit weight}
+		\(y_S\gets \alpha\)\;
+		\(c^\prime (v)\gets c^\prime (v) - \alpha (d_v^S - 1)\)\;
+		\(Z\gets \left\{ v\in S\colon c^\prime (v) = 0 \right\} \)\;
+		\(F\gets F\cup Z\), \(S\gets S \setminus Z\)\;
+		\(S\gets\) \reduce{\(S\) }\;
 	}
-	\Return{\(F\)}\;
+	\;
+	\(F^\prime \gets F\)\Comment*[r]{Compute a minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
+	\For(){\(i = \ell , \ldots  , 1\)}{
+		\If(){\(F^\prime \setminus \left\{ v_i \right\}\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} for \(\mathcal{\MakeUppercase{g}} \) }{
+			\(F^\prime \gets F^\prime \setminus \left\{ v_i \right\} \)\;
+		}
+	}
+	\Return{\(F^\prime \)}\;
 \end{algorithm}
 
 \begin{note}
@@ -130,9 +153,9 @@ We now have the following algorithm. Assuming \(v\in \mathcal{\MakeUppercase{S}}
 
 We see that we want to compare \(\sum_{S\in \mathcal{\MakeUppercase{S}} }y_S b_S\) and
 \[
-	c(F) = \sum_{v\in F}c_v = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{\MakeUppercase{S}}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1).
+	c(F) = \sum_{v\in F}c(v) = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{\MakeUppercase{S}}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1).
 \]
-If we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S c 1)\) and \(b_S\) for every \(S\), we're done.
+If we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for every \(S\), we're done.
 
 \begin{lemma}\label{lma:lec4-2}
 	For all \(S\in \mathcal{\MakeUppercase{S}} \), if \(F\) is \emph{minimal} in \(S\),\footnote{i.e., in \(\mathcal{\MakeUppercase{g}} [S]\), no \(F^\prime \subsetneq F \cap S\) in \hyperref[prb:feedback-vertex-set]{feedback vertex set}.} then we have
@@ -163,27 +186,7 @@ If we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S c 1)\) and \(b_S\) for 
 	It's clear that since \(\forall v\in B\), \(d_v^S - 1 \leq 4 (d_{v} ^S / 2 - 1)\), rearranging this inequality gives the result.
 \end{proof}
 
-We see that to show \autoref{thm:lec4-1}, it's enough to construct a minimal \(F\) and the result follows form \autoref{lma:lec4-1}. This is done by turning \(F\) into a minimal \(F^\prime \) via the following algorithm.\par
-
-\begin{algorithm}[H]\label{algo:feedback-vertex-set-PD-ii}
-	\DontPrintSemicolon
-	\caption{Minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
-	\KwData{\(F = \left\{ v_1, \ldots , v_{\ell }  \right\} \),\footnote{Where \(v_1\) is deleted first, \(v_{\ell}\) is deleted last}}
-	\KwResult{A minimal \(F^\prime \)}
-	\BlankLine
-	\(F^\prime \gets F\)\;
-	\For(){\(i = \ell , \ldots  , 1\)}{
-		\If(){\(F^\prime \setminus \left\{ v_i \right\}\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} for \(\mathcal{\MakeUppercase{g}} \) }{
-			\(F^\prime \gets F^\prime \setminus \left\{ v_i \right\} \)\;
-		}
-	}
-	\Return{\(F^\prime \)}\;
-\end{algorithm}
-\begin{note}
-	Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}.
-\end{note}
-
-The minimality of \(F^\prime \) is guaranteed by the following lemma.
+We see that to show \autoref{thm:lec4-1}, it's enough to check that \(F^\prime \) is minimal, then the result follows form \autoref{lma:lec4-1}. Hence, we now analyze \(F^\prime \). Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. The minimality of \(F^\prime \) is guaranteed by the following lemma.
 
 \begin{lemma}\label{lma:lec4-3}
 	\(F^\prime \) is minimal in every \(S_i\), where \(S_i = S\) when \(v_i\) is deleted.

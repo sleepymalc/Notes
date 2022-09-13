@@ -1,0 +1,154 @@
+\lecture{5}{13 Sep. 14:30}{Abstract Fourier Series}
+Let's start with a definition.
+
+\begin{definition}[Complete system]\label{def:complete-system}
+	A system of vector \(\left\{ x_k\colon k\geq 1 \right\} \) in \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) is \emph{complete} if the space spanned by \(\left\{ x_k\colon k\geq 1 \right\}\) is \textbf{dense} in \(\mathcal{\MakeUppercase{h}} \).
+\end{definition}
+
+\begin{eg}[Fourier inversion formula]
+	If an \hyperref[def:orthogonal-system]{orthogonal set} \(\left\{ x_{k} \colon k\geq 1 \right\} \) is \hyperref[def:complete-system]{complete}, then \(E_\infty = \mathcal{\MakeUppercase{h}} \), \(P_{E_\infty } = I\). This implies
+	\[
+		x = \sum_{k=1}^{\infty} \left\langle x, x_{k}  \right\rangle x_{k}
+	\]
+	for \(x\in \mathcal{\MakeUppercase{h}} \). This is \href{https://en.wikipedia.org/wiki/Fourier_inversion_theorem}{Fourier inversion formula}.
+\end{eg}
+
+\begin{remark}[Parseval's identity]
+	We have \(\left\lVert x\right\rVert ^{2} = \left\lVert P_{E_n} x \right\rVert^{2} + \left\lVert (I - P_{E_{n} })\right\rVert ^{2}\). By letting \(n \to \infty \), we have
+	\[
+		\left\lVert x\right\rVert^{2} = \lim\limits_{n \to \infty} \left\lVert P_{E_n}x\right\rVert ^{2} = \lim\limits_{n \to \infty} \sum_{k=1}^{n} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert ^{2} = \sum_{k=1}^{\infty} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert  ^{2}.
+	\]
+\end{remark}
+
+\begin{definition}[Separable]\label{def:separable}
+	A metric space is \emph{separable} if it contains a countable dense subset.
+\end{definition}
+
+\begin{remark}[Banach space]
+	For \hyperref[def:Banach-space]{Banach space}, \hyperref[def:separable]{separability} follows from finding a countable set of vectors \(\left\{ x_{k} \colon k\geq 1 \right\} \) such that the span of \(\left\{ x_{k} \colon k\geq 1 \right\}\) is dense in \(E\).
+\end{remark}
+
+\section{Gram-Schmidt Orthogonalization}
+
+Suppose \(x_1, x_2, \ldots \in \mathcal{\MakeUppercase{h}}\) is a set of vectors and \(E_n = \mathop{\mathrm{span}}(\left\{ x_1, \ldots , x_n \right\} )\). Then we can find an \hyperref[def:orthonormal-system]{orthonormal set} \(\left\{ y_{k} \in \mathcal{\MakeUppercase{h}} \colon k\geq 1 \right\}\) such that \(E_n = \mathop{\mathrm{span}}(\left\{ y_1, y_2, \ldots , y_{m(n)}  \right\} )\) where \(m(n) \leq n\).
+
+Firstly, set \(y_1 = x_1 / \left\lVert x_1\right\rVert \), and
+\[
+	y_n = \frac{(I - P_{E_{n-1}})x_n}{\left\lVert (I - P_{E_{n-1}})x_n \right\rVert}
+\]
+if \(x_n \notin E_{n-1}\), i.e., \(E_{n-1}\) is properly contained in \(E_n\).
+
+\begin{remark}
+	Proving \hyperref[def:complete-system]{completeness} of a set of vectors \(\left\{ x_k \colon k\geq 1 \right\} \) in \(\mathcal{\MakeUppercase{h}} \) can be \textbf{non}-trivial.
+\end{remark}
+
+\begin{eg}[Haar basis]
+	We consider the \emph{Haar basis} for \(L^2([0, 1])\). Let \(h\colon (0, 1)\to \mathbb{\MakeUppercase{r}} \) where
+	\[
+		h(t) = \begin{dcases}
+			1,  & \text{ if } 0 < t < 1 / 2; \\
+			-1, & \text{ if } 1 / 2 < t < 1.
+		\end{dcases}
+	\]
+	Extend \(h(\cdot)\) by zero outside \((0, 1)\), we get \(h\colon \mathbb{\MakeUppercase{r}} \to \mathbb{\MakeUppercase{r}} \), \(h(t) = 0\) if \(t \notin (0, 1)\), otherwise it's the same as above. The function \(t\mapsto h(2^k t)\) has support in interval \(0 < t < 2^{-k}\). Move the support to interval \(\ell 2^{-k} < t < (\ell +1)2^{-k}\) by translation. Set
+	\[
+		h_{k, \ell }(t) = h(2^{k}t - \ell ),\quad \ell = 0, 1, \ldots , 2^k - 1.
+	\]
+
+	The constant function plus functions \(h_{k, \ell }\), \(k = 0, 1, 2, \ldots  \), \(0 \leq \ell \leq 2^k - 1\) are a \hyperref[def:complete-system]{complete} \hyperref[def:orthogonal-system]{orthogonal set} for \(\mathcal{\MakeUppercase{h}} = L^2([0, 1])\).
+\end{eg}
+\begin{explanation}
+	The span of the Haar functions includes characteristics functions \(\chi _F\) for all dyadic intervals \([2^{-k}\ell , 2^{-k}(\ell +1)]\) for \(\ell = 0, 1, \ldots  , 2^{k-1} \), \(k = 0, 1, \ldots\). If the set is \textbf{not} \hyperref[def:complete-system]{complete}, then there exists \(f\in L^2([0, 1])\) such that
+	\[
+		\int _F f\,\mathrm{d} t = 0
+	\]
+	for all dyadic intervals \(F\). Since we can approximate any measurable set \(E\subseteq (0, 1)\) by a union of dyadic intervals.
+	\begin{intuition}
+		an easy way to see this is to consider
+		\[
+			\left\{ F\in \mathcal{\MakeUppercase{b}} \colon \colon \int _F f\,\mathrm{d} t = 0 \right\},
+		\]
+		which is the Borel subalgebra of \(\mathcal{\MakeUppercase{b}} \), which indeed is a Borel algebra on \((0, 1)\). Then observe that dyadic intervals generate all open intervals.
+	\end{intuition}
+
+	Hence, we see that \(\int _F f\,\mathrm{d} t= 0\) for all measurable \(F\subseteq (0, 1)\). Let \(F = \left\{ t\in (0, 1)\colon f(t) > 0 \right\} \), if \(m(F) > 0\), then
+	\[
+		\int _F f\,\mathrm{d} t > 0.
+	\]
+	Hence, a contradiction, so \(m(F) = 0\).
+\end{explanation}
+
+\begin{eg}[Fourier basis]
+	Consider the Fourier basis \(e_k (t) = \frac{1}{\sqrt{2\pi }} e^{ikt}\) for \(k\in \mathbb{\MakeUppercase{z}} \), \(-\pi < t < \pi \). This is \hyperref[def:complete-system]{complete} in \(L^2([-\pi , \pi ])\).
+\end{eg}
+\begin{explanation}
+	We use \href{https://en.wikipedia.org/wiki/Stone%E2%80%93Weierstrass_theorem}{Stone-Weierstrass theorem} and apply it to Fourier basis. All \(e_k(\cdot)\) are in \(C[-\pi , \pi ]\), i.e., continuous functions \(f\colon [-\pi , \pi ]\to \mathbb{\MakeUppercase{c}} \). We know that \(C([-\pi , \pi ])\) is a \hyperref[def:Banach-space]{Banach space} with supremum norm \(\left\lVert f\right\rVert \coloneqq \sup _{t\in [-\pi, \pi ]}\left\vert f(t) \right\vert\). Stone-Weierstrass theorem implies density of the space spanned by \(e_k(\cdot)\), \(k\in \mathbb{\MakeUppercase{z}} \) in \(C([-\pi , \pi ])\), hence the completeness in \(L^2([-\pi , \pi ])\) follows from the density of continuous functions in \(L^2([-\pi , \pi ])\). 
+\end{explanation}
+
+\section{Bounded Linear Functional}
+
+\begin{definition*}
+	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space} over \(\mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \).
+	\begin{definition}[Linear functional]\label{def:linear-functional}
+		A \emph{linear functional} on \(E\) is a linear operator \(f\colon E\to \mathbb{\MakeUppercase{r}} \) of \(\mathbb{\MakeUppercase{c}} \) such that
+		\[
+			f(ax + by) = af(x) + bf(y)
+		\]
+		for \(x, y\in E\), \(a, b\in \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \).
+	\end{definition}
+	\begin{definition}[Bounded linear functional]\label{def:bounded-linear-functional}
+		We say a \hyperref[def:linear-functional]{linear functional} \(f(\cdot)\) is a \emph{bounded linear functional} if
+		\[
+			\left\lVert f\right\rVert \coloneqq \sup _{\left\lVert x\right\rVert = 1}\left\vert f(x) \right\vert  < \infty
+		\]
+		by dilation and additive.
+	\end{definition}
+\end{definition*}
+
+\begin{remark}
+	The boundedness of \(f(\cdot)\) implies \(\left\vert f(x-y) \right\vert \leq \left\lVert f\right\rVert \left\lVert x-y\right\rVert \) for \(x, y\in E\). Hence, \(f(\cdot)\) is continuous and in fact Lipschitz continuous.
+\end{remark}
+
+\begin{remark}
+	Conversely, if a \hyperref[def:linear-functional]{linear functional} is continuous then it is bounded.
+\end{remark}
+\begin{explanation}
+	Suppose \(f(\cdot)\) is not bounded, then there exists a sequence \(x_n\in E\) such that \(\left\vert f(x_n) \right\vert \geq n \left\lVert x_n\right\rVert \) for \(n = 1, 2, \ldots  \). By linearity,
+	\[
+		\left\vert f(\frac{x_{n} }{n \left\lVert x_{n} \right\rVert }) \right\vert \geq 1, \quad n = 1, 2, \ldots.
+	\]
+	But we know \(\lim\limits_{n \to \infty} \frac{x_{n} }{n \left\lVert x_{n} \right\rVert }=0\) and \(f(0) = 0\), hence \(f(\cdot)\) is not continuous at \(0\).
+\end{explanation}
+
+\begin{definition}[Dual space]\label{def:dual-space}
+	Let \(E\) be a \hyperref[def:normed-vector-space]{normed space}. The space of all \hyperref[def:bounded-linear-functional]{bounded linear functionals} \(f(\cdot)\) on \(E\) is known as the \emph{dual space} \(E^{\ast} \) of \(E\).
+\end{definition}
+\begin{remark}
+	The \hyperref[def:dual-space]{dual space} is also a \hyperref[def:normed-vector-space]{normed space} with \hyperref[def:norm]{norm} \(\left\lVert f\right\rVert \coloneqq \sup _{\left\lVert x\right\rVert = 1}\left\vert f(x) \right\vert \), which is in fact a \hyperref[def:Banach-space]{Banach space}. And it is a \hyperref[def:Banach-space]{Banach space} even if the original \(E\) is not.
+\end{remark}
+
+\begin{definition}[Hyperplane]\label{def:hyperplane}
+	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space} and \(H\subseteq E\) is a subspace. Say \(H\) is a \emph{hyperplane} if \(\mathop{\mathrm{codim}}(H)=1\), i.e., \(\dim (\quotient{E}{H})=1\).
+\end{definition}
+
+The goal is to make an equivalence between \hyperref[def:bounded-linear-functional]{bounded linear functionals} on \(E\) and \emph{closed} \hyperref[def:hyperplane]{hyperplanes} in \(E\).
+
+\begin{problem}
+Does there exist a \textbf{non}-closed \hyperref[def:hyperplane]{hyperplane}?
+\end{problem}
+\begin{answer}
+	We know that this is not the case in finite dimension. And this question is analogous to asking \emph{does there exist a subset \(F\subseteq \mathbb{\MakeUppercase{r}} \) which is \textbf{not} Lebesgue measurable?} The answer to this is yes in both cases. However, construction uses \href{https://en.wikipedia.org/wiki/Axiom_of_choice}{axiom of choice}.
+\end{answer}
+
+\begin{proposition}
+	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space}.
+	\begin{enumerate}[(a)]
+		\item For every \hyperref[def:linear-functional]{linear functional} on \(E\), \(\ker(f)\) is a \hyperref[def:hyperplane]{hyperplane} in \(E\).
+		\item If \(f, g \neq 0\) are \hyperref[def:linear-functional]{linear functionals} on \(E\) such that \(\ker(f) = \ker(g)\), then \(f = ag\) for some \(a \neq 0\).
+		\item For every \hyperref[def:hyperplane]{hyperplane} \(H\subseteq E\), there exists a \hyperref[def:linear-functional]{linear functional} \(f \neq 0\) on \(E\) such that \(\ker(f) = H\).
+		\item If \(E\) is a \hyperref[def:Banach-space]{Banach space}, then \(f(\cdot)\) is bounded if and only if \(\ker(f) = H\) is closed.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+
+\end{proof}

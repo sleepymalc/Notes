@@ -127,15 +127,14 @@ We now have the following algorithm.\par
 	\BlankLine
 
 	\(S\gets \mathcal{\MakeUppercase{v}} \), \(c^\prime = c\), \(y\gets 0\)\Comment*[r]{\(c^\prime \in \mathbb{\MakeUppercase{r}} ^n\) keeps track of slackness of \(c\)}
-	\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{\MakeUppercase{G}} [S]\right\}\)}
 	\;
 	\While(){\(S \neq \varnothing \)}{
-		\(\alpha \gets \min _{v\in S} c^\prime (v) / (d_v^S - 1)\)\Comment*[r]{time for \(y_S\) gets tight by increasing unit weight}
-		\(y_S\gets \alpha\)\;
-		\(c^\prime (v)\gets c^\prime (v) - \alpha (d_v^S - 1)\)\;
+		\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{\MakeUppercase{G}} [S]\right\}\)}
+		\((\alpha, v) \gets \min _{v\in S} c^\prime (v) / (d_v^S - 1)\)\footnote{Note that we also get the argument \(v\).}\Comment*[r]{\(y_S\) gets tight by increasing unit weight}
+		\(y_S\gets \alpha\)\label{algo:feedback-vertex-set-PD:line6}\;
+		\(c^\prime (v)\gets c^\prime (v) - \alpha (d_v^S - 1)\)\label{algo:feedback-vertex-set-PD:line7}\;
 		\(Z\gets \left\{ v\in S\colon c^\prime (v) = 0 \right\} \)\;
 		\(F\gets F\cup Z\), \(S\gets S \setminus Z\)\;
-		\(S\gets\) \reduce{\(S\) }\;
 	}
 	\;
 	\(F^\prime \gets F\)\Comment*[r]{Compute a minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
@@ -147,15 +146,22 @@ We now have the following algorithm.\par
 	\Return{\(F^\prime \)}\;
 \end{algorithm}
 
-\begin{note}
+\begin{claim}
 	\(F\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} and \(y\) is dual-feasible.
-\end{note}
+\end{claim}
+\begin{explanation}
+	It should be clear that why \(F\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. As for the reason why \(y\) is dual-feasible, observe that we have one constraint for each \(v\). After raising \(y_S\) for chosen \(v\) in \autoref{algo:feedback-vertex-set-PD:line6} and deduce \(c^\prime (v)\) in \autoref{algo:feedback-vertex-set-PD:line7}, \(v\) will get removed so the constraint corresponding to \(v\) will be satisfied throughout.
+\end{explanation}
 
-We see that we want to compare \(\sum_{S\in \mathcal{\MakeUppercase{S}} }y_S b_S\) and
+We want to compare the primal cost and the dual cost. The primal cost is
 \[
-	c(F) = \sum_{v\in F}c(v) = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{\MakeUppercase{S}}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1).
+	c(F) = \sum_{v\in F}c(v) = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{\MakeUppercase{S}}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1),
 \]
-If we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for every \(S\), we're done.
+while the dual cost is \(\sum_{S\in \mathcal{\MakeUppercase{S}} }y_S b_S\).
+
+\begin{remark}
+	This is where the primal-dual method is powerful. i.e., by switching the order of summation, if we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for every \(S\), we're done. On caveat is that since \(S\) is changing when running \autoref{algo:feedback-vertex-set-PD}, so the final solution \(F\) may not be good for this particular \(S\). We need to guarantee some ratio for this \(F\) \textbf{for all \(S\)}.\footnote{At least for \(S\) with positive \(y_S\).}
+\end{remark}
 
 \begin{lemma}\label{lma:lec4-2}
 	For all \(S\in \mathcal{\MakeUppercase{S}} \), if \(F\) is \emph{minimal} in \(S\),\footnote{i.e., in \(\mathcal{\MakeUppercase{g}} [S]\), no \(F^\prime \subsetneq F \cap S\) in \hyperref[prb:feedback-vertex-set]{feedback vertex set}.} then we have
@@ -166,8 +172,22 @@ If we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for 
 \begin{proof}
 	Let's first see a simple case.
 	\begin{intuition}
-		If the graph is \(3\)-regular, then we see that the left-hand side is \(\leq 2\cdot \left\vert S \right\vert \), while the right-hand side is \(2\cdot \left\vert S \right\vert + 1\).
+		If the graph is \(3\)-regular, then we see that the left-hand side is \(\leq 2\cdot \left\vert S \right\vert \) by summing over the whole \(S\) instead of \(S\cap F\), while the right-hand side is \(2\cdot \left\vert S \right\vert + 4\) since \(\left\vert E(S) \right\vert = 1.5 \left\vert S \right\vert \).
+
+		This shows that in a \(3\)-regular graph, deleting every vertex in \(S\) is actually \(4\)-approximated. And this intuition generalized to general graph with degree greater than \(3\).
 	\end{intuition}
+
+	Since we assume \(S\) to be \hyperref[def:irreducible]{irreducible}, so we're not interested in degree \(0\) or \(1\) vertices (there are no such vertices in an \hyperref[def:irreducible]{irreducible} \(S\)). So the only problematic guy is degree-\(2\) vertex. And the only place a degree-\(2\) vertex can live is in a long path.
+
+	\begin{figure}[H]
+		\centering
+		\incfig{FBV-path}
+		\caption{If there are two \(v\in F\), by minimality of \(F\), one of \(v\) will be strictly unnecessary to break this path in a cycle.}
+		\label{fig:FBV-path}
+	\end{figure}
+	\begin{note}
+		Observe that we only need to delete at most one vertex in any path, and sometimes this may be loose since we can delete one branch node joining two paths, i.e., deleting \(1\) nodes for two paths.
+	\end{note}
 
 	Let \(A\) be the set of degree \(2\) vertices, and \(B\) be the set of vertices with degree larger than \(3\). Now, consider line segment in the graph. If \(\ell \) is a line segment,
 	\begin{enumerate}[(a)]
@@ -186,7 +206,7 @@ If we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for 
 	It's clear that since \(\forall v\in B\), \(d_v^S - 1 \leq 4 (d_{v} ^S / 2 - 1)\), rearranging this inequality gives the result.
 \end{proof}
 
-We see that to show \autoref{thm:lec4-1}, it's enough to check that \(F^\prime \) is minimal, then the result follows form \autoref{lma:lec4-1}. Hence, we now analyze \(F^\prime \). Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. The minimality of \(F^\prime \) is guaranteed by the following lemma.
+To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the result follows form \autoref{lma:lec4-1}. Hence, after obtaining \(F\), \autoref{algo:feedback-vertex-set-PD} further convert \(F\) into \(F^\prime \) and  try to obtain a minimal version of \(F\). Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}, and the minimality of \(F^\prime \) is guaranteed by the following lemma.
 
 \begin{lemma}\label{lma:lec4-3}
 	\(F^\prime \) is minimal in every \(S_i\), where \(S_i = S\) when \(v_i\) is deleted.
@@ -194,13 +214,11 @@ We see that to show \autoref{thm:lec4-1}, it's enough to check that \(F^\prime \
 \begin{proof}
 	Suppose this is not the case. Then there exists \(v_j\in F^\prime \) such that in \(\mathcal{\MakeUppercase{g}} [S_i]\), \(b_S= \cap S_i\setminus \left\{ v_{j}  \right\}\) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. This means \(\left\vert F \cap S_j \right\vert \setminus \left\{ v_{j}  \right\}  \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} [S_j]\).
 
-	Observe that there are no \(C\ni v_j\) such that \(C\setminus S_j\) is disjoint from \(F\), which further implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD-ii}.
+	Observe that there are no \(C\ni v_j\) such that \(C\setminus S_j\) is disjoint from \(F\), which further implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD}.
 \end{proof}
 
 Finally, we see that we can prove \autoref{thm:lec4-1}.
 
 \begin{proof}[Proof of \autoref{thm:lec4-1}]
-	By designing an algorithm which runs \autoref{algo:feedback-vertex-set-PD} and \autoref{algo:feedback-vertex-set-PD-ii} sequentially, we get a \(4\)-approximation of the density IP guaranteed by \autoref{lma:lec4-2} and \autoref{lma:lec4-3}.
-
-	From \autoref{lma:lec4-1}, \autoref{prb:feedback-vertex-set} and this density IP is equivalent, proving the theorem.
+	Firstly, \autoref{algo:feedback-vertex-set-PD} gives a \(4\)-approximation of the density IP guaranteed by \autoref{lma:lec4-2} and \autoref{lma:lec4-3}. Finally, from \autoref{lma:lec4-1}, we see that \ autoref{prb:feedback-vertex-set} and the density IP is equivalent, proving the theorem.
 \end{proof}

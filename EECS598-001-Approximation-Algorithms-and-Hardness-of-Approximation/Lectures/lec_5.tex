@@ -2,150 +2,246 @@
 \lecture{5}{14 Sep. 10:30}{Facility Location}
 
 \section{Clustering}
-The problem we're interested in is the following: Given \(n\) objects, partition them into \(k\) groups such that
+
+The problem we're interested in is called the \hyperref[prb:clustering]{clustering} problem.
+
+\begin{problem}[Clustering]\label{prb:clustering}
+Given \(n\) objects, partition them into \(k\) groups such that
 \begin{itemize}
 	\item \emph{Similar} objects are in same group
 	\item \emph{Different} objects are in different group.
 \end{itemize}
+\end{problem}
+
+\begin{note}
+	We see that \autoref{prb:clustering} is vague in terms of the definition, which is because this is more like a class of problems. We'll see different notions of \emph{similar} and \emph{different} later when we consider more explicit problems.
+\end{note}
 
 In particular, the notion of \hyperref[def:metric]{metric} is useful.
 
 \begin{definition}[Metric]\label{def:metric}
 	Given a set \(X\), a function \(d\colon X\times X\to \mathbb{\MakeUppercase{r}} ^+ \cup \left\{ 0 \right\} \) is called a \emph{metric} if
 	\begin{enumerate}[(a)]
-		\item \(d(\cdot) \geq 0\) and \(d(i, j) = 0\) if and only if \(i = j\).
+		\item \(d(\cdot, \cdot) \geq 0\) and \(d(i, j) = 0\) if and only if \(i = j\).\footnote{We didn't mention this in lectures, but in math community this should also be included.}
 		\item \(d(i, j) = d(j, i)\) for all \(i, j\in X\).
 		\item \(d(i, j) + d(j, k) \geq d(i, k)\) for all \(i, j, k\in X\).
 	\end{enumerate}
 \end{definition}
 
+\begin{remark}[Metric space]\label{rmk:metric-space}
+	Though we didn't formally introduce, but the pair \((X, d)\) of \(X\) and a \hyperref[def:metric]{metric} \(d\) on \(X\) is sometimes called a \emph{metric space}.
+\end{remark}
+
 \section{Facility Location}
 Let's first look at the problem.
 
-\begin{problem}\label{prb:facility-location}
-Given \(P,  Q\subseteq X\) and \(f\in \mathbb{\MakeUppercase{r}} ^+\) where \(P\) is the set of clients, \(Q\) is the set of (possible) facilities, and \((X, d)\) is a \hyperref[def:metric]{metric} space. We want to open \(Q^\prime \subseteq Q\) such that we minimize
+\begin{problem}[Facility location]\label{prb:facility-location}
+Given a \hyperref[rmk:metric-space]{metric space} \((X, d)\) and \(P,  Q\subseteq X\), \(f\in \mathbb{\MakeUppercase{r}} ^+\) where \(P\) is the set of clients, \(Q\) is the set of (possible) facilities, we want to open \(O \subseteq Q\) such that it minimizes
 \[
-	\sum_{i\in P} \min _{j\in Q^\prime } d(i, j) + f\left\vert Q^\prime  \right\vert,
+	\sum_{i\in P} \min _{j\in O} d(i, j) + f\left\vert O \right\vert,
 \]
 where we interpret the first summation as connection cost, the second term as opening cost.
 \end{problem}
 
+\begin{eg}
+	Consider the following example.
+	\begin{center}
+		\incfig{facility-location}
+	\end{center}
+	If \(f = 1\) and we open the black facilities, then the cost is \(2 + 5 = 7\) assuming unit length.
+\end{eg}
+
 We now write down the LP of \autoref{prb:facility-location}. Denote variables \(\left\{ y_{j} \right\}_{j\in Q}\) and \(\left\{ x_{ij} \right\}_{i\in P, j\in Q}\). Then the LP can be written as
 \begin{align*}
-	\min~ & \sum_{ij} d(i, j) x_{ij} + \sum_{j} y_{j} \cdot f                                     \\
-	      & \sum_{j}x_{ij} \geq 1                             & \forall i\in P &  & (\alpha _i)   \\
-	      & x_{ij} \leq y_j \iff y_j - x_{ij} \geq 0          & \forall i, j   &  & (\beta_{ij} ) \\
-	      & x, y \geq 0.
+	\min~    & \sum_{ij} d(i, j) x_{ij} + \sum_{j} y_{j} \cdot f                                     \\
+	         & \sum_{j}x_{ij} \geq 1                             & \forall i\in P &  & (\alpha _i)   \\
+	         & x_{ij} \leq y_j \iff y_j - x_{ij} \geq 0          & \forall i, j   &  & (\beta_{ij} ) \\
+	(P)\quad & x, y \geq 0.
 \end{align*}
 
 Denote the dual variables as \(\alpha _i\) and \(\beta_{ij} \), the dual is
 
 \begin{align*}
-	\max~ & \sum_{i} \alpha _i                                                 \\
-	      & \alpha _i - \beta _{ij} \leq d(i, j) & \forall i, j &  & (x_{ij} ) \\
-	      & \sum_{i} \beta _{ij} \leq f          & \forall j    &  & (y_i)     \\
-	      & \alpha , \beta \geq 0.
+	\max~    & \sum_{i} \alpha _i                                                 \\
+	         & \alpha _i - \beta _{ij} \leq d(i, j) & \forall i, j &  & (x_{ij} ) \\
+	         & \sum_{i} \beta _{ij} \leq f          & \forall j    &  & (y_i)     \\
+	(D)\quad & \alpha , \beta \geq 0.
 \end{align*}
 
 \begin{remark}
-	If \((\alpha , \beta )\) is feasible, redefine \(\beta _{ij} \coloneqq \max (0, \alpha _i - d(i, j))\), it's still feasible. We see that we can drop \(\beta\) and only look at \(\alpha \).
+	If \((\alpha , \beta )\) is feasible, redefine \(\beta _{ij} \coloneqq \max (0, \alpha _i - d(i, j))\), it's still feasible and will not affect the objective value. We see that we can drop \(\beta\) and only look at \(\alpha \).
 \end{remark}
 
+We can then define the following useful notion called \hyperref[def:cluster]{cluster}.
 
-Define a cluster \(C \coloneqq (j, P^\prime )\) such that \(j\in Q\), \(P^\prime \subseteq P\), and the cost is calculated by directing all \(i\in P^\prime \) to \(j\), i.e., \(c(c) = f + \sum_{i\in P^\prime }d(i, j)\).
+\begin{definition}[Cluster]\label{def:cluster}
+	A \emph{cluster} \(C \coloneqq (j, P^\prime )\) is the order pair or \(j\in Q\) and \(P^\prime \subseteq P\), where the cost \(c(C)\) is calculated by directing all \(i\in P^\prime \) to \(j\), i.e., \(c(C) = f + \sum_{i\in P^\prime }d(i, j)\).
+\end{definition}
 
-\begin{note}
-	The number of clusters is \(\left\vert Q \right\vert \cdot 2^{\left\vert P \right\vert }\).
-\end{note}
+\begin{notation}
+	We denote the set of all \hyperref[def:cluster]{clusters} \(C\) by \(\mathcal{\MakeUppercase{C}} \).
+\end{notation}
 
-\begin{remark}[Relation to set cover]
-	We see that \autoref{prb:facility-location} is equivalent to \hyperref[prb:set-cover]{set cover} on \((P, \left\{ \text{cluster} \right\} )\).
+\begin{remark}[Just set cover!]
+	We see that \autoref{prb:facility-location} is equivalent to \hyperref[prb:set-cover]{set cover} on \((P, \mathcal{\MakeUppercase{C}} )\).
 \end{remark}
 \begin{explanation}
-	If we write down the LP for \hyperref[prb:set-cover]{set cover} on \((P, \left\{ \text{cluster} \right\} )\), we have
+	If we write down the LP for \hyperref[prb:set-cover]{set cover} on \((P, \mathcal{\MakeUppercase{C}} )\), we have
 	\[
 		\begin{alignedat}{5}
-			\min~&\sum_{C} c(C)\cdot y_C\qquad\qquad&&\max ~&&\sum_{i}\alpha _i\\
-			& \sum_{C\ni i}y_C  \geq 1 \quad \forall i 				&&		&&\sum_{i\in C} \alpha _{i} \leq c(C)\quad \forall \text{ cluster }C \\
-			(P)\quad	&y\geq  0 	&&(D)\quad&& \alpha \geq 0.
+			\min~&\sum_{C\in \mathcal{\MakeUppercase{C}} } c(C)\cdot y_C\qquad\qquad&&\max ~&&\sum_{i\in P}\alpha _i\\
+			& \sum_{C\ni i}y_C  \geq 1 \quad \forall i\in P 				&&		&&\sum_{i\in C} \alpha _{i} \leq c(C)\quad \forall C\in \mathcal{\MakeUppercase{C}}  \\
+			(P)\quad	&y\geq  0 	&&(D)\quad&& \alpha \geq 0,
 		\end{alignedat}
 	\]
+	which is equivalent to what we have as above.
 \end{explanation}
 
+But observe that the number of clusters is \(\left\vert Q \right\vert \cdot 2^{\left\vert P \right\vert }\), hence directly solve either \((P)\) or \((D)\) is not feasible. In this case, we can use the primal-dual method.
+
 \subsection{Primal-Dual Method}
+
+Let's first see the primal-dual algorithm on \((P)\) and \((D)\) derived above.
 
 \begin{algorithm}[H]\label{algo:facility-location-PD}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:facility-location]{Facility location} -- Primal-Dual}
-	\KwData{}
-	\KwResult{}
-	\SetKwFunction{reduce}{reduce}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\)}
+	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\SetKw{Break}{break}
 	\BlankLine
 	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
 	\;
 	\While(){\(S \neq P\)}{
-	Increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) at \emph{unit} rate\;
+	\While(\label{algo:facility-location-PD-while-2}){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
 
-	Some \(j\in Q\setminus O\) gets tight (\(\sum_{i} \beta _{ij} = f\))\;
-	\(i\in P\setminus S\) and \(j\in O\) \emph{connected} (\(\alpha_i \geq d(i, j)\)\;
-
-	\(O\gets\left\{ \text{tight facilities}\right\} \)\;
-	\(S\gets \left\{ \text{clients connected to \(O\)} \right\} \)\;
+	\uIf(\label{algo:facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus O\) s.t. \(\sum_{i} \beta _{ij} = f\)}{
+		\Break
+	}
+	\ElseIf(\label{algo:facility-location-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+		\Break
+	}
+	}
+	\(O\gets\left\{ \text{tight facilities}\right\} \)\Comment*[r]{Update \(O\)}
+	\(S\gets \left\{ \text{clients connected to \(O\)} \right\} \)\Comment*[r]{Update \(S\)}
 	}
 
 	\;
-	\Comment{Compute \(O^\prime\):maximal independent set of \(G\)}
-
+	\label{algo:facility-location-PD-comment}\Comment{Trim down \(O\)}
+	\(G = (O, E\coloneqq \left\{ (j, j^\prime )\colon \exists i\in P \text{ such that }\alpha _i > d(i, j), j, j^\prime \in O \right\})\)\;
+	Compute \(O^\prime\) s.t. \(\forall j\in O\), either \(j\in O^\prime\) or \(\exists j^\prime\in O^\prime \) s.t. \((j, j^\prime )\in E\)\Comment*[r]{\hyperref[prb:max-strongly-independent-set]{maximal independent set}}
+	\Return{\(O^\prime \)}\;
 \end{algorithm}
 
-For every \(i\), define \(w(i)\) be the \emph{connecting witness}, i.e., the first open facility connected to \(i\). Also, from the definition, we know that for all \(i, j\), if \(i, j\) are connected, then \(d(i, j) \leq d_i\).
+\begin{intuition}
+	We're basically increasing the cost \(i\) willing to pay and stop (in the \hyperref[algo:facility-location-PD-while-2]{second while loop}) when \(i\) finally connect to \(j\). Or one can also interpret \(\alpha _i\) as the time \(i\) connects to some facilities \(j\).
+\end{intuition}
 
-\begin{note}
-	Observe that \(\alpha \) is dual-feasible just from the algorithm description.
+This directly relates to the fact that for all \(i, j\), if \(i, j\) are connected, then \(d(i, j) \leq \alpha _i\), which is exactly the spirit of the primal-dual method since we want to argue the upper-bound in terms of \(\alpha\). But before that, we need to argue that \(\alpha \) is actually feasible in order to make this bound valid.
+
+\begin{lemma}
+	\(\alpha \) is dual-feasible in \autoref{algo:facility-location-PD}.
+\end{lemma}
+\begin{proof}
+	Firstly, \(\alpha\) start from \(0\) which is feasible. Now, for \(\alpha _i\) violates the constraints \(\sum_{i\in C} \alpha \leq c(C) = f + \sum_{i\in P^\prime }d(i, j)\), there are two possibilities, but both are handled in \autoref{algo:facility-location-PD}. Specifically, \autoref{algo:facility-location-PD-if-1} and \autoref{algo:facility-location-PD-if-2}:
+	\begin{itemize}
+		\item In \autoref{algo:facility-location-PD-if-1}: This corresponds to some \(j\) gets opened, we then need to make sure that no \(\alpha _i\) will pay toward \(j\) for its open cost \(f\). But this is clear since whoever \(i\) is paying non-zero amounts to \(j\) for its \(f\), \(i\) immediately connect to \(j\) and will be clicked out from \(P\setminus S\), meaning that their dual \(\alpha _i\) will not be increased anymore.
+		\item In \autoref{algo:facility-location-PD-if-2}: This corresponds to when \(i\) want to connect (willing to pay non-zero amount to) an already opened \(j\). But we see that whenever \(i\) willing to pay for an already opened \(j\), we immediately connect them and so \(j\) gets nothing (hence will not be violated) while \(i\) just pays for the distance to go to \(j\).
+	\end{itemize}
+	In all, throughout \autoref{algo:facility-location-PD}, \(\alpha \) is feasible.
+\end{proof}
+
+\begin{note}[Trim down]
+	Just like \autoref{algo:feedback-vertex-set-PD}, after getting the initial solution \(O\), we'll soon see in the analysis section that it's kind of wasteful, so we trim it down to obtain a better solution.
 \end{note}
 
 \subsection{Analysis}
+We first do a naive analysis, i.e., try to bound the connected cost and opening cost for \(O\) obtained in \autoref{algo:facility-location-PD} before \autoref{algo:facility-location-PD-comment}, which turns out to be not working. The problem is not on connected cost, since as noted above, \(d(i, j) \leq \alpha _i\) so the connection cost is at most \(\sum_{i} \alpha _i\).
 
-If we do a naive analysis, i.e., try to bound the connected cost and opening cost, we have
-\[
-	\underbrace{\text{ connected cost }}_{\leq \sum_{i}\alpha _i} + \underbrace{\text{ opening cost } }_{= \sum_{j\in Q}f = \sum_{j}\sum_{i} \beta _{ij} },
-\]
-where the second term may be unbounded. Now, we say \((i, j)\) is \emph{contributing} if \(\alpha _i > d(i, j) \iff \beta _{ij} > 0\). Then consider \(G = (O, E)\), \((j, j^\prime )\in E\) if and only if \(\exists i\in P\) that contributes to both \(j\) and \(j^\prime \). We then see that by considering the maximal independent set of \(G\), i.e.,
-\[
-	j\in O, \text{ either } j\in O^\prime \text{ or } \exists j^\prime \text{ such that } j\in O^\prime , (j, j^\prime )\in E.
-\]
-\begin{intuition}
-	If \(i\) is contributing to two facilities \(j\) and \(j^\prime \), we close down one of them basically.
-\end{intuition}
-
-We say \(i\in P\) is \emph{directed connected } if \(j\in O^\prime \) such that \((i, j)\) is connected (\(\alpha _{i} \geq d(i, j)\)). Denote \(\alpha _i^f \coloneqq \beta _{ij}\) and \(\alpha _i^c\coloneqq d(i, j)\). Otherwise, we say \(i\) is \emph{indirectly connected}, i.e., there exists \(j\) such that \((j, w(i))\in E\), i.e., there exists \(i^\prime \) such that \((i^\prime , j)\) and \((i^\prime , w(i))\) contributing, hence \(\alpha _i^f = 0\), \(\alpha _i^c = \alpha _i\).
-
-Now, we can bound the open cost \(f\left\vert O^\prime  \right\vert \) more carefully. It's now
-\[
-	\sum_{j\in O^\prime } \sum_{\text{dir. conn. }i} \beta _{ij} = \sum_{\text{dir. conn. }i} \sum_{j\in O^\prime} \beta _{ij} = \sum_{\text{dir. conn. }i} \alpha _i^f.
-\]
-
-As for connected cost, we see that
-\begin{itemize}
-	\item If \(i\) is directed connected, \(d(i, j) \leq \alpha _i^s\).
-	\item If \(i\) is indirected connected, \(d(i, j) \leq \alpha _i\).
-\end{itemize}
-
-The first case is clear, we focus on the second case.
-
-\begin{claim}
-	If \(i\) is indirected connected and \((j, w(i))\in E\), then \(d(i, j) \leq 3 \alpha _i\).
-\end{claim}
+\begin{remark}
+	Bound the opening cost naively can't guarantee a constant approximation factor.
+\end{remark}
 \begin{explanation}
-	We first see that \(d(i, j) \leq \alpha vi + 2\alpha _{i^\prime }\), hence, it's sufficient to prove \(\alpha _{i^\prime } \leq \alpha _i\). Define \(t_{\ell } \) be the time \(\ell \) open, and \(\alpha _i\) be the time \(i\) connected. We see that
-	\begin{itemize}
-		\item If \((i, \ell )\) are connected, then \(\alpha _i \leq t_{\ell } \).
-		\item If \(\ell =w(i)\), then \(t_{\ell } \leq \alpha _i\).
-	\end{itemize}
-	Combining these together, we have \(\alpha _i ^\prime \leq t_{w(i)} \leq \alpha _i\).
+	To bound opening cost, we see that
+	\[
+		\text{ opening cost } = f \left\vert O \right\vert = \sum_{j\in O}f = \sum_{j}\sum_{i} \beta _{ij} = \sum_{i} \sum_{j\in O} \beta _{ij}.
+	\]
+	Observe that since \(\beta _{ij} = \max (0, \alpha _i - d(i, j)) \leq \alpha _i\), hence if we can guarantee for each \(i\), it only pays for one \(j\), then we will get a \(2\)-approximation. But this might not be the case since we don't have control of how many \(j\) that \(i\) is paying.
 \end{explanation}
 
-We see that the final cost is just connected cost plus \(3\) times opening cost:
+Let's first introduce some notions in order to analyze \autoref{algo:facility-location-PD}.
+
+\begin{notation}[Connecting witness]\label{not:connecting-witness}
+	The first open facility connected to \(i\) is called the \emph{connecting witness} \(w(i)\in Q\) for every \(i\in P\).
+\end{notation}
+
+\begin{notation}[Contributing]\label{not:contributing}
+	We say \((i, j)\) is \emph{contributing} if \(\alpha _i > d(i, j)\), i.e., \(\beta _{ij} > 0\).\footnote{We now have a strict inequality, i.e., \(i\) is now paying some non-trivial amount to \(j\).}
+\end{notation}
+
+Note that the problem in the naive solution happens when a client \(i\) pays multiple facilities \(j\). And a simple idea is to close some facilities \(j\) such that every client pay at most \(1\) facility.
+
+\begin{intuition}
+	If \(i\) is \hyperref[not:contributing]{contributes} to two facilities \(j\) and \(j^\prime \), we close down one of them basically since this is where the problem comes from. This is exactly how we \hyperref[algo:facility-location-PD-comment]{trim down \(O\)}: by considering \(G = (O, E)\) such that \((j, j^\prime )\in E\) if and only if \(\exists i\in P\) that \hyperref[not:contributing]{contributes} to both \(j\) and \(j^\prime \), taking \hyperref[prb:max-strongly-independent-set]{maximal independent set} of \(G\) exactly makes \(i\) paying to only one \(j\).
+\end{intuition}
+
+\begin{note}
+	In this case, we take care of opening cost, but the connected cost might be worse, so we basically turn to bound another quantity while still keep one term simple to bound.
+\end{note}
+
+\begin{notation}[Directed connected]\label{not:directed-connected}
+	We say \(i\in P\) is \emph{directed connected} if \(j\in O^\prime \) such that \((i, j)\) is connected (\(\alpha _{i} \geq d(i, j)\)). For these \(i\), divide \(\alpha _i\) into \(\alpha _i^f \coloneqq \beta _{ij}\) and \(\alpha _i^c\coloneqq d(i, j)\), i.e., \(\alpha _i = \alpha _i^f + \alpha _i^c\).
+\end{notation}
+
+\begin{notation}[Indirected connected]\label{not:indirected-connected}
+	We say \(i\) is \emph{indirectly connected} if \(i\) is not \hyperref[not:directed-connected]{directed connected},\footnote{i.e.,  there exists \(j\) such that \((j, w(i))\in E\), hence there exists \(i^\prime\) such that \((i^\prime , j)\) and \((i^\prime , w(i))\) \hyperref[not:contributing]{contributing}.} and like in \hyperref[not:directed-connected]{directed connected}, \(\alpha_i \eqqcolon \alpha _i^f + \alpha _i^c\) where \(\alpha _i^f = 0\), \(\alpha _i^c = \alpha _i\).
+	\begin{figure}[H]
+		\centering
+		\incfig{indirected-connected}
+		\caption{When \(i\) is indirected connected.}
+		\label{fig:indirected-connected}
+	\end{figure}
+\end{notation}
+
+Now, we can bound the opening cost \(f\left\vert O^\prime \right\vert\) for \(O^\prime \) more carefully. It's now
 \[
-	\text{final cost } \leq \sum 3 \alpha _i^c + \sum 3 \alpha _i^f \leq 3 \sum_{i} \alpha _i.
+	f \left\vert O^\prime  \right\vert
+	= \sum_{j\in O^\prime } \sum_{i} \beta _{ij} = \sum_{j\in O^\prime } \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \beta _{ij}
+	= \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \left[ \sum_{j\in O^\prime} \beta _{ij} \right]
+	= \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \alpha _i^f.
 \]
+
+As for connected cost, we see that if \(i\) is \hyperref[not:directed-connected]{directed connected}, \(d(i, j) \leq \alpha _i^c\), while if \(i\) is \hyperref[not:indirected-connected]{indirected connected}, it's not so clear. However, we have the following.
+
+\begin{claim}
+	If \(i\) is \hyperref[not:indirected-connected]{indirected connected}, then \(d(i, j) \leq 3 \alpha _i\).
+\end{claim}
+\begin{explanation}
+	Note that \((j, w(i))\in E\) and \(d(i, j) \leq \alpha _i + 2\alpha _{i^\prime }\) by looking at \autoref{fig:indirected-connected}, hence it's sufficient to prove \(\alpha _{i^\prime } \leq \alpha _i\). To do this, for some facility \(\ell \), define \(t_{\ell}\) to be the time \(\ell \) open in \autoref{algo:facility-location-PD-if-1}, and \(\alpha _i\) be the time \(i\) connected in \autoref{algo:facility-location-PD-if-2}. We see that
+	\begin{itemize}
+		\item If \((i, \ell )\) are \hyperref[not:contributing]{contributing}, then \(\alpha _i \leq t_{\ell } \).
+		\item If \(\ell =w(i)\), then \(t_{\ell } \leq \alpha _i\).
+	\end{itemize}
+	Combining these together, we have \(\alpha _{i ^\prime} \leq t_{w(i)} \leq \alpha _i\).
+\end{explanation}
+
+Finally, we have the following.
+\begin{theorem}
+	\autoref{algo:facility-location-PD} is a \(3\)-approximation algorithm.
+\end{theorem}
+\begin{proof}
+	The cost of \(O^\prime \) produce by \autoref{algo:facility-location-PD} is just the connected cost of plus the opening cost of \(O^\prime \), which can be bounded as
+	\[
+		\text{final cost} = \text{connected cost} + \text{opening cost} \leq \sum _i 3 \alpha _i^c + \sum_i \alpha _i^f \leq 3 \sum_{i} \alpha _i \leq 3 \OPT,
+	\]
+	which shows that it is a \(3\)-approximation algorithm.
+\end{proof}
+
+\begin{note}
+	Notice that in the above proof, since we know that the opening cost is exactly \(\sum_{i} \alpha _i^f\), and hence even if we pay \(3\) times of the opening cost, we still get a \(3\)-approximation algorithm.
+\end{note}
+
+\begin{remark}
+	\autoref{algo:facility-location-PD} is a very basic algorithm which can be used even as a black-box for other \hyperref[prb:clustering]{clustering problems}. We'll revisit this later and consider other \hyperref[def:metric]{metrics} and see what can we improve.
+\end{remark}

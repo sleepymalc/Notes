@@ -91,7 +91,7 @@ We see observe that \(c((j, T)) / \left\vert T \right\vert \) is increasing in \
 \end{remark}
 
 \subsubsection{Second Modification}
-Another potential modification gives us a \(1.61\)-approximation. We essentially allow \(i\in S\) to \emph{switch} in \autoref{algo:facility-location-greedy-I}, i.e., after \(i\) connects to \(j\), if \(j^\prime \) is closer to \(i\) later, \(i\) can \emph{offer} \(d(i, j) - d(i, j^\prime )\).
+Another potential modification gives us a \(1.61\)-approximation. We essentially allow \(i\in S\) to \emph{switch} in \autoref{algo:facility-location-greedy-I}, i.e., after \(i\) connects to \(j\), if \(j^\prime \) is closer to \(i\) later, \(i\) can \emph{offer} with \(d(i, j) - d(i, j^\prime )\) to other facilities.
 
 \begin{algorithm}[H]\label{algo:facility-location-greedy-II}
 	\DontPrintSemicolon
@@ -157,25 +157,36 @@ It's clear that in \autoref{algo:facility-location-greedy-II}, the connection co
 	It's sufficient to consider \(j\in Q\) and prove that \(\sum_{i\in P^\prime } \beta ^\prime _{ij} \leq f \) where \(P^\prime \coloneqq \left\{ i\colon \beta ^\prime _{ij} > 0 \right\} = [n]\) where we're overloading \(n\) here. Let's order \(\alpha _i\) such that \(\alpha _1 \leq \ldots \leq \alpha _n \) where \(\alpha _i\) is the time \(i\) when \(i\) is \emph{first connected}.
 
 	\begin{claim}
-		For all \(i, k\in P^\prime \) such that \(\alpha _k \leq \alpha _i\), at time (right before) \(\alpha _i\), offer from \(k\) to \(j\) is at most \(\alpha _i - d(i, j) - 2d(k, j)\).
+		For all \(i, k\in P^\prime \) such that \(\alpha _k \leq \alpha _i\), at time (right before) \(\alpha _i\), offer from \(k\) to \(j\)\footnote{We assume \(k\) currently (or is going to) connects to \(j^\prime \).} is at most \(\alpha _i - d(i, j) - 2d(k, j)\) for any \(j\in Q\).
 	\end{claim}
 	\begin{explanation}
-		We see that if \(\alpha _i = \alpha _k\), the offer is just \((\alpha _k - d(i, j))^+\). Otherwise, we have \(\alpha _k < \alpha _i\). If \(\alpha _i > d(k, j^\prime ) + d(k, j) + d(i, j)\), we immediately get a contradiction. Hence,
+		We see that if \(\alpha _i = \alpha _k\), the offer is just \((\alpha _k - d(i, j))^+\). Otherwise, we have \(\alpha _k < \alpha _i\). If \(\alpha _i > d(k, j^\prime ) + d(k, j) + d(i, j)\), we immediately get a contradiction since from triangle inequality, \(\alpha _i > d(i, j^\prime )\), i.e., \(i\) already connect to \(j^\prime \). Hence,
 		\[
-			\alpha _i \leq d(k, j^\prime )+ d(k, j) + d(i, j),
+			\alpha _i \leq d(k, j^\prime )+ d(k, j) + d(i, j).
 		\]
-		i.e., the offer is \((d(k, j^\prime ) - d(k, j))^+ \geq \alpha _i - d(i, j) - 2d(k, j)\).
+		Then, the offer from \(k\) to \(j\) is \((d(k, j^\prime ) - d(k, j))^+ \geq \alpha _i - d(i, j) - 2d(k, j)\).
 	\end{explanation}
 
 	Observe that for all \(i\in [n]\), we have
 	\begin{equation}\label{eq:lec6}
 		\sum_{k=1} ^{i-1} (\alpha _i - d(i, j) - 2d(k, j)) + \sum_{k=i} ^n (\alpha _i - d(k, j)) \leq \hat{f}
 	\end{equation}
-	since we can consider the total offer to \(j\) at time (right before) \(\alpha _i\). Now, we add \autoref{eq:lec6} for all \(i\in [n]\), we have
+	by considering the total offer from \(k\) to \(j\) at time (right before) \(\alpha _i\). Now, we add \autoref{eq:lec6} for all \(i\in [n]\), we have
 	\[
-		n \sum_{i=1} ^n \alpha _i - \underbrace{\sum_{i=1} ^n (i-1)d(i, j) - 2 \sum_{i=1} ^n (n - i)d(i, j) - \sum_{i=1} ^n i\cdot d(i, j)}_{\geq \sum_{i=1} ^n (i\cdot d(i, j) + 2(n-i)d(i, j) + id(i, j)) = \sum_{i=1} ^n 2n\cdot d(i, j)} \leq n \hat{f} = n \hat{f} = 2n f.
+		n \sum_{i=1} ^n \alpha _i - \sum_{i=1} ^n (i-1)d(i, j) - 2 \sum_{k=1} ^n (n - k)d(k, j) - \sum_{i=1} ^n k\cdot d(k, j) \leq n \hat{f} = 2n f.
 	\]
-
+	Since the summation over \(k\) is just indexes, we can change it to \(i\), hence
+	\[
+		\begin{split}
+			2n f &\geq n \sum_{i=1} ^n \alpha _i - \sum_{i=1} ^n (i-1)d(i, j) - 2 \sum_{i=1} ^n (n - i)d(i, j) - \sum_{i=1} ^n i\cdot d(i, j)\\
+			&\geq n \sum_{i=1} ^n \alpha _i - \sum_{i=1} ^n id(i, j) - 2 \sum_{i=1} ^n (n - i)d(i, j) - \sum_{i=1} ^n i\cdot d(i, j) = n \sum_{i=1} ^n \alpha _i - \sum\limits_{i=1}^{n} 2n d(i, j)
+		\end{split}
+	\]
+	where we turn the factor \((i-1)\) into \(i\) and gather the terms together. Clean up a bit, we have
+	\[
+		n \sum\limits_{i=1}^{n} \alpha _i - 2n \sum\limits_{i=1}^{n} d(i, j) \leq 2nf \iff \frac{\sum_{i=1} ^n \alpha _i}{2} - \sum_{i=1} ^n d(i, j) \leq f,
+	\]
+	finishing the proof.
 \end{proof}
 
 From \autoref{lma:lec6}, we immediately have the following.

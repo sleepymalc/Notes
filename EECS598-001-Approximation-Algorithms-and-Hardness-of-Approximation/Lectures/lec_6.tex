@@ -1,0 +1,185 @@
+\lecture{6}{19 Sep. 10:30}{Facility Location with LMP Approximation}
+\begin{remark}[Hardness]
+	For \autoref{prb:facility-location}, we have the following.
+	\begin{enumerate}[(a)]
+		\item \(1.488\)-approximation [Li 12]
+		\item \(1.463\)-approximation is \(\NP\)-hard [GK 99]
+	\end{enumerate}
+\end{remark}
+
+\begin{definition}[LMP approximation]\label{def:LMP}
+	An algorithm is \emph{\(\gamma \)-LMP approximation} if
+	\[
+		\frac{\mathop{\mathrm{conn}}(\text{ALG})}{\gamma }+ \mathop{\mathrm{open}}(\text{ALG} ) \leq \OPT
+	\]
+	for some \(\gamma > 0\).
+\end{definition}
+
+\begin{remark}[Hardness in temrs of LMP]
+	For \autoref{prb:facility-location}, we have the following.
+	\begin{enumerate}[(a)]
+		\item \(3\)-\hyperref[def:LMP]{LMP approximation} [JV 01]
+		\item \(2\)-\hyperref[def:LMP]{LMP approximation} [JMS 02]
+		\item \(1.99\ldots 9 \)-\hyperref[def:LMP]{LMP approximation} [CGLS 22]
+		\item \(1.73\)-\hyperref[def:LMP]{LMP approximation}\footnote{The number comes from \(1 + 2 / e\).} is \(\NP\)-hard [JMS 02]
+	\end{enumerate}
+\end{remark}
+
+\subsection{Greedy Method}
+Let's take another look at \autoref{prb:facility-location} and see it as an instance of \autoref{prb:set-cover} where the universe is all the clients \(P\), while the collection of sets are pairs of facility and its connected clients, i.e., \hyperref[def:cluster]{clusters}. Then, it's natural to consider using a similar algorithm as \autoref{algo:set-cover-greedy} to solve this.
+
+\begin{algorithm}[H]\label{algo:facility-location-greedy}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)\footnote{We didn't use it explicitly in the alogirhtm since we hide it in the cost function \(c(\cdot)\).}}
+	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+
+	\(S \gets \varnothing \), \(O\gets \varnothing\)\;
+	\While(){\(S \neq P \)}{
+		choose \((j, T)\in Q \times \mathcal{\MakeUppercase{p}} (P\setminus X)\) with minimum \(c((j, T)) / \left\vert T \right\vert \)\;
+		\(O\gets O \cup \left\{ j \right\}\)\;
+		\(S \gets S \cup T\)\;
+	}
+	\Return{\(O\)}\;
+\end{algorithm}
+
+This is just \autoref{algo:set-cover-greedy}, hence we have \(H_n\)-approximation. But as we have seen in \autoref{thm:lec5}, we have achieved a constant approximation ratio for \autoref{prb:facility-location}. Hence, we should be able to do better based on \autoref{algo:facility-location-greedy}.
+
+\begin{remark}
+	If we modify \autoref{algo:facility-location-greedy} such that for all \((j, T)\), if \(j\) is open, then we define the cost of this \hyperref[def:cluster]{cluster} as
+	\[
+		c((j, T))\coloneqq \frac{\sum_{i\in T} d(i, j)}{\left\vert T \right\vert }.
+	\]
+	We'll achieve \(1.861\)-approximation, but the analysis is complex.
+\end{remark}
+
+Instead, we're going to see other variations based on \autoref{algo:facility-location-greedy}.
+
+\subsubsection{First Modification}
+We see observe that \(c((j, T)) / \left\vert T \right\vert \) is increasing in \autoref{algo:facility-location-greedy}.\todo{proof!} Also, if \(\alpha \coloneqq c((j, T)) / \left\vert T \right\vert\), then for all \(i\in T\), \(d(i, j) \leq \alpha \) where we interpret this as \(i\) \emph{pays} \(\alpha _i\) to cover the connection cost \(d(i, j)\) and the opening cost \(\alpha _i - d(i, j)\) of \(j\). Following this intuition, if we change \autoref{algo:facility-location-PD-if-1} in \autoref{algo:facility-location-PD} (with only first phase) such that the summation is over \(P\setminus S\), it becomes exactly \autoref{algo:facility-location-greedy}.
+
+\begin{algorithm}[H]\label{algo:facility-location-greedy-I}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification I}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
+	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\;
+	\While(){\(S \neq P\)}{
+	\While(){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
+
+	\uIf(\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus O\) s.t. \(\sum_{i\in P\mathcolor{red}{\setminus S}} \beta _{ij} = f\)}{
+		\Break
+	}
+	\ElseIf(\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+		\Break
+	}
+	}
+	\(O\gets \mathcolor{red}{O \cup \left\{ j \right\}}\)\Comment*[r]{Update \(O\)}
+	\(S\gets \mathcolor{red}{S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} }\)\Comment*[r]{Update \(S\)}
+	}
+	\Return{\(O\)}\;
+\end{algorithm}
+
+\begin{remark}
+	Since \autoref{algo:facility-location-PD-if-1} and \autoref{algo:facility-location-PD-if-2} can happen simultaneously, while what we just said assumes the opposite, so we need to further modify \autoref{algo:facility-location-PD} in \autoref{algo:facility-location-PD-lin10} and \autoref{algo:facility-location-PD-lin11}
+\end{remark}
+
+\subsubsection{Second Modification}
+Another potential modification gives us a \(1.61\)-approximation. We essentially allow \(i\in S\) to \emph{switch} in \autoref{algo:facility-location-greedy-I}, i.e., after \(i\) connects to \(j\), if \(j^\prime \) is closer to \(i\) later, \(i\) can \emph{offer} \(d(i, j) - d(i, j^\prime )\).
+
+\begin{algorithm}[H]\label{algo:facility-location-greedy-II}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification II}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
+	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\;
+	\While(){\(S \neq P\)}{
+	\While(){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
+
+	\If(){some \(j\in Q\setminus O\) s.t. \(\mathcolor{red}{\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ } + \sum_{i\in P\setminus S} \beta _{ij} = f\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
+			\Break
+		}
+		\If(\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+			\Break
+		}
+	}
+	\(O\gets O \cup \left\{ j \right\} \)\Comment*[r]{Update \(O\)}
+	\(S\gets S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} \)\Comment*[r]{Update \(S\)}
+	}
+	\Return{\(O\)}\;
+\end{algorithm}
+
+\subsubsection{Third Modification}
+If we run \autoref{algo:facility-location-greedy-II} with facility cost being \(\hat{f} \coloneqq 2f\), we can have a \(2\)-\hyperref[def:LMP]{LMP approximation} algorithm as follows.
+
+\begin{algorithm}[H]\label{algo:facility-location-greedy-III}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification III}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
+	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\;
+	\While(){\(S \neq P\)}{
+	\While(){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
+
+	\If(){some \(j\in Q\setminus O\) s.t. \(\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ + \sum_{i\in P\setminus S} \beta _{ij} = \mathcolor{red}{\hat{f}}\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
+			\Break
+		}
+		\If(\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+			\Break
+		}
+	}
+	\(O\gets O \cup \left\{ j \right\} \)\Comment*[r]{Update \(O\)}
+	\(S\gets S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} \)\Comment*[r]{Update \(S\)}
+	}
+	\Return{\(O\)}\;
+\end{algorithm}
+
+It's clear that in \autoref{algo:facility-location-greedy-II}, the connection cost plus \(2\) times the opening cost is \(\sum_{i\in P} \alpha _i\) from how we design the algorithm by changing the facility cost from \(f\) to \(\hat{f} \coloneqq 2f\). Now, a crucial lemma is the following.
+
+\begin{lemma}\label{lma:lec6}
+	\((\alpha ^\prime , \beta ^\prime )\) is dual feasible, where \(\alpha ^\prime \coloneqq \alpha  / 2\), \(\beta ^\prime _{ij}\coloneqq (\alpha ^\prime _{ij} - d(i, j))^+\).
+\end{lemma}
+\begin{proof}
+	It's sufficient to consider \(j\in Q\) and prove that \(\sum_{i\in P^\prime } \beta ^\prime _{ij} \leq f \) where \(P^\prime \coloneqq \left\{ i\colon \beta ^\prime _{ij} > 0 \right\} = [n]\) where we're overloading \(n\) here. Let's order \(\alpha _i\) such that \(\alpha _1 \leq \ldots \leq \alpha _n \) where \(\alpha _i\) is the time \(i\) when \(i\) is \emph{first connected}.
+
+	\begin{claim}
+		For all \(i, k\in P^\prime \) such that \(\alpha _k \leq \alpha _i\), at time (right before) \(\alpha _i\), offer from \(k\) to \(j\) is at most \(\alpha _i - d(i, j) - 2d(k, j)\).
+	\end{claim}
+	\begin{explanation}
+		We see that if \(\alpha _i = \alpha _k\), the offer is just \((\alpha _k - d(i, j))^+\). Otherwise, we have \(\alpha _k < \alpha _i\). If \(\alpha _i > d(k, j^\prime ) + d(k, j) + d(i, j)\), we immediately get a contradiction. Hence,
+		\[
+			\alpha _i \leq d(k, j^\prime )+ d(k, j) + d(i, j),
+		\]
+		i.e., the offer is \((d(k, j^\prime ) - d(k, j))^+ \geq \alpha _i - d(i, j) - 2d(k, j)\).
+	\end{explanation}
+
+	Observe that for all \(i\in [n]\), we have
+	\begin{equation}\label{eq:lec6}
+		\sum_{k=1} ^{i-1} (\alpha _i - d(i, j) - 2d(k, j)) + \sum_{k=i} ^n (\alpha _i - d(k, j)) \leq \hat{f}
+	\end{equation}
+	since we can consider the total offer to \(j\) at time (right before) \(\alpha _i\). Now, we add \autoref{eq:lec6} for all \(i\in [n]\), we have
+	\[
+		n \sum_{i=1} ^n \alpha _i - \underbrace{\sum_{i=1} ^n (i-1)d(i, j) - 2 \sum_{i=1} ^n (n - i)d(i, j) - \sum_{i=1} ^n i\cdot d(i, j)}_{\geq \sum_{i=1} ^n (i\cdot d(i, j) + 2(n-i)d(i, j) + id(i, j)) = \sum_{i=1} ^n 2n\cdot d(i, j)} \leq n \hat{f} = n \hat{f} = 2n f.
+	\]
+
+\end{proof}
+
+From \autoref{lma:lec6}, we immediately have the following.
+
+\begin{theorem}
+	\autoref{algo:facility-location-greedy-II} is a \(2\)-\hyperref[def:LMP]{LMP approximation} algorithm w.r.t. the original \(f\).
+\end{theorem}

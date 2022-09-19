@@ -106,7 +106,7 @@ Let's first see the primal-dual algorithm on \((P)\) and \((D)\) derived above.
 \begin{algorithm}[H]\label{algo:facility-location-PD}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:facility-location]{Facility location} -- Primal-Dual}
-	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\)}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
 	\KwResult{A set of opened facilities \(O\subseteq Q\)}
 	\SetKw{Break}{break}
 	\BlankLine
@@ -116,15 +116,15 @@ Let's first see the primal-dual algorithm on \((P)\) and \((D)\) derived above.
 	\While(\label{algo:facility-location-PD-while-2}){\textsf{True}}{
 	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
 
-	\uIf(\label{algo:facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus O\) s.t. \(\sum_{i} \beta _{ij} = f\)}{
+	\uIf(\label{algo:facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus O\) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
 		\Break
 	}
 	\ElseIf(\label{algo:facility-location-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
 		\Break
 	}
 	}
-	\(O\gets\left\{ \text{tight facilities}\right\} \)\Comment*[r]{Update \(O\)}
-	\(S\gets \left\{ \text{clients connected to \(O\)} \right\} \)\Comment*[r]{Update \(S\)}
+	\(O\gets\left\{ \text{tight facilities}\right\} \)\label{algo:facility-location-PD-lin10}\Comment*[r]{Update \(O\)}
+	\(S\gets \left\{ \text{clients connected to \(O\)} \right\} \)\label{algo:facility-location-PD-lin11}\Comment*[r]{Update \(S\)}
 	}
 
 	\;
@@ -133,6 +133,10 @@ Let's first see the primal-dual algorithm on \((P)\) and \((D)\) derived above.
 	Compute \(O^\prime\) s.t. \(\forall j\in O\), either \(j\in O^\prime\) or \(\exists j^\prime\in O^\prime \) s.t. \((j, j^\prime )\in E\)\Comment*[r]{\hyperref[prb:max-strongly-independent-set]{maximal independent set}}
 	\Return{\(O^\prime \)}\;
 \end{algorithm}
+
+\begin{note}
+	\autoref{algo:facility-location-PD-if-1} and \autoref{algo:facility-location-PD-if-2} can happen in the same time.
+\end{note}
 
 \begin{intuition}
 	We're basically increasing the cost \(i\) willing to pay and stop (in the \hyperref[algo:facility-location-PD-while-2]{second while loop}) when \(i\) finally connect to \(j\). Or one can also interpret \(\alpha _i\) as the time \(i\) connects to some facilities \(j\).
@@ -227,7 +231,7 @@ As for connected cost, we see that if \(i\) is \hyperref[not:directed-connected]
 \end{explanation}
 
 Finally, we have the following.
-\begin{theorem}
+\begin{theorem}\label{thm:lec5}
 	\autoref{algo:facility-location-PD} is a \(3\)-approximation algorithm.
 \end{theorem}
 \begin{proof}

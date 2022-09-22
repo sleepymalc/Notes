@@ -1,0 +1,139 @@
+\lecture{7}{21 Sep. 10:30}{\(k\)-Median and LMP Approximation}
+\section{\(k\)-Median}
+
+Let's look at another \hyperref[def:cluster]{cluster} problem.
+
+\begin{problem}[\(k\)-median]\label{prb:k-median}
+Given a \hyperref[def:metric]{metric space} \((X, d)\) and \(P, Q\subseteq X\) with \(k\in \mathbb{\MakeUppercase{n}} \), find \(Q^\prime \subseteq Q\) with \(\left\vert Q^\prime  \right\vert = k\) which minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j)\).
+\end{problem}
+
+The natural linear programming is the following. Consider \(\left\{ x_{ij}  \right\}_{i\in P, j\in Q} \) and \(\left\{ y_j \right\}_{j\in Q} \), then
+\begin{align*}
+	\min~ & \sum_{ij} x_{ij} d(i, j)                                             \\
+	      & \sum_{j} x_{ij} \geq 1   & \forall i\in P         &  & (\alpha _i)   \\
+	      & x_{ij} \leq y_j          & \forall i\in P, j\in Q &  & (\beta _{ij}) \\
+	      & \sum_{j} y_j \leq k
+	      & x, y\geq 0
+\end{align*}
+
+The dual is then
+\begin{align*}
+	\max~ & \sum_{i} \alpha _i - kf                                    \\
+	      & \sum_{i} \beta _{ij} \leq d(i, j) & \forall i\in P, j\in Q \\
+	      & \sum_{i} \beta _{ij} \leq f       & \forall j\in Q         \\
+	      & \alpha , \beta \geq 0
+\end{align*}
+
+\begin{definition}[LMP approximation]\label{def:LMP}
+	An algorithm is called \emph{\(\gamma \)-Lagrangian Multiplier Preserving approximation} (LMP-approximation) if
+	\[
+		\frac{\mathop{\mathrm{conn}}(\text{ALG})}{\gamma }+ k^\prime f \leq \sum_{i} \alpha _i
+	\]
+	for some \(\gamma > 0\).
+\end{definition}
+
+\begin{remark}
+	Suppose we guessed \(f\), and after running \(\gamma\)-\hyperref[def:LMP]{LMP approximation} algorithm and somehow get \(k^\prime = k\). Then we have
+	\[
+		\frac{\mathop{\mathrm{conn}}(\mathrm{ALG})}{\gamma } \leq \sum_{i} \alpha _i - kf \leq \OPT_{\text{\(k\)-med.}},
+	\]
+	i.e., this is a \(\gamma \)-approximation algorithm.
+\end{remark}
+
+Actually, we don't have ideas about the relation between \(k\) and \(f\).
+
+Now, the idea is to maintain \([f_2, f_1]\) such that \(f_2 \leq f_1\), where
+\begin{itemize}
+	\item At \(f_2\), the algorithm opens \(k_2 \geq k\) facilities.
+	\item At \(f_1\), the algorithm opens \(k_1 \leq k\) facilities.
+\end{itemize}
+Then, by binary search, we can get \(f_2 \leq f_1\) such that
+\[
+	\left\vert f_1 - f_2 \right\vert \leq \frac{\epsilon \OPT}{n}.
+\]
+
+\subsection{Bipoint Rounding}
+
+Now, there exists \(a\in [0, 1]\) and \(b = 1 - a\) such that \(k = ak_1 + bk_2\) where \(k_1 \leq k \leq k_2\). Denote \(C_i\) as the connection cost with \(f_1\) such that \(C_1 \geq C_2\), we have
+\[
+	\begin{dcases}
+		C^1 + \gamma k_1 f_1 \leq \gamma \sum_{i} \alpha _i^1, & \quad (a)  \\
+		C^2 + \gamma k_2 f_2 \leq \gamma \sum_{i} \alpha _i^2, & \quad (b),
+	\end{dcases}
+\]
+hence,
+\[
+	aC_1 + bC_2
+	\leq \gamma \left( a \sum_{i} \alpha _i^1 + b \sum_{i} \alpha _i^2 - ak_1 f_1 - bk_2 f_2 \right)
+	\leq \gamma \underbrace{\left( \sum_{i} \alpha _i - kf \right)}_{\leq \OPT_{\text{\(k\)-med.}}} + \underbrace{\gamma k \left\vert f_1 - f_2 \right\vert}_{\epsilon \OPT_{\text{\(k\)-med.}}},
+\]
+where we set \(\alpha \coloneqq a \alpha ^1 + b \alpha ^2\) and \(f \coloneqq \max (f_1, f_2)\).
+
+\begin{note}
+	\((\alpha , f)\) is dual-feasible for \autoref{prb:k-median}.
+\end{note}
+
+\begin{definition}[Bipoint solution]\label{def:bipoint-solution}
+	Given \(F^1\)  \(F^2\) and \(\left\vert F^1 \right\vert = k^1\), \(\left\vert F^2 \right\vert = k^2\) and \(k=ak^1 + bk^2\) such that
+	\[
+		a\cdot \mathop{\mathrm{conhn}}(F^1) + b\cdot \mathop{\mathrm{conhn}}(F^2) \leq \gamma \cdot \OPT_{\text{\(k\)-med.}}.
+	\]
+	The so-called \emph{bipoint solution}
+\end{definition}
+
+\begin{remark}[\(\delta \)-bipoint rounding]
+	For \(F^1\) and \(F^2\), output \(F\) with \(\left\vert F \right\vert = k\) such that
+	\[
+		\mathop{\mathrm{conn}}(F) \leq \delta \cdot (a C^1 + b C^2).
+	\]
+\end{remark}
+
+\subsubsection{\(2\)-Bipoint Rounding}
+For \(j\in F^1\), let \(\pi (j)\)  be the closest facility in \(F^2\) to \(j\). Let \(F^{\ast} = \left\{ j^\prime \in F^2 \colon j^\prime =\pi (j) \text{ for some }j\in F^1  \right\} \). We see that \(\left\vert F^{\ast}  \right\vert \leq k^1\). If \(\left\vert F^{\ast}  \right\vert < k^1\), then we add arbitrary centers so that \(\left\vert F^{\ast}  \right\vert = k^1\).
+
+To open the facilities as what we want, consider the following rounding algorithm.
+\begin{enumerate}
+	\item Open \(F^1\) with probability \(a\), otherwise open \(F^{\ast} \).
+	\item Randomly choose \(k - k_1\) far from \(F^2 \setminus F^{\ast} \) .
+\end{enumerate}
+
+Then,
+\begin{enumerate}
+	\item \(j\in F^1\), \(\Pr(\text{\(j\) open} )= a\)
+	\item \(j\in F^{\ast}\), \(\Pr(\text{\(j\) open} )= b\)
+	\item \(j\in F^2 \setminus F^{\ast}\), \(\Pr(\text{\(j\) open} )= \frac{k-k_1}{k_2 - k_1}= b\)
+\end{enumerate}
+
+Now, fix \(i\in P\), we have
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c|c|c}
+		\toprule
+		                               & distance       & probability                  \\
+		\midrule
+		\(j^2\) open                   & \(d_2\)        & \(b\)                        \\
+		\(j^2\) not open, \(j^1\) open & \(d_1\)        & \(\geq (a-b)^+ \eqqcolon M\) \\
+		none of \(j^1, j^2\) open      & \(2d_1 + d_2\) & \(\leq 1 - b - M\)           \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Then, the expected cost is just
+\[
+	\mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq b d_2 + Md_1 + (1 - b - M) (2d_1 + d_2).
+\]
+
+\begin{itemize}
+	\item If \(b \geq a\),\footnote{We have \(b \geq 1 / 2\).} then \(M = 0\) and
+	      \[
+		      \mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq b - d_2 + (1 - b)	(2 d_1 + d_2) = 2ad_1 + d_2 \leq 2(ad_1 + bd_2).
+	      \]
+	\item If \(a > b\), then \(a > 1 / 2\), \(M = a - b\) and
+	      \[
+		      \mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq bd_2 ( (a - b))d_1 + b(2d_1 + d_2) = d_1(a+b)+d_2(b+d) \leq 2(ad_1 + bd_2).
+	      \]
+\end{itemize}
+
+\begin{remark}[SOTA]
+	The SOTA result
+\end{remark}

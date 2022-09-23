@@ -1,7 +1,7 @@
 \lecture{7}{21 Sep. 10:30}{\(k\)-Median and LMP Approximation}
 \section{\(k\)-Median}
 
-Let's look at another \hyperref[def:cluster]{cluster} problem.
+Let's look at another \hyperref[prb:clustering]{clustering} problem.
 
 \begin{problem}[\(k\)-median]\label{prb:k-median}
 Given a \hyperref[def:metric]{metric space} \((X, d)\) and \(P, Q\subseteq X\) with \(k\in \mathbb{\MakeUppercase{n}} \), find \(Q^\prime \subseteq Q\) with \(\left\vert Q^\prime  \right\vert = k\) which minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j)\).
@@ -24,8 +24,8 @@ The dual is then
 	      & \alpha , \beta \geq 0
 \end{align*}
 
-\begin{definition}[LMP approximation]\label{def:LMP}
-	An algorithm is called \emph{\(\gamma \)-Lagrangian Multiplier Preserving approximation} (LMP-approximation) if
+\begin{definition}[LMP approximation]\label{def:LMP}\todo{Fix}
+	An algorithm is called \emph{\(\gamma \)-Lagrangian multiplier preserving approximation} (LMP-approximation) if
 	\[
 		\frac{\mathop{\mathrm{conn}}(\text{ALG})}{\gamma }+ k^\prime f \leq \sum_{i} \alpha _i
 	\]
@@ -40,45 +40,43 @@ The dual is then
 	i.e., this is a \(\gamma \)-approximation algorithm.
 \end{remark}
 
-Actually, we don't have ideas about the relation between \(k\) and \(f\).
-
-Now, the idea is to maintain \([f_2, f_1]\) such that \(f_2 \leq f_1\), where
+Actually, we don't have ideas about the relation between \(k\) and \(f\). In particular, we have very little knowledge about which, the only thing we know is it behaves quite arbitrary. In this case, our previous technique doesn't work anymore, a new idea is then to maintain \([f^2, f^1]\) such that \(f^2 \leq f^1\), where
 \begin{itemize}
-	\item At \(f_2\), the algorithm opens \(k_2 \geq k\) facilities.
-	\item At \(f_1\), the algorithm opens \(k_1 \leq k\) facilities.
+	\item At \(f^2\), the algorithm opens \(k^2 \geq k\) facilities.
+	\item At \(f^1\), the algorithm opens \(k^1 \leq k\) facilities.
 \end{itemize}
 Then, by binary search, we can get \(f_2 \leq f_1\) such that
 \[
-	\left\vert f_1 - f_2 \right\vert \leq \frac{\epsilon \OPT}{n}.
+	\left\vert f^1 - f^2 \right\vert \leq \frac{\epsilon \OPT}{n}.
 \]
 
 \subsection{Bipoint Rounding}
 
-Now, there exists \(a\in [0, 1]\) and \(b = 1 - a\) such that \(k = ak_1 + bk_2\) where \(k_1 \leq k \leq k_2\). Denote \(C_i\) as the connection cost with \(f_1\) such that \(C_1 \geq C_2\), we have
+Now, if \(a\in [0, 1]\) and \(b \coloneqq 1 - a\), we have \(k \coloneqq ak^1 + bk^2\) where \(k^1 \leq k \leq k^2\). Denote \(C^i\) as the connection cost with \(f^i\) such that \(C^1 \geq C^2\), we have
 \[
 	\begin{dcases}
-		C^1 + \gamma k_1 f_1 \leq \gamma \sum_{i} \alpha _i^1, & \quad (a)  \\
-		C^2 + \gamma k_2 f_2 \leq \gamma \sum_{i} \alpha _i^2, & \quad (b),
+		C^1 + \gamma k^1 f^1 \leq \gamma \sum_{i} \alpha _i^1, & \quad (\times a) \\
+		C^2 + \gamma kr2 f^2 \leq \gamma \sum_{i} \alpha _i^2, & \quad (\times b)
 	\end{dcases}
 \]
 hence,
 \[
-	aC_1 + bC_2
-	\leq \gamma \left( a \sum_{i} \alpha _i^1 + b \sum_{i} \alpha _i^2 - ak_1 f_1 - bk_2 f_2 \right)
-	\leq \gamma \underbrace{\left( \sum_{i} \alpha _i - kf \right)}_{\leq \OPT_{\text{\(k\)-med.}}} + \underbrace{\gamma k \left\vert f_1 - f_2 \right\vert}_{\epsilon \OPT_{\text{\(k\)-med.}}},
+	aC^1 + bC^2
+	\leq \gamma \left( a \sum_{i} \alpha _i^1 + b \sum_{i} \alpha _i^2 - ak^1 f^1 - bk^2 f^2 \right)
+	\leq \gamma \underbrace{\left( \sum_{i} \alpha _i - kf \right)}_{\leq \OPT_{\text{\(k\)-med.}}} + \underbrace{\vphantom{\left( \sum_{i} \alpha _i - kf \right)}\gamma k \left\vert f^1 - f^2 \right\vert}_{\epsilon \OPT_{\text{\(k\)-med.}}},
 \]
-where we set \(\alpha \coloneqq a \alpha ^1 + b \alpha ^2\) and \(f \coloneqq \max (f_1, f_2)\).
+where we set \(\alpha \coloneqq a \alpha ^1 + b \alpha ^2\) and \(f \coloneqq \max (f^1, f^2)\).
 
 \begin{note}
 	\((\alpha , f)\) is dual-feasible for \autoref{prb:k-median}.
 \end{note}
 
 \begin{definition}[Bipoint solution]\label{def:bipoint-solution}
-	Given \(F^1\)  \(F^2\) and \(\left\vert F^1 \right\vert = k^1\), \(\left\vert F^2 \right\vert = k^2\) and \(k=ak^1 + bk^2\) such that
+	Given \(F^1\), \(F^2\) with \(\left\vert F^1 \right\vert = k^1\), \(\left\vert F^2 \right\vert = k^2\) and \(k=ak^1 + bk^2\) for \(a, b\in [0, 1]\), \(a + b = 1\). If the connection cost of \(aF^1 + b F^2\) satisfies
 	\[
-		a\cdot \mathop{\mathrm{conhn}}(F^1) + b\cdot \mathop{\mathrm{conhn}}(F^2) \leq \gamma \cdot \OPT_{\text{\(k\)-med.}}.
+		a\cdot \mathop{\mathrm{conn}}(F^1) + b\cdot \mathop{\mathrm{conn}}(F^2) \leq \gamma \cdot \OPT_{\text{\(k\)-med.}},
 	\]
-	The so-called \emph{bipoint solution}
+	we then call such a solution a \emph{bipoint solution}.
 \end{definition}
 
 \begin{remark}[\(\delta \)-bipoint rounding]

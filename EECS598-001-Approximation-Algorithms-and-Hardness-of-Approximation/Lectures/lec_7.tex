@@ -39,7 +39,7 @@ Due to the similarity between \autoref{prb:k-median} and \autoref{prb:facility-l
 \]
 i.e., this is a \(\gamma \)-approximation algorithm. So now, the task is to guess \(f\) such that the algorithm gives exactly \(k\) centers.
 
-\subsection{Bipoint Rounding}
+\subsection{Bipoint Solution}
 Turns out that we don't have ideas about the relation between \(k\) and \(f\), the only thing we know is that if \(f\to \infty \), \(k\) decreases, other than that it behaves quite arbitrary.
 
 \begin{remark}
@@ -84,71 +84,162 @@ where we set \(\alpha \coloneqq a \alpha ^1 + b \alpha ^2\) and \(f \coloneqq \m
 \end{explanation}
 
 \begin{definition}[Bipoint solution]\label{def:bipoint-solution}
-	Given \(F^1\), \(F^2\) with \(\left\vert F^1 \right\vert = k^1\), \(\left\vert F^2 \right\vert = k^2\) and \(k=ak^1 + bk^2\) for \(a, b\in [0, 1]\), \(a + b = 1\). If the connection cost of \(aF^1 + b F^2\) satisfies
+	Given \(F^1\), \(F^2\) with \(\left\vert F^1 \right\vert = k^1\), \(\left\vert F^2 \right\vert = k^2\) and \(k=ak^1 + bk^2\) for \(a, b\in [0, 1]\) and \(a + b = 1\), the \emph{bipoint solution}, denoted as \(aF^1 + b F^2\), satisfies
 	\[
-		a C^1 + b C^2 \leq \gamma \cdot \OPT_{\text{\(k\)-med.}},
+		a C^1 + b C^2 \leq \gamma \cdot \OPT_{\text{\(k\)-med.}}.
 	\]
-	we then call such a solution a \emph{bipoint solution}.
 \end{definition}
 
-From \autoref{def:bipoint-solution}, it's natural to do the so-called \hyperref[def:bipoint-rounding]{bipoint rounding}.
 
+\subsection{Bipoint Rounding}
+From \autoref{def:bipoint-solution}, it's natural to do the so-called \hyperref[def:bipoint-rounding]{bipoint rounding}.
 \begin{definition}[\(\delta \)-bipoint rounding]\label{def:bipoint-rounding}
 	Given solutions \(F^1\) and \(F^2\), a solution \(F\) with \(\left\vert F \right\vert = k\) such that
 	\[
-		\mathop{\mathrm{conn}}(F) \leq \delta \cdot (a C^1 + b C^2)
+		\mathop{\mathrm{conn}}(F) \leq \delta \cdot (a C^1 + b C^2) = \delta \cdot \mathop{\mathrm{conn}}(aF^1 + bF^2)
 	\]
 	is the so-called \emph{\(\delta\)-bipoint rounding solution}.
 \end{definition}
 \begin{note}
-	If we have a \(\delta\)-\hyperref[def:bipoint-rounding]{bipoint rounding} of a \(\gamma \)-\hyperref[def:LMP]{LMP} algorithm solution, then we automatically have an \hyperref[def:LMP]{LMP} ratio of \(\delta \cdot \gamma \) for this \hyperref[def:bipoint-rounding]{bipoint rounding} solution.
+	If we have a \(\delta\)-\hyperref[def:bipoint-rounding]{bipoint rounding} of a \(\gamma \)-\hyperref[def:LMP]{LMP} algorithm solution, then we automatically have an approximation ratio of \(\delta \cdot \gamma \) for this \hyperref[def:bipoint-rounding]{bipoint rounding} solution.
 \end{note}
 
-Back to \autoref{prb:k-median}, we see that we can actually get a \(2\)-\hyperref[def:bipoint-rounding]{bipoint rounding} as follows. For \(j\in F^1\), let \(\pi (j)\) be the closest facility in \(F^2\) to \(j\). Let \(F^{\ast} = \left\{ j^\prime \in F^2 \colon j^\prime =\pi (j) \text{ for some }j\in F^1  \right\} \). We see that \(\left\vert F^{\ast}  \right\vert \leq k^1\) since if \(\left\vert F^{\ast}  \right\vert < k^1\), then we add arbitrary centers so that \(\left\vert F^{\ast}  \right\vert = k^1\).
+Back to \autoref{prb:k-median}, we see that we can actually get a \(2\)-\hyperref[def:bipoint-rounding]{bipoint rounding} as follows. Consider we create a bipartite graph with \(Q^1, Q^2 \subseteq Q\) being two sides of the graph. Then for each \(i\in P\), \(i\) is connected to the closest facility in \(Q^1\), and also another closest facility in \(Q^2\), so we can create an edge between these two facilities.
+
+\begin{center}
+	\incfig{bipoint-rounding}
+\end{center}
+
+Now, for a fixed \(i\in P\), let \(d_j \coloneqq d(i, Q^j )\) for \(j = 1, 2\), we want to compare our designed final cost to \(a C^1 + b C^2\), so for this fixed \(i\), we want to make sure \(i\) \emph{pays} not much more than \(a d_1 + b d_2\).
+
+\begin{intuition}
+	We see that a natural rounding algorithm is the following: for an \(i \in P\), if its closest facility in \(Q^1\) is opened while its closest facility in \(Q^2\) is not opened, we may just direct \(i\) to the opened one in \(Q^1\), same for the other case. Now, if both facilities are opened, then we direct \(i\) to the facility in \(F^1\) with probability \(a\), while to the facility in \(Q^2\) with probability \(1 - a = b\).
+\end{intuition}
+
+\begin{remark}
+	The problem of the above algorithm is that we don't have control about the total number of the final open facilities: it can be the case that at the end we open every facility in \(Q^2\), which is \(k^2\), not \(k\). So we need to sometimes direct \(i\) to other facilities (in \(Q^1\)) that is not closest to which.
+\end{remark}
+
+For \(j\in Q^1\), let \(\pi (j)\) be the closest facility in \(Q^2\) to \(j\), and let \(Q^{\ast} \) be the image of such a map \(\pi \), i.e., \(Q^{\ast} = \left\{ j^\prime \in Q^2 \colon j^\prime =\pi (j) \text{ for some }j\in Q^1  \right\} \).
+
+\begin{note}
+	We may assume \(\left\vert Q^{\ast} \right\vert = k^1\).
+\end{note}
+\begin{explanation}
+	Clearly, \(\left\vert Q^{\ast} \right\vert \leq k^1\). And if \(\left\vert Q^{\ast}  \right\vert < k^1\), we add arbitrary centers so that \(\left\vert Q^{\ast}  \right\vert = k^1\).
+	\begin{center}
+		\incfig{bipoint-rounding-II}
+	\end{center}
+	For example, the initial image size above is only \(4\), we need to add \(2\) more arbitrary centers into \(Q^{\ast}\).
+\end{explanation}
 
 To open the facilities as what we want, consider the following rounding algorithm.
-\begin{enumerate}[(a)]
-	\item Open \(F^1\) with probability \(a\), otherwise open \(F^{\ast} \).
-	\item Randomly choose \(k - k_1\) far from \(F^2 \setminus F^{\ast} \).
-\end{enumerate}
 
-Then,
-\begin{itemize}
-	\item \(j\in F^1\), \(\Pr(\text{\(j\) open} )= a\)
-	\item \(j\in F^{\ast}\), \(\Pr(\text{\(j\) open} )= b\)
-	\item \(j\in F^2 \setminus F^{\ast}\), \(\Pr(\text{\(j\) open} )= \frac{k-k_1}{k_2 - k_1}= b\)
-\end{itemize}
+\begin{algorithm}[H]\label{algo:k-median-bipoint-rounding}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:k-median]{\(k\)-Median} -- \(2\)-\hyperref[def:bipoint-rounding]{Bipoint Rounding}}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), \(a\in (0, 1)\), \(\epsilon \in (0, 1)\), \(k\in \mathbb{\MakeUppercase{n}} \)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\) with \(\left\vert Q ^\prime \right\vert = k \)}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{bisearch}{binary-search}
+	\SetKw{Break}{break}
+	\BlankLine
 
-Now, fix \(i\in P\) and let \(d_j \coloneqq d(i, j)\), then we have
-\begin{table}[H]
-	\centering
-	\begin{tabular}{c|c|c}
-		\toprule
-		                               & distance       & probability                  \\
-		\midrule
-		\(j^2\) open                   & \(d_2\)        & \(b\)                        \\
-		\(j^2\) not open, \(j^1\) open & \(d_1\)        & \(\geq (a-b)^+ \eqqcolon M\) \\
-		none of \(j^1, j^2\) open      & \(2d_1 + d_2\) & \(\leq 1 - b - M\)           \\
-		\bottomrule
-	\end{tabular}
-\end{table}
+	\((Q^1, Q^2)\gets\)\bisearch{\(P\), \(Q\), \(\epsilon\)}\Comment*[r]{achieve \(\left\vert f^1 - f^2 \right\vert \leq \epsilon \OPT / n\)}
+	\;
+	\(Q^\prime \gets \varnothing \), \(k^1\gets \left\vert Q^1 \right\vert\), \(k^2\gets \left\vert Q^2 \right\vert\), \(Q^{\ast}\gets \left\{ j^\prime \in Q^2 \colon j^\prime =\pi (j) \text{ for some }j\in Q^1  \right\}\)\;
+	\;
+	\For(\label{algo:k-median-bipoint-rounding-for}){\(j\in Q^1\)}{
+		\uIf(\Comment*[f]{open \(Q^1\) w.p.\(a\)}){\rand{\(0\), \(1\)}\(\leq a\)}{
+			\(Q^\prime \gets Q^\prime \cup \left\{ j \right\} \)\;
+		}\Else(\label{algo:k-median-bipoint-rounding-else}\Comment*[f]{open \(Q^{\ast}\) w.p.\(1-a\)}){
+			\(Q^\prime \gets Q^\prime \cup \left\{ \pi (j) \right\} \)\;
+		}
+	}
+	\;
+	\Comment{still need to open \(k - k^1\) more}
+	\(Q^\prime \gets Q^\prime \cup \left\{ \text{\((k - k^1)\) random \(j\in Q^2 \setminus Q^{\ast}\) }  \right\} \)\label{algo:k-median-bipoint-rounding-random}\;
+	\Return{\(Q^\prime \)}\;
+\end{algorithm}
 
-Then, the expected cost is just
-\[
-	\mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq b d_2 + Md_1 + (1 - b - M) (2d_1 + d_2).
-\]
+\begin{remark}
+	\autoref{algo:k-median-bipoint-rounding} is a randomized algorithm which will \textbf{always} open \(k\) facilities. The randomness comes from the cost, i.e., we can analyze its cost in expectation.
+\end{remark}
 
-\begin{itemize}
-	\item If \(b \geq a\), then \(b \geq 1 / 2\), \(M = 0\) and
-	      \[
-		      \mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq b - d_2 + (1 - b)	(2 d_1 + d_2) = 2ad_1 + d_2 \leq 2(ad_1 + bd_2).
-	      \]
-	\item If \(a > b\), then \(a > 1 / 2\), \(M = a - b\) and
-	      \[
-		      \mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq bd_2 ( (a - b))d_1 + b(2d_1 + d_2) = d_1(a+b)+d_2(b+d) \leq 2(ad_1 + bd_2).
-	      \]
-\end{itemize}
+\begin{intuition}
+	\autoref{algo:k-median-bipoint-rounding} is kind of \emph{mimicking} what we want, since
+	\begin{itemize}
+		\item \(j\in Q^1\), \(\Pr(\text{\(j\) open} )= a\)
+		\item \(j\in Q^{\ast}\), \(\Pr(\text{\(j\) open} ) = 1 - a = b\)
+		\item \(j\in Q^2 \setminus Q^{\ast}\), \(\Pr(\text{\(j\) open} )= \frac{k-k^1}{k^2 - k^1}= b\)
+	\end{itemize}
+\end{intuition}
+
+\begin{theorem}
+	\autoref{algo:k-median-bipoint-rounding} is a \(2\)-\hyperref[def:bipoint-rounding]{bipoint} algorithm (in expectation).
+\end{theorem}
+\begin{proof}
+	Let's analyze a bit careful. Fixing an \(i\in P\), and denote its closest facility in \(Q^1\) as \(j^1\), and the closest facility in \(Q^2\) as \(j^2\). If \(j^1\) is not opened, then we know \(\pi (j^1)\) is opened for sure in \autoref{algo:k-median-bipoint-rounding-else}. We see that
+	\begin{itemize}
+		\item If \(j^2\) is in \(Q^{\ast} \), then we know \(i\) will be direct to either \(j^1\) or \(j^2\) in \autoref{algo:k-median-bipoint-rounding-for}, i.e., \(i\) is perfectly happy since it can go to one of the closest facility.
+		\item The tricky case is when \(j^2\) is not in \(Q^{\ast}\).
+		      \begin{itemize}
+			      \item If \(j^1\) is opened, \(i\) can still go to \(j^1\) without problem.
+			      \item If \(j^1\) is also not opened, we know that \(\pi (j^1)\) will be opened in \autoref{algo:k-median-bipoint-rounding-else}. In this worst case, we just direct \(i\) to \(\pi (j^1)\) and the distance will be \(i\to j^1 \to \pi (j^1) \), which is bounded by \(d_1 + d(j^1, \pi (j^1))\). But observe that \(d(j^1, \pi (j^1)) \leq d_1 + d_2\), so we have \(2d_1 + d_2\).
+		      \end{itemize}
+	\end{itemize}
+
+	\begin{center}
+		\incfig{bipoint-rounding-III}
+	\end{center}
+
+	In all, we have the following.\footnote{This is a slightly worse result since we force \(i\) to go to \(j^2\) if \(j^2\) is opened, but actually, \(i\) can go to \(j^1\) if \(j^1\) is opened too with shorter distance. But this still gives us a good enough bound.}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{c|c|c}
+			\toprule
+			                               & Distance       & Probability                  \\
+			\midrule
+			\(j^2\) open                   & \(d_2\)        & \(b\)                        \\
+			\(j^2\) not open, \(j^1\) open & \(d_1\)        & \(\geq (a-b)^+ \eqqcolon M\) \\
+			none of \(j^1, j^2\) open      & \(2d_1 + d_2\) & \(\leq 1 - b - M\)           \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+
+	Then, the expected cost is just\footnote{Since the final case is always worse than the second case, it is legal to assume that the second case has the minimum probability and the final has the maximum for the expectation bound to hold.}
+	\[
+		\mathbb{E}\left[\text{\(i\)'s connection cost}\right] \leq b d_2 + Md_1 + (1 - b - M) (2d_1 + d_2),
+	\]
+	and we now have two cases.
+	\begin{itemize}
+		\item If \(b \geq a\), then \(b \geq 1 / 2\), \(M = 0\) and
+		      \[
+			      \mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq b \cdot d_2 + (1 - b) (2 d_1 + d_2) = 2ad_1 + d_2 \leq 2(ad_1 + bd_2).
+		      \]
+		\item If \(a > b\), then \(a > 1 / 2\), \(M = a - b\) and
+		      \[
+			      \mathbb{E}\left[\text{\(i\)'s connected cost}\right] \leq b\cdot d_2 + (a - b) d_1 + b(2d_1 + d_2) = d_1(a+b)+d_2(b+b) \leq 2(ad_1 + bd_2).
+		      \]
+	\end{itemize}
+
+	This shows \autoref{algo:k-median-bipoint-rounding} is a \(2\)-\hyperref[def:bipoint-rounding]{bipoint} algorithm in expectation, proving the result.
+\end{proof}
 
 \begin{remark}[SOTA]
-	The SOTA result
+	The SOTA result specifically for \autoref{prb:k-median} is summarized as follows.
+	% file:///Users/pbb/Developer/quiver/src/index.html?q=WzAsNixbMCwwLCJcXHRleHR7XFxoeXBlcnJlZlthbGdvOmZhY2lsaXR5LWxvY2F0aW9uLVBEXXtQcmltYWwtRHVhbH0gXFwoM1xcKS1cXGh5cGVycmVmW2RlZjpMTVBde0xNUH19Il0sWzAsMSwiXFx0ZXh0e0R1YWwgRml0dGluZ35cXGNpdGV7aHR0cHM6Ly9kb2kub3JnLzEwLjQ4NTUwL2FyeGl2LjIyMDcuMDUxNTB9IFxcKDEuOTlcXGxkb3RzIDkgXFwpLVxcaHlwZXJyZWZbZGVmOkxNUF17TE1QfX0iXSxbMSwwLCJcXHRleHR7XFxoeXBlcnJlZlthbGdvOmstbWVkaWFuLWJpcG9pbnQtcm91bmRpbmdde1xcKDJcXCktYmlwb2ludCByb3VuZGluZ319Il0sWzEsMSwiXFx0ZXh0e1xcKDEuMzVcXCktYmlwb2ludCByb3VuZGluZ31cXGZvb3Rub3Rle1RoaXMgd2lsbCByZXR1cm4gXFwoaytjXFwpIGNlbnRlcnMsIHdoZXJlIFxcKGNcXCkgaXMgYW4gYWJzb2x1dGUgY29uc3RhbnQuIFRoZXJlJ3MgYSB3YXkgdG8gdHJhbnNmb3JtIHRoaXMgc29sdXRpb24gYmFjayB0byBcXChrXFwpIGNlbnRlcnMgd2l0aG91dCBsb29zaW5nIGFueSBwZXJmb3JtYW5jZS59Il0sWzIsMCwiXFx0ZXh0e1xcKDNcXCktYXBwcm94aW1hdGlvbn0iXSxbMiwxLCJcXHRleHR7XFwoMi43XFwpLWFwcHJlb3hpbWF0aW9ufSJdLFsxLDNdLFszLDVdLFswLDQsIiIsMCx7ImN1cnZlIjotM31dXQ==
+	\[\begin{tikzcd}
+			{\text{\hyperref[algo:facility-location-PD]{Primal-Dual} \(3\)-\hyperref[def:LMP]{LMP}}} & {\text{\hyperref[algo:k-median-bipoint-rounding]{\(2\)-bipoint rounding}}} & {\text{\(3\)-approximation}} \\
+			{\text{Dual Fitting~\cite{https://doi.org/10.48550/arxiv.2207.05150} \(1.99\ldots 9 \)-\hyperref[def:LMP]{LMP}}} & {\text{\(1.35\)-bipoint rounding}\footnote{This will return \(k+c\) centers, where \(c\) is an absolute constant. There's a way to transform this solution back to \(k\) centers without loosing any performance.}} & {\text{\(2.7\)-appreoximation}}
+			\arrow[from=2-1, to=2-2]
+			\arrow[from=2-2, to=2-3]
+			\arrow[curve={height=-18pt}, from=1-1, to=1-3]
+		\end{tikzcd}\]
+
+	But we'll see that by changing the problem a bit, like consider squaring the distance in the objective of \autoref{prb:k-median} (which is the \(k\)-mean problem), we can get \(9\)-approximation by \hyperref[algo:facility-location-PD]{Primal-Dual}, while the lower path doesn't tell us anything, which is so fragile.
 \end{remark}
+
+\begin{note}[Derandomized]
+	It's possible to derandomized \autoref{algo:k-median-bipoint-rounding}.
+\end{note}

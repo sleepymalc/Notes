@@ -46,16 +46,22 @@ Turns out that we don't have ideas about the relation between \(k\) and \(f\), t
 	The relation between \(k\) and \(f\) indeed highly depends on what algorithm we use. But at least for \autoref{algo:facility-location-greedy-III}, nobody knows anything in this case.
 \end{remark}
 
-Given this fact, just randomly guess one \(f\) doesn't work. A new idea is then to maintain two solutions (or interval) \([f^2, f^1]\) such that \(f^2 \leq f^1\), where
+Given this fact, just randomly guess one \(f\) doesn't work. A new idea is then to maintain two solutions (or interval) \([f^2, f^1]\) such that \(f^2 \leq f^1\),\footnote{We start from \(f^2 = 0\) and \(f^1 = \infty \), where we set \(f^1\) arbitrary large.} where
 \begin{itemize}
-	\item At \(f^2\), the algorithm opens \(k^2 \geq k\) facilities.
-	\item At \(f^1\), the algorithm opens \(k^1 \leq k\) facilities.
+	\item at \(f^2\), the algorithm opens \(k^2 \geq k\) facilities;
+	\item at \(f^1\), the algorithm opens \(k^1 \leq k\) facilities.
 \end{itemize}
-Then, by binary search, we can get \(f_2 \leq f_1\) such that
+Then, a naive approach is to use binary search and get \(f^2 \leq f^1\) such that
 \[
 	\left\vert f^1 - f^2 \right\vert \leq \frac{\epsilon \OPT}{n}.
 \]
-Now, if \(a\in [0, 1]\) and \(b \coloneqq 1 - a\), we have \(k \coloneqq ak^1 + bk^2\) where \(k^1 \leq k \leq k^2\). Denote \(C^i\) as the connection cost with \(f^i\) such that \(C^1 \geq C^2\), we have
+Notice that the whole point of doing binary search is because we assume that if \(k^2 \geq k\) at \(f^2\) and \(k_1 \leq k\) at \(f^1\), then we can find an \(f^{\ast} \in [f^2, f^1]\) such that we get exactly \(k^{\ast} = k\) at \(f^{\ast} \).
+
+\begin{remark}[Caveat of achieving \(k\)]
+	This is probably not the case for \autoref{algo:facility-location-greedy} (\(2\)-\hyperref[def:LMP]{LMP}) since the decision is quite sequential; but if we use \autoref{algo:facility-location-PD} (\(2\)-\hyperref[def:LMP]{LMP}), since there are lots of \hyperref[prb:max-strongly-independent-set]{maximal independent sets}, so by doing \textbf{a lot more work}, we can actually achieve this.
+\end{remark}
+
+Now, assume that we have continuity of the relation between \(k\) and \(f\) by carefully designing our (\(\gamma\)-\hyperref[def:LMP]{LMP}) algorithm, then \(\exists a\in [0, 1]\) and \(b \coloneqq 1 - a\) such that \(k \coloneqq ak^1 + bk^2\) where \(k^1 \leq k \leq k^2\). Denote \(C^i\) as the connection cost \(\mathop{\mathrm{conn}}(f^i)\) of \(f^i\) such that \(C^1 \geq C^2\), we have
 \[
 	\begin{dcases}
 		C^1 + \gamma k^1 f^1 \leq \gamma \sum_{i} \alpha _i^1, & \quad (\times a) \\
@@ -66,30 +72,39 @@ hence,
 \[
 	aC^1 + bC^2
 	\leq \gamma \left( a \sum_{i} \alpha _i^1 + b \sum_{i} \alpha _i^2 - ak^1 f^1 - bk^2 f^2 \right)
-	\leq \gamma \underbrace{\left( \sum_{i} \alpha _i - kf \right)}_{\leq \OPT_{\text{\(k\)-med.}}} + \underbrace{\vphantom{\left( \sum_{i} \alpha _i - kf \right)}\gamma k \left\vert f^1 - f^2 \right\vert}_{\epsilon \OPT_{\text{\(k\)-med.}}},
+	\leq \gamma \underbrace{\left( \sum_{i} \alpha _i - kf \right)}_{\leq \OPT_{\text{\(k\)-med.}}} + \underbrace{\vphantom{\left( \sum_{i} \alpha _i - kf \right)}\gamma k \left\vert f^1 - f^2 \right\vert}_{\leq \epsilon \OPT_{\text{\(k\)-med.}}},
 \]
 where we set \(\alpha \coloneqq a \alpha ^1 + b \alpha ^2\) and \(f \coloneqq \max (f^1, f^2)\).
 
 \begin{note}
-	\((\alpha , f)\) is dual-feasible for \autoref{prb:k-median}.
+	To make sure \(\sum_{i} \alpha _i - kf \leq  \OPT_{\text{\(k\)-med.}}\), we need to check that \((\alpha , f)\) is dual-feasible for \autoref{prb:k-median}.
 \end{note}
+\begin{explanation}
+	The feasibility comes from the fact that the first two constraints of \autoref{prb:k-median} are linear, so they're automatically satisfied. The only non-trivial constraint is \(\sum_{i} \beta _{ij} \leq f\), but since we choose \(f\) to be the maximum, it'll be more satisfied.
+\end{explanation}
 
 \begin{definition}[Bipoint solution]\label{def:bipoint-solution}
 	Given \(F^1\), \(F^2\) with \(\left\vert F^1 \right\vert = k^1\), \(\left\vert F^2 \right\vert = k^2\) and \(k=ak^1 + bk^2\) for \(a, b\in [0, 1]\), \(a + b = 1\). If the connection cost of \(aF^1 + b F^2\) satisfies
 	\[
-		a\cdot \mathop{\mathrm{conn}}(F^1) + b\cdot \mathop{\mathrm{conn}}(F^2) \leq \gamma \cdot \OPT_{\text{\(k\)-med.}},
+		a C^1 + b C^2 \leq \gamma \cdot \OPT_{\text{\(k\)-med.}},
 	\]
 	we then call such a solution a \emph{bipoint solution}.
 \end{definition}
 
-\begin{remark}[\(\delta \)-bipoint rounding]
-	For \(F^1\) and \(F^2\), output \(F\) with \(\left\vert F \right\vert = k\) such that
-	\[
-		\mathop{\mathrm{conn}}(F) \leq \delta \cdot (a C^1 + b C^2).
-	\]
-\end{remark}
+From \autoref{def:bipoint-solution}, it's natural to do the so-called \hyperref[def:bipoint-rounding]{bipoint rounding}.
 
-Back to \autoref{prb:k-median}, we see that we can actually get a \(2\)-bipoint rounding as follows. For \(j\in F^1\), let \(\pi (j)\) be the closest facility in \(F^2\) to \(j\). Let \(F^{\ast} = \left\{ j^\prime \in F^2 \colon j^\prime =\pi (j) \text{ for some }j\in F^1  \right\} \). We see that \(\left\vert F^{\ast}  \right\vert \leq k^1\) since if \(\left\vert F^{\ast}  \right\vert < k^1\), then we add arbitrary centers so that \(\left\vert F^{\ast}  \right\vert = k^1\).
+\begin{definition}[\(\delta \)-bipoint rounding]\label{def:bipoint-rounding}
+	Given solutions \(F^1\) and \(F^2\), a solution \(F\) with \(\left\vert F \right\vert = k\) such that
+	\[
+		\mathop{\mathrm{conn}}(F) \leq \delta \cdot (a C^1 + b C^2)
+	\]
+	is the so-called \emph{\(\delta\)-bipoint rounding solution}.
+\end{definition}
+\begin{note}
+	If we have a \(\delta\)-\hyperref[def:bipoint-rounding]{bipoint rounding} of a \(\gamma \)-\hyperref[def:LMP]{LMP} algorithm solution, then we automatically have an \hyperref[def:LMP]{LMP} ratio of \(\delta \cdot \gamma \) for this \hyperref[def:bipoint-rounding]{bipoint rounding} solution.
+\end{note}
+
+Back to \autoref{prb:k-median}, we see that we can actually get a \(2\)-\hyperref[def:bipoint-rounding]{bipoint rounding} as follows. For \(j\in F^1\), let \(\pi (j)\) be the closest facility in \(F^2\) to \(j\). Let \(F^{\ast} = \left\{ j^\prime \in F^2 \colon j^\prime =\pi (j) \text{ for some }j\in F^1  \right\} \). We see that \(\left\vert F^{\ast}  \right\vert \leq k^1\) since if \(\left\vert F^{\ast}  \right\vert < k^1\), then we add arbitrary centers so that \(\left\vert F^{\ast}  \right\vert = k^1\).
 
 To open the facilities as what we want, consider the following rounding algorithm.
 \begin{enumerate}[(a)]

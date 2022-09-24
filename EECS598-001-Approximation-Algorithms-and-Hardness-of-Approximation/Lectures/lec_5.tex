@@ -36,9 +36,9 @@ In particular, the notion of \hyperref[def:metric]{metric} is useful.
 Let's first look at the problem.
 
 \begin{problem}[Facility location]\label{prb:facility-location}
-Given a \hyperref[rmk:metric-space]{metric space} \((X, d)\) and \(P,  Q\subseteq X\), \(f\in \mathbb{\MakeUppercase{r}} ^+\) where \(P\) is the set of clients, \(Q\) is the set of (possible) facilities, we want to open \(O \subseteq Q\) such that it minimizes
+Given a \hyperref[rmk:metric-space]{metric space} \((X, d)\) and \(P,  Q\subseteq X\), \(f\in \mathbb{\MakeUppercase{r}} ^+\) where \(P\) is the set of clients, \(Q\) is the set of (possible) facilities, we want to open \(Q^\prime \subseteq Q\) such that it minimizes
 \[
-	\sum_{i\in P} \min _{j\in O} d(i, j) + f\left\vert O \right\vert,
+	\sum_{i\in P} \min _{j\in Q^\prime } d(i, j) + f\left\vert Q^\prime  \right\vert,
 \]
 where we interpret the first summation as connection cost, the second term as opening cost.
 \end{problem}
@@ -107,31 +107,30 @@ Let's first see the primal-dual algorithm on \((P)\) and \((D)\) derived above.
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:facility-location]{Facility location} -- Primal-Dual}
 	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
-	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
 	\SetKw{Break}{break}
 	\BlankLine
-	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
 	\;
 	\While(){\(S \neq P\)}{
 	\While(\label{algo:facility-location-PD-while-2}){\textsf{True}}{
 	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
 
-	\uIf(\label{algo:facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus O\) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
+	\uIf(\label{algo:facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
 		\Break
 	}
-	\ElseIf(\label{algo:facility-location-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+	\ElseIf(\label{algo:facility-location-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
 		\Break
 	}
 	}
-	\(O\gets\left\{ \text{tight facilities}\right\} \)\label{algo:facility-location-PD-lin10}\Comment*[r]{Update \(O\)}
-	\(S\gets \left\{ \text{clients connected to \(O\)} \right\} \)\label{algo:facility-location-PD-lin11}\Comment*[r]{Update \(S\)}
+	\(Q^\prime \gets\left\{ \text{tight facilities}\right\} \)\label{algo:facility-location-PD-lin10}\Comment*[r]{Update \(Q^\prime \)}
+	\(S\gets \left\{ \text{clients connected to \(Q^\prime\)} \right\} \)\label{algo:facility-location-PD-lin11}\Comment*[r]{Update \(S\)}
 	}
-
 	\;
-	\label{algo:facility-location-PD-comment}\Comment{Trim down \(O\)}
-	\(G = (O, E\coloneqq \left\{ (j, j^\prime )\colon \exists i\in P \text{ such that }\alpha _i > d(i, j), j, j^\prime \in O \right\})\)\;
-	Compute \(O^\prime\) s.t. \(\forall j\in O\), either \(j\in O^\prime\) or \(\exists j^\prime\in O^\prime \) s.t. \((j, j^\prime )\in E\)\Comment*[r]{\hyperref[prb:max-strongly-independent-set]{maximal independent set}}
-	\Return{\(O^\prime \)}\;
+	\label{algo:facility-location-PD-comment}\Comment{Trim down \(Q^\prime \)}
+	\(G = (Q^\prime , E\coloneqq \left\{ (j, j^\prime )\colon \exists i\in P \text{ such that }\alpha _i > d(i, j), j, j^\prime \in Q^\prime \right\})\)\;
+	Compute \(Q^{\prime\prime}\) s.t. \(\forall j\in Q^\prime \), either \(j\in Q^{\prime\prime}\) or \(\exists j^\prime\in Q^{\prime\prime} \) s.t. \((j, j^\prime )\in E\)\Comment*[r]{\hyperref[prb:max-strongly-independent-set]{max independent set}}
+	\Return{\(Q^{\prime\prime} \)}\;
 \end{algorithm}
 
 \begin{note}
@@ -157,11 +156,11 @@ This directly relates to the fact that for all \(i, j\), if \(i, j\) are connect
 \end{proof}
 
 \begin{note}[Trim down]
-	Just like \autoref{algo:feedback-vertex-set-PD}, after getting the initial solution \(O\), we'll soon see in the analysis section that it's kind of wasteful, so we trim it down to obtain a better solution.
+	Just like \autoref{algo:feedback-vertex-set-PD}, after getting the initial solution \(Q^\prime \), we'll soon see in the analysis section that it's kind of wasteful, so we trim it down to obtain a better solution.
 \end{note}
 
 \subsection{Analysis}
-We first do a naive analysis, i.e., try to bound the connected cost and opening cost for \(O\) obtained in \autoref{algo:facility-location-PD} before \autoref{algo:facility-location-PD-comment}, which turns out to be not working. The problem is not on connected cost, since as noted above, \(d(i, j) \leq \alpha _i\) so the connection cost is at most \(\sum_{i} \alpha _i\).
+We first do a naive analysis, i.e., try to bound the connected cost and opening cost for \(Q^\prime \) obtained in \autoref{algo:facility-location-PD} before \autoref{algo:facility-location-PD-comment}, which turns out to be not working. The problem is not on connected cost, since as noted above, \(d(i, j) \leq \alpha _i\) so the connection cost is at most \(\sum_{i} \alpha _i\).
 
 \begin{remark}
 	Bound the opening cost naively can't guarantee a constant approximation factor.
@@ -169,7 +168,7 @@ We first do a naive analysis, i.e., try to bound the connected cost and opening 
 \begin{explanation}
 	To bound opening cost, we see that
 	\[
-		\text{ opening cost } = f \left\vert O \right\vert = \sum_{j\in O}f = \sum_{j}\sum_{i} \beta _{ij} = \sum_{i} \sum_{j\in O} \beta _{ij}.
+		\text{ opening cost } = f \left\vert Q^\prime  \right\vert = \sum_{j\in Q^\prime }f = \sum_{j}\sum_{i} \beta _{ij} = \sum_{i} \sum_{j\in Q^\prime } \beta _{ij}.
 	\]
 	Observe that since \(\beta _{ij} = \max (0, \alpha _i - d(i, j)) \leq \alpha _i\), hence if we can guarantee for each \(i\), it only pays for one \(j\), then we will get a \(2\)-approximation. But this might not be the case since we don't have control of how many \(j\) that \(i\) is paying.
 \end{explanation}
@@ -187,7 +186,7 @@ Let's first introduce some notions in order to analyze \autoref{algo:facility-lo
 Note that the problem in the naive solution happens when a client \(i\) pays multiple facilities \(j\). And a simple idea is to close some facilities \(j\) such that every client pay at most \(1\) facility.
 
 \begin{intuition}
-	If \(i\) is \hyperref[not:contributing]{contributes} to two facilities \(j\) and \(j^\prime \), we close down one of them basically since this is where the problem comes from. This is exactly how we \hyperref[algo:facility-location-PD-comment]{trim down \(O\)}: by considering \(G = (O, E)\) such that \((j, j^\prime )\in E\) if and only if \(\exists i\in P\) that \hyperref[not:contributing]{contributes} to both \(j\) and \(j^\prime \), taking \hyperref[prb:max-strongly-independent-set]{maximal independent set} of \(G\) exactly makes \(i\) paying to only one \(j\).
+	If \(i\) is \hyperref[not:contributing]{contributes} to two facilities \(j\) and \(j^\prime \), we close down one of them basically since this is where the problem comes from. This is exactly how we \hyperref[algo:facility-location-PD-comment]{trim down \(Q^\prime \)}: by considering \(G = (Q^\prime , E)\) such that \((j, j^\prime )\in E\) if and only if \(\exists i\in P\) that \hyperref[not:contributing]{contributes} to both \(j\) and \(j^\prime \), taking \hyperref[prb:max-strongly-independent-set]{maximal independent set} of \(G\) exactly makes \(i\) paying to only one \(j\).
 \end{intuition}
 
 \begin{note}
@@ -195,7 +194,7 @@ Note that the problem in the naive solution happens when a client \(i\) pays mul
 \end{note}
 
 \begin{notation}[Directed connected]\label{not:directed-connected}
-	We say \(i\in P\) is \emph{directed connected} if \(j\in O^\prime \) such that \((i, j)\) is connected (\(\alpha _{i} \geq d(i, j)\)). For these \(i\), divide \(\alpha _i\) into \(\alpha _i^f \coloneqq \beta _{ij}\) and \(\alpha _i^c\coloneqq d(i, j)\), i.e., \(\alpha _i = \alpha _i^f + \alpha _i^c\).
+	We say \(i\in P\) is \emph{directed connected} if \(j\in Q^{\prime\prime} \) such that \((i, j)\) is connected (\(\alpha _{i} \geq d(i, j)\)). For these \(i\), divide \(\alpha _i\) into \(\alpha _i^f \coloneqq \beta _{ij}\) and \(\alpha _i^c\coloneqq d(i, j)\), i.e., \(\alpha _i = \alpha _i^f + \alpha _i^c\).
 \end{notation}
 
 \begin{notation}[Indirected connected]\label{not:indirected-connected}
@@ -208,11 +207,11 @@ Note that the problem in the naive solution happens when a client \(i\) pays mul
 	\end{figure}
 \end{notation}
 
-Now, we can bound the opening cost \(f\left\vert O^\prime \right\vert\) for \(O^\prime \) more carefully. It's now
+Now, we can bound the opening cost \(f\left\vert Q^{\prime\prime} \right\vert\) for \(Q^{\prime\prime} \) more carefully. It's now
 \[
-	f \left\vert O^\prime  \right\vert
-	= \sum_{j\in O^\prime } \sum_{i} \beta _{ij} = \sum_{j\in O^\prime } \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \beta _{ij}
-	= \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \left[ \sum_{j\in O^\prime} \beta _{ij} \right]
+	f \left\vert Q^{\prime\prime}  \right\vert
+	= \sum_{j\in Q^{\prime\prime} } \sum_{i} \beta _{ij} = \sum_{j\in Q^{\prime\prime} } \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \beta _{ij}
+	= \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \left[ \sum_{j\in Q^{\prime\prime}} \beta _{ij} \right]
 	= \sum_{\text{\hyperref[not:directed-connected]{d.c.} }i} \alpha _i^f.
 \]
 
@@ -235,7 +234,7 @@ Finally, we have the following.
 	\autoref{algo:facility-location-PD} is a \(3\)-approximation algorithm.
 \end{theorem}
 \begin{proof}
-	The cost of \(O^\prime \) produce by \autoref{algo:facility-location-PD} is just the connected cost of plus the opening cost of \(O^\prime \), which can be bounded as
+	The cost of \(Q^{\prime\prime} \) produce by \autoref{algo:facility-location-PD} is just the connected cost of plus the opening cost of \(Q^{\prime\prime} \), which can be bounded as
 	\[
 		\text{final cost} = \text{connected cost} + \text{opening cost} \leq \sum _i 3 \alpha _i^c + \sum_i \alpha _i^f \leq 3 \sum_{i} \alpha _i \leq 3 \OPT,
 	\]

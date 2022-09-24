@@ -7,14 +7,19 @@ Let's look at another \hyperref[prb:clustering]{clustering} problem.
 Given a \hyperref[def:metric]{metric space} \((X, d)\) and \(P, Q\subseteq X\) with \(k\in \mathbb{\MakeUppercase{n}} \), find \(Q^\prime \subseteq Q\) with \(\left\vert Q^\prime  \right\vert = k\) which minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j)\).
 \end{problem}
 
-The natural linear programming is the following. Consider \(\left\{ x_{ij}  \right\}_{i\in P, j\in Q} \) and \(\left\{ y_j \right\}_{j\in Q} \), then
+The natural linear programming for \autoref{prb:k-median} is the following. Consider \(\left\{ x_{ij}  \right\}_{i\in P, j\in Q} \) and \(\left\{ y_j \right\}_{j\in Q} \), then
 \begin{align*}
-	\min~ & \sum_{ij} x_{ij} d(i, j)                                             \\
-	      & \sum_{j} x_{ij} \geq 1   & \forall i\in P         &  & (\alpha _i)   \\
-	      & x_{ij} \leq y_j          & \forall i\in P, j\in Q &  & (\beta _{ij}) \\
-	      & \sum_{j} y_j \leq k
+	\min~ & \sum_{ij} x_{ij} d(i, j)                                                \\
+	      & \sum_{j} x_{ij} \geq 1   & \forall i\in P         &  & (\alpha _i)      \\
+	      & x_{ij} \leq y_j          & \forall i\in P, j\in Q &  & (\beta _{ij})    \\
+	      & \sum_{j} y_j \leq k      &                        &  & (f)\footnotemark \\
 	      & x, y\geq 0
 \end{align*}
+\footnotetext{Notice that compare to \autoref{prb:facility-location}, \(f\) here is a variable but not a given facility cost! The reason why we do this will be clear soon.}
+
+\begin{intuition}
+	We interpret \(x_{ij} \) as follows: if \(x_{ij} = 1\), then \(i\) belongs to \(j\). And \(y_j=1\) if \(j\) is the actual median we choose (i.e., in \(Q^\prime \)). As for constraints, both \(\sum_{j} x_{ij} \geq 1\) and \(\sum_{j} y_j \leq k\) are clear, while for \(x_{ij} \leq y_j\), we see that it can't be the case that \(x_{ij} = 1\) while \(y_j = 0\), i.e., we can't have the case that \(x_{ij} \) belongs to \(j\) while \(j\) isn't even in \(Q^\prime \).
+\end{intuition}
 
 The dual is then
 \begin{align*}
@@ -24,23 +29,24 @@ The dual is then
 	      & \alpha , \beta \geq 0
 \end{align*}
 
-\begin{definition}[LMP approximation]\label{def:LMP}\todo{Fix}
-	An algorithm is called \emph{\(\gamma \)-Lagrangian multiplier preserving approximation} (LMP-approximation) if
-	\[
-		\frac{\mathop{\mathrm{conn}}(\text{ALG})}{\gamma }+ k^\prime f \leq \sum_{i} \alpha _i
-	\]
-	for some \(\gamma > 0\).
-\end{definition}
+\begin{note}
+	Notice that this is exactly the dual as \autoref{prb:facility-location}, except that we now have an additional \(-kf\) term in the objective function. Although \(f\) is not included in the statement of \autoref{prb:k-median}, by denoting one of the dual variable \(f\), we get a similar formulation compare to \autoref{prb:facility-location}.
+\end{note}
+
+Due to the similarity between \autoref{prb:k-median} and \autoref{prb:facility-location}, we can try to use \autoref{algo:facility-location-greedy-III} which solves \autoref{prb:facility-location} with \(2\)-\hyperref[def:LMP]{LMP} guarantee. But note that in \autoref{prb:facility-location}, we need to specify \(f\). Suppose we guessed \(f\), and we run a \(\gamma\)-\hyperref[def:LMP]{LMP approximation} algorithm and somehow get \(k^\prime = k\). Then we have
+\[
+	\frac{\mathop{\mathrm{conn}}(\mathrm{ALG})}{\gamma } \leq \sum_{i} \alpha _i - kf \leq \OPT_{\text{\(k\)-med.}},
+\]
+i.e., this is a \(\gamma \)-approximation algorithm. So now, the task is to guess \(f\) such that the algorithm gives exactly \(k\) centers.
+
+\subsection{Bipoint Rounding}
+Turns out that we don't have ideas about the relation between \(k\) and \(f\), the only thing we know is that if \(f\to \infty \), \(k\) decreases, other than that it behaves quite arbitrary.
 
 \begin{remark}
-	Suppose we guessed \(f\), and after running \(\gamma\)-\hyperref[def:LMP]{LMP approximation} algorithm and somehow get \(k^\prime = k\). Then we have
-	\[
-		\frac{\mathop{\mathrm{conn}}(\mathrm{ALG})}{\gamma } \leq \sum_{i} \alpha _i - kf \leq \OPT_{\text{\(k\)-med.}},
-	\]
-	i.e., this is a \(\gamma \)-approximation algorithm.
+	The relation between \(k\) and \(f\) indeed highly depends on what algorithm we use. But at least for \autoref{algo:facility-location-greedy-III}, nobody knows anything in this case.
 \end{remark}
 
-Actually, we don't have ideas about the relation between \(k\) and \(f\). In particular, we have very little knowledge about which, the only thing we know is it behaves quite arbitrary. In this case, our previous technique doesn't work anymore, a new idea is then to maintain \([f^2, f^1]\) such that \(f^2 \leq f^1\), where
+Given this fact, just randomly guess one \(f\) doesn't work. A new idea is then to maintain two solutions (or interval) \([f^2, f^1]\) such that \(f^2 \leq f^1\), where
 \begin{itemize}
 	\item At \(f^2\), the algorithm opens \(k^2 \geq k\) facilities.
 	\item At \(f^1\), the algorithm opens \(k^1 \leq k\) facilities.
@@ -49,9 +55,6 @@ Then, by binary search, we can get \(f_2 \leq f_1\) such that
 \[
 	\left\vert f^1 - f^2 \right\vert \leq \frac{\epsilon \OPT}{n}.
 \]
-
-\subsection{Bipoint Rounding}
-
 Now, if \(a\in [0, 1]\) and \(b \coloneqq 1 - a\), we have \(k \coloneqq ak^1 + bk^2\) where \(k^1 \leq k \leq k^2\). Denote \(C^i\) as the connection cost with \(f^i\) such that \(C^1 \geq C^2\), we have
 \[
 	\begin{dcases}
@@ -86,8 +89,7 @@ where we set \(\alpha \coloneqq a \alpha ^1 + b \alpha ^2\) and \(f \coloneqq \m
 	\]
 \end{remark}
 
-\subsubsection{\(2\)-Bipoint Rounding}
-For \(j\in F^1\), let \(\pi (j)\)  be the closest facility in \(F^2\) to \(j\). Let \(F^{\ast} = \left\{ j^\prime \in F^2 \colon j^\prime =\pi (j) \text{ for some }j\in F^1  \right\} \). We see that \(\left\vert F^{\ast}  \right\vert \leq k^1\) since if \(\left\vert F^{\ast}  \right\vert < k^1\), then we add arbitrary centers so that \(\left\vert F^{\ast}  \right\vert = k^1\).
+Back to \autoref{prb:k-median}, we see that we can actually get a \(2\)-bipoint rounding as follows. For \(j\in F^1\), let \(\pi (j)\) be the closest facility in \(F^2\) to \(j\). Let \(F^{\ast} = \left\{ j^\prime \in F^2 \colon j^\prime =\pi (j) \text{ for some }j\in F^1  \right\} \). We see that \(\left\vert F^{\ast}  \right\vert \leq k^1\) since if \(\left\vert F^{\ast}  \right\vert < k^1\), then we add arbitrary centers so that \(\left\vert F^{\ast}  \right\vert = k^1\).
 
 To open the facilities as what we want, consider the following rounding algorithm.
 \begin{enumerate}[(a)]

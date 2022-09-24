@@ -1,4 +1,5 @@
 \lecture{6}{19 Sep. 10:30}{Facility Location with LMP Approximation}
+
 \subsection{Hardness}
 For \autoref{prb:facility-location}, we have the following.
 \begin{enumerate}[(a)]
@@ -6,7 +7,20 @@ For \autoref{prb:facility-location}, we have the following.
 	\item \(1.463\)-approximation is \(\NP\)-hard~\cite{GUHA1999228}
 \end{enumerate}
 
-In terms of \hyperref[def:LMP]{LMP}, For \autoref{prb:facility-location}, we have the following.
+Turns out that specifically for \autoref{prb:facility-location}, we can have a more refine notion of approximation ratio defined below.
+
+\begin{definition}[LMP approximation]\label{def:LMP}
+	An algorithm \(\mathrm{ALG}\) which solves \hyperref[prb:facility-location]{facility location} is called \emph{\(\gamma \)-Lagrangian multiplier preserving approximation} (LMP-approximation) if
+	\[
+		\frac{\mathop{\mathrm{conn}}(\mathrm{ALG})}{\gamma }+ \mathop{\mathrm{open}}(\mathrm{ALG}) \leq \sum_{i} \alpha _i
+	\]
+	for some \(\gamma > 0\).\footnote{The opening cost is just \(k^\prime f\) if \(\mathrm{ALG}\) opens \(k^\prime \) centers.}
+\end{definition}
+\begin{remark}
+	The notion of \hyperref[def:LMP]{LMP approximation} is due to Lagrangian multiplier in the field of optimization, where the dual variables  are treated as a Lagrangian multipliers. And \autoref{def:LMP} says that we're not approximating \(k^\prime f\) at all, hence it's \emph{preserving}.
+\end{remark}
+
+Then in terms of \hyperref[def:LMP]{LMP}, we have the following.
 \begin{enumerate}[(a)]
 	\item \(3\)-\hyperref[def:LMP]{LMP approximation}~\cite{10.1145/375827.375845}
 	\item \(2\)-\hyperref[def:LMP]{LMP approximation}~\cite{10.1145/509907.510012}
@@ -21,17 +35,17 @@ Let's take another look at \autoref{prb:facility-location} and see it as an inst
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy}
 	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)\footnote{We didn't use it explicitly in the algorithm since we hide it in the cost function \(c(\cdot)\).}}
-	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
 	\SetKw{Break}{break}
 	\BlankLine
 
-	\(S \gets \varnothing \), \(O\gets \varnothing\)\;
+	\(S \gets \varnothing \), \(Q^\prime \gets \varnothing\)\;
 	\While(){\(S \neq P \)}{
 		choose \((j, T)\in Q \times \mathcal{\MakeUppercase{p}} (P\setminus X)\) with minimum \(c((j, T)) / \left\vert T \right\vert \)\;
-		\(O\gets O \cup \left\{ j \right\}\)\;
+		\(Q^\prime \gets Q^\prime  \cup \left\{ j \right\}\)\;
 		\(S \gets S \cup T\)\;
 	}
-	\Return{\(O\)}\;
+	\Return{\(Q^\prime \)}\;
 \end{algorithm}
 
 This is just \autoref{algo:set-cover-greedy}, hence we have \(H_n\)-approximation. But as we have seen in \autoref{thm:lec5}, we have achieved a constant approximation ratio for \autoref{prb:facility-location}. Hence, we should be able to do better based on \autoref{algo:facility-location-greedy}.
@@ -53,30 +67,29 @@ We see observe that \(c((j, T)) / \left\vert T \right\vert \) is increasing in \
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification I}
 	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
-	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
 	\SetKw{Break}{break}
 	\BlankLine
-	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(Q^\prime \):open facilities}
 	\;
 	\While(){\(S \neq P\)}{
 	\While(){\textsf{True}}{
-	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
-
-	\uIf(\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus O\) s.t. \(\sum_{i\in P\mathcolor{red}{\setminus S}} \beta _{ij} = f\)}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}\;
+	\uIf(\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P\mathcolor{red}{\setminus S}} \beta _{ij} = f\)}{
 		\Break
 	}
-	\ElseIf(\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+	\ElseIf(\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
 		\Break
 	}
 	}
-	\(O\gets \mathcolor{red}{O \cup \left\{ j \right\}}\)\Comment*[r]{Update \(O\)}
+	\(Q^\prime \gets \mathcolor{red}{Q^\prime  \cup \left\{ j \right\}}\)\Comment*[r]{Update \(Q^\prime \)}
 	\(S\gets \mathcolor{red}{S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} }\)\Comment*[r]{Update \(S\)}
 	}
-	\Return{\(O\)}\;
+	\Return{\(Q^\prime \)}\;
 \end{algorithm}
 
 \begin{remark}
-	Since \autoref{algo:facility-location-PD-if-1} and \autoref{algo:facility-location-PD-if-2} can happen simultaneously, while what we just said assumes the opposite, so we need to further modify \autoref{algo:facility-location-PD} in \autoref{algo:facility-location-PD-lin10} and \autoref{algo:facility-location-PD-lin11}
+	Since \autoref{algo:facility-location-PD-if-1} and \autoref{algo:facility-location-PD-if-2} can happen simultaneously, while what we just said assumes the opposite, so we need to further modify \autoref{algo:facility-location-PD} in \autoref{algo:facility-location-PD-lin10} and \autoref{algo:facility-location-PD-lin11}.
 \end{remark}
 
 \subsubsection{Second Modification}
@@ -86,26 +99,25 @@ Another potential modification gives us a \(1.61\)-approximation. We essentially
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification II}
 	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
-	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
 	\SetKw{Break}{break}
 	\BlankLine
-	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(Q^\prime \):open facilities}
 	\;
 	\While(){\(S \neq P\)}{
 	\While(){\textsf{True}}{
-	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
-
-	\If(){some \(j\in Q\setminus O\) s.t. \(\mathcolor{red}{\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ } + \sum_{i\in P\setminus S} \beta _{ij} = f\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}\;
+	\If(){some \(j\in Q\setminus Q^\prime \) s.t. \(\mathcolor{red}{\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ } + \sum_{i\in P\setminus S} \beta _{ij} = f\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
 			\Break
 		}
-		\If(\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+		\If(\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
 			\Break
 		}
 	}
-	\(O\gets O \cup \left\{ j \right\} \)\Comment*[r]{Update \(O\)}
+	\(Q^\prime \gets Q^\prime  \cup \left\{ j \right\} \)\Comment*[r]{Update \(Q^\prime \)}
 	\(S\gets S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} \)\Comment*[r]{Update \(S\)}
 	}
-	\Return{\(O\)}\;
+	\Return{\(Q^\prime \)}\;
 \end{algorithm}
 
 \subsubsection{Third Modification}
@@ -115,29 +127,28 @@ If we run \autoref{algo:facility-location-greedy-II} with facility cost being \(
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification III}
 	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
-	\KwResult{A set of opened facilities \(O\subseteq Q\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
 	\SetKw{Break}{break}
 	\BlankLine
-	\(S\gets \varnothing \), \(O\gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(Q^\prime \):open facilities}
 	\;
 	\While(){\(S \neq P\)}{
 	\While(){\textsf{True}}{
-	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
-
-	\If(){some \(j\in Q\setminus O\) s.t. \(\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ + \sum_{i\in P\setminus S} \beta _{ij} = \mathcolor{red}{\hat{f}}\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}\;
+	\If(){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ + \sum_{i\in P\setminus S} \beta _{ij} = \mathcolor{red}{\hat{f}}\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
 			\Break
 		}
-		\If(\Comment*[f]{\(i\) can connect to \(j\in O\)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+		\If(\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
 			\Break
 		}
 	}
-	\(O\gets O \cup \left\{ j \right\} \)\Comment*[r]{Update \(O\)}
+	\(Q^\prime \gets Q^\prime  \cup \left\{ j \right\} \)\Comment*[r]{Update \(Q^\prime \)}
 	\(S\gets S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} \)\Comment*[r]{Update \(S\)}
 	}
-	\Return{\(O\)}\;
+	\Return{\(Q^\prime \)}\;
 \end{algorithm}
 
-It's clear that in \autoref{algo:facility-location-greedy-II}, the connection cost plus \(2\) times the opening cost is \(\sum_{i\in P} \alpha _i\) from how we design the algorithm by changing the facility cost from \(f\) to \(\hat{f} \coloneqq 2f\). Now, a crucial lemma is the following.
+It's clear that in \autoref{algo:facility-location-greedy-III}, the connection cost plus \(2\) times the opening cost is \(\sum_{i\in P} \alpha _i\) from how we design the algorithm by changing the facility cost from \(f\) to \(\hat{f} \coloneqq 2f\). Now, a crucial lemma is the following.
 
 \begin{lemma}\label{lma:lec6}
 	\((\alpha ^\prime , \beta ^\prime )\) is dual feasible, where \(\alpha ^\prime \coloneqq \alpha  / 2\), \(\beta ^\prime _{ij}\coloneqq (\alpha ^\prime _{ij} - d(i, j))^+\).
@@ -181,5 +192,5 @@ It's clear that in \autoref{algo:facility-location-greedy-II}, the connection co
 From \autoref{lma:lec6}, we immediately have the following.
 
 \begin{theorem}
-	\autoref{algo:facility-location-greedy-II} is a \(2\)-\hyperref[def:LMP]{LMP approximation} algorithm w.r.t. the original \(f\).
+	\autoref{algo:facility-location-greedy-III} is a \(2\)-\hyperref[def:LMP]{LMP approximation} algorithm w.r.t. the original \(f\).
 \end{theorem}

@@ -56,12 +56,38 @@ Our goal is to show that \autoref{eq:lec8} implies \(\mathop{\mathrm{cost}}(Q^\p
 	\item For all \(j\in Q^{\ast} \), let \(\pi (j)\in Q^\prime \) be the facility closest to \(j\). Then if \(S_i\) contains \(j\in Q^\prime \), \(\pi ^{-1} (j)\subseteq S_i\).\footnote{In particular, if \(\left\vert \pi ^{-1} (j) \right\vert > w / 2 \), then \(j\) is not contained in any \hyperref[not:swap]{swap}.}
 \end{enumerate}
 
-The existence of such \hyperref[not:swap]{swaps} family is ensured by the following.
+The existence of such \hyperref[not:swap]{swaps} family is ensured by the following lemma.
 \begin{lemma}\label{lma:lec8}
-	There exists \(S_1, \ldots, S_t\) with \(p_1, \ldots  , p_t\) such that \(\forall j\in Q^{\ast} \), \(\sum_{S_i \ni j}p_i = 1\) and if \(j\in S_i\), \(\pi ^{-1} (j)\subseteq S_i\) with \(p^\prime = \max _{j\in Q^\prime }\sum_{S_i\ni j}p_i = 1 + 2 / w\).
+	There exists a family of \hyperref[not:swap]{swaps} \(S_1, \ldots, S_t\) with weights \(p_1, \ldots  , p_t\) such that \(\forall j\in Q^{\ast} \), \(\sum_{S_i \ni j}p_i = 1\) and if \(j\in S_i\), \(\pi ^{-1} (j)\subseteq S_i\) with \(p^\prime = \max _{j\in Q^\prime }\sum_{S_i\ni j}p_i = 1 + 2 / w\).
 \end{lemma}
 \begin{proof}
+	For all \(j\in Q^\prime \), we call \(j\)
+	\begin{itemize}
+		\item \emph{big}: if \(\left\vert \pi ^{-1} (j) \right\vert > w / 2\).
+		\item \emph{small}: if \(\left\vert \pi ^{-1} (j) \right\vert \in [1, w / 2]\).
+		\item \emph{lonely}: if \(\left\vert \pi ^{-1} (j) \right\vert = 0\).
+	\end{itemize}
+	Then for each small or big \(j\), we create a \emph{group} \(G_j\) that contains \(\pi ^{-1} (j)\), \(j\) and \(\left\vert \pi ^{-1} (j) \right\vert - 1\) lonely facilities (denote as \(R_j \subseteq Q^\prime \)). We see that \(\left\vert G_j \right\vert = 2 \left\vert \pi ^{-1} (j) \right\vert \), and we can ensure each lonely facility belongs to exactly \(1\) group, i.e., \(\exists G_1, \ldots G_r\) such that each facility belongs to exactly \(1\) group. It's now clear that how we should create \hyperref[not:swap]{swaps} and their corresponding weight:
+	\begin{enumerate}[(a)]
+		\item For small \(j\), let \(G_j\) be a \hyperref[not:swap]{swap} with weight \(1\).
+		\item For big \(j\), let \(w^\prime \coloneqq \left\vert \pi ^{-1} (j) \right\vert \), then for any \(S \subseteq \pi ^{-1} (j)\) and \(T \subseteq R_j\) with \(\left\vert S \right\vert = \left\vert T \right\vert = w / 2\), we let \((S \cup T)\) be a \hyperref[not:swap]{swap} with weight \(1 / \left( \binom{w^\prime -1}{w / 2 - 1} \cdot \binom{w^\prime - 1}{w / 2} \right) \).\footnote{Notice that since \(j\) is big, so \(j\) can't be in any \hyperref[not:swap]{swap}, so we have only \(w^\prime - 1\) to choose from.}
+	\end{enumerate}
+	Since for every \(j^{\ast} \in Q^{\ast} \), there is only one group containing \(j^{\ast}\), to verify \(\sum_{S_i \ni j^{\ast} }p_i = 1 \), we see that
+	\begin{enumerate}[(a)]
+		\item \(j^{\ast} \) is containing in \(G_j\) for \(j\) small: In this case, we have one \hyperref[not:swap]{swap}, i.e., \(G_j\) itself with weight \(1\).
+		\item \(j^{\ast} \) is containing in \(G_j\) for \(j\) big: In this case, since every such \hyperref[not:swap]{swap} created inside \(G_j\) contains \(j^{\ast} \) and has uniform weight, it sums up to \(1\).
+	\end{enumerate}
 
+	Finally, we want to show that \(p^\prime = \max _{j\in Q^\prime }\sum_{S_i \ni j}p_i = 1 + 2 / w \). But this is also easy since given \(j\in Q^\prime \), the summation is inside \(G_j\), and in particular, \(S_i\) is inside \(G_j\) as well. Then
+	\begin{enumerate}[(a)]
+		\item \(j\) is small: Only swap is \(G_j\) itself with weight \(1\).
+		\item \(j\) is big: \(j\) can't even be in one \hyperref[not:swap]{swap}, hence the sum is \(0\).
+		\item \(j\) is lonely: In this case, we have
+		      \[
+			      \sum_{S_i \ni j} p_i = \frac{1}{\binom{w^\prime - 1}{w / 2 - 1} \binom{w^\prime - 1}{w / 2}}\cdot \binom{w^\prime }{w / 2}\binom{w^\prime -2}{w / 2 - 1} = \frac{w^\prime }{w / 2} \frac{w/2}{w^\prime -1} = \frac{w^\prime }{w^\prime -1} \leq 1 + \frac{2}{w}.
+		      \]
+	\end{enumerate}
+	Taking the maximum, we have \(p^\prime = 1 + 2 / w\) as desired.
 \end{proof}
 
 With \autoref{lma:lec8}, we're ready to prove the following.
@@ -72,14 +98,18 @@ With \autoref{lma:lec8}, we're ready to prove the following.
 \begin{proof}
 	Fix \(i\in P\), we analyze how it contributes to the left-hand side of \autoref{eq:lec8}. Let \(j^\prime \in Q^\prime \) and \(j^{\ast} \in Q^{\ast} \) be facilities closest to \(i\), and \(d_i^\prime \coloneqq d(i, j^\prime )\), \(d_i^{\ast} = d(i, j^{\ast} )\), then for every \(S_{\ell}\), we have
 	\begin{enumerate}[(a)]
-		\item \(S_{\ell }\ni j^{\ast} \). Then contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - d_i^{\ast}\) (\(i\) can go to \(j^{\ast} \))
-		\item \(S_{\ell }\ni j^\prime \). By the second property, either \(\pi (j^{\ast} )\in S_{\ell } \) or \(S_{\ell }\ni j^{\ast}\). The latter falls back to the first case, and if \(\pi (j^{\ast} )\in S_{\ell } \), contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - (2d_i^{\ast} + d_i^\prime ) = -2d_i^{\ast}\). (\(i\) can go to \(\pi (j^{\ast} )\))
-		\item Otherwise, contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(0\). (\(i\) can stay with \(j^\prime \))
+		\item \(S_{\ell }\ni j^{\ast} \). Then contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - d_i^{\ast}\).\footnote{\(i\) can go to \(j^{\ast} \).}
+		\item \(S_{\ell }\ni j^\prime\). By the second property, either
+		      \begin{itemize}
+			      \item \(\pi (j^{\ast} )\in S_{\ell } \): this implies \(j^{\ast}\in S_{\ell }\), which falls back to the first case.
+			      \item \(\pi (j^{\ast} )\notin S_{\ell } \): the contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - (2d_i^{\ast} + d_i^\prime ) = -2d_i^{\ast}\).\footnote{\(i\) can go to \(\pi (j^{\ast} )\).}
+		      \end{itemize}
+		\item Otherwise, contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(0\).\footnote{\(i\) can stay with \(j^\prime \).}
 	\end{enumerate}
 
-	In all, we see that the first case has total weight \(1\), while (b) \(-\) (c) has total weight \(\leq p^\prime \), hence \autoref{eq:lec8} implies
+	In all, we see that the first case has total weight \(1\) from the first property, while (b)\(-\)(a) has total weight \(\leq p^\prime \), hence \autoref{eq:lec8} implies
 	\[
-		\sum_{i\in P} \left[ (d_i^\prime - d_i^{\ast} )\cdot 1 - (2d_i^{\ast} )\cdot p^\prime \right] \leq \sum_{i=1} ^t p_i(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)) \leq 0,
+		\sum_{i\in P} \left[ (d_i^\prime - d_i^{\ast} )\cdot 1 - (2d_i^{\ast} )\cdot p^\prime \right] \leq \sum_{\ell =1} ^t p_{\ell } (\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)) \leq 0,
 	\]
 	which is equivalent to say
 	\[

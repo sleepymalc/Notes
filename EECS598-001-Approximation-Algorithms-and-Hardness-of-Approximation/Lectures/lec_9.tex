@@ -1,0 +1,97 @@
+\lecture{9}{28 Sep. 10:30}{Euclidean \(k\)-Median}
+\begin{prev}
+	Recall the dual of \autoref{prb:facility-location}
+	\begin{align*}
+		\max~    & \sum_{i} \alpha _i                                  \\
+		         & \alpha _i - \beta _{ij} \leq d(i, j) & \forall i, j \\
+		         & \sum_{i} \beta _{ij} \leq f          & \forall j    \\
+		(D)\quad & \alpha , \beta \geq 0
+	\end{align*}
+	and the \autoref{algo:facility-location-PD}.
+\end{prev}
+
+Now, consider the following problem.
+
+\begin{problem}[Euclidean \(k\)-median]\label{prb:Euclidean-k-median}
+Given a \hyperref[def:metric]{metric space} \((X, d)\) with \(d(i, j) = \left\lVert i - j\right\rVert_2\) and \(P, Q\subseteq X\) with \(k\in \mathbb{\MakeUppercase{n}} \), find \(Q^\prime \subseteq Q\) with \(\left\vert Q^\prime  \right\vert = k\) which minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j)\).
+\end{problem}
+
+Again, we can solve \autoref{prb:Euclidean-k-median} by the similar algorithm which solves \autoref{prb:facility-location} and \autoref{prb:k-median}.
+
+\begin{algorithm}[H]\label{algo:Euclidean-k-median-PD}
+	\DontPrintSemicolon
+	\caption{ \hyperref[prb:Euclidean-k-median]{Euclidean\(k\)-Median} -- Primal-Dual}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
+	\;
+	\While(){\(S \neq P\)}{
+	\While(\label{algo:facility-location-PD-while-2}){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
+
+	\uIf(\label{algo:facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
+		\Break
+	}
+	\ElseIf(\label{algo:facility-location-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+		\Break
+	}
+	}
+	\(Q^\prime \gets\left\{ \text{tight facilities}\right\} \)\label{algo:facility-location-PD-lin10}\Comment*[r]{Update \(Q^\prime \)}
+	\(S\gets \left\{ \text{clients connected to \(Q^\prime\)} \right\} \)\label{algo:facility-location-PD-lin11}\Comment*[r]{Update \(S\)}
+	}
+	\;
+	\label{algo:facility-location-PD-comment}\Comment{Trim down \(Q^\prime \)}
+	\(G = (Q^\prime , E\coloneqq \left\{ (j, j^\prime )\colon \exists i\in P \text{ such that } d(j, j^\prime ) \leq \delta \cdot \min (t_j , t_{j^\prime }), j, j^\prime \in Q^\prime \right\})\)\footnote{We let \(t_j\) be the time that \(j\) is open, and \(\delta = \sqrt{8 / 3} \approx 1.633\ldots\).}\;
+	Compute \(Q^{\prime\prime}\) s.t. \(\forall j\in Q^\prime \), either \(j\in Q^{\prime\prime}\) or \(\exists j^\prime\in Q^{\prime\prime} \) s.t. \((j, j^\prime )\in E\)\Comment*[r]{\hyperref[prb:max-strongly-independent-set]{max independent set}}
+	\Return{\(Q^{\prime\prime} \)}\;
+\end{algorithm}
+
+\begin{remark}
+	Again, we know that \(\alpha \) is dual-feasible. And if \(\beta _{ij} > 0\), then \(\alpha _i \leq t_j\).
+\end{remark}
+
+Let \(w(i)\in O\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)\) is the connected witness of \(i\). Then we do the analysis similarly. Fix \(i\in P\), then observe that given \(S = O^\prime \cap \left\{ j\colon \beta _{ij} > 0 \right\}\), if \(\delta = 2\), then \(\left\vert S \right\vert \leq 1\). Then,
+\begin{enumerate}[(a)]
+	\item If \(\left\vert S \right\vert = 1\), \(S = \left\{ j \right\} \). We see that
+	      \[
+		      \mathop{\mathrm{conn}}(i) + \mathop{\mathrm{open}}(i) \leq d(i, j) + (\alpha _i - d(i, j)) \leq \alpha _i
+	      \]
+	\item If \(\left\vert S \right\vert = 0\), then \(\mathop{\mathrm{open}}(i) = 0\), and \(\mathop{\mathrm{conn}}(i) \leq d(i, j^\prime )\). Then \(\exists j^\prime \in O^\prime \) such that \((w(i), j^\prime )\in E\),
+	      \[
+		      \mathop{\mathrm{conn}}(i) + \mathop{\mathrm{open}}(i) \leq d(i, j^\prime )\leq \alpha _i + \delta t_{w(i)} \leq (1 + \delta )\alpha _i.
+	      \]
+\end{enumerate}
+
+Generally, our goal is to prove that for all \(i\),
+\[
+	\frac{\mathop{\mathrm{conn}}(i)}{\rho} + \mathop{\mathrm{open}}(i) \leq \alpha _i \implies \frac{\mathop{\mathrm{conn}}}{\rho } + \left\vert O^\prime  \right\vert f \leq \sum_{i} \alpha _i.
+\]
+
+We first see two \emph{magics}. Let \(i^\prime = \frac{1}{s}\sum_{j\in S} j\). Then
+\[
+	\begin{split}
+		\sum_{j\in S} \left\lVert j - i\right\rVert ^{2}
+		&= \sum_{j\in S} \left\langle j - i + i^\prime - i^\prime , j - i + i^\prime - i^\prime  \right\rangle \\
+		&= \sum_{j} \left( \left\lVert j - i\right\rVert ^{2} + \left\lVert i^\prime - i\right\rVert ^{2} + 2\left\langle j c i^\prime , i^\prime - i \right\rangle  \right) \\
+		&= \sum_{j} \left\lVert j - i^\prime \right\rVert ^{2} + s \left\lVert i^\prime - i\right\rVert ^{2} .
+	\end{split}
+\]
+
+Also,
+\[
+	\begin{split}
+		\sum_{j, j^\prime \in S} \left\lVert j - j^\prime \right\rVert ^{2}
+		&= \sum_{j, j^\prime }\left\langle j- j^\prime + i^\prime - i^\prime , j- j^\prime + i^\prime - i^\prime  \right\rangle  \\
+		&= \sum_{j, j^\prime } \left( \left\lVert j - i^\prime \right\rVert^{2} + \left\lVert j^\prime - i^\prime \right\rVert ^{2} + 2 \left\langle j -i^\prime , i^\prime - j^\prime  \right\rangle   \right) \\
+		&= 2s\cdot \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} .
+	\end{split}
+\]
+
+\begin{claim}
+	\(\left\vert S \right\vert \leq 3\).
+\end{claim}
+\begin{explanation}
+
+\end{explanation}

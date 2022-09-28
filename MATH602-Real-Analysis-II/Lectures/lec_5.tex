@@ -1,31 +1,31 @@
 \lecture{5}{13 Sep. 14:30}{Abstract Fourier Series}
-\section{Fourier Series}
-Let's start with a definition.
+\subsection{Orthonormal Bases}
+Follows from the discussion, we note that the \hyperref[def:Fourier-series]{Fourier series} of \(x\) needs not converge to \(x\), but we can still compute the point where it converges. However, we can now identify an extra condition so that the \hyperref[def:Fourier-series]{Fourier series} of every vector \(x\) converges to \(x\).
+
 \begin{definition}[Complete system]\label{def:complete-system}
-	A system of vector \(\left\{ x_k\colon k\geq 1 \right\} \) in \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) is \emph{complete} if the space spanned by \(\left\{ x_k\colon k\geq 1 \right\}\) is \textbf{dense} in \(\mathcal{\MakeUppercase{h}} \).
+	A system of vector \(\left\{ x_k\right\}_k\) in \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) is \emph{complete} if the space spanned by \(\left\{ x_k\right\}_k\) is \textbf{dense} in \(\mathcal{\MakeUppercase{h}} \), i.e., \(\mathop{\mathrm{span}}(\left\{ x_k \right\} _k) = \mathcal{\MakeUppercase{h}} \).
 \end{definition}
 
-\begin{eg}[Fourier inversion formula]
-	If an \hyperref[def:orthogonal-system]{orthogonal set} \(\left\{ x_{k} \colon k\geq 1 \right\} \) is \hyperref[def:complete-system]{complete}, then \(E_\infty = \mathcal{\MakeUppercase{h}} \), \(P_{E_\infty } = I\). This implies
+\begin{definition}[Orthonormal basis]\label{def:orthonormal-basis}
+	A \hyperref[def:complete-system]{complete} \hyperref[def:orthonormal-system]{orthonormal system} in a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) is called an \emph{orthonormal basis} of \(\mathcal{\MakeUppercase{h}} \).
+\end{definition}
+
+\begin{theorem}[Fourier expansions]\label{thm:Fourier-expansion}
+	Let \(\left\{ x_k \right\} _k\) be an \hyperref[def:orthonormal-basis]{orthonormal basis} of a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \). Then every vector \(x\in \mathcal{\MakeUppercase{h}} \) can be expanded in its \hyperref[def:Fourier-series]{Fourier series}
 	\[
-		x = \sum_{k=1}^{\infty} \left\langle x, x_{k}  \right\rangle x_{k}
+		x = \sum_{k} \left\langle x, x_k \right\rangle x_k.
 	\]
-	for \(x\in \mathcal{\MakeUppercase{h}} \). This is \href{https://en.wikipedia.org/wiki/Fourier_inversion_theorem}{Fourier inversion formula}.
-\end{eg}
+	This is sometimes called \href{https://en.wikipedia.org/wiki/Fourier_inversion_theorem}{Fourier inversion formula}.
+\end{theorem}
+\begin{proof}
+	If an \hyperref[def:orthogonal-system]{orthogonal set} \(\left\{ x_{k} \right\}_k \) is \hyperref[def:complete-system]{complete}, then \(E_\infty = \mathcal{\MakeUppercase{h}} \), \(P_{E_\infty } = I\). This implies \(x = \sum_{k=1}^{\infty} \left\langle x, x_{k}  \right\rangle x_{k}\) for \(x\in \mathcal{\MakeUppercase{h}} \).
+\end{proof}
 
 \begin{remark}[Parseval's identity]
-	We have \(\left\lVert x\right\rVert ^{2} = \left\lVert P_{E_n} x \right\rVert^{2} + \left\lVert (I - P_{E_{n} })\right\rVert ^{2}\). By letting \(n \to \infty \), we have
+	From \autoref{thm:Fourier-expansion}, we have \(\left\lVert x\right\rVert ^{2} = \left\lVert P_{E_n} x \right\rVert^{2} + \left\lVert (I - P_{E_{n} })\right\rVert ^{2}\). By letting \(n \to \infty \), we have
 	\[
 		\left\lVert x\right\rVert^{2} = \lim\limits_{n \to \infty} \left\lVert P_{E_n}x\right\rVert ^{2} = \lim\limits_{n \to \infty} \sum_{k=1}^{n} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert ^{2} = \sum_{k=1}^{\infty} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert  ^{2}.
 	\]
-\end{remark}
-
-\begin{definition}[Separable]\label{def:separable}
-	A metric space is \emph{separable} if it contains a countable dense subset.
-\end{definition}
-
-\begin{remark}[Banach space]
-	For \hyperref[def:Banach-space]{Banach space}, \hyperref[def:separable]{separability} follows from finding a countable set of vectors \(\left\{ x_{k} \colon k\geq 1 \right\} \) such that the span of \(\left\{ x_{k} \colon k\geq 1 \right\}\) is dense in \(E\).
 \end{remark}
 
 \subsection{Gram-Schmidt Orthogonalization}
@@ -85,9 +85,34 @@ if \(x_n \notin E_{n-1}\), i.e., \(E_{n-1}\) is properly contained in \(E_n\).
 	We use \href{https://en.wikipedia.org/wiki/Stone%E2%80%93Weierstrass_theorem}{Stone-Weierstrass theorem} and apply it to Fourier basis. All \(e_k(\cdot)\) are in \(C[-\pi , \pi ]\), i.e., continuous functions \(f\colon [-\pi , \pi ]\to \mathbb{\MakeUppercase{c}} \). We know that \(C([-\pi , \pi ])\) is a \hyperref[def:Banach-space]{Banach space} with supremum norm \(\left\lVert f\right\rVert \coloneqq \sup _{t\in [-\pi, \pi ]}\left\vert f(t) \right\vert\). Stone-Weierstrass theorem implies density of the space spanned by \(e_k(\cdot)\), \(k\in \mathbb{\MakeUppercase{z}} \) in \(C([-\pi , \pi ])\), hence the completeness in \(L^2([-\pi , \pi ])\) follows from the density of continuous functions in \(L^2([-\pi , \pi ])\). 
 \end{explanation}
 
-\chapter{Bounded Linear Operators}
-\section{Bounded Linear Functionals}
+\begin{proposition}\label{prop:lec5-1}
+	Let \(\left\{ x_k \right\} _k\) be a linear independent system in a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \). Then the system \(\left\{ y_k \right\} _k\) obtained by Gram-Schmidt orthogonalization of \(\left\{ x_k \right\} _k\) is an \hyperref[def:orthonormal-system]{orthonormal system} in \(\mathcal{\MakeUppercase{h}} \), and
+	\[
+		\mathop{\mathrm{span}}(\left\{ h_k \right\} _{k=1}^n) = \mathop{\mathrm{span}}(\left\{ x_k \right\} _{k=1}^n)
+	\]
+	for all \(n\in \mathbb{\MakeUppercase{n}} \).
+\end{proposition}
+\begin{proof}
+	The system \(\left\{ y_k \right\} _k\) is \hyperref[def:orthonormal-system]{orthonormal} by construction, and we obviously have the inclusion \(\mathop{\mathrm{span}}(\left\{ y_k \right\} _k) \subseteq \mathop{\mathrm{span}}(\left\{ x_k \right\} _k)\). Furthermore, since the dimensions of these subspaces both equal \(n\) by construction, so they're indeed equal.
+\end{proof}
 
+\subsection{Existence of Orthogonal Bases}
+We see that from \autoref{prop:lec5-1}, we'll obtain that every \hyperref[def:Hilbert-space]{Hilbert space} that is not \emph{too large} has an \hyperref[def:orthonormal-basis]{orthonormal basis}. We call this \hyperref[def:Hilbert-space]{Hilbert space} \hyperref[def:separable]{separable}.
+
+\begin{definition}[Separable]\label{def:separable}
+	A metric space is \emph{separable} if it contains a countable dense subset.
+\end{definition}
+
+\begin{remark}[Banach space]
+	For \hyperref[def:Banach-space]{Banach space}, \hyperref[def:separable]{separability} follows from finding a countable set of vectors \(\left\{ x_{k}\right\}_k\) such that the span of \(\left\{ x_{k}\right\}_k\) is dense in \(E\).
+\end{remark}
+
+\chapter{Bounded Linear Operators}
+
+In this chapter we study certain transformations of \hyperref[def:Banach-space]{Banach spaces}. Because these spaces are linear, the appropriate transformations to study will be linear operators. Furthermore, since \hyperref[def:Banach-space]{Banach spaces} carry topology, it is most appropriate to study continuous transformations, i.e. continuous linear operators. They are also called bounded linear operators for the reasons that will become clear shortly.
+
+\section{Bounded Linear Functionals}
+\subsection{Continuity and Boundedness}
 \begin{definition*}
 	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space} over \(\mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \).
 	\begin{definition}[Linear functional]\label{def:linear-functional}
@@ -106,9 +131,7 @@ if \(x_n \notin E_{n-1}\), i.e., \(E_{n-1}\) is properly contained in \(E_n\).
 	\end{definition}
 \end{definition*}
 
-\begin{remark}
-	The boundedness of \(f(\cdot)\) implies \(\left\vert f(x-y) \right\vert \leq \left\lVert f\right\rVert \left\lVert x-y\right\rVert \) for \(x, y\in E\). Hence, \(f(\cdot)\) is continuous and in fact Lipschitz continuous.
-\end{remark}
+Clearly, the boundedness of \(f(\cdot)\) implies \(\left\vert f(x-y) \right\vert \leq \left\lVert f\right\rVert \left\lVert x-y\right\rVert \) for \(x, y\in E\). Hence, \(f(\cdot)\) is continuous and in fact Lipschitz continuous.
 
 \begin{remark}
 	Conversely, if a \hyperref[def:linear-functional]{linear functional} is continuous then it is bounded.
@@ -121,12 +144,11 @@ if \(x_n \notin E_{n-1}\), i.e., \(E_{n-1}\) is properly contained in \(E_n\).
 	But we know \(\lim\limits_{n \to \infty} \frac{x_{n} }{n \left\lVert x_{n} \right\rVert }=0\) and \(f(0) = 0\), hence \(f(\cdot)\) is not continuous at \(0\).
 \end{explanation}
 
+\subsection{Dual Spaces and Hyperplanes}
 \begin{definition}[Dual space]\label{def:dual-space}
 	Let \(E\) be a \hyperref[def:normed-vector-space]{normed space}. The space of all \hyperref[def:bounded-linear-functional]{bounded linear functionals} \(f(\cdot)\) on \(E\) is known as the \emph{dual space} \(E^{\ast} \) of \(E\).
 \end{definition}
-\begin{remark}
-	The \hyperref[def:dual-space]{dual space} is also a \hyperref[def:normed-vector-space]{normed space} with \hyperref[def:norm]{norm} \(\left\lVert f\right\rVert \coloneqq \sup _{\left\lVert x\right\rVert = 1}\left\vert f(x) \right\vert \), which is in fact a \hyperref[def:Banach-space]{Banach space}. And it is a \hyperref[def:Banach-space]{Banach space} even if the original \(E\) is not.
-\end{remark}
+The \hyperref[def:dual-space]{dual space} is also a \hyperref[def:normed-vector-space]{normed space} with \hyperref[def:norm]{norm} \(\left\lVert f\right\rVert \coloneqq \sup _{\left\lVert x\right\rVert = 1}\left\vert f(x) \right\vert \), which is in fact a \hyperref[def:Banach-space]{Banach space}. And it is a \hyperref[def:Banach-space]{Banach space} even if the original \(E\) is not. This definition implies \(\left\vert f(x) \right\vert \leq \left\lVert f\right\rVert \left\lVert x\right\rVert \) for \(x\in E\), \(f\in E^{\ast} \). Also, \(\left\lVert f\right\rVert \) is the smallest number in this inequality that makes it valid for all \(x\in X\).
 
 \begin{definition}[Hyperplane]\label{def:hyperplane}
 	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space} and \(H\subseteq E\) is a subspace. Say \(H\) is a \emph{hyperplane} if \(\mathop{\mathrm{codim}}(H)=1\), i.e., \(\dim (\quotient{E}{H})=1\).
@@ -141,7 +163,9 @@ Does there exist a \textbf{non}-closed \hyperref[def:hyperplane]{hyperplane}?
 	We know that this is not the case in finite dimension. And this question is analogous to asking \emph{does there exist a subset \(F\subseteq \mathbb{\MakeUppercase{r}} \) which is \textbf{not} Lebesgue measurable?} The answer to this is yes in both cases. However, construction uses \href{https://en.wikipedia.org/wiki/Axiom_of_choice}{axiom of choice}.
 \end{answer}
 
-\begin{proposition}\label{prop:lec5-1}
+Turns out that there is a canonical correspondence between the \hyperref[def:linear-functional]{lienar functionals} and the \hyperref[def:hyperplane]{hyperplanes} in \(E\). This is clarified in \autoref{prop:lec5-2}.
+
+\begin{proposition}[Linear functionals and hyperplanes]\label{prop:lec5-2}
 	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space}.
 	\begin{enumerate}[(a)]
 		\item For every \hyperref[def:linear-functional]{linear functional} on \(E\), \(\ker(f)\) is a \hyperref[def:hyperplane]{hyperplane} in \(E\). If \(E\) is a \hyperref[def:Banach-space]{Banach space}, and \(f(\cdot)\) is bounded, then \(\ker(f) = H\) is closed.

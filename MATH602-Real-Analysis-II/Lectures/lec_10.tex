@@ -1,0 +1,252 @@
+\lecture{10}{29 Sep. 14:30}{Adjoint Operators and Ergodic Theorem}
+Before ending this section, we have this final characterization of \hyperref[def:convex-set]{convex sets}: they're intersections of \hyperref[def:half-space]{half-spaces}!
+
+\begin{definition}[Half-space]\label{def:half-space}
+	A \emph{half-space} \(H \subseteq E\) has the form of
+	\[
+		H = \left\{ x\in E\colon f(x) \leq \lambda  \right\}
+	\]
+	for \(f\in E^{\ast} \), i.e., it is what lies on one side of a \hyperref[def:hyperplane]{hyperplane}.
+\end{definition}
+
+\begin{corollary}
+	Let \(K\subseteq E\) be closed \hyperref[def:convex-set]{convex set}. Then \(K\) is the intersection of all \hyperref[def:half-space]{half-spaces} containing \(K\).
+\end{corollary}
+\begin{proof}
+	Firstly, \(K\) is trivially contained in the intersection of the \hyperref[def:half-space]{half-spaces} that contain \(K\). Denote such an intersection as \(S\), then we have \(K \subseteq S\). On the other hand, to show \(K \supseteq S\), if \(x_0 \notin K\), we show that there's a \hyperref[def:half-space]{half-space} contains \(K\) but not \(x_0\), hence \(x_0 \notin S\) too, i.e., \(S \subseteq K\).
+
+	From \autoref{thm:separation-of-convex-sets} with \(A = K\) and \(B = \left\{ x_0 \right\}\), there exists \(f\in E^{\ast} \) such that \(\lambda \coloneqq \sup _{k\in K}f(k) < f(x_0)\). We then see that the \hyperref[def:half-space]{half-space} \(\left\{ x\in E \colon f(x) \leq \lambda  \right\} \) contains \(K\) but not \(x_0\).
+\end{proof}
+
+\section{Bounded Linear Operators}
+Turns out that we can generalize the notion of \hyperref[def:linear-functional]{linear functionals} \(f\colon E\to \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \) by further abstracting out the domain by another \hyperref[def:Banach-space]{Banach space}.
+
+As one can imagine, several results for \hyperref[def:linear-op]{linear operators} will be generalizations of those we have already seen for \hyperref[def:linear-functional]{linear functionals}, but there'll be important differences though. For example, a natural extension of \hyperref[thm:Hahn-Banach]{Hahn-Banach theorem} fails for \hyperref[def:linear-op]{linear operators}.
+
+Firstly, same as before, the \hyperref[def:op-norm]{operator norm} is defined as follows.
+
+\begin{definition}[Operator norm]\label{def:op-norm}
+	Given an operator \(T\), its \emph{operator norm} is defined as
+	\[
+		\left\lVert T\right\rVert \coloneqq \sup _{\left\lVert x\right\rVert = 1} \left\lVert Tx\right\rVert.
+	\]
+\end{definition}
+
+\begin{remark}
+	The \hyperref[def:op-norm]{operator norm} is a \hyperref[def:norm]{norm} on \hyperref[def:bounded-linear-op]{bounded linear operators}.
+\end{remark}
+
+\subsection{Continuity and Boundedness}
+Then, we have the following.
+\begin{definition*}
+	Let \(X, Y\) be two \hyperref[def:Banach-space]{Banach spaces}.
+	\begin{definition}[Linear operator]\label{def:linear-op}
+		A map \(T\colon X\to Y\) is called a \emph{linear operator} if
+		\[
+			T(ax + by) = aTx + bTy
+		\]
+		for \(a, b\in \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \), \(x, y\in X\).
+	\end{definition}
+	\begin{definition}[Bounded linear operator]\label{def:bounded-linear-op}
+		A \hyperref[def:linear-op]{linear operator} \(T\) is \emph{bounded} if \(\left\lVert T\right\rVert < \infty \).
+	\end{definition}
+\end{definition*}
+
+\begin{remark}[Bounded operator]
+	We can also talk about boundedness of an (nonlinear) operator \(T\) just the same as requiring \(\left\lVert T\right\rVert < \infty \).
+\end{remark}
+
+As before, given \autoref{def:op-norm}, we always have
+\[
+	\left\lVert Tx\right\rVert \leq \left\lVert T\right\rVert \left\lVert x\right\rVert
+\]
+for a \hyperref[def:linear-op]{linear operator} \(T\colon X\to Y\), \(x\in X\).
+
+\begin{definition}[Lipschitz]\label{def:Lipschitz}
+	The operator \(T\) is called \emph{Lipschitz} if
+	\[
+		\left\lVert Tx - Ty\right\rVert \leq \left\lVert T\right\rVert \left\lVert x - y\right\rVert
+	\]
+	for \(x, y\in E\).
+\end{definition}
+
+\begin{remark}[Continuity and Boundnedness]
+	Same as \hyperref[def:linear-functional]{linear functionals}, the continuity and boundedness of \hyperref[def:linear-op]{linear operators} are equivalent.
+\end{remark}
+
+\subsection{Space of Operators}
+Let \(X\) and \(Y\) be \hyperref[def:normed-vector-space]{normed space}, and let \(\mathcal{\MakeUppercase{l}} (X, Y) \) be the space of \hyperref[def:bounded-linear-op]{bounded linear operators} \(T\colon X\to Y\), then \(\mathcal{\MakeUppercase{l}} (X, Y)\) is a \hyperref[def:Banach-space]{Banach space} under the \hyperref[def:norm]{norm} \(T\to \left\lVert T\right\rVert \).
+
+\begin{eg}
+	The \hyperref[def:dual-space]{dual space} of \(E\) is just \(E^{\ast} = \mathcal{\MakeUppercase{l}} (E, \mathbb{\MakeUppercase{r}} )\).
+\end{eg}
+
+\begin{remark}
+	In particular, we have
+	\begin{enumerate}[(a)]
+		\item \(\left\lVert T\right\rVert = 0 \iff T = 0\).
+		\item \(\left\lVert \lambda T\right\rVert = \left\vert \lambda  \right\vert \left\lVert T\right\rVert  \) for \(\lambda \in \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \), \(T\in \mathcal{\MakeUppercase{l}} (X, Y)\).
+		\item \(\left\lVert T + S\right\rVert \leq \left\lVert T\right\rVert + \left\lVert S\right\rVert \), \(T, S \in \mathcal{\MakeUppercase{l}} (X, Y)\).
+		\item \(\left\lVert TS\right\rVert \leq \left\lVert T\right\rVert \left\lVert S\right\rVert \), \(T, S\in \mathcal{\MakeUppercase{l}} (X, Y)\).
+	\end{enumerate}
+\end{remark}
+
+\subsection{Adjoint Operators}
+The concept of \hyperref[def:adjoint-op]{adjoint operators} is a generalization of matrix transpose in linear algebra. Recall that if \(A = (a_{ij} )\) is an \(n\times n\) matrix with complex entries, then the Hermitian transpose of \(A\) is an \(n\times n\) matrix \(A^{\ast} = (\overline{a_{ij}})\). The transpose thus satisfies the identity
+\[
+	\left\langle A^{\ast} x, y \right\rangle = \left\langle x, Ay \right\rangle
+\]
+for \(x, y\in \mathbb{\MakeUppercase{c}} ^n\). We now extend this to \hyperref[def:linear-op]{linear operators}.
+
+\begin{definition}[Adjoint operator]\label{def:adjoint-op}
+	Let \(T\in \mathcal{\MakeUppercase{l}} (X, Y)\), the \emph{adjoint} \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (Y^{\ast} , X^{\ast} )\) of \(T\) is defined as
+	\[
+		T^{\ast} f\colon X\to \mathbb{\MakeUppercase{r}} \text{ or }\mathbb{\MakeUppercase{c}}
+	\]
+	for \(f\in Y^{\ast}\), and \(T^{\ast} f(x) = f(Tx)\) for \(x\in X\).
+\end{definition}
+
+We should note that \(T^{\ast} \) is indeed a \hyperref[def:bounded-linear-op]{bounded linear operator} since
+\[
+	\left\vert T^{\ast} f(x) \right\vert = \left\vert f(Tx) \right\vert \leq \left\lVert f\right\rVert \left\lVert Tx\right\rVert \leq \left\lVert f\right\rVert \left\lVert T\right\rVert \left\lVert x\right\rVert
+\]
+for \(x\in X\), hence \(T^{\ast} f\) is a \hyperref[def:linear-functional]{linear functional} where
+\[
+	\left\lVert T^{\ast} f\right\rVert = \sup_{\left\lVert x\right\rVert = 1} \left\vert T^{\ast} f(x) \right\vert \leq \sup _{\left\lVert x\right\rVert = 1}\left\lVert f\right\rVert \left\lVert T\right\rVert \left\lVert x\right\rVert = \left\lVert f\right\rVert \left\lVert T\right\rVert,
+\]
+hence, \(T^{\ast} f\in X^{\ast} \) and \(\left\lVert T^{\ast} f\right\rVert \leq \left\lVert T\right\rVert \left\lVert f\right\rVert \). So, we have \(T^{\ast} \colon Y^{\ast} \to X^{\ast} \) with \(T^{\ast} \) being a \hyperref[def:linear-op]{linear operator} and \(T^{\ast} \) is \hyperref[def:bounded-linear-op]{bounded} with
+\[
+	\left\lVert T^{\ast} \right\rVert \leq \left\lVert T\right\rVert .
+\]
+In fact, we can achieve equality, which is shown in \autoref{prop:lec10}.
+
+\begin{proposition}\label{prop:lec10}
+	For every \(T\in \mathcal{\MakeUppercase{l}} (X,Y)\), the \hyperref[def:adjoint-op]{adjoint} \(T^{\ast} \) is in \(\mathcal{\MakeUppercase{l}} (Y^{\ast} , X^{\ast} )\) with \(\left\lVert T^{\ast} \right\rVert = \left\lVert T\right\rVert \).
+\end{proposition}
+\begin{proof}
+	Since
+	\[
+		\begin{split}
+			\left\lVert T^{\ast} \right\rVert
+			= \sup _{\left\lVert f\right\rVert _{Y^{\ast} }= 1}\left\lVert T^{\ast} f\right\rVert _{X^{\ast} }
+			&= \sup _{\left\lVert f\right\rVert _{Y^{\ast} } = 1} \sup _{\left\lVert x\right\rVert _X = 1}\left\vert T^{\ast} f(x) \right\vert\\
+			&= \sup_{\left\lVert f\right\rVert _{Y^{\ast} }= 1}\sup _{\left\lVert x\right\rVert _X = 1} \left\vert f(Tx) \right\vert
+			= \sup _{\left\lVert x\right\rVert _X = 1} \sup _{\left\lVert f\right\rVert _{Y^{\ast} } = 1} \left\vert f(Tx) \right\vert.
+		\end{split}
+	\]
+	By choosing \(f\) to be a \hyperref[thm:supporting-functional]{supporting functional} of \(Tx\), \(\sup _{\left\lVert f\right\rVert _{Y^{\ast} }=1}\left\vert f(Tx) \right\vert = \left\lVert Tx\right\rVert _{Y^{\ast} }\), hence
+	\[
+		\left\lVert T^{\ast} \right\rVert = \sup _{\left\lVert x\right\rVert _X = 1} \left\lVert Tx\right\rVert _{Y^{\ast} }= \left\lVert T\right\rVert.
+	\]
+\end{proof}
+
+Let's look at some properties of \hyperref[def:adjoint-op]{adjoint operators}. Let \(T, S\in \mathcal{\MakeUppercase{l}} (X, Y) \implies T^{\ast} , S^{\ast} \in \mathcal{\MakeUppercase{l}} (Y^{\ast} , X^{\ast} )\), then
+\begin{enumerate}[(a)]
+	\item \((aT + bS)^{\ast} = aT^{\ast} + bS^{\ast} \), \(a, b\in \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \). Also, \((aT)^{\ast} f(x) = f(aTx) = af(Tx) = aT^{\ast} f(x)\).
+	\item \((ST)^{\ast} = T^{\ast} S^{\ast} \). This implies that if \(T\in \mathcal{\MakeUppercase{l}} (X, X)\) is invertible, then \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (X^{\ast} , X^{\ast} )\) is invertible and \((T^{\ast} )^{-1} = (T^{-1} )^{\ast} \).
+\end{enumerate}
+
+\begin{remark}[Adjoint operators on Hilbert spaces]
+	Specialize to \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \), then by \hyperref[thm:Riesz-representation]{Riesz representation theorem}, \(\mathcal{\MakeUppercase{h}} ^{\ast} \equiv \mathcal{\MakeUppercase{h}} \), i.e., \(f\in \mathcal{\MakeUppercase{h}} ^{\ast} \iff \exists y\in \mathcal{\MakeUppercase{h}} \) such that \(f(x) = \left\langle x, y \right\rangle \) for \(x\in \mathcal{\MakeUppercase{h}} \). Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} , \mathcal{\MakeUppercase{h}} )\), and \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} ^{\ast} , \mathcal{\MakeUppercase{h}} ^{\ast} )\) with \(T^{\ast} f(x) = f(Tx) = \left\langle Tx, y \right\rangle\) for \(x, y\in \mathcal{\MakeUppercase{h}} \), \(f\in \mathcal{\MakeUppercase{h}} ^{\ast} \).
+
+	Write \(T^{\ast} f(x) = \left\langle x, T^{\ast} y \right\rangle \), which defined \(T^{\ast} y\colon \mathcal{\MakeUppercase{H}} \to \mathcal{\MakeUppercase{h}} \), hence \(\left\langle Tx, y \right\rangle = \left\langle x, T^{\ast} y \right\rangle  \) for \(x, y\in \mathcal{\MakeUppercase{h}}\). Clearly, \(T^{\ast} \) is a \hyperref[def:bounded-linear-op]{bounded linear operator} on \(\mathcal{\MakeUppercase{h}} \), i.e., \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}}^{\ast} , \mathcal{\MakeUppercase{h}}^{\ast} )\) since
+	\[
+		\left\lVert T^{\ast} \right\rVert
+		= \sup _{\left\lVert y\right\rVert = 1} \left\lVert T^{\ast} y\right\rVert
+		= \sup _{\left\lVert y\right\rVert = \left\lVert x\right\rVert = 1} \left\langle x, T^{\ast} y \right\rangle
+		= \sup _{\left\lVert y\right\rVert = \left\lVert x\right\rVert = 1}\left\langle Tx, y \right\rangle
+		= \left\lVert T\right\rVert
+	\]
+	just like \autoref{prop:lec10}. We see that \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} ^{\ast} , \mathcal{\MakeUppercase{h}} ^{\ast} )\implies T^{\ast} \in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} , \mathcal{\MakeUppercase{h}} )\) via \hyperref[thm:Riesz-representation]{Riesz representation}. Note that if \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} , \mathcal{\MakeUppercase{h}} )\),
+	\[
+		(aT)^{\ast} = \overline{a} T^{\ast}
+	\]
+	for \(a\in \mathbb{\MakeUppercase{c}} \).
+\end{remark}
+
+Just as with \hyperref[def:Hilbert-space]{Hilbert space}, we have a generalized notion of \hyperref[def:orthogonal]{orthogonality}, which we call \hyperref[def:annihilator]{annihilator}.
+
+\begin{definition}[Annihilator]\label{def:annihilator}
+	Let \(A \subseteq X\) where \(X\) is a \hyperref[def:Banach-space]{Banach space}, then the \emph{annihilator} \(A^\perp\) of \(A\) is a subset of \(X^{\ast} \) defined as
+	\[
+		A^\perp \coloneqq \left\{ f\in X^{\ast} \colon f(x) = 0, x\in A \right\}.
+	\]
+\end{definition}
+
+\begin{note}
+	\(A^\perp\) is a closed linear subspace of \(X^{\ast} \).
+\end{note}
+
+\begin{proposition}\label{prop:lec10-1}
+	Given two  \hyperref[def:Banach-space]{Banach spaces} \(X\) and \(Y\), let \(T\in \mathcal{\MakeUppercase{l}} (X, Y)\) and \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (Y^{\ast} , X^{\ast} )\). Then \((\im T)^\perp, \ker (T^{\ast} ) \subseteq Y^{\ast}\) satisfy
+	\[
+		(\im T)^\perp = \ker (T^{\ast} ).
+	\]
+\end{proposition}
+\begin{proof}
+	Since \(f\in (\im T)^\perp \iff f(Tx)= 0\) for all \(x\in X\), i.e., \(T^{\ast} f(x) = 0 \iff T^{\ast} f = 0\iff f\in \ker(T^{\ast})\), proving the result.
+\end{proof}
+
+\begin{corollary}
+	Let \(\mathcal{\MakeUppercase{h}} \) be a \hyperref[def:Hilbert-space]{Hilbert space}, and \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} , \mathcal{\MakeUppercase{h}} )\). Then the orthogonal decomposition holds, i.e.,
+	\[
+		\mathcal{\MakeUppercase{h}} = \overline{\im T}\oplus \ker (T^{\ast} ).
+	\]
+\end{corollary}
+\begin{proof}
+	By \autoref{prop:lec10-1}, \(\ker (T^{\ast} ) = (\im T)^\perp\). And since \(\mathcal{\MakeUppercase{h}}\) is \hyperref[def:Hilbert-space]{Hilbert space}, \(\overline{\im T} = \im T\) from the fact that if \(E \subseteq \mathcal{\MakeUppercase{h}} \), \((E^\perp)^\perp = \overline{E}\), hence \((\overline{\im T})^{\perp} = \ker T^{\ast} \). Just by a simple application of \autoref{thm:orthogonality-principle}, the proof is complete.
+\end{proof}
+
+\subsection{Ergodic Theory}
+We now see an application on ergodic theorems. Ergodic theorems allow one to compute space averages as time averages. Let's first state and prove a preliminary form of ergodic theorem, i.e., \hyperref[thm:von-Neumann-ergodic]{von Neumann ergodic theorem}.
+
+\begin{theorem}[von Neumann ergodic theorem]\label{thm:von-Neumann-ergodic}
+	Let \(U\) be a unitary operator on a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \), and \(P\) denote the \hyperref[def:orthogonal-projection]{orthogonal projection} onto the invariant subspace \(\left\{ x\in \mathcal{\MakeUppercase{h}} \colon Ux = x \right\} \). Then, for all \(x\in \mathcal{\MakeUppercase{h}} \),
+	\[
+		\lim\limits_{N \to \infty} \frac{1}{N}\sum\limits_{n=1}^{N-1} U^n x = Px.
+	\]
+\end{theorem}
+
+We can actually use what we have discussed proving \autoref{thm:von-Neumann-ergodic}. Given a probability space \((\Omega , \mathcal{\MakeUppercase{f}} , P)\) with \(P(\Omega ) = 1\), let \(T\colon \Omega \to \Omega \) be a measurable map, i.e., \(T^{-1} A \in \mathcal{\MakeUppercase{f}} \) if \(A\in \mathcal{\MakeUppercase{f}} \). Then, we define the following.
+
+\begin{definition}[Measure-preserving]\label{def:measure-preserving}
+	Let \((\Omega , \mathcal{\MakeUppercase{f}} , P)\) be a probability space. A transformation \(T\colon \Omega \to \Omega \) is called \emph{measure-preserving} if
+	\[
+		P(T^{-1} A) = P(A)
+	\]
+	for \(A\in \mathcal{\MakeUppercase{f}} \), where \(T^{-1} A = \left\{ \omega \in \Omega \colon T \omega \in A \right\} \).
+\end{definition}
+
+Let's first see some examples which illustrate the implications of \autoref{thm:von-Neumann-ergodic} for time and space averages. We start with simple dynamical systems corresponding to rotation.
+
+\begin{eg}
+	Let \(\Omega =[0, 1]\), \(P\) be the Lebesgue measure and \(\mathcal{\MakeUppercase{f}} \) be Borel sets. Given \(\lambda \in \mathbb{\MakeUppercase{r}} \), define
+	\[
+		T \omega = \omega + \lambda \bmod 1.
+	\]
+	This is equivalent to rotation on the unit circle through an angle \(2\pi \lambda \), and we see that \(T\) is \hyperref[def:measure-preserving]{measure-preserving} and one-to-one, and \(T^{-1} \) exists.
+\end{eg}
+
+\begin{eg}
+	Let \(\Omega =[0, 1]\), \(P\) be the Lebesgue measure and \(\mathcal{\MakeUppercase{f}} \) be Borel sets. Now, let
+	\[
+		T \omega = 2 \omega \bmod 1.
+	\]
+	Then we see that \(T\) is just the shift operator on the binary representation, i.e., given \(\omega = \sum_{j=1} ^{\infty} \frac{a_{j} }{2^j}\) for \(a_j = 0\) or \(1\), then
+	\[
+		T \omega = \sum\limits_{j=1}^{\infty } \frac{a_{j+1}}{2^j}.
+	\]
+	Now, let the \emph{dyadic interval} \(I_{n, k}\) be defined as
+	\[
+		I_{n, k}\coloneqq \left[ \frac{k-1}{2^n}, \frac{k}{2^n} \right]
+	\]
+	for \(1 \leq k \leq 2^n\), we have \(T^{-1} I_{n, k} = I_{n+1, k} \cup I_{n+1, k+ 2^n}\), hence \(P(T^{-1} I_{n, k}) = P(I_{n, k})\) for all dyadic intervals \(I_{n, k}\). This implies
+	\[
+		P(T^{-1} O) = P(O)
+	\]
+	for all \(O\in \mathcal{\MakeUppercase{f}} \), hence \(T\) is \hyperref[def:measure-preserving]{measure-preserving}, but not one-to-one. In fact, \(T\) is a two-to-one mapping. The action of \(T\) is \([0, 1 / 2] \overset{T}{\to} [0, 1]\), \([1 / 2, 1] \overset{T}{\to} [0, 1]\). We see that \(T\) doubles the length of a dyadic interval. To summarize,
+	\begin{itemize}
+		\item \(T\) is \hyperref[def:measure-preserving]{measure-preserving} since it is two-to-one.
+		\item \(T\) is an expanding map, which is called hyperbolic.
+	\end{itemize}
+\end{eg}

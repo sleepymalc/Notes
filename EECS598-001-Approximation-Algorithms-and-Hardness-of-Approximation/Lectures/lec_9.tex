@@ -61,21 +61,21 @@ Again, we think of \(\alpha _i\) as the time that \(i\) is connected, and \(t_j\
 \end{intuition}
 
 \begin{remark}
-	As before, let \(w(i)\in O\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)\) is the connected witness of \(i\). Then we have the following.
+	As before, let \(w(i)\in Q^\prime\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)\) is the connected witness of \(i\). Then we have the following.
 	\begin{enumerate}[(a)]
 		\item \(\alpha \) is dual-feasible.
 		\item If \(\beta _{ij} > 0\), then \(\alpha _i \leq t_j\).
-		\item For all \(i\), \(\exists w(i)\in O\) such that \(\alpha_i \geq t_{w(i)}\).
+		\item For all \(i\), \(\exists w(i)\in Q^\prime \) such that \(\alpha_i \geq t_{w(i)}\).
 	\end{enumerate}
 \end{remark}
 
-We now do the analysis similarly. Fix a client \(i\in P\), then observe that given \(S = O^\prime \cap \left\{ j\colon \beta _{ij} > 0 \right\}\), if \(\delta = 2\), then \(\left\vert S \right\vert \leq 1\). We see that
+We now do the analysis similarly. Fix a client \(i\in P\), then observe that given \(S = Q^{\prime\prime} \cap \left\{ j\colon \beta _{ij} > 0 \right\}\), if \(\delta = 2\), then \(\left\vert S \right\vert \leq 1\).\footnote{Since if both \(\beta _j\) and \(\beta _{j^\prime }\) is greater than \(0\), then \(d(j, j^\prime ) \leq 2\alpha _i \leq 2 \min (t_j , t_{j^\prime })\). This means \(j\) and \(j^\prime \) will have an edge but from the property of \hyperref[prb:max-strongly-independent-set]{max independent set}, one of them will not be included.} We see that
 \begin{enumerate}[(a)]
-	\item If \(\left\vert S \right\vert = 1\), \(S = \left\{ j \right\} \). We see that
+	\item If \(\left\vert S \right\vert = 1\), \(S = \left\{ j \right\} \). We see that \(\mathop{\mathrm{conn}}(i) \leq d(i, j)\) and \(\mathop{\mathrm{open}}(i) = \alpha _i - d(i, j)\), so
 	      \[
 		      \mathop{\mathrm{conn}}(i) + \mathop{\mathrm{open}}(i) \leq d(i, j) + (\alpha _i - d(i, j)) \leq \alpha _i
 	      \]
-	\item If \(\left\vert S \right\vert = 0\), then \(\mathop{\mathrm{open}}(i) = 0\), and \(\mathop{\mathrm{conn}}(i) \leq d(i, j^\prime )\). Then \(\exists j^\prime \in O^\prime \) such that \((w(i), j^\prime )\in E\),
+	\item If \(\left\vert S \right\vert = 0\), then \(\mathop{\mathrm{open}}(i) = 0\) and either \(w(i)\in Q^{\prime\prime}\), or \(j^\prime \in Q^{\prime\prime}\) such that \((w(i), j^\prime )\in E\). In any case, \(\mathop{\mathrm{conn}}(i) \leq d(i, j^\prime ) \leq d(i, w(i)) + d(w(i), j^\prime )\), hence
 	      \[
 		      \mathop{\mathrm{conn}}(i) + \mathop{\mathrm{open}}(i) \leq d(i, j^\prime )\leq \alpha _i + \delta t_{w(i)} \leq (1 + \delta )\alpha _i.
 	      \]
@@ -87,8 +87,13 @@ Generally, our goal is to prove that for all \(i\),
 \end{equation}
 which implies
 \[
-	\frac{\mathop{\mathrm{conn}}}{\rho } + \left\vert O^\prime  \right\vert f \leq \sum_{i} \alpha _i.
+	\frac{\mathop{\mathrm{conn}}}{\rho } + \left\vert Q^{\prime\prime}\right\vert f \leq \sum_{i} \alpha _i,
 \]
+i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
+
+\begin{remark}
+	We see that we get the exactly \(3\)-\hyperref[def:LMP]{LMP} approximation for \(\delta = 2\) case! Notice that in this case, since \(\left\vert S \right\vert \leq 1\) as we noted, \autoref{algo:Euclidean-k-median-PD} and \autoref{algo:facility-location-PD} are equivalent.
+\end{remark}
 
 We first see two \emph{magics}. Let \(i^\prime = \frac{1}{s}\sum_{j\in S} j\). Then
 \[

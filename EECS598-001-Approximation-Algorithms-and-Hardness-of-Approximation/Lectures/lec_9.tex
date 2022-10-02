@@ -82,7 +82,7 @@ We now do the analysis similarly. Fix a client \(i\in P\), then observe that giv
 \end{enumerate}
 
 Generally, our goal is to prove that for all \(i\),
-\begin{equation}
+\begin{equation}\label{eq:lec9}
 	\frac{\mathop{\mathrm{conn}}(i)}{\rho} + \mathop{\mathrm{open}}(i) \leq \alpha _i,
 \end{equation}
 which implies
@@ -91,36 +91,47 @@ which implies
 \]
 i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
 
+\begin{note}
+	Specifically, \autoref{eq:lec9} is equivalent to
+	\[
+		\frac{\min _{j\in S}d(i, j)}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j)) \leq \alpha _i.
+	\]
+\end{note}
+
 \begin{remark}
 	We see that we get the exactly \(3\)-\hyperref[def:LMP]{LMP} approximation for \(\delta = 2\) case! Notice that in this case, since \(\left\vert S \right\vert \leq 1\) as we noted, \autoref{algo:Euclidean-k-median-PD} and \autoref{algo:facility-location-PD} are equivalent.
 \end{remark}
-
-We first see two \emph{magics}. Let \(i^\prime = \frac{1}{s}\sum_{j\in S} j\). Then
-\[
-	\begin{split}
-		\sum_{j\in S} \left\lVert j - i\right\rVert ^{2}
-		&= \sum_{j\in S} \left\langle j - i + i^\prime - i^\prime , j - i + i^\prime - i^\prime  \right\rangle \\
-		&= \sum_{j} \left( \left\lVert j - i\right\rVert ^{2} + \left\lVert i^\prime - i\right\rVert ^{2} + 2\left\langle j c i^\prime , i^\prime - i \right\rangle  \right) \\
-		&= \sum_{j} \left\lVert j - i^\prime \right\rVert ^{2} + s \left\lVert i^\prime - i\right\rVert ^{2} .
-	\end{split}
-\]
-
-Also,
-\[
-	\begin{split}
-		\sum_{j, j^\prime \in S} \left\lVert j - j^\prime \right\rVert ^{2}
-		&= \sum_{j, j^\prime }\left\langle j- j^\prime + i^\prime - i^\prime , j- j^\prime + i^\prime - i^\prime  \right\rangle  \\
-		&= \sum_{j, j^\prime } \left( \left\lVert j - i^\prime \right\rVert^{2} + \left\lVert j^\prime - i^\prime \right\rVert ^{2} + 2 \left\langle j -i^\prime , i^\prime - j^\prime  \right\rangle   \right) \\
-		&= 2s\cdot \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} .
-	\end{split}
-\]
 
 \begin{claim}
 	\(\left\vert S \right\vert \leq 3\).
 \end{claim}
 \begin{explanation}
+	We first see two tricks, which we call them the \emph{\(k\)-means magic formulas}. Let \(i^\prime = \sum_{j\in S} j / \left\vert S \right\vert\). Then
+	\[
+		\begin{split}
+			\sum_{j\in S} \left\lVert j - i\right\rVert ^{2}
+			&= \sum_{j\in S} \left\langle j - i + i^\prime - i^\prime , j - i + i^\prime - i^\prime  \right\rangle \\
+			&= \sum_{j} \left( \left\lVert j - i\right\rVert ^{2} + \left\lVert i^\prime - i\right\rVert ^{2} + 2\left\langle j - i^\prime , i^\prime - i \right\rangle  \right) \\
+			&= \sum_{j} \left\lVert j - i^\prime \right\rVert ^{2} + \left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} .
+		\end{split}
+	\]
+
+	Also,
+	\[
+		\begin{split}
+			\sum_{j, j^\prime \in S} \left\lVert j - j^\prime \right\rVert ^{2}
+			&= \sum_{j, j^\prime }\left\langle j- j^\prime + i^\prime - i^\prime , j- j^\prime + i^\prime - i^\prime  \right\rangle  \\
+			&= \sum_{j, j^\prime } \left( \left\lVert j - i^\prime \right\rVert^{2} + \left\lVert j^\prime - i^\prime \right\rVert ^{2} + 2 \left\langle j -i^\prime , i^\prime - j^\prime  \right\rangle   \right) \\
+			&= 2\left\vert S \right\vert \cdot \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} .
+		\end{split}
+	\]
+
+	\begin{remark}
+		In both cases, we have \(\left\langle j - i^\prime , i^\prime - j^\prime  \right\rangle = 0\).
+	\end{remark}
+
 	From the above tricks, we have
 	\[
-		3
+		\left\vert S \right\vert \alpha _i^{2} \geq \sum_{j\in S} \left\lVert j - i\right\rVert ^{2}
 	\]
 \end{explanation}

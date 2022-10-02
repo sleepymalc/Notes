@@ -73,7 +73,7 @@ We now do the analysis similarly. Fix a client \(i\in P\), then observe that giv
 \begin{enumerate}[(a)]
 	\item If \(\left\vert S \right\vert = 1\), \(S = \left\{ j \right\} \). We see that \(\mathop{\mathrm{conn}}(i) \leq d(i, j)\) and \(\mathop{\mathrm{open}}(i) = \alpha _i - d(i, j)\), so
 	      \[
-		      \mathop{\mathrm{conn}}(i) + \mathop{\mathrm{open}}(i) \leq d(i, j) + (\alpha _i - d(i, j)) \leq \alpha _i
+		      \mathop{\mathrm{conn}}(i) + \mathop{\mathrm{open}}(i) \leq d(i, j) + (\alpha _i - d(i, j)) \leq \alpha _i.
 	      \]
 	\item If \(\left\vert S \right\vert = 0\), then \(\mathop{\mathrm{open}}(i) = 0\) and either \(w(i)\in Q^{\prime\prime}\), or \(j^\prime \in Q^{\prime\prime}\) such that \((w(i), j^\prime )\in E\). In any case, \(\mathop{\mathrm{conn}}(i) \leq d(i, j^\prime ) \leq d(i, w(i)) + d(w(i), j^\prime )\), hence
 	      \[
@@ -82,7 +82,7 @@ We now do the analysis similarly. Fix a client \(i\in P\), then observe that giv
 \end{enumerate}
 
 Generally, our goal is to prove that for all \(i\),
-\begin{equation}\label{eq:lec9}
+\begin{equation}\label{eq:lec9-1}
 	\frac{\mathop{\mathrm{conn}}(i)}{\rho} + \mathop{\mathrm{open}}(i) \leq \alpha _i,
 \end{equation}
 which implies
@@ -92,10 +92,11 @@ which implies
 i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
 
 \begin{note}
-	Specifically, \autoref{eq:lec9} is equivalent to
+	Specifically, \autoref{eq:lec9-1} is equivalent to
 	\[
 		\frac{\min _{j\in S}d(i, j)}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j)) \leq \alpha _i.
 	\]
+	Furthermore, in the case of \(\delta =2\), we see that we can set \(\rho \coloneqq 1 + \delta = 3\).
 \end{note}
 
 \begin{remark}
@@ -103,7 +104,7 @@ i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
 \end{remark}
 
 \begin{claim}
-	\(\left\vert S \right\vert \leq 3\).
+	For \(\delta \coloneqq \sqrt{8 / 3}\) and \(S = Q^{\prime\prime} \cap \left\{ j\colon \beta _{ij} > 0\right\} \), \(\left\vert S \right\vert \leq 3\).
 \end{claim}
 \begin{explanation}
 	We first see two tricks, which we call them the \emph{\(k\)-means magic formulas}. Let \(i^\prime = \sum_{j\in S} j / \left\vert S \right\vert\). Then
@@ -111,23 +112,62 @@ i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
 		\begin{split}
 			\sum_{j\in S} \left\lVert j - i\right\rVert ^{2}
 			&= \sum_{j\in S} \left\langle j - i + i^\prime - i^\prime , j - i + i^\prime - i^\prime  \right\rangle \\
-			&= \sum_{j} \left( \left\lVert j - i\right\rVert ^{2} + \left\lVert i^\prime - i\right\rVert ^{2} + 2\left\langle j - i^\prime , i^\prime - i \right\rangle  \right) \\
-			&= \sum_{j} \left\lVert j - i^\prime \right\rVert ^{2} + \left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} .
+			&= \sum_{j\in S} \left( \left\lVert j - i\right\rVert ^{2} + \left\lVert i^\prime - i\right\rVert ^{2} + 2\left\langle j - i^\prime , i^\prime - i \right\rangle  \right) \\
+			&= \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} + \left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} .
 		\end{split}
 	\]
-
+	\begin{remark}[Fact]
+		One can actually show that \(i^\prime \) (i.e., the geometric mean) is the optimal solution for \hyperref[prb:Euclidean-k-median]{\(k\)-means}, and if we choose \(i\) rather than \(i^\prime \) to be the center, the deviation from \(\OPT\) is exactly \(\left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} \).
+	\end{remark}
 	Also,
 	\[
 		\begin{split}
 			\sum_{j, j^\prime \in S} \left\lVert j - j^\prime \right\rVert ^{2}
-			&= \sum_{j, j^\prime }\left\langle j- j^\prime + i^\prime - i^\prime , j- j^\prime + i^\prime - i^\prime  \right\rangle  \\
-			&= \sum_{j, j^\prime } \left( \left\lVert j - i^\prime \right\rVert^{2} + \left\lVert j^\prime - i^\prime \right\rVert ^{2} + 2 \left\langle j -i^\prime , i^\prime - j^\prime  \right\rangle   \right) \\
+			&= \sum_{j, j^\prime \in S}\left\langle j- j^\prime + i^\prime - i^\prime , j- j^\prime + i^\prime - i^\prime  \right\rangle  \\
+			&= \sum_{j, j^\prime \in s} \left( \left\lVert j - i^\prime \right\rVert^{2} + \left\lVert j^\prime - i^\prime \right\rVert ^{2} + 2 \left\langle j -i^\prime , i^\prime - j^\prime  \right\rangle   \right) \\
 			&= 2\left\vert S \right\vert \cdot \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} .
 		\end{split}
 	\]
 
 	From the above tricks, we have
 	\[
-		\left\vert S \right\vert \alpha _i^{2} \geq \sum_{j\in S} \left\lVert j - i\right\rVert ^{2}
+		\left\vert S \right\vert \alpha _i^{2} \geq \sum_{j\in S} \left\lVert j - i\right\rVert ^{2} \geq \frac{1}{2\left\vert S \right\vert} \sum_{j, j^\prime \in S} \left\lVert j - j^\prime \right\rVert ^{2} > \frac{(s-1)\delta ^{2} \alpha _i^{2} }{2},
 	\]
+	where the last inequality follows from \(\left\lVert j - j^\prime \right\rVert > \delta \cdot \min (t_{j} , t_{j^\prime }) \geq \delta \cdot \alpha _i\). Then, we have
+	\[
+		\left\vert S \right\vert \alpha _i ^{2} > \frac{(s-1)\delta ^{2} \alpha _i^{2} }{2} \implies \left\vert S \right\vert \left( \frac{\delta ^{2} }{2} - 1 \right) < \frac{\delta ^{2} }{2} \implies \left\vert S \right\vert < \frac{\delta ^{2} }{\delta ^{2} - 2} = 4
+	\]
+	by plugging in \(\delta = \sqrt{8 / 3} \), hence \(\left\vert S \right\vert \leq 3\) by integrality.
 \end{explanation}
+
+Now, given the fact that we already handle the case that \(\left\vert S \right\vert = 0\) and \( \left\vert S \right\vert = 1\), we now consider the cases that \(\left\vert S \right\vert = 2\) and \(\left\vert S \right\vert = 3\). If \(\left\vert S \right\vert = 2\), let \(S = \left\{ j_1, j_2 \right\}\), then \((\alpha _i - d(i, j_1)) + (\alpha _i - d(i, j_2)) \leq (2 - \delta )\alpha _i\). Since \(\mathop{\mathrm{conn}}(i) \leq \alpha _i\),
+\begin{equation}\label{eq:lec9-2}
+	\frac{d(i, j^{\ast} )}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j)) \leq \alpha _i \left( \frac{1}{\rho } + 2-\delta  \right) \leq \alpha _i,
+\end{equation}
+where the last inequality follows from \(1 / \rho + 2 - \delta \leq 1 \iff 1 / \rho \leq \delta -1\), which is satisfied by \(\rho \coloneqq 1 + \delta = 1 + \sqrt{8 / 3} \).
+
+If \(\left\vert S \right\vert = 3\), let \(S = \left\{ j_1, j_2, j_3 \right\} \). Now, instead of looking at a more complicated geometric structure and try to optimize it, we simply add \autoref{eq:lec9-2} three times for \((j_1, j_2)\), \((j_2, j_3)\) and \((j_1, j_3)\), we have \(2 \sum_{j\in S} (\alpha _i - d(i, j)) \leq 3(2-\delta )\alpha _i\) hence
+\[
+	\frac{d(i, j^{\ast} )}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j) ) \leq \alpha _i \left( \frac{1}{\rho } + \frac{3(2-\delta )}{2} \right) \leq \alpha _i
+\]
+since \(1 / \rho + 3(2 - \delta ) / 2 \leq 1 \iff 1 / \rho \leq (3\delta - 4) / 2\), which is satisfied by \(\rho \coloneqq 1 + \delta = 1 + \sqrt{8 / 3} \)
+
+\begin{remark}[SOTA]
+	Compare general \hyperref[def:metric]{metric} \autoref{prb:k-median} and Euclidean \hyperref[def:metric]{metric} \autoref{prb:Euclidean-k-median}, we have the following.
+	% file:///Users/pbb/Developer/quiver/src/index.html?q=WzAsMTIsWzAsMiwiXFx0ZXh0e1xcaHlwZXJyZWZbYWxnbzpmYWNpbGl0eS1sb2NhdGlvbi1QRF17UHJpbWFsLUR1YWx9IFxcKDNcXCktXFxoeXBlcnJlZltkZWY6TE1QXXtMTVB9fSJdLFswLDMsIlxcdGV4dHtEdWFsIEZpdHRpbmd+XFxjaXRle2h0dHBzOi8vZG9pLm9yZy8xMC40ODU1MC9hcnhpdi4yMjA3LjA1MTUwfSBcXCgxLjlcXGxkb3RzIDkgXFwpLVxcaHlwZXJyZWZbZGVmOkxNUF17TE1QfX0iXSxbMSw0LCJcXHRleHR7XFxoeXBlcnJlZlthbGdvOmstbWVkaWFuLWJpcG9pbnQtcm91bmRpbmdde1xcKDJcXCktYmlwb2ludCByb3VuZGluZ319Il0sWzEsMywiXFx0ZXh0e1xcKDEuM1xcbGRvdHMgM1xcKS1iaXBvaW50IHJvdW5kaW5nfSJdLFsyLDIsIlxcdGV4dHtcXCgzXFwpLWFwcHJveGltYXRpb259Il0sWzIsMywiXFx0ZXh0e1xcKDIuNjdcXCktYXBwcm94aW1hdGlvbn0iXSxbMCw0LCJcXHRleHR7XFxoeXBlcnJlZlthbGdvOmstbWVkaWFuLWxvY2FsLXNlYXJjaF17TG9jYWwgU2VhcmNofSBcXCgzXFwpLVxcaHlwZXJyZWZbZGVmOkxNUF17TE1QfX0iXSxbMiw0LCJcXHRleHR7XFwoNFxcKS1hcHByb3hpbWF0aW9ufSJdLFswLDEsIlxcdGV4dHtcXGh5cGVycmVmW2FsZ286RXVjbGlkZWFuLWstbWVkaWFuLVBEXXtFdWNsaWRlYW4gUHJpbWFsLUR1YWx9IFxcKDIuNjNcXCktXFxoeXBlcnJlZltkZWY6TE1QXXtMTVB9fSJdLFsyLDEsIlxcdGV4dHtcXCgyLjYzXFwpLWFwcHJveGltYXRpb259Il0sWzAsMCwiXFx0ZXh0e1xcKDIuNDFcXCktXFxoeXBlcnJlZltkZWY6TE1QXXtMTVB9fVxcZm9vdG5vdGV7XFwoMi40MFxcKSBpcyB0aGUgU09UQS59Il0sWzIsMCwiXFx0ZXh0e1xcKDIuNDFcXCktYXBwcm94aW1hdGlvbn0iXSxbMSwzXSxbMyw1XSxbMCw0LCJcXHRleHR7Q29udmVyc2lvbn0iXSxbNiwyXSxbMiw3XSxbOCw5LCJcXHRleHR7Q29udmVyc2lvbn0iXSxbMTAsMTEsIlxcdGV4dHtDb252ZXJzaW9ufSJdXQ==
+	\[\begin{tikzcd}
+			{\text{\(2.41\)-\hyperref[def:LMP]{LMP}}\footnote{\(2.40\) is the SOTA.}} && {\text{\(2.41\)-approximation}} \\
+			{\text{\hyperref[algo:Euclidean-k-median-PD]{Euclidean Primal-Dual} \(2.63\)-\hyperref[def:LMP]{LMP}}} && {\text{\(2.63\)-approximation}} \\
+			{\text{\hyperref[algo:facility-location-PD]{Primal-Dual} \(3\)-\hyperref[def:LMP]{LMP}}} && {\text{\(3\)-approximation}} \\
+			{\text{Dual Fitting~\cite{https://doi.org/10.48550/arxiv.2207.05150} \(1.9\ldots 9 \)-\hyperref[def:LMP]{LMP}}} & {\text{\(1.3\ldots 3\)-bipoint rounding}} & {\text{\(2.67\)-approximation}} \\
+			{\text{\hyperref[algo:k-median-local-search]{Local Search} \(3\)-\hyperref[def:LMP]{LMP}}} & {\text{\hyperref[algo:k-median-bipoint-rounding]{\(2\)-bipoint rounding}}} & {\text{\(4\)-approximation}}
+			\arrow[from=4-1, to=4-2]
+			\arrow[from=4-2, to=4-3]
+			\arrow["{\text{Conversion}}", from=3-1, to=3-3]
+			\arrow[from=5-1, to=5-2]
+			\arrow[from=5-2, to=5-3]
+			\arrow["{\text{Conversion}}", from=2-1, to=2-3]
+			\arrow["{\text{Conversion}}", from=1-1, to=1-3]
+		\end{tikzcd}\]
+	Noticeably, \(2.41\)-\hyperref[def:LMP]{LMP} approximation is \(1 + \sqrt{2} \), which is exactly the threshold behavior in Euclidean \hyperref[def:metric]{metric} we're building our intuition upon.
+\end{remark}

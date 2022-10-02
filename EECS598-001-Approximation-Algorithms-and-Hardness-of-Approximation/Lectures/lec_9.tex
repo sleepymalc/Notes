@@ -1,5 +1,19 @@
 \lecture{9}{28 Sep. 10:30}{Euclidean \(k\)-Median}
-\begin{prev}
+Consider the following problem.
+
+\begin{problem}[Euclidean \(k\)-median]\label{prb:Euclidean-k-median}
+Given a \hyperref[def:metric]{metric space} \((X, d) = (\mathbb{\MakeUppercase{r}} ^\ell, \left\lVert \cdot \right\rVert _2 )\) and \(P, Q\subseteq X\) with \(k\in \mathbb{\MakeUppercase{n}} \), find \(Q^\prime \subseteq Q\) with \(\left\vert Q^\prime  \right\vert = k\) which minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j)\).
+\end{problem}
+
+We see that \autoref{prb:Euclidean-k-median} is like \autoref{prb:k-median}, but with a specific \hyperref[def:metric]{metric space}, i.e., \((\mathbb{\MakeUppercase{r}} ^\ell , \left\lVert \cdot \right\rVert _2)\).
+
+\begin{note}
+	We assume that \(\ell \) is large. If it's not the case, then actually for all \(\epsilon > 0\), there exists a \((1+\epsilon )\)-approximation algorithm with running time \(2^{2^{O(\ell )}}\cdot \mathop{\mathrm{poly}}(n)\). Hence, if \(\ell \) is small (or constant), we can use this algorithm. But if it's not, what we're going to see is better.
+\end{note}
+
+It's natural to ask that whether we can solve \autoref{prb:Euclidean-k-median} by the similar algorithm which solves \autoref{prb:facility-location} and \autoref{prb:k-median}. In particular, we're going to use \autoref{algo:facility-location-PD}.
+
+\begin{prev}[Dual LP for \autoref{prb:facility-location}]
 	Recall the dual of \autoref{prb:facility-location}
 	\begin{align*}
 		\max~    & \sum_{i} \alpha _i                                  \\
@@ -10,17 +24,11 @@
 	and the \autoref{algo:facility-location-PD}.
 \end{prev}
 
-Now, consider the following problem.
-
-\begin{problem}[Euclidean \(k\)-median]\label{prb:Euclidean-k-median}
-Given a \hyperref[def:metric]{metric space} \((X, d)\) with \(d(i, j) = \left\lVert i - j\right\rVert_2\) and \(P, Q\subseteq X\) with \(k\in \mathbb{\MakeUppercase{n}} \), find \(Q^\prime \subseteq Q\) with \(\left\vert Q^\prime  \right\vert = k\) which minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j)\).
-\end{problem}
-
-Again, we can solve \autoref{prb:Euclidean-k-median} by the similar algorithm which solves \autoref{prb:facility-location} and \autoref{prb:k-median}.
+Again, we think of \(\alpha _i\) as the time that \(i\) is connected, and \(t_j\) be the time that \(j\) is open in \autoref{algo:facility-location-PD}, and the only thing we change is the phase two, i.e., how we trim down the solution. We now see the algorithm, which essentially achieves \(\rho \coloneqq (1 + \delta)\)-\hyperref[def:LMP]{LMP} approximation where \(\delta \coloneqq \sqrt{8 / 3} \approx 1.633\ldots\).\footnote{We'll see why we have this artificial number soon.}
 
 \begin{algorithm}[H]\label{algo:Euclidean-k-median-PD}
 	\DontPrintSemicolon
-	\caption{ \hyperref[prb:Euclidean-k-median]{Euclidean\(k\)-Median} -- Primal-Dual}
+	\caption{\hyperref[prb:Euclidean-k-median]{Euclidean \(k\)-Median} -- Primal-Dual}
 	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
 	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
 	\SetKw{Break}{break}
@@ -28,31 +36,40 @@ Again, we can solve \autoref{prb:Euclidean-k-median} by the similar algorithm wh
 	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
 	\;
 	\While(){\(S \neq P\)}{
-	\While(\label{algo:facility-location-PD-while-2}){\textsf{True}}{
+	\While(\label{algo:Euclidean-k-median-PD-while-2}){\textsf{True}}{
 	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
 
-	\uIf(\label{algo:facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
+	\uIf(\label{algo:Euclidean-k-median-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
 		\Break
 	}
-	\ElseIf(\label{algo:facility-location-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+	\ElseIf(\label{algo:Euclidean-k-median-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
 		\Break
 	}
 	}
-	\(Q^\prime \gets\left\{ \text{tight facilities}\right\} \)\label{algo:facility-location-PD-lin10}\Comment*[r]{Update \(Q^\prime \)}
-	\(S\gets \left\{ \text{clients connected to \(Q^\prime\)} \right\} \)\label{algo:facility-location-PD-lin11}\Comment*[r]{Update \(S\)}
+	\(Q^\prime \gets\left\{ \text{tight facilities}\right\} \)\label{algo:Euclidean-k-median-PD-lin10}\Comment*[r]{Update \(Q^\prime \)}
+	\(S\gets \left\{ \text{clients connected to \(Q^\prime\)} \right\} \)\label{algo:Euclidean-k-median-PD-lin11}\Comment*[r]{Update \(S\)}
 	}
 	\;
-	\label{algo:facility-location-PD-comment}\Comment{Trim down \(Q^\prime \)}
-	\(G = (Q^\prime , E\coloneqq \left\{ (j, j^\prime )\colon \exists i\in P \text{ such that } d(j, j^\prime ) \leq \delta \cdot \min (t_j , t_{j^\prime }), j, j^\prime \in Q^\prime \right\})\)\footnote{We let \(t_j\) be the time that \(j\) is open, and \(\delta = \sqrt{8 / 3} \approx 1.633\ldots\).}\;
+	\label{algo:Euclidean-k-median-PD-comment}\Comment{Trim down \(Q^\prime \)}
+	\(G = (Q^\prime , E\coloneqq \left\{ (j, j^\prime )\colon \exists i\in P \text{ such that } \mathcolor{red}{d(j, j^\prime ) \leq \delta \cdot \min (t_j , t_{j^\prime })}, j, j^\prime \in Q^\prime \right\})\)\;
 	Compute \(Q^{\prime\prime}\) s.t. \(\forall j\in Q^\prime \), either \(j\in Q^{\prime\prime}\) or \(\exists j^\prime\in Q^{\prime\prime} \) s.t. \((j, j^\prime )\in E\)\Comment*[r]{\hyperref[prb:max-strongly-independent-set]{max independent set}}
 	\Return{\(Q^{\prime\prime} \)}\;
 \end{algorithm}
 
+\begin{intuition}
+	The problematic part is when \(i\) contributing to too many facilities at once, but we'll see that this can't happen if we're considering Euclidean \hyperref[def:metric]{metric}.
+\end{intuition}
+
 \begin{remark}
-	Again, we know that \(\alpha \) is dual-feasible. And if \(\beta _{ij} > 0\), then \(\alpha _i \leq t_j\).
+	As before, let \(w(i)\in O\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)\) is the connected witness of \(i\). Then we have the following.
+	\begin{enumerate}[(a)]
+		\item \(\alpha \) is dual-feasible.
+		\item If \(\beta _{ij} > 0\), then \(\alpha _i \leq t_j\).
+		\item For all \(i\), \(\exists w(i)\in O\) such that \(\alpha_i \geq t_{w(i)}\).
+	\end{enumerate}
 \end{remark}
 
-Let \(w(i)\in O\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)\) is the connected witness of \(i\). Then we do the analysis similarly. Fix \(i\in P\), then observe that given \(S = O^\prime \cap \left\{ j\colon \beta _{ij} > 0 \right\}\), if \(\delta = 2\), then \(\left\vert S \right\vert \leq 1\). Then,
+We now do the analysis similarly. Fix a client \(i\in P\), then observe that given \(S = O^\prime \cap \left\{ j\colon \beta _{ij} > 0 \right\}\), if \(\delta = 2\), then \(\left\vert S \right\vert \leq 1\). We see that
 \begin{enumerate}[(a)]
 	\item If \(\left\vert S \right\vert = 1\), \(S = \left\{ j \right\} \). We see that
 	      \[
@@ -65,8 +82,12 @@ Let \(w(i)\in O\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)
 \end{enumerate}
 
 Generally, our goal is to prove that for all \(i\),
+\begin{equation}
+	\frac{\mathop{\mathrm{conn}}(i)}{\rho} + \mathop{\mathrm{open}}(i) \leq \alpha _i,
+\end{equation}
+which implies
 \[
-	\frac{\mathop{\mathrm{conn}}(i)}{\rho} + \mathop{\mathrm{open}}(i) \leq \alpha _i \implies \frac{\mathop{\mathrm{conn}}}{\rho } + \left\vert O^\prime  \right\vert f \leq \sum_{i} \alpha _i.
+	\frac{\mathop{\mathrm{conn}}}{\rho } + \left\vert O^\prime  \right\vert f \leq \sum_{i} \alpha _i.
 \]
 
 We first see two \emph{magics}. Let \(i^\prime = \frac{1}{s}\sum_{j\in S} j\). Then
@@ -93,5 +114,8 @@ Also,
 	\(\left\vert S \right\vert \leq 3\).
 \end{claim}
 \begin{explanation}
-
+	From the above tricks, we have
+	\[
+		3
+	\]
 \end{explanation}

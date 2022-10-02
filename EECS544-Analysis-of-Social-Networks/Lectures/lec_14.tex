@@ -6,9 +6,9 @@ Recall that the basic page rank \(r(n)\) is updated by the equation \(r(n+1) = N
 \]
 where \(N\) is a row stochastic matrix. On the other hand, compare to \hyperref[def:Markov-chain]{Markov Chain},
 \[
-	\probability{}{X_n = \cdot}^{\top} = \mu^{\top}P^n = \mu^{\top}P^{n-1}P = \probability{}{X_{n-1} = \cdot}^{\top}P
+	\Pr(X_n = \cdot)^{\top} = \mu^{\top}P^n = \mu^{\top}P^{n-1}P = \Pr(X_{n-1} = \cdot)^{\top}P
 \]
-with \(\mu\sim \probability{}{X_0 = \cdot}\). We see that the above two equations are the same with
+with \(\mu\sim \Pr(X_0 = \cdot)\). We see that the above two equations are the same with
 \[
 	r(0)\coloneqq \begin{pmatrix}
 		1/V    \\
@@ -59,7 +59,7 @@ for scaled page rank update equation.
 
 \begin{intuition}
 	Compare to basic page rank, scaled page rank can be thought as follows. When a \hyperref[def:random-walker]{random walker}
-	at location \(i\), we toss a biased coin with \(\probability{}{\{\mathrm{H} \}} = s\). If we get heads, then we follow
+	at location \(i\), we toss a biased coin with \(\Pr(\{\mathrm{H} \}) = s\). If we get heads, then we follow
 	the \hyperref[def:simple-random-walk]{simple random walk rule}. Otherwise,
 	if we get tails, we pick any node on the network at random as the next destination.
 \end{intuition}
@@ -151,7 +151,7 @@ where we essentially implement \hyperref[def:simple-random-walk]{simple random w
 	\(\arrival(v)\gets 1\)\;
 	\;
 	\For(){\(i = 1, \ldots, T\)}{
-	\(\result\gets\)\toss{\(s\)}\Comment*[r]{Toss a biased coin with \(\probability{}{\{\mathrm{H} \}} = s\), \(\probability{}{\{\mathrm{T} \}} = 1 - s\)}
+	\(\result\gets\)\toss{\(s\)}\Comment*[r]{Toss a biased coin with \(\Pr(\{\mathrm{H} \}) = s\), \(\Pr(\{\mathrm{T} \}) = 1 - s\)}
 	\uIf(\Comment*[f]{If heads}){\(\result = \mathrm{H}\)}{
 	\lIf(\Comment*[f]{Go to \(v\)'s neighbor randomly}){\(d_i^{\text{out}}\neq 0\)}{\(v\gets\) \random{\(N_i^{\text{out}}\)}}
 	}\Else(\Comment*[f]{If tails}){
@@ -217,7 +217,7 @@ But this estimator has two main issues.
 \begin{problem}[Speed of convergence]
 Not clear how long we should run this for. Namely, we need to be able to say something about
 \[
-	\expectation{}{\left\vert \hat{\pi}^{\top}_v(s) - \pi_v(s) \right\vert^2 }
+	\mathbb{E}\left[\left\vert \hat{\pi}^{\top}_v(s) - \pi_v(s) \right\vert^2 \right]
 \]
 in \(T\) to ensure the speed of convergence.
 \end{problem}
@@ -233,8 +233,8 @@ and if it is biased,
 \]
 We see that \(\hat{\pi}^{\top}_v(s)\) is indeed biased since
 \[
-	\mathrm{E}\left[\hat{\pi}^{\top}_v(s)\right] = \frac{1}{T}\sum\limits_{n=0}^{T-1} \expectation{}{\mathbbm{1}_{\{X_n = v\}}}
-	= \frac{1}{T}\sum\limits_{n=0}^{T-1} \probability{}{X_n = v}
+	\mathrm{E}\left[\hat{\pi}^{\top}_v(s)\right] = \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbb{E}\left[\mathbbm{1}_{\{X_n = v\}} \right]
+	= \frac{1}{T}\sum\limits_{n=0}^{T-1} \Pr(X_n = v)
 	= \frac{1}{T}\sum\limits_{n=0}^{T-1} (\mu_0 P^n)_v\underset{T\to \infty }{\to }\pi_v(s),
 \]
 where \(P\) is the \underline{one-step transformation matrix}. This only converges when \(T\to \infty \) by
@@ -280,9 +280,9 @@ Firstly, the term \(s^i(1-s) \coloneqq \tau\) is the so-called geometric \hyperr
 	We can think of \(\tau\) as the probability of tossing a series of \hyperref[def:independent]{independent} biased coins until first tail occurs,
 	since we have
 	\[
-		\probability{}{\tau = 0} = 1 - s,\quad
-		\probability{}{\tau = 1} = s(1 - s), \ldots,
-		\probability{}{\tau = i} = s^i(1 - s).
+		\Pr(\tau = 0) = 1 - s,\quad
+		\Pr(\tau = 1) = s(1 - s), \ldots,
+		\Pr(\tau = i) = s^i(1 - s).
 	\]
 \end{intuition}
 \begin{remark}
@@ -338,11 +338,11 @@ and the associated \(X_{\tau}\) as \(X_{\tau_1}, X_{\tau_2}, \ldots , X_{\tau_K}
 \]
 This is an unbiased estimator since
 \[
-	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \probability{}{X_{\tau_k} = v} = \pi_v(s).
+	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \Pr(X_{\tau_k} = v) = \pi_v(s).
 \]
 Also, the variance can be derived as
 \[
-	\variance{}{\hat{\pi}_v^K(s)} = \frac{\pi_v(s)(1 - \pi_v(s))}{K}\leq \frac{1}{4K}.
+	\mathop{\mathrm{Var}}\left[\hat{\pi}_v^K(s) \right] = \frac{\pi_v(s)(1 - \pi_v(s))}{K}\leq \frac{1}{4K}.
 \]
 
 \begin{remark}
@@ -366,7 +366,7 @@ Also, the variance can be derived as
 		\]
 		with
 		\[
-			\expectation{}{\hat{\mu}_N} = \frac{1}{N}\sum\limits_{i=1}^{N} \expectation{}{X_i} = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
+			\mathbb{E}\left[\hat{\mu}_N \right] = \frac{1}{N}\sum\limits_{i=1}^{N} \mathbb{E}\left[X_i \right] = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
 		\]
 		which implies this is an unbiased estimator.
 		\item Denote \(\hat{\mathrm{Var}}(N)\) as the empirical variance estimator. It's defined as
@@ -375,13 +375,13 @@ Also, the variance can be derived as
 		      \]
 		      This is indeed a biased estimator since
 		      \[
-			      \expectation{}{\hat{\mathrm{Var}}(N)} = \left(\frac{N-1}{N}\right) \sigma^2,
+			      \mathbb{E}\left[\hat{\mathrm{Var}}(N) \right]  = \left(\frac{N-1}{N}\right) \sigma^2,
 		      \]
 		      which is slightly less than the true variance. We then have an unbiased estimator defined as
 		      \[
 			      \overline{\mathrm{Var}}(N) \coloneqq  \frac{1}{N-1}\sum\limits_{i=1}^{N} (X_{i-\hat{\mu}_N})^2
 		      \]
-		      with \(\expectation{}{\overline{\mathrm{Var}}(N)} = \sigma^2\).
+		      with \(\mathbb{E}\left[\overline{\mathrm{Var}}(N) \right]  = \sigma^2\).
 	\end{itemize}
 \end{note}
 
@@ -451,7 +451,7 @@ Explicitly, we have
 This is another unbiased estimator for the same reason given in the \hyperref[subsec:second-page-rank-estimator]{second estimator},
 but we see that this converges faster and with smaller variance. Specifically, we have
 \[
-	\variance{}{\hat{\pi}_v(s)} = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert M}\left(\pi_{j} - \frac{\sum_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert} \sigma_{ij}^2}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\right)
+	\mathop{\mathrm{Var}}\left[\hat{\pi}_v(s) \right]  = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert M}\left(\pi_{j} - \frac{\sum_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert} \sigma_{ij}^2}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\right)
 \]
 for all \(v\in \mathcal{\MakeUppercase{v}} \). Hence, this is a better estimator.
 

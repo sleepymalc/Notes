@@ -1,0 +1,284 @@
+\chapter{Traveling Salesman Problem}
+\lecture{10}{3 Oct. 10:30}{Spanning Tree}
+Instead of discussing general network design problems, we focus on traveling salesman problem specifically. And turns out that although this is a good old problem in TCS, but still, lots of improvement is done in the past decade. Turns out, most of the improvement is based on the understanding of spanning tree, specifically, how to sample a good enough random \hyperref[def:spanning-tree]{spanning tree}.
+
+\section{Spanning Tree}
+We first look at the definition of a \hyperref[def:spanning-tree]{spanning tree}.
+
+\begin{definition}[Spanning tree]\label{def:spanning-tree}
+	A \emph{spanning tree} \(T\) of a connected graph \(\mathcal{\MakeUppercase{g}}=(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) is an induced subgraph of \(\mathcal{\MakeUppercase{g}} \) which spans \(\mathcal{\MakeUppercase{g}} \), i.e., \(V(T) = \mathcal{\MakeUppercase{v}}\) and \(E(T) \subseteq \mathcal{\MakeUppercase{e}} \).
+\end{definition}
+
+\begin{remark}
+	A \hyperref[def:spanning-tree]{spanning tree} of a connected graph \(\mathcal{\MakeUppercase{g}} \) can also be defined as a maximal set of edges of \(\mathcal{\MakeUppercase{g}} \) that contains no cycle, or as a minimal set of edges that connect all vertices.
+\end{remark}
+
+Then, we're interested in the following problem.
+
+\begin{problem}[Minimum spanning tree]\label{prb:min-spanning-tree}
+Given a connected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and an edge-weight function \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), find a \hyperref[def:spanning-tree]{spanning tree} \(T\) which minimizes \(w(T)\).
+\end{problem}
+
+There are lots of different algorithms which solve \autoref{prb:min-spanning-tree}, e.g., \href{https://en.wikipedia.org/wiki/Prim%27s_algorithm}{Prim's algorithm}, \href{https://en.wikipedia.org/wiki/Kruskal%27s_algorithm}{Kruskal's Algorithm}, etc. in undergraduate algorithm courses. But turns out that by looking at the LP formulation of this problem, we get some non-trivial result. 
+
+\subsection{LP Formulation}
+Denote the variables as \(\left\{ x_e \right\} _{e\in \mathcal{\MakeUppercase{e}} }\), where we interpret \(x_e = 1\) if \(e\) is in the final \hyperref[def:spanning-tree]{spanning tree}, otherwise if it's \(0\), then \(e\) is not in the final \hyperref[def:spanning-tree]{spanning tree}. One natural formulation is the following:
+\begin{align*}
+	\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                  \\
+	      & \sum_{e\in \partial S} x_e \geq 1                 & \forall S\subseteq \mathcal{V} \\
+	      & x \geq 0.
+\end{align*}
+\begin{notation}
+	If \(S \subseteq \mathcal{\MakeUppercase{v}} \), then we denote \(\partial S = E(S, \overline{S} )\) be the edges between \(S\) and \(\overline{S} \).
+\end{notation}
+\begin{intuition}
+	The second constraint is trying to model that for every cut set \(S \subseteq \mathcal{\MakeUppercase{v}} \), our \hyperref[def:spanning-tree]{spanning tree} need to include at least one edge from the boundary, i.e., \(\partial S\).
+\end{intuition}
+
+But turns out that this formulation will give us an \hyperref[def:integrality-gap]{integrality gap} of \(2\), since for a cycle graph, just by choosing half of the edges, i.e., \(x_e = 1 / 2\) for all \(e\in \mathcal{\MakeUppercase{e}} \), the constraints are satisfied while we know we need to include all but one edge to form a valid \hyperref[def:spanning-tree]{spanning tree}.
+
+\begin{remark}
+	There are ways to strengthen the second constraints by looking at \textbf{directed} \hyperref[def:spanning-tree]{spanning trees} rather than the usual undirected ones to give us an LP which solves \autoref{prb:min-spanning-tree} exactly.
+\end{remark}
+
+We see that the problems arise from the fact that there are not enough edges to span \(\mathcal{\MakeUppercase{g}} \), so we now require it explicitly in our LP formulation. Furthermore, to ensure there are no cycles, for any \(S \subseteq \mathcal{\MakeUppercase{v}} \), we again make sure that the total edges we have is less than \(\left\vert S \right\vert - 1\). Then, we have the following.
+\begin{equation}\label{eq:lec10-1}
+	\begin{alignedat}{3}
+		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                                                       \\
+		& \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e = n-1                                                                      \\
+		& \sum_{e\in E(S, \overline{S} )} x_e \leq \left\vert S \right\vert - 1 & \forall S \subseteq \mathcal{\MakeUppercase{v}} \\
+		& x \geq 0.
+	\end{alignedat}
+\end{equation}
+
+This is not solvable just by throwing this into an LP solver since there are exponentially many constraints! Regardless, we note the following.
+\begin{remark}[Separation oracle]\label{rmk:separation-oracle}
+	Given a linear program \((P)\) with \(x\in \mathbb{\MakeUppercase{r}} ^n\) as variables, a \emph{separation oracle} is an algorithm which outputs
+	\begin{itemize}
+		\item \textsf{Yes} if \(x\) is feasible.
+		\item \textsf{No} with \emph{the violating constraint} if \(x\) is not feasible.
+	\end{itemize}
+
+	And if we have a polynomial time separation oracle, we can solve any LP in polynomial time by using the \href{https://en.wikipedia.org/wiki/Ellipsoid_method}{ellipsoid algorithm}.
+\end{remark}
+
+Now, we just state that there's a \hyperref[rmk:separation-oracle]{separation oracle} for the above LP, so we can solve it in polynomial time and get a fractional solution \(\left\{ x_e \right\} _{e\in \mathcal{\MakeUppercase{e}}}\). So our next task is to round it into an integral one.
+
+\subsection{Pipage Rounding}
+Now, call \(S\subseteq \mathcal{\MakeUppercase{v}} \) \emph{tight} if \(\sum_{e\in E(S, \overline{S})} x_e = \left\vert S \right\vert - 1 \).
+
+\begin{lemma}[Uncrossing]\label{lma:uncrossing}
+	If \(S\) and \(T\) are tight with \(S \cap T \neq \varnothing \), both \(S \cup T\) and \(S \cap T\) are tight.
+\end{lemma}
+\begin{proof}
+	Observe that since \(S\) and \(T\) are tight and \(S\cup T\) and \(S \cap T\) are cuts as well (hence satisfy the constraints),
+	\[
+		\begin{split}
+			(\left\vert S \right\vert - 1) + (\left\vert T \right\vert - 1)
+			&= \sum_{e\in E(S)}x_e + \sum_{e\in E(T)} x_e\\
+			&\leq \sum_{e\in E(S \cup T)}x_e  + \sum_{e\in E (S \cap T)} x_e
+			\leq (\left\vert S \cup T \right\vert - 1) + ( \left\vert S \cap T \right\vert - 1),
+		\end{split}
+	\]
+	with the fact that \(\left\vert S \right\vert + \left\vert T \right\vert = \left\vert S \cup T \right\vert + \left\vert S \cap T \right\vert\),\footnote{Consider every possible edges between \(S\setminus T\), \(T\setminus S\), \(S \cap T\) and \(\overline{S \cup T}\).} hence everything is equal.
+\end{proof}
+
+Finally, we call a tight \(T\) \emph{integral} if and only if for all \(e\in E(T)\), \(x_e\in \left\{ 0, 1 \right\} \); and a tight \(T\) \emph{fractional} if there exists \(e \neq f\in E(T)\) such that \(x_e\) and \(x_f\) are fractional.\footnote{We can equivalently require only one \(x_e\) being fractional, but since \(T\) is tight, there'll another \(f \neq e\) such that \(x_f\) is fractional as well.}
+
+\subsubsection{Deterministic Pipage Rounding}
+We first see the deterministic rounding algorithm.
+
+\begin{algorithm}[H]\label{algo:min-spanning-tree-pipage-rounding}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:min-spanning-tree]{Minimum spanning tree} -- Pipage-Rounding}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a weight function \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\)}
+	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
+	\SetKw{Break}{break}
+	\SetKwFunction{Swap}{swap}
+	\SetKwFunction{LP}{LP-Solver}
+	\SetKwFunction{SG}{Subgraph}
+	\BlankLine
+	\(x\gets\)\LP{\autoref{eq:lec10-1}}\Comment*[r]{with \hyperref[rmk:separation-oracle]{separation oracle}}
+	\;
+	\label{algo:min-spanning-tree-pipage-rounding-rounding}\Comment{Pipage Rounding}
+	\While(\Comment*[f]{not integral}){\(x \notin \mathbb{\MakeUppercase{n}} ^{m}\)}{
+		\(T\gets\) minimal tight fraction set\label{algo:min-spanning-tree-pipage-rounding-min-tight-set}\Comment*[r]{inclusion-wise minimal\footnote{i.e., \(\nexists T^\prime \subsetneq T\) tight fractional set.}}
+		\(f, g\gets \) fractional edges\Comment*[r]{\(f, g \in E(T)\)}
+		\If(\Comment*[f]{ensure \(w(f) \leq w(g)\)}){\(w(f) > w(g)\)}{
+			\Swap{\(f\), \(g\)}\;
+		}
+		\While(\label{algo:min-spanning-tree-pipage-rounding-increase}\Comment*[f]{by solving \autoref{eq:lec10-2}}){increase \(x_f\) and decrease \(x_g\) by a unit}{
+			\uIf(\label{algo:min-spanning-tree-pipage-rounding-if}){\(x_f\) or \(x_g\) becomes integral}{
+				\Break\;
+			}
+			\ElseIf(\label{algo:min-spanning-tree-pipage-rounding-elif}){\(\exists T^\prime \subsetneq T\) is tight}{
+				\Break\;
+			}
+		}
+	}
+	\;
+	\(T\gets\)\SG{\(\mathcal{\MakeUppercase{g}} \),\(x\)}\Comment*[r]{construct a \hyperref[def:spanning-tree]{spanning tree}}
+	\Return{\(T\)}\;
+\end{algorithm}
+
+\begin{remark}[Implementation detail]
+	There are two non-trivial steps in \autoref{algo:min-spanning-tree-pipage-rounding}.
+	\begin{itemize}
+		\item \autoref{algo:min-spanning-tree-pipage-rounding-increase}: This continuous process is done by taking \(\delta \) from solving the following LP as the total unit we should increase/decrease:
+		      \begin{equation}\label{eq:lec10-2}
+			      \begin{alignedat}{4}
+				      \max~ & \delta                                                                                                    \\
+				      & y = x+\delta e_f - \delta e_g                                                                             \\
+				      & \sum_{e\in E(S)} y- e \leq \left\vert S \right\vert - 1 &\quad \forall S \subseteq \mathcal{\MakeUppercase{v}} \\
+				      & 0 \leq y \leq 1,
+			      \end{alignedat}
+		      \end{equation}
+		      where \(e_i\) is the unit vector with \(1\) at entry \(i\). Again, this is in the similar form as \autoref{eq:lec10-1}, and there's a \hyperref[rmk:separation-oracle]{separation oracle} which solves this LP in polynomial-time.
+		\item \autoref{algo:min-spanning-tree-pipage-rounding-min-tight-set}: Start from the whole vertex set \(\mathcal{\MakeUppercase{v}} \), and we simply look at \(f\) which is none-integral edge and ask can we increase it or not, i.e., we ask the \hyperref[rmk:separation-oracle]{separation oracle} for \autoref{eq:lec10-2}, and if there's a smaller tight fraction set inside \(T\), \(\delta > 0\) strictly, and we just keep searching in this way. We'll see what does this mean exactly in \autoref{lma:lec10-1}.
+	\end{itemize}
+\end{remark}
+
+Our goal now is to show that during the \hyperref[algo:min-spanning-tree-pipage-rounding-rounding]{pipage rounding}:
+\begin{enumerate}[(a)]
+	\item \(x\) remains feasible;
+	\item \(\sum_{e} x_e w(e)\) remains unchanged (does not increase).
+\end{enumerate}
+
+To show \(x\) remains feasible, first note that the non-tight sets are handled (captured) in \autoref{algo:min-spanning-tree-pipage-rounding-elif}, as for tight sets, we have \autoref{lma:lec10-1}.
+
+\begin{lemma}\label{lma:lec10-1}
+	All tight sets remain tight after running \autoref{algo:min-spanning-tree-pipage-rounding-increase}.
+\end{lemma}
+\begin{proof}
+	The only way for a tight set becomes over-tight is when we increase \(x_f\) in \autoref{algo:min-spanning-tree-pipage-rounding-increase}, an already tight set \(U\) becomes over-tight. But if this is the case and \(U\) is violated, then \(U\ni f\) and \(U\not\ni g\) and \(U\) is tight, we have \(U \cap T\) is tight from \autoref{lma:uncrossing}, contradicting the minimality of \(T\) \(\conta\)
+\end{proof}
+
+\begin{remark}\label{rmk:lec10-1}
+	From the proof above, we see that we can now \hyperref[algo:min-spanning-tree-pipage-rounding-min-tight-set]{find minimal \(T\)} by increasing a fractional \(x_f\): if some set \(U\) is not violated, then we know \(T \cap U\) is tight, then we just keep nesting and get the minimal one.
+\end{remark}
+
+Now, we just need to show \autoref{algo:min-spanning-tree-pipage-rounding} terminates in polynomial time.
+
+\begin{lemma}\label{lma:lec10-2}
+	\autoref{algo:min-spanning-tree-pipage-rounding} in a polynomial time algorithm.
+\end{lemma}
+\begin{proof}
+	Observe that
+	\begin{enumerate}[(a)]
+		\item \autoref{algo:min-spanning-tree-pipage-rounding-if} can only happen \(m\) times: at most \(m\) edges can be fractional at first, and after one becomes integral, it remains integral.
+		\item \autoref{algo:min-spanning-tree-pipage-rounding-elif} can only happen \(n\) times: at most \(n\) nodes can be in \(T\) at first, and when \autoref{algo:min-spanning-tree-pipage-rounding-elif} is triggered, the size of \(T\) decreases by at least \(1\) and never goes up.
+	\end{enumerate}
+	In all, we see that \autoref{algo:min-spanning-tree-pipage-rounding} is a polynomial time algorithm.
+\end{proof}
+
+\begin{note}
+	Notice that in \autoref{algo:min-spanning-tree-pipage-rounding-elif}, we require \(T^\prime \subsetneq T\), and if we trigger this, in the next iteration when choosing \(T\) in \autoref{algo:min-spanning-tree-pipage-rounding-min-tight-set}, we'll need to choose a strictly smaller \(T\) compare to the last iteration\footnote{This is guaranteed by \autoref{lma:lec10-1} since we know the only we change is \(x_f\) and \(x_g\), and if some new \(T^\prime \) can become tight, it has non-empty intersection with \(T\) and hence as the \hyperref[rmk:lec10-1]{remark}, we can find such a \(T^\prime \).} in order to make \autoref{lma:lec10-2} valid.
+\end{note}
+
+We see that this implies the following.
+
+\begin{theorem}
+	\autoref{algo:min-spanning-tree-pipage-rounding} solves \autoref{prb:min-spanning-tree} exactly in polynomial time.
+\end{theorem}
+\begin{proof}
+	Firstly, \autoref{algo:min-spanning-tree-pipage-rounding} is a polynomial time algorithm from \autoref{lma:lec10-2}. Also, since \autoref{eq:lec10-1} is an LP-relaxation of \autoref{prb:min-spanning-tree} while we know that
+\end{proof}
+
+\subsubsection{Randomized Pipage Rounding}
+We first see the algorithm.
+
+\begin{algorithm}[H]\label{algo:min-spanning-tree-randomized-pipage-rounding}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:min-spanning-tree]{Minimum spanning tree} -- Randomized pipage-rounding}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a weight function \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\)}
+	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
+	\SetKw{Break}{break}
+	\SetKwFunction{Swap}{swap}
+	\SetKwFunction{LP}{LP-Solver}
+	\SetKwFunction{SG}{Subgraph}
+	\SetKwFunction{Rand}{rand}
+	\BlankLine
+	\(x\gets\)\LP{\autoref{eq:lec10-1}}\Comment*[r]{with \hyperref[rmk:separation-oracle]{separation oracle}}
+	\;
+	\While(\Comment*[f]{not integral}){\(x \notin \mathbb{\MakeUppercase{n}} ^{m}\)}{
+		\(T\gets\) minimal tight fraction set\Comment*[r]{inclusion-wise minimal\footnote{i.e., \(\nexists T^\prime \subsetneq T\) tight fractional set.}}
+		\(f, g\gets \) fractional edges\label{algo:min-spanning-tree-randomized-pipage-rounding-fg}\Comment*[r]{\(f, g \in E(T)\)}
+		\If(\Comment*[f]{ensure \(w(f) \leq w(g)\)}){\(w(f) > w(g)\)}{
+			\Swap{\(f\), \(g\)}\;
+		}
+		\(a\gets \max_a x_f \gets x_f + a, x_g \gets x_g - a\) feasible\Comment*[r]{\(a > 0\)}
+		\(b\gets \max_b x_f \gets x_f - b, x_g \gets x_g + b\) feasible\Comment*[r]{\(b > 0\)}
+		\uIf(\Comment*[f]{w.p.\(\frac{b}{a+b}\)}){\rand{\((0, 1)\)}\(< \frac{b}{a + b}\)}{
+			\(x_f \gets x_f + a\), \(x_g \gets x_g - a\)\;
+		}\Else(\Comment*[f]{w.p.\(\frac{a}{a+b}\)}){
+			\(x_f \gets x_f - b\), \(x_g \gets x_g + b\)\;
+		}
+	}
+	\;
+	\(T\gets\)\SG{\(\mathcal{\MakeUppercase{g}} \),\(x\)}\Comment*[r]{construct a \hyperref[def:spanning-tree]{spanning tree}}
+	\Return{\(T\)}\;
+\end{algorithm}
+
+As in the \hyperref[algo:min-spanning-tree-pipage-rounding]{deterministic version}, the same proof can show that \(x\) is feasible, and the number of iteration will be less than \(m \cdot n\), hence it's a polynomial time algorithm. Remarkably, we have the following.
+
+\begin{theorem}
+	\autoref{algo:min-spanning-tree-randomized-pipage-rounding} solves \autoref{prb:min-spanning-tree} exactly.
+\end{theorem}
+\begin{proof}
+	To show that the cost is good enough, note that in one iteration, \(\mathbb{E}\left[x^{\text{end} } \right] = x^{\text{start} }\), then
+	\[
+		\mathbb{E}\left[ x^{\text{final}} \right] = x^{\text{LP} },
+	\]
+	hence any possible \(x^{\text{final} }\) satisfies
+	\[
+		\sum_{e\in \mathcal{\MakeUppercase{e}} } x^{\text{final}}_e w(e)= \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e^{\text{LP}} w(e),
+	\]
+	hence we get a \(1\)-approximation algorithm, i.e., \autoref{algo:min-spanning-tree-randomized-pipage-rounding} solves \autoref{prb:min-spanning-tree} exactly.
+\end{proof}
+
+\begin{remark}
+	We can interpret \(x^{\text{final} }\) as the distribution of \hyperref[def:spanning-tree]{spanning trees}, i.e., we have
+	\[
+		\mathbb{E}\left[x^{\text{final} } \right] = x^{\text{LP} } \iff \forall e\in \mathcal{\MakeUppercase{e}}, \Pr(e\in T) = x_e^{\text{LP} },
+	\]
+	where the probability depends on the randomness introduce in \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, i.e., \(x_e^{\text{final} } \).
+\end{remark}
+
+\section{Negative Correlation}
+The above remark is just for one edge, and actually, \autoref{algo:min-spanning-tree-randomized-pipage-rounding} produces a negative correlated distribution. Firstly, if \(x_e^{\text{final} } \) are independent, then
+\[
+	\mathbb{E}\left[\prod_{e\in S} x^{\text{final} }_e \right] = \Pr(S \subseteq T) = \prod_{e\in S} \Pr(e\in T) = \prod_{e\in S} x^{\text{LP} }_e.
+\]
+But since we know that \(x_e^{\text{final} }\) are not independent for sure since they depend on a sequence of steps executed by \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, it's non-trivial to analyze. We now see the main result in this section.
+
+\begin{theorem}[Negative correlation]\label{thm:negative-correlation}
+	For all \(S \subseteq \mathcal{\MakeUppercase{e}} \),
+	\[
+		\mathbb{E}\left[\prod_{e\in S} x^{\text{final} }_e \right] = \Pr(S \subseteq T) \leq \prod_{e\in S} \Pr(e\in T) = \prod_{e\in S} x^{\text{LP} }_e.
+	\]
+\end{theorem}
+\begin{proof}
+	Let \(y^i\) be \(x\) after \(i^{th} \) iteration maintained by \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, it's sufficient to show
+	\[
+		\mathbb{E}\left[\prod\limits_{e\in S} y^{i+1}_e \mid y^i\right] \leq \prod\limits_{e\in S} y^i_e
+	\]
+	since if this holds, say \autoref{algo:min-spanning-tree-randomized-pipage-rounding} runs \(M\) iterations in total, then
+	\[
+		\mathbb{E}\left[\prod\limits_{e\in S} x_e^{\text{final} } \right]
+		= \mathbb{E}\left[\prod\limits_{e\in S} y_e^{M} \right]
+		= \mathbb{E}\left[\prod\limits_{e\in S} y_e^{M} \mid y^{M-1} \right]
+		\leq \prod\limits_{e\in S} y_e^{M-1},
+	\]
+	any by taking expectation again iteratively, we obtain the desired result down to \(\prod_{e\in S} y^0_e\). Now, consider that in the \(i^{th} \) iteration of \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, for \(f, g\) picked in \autoref{algo:min-spanning-tree-randomized-pipage-rounding-fg}:
+	\begin{enumerate}[(i)]
+		\item \(f, g \notin S\): trivially holds.
+		\item \(f\in S\), \(g \notin S\):\footnote{And also \(g\in S\) and \(f \notin S\), since they're symmetric.} we have \(\mathbb{E}\left[\prod_{e\in S} y^{i+1}_e \mid y^i\right] = \prod_{e\in S\setminus \left\{ f \right\} } y_e^i \cdot \mathbb{E}\left[y_f^{i+1} \mid y^i\right] = \prod_{e\in S} y_e^i\) where \(\mathbb{E}\left[y_f^{i+1} \mid y^i\right] = y^i_f\) is the designed from \autoref{algo:min-spanning-tree-randomized-pipage-rounding}.
+		\item \(f, g\in S\). Suffices to compare \(\mathbb{E}\left[y_f^{i+1} \cdot y_g^{i+1} \mid y^i \right] \) and \(y_f^i \cdot y_g^i\), and the goal is to show \(\leq \).
+		      \begin{enumerate}[(a)]
+			      \item \(\mathbb{E}\left[(y_f^{i+1} + y_g^{i+1})^{2} \mid y^i \right] = (y_f^i + y_g^i)^{2} \) since \(y_f^{i+1} + y_g^{i+1} = y_f^i + y_g^i\) almost surely.
+			      \item \(\mathbb{E}\left[(y_f^{i+1} - y_g^{i+1})^{2} \mid y^i \right] \geq (y_f^i + y_g^i)^{2} \) since the variance of any random variable is non-negative.
+		      \end{enumerate}
+		      We see that by subtracting them, we have \(\mathbb{E}\left[y_f^{i+1}\cdot y_g^{i+1} \mid y^i\right] \leq y_f^i\cdot y_g^i\) as desired.
+	\end{enumerate}
+	In all cases, the hypothesis for \(i\) holds, hence the theorem is proved.
+\end{proof}

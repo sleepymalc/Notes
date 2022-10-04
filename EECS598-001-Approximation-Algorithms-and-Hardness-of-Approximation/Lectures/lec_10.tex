@@ -141,8 +141,10 @@ We first see the deterministic rounding algorithm.
 Our goal now is to show that during the \hyperref[algo:min-spanning-tree-pipage-rounding-rounding]{pipage rounding}:
 \begin{enumerate}[(a)]
 	\item \(x\) remains feasible;
-	\item \(\sum_{e} x_e w(e)\) remains unchanged (does not increase).
+	\item \(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\) will not increase.
 \end{enumerate}
+
+We first show that \(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\) will not increase. This is because from our design, \(\sum_{e\in \mathcal{\MakeUppercase{e}} }x_e \) remains unchanged, while we increase \(x_f\) while decrease \(x_g\) for \(w(f) \leq w(g)\), hence the total cost for the \hyperref[def:spanning-tree]{spanning tree} decreases.
 
 To show \(x\) remains feasible, first note that the non-tight sets are handled (captured) in \autoref{algo:min-spanning-tree-pipage-rounding-elif}, as for tight sets, we have \autoref{lma:lec10-1}.
 
@@ -206,8 +208,8 @@ We first see the algorithm.
 		\If(\Comment*[f]{ensure \(w(f) \leq w(g)\)}){\(w(f) > w(g)\)}{
 			\Swap{\(f\), \(g\)}\;
 		}
-		\(a\gets \max_a x_f \gets x_f + a, x_g \gets x_g - a\) feasible\Comment*[r]{\(a > 0\)}
-		\(b\gets \max_b x_f \gets x_f - b, x_g \gets x_g + b\) feasible\Comment*[r]{\(b > 0\)}
+		\(a\gets \max_a x_f \gets x_f + a, x_g \gets x_g - a\) remain feasible\Comment*[r]{\(a > 0\)}
+		\(b\gets \max_b x_f \gets x_f - b, x_g \gets x_g + b\) remain feasible\Comment*[r]{\(b > 0\)}
 		\uIf(\Comment*[f]{w.p.\(\frac{b}{a+b}\)}){\rand{\((0, 1)\)}\(< \frac{b}{a + b}\)}{
 			\(x_f \gets x_f + a\), \(x_g \gets x_g - a\)\;
 		}\Else(\Comment*[f]{w.p.\(\frac{a}{a+b}\)}){

@@ -21,7 +21,7 @@ Given a connected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{
 
 There are lots of different algorithms which solve \autoref{prb:min-spanning-tree}, e.g., \href{https://en.wikipedia.org/wiki/Prim%27s_algorithm}{Prim's algorithm}, \href{https://en.wikipedia.org/wiki/Kruskal%27s_algorithm}{Kruskal's Algorithm}, etc. in undergraduate algorithm courses. But turns out that by looking at the LP formulation of this problem, we get some non-trivial result. 
 
-\subsection{LP Formulation}
+\subsection{Spanning Tree Polytope}
 Denote the variables as \(\left\{ x_e \right\} _{e\in \mathcal{\MakeUppercase{e}} }\), where we interpret \(x_e = 1\) if \(e\) is in the final \hyperref[def:spanning-tree]{spanning tree}, otherwise if it's \(0\), then \(e\) is not in the final \hyperref[def:spanning-tree]{spanning tree}. One natural formulation is the following:
 \begin{align*}
 	\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                  \\
@@ -43,12 +43,12 @@ But turns out that this formulation will give us an \hyperref[def:integrality-ga
 
 We see that the problems arise from the fact that there are not enough edges to span \(\mathcal{\MakeUppercase{g}} \), so we now require it explicitly in our LP formulation. Furthermore, to ensure there are no cycles, for any \(S \subseteq \mathcal{\MakeUppercase{v}} \), we again make sure that the total edges we have is less than \(\left\vert S \right\vert - 1\). Then, we have the following.
 \begin{equation}\label{eq:lec10-1}
-	\begin{alignedat}{3}
-		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                                                       \\
-		& \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e = n-1                                                                      \\
-		& \sum_{e\in E(S, \overline{S} )} x_e \leq \left\vert S \right\vert - 1 & \forall S \subseteq \mathcal{\MakeUppercase{v}} \\
-		& x \geq 0.
-	\end{alignedat}
+	\begin{aligned}
+		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                                                                        \\
+		      & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e = n-1                                                                                       \\
+		      & \sum_{e\in E(S, \overline{S} )} x_e \leq \left\vert S \right\vert - 1 & \forall \varnothing \neq S \subseteq \mathcal{\MakeUppercase{v}} \\
+		      & x \geq 0.
+	\end{aligned}
 \end{equation}
 
 This is not solvable just by throwing this into an LP solver since there are exponentially many constraints! Regardless, we note the following.
@@ -126,23 +126,19 @@ We first see the deterministic rounding algorithm.
 	\begin{itemize}
 		\item \autoref{algo:min-spanning-tree-pipage-rounding-increase}: This continuous process is done by taking \(\delta \) from solving the following LP as the total unit we should increase/decrease:
 		      \begin{equation}\label{eq:lec10-2}
-			      \begin{alignedat}{4}
+			      \begin{aligned}
 				      \max~ & \delta                                                                                                    \\
-				      & y = x+\delta e_f - \delta e_g                                                                             \\
-				      & \sum_{e\in E(S)} y- e \leq \left\vert S \right\vert - 1 &\quad \forall S \subseteq \mathcal{\MakeUppercase{v}} \\
-				      & 0 \leq y \leq 1,
-			      \end{alignedat}
+				            & y = x+\delta e_f - \delta e_g                                                                             \\
+				            & \sum_{e\in E(S)} y- e \leq \left\vert S \right\vert - 1 & \forall S \subseteq \mathcal{\MakeUppercase{v}} \\
+				            & 0 \leq y \leq 1,
+			      \end{aligned}
 		      \end{equation}
 		      where \(e_i\) is the unit vector with \(1\) at entry \(i\). Again, this is in the similar form as \autoref{eq:lec10-1}, and there's a \hyperref[rmk:separation-oracle]{separation oracle} which solves this LP in polynomial-time.
 		\item \autoref{algo:min-spanning-tree-pipage-rounding-min-tight-set}: Start from the whole vertex set \(\mathcal{\MakeUppercase{v}} \), and we simply look at \(f\) which is none-integral edge and ask can we increase it or not, i.e., we ask the \hyperref[rmk:separation-oracle]{separation oracle} for \autoref{eq:lec10-2}, and if there's a smaller tight fraction set inside \(T\), \(\delta > 0\) strictly, and we just keep searching in this way. We'll see what does this mean exactly in \autoref{lma:lec10-1}.
 	\end{itemize}
 \end{remark}
 
-Our goal now is to show that during the \hyperref[algo:min-spanning-tree-pipage-rounding-rounding]{pipage rounding}:
-\begin{enumerate}[(a)]
-	\item \(x\) remains feasible;
-	\item \(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\) will not increase.
-\end{enumerate}
+Our goal now is to show that during the \hyperref[algo:min-spanning-tree-pipage-rounding-rounding]{pipage rounding}, \(x\) remains feasible and \(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\) will not increase.
 
 We first show that \(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\) will not increase. This is because from our design, \(\sum_{e\in \mathcal{\MakeUppercase{e}} }x_e \) remains unchanged, while we increase \(x_f\) while decrease \(x_g\) for \(w(f) \leq w(g)\), hence the total cost for the \hyperref[def:spanning-tree]{spanning tree} decreases.
 

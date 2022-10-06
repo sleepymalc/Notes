@@ -1,6 +1,148 @@
-\lecture{11}{4 Oct. 14:30}{Ergodic Theorem}
+\lecture{11}{4 Oct. 14:30}{Ergodic Theorem and Open Mapping}
+Now, we're ready to discuss ergodic theorem formally. Suppose \(T\colon \Omega \to \Omega\) is \hyperref[def:measure-preserving]{measure-preserving}, we can associate operator \(U\) on \(L_2(\Omega)\) by defining \(U f(\omega) = f(T \omega)\) for \(f\in L_2(\Omega )\) and \(\omega \in \Omega\). Notice that
+\[
+	\int_\Omega f(T \omega) \,\mathrm{d} \mu(\omega) = \int_\Omega f(\omega) \,\mathrm{d} \mu(\omega)
+\]
+for all \(f\in L_1(\Omega )\),\footnote{This is true by letting \(f = \mathbbm{1}_A\) and then extend to \(L_1(\Omega)\).} so for \(\varphi \in L_2(\Omega)\), \(U \varphi(\omega) = \varphi (T \omega)\) and since
+\[
+	\left\langle U \varphi, U \psi \right\rangle
+	= \int_\Omega \varphi(T \omega) \psi(T \omega) \,\mathrm{d} \mu(\omega)
+	= \int_\Omega \varphi(\omega) \psi(\omega) \,\mathrm{d} \mu(\omega)
+	= \left\langle \varphi, \psi \right\rangle
+\]
+for \(\varphi,\psi \in L_2(\Omega)\), we see that \(U\) is a \hyperref[def:bounded-linear-op]{bounded linear operator} on \(\mathcal{H} = L_2(\Omega)\) with \(\left\lVert U\right\rVert  = 1\), \(\left\lVert U\varphi \right\rVert = \left\lVert \varphi \right\rVert\), \(\varphi \in \mathcal{H}\). In addition, for \(\varphi,\psi \in \mathcal{H}\), \(\left\langle U \varphi, U \psi \right\rangle = \left\langle \varphi, \psi \right\rangle\) implies \(\left\langle U^{\ast} U \varphi, \psi \right\rangle = \left\langle \varphi, \psi \right\rangle\), which further implies \(U^{\ast} U = I\), so \(U\) is one-to-one. Let's first see one more definition before we proceed.
 
-Studied by \href{https://en.wikipedia.org/wiki/Hermann_Weyl}{Weyl}.
+\begin{definition}[Unitary operator]\label{def:unitary-op}
+	A \emph{unitary operator} is a \hyperref[def:bounded-linear-op]{bounded linear operator} \(U\colon \mathcal{\MakeUppercase{h}} \to \mathcal{\MakeUppercase{h}} \) on a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) such that \(U\) is surjective and for all \(x, y\in \mathcal{\MakeUppercase{h}} \),
+	\[
+		\left\langle Ux, Uy \right\rangle _{\mathcal{\MakeUppercase{h}} } = \left\langle x, y \right\rangle _{\mathcal{\MakeUppercase{h}} }.
+	\]
+\end{definition}
+
+Notice that \(U\) is not necessarily onto. However, if \(U\) is indeed onto, then \(UU^{\ast} = U^{\ast} U = I\), implying that \(U\) is a \hyperref[def:unitary-op]{unitary operator} on \(\mathcal{H}\) and invertible.
+
+\begin{note}
+	\(U\) is invertible if and only if \(T\) is one-to-one.
+\end{note}
+\begin{explanation}
+	Since \(U\) just need to be onto for \(U\) being invertible, with \(U^{\ast} \varphi(\omega) = \varphi(T^{-1} \omega)\) for \(\omega \in \Omega\), if \(T\) is one-to-one then \(T^{-1} \) is onto, implying \(U^{\ast} \) is onto, so is \(U\).
+\end{explanation}
+
+\begin{remark}
+	\(T\colon \Omega \to \Omega\) is one-to-one implies \(T\) is almost onto.
+\end{remark}
+\begin{explanation}
+	Let \(A\) be a set such that \(T(\Omega) \subset A\), and hence \(T^{-1} A = \Omega\) so \(P(T^{-1}A) = P(\Omega) = 1\), implying that \(P(A) = 1\), hence \(P(\Omega \setminus A) = 0\).
+\end{explanation}
+
+In the case \(T\) is not invertible (e.g. a \(2\)-\(1\) mapping), one might expect a similar formula for \(U^{\ast}\). In the \hyperref[eg:shift-op]{shift operator} example, \(T_1\colon [0, 1 / 2] \to [0,1]\), \(T_2\colon [1 / 2, 1] \to [0,1]\), and \(T_1, T_2\) are invertible, we have
+\[
+	U^{\ast} \varphi(\omega) = \frac{1}{2}\left( \varphi(T_1^{-1} \omega) + \varphi(T_2^{-1} \omega) \right) .
+\]
+
 \begin{definition}[Ergodic transformation]\label{def:ergodic-transformation}
 	A one-to-one, \hyperref[def:measure-preserving]{measure-preserving} transformation \(T\) is \emph{ergodic} if the only functions \(f\in L_2 (\Omega , \mathcal{\MakeUppercase{f}} , P)\) which satisfy \(f(T \omega ) = f(\omega )\) for almost all \(\omega \in \Omega \) are the constant functions.
 \end{definition}
+\begin{remark}[Eigenfunction]
+	Phrasing differently, a \hyperref[def:measure-preserving]{measure-preserving} mapping \(T\colon \Omega \to \Omega\) is \hyperref[def:ergodic-transformation]{ergodic} if and only if the only eigenfunction \(\varphi \in L_2(\Omega)\) of the corresponding operator \(U\) is the constant function, i.e. \(U \varphi = \varphi\) implying \(\varphi\) is a constant.
+\end{remark}
+
+\begin{lemma}
+	A \hyperref[def:measure-preserving]{measure-preserving} mapping \(T\colon \Omega \to \Omega\) is \hyperref[def:ergodic-transformation]{ergodic} if and only if invariant sets of \(T\) have probability \(0\) or \(1\), i.e. if \(A \in \mathcal{F}\) satisfies
+	\[
+		P((A - T^{-1} A) \cup (T^{-1} A - A)) = 0,
+	\]
+	then \(P(A) = 0\) or \(P(A) = 1\).
+\end{lemma}
+\begin{proof}
+	Assume \(T\) is not \hyperref[def:ergodic-transformation]{ergodic}, then there exists \(\varphi \in L_2(\Omega)\) such that \(U \varphi = \varphi\). Hence, we can find \(a,b \in \mathbb{\MakeUppercase{r}}\), \(a < b\) such that \(A = \{\omega \in \Omega\colon a < \varphi(\omega) < b\}\) has \(0 < P(A) < 1\). However,
+	\[
+		T^{-1}A  = \{\omega:\ T \omega \in A\}
+		= \{\omega:\ a < \varphi(T \omega) < b\}
+		= \{\omega:\ a < \varphi(\omega) < b\} = A,
+	\]
+	and thus \(A\) is invariant.
+
+	Conversely, suppose \(A \in \mathcal{\MakeUppercase{f}}\), we have \(A = T^{-1}A\) up to measure-zero sets and \(0 < P(A) < 1\), then \(\varphi = \mathbbm{1}_A\) satisfies \(U \varphi = \varphi \in L_2(\Omega)\) with the fact that \(\varphi\) is not constant., proving the result.
+\end{proof}
+
+\begin{proposition}
+	Suppose \(T\colon \Omega \to \Omega\) is \hyperref[def:measure-preserving]{measure-preserving} and \(\varphi \in L_2(\Omega)\), \(\mathbb{E}\left[\varphi \right] = 0\), then
+	\[
+		\lim\limits_{N \to \infty} \frac{1}{N} \sum_{n = 0}^{N - 1} \varphi(T^n \cdot) \to 0
+	\]
+	in \(L_2(\Omega)\).
+\end{proposition}
+\begin{proof}
+	Note it suffices to assume \(\mathbb{E}\left[\varphi \right] = 0\). We want to show
+	\[
+		\lim_{N \to \infty} \frac{1}{N} [I + U + U^2 + \ldots + U^{N-1}] \varphi(\cdot) = 0
+	\]
+	in \(L_2(\Omega)\). If \(\varphi\) is orthogonal to the constant function. Since \(\mathbb{E}\left[\varphi \right] = 0\), then \(\left\langle \varphi, 1 \right\rangle  = 0\). Define a \emph{derivative} operator on \(L_2(\Omega)\) such that
+	\[
+		D \varphi = (U - I) \varphi = \varphi(T \cdot) - \varphi(\cdot).
+	\]
+	Use Fundamental Theorem of Calculus argument,
+	\[
+		[I + U + U^2 + \ldots + U^{N-1}] D\varphi = (U^N - I) \varphi.
+	\]
+	Hence,
+	\[
+		\left\lVert \frac{I + U + U^2 + \ldots + U^{N-1}}{N} \varphi\right\rVert \leq \frac{2 \left\lVert \psi\right\rVert }{N}
+	\]
+	if \(\varphi = D \psi\). In that case \(\lim\) as \(N \to \infty\) is zero, i.e. if \(\varphi \in \Im{D} \subset \mathcal{H} = L_2(\Omega)\), then finished. Note also that
+	\[
+		\left\lVert \frac{I + U + U^2 + \ldots + U^{N-1}}{N}\right\rVert \leq 1
+	\]
+	since \(\left\lVert U\right\rVert = 1\). Hence, converge to zero if \(\varphi \in \overline{\Im{D}}\).
+	\[
+		\varphi \in \overline{\Im{D}} \implies \exists\ \varphi_\epsilon \in \Im{D},\ \left\lVert \varphi_\epsilon - \varphi\right\rVert  < \epsilon,
+	\]
+	which implies \(\norm{\frac{I + U + \ldots + U^{N-1}}{N} (\varphi_\epsilon - \varphi)} < \epsilon\).
+
+	Recall \(\overline{\Im{D}} \oplus \ker{D^{\ast}} = \mathcal{H} = L_2(\Omega)\). It suffices to show \(\ker{D^{\ast}}\) is spanned by constant functions.
+
+	Note \(T\) ergodic implies \(\ker{D}\) is spanned by constants, we have \(D \varphi = 0 \Leftrightarrow U\varphi = \varphi\), and
+	\[
+		(D^{\ast} \varphi = 0 \Leftrightarrow U^{\ast} \varphi = 0) \implies (\left\langle \varphi, U^{\ast} \varphi, \varphi \right\rangle  = \left\langle \varphi, \varphi \right\rangle ).
+	\]
+	Therefore,
+	\begin{align*}
+		\left\langle U \varphi, \varphi \right\rangle                 & = \left\langle \varphi, \varphi \right\rangle   \\
+		\int \varphi(T \omega) \varphi(\omega) \,\mathrm{d} P(\omega) & =\int \varphi(\omega)^2 \,\mathrm{d} \omega     \\
+		                                                              & = \int \varphi(T \omega)^2 \,\mathrm{d} \omega,
+	\end{align*}
+	which implies
+	\[
+		\frac{1}{2} \int [\varphi(T \omega)^2 + \varphi(\omega)^2] \,\mathrm{d} P(\omega) - \int \varphi(T \omega) \varphi(\omega) \,\mathrm{d} P(\omega) = 0.
+	\]
+	i.e. \(\frac{1}{2} \int[\varphi(T \omega) - \varphi(\omega)]^2 \,\mathrm{d} P(\omega) = 0\), which means
+	\[
+		\varphi(T \omega) = \varphi(\omega),\ \omega \in \Omega.
+	\]
+	i.e. \(\varphi \equiv \text{constant}\) by ergodicity.
+\end{proof}
+
+\begin{theorem}[von Newmann ergodic theorem]\label{von-Newmann-ergodic}
+	Suppose \(T\colon \Omega \to \Omega\) is \hyperref[def:measure-preserving]{measure-preserving}, then for any \(\varphi \in L_2(\Omega)\), one has
+	\[
+		\lim_{N \to \infty} \frac{1}{N} \sum_{n=0}^{N-1} \varphi(T^n \cdot) = \int_\Omega \varphi(\omega) \,\mathrm{d} P(\omega).
+	\]
+\end{theorem}
+\begin{remark}
+	Convergence is in the \(L_2(\Omega)\) sense, i.e. mean square.
+\end{remark}
+
+\chapter{Main Principles of Functional Analysis}
+
+\section{Open Mapping Theorem}
+
+Suppose \(T\colon X \to Y\) is a \hyperref[def:bounded-linear-op]{bounded linear operator} on \hyperref[def:Banach-space]{Banach spaces}, and \(T\) is injective and surjective, i.e. \(T^{-1}\colon Y \to X\) exists. In this section, we'll see that the \hyperref[def:open-mapping]{open mapping theorem} implies \(T^{-1}\) is a \hyperref[rmk:bounded-op]{bounded operator}. The main argument relies on \href{https://en.wikipedia.org/wiki/Baire_category_theorem}{Baire category theorem}.
+
+\begin{definition}[Nowhere dense]\label{def:nowhere-dense}
+	A set \(S\) in a metric space \(M\) is \emph{nowhere dense} if its closure \(\overline{S}\) has empty interior.
+\end{definition}
+
+\begin{eg}[Cantor set]
+	The \href{https://en.wikipedia.org/wiki/Cantor_set}{Cantor set} is a \hyperref[def:nowhere-dense]{nowhere dense} set.
+\end{eg}

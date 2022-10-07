@@ -1,0 +1,135 @@
+\lecture{12}{6 Oct. 14:30}{Open Mapping}
+Let's start with a proposition.
+
+\begin{proposition}[Baire category theorem]\label{prop:Baire-category}
+	A complete metric space is \textbf{never} the union of a countable number of \hyperref[def:nowhere-dense]{nowhere dense} sets.
+\end{proposition}
+\begin{proof}
+	We prove this by contradiction. Assume \(M = \bigcup_{n=1}^{\infty} A_n\) with each \(A_n\) \hyperref[def:nowhere-dense]{nowhere dense}. Since \(A_1\) is \hyperref[def:nowhere-dense]{nowhere dense}, so we can find \(x_1\in M- \overline{A} _1\). Furthermore, since \(\overline{A} _1\) is closed, so we can find open ball \(B_1\) centered at \(x_1\) with radius less or equal to \(1\) such that \(B_1 \cap A_1= \varnothing \).
+
+	Similarly, \(A_2\) is \hyperref[def:nowhere-dense]{nowhere dense}, so there exists \(x_1\in B_1 - \overline{A} _2\), with \(\overline{A} _2\) closed, we can still find ball \(B_2\) centered at \(x_2\) with radius less or equal to \(1 / 2\) such that
+	\[
+		x_2 \in B_2 \subseteq \overline{B} _2 \subseteq B_1
+	\]
+	and \(B_2 \cap A_2 = \varnothing \). Clearly, by induction, we can find a sequence \(\left\{ x_n \right\} _{n=1}^{\infty} \) and open balls \(B_n\) such that
+	\[
+		x_{n+1} \in B_{n+1} \subseteq \overline{B} _{n+1} \subseteq B_n
+	\]
+	where \(B_n\) has radius smaller than \(1 / 2^{n-1}\) and \(B_n \cap A_n = \varnothing \).
+
+	Now, since the sequence \(\left\{ x_ n \right\} \) is Cauchy and \(M\) is complete, we know that \(x_n \to x_{\infty }\in M\), so \(x_{\infty }\in B_n\) for all \(n\), so \(x_\infty \notin A_n\) for all \(n\). Hence,
+	\[
+		M \neq \bigcup\limits_{n=1}^{\infty} A_n,
+	\]
+	which is a contradiction\(\conta\)
+\end{proof}
+
+We can now prove the central theorem in functional analysis, the \hyperref[thm:open-mapping]{open mapping theorem}.
+
+\begin{theorem}[Open mapping theorem]\label{thm:open-mapping}
+	Let \(X, Y\) be \hyperref[def:Banach-space]{Banach spaces} and \(T\in \mathcal{\MakeUppercase{l}} (X, Y)\). Assume \(T\) is surjective, i.e., \(T(X)= Y\), then \(T\) maps open sets in \(X\) to open sets in \(Y\).
+\end{theorem}
+\begin{proof}
+	Let \(B_X \coloneqq \left\{ x\in X \mid \left\lVert x\right\rVert \leq 1 \right\} \) be an unit ball in \(X\), similarly \(B_Y\) be an unit ball in \(Y\). Then it's sufficient to show \(T(B_X) \subseteq \epsilon B_Y\) for some \(\epsilon > 0\). To see this, let \(U \subseteq X\) be an open set and \(y\in TU\). we need to show \(TU\) contains a neighborhood of \(y\). Let \(x\in U\), \(Tx = y\). Since \(U\) is open, so there exists \(\delta > 0\) such that \(U \supseteq x + \delta B_X\), so
+	\[
+		TU \supseteq T(x + \delta B_X) = y + \delta B_X \supseteq y + \delta \epsilon B_Y,
+	\]
+	i.e., \(TU\) contains a neighborhood of \(y\).
+
+	We now show \(TB_X \supseteq \epsilon B_Y\) for some \(\epsilon > 0\). Observe that \(X = \bigcup_{n=1}^{\infty} n B_X\), hence
+	\[
+		Y = TX = \bigcup\limits_{n=1}^{\infty } n TB_{X}.
+	\]
+	From \autoref{prop:Baire-category}, we know that there exists \(n \geq 1\) such that \(\overline{TB_X}\) has non-empty interior, i.e., \(\overline{TB_X}\) has non-empty interior too. Hence, there exists \(y\in Y\), \(\delta > 0\) such that \(y + \delta B_Y \subseteq \overline{TB_X}\). With \(TX=Y\), there exists \(x\in X\) such that \(Tx = y\), hence \(\delta B_Y \subseteq \overline{T(B_X - \left\{ x \right\} )}\). So \(B_X - \left\{ x \right\} \subseteq n B_X\) for some \(n \geq 1\), meaning that \(\delta B_Y \subseteq n \overline{TB_X}\), implying
+	\[
+		\overline{TB_X}\subseteq \epsilon B_Y
+	\]
+	for some \(\epsilon > 0\). Finally, we show that
+	\[
+		\overline{TB_X} \subseteq T(2 B_X),
+	\]
+	which will imply \(TB_X \subseteq \epsilon / 2 B_Y\). To see this, we use a scaling argument. Let \(y\in \overline{TB_X}\), then there exists \(x_1 \in B_X\) such that
+	\[
+		y-Tx_1 \in \frac{\epsilon}{2} B_y \subseteq \overline{T \frac{1}{2}B_X}.
+	\]
+	We cna then choose \(x_2\in \frac{1}{2}B_X\) such that
+	\[
+		y-Tx_1 - Tx_2 \in \frac{\epsilon}{4}B_Y \subseteq \overline{T\frac{1}{2^2}B_X}.
+	\]
+	By induction, we can construct a sequence \(\left\{ x_n \right\}_{n\geq 1} \) such that
+	\[
+		x_n \in \frac{1}{2^{n-1}}B_X,\quad y- \sum_{j=1}^n Tx_j\in \frac{\epsilon}{2^n} B_Y.
+	\]
+	Then, \(x = \sum_{j=1} ^{\infty }x_n \in 2B_X\) where \(Tx = y\).
+\end{proof}
+
+\begin{corollary}[Inverse mapping theorem]\label{col:inverse-mapping}
+	Let \(T\colon X\to Y\) be a \hyperref[def:bounded-linear-op]{bounded linear operator} between \hyperref[def:Banach-space]{Banach spaces} \(X\) and \(Y\) which is both injective and surjective. Then \(T\) has a \hyperref[rmk:bounded-op]{bounded} inverse \(T^{-1} \in \mathcal{\MakeUppercase{l}} (Y, X)\).
+\end{corollary}
+
+\begin{proposition}
+	Given two \hyperref[def:Banach-space]{Banach spaces} \(X, Y\) and \(T\in \mathcal{\MakeUppercase{l}} (X, Y)\), then the following are equivalent.
+	\begin{enumerate}[(a)]
+		\item \(T\) is injective and \(\im (T)\) is closed.
+		\item \(T\) is bounded below, i.e., \(\exists c > 0\), \(\left\lVert Tx\right\rVert \geq c \left\lVert x\right\rVert \) for all \(x\in X\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	To show that (a) implies (b), we see that \(T^{-1} \colon \im(T) \to X\) is bounded  since \(\im(T)\) is \hyperref[def:Banach-space]{Banach space}, from \autoref{thm:open-mapping},
+	\[
+		\left\lVert T^{-1} y\right\rVert \leq c^{-1} \left\lVert y\right\rVert
+	\]
+	for \(y\in \im(T)\), \(c > 0\) being some constant. Set \(y\coloneqq Tx\), then
+	\[
+		\left\lVert Tx\right\rVert \geq c\left\lVert x\right\rVert
+	\]
+	for \(x\in X\), we're done. To show another direction, suppose \(T\) is bounded below, then \(T\) is injective since \(Tx= 0\) implies \(x = 0\). To see \(\im(T)\) is closed, let \(x_{n} \in X\) for \(n\geq 1\) be a sequence such that \(\left\{ Tx_n \right\} _{n \geq 1}\) is Cauchy such that \(\left\lVert Tx_n - Tx_m\right\rVert \geq c \left\lVert x_n - x_m\right\rVert \) for all \(n, m\), implying \(\left\{ x_n \right\} _{n\geq 1}\)  is Cauchy, hence \(x_n \to x_\infty \in X\), i.e., \(Tx_n \to Tx_\infty \in \im(T)\), proving the result.
+\end{proof}
+
+\section{Closed Graph Theorem}
+We first see some definitions.
+\begin{definition}[Graph]\label{def:graph}
+	Let \(T\in \mathcal{\MakeUppercase{l}} (X, Y)\) for \(X\), \(Y\) being \hyperref[def:Banach-space]{Banach spaces}. Then the \emph{graph} \(\Gamma (T)\) of \(T\) is defined as
+	\[
+		\Gamma (T) \coloneqq \left\{ (x, Tx) \in X \times Y\mid x\in X \right\}.
+	\]
+\end{definition}
+\begin{definition}[Closed graph]\label{def:closed-graph}
+	We say that the \hyperref[def:graph]{graph} \(\Gamma (T)\) of \(T\) is \emph{closed} if it is a closed subspace of \(X \times Y\).
+\end{definition}
+
+Hence, if \(\left\{ x_n \right\} _{n\geq 1}\) is a sequence in \(X\) such that both \(\left\{ x_n \right\} _{n\geq 1}\) and \(\left\{ Tx_n \right\}_{n\geq 1} \) are Cauchy, then there exists \(x_\infty \in X\) such that \(x_n \to x_\infty \) and \(Tx_\infty \to y_\infty \) for \(y_\infty = Tx_\infty \).
+
+\begin{proposition}[Closed graph theorem]\label{prop:closed-graph}
+	Let \(T\colon X\to Y\) be a \hyperref[def:linear-op]{linear operator} between \hyperref[def:Banach-space]{Banach spaces} \(X\) and \(Y\). Then \(T\) is \hyperref[rmk:bounded-op]{bounded} (continuous) if and only if \(\Gamma (T)\) is closed.
+\end{proposition}
+\begin{proof}
+	The forward direction is easy since if \(T\) is \hyperref[rmk:bounded-op]{bounded}, then \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}.
+
+	Now assume \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}, then we see that \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space}. We can now use \autoref{thm:open-mapping}. Define a \hyperref[def:norm]{norm} on \(X \times Y\) by \(\left\lVert (x, y)\right\rVert = \left\lVert x\right\rVert + \left\lVert y\right\rVert\), then \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space} with this \hyperref[def:norm]{norm}. Define \(u\colon \Gamma (T)\to X\) by \(u(x, Tx)=x\) for \(x\in X\), then \(u\) is \hyperref[rmk:bounded-op]{bounded} wince \(\left\lVert u\right\rVert \leq 1\). From \autoref{thm:open-mapping}, we know that \(u\) is surjective and injective implies \(u^{-1} \colon X\to \Gamma (T)\) is \hyperref[rmk:bounded-op]{bounded}, hence
+	\[
+		\left\lVert u(x, Tx)\right\rVert \geq c \left\lVert (x, Tx)\right\rVert
+	\]
+	for all \(x\in X\) and some \(c> 0\), i.e.,
+	\[
+		\left\lVert x\right\rVert \geq c \left( \left\lVert x\right\rVert + \left\lVert Tx\right\rVert  \right) \implies \left\lVert Tx\right\rVert \leq \left( \frac{1}{c}- 1 \right) \left\lVert x\right\rVert
+	\]
+	for all \(x\in X\), so \(T\) is \hyperref[rmk:bounded-op]{bounded}.
+\end{proof}
+
+One application to self-\hyperref[def:adjoint-op]{adjoint operator}, i.e., \(T^{\ast} = T\), on \hyperref[def:Hilbert-space]{Hilbert space} is the following.
+
+\begin{proposition}[Hellinger-Toeplitz theorem]\label{thm:Hellinger-Toeplitz}
+	Let \(T\colon \mathcal{\MakeUppercase{h}} \to \mathcal{\MakeUppercase{h}} \) be a \hyperref[def:linear-op]{linear operator} which is self-\hyperref[def:adjoint-op]{adjoint operator}. Then we have
+	\[
+		\left\langle Tx, y \right\rangle  = \left\langle x, Ty \right\rangle
+	\]
+	for \(x, y\in \mathcal{\MakeUppercase{h}} \), implying \(T\) is \hyperref[rmk:bounded-op]{bounded}.
+\end{proposition}
+\begin{proof}
+	We need to show that for a self-\hyperref[def:adjoint-op]{adjoint operator} \(T\), \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}. Let \(\left\{ x_n \in \mathcal{\MakeUppercase{h}} \right\} _{n\geq 1}\) such that \(x_n \to x_\infty \in \mathcal{\MakeUppercase{h}} \) and \(Tx_n \to y_\infty \in\mathcal{\MakeUppercase{h}} \), then we need to show \(Tx_\infty \to y_\infty \). We can use self-\hyperref[def:adjoint-op]{adjointness} of \(T\) i.e., for all \(z\in \mathcal{\MakeUppercase{h}} \),
+	\[
+		\left\langle z, y_\infty  \right\rangle = \lim\limits_{n \to \infty} \left\langle z, Tx_n \right\rangle = \lim\limits_{n \to \infty} \left\langle Tz, x_n \right\rangle = \left\langle Tz, x_\infty  \right\rangle = \left\langle z, Tx_\infty  \right\rangle.
+	\]
+	Since this holds for all \(z\in \mathcal{\MakeUppercase{h}} \), we know that \(Tx_\infty = y_\infty \), hence \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}, so \(T\) is \hyperref[rmk:bounded-op]{bounded}.
+\end{proof}

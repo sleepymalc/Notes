@@ -1,0 +1,92 @@
+\lecture{12}{10 Oct. 10:30}{ATSP with Random Spanning Tree}
+Let's prove \autoref{thm:num-small-mincuts}.
+\begin{proof}[Proof of \autoref{thm:num-small-mincuts}]
+	We first see a randomized algorithm which solves the \(\alpha \)-mincuts problem.
+
+	\begin{algorithm}[H]\label{algo:num-small-mincuts}
+		\DontPrintSemicolon
+		\caption{Small \(\alpha \)-Mincuts -- Random Contraction}
+		\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a weight function \(x\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), \(\alpha \)}
+		\KwResult{A \hyperref[def:tour]{tour} \(T\)}
+		\SetKw{Break}{break}
+		\SetKwFunction{Contract}{contract}
+		\SetKwFunction{rand}{rand}
+		\BlankLine
+		\While(){\(\left\vert \mathcal{\MakeUppercase{v}} \right\vert > 2\alpha\)}{
+			Sample \(e\in \mathcal{\MakeUppercase{e}} \)  w.p. \(x_e\)\;
+			\Contract{\(e\)}\;
+		}
+		\Return{\rand{\(\mathcal{\MakeUppercase{v}}\)}}\;
+	\end{algorithm}
+
+	Now, if \(S\) is an \(\alpha \)-mincut, we're interested in the probability of \(S\) is outputted from \autoref{algo:num-small-mincuts}. Denote \(\Pr(S \text{ survives when } \left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i) \eqqcolon P_i\), and suppose \(S\) survived until \(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i\), then we see that \(S\) is still an \(\alpha \)-mincut, and in the current \(\mathcal{\MakeUppercase{g}} \),
+	\[
+		\lambda \leq \mathbb{E}_{v\in \mathcal{\MakeUppercase{v}} }\left[ \sum_{e\in \theta \left\{ v \right\} } x(e) \right] = \frac{2}{i} \sum_{e\in \mathcal{\MakeUppercase{e}} } x(e),
+	\]
+	hence
+	\[
+		P_i \geq 1 - \frac{\sum_{e\in \partial S} x(e)}{\sum_{e\in \mathcal{\MakeUppercase{e}} }x(e) } \geq 1 - \frac{2\alpha }{i} = \frac{i-2\alpha }{i}.
+	\]
+
+	We then see that
+	\[
+		\begin{split}
+			\Pr(S \text{ is outputted from \autoref{algo:num-small-mincuts}})
+			&\geq P_n \cdot P_{n-1}\cdot \ldots \cdot P_{2\alpha + 1} \cdot \frac{1}{2^{2\alpha }}\\
+			&= \left( \frac{n - 2\alpha }{n} \right) \left( \frac{n-1-2\alpha }{n-1} \right) \ldots \left( \frac{1}{2\alpha +1} \right) \cdot 2^{-2\alpha }\\
+			&= \frac{(2\alpha )!}{n(n-1)\ldots (n-2\alpha +1) }\cdot 2^{-2\alpha }\\
+			&\geq \frac{1}{(2n)^{2\alpha }}.
+		\end{split}
+	\]
+	Then the result follows because the probability should sum to \(1\).
+\end{proof}
+
+Now, recall the Spanning Tree polytope \autoref{eq:lec10-1}. Given an optimal \(x\), define \(y_{uv} = x_{uv} + x_{vu}\) and \(z = \frac{n-1}{n}y\). We see that \(z\) is feasible for this Spanning tree polytope since
+\[
+	\sum_{e\in \mathcal{\MakeUppercase{e}} } z_e = n-1
+\]
+is trivial, while for all \(S \subsetneq \mathcal{\MakeUppercase{v}} \),
+\[
+	\sum_{e\in E(S)} x_e = \sum_{v\in S} \sum_{e\in \partial ^+ \left\{ v \right\} } x(e) - \sum_{e\in E(S, \overline{S} )} x(e) \leq \left\vert S \right\vert - 1,
+\]
+so \(z\) is feasible. Now, we can sample a random spanning tree \(T^\prime \) such that
+\begin{enumerate}[(a)]
+	\item for all \(e\in \mathcal{\MakeUppercase{e}} \), \(\Pr(e\in T^\prime ) \coloneqq z_e\)
+	\item For all \(S \subseteq \mathcal{\MakeUppercase{e}} \),
+\end{enumerate}
+
+
+
+\section{Symmetric Traveling Salesman Problem}
+
+\begin{problem}[Symmetric TSP]\label{prb:TSP}
+Given a complete bidirected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\) satisfying the \emph{directed} triangle inequality.\footnote{Compare to the regular triangle inequality, now the order matters, i.e., for all \(a, b, c\in \mathcal{\MakeUppercase{v}} \), \(d(a, c) \leq d(a, b) + d(b, c)\).} Find a \hyperref[def:tour]{tour} \((a_0, \ldots , a_k)\) which minimizes \(\sum_{i=0} ^{k-1}d(a_{i-1}, a_i)\).
+\end{problem}
+
+\subsection{Minimum Spanning Tree}
+
+
+
+\subsection{Symmetric TSP Polytope}
+\begin{align*}
+	\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e d(e)                                                                     \\
+	      & \sum_{e\in \partial S} x_e \geq 2                 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
+	      & \sum_{e\in \partial \{v\}} x_e = 2                & \forall v\in \mathcal{\MakeUppercase{v}}                          \\
+	      & x \geq 0
+\end{align*}
+
+Let \(x\) be the LP optimal solution, we see that \(x\cdot \frac{n-1}{n}\) is in spanning tree polytope. This implies we can compute the spanning tree \(T\) such that \(d(T) \leq d(x)\). Let \(O\) be the set of odd-degree vertices w.r.t. \(T\).
+
+\begin{notation}[\(O\)-join]\label{def:O-join}
+	We say \(M \subseteq \mathcal{\MakeUppercase{e}} \) is \emph{\(O\)-join} if \(\deg_M(v)\) is odd when \(v\in O\), and \(\deg_M(v)\) is even if \(v \notin O\).
+\end{notation}
+
+\hyperref[def:O-join]{\(O\)-join} LP
+
+\begin{theorem}
+	If \(y\) is feasible, then there exists an \hyperref[def:O-join]{\(O\)-join} \(M\) such that \(\sum_{e\in M}d(e) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} }y_e\).
+\end{theorem}
+
+\begin{corollary}
+
+\end{corollary}

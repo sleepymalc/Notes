@@ -1,9 +1,9 @@
 \lecture{5}{13 Sep. 14:30}{Abstract Fourier Series}
 \subsection{Orthonormal Bases}
-Follows from the discussion, we note that the \hyperref[def:Fourier-series]{Fourier series} of \(x\) needs not converge to \(x\), but we can still compute the point where it converges. However, we can now identify an extra condition so that the \hyperref[def:Fourier-series]{Fourier series} of every vector \(x\) converges to \(x\).
+It should be easy to identify an extra condition which makes the \hyperref[def:Fourier-series]{Fourier series} of every vector \(x\) converges to \(x\).
 
 \begin{definition}[Complete system]\label{def:complete-system}
-	A system of vector \(\left\{ x_k\right\}_k\) in \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) is \emph{complete} if the space spanned by \(\left\{ x_k\right\}_k\) is \textbf{dense} in \(\mathcal{\MakeUppercase{h}} \), i.e., \(\mathop{\mathrm{span}}(\left\{ x_k \right\} _k) = \mathcal{\MakeUppercase{h}} \).
+	A system of vector \(\left\{ x_k\right\}_k\) in \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \) is \emph{complete} if the space spanned by \(\left\{ x_k\right\}_k\) is dense in \(\mathcal{\MakeUppercase{h}} \), i.e., \(\overline{\mathop{\mathrm{span}}(\left\{ x_k \right\} _k)} = \mathcal{\MakeUppercase{h}} \).
 \end{definition}
 
 \begin{definition}[Orthonormal basis]\label{def:orthonormal-basis}
@@ -21,16 +21,22 @@ Follows from the discussion, we note that the \hyperref[def:Fourier-series]{Four
 	If an \hyperref[def:orthogonal-system]{orthogonal set} \(\left\{ x_{k} \right\}_k \) is \hyperref[def:complete-system]{complete}, then \(E_\infty = \mathcal{\MakeUppercase{h}} \), \(P_{E_\infty } = I\). This implies \(x = \sum_{k=1}^{\infty} \left\langle x, x_{k}  \right\rangle x_{k}\) for \(x\in \mathcal{\MakeUppercase{h}} \).
 \end{proof}
 
-\begin{remark}[Parseval's identity]
+\begin{corollary}[Parseval's identity]
+	Let \(\left\{ x_k \right\} _k\) be an \hyperref[def:orthonormal-basis]{orthonormal basis} of a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \). Then
+	\[
+		\left\lVert x\right\rVert ^{2} = \sum_{k} \left\vert \left\langle x, x_k \right\rangle  \right\vert ^{2} .
+	\]
+\end{corollary}
+\begin{proof}
 	From \autoref{thm:Fourier-expansion}, we have \(\left\lVert x\right\rVert ^{2} = \left\lVert P_{E_n} x \right\rVert^{2} + \left\lVert (I - P_{E_{n} })\right\rVert ^{2}\). By letting \(n \to \infty \), we have
 	\[
 		\left\lVert x\right\rVert^{2} = \lim\limits_{n \to \infty} \left\lVert P_{E_n}x\right\rVert ^{2} = \lim\limits_{n \to \infty} \sum_{k=1}^{n} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert ^{2} = \sum_{k=1}^{\infty} \left\vert \left\langle x, x_{k}  \right\rangle  \right\vert  ^{2}.
 	\]
-\end{remark}
+\end{proof}
 
 \subsection{Gram-Schmidt Orthogonalization}
 
-Suppose \(x_1, x_2, \ldots \in \mathcal{\MakeUppercase{h}}\) is a set of vectors and \(E_n = \mathop{\mathrm{span}}(\left\{ x_1, \ldots , x_n \right\} )\). Then we can find an \hyperref[def:orthonormal-system]{orthonormal set} \(\left\{ y_{k} \in \mathcal{\MakeUppercase{h}} \colon k\geq 1 \right\}\) such that \(E_n = \mathop{\mathrm{span}}(\left\{ y_1, y_2, \ldots , y_{m(n)}  \right\} )\) where \(m(n) \leq n\).
+Suppose \(x_1, x_2, \ldots \in \mathcal{\MakeUppercase{h}}\) is a set of vectors and \(E_n = \mathop{\mathrm{span}}(\left\{ x_1, \ldots , x_n \right\} )\). Then we can find an \hyperref[def:orthonormal-system]{orthonormal set} \(\left\{ y_{k} \right\}_{k\geq 1}\) in \(\mathcal{\MakeUppercase{h}}\) such that \(E_n = \mathop{\mathrm{span}}(\left\{ y_1, y_2, \ldots , y_{m(n)}  \right\} )\) where \(m(n) \leq n\).
 
 Firstly, set \(y_1 = x_1 / \left\lVert x_1\right\rVert \), and
 \[
@@ -39,8 +45,19 @@ Firstly, set \(y_1 = x_1 / \left\lVert x_1\right\rVert \), and
 if \(x_n \notin E_{n-1}\), i.e., \(E_{n-1}\) is properly contained in \(E_n\).
 
 \begin{remark}
-	Proving \hyperref[def:complete-system]{completeness} of a set of vectors \(\left\{ x_k \colon k\geq 1 \right\} \) in \(\mathcal{\MakeUppercase{h}} \) can be \textbf{non}-trivial.
+	Proving \hyperref[def:complete-system]{completeness} of a set of vectors \(\left\{ x_k \right\}_{k\geq 1} \) in \(\mathcal{\MakeUppercase{h}} \) can be \textbf{non}-trivial.
 \end{remark}
+
+We note that we can effectively compute the vectors \(P_{E_n} (x_{n+1}) \) since we know that \(S_n(x)\) is the \hyperref[def:orthogonal-projection]{orthogonal projection} of \(x\) onto \(\mathop{\mathrm{span}}(\left\{ y_k \right\} )\), which is the partial sum of Fourier series
+\[
+	S_n(x) = \sum_{k=1} ^n \left\langle x, y_k \right\rangle y_k.
+\]
+As for \(P_n(x)\), we see that it's the \hyperref[def:orthogonal-projection]{orthogonal projection} onto the \hyperref[def:orthogonal-complement]{orthogonal complement}, i.e.,
+\[
+	P_{E_n}(x) = x - S_n(x) = x - \sum_{k=1} ^n \left\langle x, y_{k}  \right\rangle y_{k} \implies P_{E_n}(x_{n+1} ) = x_{n+1} - \sum\limits_{k=1}^{n} \left\langle x_{n+1, y_{k} }  \right\rangle  y_{k}.
+\]
+
+Let's now see some examples.
 
 \begin{eg}[Haar basis]
 	We consider the \emph{Haar basis} for \(L^2([0, 1])\). Let \(h\colon (0, 1)\to \mathbb{\MakeUppercase{r}} \) where
@@ -88,7 +105,7 @@ if \(x_n \notin E_{n-1}\), i.e., \(E_{n-1}\) is properly contained in \(E_n\).
 \begin{proposition}\label{prop:lec5-1}
 	Let \(\left\{ x_k \right\} _k\) be a linear independent system in a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \). Then the system \(\left\{ y_k \right\} _k\) obtained by Gram-Schmidt orthogonalization of \(\left\{ x_k \right\} _k\) is an \hyperref[def:orthonormal-system]{orthonormal system} in \(\mathcal{\MakeUppercase{h}} \), and
 	\[
-		\mathop{\mathrm{span}}(\left\{ h_k \right\} _{k=1}^n) = \mathop{\mathrm{span}}(\left\{ x_k \right\} _{k=1}^n)
+		\mathop{\mathrm{span}}(\left\{ y_k \right\} _{k=1}^n) = \mathop{\mathrm{span}}(\left\{ x_k \right\} _{k=1}^n)
 	\]
 	for all \(n\in \mathbb{\MakeUppercase{n}} \).
 \end{proposition}
@@ -108,15 +125,15 @@ We see that from \autoref{prop:lec5-1}, we'll obtain that every \hyperref[def:Hi
 \end{remark}
 
 \chapter{Bounded Linear Operators}
-
-In this chapter we study certain transformations of \hyperref[def:Banach-space]{Banach spaces}. Because these spaces are linear, the appropriate transformations to study will be linear operators. Furthermore, since \hyperref[def:Banach-space]{Banach spaces} carry topology, it is most appropriate to study continuous transformations, i.e. continuous linear operators. They are also called bounded linear operators for the reasons that will become clear shortly.
+In this chapter we study certain transformations of \hyperref[def:Banach-space]{Banach spaces}. Because these spaces are linear, the appropriate transformations to study will be \hyperref[def:linear-op]{linear operators}. Furthermore, since \hyperref[def:Banach-space]{Banach spaces} carry topology, it is most appropriate to study continuous transformations, i.e. continuous \hyperref[def:linear-op]{linear operators}. They are also called \hyperref[def:bounded-linear-op]{bounded linear operators} for the reasons that will become clear shortly.
 
 \section{Bounded Linear Functionals}
+Turns out that the case when the operators' range is \(\mathbb{\MakeUppercase{r}} \) is interesting enough already, hence we study this case first.
 \subsection{Continuity and Boundedness}
 \begin{definition*}
 	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space} over \(\mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \).
 	\begin{definition}[Linear functional]\label{def:linear-functional}
-		A \emph{linear functional} on \(E\) is a linear operator \(f\colon E\to \mathbb{\MakeUppercase{r}} \) of \(\mathbb{\MakeUppercase{c}} \) such that
+		A \emph{linear functional} on \(E\) is a \hyperref[def:linear-op]{linear operator} \(f\colon E\to \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \) such that
 		\[
 			f(ax + by) = af(x) + bf(y)
 		\]
@@ -130,7 +147,7 @@ In this chapter we study certain transformations of \hyperref[def:Banach-space]{
 	\end{definition}
 \end{definition*}
 
-Clearly, the boundedness of \(f(\cdot)\) implies \(\left\vert f(x-y) \right\vert \leq \left\lVert f\right\rVert \left\lVert x-y\right\rVert \) for \(x, y\in E\). Hence, \(f(\cdot)\) is continuous and in fact Lipschitz continuous.
+Clearly, the boundedness of \(f(\cdot)\) implies \(\left\vert f(x-y) \right\vert \leq \left\lVert f\right\rVert \left\lVert x-y\right\rVert \) for \(x, y\in E\). Hence, \(f(\cdot)\) is continuous and in fact Lipschitz continuous if it's \hyperref[def:bounded-linear-functional]{boounded}.
 
 \begin{remark}
 	Conversely, if a \hyperref[def:linear-functional]{linear functional} is continuous then it is bounded.
@@ -144,8 +161,10 @@ Clearly, the boundedness of \(f(\cdot)\) implies \(\left\vert f(x-y) \right\vert
 \end{explanation}
 
 \subsection{Dual Spaces and Hyperplanes}
+Indeed, we have a special name for the space of all \hyperref[def:bounded-linear-functional]{bounded linear functionals} called \hyperref[def:dual-space]{dual spaces} due to its importance.
+
 \begin{definition}[Dual space]\label{def:dual-space}
-	Let \(E\) be a \hyperref[def:normed-vector-space]{normed space}. The space of all \hyperref[def:bounded-linear-functional]{bounded linear functionals} \(f(\cdot)\) on \(E\) is known as the \emph{dual space} \(E^{\ast} \) of \(E\).
+	Let \(E\) be a \hyperref[def:normed-vector-space]{normed space}, then the space of all \hyperref[def:bounded-linear-functional]{bounded linear functionals} \(f(\cdot)\) on \(E\) is called the \emph{dual space} \(E^{\ast} \) of \(E\).
 \end{definition}
 The \hyperref[def:dual-space]{dual space} is also a \hyperref[def:normed-vector-space]{normed space} with \hyperref[def:norm]{norm} \(\left\lVert f\right\rVert \coloneqq \sup _{\left\lVert x\right\rVert = 1}\left\vert f(x) \right\vert \), which is in fact a \hyperref[def:Banach-space]{Banach space}. And it is a \hyperref[def:Banach-space]{Banach space} even if the original \(E\) is not. This definition implies \(\left\vert f(x) \right\vert \leq \left\lVert f\right\rVert \left\lVert x\right\rVert \) for \(x\in E\), \(f\in E^{\ast} \). Also, \(\left\lVert f\right\rVert \) is the smallest number in this inequality that makes it valid for all \(x\in X\).
 
@@ -159,16 +178,16 @@ The goal is to make an equivalence between \hyperref[def:bounded-linear-function
 Does there exist a \textbf{non}-closed \hyperref[def:hyperplane]{hyperplane}?
 \end{problem}
 \begin{answer}
-	We know that this is not the case in finite dimension. And this question is analogous to asking \emph{does there exist a subset \(F\subseteq \mathbb{\MakeUppercase{r}} \) which is \textbf{not} Lebesgue measurable?} The answer to this is yes in both cases. However, construction uses \href{https://en.wikipedia.org/wiki/Axiom_of_choice}{axiom of choice}.
+	We know that this is not the case in finite dimension. And this question is analogous to \emph{does there exist a subset \(F\subseteq \mathbb{\MakeUppercase{r}} \) which is \textbf{not} Lebesgue measurable?} The answer to this is yes in both cases. However, construction uses \href{https://en.wikipedia.org/wiki/Axiom_of_choice}{axiom of choice}.
 \end{answer}
 
-Turns out that there is a canonical correspondence between the \hyperref[def:linear-functional]{lienar functionals} and the \hyperref[def:hyperplane]{hyperplanes} in \(E\). This is clarified in \autoref{prop:lec5-2}.
+Turns out that there is a canonical correspondence between the \hyperref[def:linear-functional]{linear functionals} and the \hyperref[def:hyperplane]{hyperplanes} in \(E\). This is clarified in \autoref{prop:lec5-2}.
 
 \begin{proposition}[Linear functionals and hyperplanes]\label{prop:lec5-2}
 	Let \(E\) be a \hyperref[def:linear-vector-space]{linear space}.
 	\begin{enumerate}[(a)]
-		\item For every \hyperref[def:linear-functional]{linear functional} on \(E\), \(\ker(f)\) is a \hyperref[def:hyperplane]{hyperplane} in \(E\). If \(E\) is a \hyperref[def:Banach-space]{Banach space}, and \(f(\cdot)\) is bounded, then \(\ker(f) = H\) is closed.
+		\item For every \hyperref[def:linear-functional]{linear functional} \(f\) on \(E\), \(\ker(f)\) is a \hyperref[def:hyperplane]{hyperplane} in \(E\). If \(E\) is a \hyperref[def:Banach-space]{Banach space}, and \(f(\cdot)\) is bounded, then \(\ker(f) = H\) is closed.
 		\item If \(f, g \neq 0\) are \hyperref[def:linear-functional]{linear functionals} on \(E\) such that \(\ker(f) = \ker(g)\), then \(f = ag\) for some \(a \neq 0\).
-		\item For every \hyperref[def:hyperplane]{hyperplane} \(H\subseteq E\), there exists a \hyperref[def:linear-functional]{linear functional} \(f \neq 0\) on \(E\) such that \(\ker(f) = H\). If \(E\) is a \hyperref[def:Banach-space]{Banach space}, and \(\ker(f) = H\) is closed, then \(f(\cdot)\) is bounded.
+		\item For every \hyperref[def:hyperplane]{hyperplane} \(H\subseteq E\), there exists a \hyperref[def:linear-functional]{linear functional} \(f \neq 0\) on \(E\) such that \(\ker(f) = H\). If \(E\) is a \hyperref[def:Banach-space]{Banach space} and \(\ker(f) = H\) is closed, then \(f(\cdot)\) is bounded.
 	\end{enumerate}
 \end{proposition}

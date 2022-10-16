@@ -1,15 +1,22 @@
-\lecture{13}{11 Oct. 14:30}{Open Mapping}
-\subsection{Principle of Uniform Boundedness}
-The final consequence of \autoref{thm:open-mapping} is the following.
-\begin{proposition}[Uniform boundedness theorem]\label{prop:uniform-boundedness}
-	Let \(X, Y\) be \hyperref[def:Banach-space]{Banach spaces} and let \(\mathcal{\MakeUppercase{T}} \subseteq \mathcal{\MakeUppercase{l}} (X, Y)\) be a family of \hyperref[def:bounded-linear-op]{bounded linear operator} from \(X\) to \(Y\) such that \(\sup _{T\in \mathcal{\MakeUppercase{t}} } \left\lVert Tx\right\rVert < \infty\) for all \(x\in X\). Then \(\sup _{T\in \mathcal{\MakeUppercase{t}} }\left\lVert T\right\rVert < \infty \).
-\end{proposition}
+\lecture{13}{11 Oct. 14:30}{Principle of Uniform Boundedness}
+\section{Principle of Uniform Boundedness}
+The final consequence of \hyperref[thm:open-mapping]{open mapping theorem} is the following, which completes the whole picture of functional analysis. We first see some definitions.
+
+\begin{definition*}
+	Let \(X, Y\) be \hyperref[def:Banach-space]{Banach spaces} and let \(\mathcal{\MakeUppercase{T}} \subseteq \mathcal{\MakeUppercase{l}} (X, Y)\) be a family of \hyperref[def:bounded-linear-op]{bounded linear operator} from \(X\) to \(Y\).
+	\begin{definition}[Point-wise bounded]\label{def:point-wise-bounded}
+		\(\mathcal{\MakeUppercase{t}} \) is \emph{point-wise bounded}, if \(\sup _{T\in \mathcal{\MakeUppercase{t}} } \left\lVert Tx\right\rVert < \infty\) for all \(x\in X\).
+	\end{definition}
+	\begin{definition}[Uniformly bounded]\label{def:uniformly-bounded}
+		\(\mathcal{\MakeUppercase{t}} \) is \emph{uniformly bounded} if \(\sup _{T\in \mathcal{\MakeUppercase{t}} }\left\lVert T\right\rVert < \infty \).
+	\end{definition}
+\end{definition*}
+
+\begin{theorem}[Uniform boundedness theorem]\label{thm:uniform-boundedness}
+	Let \(X, Y\) be \hyperref[def:Banach-space]{Banach spaces} and let \(\mathcal{\MakeUppercase{T}} \subseteq \mathcal{\MakeUppercase{l}} (X, Y)\) be a family of \hyperref[def:bounded-linear-op]{bounded linear operator} from \(X\) to \(Y\) such that it's \hyperref[def:point-wise-bounded]{point-wise bounded}, then it's \hyperref[def:uniformly-bounded]{uniformly bounded}.
+\end{theorem}
 \begin{proof}
-	Define \(M\colon X\to \mathbb{\MakeUppercase{r}} \) by \(M(x) = \sup _{T\in \mathcal{\MakeUppercase{t}} }\left\lVert Tx\right\rVert \) for \(x\in X\). Then
-	\[
-		X = \bigcup\limits_{n=1}^{\infty} X_n,\quad X_n \coloneqq \left\{ x\in X\colon M(x) \leq n \right\}.
-	\]
-	From \autoref{prop:Baire-category}, there exists \(n \geq 1\) such that \(\overline{X} _n\) has non-empty interior. Note that the function \(x \mapsto M(x)\) for \(x\in X\) is lower semi-continuous, i.e.,
+	Define \(M\colon X\to \mathbb{\MakeUppercase{r}} \) by \(M(x) = \sup _{T\in \mathcal{\MakeUppercase{t}} }\left\lVert Tx\right\rVert \) for \(x\in X\), also, let \(X_n \coloneqq \left\{ x\in X\colon M(x) \leq n \right\}\), we can then write \(X = \bigcup_{n=1}^{\infty} X_n\). From \hyperref[prop:Baire-category]{Baire-category theorem}, there exists \(n \geq 1\) such that \(\overline{X} _n\) has non-empty interior. Note that the function \(x \mapsto M(x)\) for \(x\in X\) is lower semi-continuous, i.e.,
 	\[
 		M(x) \leq \liminf_{x_n \to x} M(x_n)
 	\]
@@ -17,27 +24,47 @@ The final consequence of \autoref{thm:open-mapping} is the following.
 	\[
 		\left\lVert Tx\right\rVert \leq \lim\limits_{n \to \infty} \left\lVert Tx_n\right\rVert \leq \liminf_{n \to \infty} M(x_n),
 	\]
-	and by taking supremum over \(x\), we have \(M(x) \leq \liminf_{n \to \infty} M(x_n)\). Hence, we see that \(X_n = \left\{ x\in X\colon M(x)\leq n \right\} \) is closed, i.e., \(\overline{X} _n = X_n\), and we conclude \(X_n\) has non-empty interior. This implies \(X_n \supseteq x_{0} + \epsilon B_X\) for some \(\epsilon > 0\) and \(B_X\coloneqq \left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \). And since \(M(\cdot)\) is symmetric and \hyperref[def:convex-function]{convex}, i.e., \(M(-x) = M(x)\) for \(x\in X\) and
-	\[
-		M(\lambda x + (1 - \lambda )y) \leq \lambda M(x) + (1 - \lambda )M(y)
-	\]
-	for \(x, y\in X\), \(0 < \lambda < 1\), we see that \(X_n \supseteq x_0 + \epsilon B_X\). From symmetric, we also have \(X_n \supseteq -x_0 + \epsilon B_X\). Then by \hyperref[def:convex-function]{convexity}, we together have \(X_n \supseteq \epsilon B_X\), hence
+	and by taking supremum over \(x\), we have \(M(x) \leq \liminf_{n \to \infty} M(x_n)\). Hence, we see that \(X_n\) is closed, i.e., \(\overline{X} _n = X_n\), and we conclude \(X_n\) has non-empty interior. This implies \(X_n \supseteq x_{0} + \epsilon B_X\) for some \(\epsilon > 0\) and \(B_X\coloneqq \left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \).
+
+	Since \(M(\cdot)\) is symmetric and \hyperref[def:convex-function]{convex}, i.e., \(M(-x) = M(x)\) for \(x\in X\) and \(M(\lambda x + (1 - \lambda )y) \leq \lambda M(x) + (1 - \lambda )M(y)\) for \(x, y\in X\), \(0 < \lambda < 1\), we see that \(X_n \supseteq x_0 + \epsilon B_X\). From symmetric, we also have \(X_n \supseteq -x_0 + \epsilon B_X\). Then by \hyperref[def:convex-function]{convexity}, we together have \(X_n \supseteq \epsilon B_X\), hence
 	\[
 		\left\lVert x\right\rVert \leq \epsilon \implies \sup _{T\in \mathcal{\MakeUppercase{t}} } \left\lVert Tx\right\rVert \leq n\implies \sup _{T\in \mathcal{\MakeUppercase{t}} } \left\lVert T\right\rVert \leq \frac{n}{\epsilon }.
 	\]
 \end{proof}
 
-\begin{definition}[Weakly bounded]\label{def:weakly-bounded}
-	Let \(A \subseteq X\), we say \(A\) is \emph{weakly bounded} if \(\sup _{f\in X^{\ast} }\left\vert f(x) \right\vert < \infty\) for all \(x\in A\).
-\end{definition}
+We note that in the above proof, we only use the completeness of \(X\), not \(Y\). So the \hyperref[thm:uniform-boundedness]{uniform boundedness theorem} still holds if \(X\) is a \hyperref[def:Banach-space]{Banach space} while \(Y\) is only a \hyperref[def:normed-vector-space]{normed space}.
+
+\begin{remark}[Principle of condensation of singularities]
+	The \hyperref[thm:uniform-boundedness]{uniform Boundedness theorem} is called \emph{principle of condensation of singularities} by Banach and Steinhaus initially.
+\end{remark}
+\begin{explanation}
+	Suppose a family \(\mathcal{\MakeUppercase{t}} \subseteq \mathcal{\MakeUppercase{l}} (X, Y)\) is not \hyperref[def:uniformly-bounded]{uniformly bounded}, then the set of vectors
+	\[
+		\left\{ Tx\colon x\in B_X, T\in \mathcal{\MakeUppercase{t}}  \right\}
+	\]
+	is unbounded. We see that from the \hyperref[thm:uniform-boundedness]{uniform boundedness theorem} is not even \hyperref[def:point-wise-bounded]{point-wise bounded}, so there exists \emph{one} vector \(x\in X\) with unbounded trajectory \(\left\{ Tx\colon T\in \mathcal{\MakeUppercase{t}}  \right\} \). One can say that the unboundedness of the family \(\mathcal{\MakeUppercase{t}} \) is condensated in a single \emph{singularity} vector \(x\).
+\end{explanation}
+
+\subsection{Weak and Strong Boundedness}
+\hyperref[thm:uniform-boundedness]{Principle of uniform boundedness} can be used to check whether a given set in a \hyperref[def:Banach-space]{Banach space} is bounded in the following way. Firstly, let's see some definitions.
+
+\begin{definition*}
+	Let \(A \subseteq X\) where \(X\) is a \hyperref[def:Banach-space]{Banach space}.
+	\begin{definition}[Weakly bounded]\label{def:weakly-bounded}
+		\(A\) is \emph{weakly bounded} if \(\sup _{f\in X^{\ast} }\left\vert f(x) \right\vert < \infty\) for all \(x\in A\).
+	\end{definition}
+	\begin{definition}[Strongly bounded]\label{def:strongly-bounded}
+		\(A\) is \emph{strongly bounded} if \(\sup _{x\in A}\left\lVert x\right\rVert < \infty\).
+	\end{definition}
+\end{definition*}
 
 \begin{corollary}[Weak boundedness implies strong boundedness]\label{col:weak-bd-implies-strong-bd}
-	Let \(A \subseteq X\) and suppose \(A\) is \hyperref[def:weakly-bounded]{weakly bounded}, then \(A\) is strongly bounded, i.e., \(\sup _{x\in A} \left\lVert x\right\rVert < \infty \).
+	Let \(A \subseteq X\) for \(X\) being a \hyperref[def:Banach-space]{Banach space}, and suppose \(A\) is \hyperref[def:weakly-bounded]{weakly bounded}. Then \(A\) is \hyperref[def:strongly-bounded]{strongly bounded}.
 \end{corollary}
 \begin{proof}
 	Firstly, we embed \(A\) into \(A^{\ast\ast} \subseteq X^{\ast\ast} \) by considering the conical embedding \(X\to X^{\ast\ast}\), and we see that
 	\[
 		\sup _{x^{\ast\ast}\in A^{\ast\ast}} \left\vert x^{\ast\ast} (f) \right\vert < \infty
 	\]
-	for all \(f\in X^{\ast} \). From \autoref{prop:uniform-boundedness}, we have \(\sup _{x^{\ast\ast} \in A^{\ast\ast} }\left\lVert x^{\ast\ast} \right\rVert < \infty \), and with \autoref{thm:Hahn-Banach}, we have \(\left\lVert x^{\ast\ast} \right\rVert = \left\lVert x\right\rVert \) for all \(x\in X\), proving the result.
+	for all \(f\in X^{\ast} \). From the \hyperref[thm:uniform-boundedness]{uniform boundedness theorem}, we have \(\sup _{x^{\ast\ast} \in A^{\ast\ast} }\left\lVert x^{\ast\ast} \right\rVert < \infty \), and with \hyperref[thm:Hahn-Banach]{Hahn-Banach theorem}, we have \(\left\lVert x^{\ast\ast} \right\rVert = \left\lVert x\right\rVert \) for all \(x\in X\), proving the result.
 \end{proof}

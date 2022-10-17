@@ -43,8 +43,8 @@ But turns out that this formulation will give us an \hyperref[def:integrality-ga
 	There are ways to strengthen the second constraints by looking at \textbf{directed} \hyperref[def:spanning-tree]{spanning trees} rather than the usual undirected ones to give us an LP which solves \autoref{prb:min-spanning-tree} exactly.
 \end{remark}
 
-We see that the problems arise from the fact that there are not enough edges to span \(\mathcal{\MakeUppercase{g}} \), so we now require it explicitly in our LP formulation. Furthermore, to ensure there are no cycles, for any \(S \subseteq \mathcal{\MakeUppercase{v}} \), we again make sure that the total edges we have is less than \(\left\vert S \right\vert - 1\). Then, we have the following.
-\begin{equation}\label{eq:lec10-1}
+We see that the problems arise from the fact that there are not enough edges to span \(\mathcal{\MakeUppercase{g}} \), so we now require it explicitly in our LP formulation. Furthermore, to ensure there are no cycles, for any \(S \subseteq \mathcal{\MakeUppercase{v}} \), we again make sure that the total edges we have is less than \(\left\vert S \right\vert - 1\). Then, we have the following \hyperref[def:spanning-tree]{spanning tree} polytope.
+\begin{equation}\label{eq:spanning-tree-polytope}
 	\begin{aligned}
 		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                                                                         \\
 		      & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e = n-1                                                                                        \\
@@ -93,7 +93,7 @@ We first see the deterministic rounding algorithm.
 \begin{algorithm}[H]\label{algo:min-spanning-tree-pipage-rounding}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:min-spanning-tree]{Minimum Spanning Tree} -- Pipage-Rounding}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(x\) of \autoref{eq:lec10-1}\footnote{By using \hyperref[rmk:separation-oracle]{separation oracle}.}}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(x\) of \autoref{eq:spanning-tree-polytope}\footnote{By using \hyperref[rmk:separation-oracle]{separation oracle}.}}
 	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
 	\SetKw{Break}{break}
 	\SetKwFunction{Swap}{swap}
@@ -106,7 +106,7 @@ We first see the deterministic rounding algorithm.
 		\If(\Comment*[f]{ensure \(w(f) \leq w(g)\)}){\(w(f) > w(g)\)}{
 			\Swap{\(f\), \(g\)}\;
 		}
-		\While(\label{algo:min-spanning-tree-pipage-rounding-increase}\Comment*[f]{by solving \autoref{eq:lec10-2}}){increase \(x_f\) and decrease \(x_g\) by a unit}{
+		\While(\label{algo:min-spanning-tree-pipage-rounding-increase}\Comment*[f]{by solving \autoref{eq:lec10}}){increase \(x_f\) and decrease \(x_g\) by a unit}{
 			\uIf(\label{algo:min-spanning-tree-pipage-rounding-if}){\(x_f\) or \(x_g\) becomes integral}{
 				\Break\;
 			}
@@ -124,7 +124,7 @@ We first see the deterministic rounding algorithm.
 	There are two non-trivial steps in \autoref{algo:min-spanning-tree-pipage-rounding}.
 	\begin{itemize}
 		\item \autoref{algo:min-spanning-tree-pipage-rounding-increase}: This continuous process is done by taking \(\delta \) from solving the following LP as the total unit we should increase/decrease:
-		      \begin{equation}\label{eq:lec10-2}
+		      \begin{equation}\label{eq:lec10}
 			      \begin{aligned}
 				      \max~ & \delta                                                                                                    \\
 				            & y = x+\delta e_f - \delta e_g                                                                             \\
@@ -132,8 +132,8 @@ We first see the deterministic rounding algorithm.
 				            & 0 \leq y \leq 1,
 			      \end{aligned}
 		      \end{equation}
-		      where \(e_i\) is the unit vector with \(1\) at entry \(i\). Again, this is in the similar form as \autoref{eq:lec10-1}, and there's a \hyperref[rmk:separation-oracle]{separation oracle} which solves this LP in polynomial-time.
-		\item \autoref{algo:min-spanning-tree-pipage-rounding-min-tight-set}: Start from the whole vertex set \(\mathcal{\MakeUppercase{v}} \), and we simply look at \(f\) which is none-integral edge and ask can we increase it or not, i.e., we ask the \hyperref[rmk:separation-oracle]{separation oracle} for \autoref{eq:lec10-2}, and if there's a smaller tight fraction set inside \(T\), \(\delta > 0\) strictly, and we just keep searching in this way. We'll see what does this mean exactly in \autoref{lma:lec10-1}.
+		      where \(e_i\) is the unit vector with \(1\) at entry \(i\). Again, this is in the similar form as \autoref{eq:spanning-tree-polytope}, and there's a \hyperref[rmk:separation-oracle]{separation oracle} which solves this LP in polynomial-time.
+		\item \autoref{algo:min-spanning-tree-pipage-rounding-min-tight-set}: Start from the whole vertex set \(\mathcal{\MakeUppercase{v}} \), and we simply look at \(f\) which is none-integral edge and ask can we increase it or not, i.e., we ask the \hyperref[rmk:separation-oracle]{separation oracle} for \autoref{eq:lec10}, and if there's a smaller tight fraction set inside \(T\), \(\delta > 0\) strictly, and we just keep searching in this way. We'll see what does this mean exactly in \autoref{lma:lec10-1}.
 	\end{itemize}
 \end{remark}
 
@@ -178,7 +178,7 @@ We see that this implies the following.
 	\autoref{algo:min-spanning-tree-pipage-rounding} solves \autoref{prb:min-spanning-tree} exactly in polynomial time.
 \end{theorem}
 \begin{proof}
-	Firstly, \autoref{algo:min-spanning-tree-pipage-rounding} is a polynomial time algorithm from \autoref{lma:lec10-2}. Also, since \autoref{eq:lec10-1} is an LP-relaxation of \autoref{prb:min-spanning-tree} while we know that
+	Firstly, \autoref{algo:min-spanning-tree-pipage-rounding} is a polynomial time algorithm from \autoref{lma:lec10-2}. Also, since \autoref{eq:spanning-tree-polytope} is an LP-relaxation of \autoref{prb:min-spanning-tree} while we know that
 \end{proof}
 
 \subsubsection{Randomized Pipage Rounding}
@@ -187,7 +187,7 @@ We first see the algorithm.
 \begin{algorithm}[H]\label{algo:min-spanning-tree-randomized-pipage-rounding}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:min-spanning-tree]{Minimum Spanning Tree} -- Randomized Pipage-Rounding}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(x\) of \autoref{eq:lec10-1}\footnote{Again, by using \hyperref[rmk:separation-oracle]{separation oracle}.}}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(x\) of \autoref{eq:spanning-tree-polytope}\footnote{Again, by using \hyperref[rmk:separation-oracle]{separation oracle}.}}
 	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
 	\SetKw{Break}{break}
 	\SetKwFunction{Swap}{swap}

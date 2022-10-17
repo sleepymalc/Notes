@@ -1,3 +1,279 @@
-\lecture{13}{12 Oct. 10:30}{Magic Spanning Tree Distribution}
+\lecture{13}{12 Oct. 10:30}{Toward Next Step: Magic Spanning Tree Distribution}
 \section{Beyond the \(3 / 2\) Barrier for STSP}
+In this section, we'll see some ideas of the recent breakthrough on \hyperref[prb:STSP]{symmetric TSP}, which breaks the \(3 / 2\)-approximation barrier by a tiny absolutely constant~\cite{10.1145/3406325.3451009}.
+\begin{prev}
+	If we have a solution \(x\) in the \hyperref[eq:STSP-polytope]{STSP polytope}, then \((n-1) / n \times x\) is in the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope} and \(x / 2\) is in the \hyperref[eq:O-join-LP]{\(O\)-join LP}.
+\end{prev}
 
+The advantage we'll get is that, indeed, dividing \(x\) by \(2\) is wasteful, or more explicitly, we want to find the set of odd degree vertices \(O\) w.r.t. \(T\) which defines the \hyperref[eq:O-join-LP]{\(O\)-join LP} with the cost less than \((1 / 2 - \delta )x\) for some absolutely constant \(\delta > 0\).
+
+\begin{intuition}
+	The slackness comes from the difference between all cuts and \(O\)-odd cuts.
+\end{intuition}
+
+But observe that \(O\) depends entirely on the choice of \(T\), and hence our goal now is to sample a \hyperref[def:spanning-tree]{spanning tree} \(T\) (with the corresponding \(O = O^{(T)}\)) such that the feasible solution \(y^{(T)}\) for the corresponding \hyperref[eq:O-join-LP]{\(O^{(T)}\)-join LP} satisfies
+\begin{enumerate}[(a)]
+	\item \(\mathbb{E}_{T}\left[e\in T \right] = (n-1) / n \cdot x_e\),
+	\item \(\mathbb{E}_{T}\left[y^{(T)}_e \right] \leq (1 / 2 - \delta )x_e\).
+\end{enumerate}
+If this is the case, we see that
+\[
+	\mathbb{E}\left[ \text{cost of \hyperref[prb:STSP]{TSP} \hyperref[def:tour]{tour}} \right] \leq \left( \frac{3}{2} - \delta  \right) \cdot \OPT_{\mathrm{LP}},
+\]
+which breaks the \(3 / 2\) barrier for \hyperref[prb:STSP]{symmetric TSP}.
+
+\subsection{Strong Assumptions}\label{sub:strong-assumption}
+Surely, we'll not look into the most general setting, instead, we'll make some strong assumptions to help us get intuitions. Specifically, we assume that there exists a tiny constant \(\epsilon \in (0, 0.01)\) such that
+\begin{enumerate}
+	\item \(x_e \leq \epsilon \),
+	\item \(\sum_{e\in \partial S} x(e) \geq 2 + \epsilon \) for all non-singleton cut \(S\).\footnote{This means \(2 \leq \left\vert S \right\vert \leq n-2\).}
+\end{enumerate}
+The second assumption is a huge assumption, but if we have this, we see that \(x / (2 + \epsilon )\) satisfies all \hyperref[eq:O-join-LP]{\(O\)-join LP} constraints except for the singleton cut \(S\), and we're going to fix this. To do so, we first define a useful terminology.
+
+\begin{notation}[Even]\label{not:even}
+	Given a tree \(T\), the edge \(e=(u, v)\) is \emph{even} if both \(\deg_T(u)\) and \(\deg_T(v)\) are even.
+\end{notation}
+
+Then, we see that if we can sample a \(T\) such that
+\begin{enumerate}[(a)]
+	\item \(\mathbb{E}_{T}\left[e\in T \right] = (n-1) / n \cdot x_e\),
+	\item \(\mathbb{E}_{T}\left[e \text{ is \hyperref[not:even]{even}} \right] \geq \delta \),
+\end{enumerate}
+then we'll have
+\[
+	y^{(T)}_e = \begin{dcases}
+		x_e / (2 + \epsilon), & \text{ if } e \text{ is \hyperref[not:even]{even}}; \\
+		x_e / 2,              & \text{ otherwise},
+	\end{dcases}
+\]
+which is always in the \hyperref[eq:O-join-LP]{\(O\)-join polytope} since if \(e\) is \hyperref[not:even]{even}, then the \hyperref[eq:O-join-LP]{\(O\)-join LP} constraint is irrelevant in this case, and hence
+\[
+	\mathbb{E}\left[y_e^{(T)} \right] \leq \delta \frac{x_e}{2+\epsilon } + (1 - \delta ) \frac{x_e}{2} < \left( \frac{1}{2} - \frac{\delta \epsilon }{4} \right) x_e,
+\]
+we again get the slackness we want. Now, the goal is to find such a \hyperref[def:spanning-tree]{spanning tree} distribution, which is the tricky part.
+
+\subsection{Characterization of Spanning Tree Distribution}
+To find such a distribution, we start by characterizing some properties which are necessary for any distribution satisfies the two conditions above. In particular, we care more about the second condition, i.e., \(\mathbb{E}_{T}\left[e \text{ is \hyperref[not:even]{even}} \right] \geq \delta \), since the first one is quite easy to satisfy.
+
+Fix a \((u, v)\in \mathcal{\MakeUppercase{e}} \), we want to make sure that \(\Pr_T(\deg_T(u)\text{ and }\deg_T(v)\text{ are \hyperref[not:even]{even}}) \geq \delta \). Let \(f_i\) and \(g_i\) be the edges incident to \(u\) and \(v\), respectively, and by abusing the notations, we also let \(f_i\) and \(g_i\) be the indicator variables indicating whether \(f_i\) appears in the tree \(T\) or not.
+\begin{center}
+	\incfig{lec13-1}
+\end{center}
+
+\begin{note}
+	Notice that \(\deg_{\mathcal{\MakeUppercase{g}} }(u) = \deg_{\mathcal{\MakeUppercase{g}} }(v)\) since in \hyperref[prb:STSP]{symmetric TSP}, \(\mathcal{\MakeUppercase{g}} \) is complete.
+\end{note}
+
+Now, define \(d_u \coloneqq \deg_{T}(u) = e + f_1 + \ldots  + f_k\) and \(d_v \coloneqq \deg_T(v) = e + g_1 + \ldots  + g_k\), we know that \(d_u, d_v \geq 1\), and to satisfy the first condition, i.e., \(\mathbb{E}_{T}\left[e\in T \right] = (n-1) / n \cdot x_e\), we have
+\[
+	\mathbb{E}_{}\left[d_u \right] = \mathbb{E}_{}\left[e + f_1 + \ldots + f_k  \right] = \mathbb{E}_{}\left[d_v \right] = \mathbb{E}_{}\left[e + g_1 + \ldots + g_k  \right] = \frac{n-1}{n}\cdot 2
+\]
+since in the \hyperref[eq:STSP-polytope]{symmetric TSP polytope} requires that \(\sum_{e\in \partial \left\{ v \right\}} x_e = 2\). We're now interested in characterizing the probability density function of \(d_u\), which we now know it's value is at least \(1\) and the mean is around \(2\).
+
+\subsubsection{Log-Coincavity}\label{subsub:log-concavity}
+Let's first introduce some definition.
+
+\begin{definition}[Log-concave]\label{def:log-concave}
+	Let \(a\) be an integer-valued random variable, then the distribution of \(a\) is \emph{log-concave}\footnote{If we take the \(\log\) on both sides, we'll get a concave function.} if
+	\[
+		\Pr(a=i) \geq \sqrt{\Pr(a=i-1) \Pr(a=i+1)}.
+	\]
+\end{definition}
+
+We see that \autoref{def:log-concave} can be equivalently characterize as
+\[
+	\Pr(a=i+1) \leq \Pr(a=i) \cdot \left( \frac{\Pr(a=i)}{\Pr(a=i-1)} \right).
+\]
+
+\begin{intuition}[\href{https://en.wikipedia.org/wiki/Unimodality}{Unimodality}]
+	If a distribution is \hyperref[def:log-concave]{log-concave}, going from \(a=i\) to \(a=i-1\), the probability decrease by a factor of \(\alpha\), then when considering \(i+1\), it'll decrease even faster. This property is called the \emph{unimodality}.
+\end{intuition}
+
+\begin{eg}[\href{https://en.wikipedia.org/wiki/Binomial_distribution}{Binomial distribution}]
+	The \emph{binomial distribution} is \hyperref[def:log-concave]{log-concave}. Furthermore, it's almost an \emph{if and only if} condition in our case.
+\end{eg}
+\begin{explanation}
+	If we look at \(d_u\), we can think of it as the distribution of getting heads when flipping biased coins independently with different probability each time.
+\end{explanation}
+
+With this interpretation, the distribution of \(d_u\) is like
+\begin{enumerate}[(a)]
+	\item minimum value \(1\),
+	\item mean \(2\),
+	\item essentially \href{https://en.wikipedia.org/wiki/Binomial_distribution}{binomial},
+\end{enumerate}
+hence it shouldn't behave too crazily. We can now prove the following.
+
+\begin{claim}
+	\(\Pr(d_u = 2) \geq 1 / 5\).
+\end{claim}
+\begin{explanation}
+	Let \(\Pr(d_u = 2) \eqqcolon b < 1 / 5\), and let \(a\coloneqq \Pr(d_u = 1)\), then \(a \geq (1 - 1 / 5) / 2 = 2 / 5\) since otherwise \(\Pr(d_u \geq 3) > 2 / 5\) and \(\mathbb{E}_{}\left[ d_u \right] > 2 \), contradiction. Then, we see that the probability (ratio) gap between \(a\) and \(b\) is approximately \(1 / 2\), from \hyperref[def:log-concave]{log-concavity}, the probability sum will just not sum up to \(1\), contradiction again.\footnote{If \(a\) is large, then \(b\) need to be small, this large gap with \hyperref[def:log-concave]{log-concavity} will make sure the same argument follows.}
+\end{explanation}
+
+
+Also, by the similar argument, we have the following.
+
+\begin{claim}
+	\(\Pr(d_u \geq 2) \geq 1 / 2\).
+\end{claim}
+
+\subsubsection{Conditioning}\label{subsub:conditioning}
+Here, we'll see that some good properties hold after conditioning. Explicitly, let \(E\) be the event that \(d_u + d_v = 4\), by the same argument as above where we now know that \(d_u + d_v\) has minimum value of \(2\) with mean nearly \(4\), we have \(\Pr(E) \geq 1 / 10\). Now, we're going to consider the probability of \(\Pr(d_u = i)\) conditioning on \(E\), i.e., \(\Pr(d_u = i \mid E)\).
+
+\begin{remark}
+	After conditioning, it's still \hyperref[def:log-concave]{log-concave}.
+\end{remark}
+
+We see that if \(\Pr(d_u = 2 \mid E) \geq 10 \delta\), then we're done since
+\[
+	\Pr(d_u = d_v = 2) \geq \Pr(E) \cdot \Pr(d_u = 2 \mid E) \geq \frac{1}{10}\cdot 10\delta = \delta.
+\]
+
+\subsection{Toward a Contradiction}
+What we want is \emph{almost} the case, since if \(\Pr(d_u = 2 \mid E) \leq 10 \delta\), from \(10\sigma < 1 / 3\) and the \hyperref[def:log-concave]{log-concavity} and the only value \(d_u\) and \(d_v\) can take is \(1, 2\), and \(3\), we know that \(2\) can't be a mode. Hence, we see that
+\begin{itemize}
+	\item \(1\) is the mode: \(\Pr(d_u = 3 \mid E) \leq 10\delta \),
+	\item \(3\) is the mode: \(\Pr(d_u = 1 \mid E) \leq 10\delta \),
+\end{itemize}
+since we're now assuming \(\Pr(d_u = 2 \mid E) \leq 10 \delta \). We see that since \(d_u\) and \(d_v\) are symmetric, we may just assume
+\begin{itemize}
+	\item \(\Pr(d_u \leq 2 \mid E) \leq 20\delta \),
+	\item \(\Pr(d_v \geq 2 \mid E) \leq 20\delta \).
+\end{itemize}
+
+We're now going to show that this leads to a contradiction, and hence what we want is indeed the case, i.e., \(\Pr(d_u = 2 \mid E) \geq 10 \delta\), leading to \(\Pr(d_u = d_v = 2) \geq \delta\).
+\subsubsection{Stochastic Dominance}\label{subsub:stochastic-dominance}
+Intuitively, stochastic dominance states that if \(a+b\) is big, then \(a\) is big. From the above discussion with this intuition, we have
+\begin{itemize}
+	\item \(\Pr(d_u \leq 2 \mid d_u + d_v \geq 4) \leq 20\delta \),
+	\item \(\Pr(d_v \geq 2 \mid d_u + d_v \leq 3) \leq 20\delta \).
+\end{itemize}
+
+\begin{note}
+	From these two bound, we're almost saying something like \(d_u + d_v\) is positively correlated with \(d_u\), and is also positively correlated with \(d_v\).
+\end{note}
+
+With this intuition, we see that
+\[
+	\Pr(d_u \leq 2 \text{ and }d_v \geq 2 ) \leq 20 \delta
+\]
+since the original two probability bounds' events are disjoint, so only one will happen. Then, we have
+\begin{equation}\label{eq:lec13-1}
+	\begin{split}
+		\mathbb{E}_{}\left[d_u \cdot d_v \right]
+		&= \mathbb{E}_{}\left[d_u \cdot d_v \mid d_v = 1 \right] \Pr(d_v = 1) + \mathbb{E}_{}\left[d_u \cdot d_v \mid d_v \geq 2 \right] \Pr(d_v \geq 2)\\
+		&\geq \Pr(d_v = 1) +  \mathbb{E}_{}\left[3\cdot d_v \mid d_v \geq 2 \right] \Pr(d_v \geq 2) - O(\delta )\\
+		&\geq 5 - O(\delta ),
+	\end{split}
+\end{equation}
+where in the first inequality, in the first term, we drop \(\mathbb{E}_{}\left[d_u\cdot d_v \mid d_v = 1\right]\) naively since this is always greater than \(1\), and for the second term, we almost have \(d_u \geq 3\) given \(d_v \geq 2\) from the following intuition.
+
+\begin{intuition}
+	If we first consider \(\delta = 0\), then given \(d_v \geq 2\), we know that from the second bound, \(d_u + d_v \nleq 3\), i.e., \(d_u + d_v \geq 4\). From the first bound, this further implies \(d_u \nleq 2\), i.e., \(d_u \geq 3\).
+\end{intuition}
+
+Also, for the second inequality, since \(\Pr(d_v = 1) \leq 1 / 2\) and
+\[
+	\mathbb{E}_{}\left[d_v \right] = \Pr(d_v = 1) + \mathbb{E}_{}\left[ d_v \mid d_v \geq 2 \right] \Pr(d_v \geq 2)\approx 2,
+\]
+the whole sum is minimized when \(\Pr(d_v = 1) = 1 / 2\), and we get \(5 - O(\delta )\).
+
+\begin{remark}
+	We see that although \(d_u, d_v\) is nearly \(2\) as we know, but their product is at least \(5\).
+\end{remark}
+
+\subsubsection{Negative Correlation}\label{subsub:negative-correlation}
+Consider calculating \(\mathbb{E}_{}\left[d_u \cdot d_v \right] \) as follows,
+\begin{equation}\label{eq:lec13-2}
+	\begin{split}
+		\mathbb{E}_{}\left[d_u \cdot d_v \right]
+		&= \mathbb{E}_{}\left[\left( e + \sum_{i} f_i \right) \left( e + \sum_{i} g_i \right)  \right] \\
+		&= \mathbb{E}_{}\left[e^{2} \right] + \sum_{i} \left( \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[f_i \right] + \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[g_i \right]   \right) + \sum_{ij} \mathbb{E}_{}\left[f_i \right] \mathbb{E}_{}\left[g_j \right]\\
+		&= \mathbb{E}_{}\left[e \right] + \sum_{i} \left( \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[f_i \right] + \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[g_i \right]   \right) + \sum_{ij} \mathbb{E}_{}\left[f_i \right] \mathbb{E}_{}\left[g_j \right] \\
+		&\leq \epsilon + \mathbb{E}_{}\left[ d_u \right] \mathbb{E}_{}\left[d_v \right] \\
+		&\leq 4 + \epsilon,
+	\end{split}
+\end{equation}
+where we use the assumption that \(x_e \leq \epsilon \). We see that \autoref{eq:lec13-1} and \autoref{eq:lec13-2} gives us a contradiction.
+
+In all, as discussed in \autoref{sub:strong-assumption}, we arrive at the following theorem.
+
+\begin{theorem}
+	Under the \hyperref[sub:strong-assumption]{assumptions}, any \hyperref[def:spanning-tree]{spanning tree} distribution satisfies \hyperref[subsub:log-concavity]{log-concavity}, \hyperref[subsub:conditioning]{conditioning property}, \hyperref[subsub:stochastic-dominance]{stochastic dominance property}, and also \hyperref[subsub:negative-correlation]{negative correlation} property, the \(3 / 2\) barrier of \hyperref[prb:STSP]{symmetric TSP} can be broken.
+\end{theorem}
+
+\subsection{Magic Spanning Tree Distribution}
+To see the complexity about the general cases, we directly state the \hyperref[def:spanning-tree]{spanning tree} distribution we'll need in the general case. Given \(x\in \left[ 0, 1 \right] ^{\left\vert \mathcal{\MakeUppercase{e}}  \right\vert }\) in the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope}, let a distribution \(\mu \) of a random \hyperref[def:spanning-tree]{spanning tree} \(T\), i.e., let \(\mu (T) = \Pr(T\text{ is sampled})\).
+
+There are actually three relevant distributions.
+
+\subsubsection{Strongly Rayleigh Distribution}
+\begin{definition*}
+	Given a distribution \(\mu (T)\) and \(p(z_1, \ldots , z_m ) \coloneqq \sum_{T} \mu (T) \prod_{e\in T} z_e\).
+	\begin{definition}[Real-stable]\label{def:real-stable}
+		We say \(p\) is \emph{real-stable} if \(\mu (T)\in \mathbb{\MakeUppercase{r}} \) for all \(T\), and for all \(z_1, \ldots  , z_m\in \mathbb{\MakeUppercase{c}} \) such that \(\im(z_i) > 0\) for all \(i\), we have \(p(z_1, \ldots , z_m ) \neq 0\).
+	\end{definition}
+	\begin{definition}[Strongly Rayleigh distribution]\label{def:strongly-Rayleigh-distribution}
+		If \(\mu \) induces a \hyperref[def:real-stable]{real-stable} \(p\), then \(\mu\) is a \emph{strongly Rayleigh distribution}.
+	\end{definition}
+\end{definition*}
+
+Turns out that there are lots of distributions are \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh}, and it's indeed a very good choice in our case since it satisfies  all \hyperref[subsub:log-concavity]{log-concavity}, \hyperref[subsub:conditioning]{conditioning property}, \hyperref[subsub:stochastic-dominance]{stochastic dominance property}, and also \hyperref[subsub:negative-correlation]{negative correlation}.
+
+\subsubsection{Max-Entropy Distribution}
+Nevertheless, among all \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh distributions}, we want to choose a most random one. This suggests we look into the notion of entropy. Denote \(\mathrm{ST}\) be the set of all \hyperref[def:spanning-tree]{spanning trees}, consider the following \emph{maximum entropy LP}:
+\begin{equation}\label{eq:max-entropy}
+	\begin{aligned}
+		\max~ & \sum_{T\in \mathrm{ST}} \mu (T) \log \frac{1}{\mu (T)}                                            \\
+		      & \sum_{T\in \mathrm{ST} } \mu (T) = 1                                                              \\
+		      & \sum_{T \ni e} \mu (T) = x_e                           & \forall e\in \mathcal{\MakeUppercase{e}} \\
+		      & \mu \geq 0.
+	\end{aligned} \iff
+	\begin{aligned}
+		\min~ & \sum_{T\in \mathrm{ST}} \mu (T) \log \mu (T)                                            \\
+		      & \sum_{T\in \mathrm{ST} } \mu (T) = 1                                                    \\
+		      & \sum_{T \ni e} \mu (T) = x_e                 & \forall e\in \mathcal{\MakeUppercase{e}} \\
+		      & \mu \geq 0.
+	\end{aligned}
+\end{equation}
+
+Solving this induces the following.
+\begin{definition}[Max-entropy distribution]\label{def:max-entropy-distribution}
+	The optimal solution \(\mu \) for the \hyperref[eq:max-entropy]{maximum entropy LP} is the \emph{max-entropy distribution}.
+\end{definition}
+
+Observe that the \hyperref[eq:max-entropy]{maximum entropy LP} has exponentially many variables, but at least this is a convex program since \(x\log x\) is a convex function, and we can indeed approximately solve it in polynomial time with only polynomially many \(T\in \mathrm{ST} \) has non-zero probability, i.e., the size of the support of \(\mu\) is in polynomial.
+
+\subsubsection{\(\lambda \)-Uniform Distribution}
+Finally, we have the following.
+\begin{definition}[\(\lambda \)-uniform distribution]\label{def:lambda-uniform}
+	A distribution \(\mu (T)\) is \emph{\(\lambda \)-uniform} if there exists a \(\lambda \in (\mathbb{\MakeUppercase{r}} ^+ \cup \left\{ 0 \right\} )^{n}\) such that \(\mu (T) = \prod_{e\in T} \lambda _e / M\) for some \(M\).
+\end{definition}
+
+\begin{note}[Uniform distribution]
+	When \(\lambda _e = 1\) for all \(e\in \mathcal{\MakeUppercase{e}} \), then we just have a uniform distribution over \(\mathrm{ST}\).
+\end{note}
+
+Now, we're going to see how these three distributions relate to each other. A technical lemma is the following.
+
+\begin{proposition}\label{prop:lec13}
+	A \hyperref[def:max-entropy-distribution]{max-entropy distribution} is always \hyperref[def:lambda-uniform]{\(\lambda \)-uniform} for some \(\lambda \).
+\end{proposition}
+\begin{proof}
+	We can take the \href{https://en.wikipedia.org/wiki/Duality_(optimization)}{Lagrangian dual} of the \hyperref[eq:max-entropy]{maximum entropy LP}, the optimality condition (i.e., \href{https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions}{KKT condition}) will give us the result.
+\end{proof}
+
+More interestingly, we have the following.
+
+\begin{theorem}[\href{https://en.wikipedia.org/wiki/Kirchhoff's_theorem}{Matrix tree theorem}]\label{thm:lec13}
+	A \hyperref[def:lambda-uniform]{\(\lambda \)-uniform distribution} \(\mu \) for \(\mathrm{ST} \), then the induced \(p\) is \hyperref[def:real-stable]{real-stable}, i.e., \(\mu \) is \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh}.
+\end{theorem}
+
+Combining \autoref{prop:lec13} and \autoref{thm:lec13}, we have the following.
+
+\begin{corollary}
+	A \hyperref[def:max-entropy-distribution]{max-entropy distribution} is \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh}.
+\end{corollary}
+
+We see that it's enough to find a \hyperref[def:max-entropy-distribution]{max-entropy distribution}, and as noted before, this can be done via solving the \hyperref[eq:max-entropy]{maximum entropy LP} in polynomial time!

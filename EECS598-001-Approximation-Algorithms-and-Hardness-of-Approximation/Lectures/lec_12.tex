@@ -48,10 +48,10 @@ Let's prove \autoref{thm:num-small-mincuts}.
 \end{proof}
 
 \subsection{Random Thin Spanning Tree}
-Now, we're ready to show that a randomly sampled \hyperref[def:spanning-tree]{spanning tree} will be a \hyperref[def:thin]{thin} tree with high probability. Recall the \hyperref[def:spanning-tree]{spanning tree} polytope, i.e., \autoref{eq:lec10-1} with our LP formulation for \autoref{prb:ATSP}, i.e., \autoref{eq:lec11}. Then given an optimal \(x\) of \autoref{eq:lec11}, define \(y_{uv} = x_{uv} + x_{vu}\) and \(z = \frac{n-1}{n}y\) for \autoref{eq:lec10-1}.\footnote{Notice that the summation over \(y\) is exactly \(n\), but we want the sum to be \(n-1\), hence we scale it down.}
+Now, we're ready to show that a randomly sampled \hyperref[def:spanning-tree]{spanning tree} will be a \hyperref[def:thin]{thin} tree with high probability. Recall the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope}, with our \hyperref[eq:ATSP-polytope]{ATSP polytope} for \autoref{prb:ATSP}. Then given an optimal \(x\) of \autoref{eq:ATSP-polytope}, define \(y_{uv} = x_{uv} + x_{vu}\) and \(z = \frac{n-1}{n}y\) for \autoref{eq:spanning-tree-polytope}.\footnote{Notice that the summation over \(y\) is exactly \(n\), but we want the sum to be \(n-1\), hence we scale it down.}
 
 \begin{remark}
-	\(z\) is feasible for the \hyperref[eq:lec10-1]{spanning tree polytope}.
+	\(z\) is feasible for the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope}.
 \end{remark}
 \begin{explanation}
 	Since we have scaled down \(y\), hence \(\sum_{e\in \mathcal{\MakeUppercase{e}} } z_e = n-1\). While for the second constraint, all \(\varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \), we have
@@ -66,7 +66,7 @@ Now, we can sample a random \hyperref[def:spanning-tree]{spanning tree} \(T^\pri
 \begin{algorithm}[H]\label{algo:random-thin-spanning-tree}
 	\DontPrintSemicolon
 	\caption{\hyperref[def:thin]{Thin} \hyperref[def:spanning-tree]{Spanning Tree} -- Randomized Pipage-Rounding}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(z\) of \autoref{eq:lec10-1}}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(z\) of \autoref{eq:spanning-tree-polytope}}
 	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
 	\SetKwFunction{RPG}{\hyperref[algo:min-spanning-tree-randomized-pipage-rounding]{Randomized-Pipage-Rounding}}
 	\BlankLine
@@ -156,7 +156,7 @@ In all, we have the following.
 \begin{algorithm}[H]\label{algo:random-construct-tour}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:ATSP]{Asymmetric TSP} -- Randomized Construction}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(z\) of \autoref{eq:lec10-1}}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(z\) of \autoref{eq:spanning-tree-polytope}}
 	\KwResult{A \hyperref[def:tour]{tour} \(T\)}
 	\SetKwFunction{TSP}{\hyperref[algo:random-thin-spanning-tree]{Thin-Spanning-Tree}}
 	\SetKwFunction{Construct}{\hyperref[lma:lec11-2]{Thin-Tree-to-Tour}}
@@ -225,9 +225,8 @@ Clearly, \autoref{algo:Christofides-Serdyuko} runs in polynomial time, and we're
 However, we get more insight by looking at the LP relaxation of \autoref{prb:STSP}, and in fact, the recent improvement is based on looking into the corresponding LP formulation.
 
 \subsection{Symmetric TSP Polytope}
-We now analyze the approximation ratio via LP formulation of \autoref{algo:Christofides-Serdyuko}. Indeed, we may follow the same strategy of how we solve \autoref{prb:ATSP}, i.e., we first define the \hyperref[eq:lec12-1]{spanning tree polytope}, and then try to build a \hyperref[def:tour]{tour} based on the \hyperref[def:spanning-tree]{spanning tree} we obtained from solving that \hyperref[eq:lec12-1]{polytope}. Since now there are no directions, we obtain the following \hyperref[def:spanning-tree]{spanning tree} polytope, which is considerably simpler than \autoref{eq:lec11} by a simple reduction.
-
-\begin{equation}\label{eq:lec12-1}
+We now analyze the approximation ratio via LP formulation of \autoref{algo:Christofides-Serdyuko}. Indeed, since there are no directions now, we may follow the same strategy of how we solve \autoref{prb:ATSP}, i.e., we first define the \hyperref[eq:STSP-polytope]{symmetric TSP polytope} via a simple reduction from the \hyperref[eq:ATSP-polytope]{asymmetric TSP polytope}.
+\begin{equation}\label{eq:STSP-polytope}
 	\begin{aligned}
 		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e d(e)                                                                     \\
 		      & \sum_{e\in \partial S} x_e \geq 2                 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
@@ -235,23 +234,23 @@ We now analyze the approximation ratio via LP formulation of \autoref{algo:Chris
 		      & x \geq 0
 	\end{aligned}
 \end{equation}
+Let \(x\) be this LP optimal solution, we now try to build a \hyperref[def:tour]{tour} based on the two-step procedure as in \autoref{algo:Christofides-Serdyuko}:
+\begin{enumerate}[(a)]
+	\item finding a \hyperref[def:spanning-tree]{spanning tree},
+	\item fix it to be in the \hyperref[eq:STSP-polytope]{symmetric TSP polytope} by finding a matching of odd degrees vertices.
+\end{enumerate}
 
-Let \(x\) be this LP optimal solution, we see that \(x\cdot \frac{n-1}{n}\) is in the \hyperref[eq:lec12-1]{spanning tree polytope} as in the case of \autoref{prb:ATSP}. This implies we can compute the \hyperref[def:spanning-tree]{spanning tree} \(T\) such that \(d(T) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(x)x_e\).
+\subsubsection{Analysis}
+To do the analysis, observe that \(x\cdot \frac{n-1}{n}\) is in the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope} as in the case of \autoref{prb:ATSP}, which implies if we can find a \hyperref[prb:min-spanning-tree]{minimum spanning tree} \(T\), then \(d(T) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(x)x_e\).
 
-Note that it's not enough to just get \(T\), we still need a matching \(M\). Let \(O\) be the set of odd-degree vertices w.r.t. \(T\) as defined in \autoref{algo:Christofides-Serdyuko-linea2}.
-\begin{note}
-	Notice that we may assume \(\left\vert O \right\vert \) is even.
-\end{note}
-
-We then define the following.
+Note that it's not enough to just get \(T\), we still need a matching \(M\). Let \(O\) be the set of odd-degree vertices w.r.t. \(T\) as defined in \autoref{algo:Christofides-Serdyuko-linea2}. Notice that we may assume \(\left\vert O \right\vert \) is even, we then define the following.
 
 \begin{definition}[\(O\)-join]\label{def:O-join}
 	Given \(O\subseteq \mathcal{\MakeUppercase{v}} \) and \(\left\vert O \right\vert \) even, \(M \subseteq \mathcal{\MakeUppercase{e}} \) is \emph{\(O\)-join} if \(\deg_M(v)\) is odd when \(v\in O\), and \(\deg_M(v)\) is even if \(v \notin O\).
 \end{definition}
 
 With this, we define the so-called \emph{\hyperref[def:O-join]{\(O\)-join} LP}.
-
-\begin{equation}\label{eq:lec12-2}
+\begin{equation}\label{eq:O-join-LP}
 	\begin{aligned}
 		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } y_e d(e)                                                                      \\
 		      & y(\partial S) \geq 1                              & \forall S\text{ s.t. }\left\vert S \cap O \right\vert \text{ odd}; \\
@@ -259,14 +258,26 @@ With this, we define the so-called \emph{\hyperref[def:O-join]{\(O\)-join} LP}.
 	\end{aligned}
 \end{equation}
 
-\begin{remark}
-	The \hyperref[eq:lec12-2]{\(O\)-join LP} is exact, i.e., if \(y\) is feasible, then there exists an \hyperref[def:O-join]{\(O\)-join} \(M\) such that \(d(M) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(e)y_e\).
-\end{remark}
-We omit the proof here, but if we believe this is true, then we have the following.
+\begin{lemma}\label{lma:lec12-3}
+	The \hyperref[eq:O-join-LP]{\(O\)-join LP} is exact, i.e., if \(y\) is feasible, then there exists an \hyperref[def:O-join]{\(O\)-join} \(M\) such that \(d(M) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(e)y_e\).
+\end{lemma}
+We omit the proof here, but if we believe \autoref{lma:lec12-3} is true, then we have the following.
 
 \begin{theorem}
 	\autoref{algo:Christofides-Serdyuko} is a \(1.5\)-approximation algorithm using LP relaxation analysis.
 \end{theorem}
 \begin{proof}
-	Since both \autoref{eq:lec12-1} and \autoref{eq:lec12-2} are valid LP relaxation of \autoref{algo:Christofides-Serdyuko-linea1} and \autoref{algo:Christofides-Serdyuko-linea3}, respectively, we see that \(d(T) \leq \frac{n-1}{n}\OPT_{\mathrm{LP}}\), also, \(d(M) \leq \OPT_{\mathrm{LP} } / 2\), hence \(d(T \cup M) \leq 1.5\cdot \OPT_{\mathrm{LP} }\) as desired.
+	Since both \hyperref[eq:spanning-tree-polytope]{spanning tree polytope} and the \hyperref[eq:O-join-LP]{\(O\)-join LP} are valid LP relaxation of \autoref{algo:Christofides-Serdyuko-linea1} and \autoref{algo:Christofides-Serdyuko-linea3}, respectively, by denoting \(T\) and \(M\) obtained from solving these two LPs respectively, from the above discussion, we know
+	\[
+		d(T) \leq \frac{n-1}{n}\times \OPT_{\mathrm{LP}}
+	\]
+	for the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope LP} and
+	\[
+		d(M) \leq \frac{1}{2}\times \OPT_{\mathrm{LP} }
+	\]
+	for the \hyperref[eq:O-join-LP]{\(O\)-join LP}, combining these we have
+	\[
+		d(T \cup M) = d(T) + d(M) \leq 1.5\cdot \OPT_{\mathrm{LP} }
+	\]
+	for the \hyperref[eq:STSP-polytope]{STSP polytope}, as desired.
 \end{proof}

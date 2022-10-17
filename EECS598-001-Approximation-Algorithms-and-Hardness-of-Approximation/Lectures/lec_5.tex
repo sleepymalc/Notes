@@ -36,11 +36,7 @@ In particular, the notion of \hyperref[def:metric]{metric} is useful.
 Let's first look at the problem.
 
 \begin{problem}[Facility location]\label{prb:facility-location}
-Given a \hyperref[rmk:metric-space]{metric space} \((X, d)\) and \(P,  Q\subseteq X\), \(f\in \mathbb{\MakeUppercase{r}} ^+\) where \(P\) is the set of clients, \(Q\) is the set of (possible) facilities, we want to open \(Q^\prime \subseteq Q\) such that it minimizes
-\[
-	\sum_{i\in P} \min _{j\in Q^\prime } d(i, j) + f\left\vert Q^\prime  \right\vert,
-\]
-where we interpret the first summation as connection cost, the second term as opening cost.
+Given a \hyperref[rmk:metric-space]{metric space} \((X, d)\) and \(P,  Q\subseteq X\), \(f\in \mathbb{\MakeUppercase{r}} ^+\) where \(P\) is the set of clients, \(Q\) is the set of (possible) facilities, we want to open \(Q^\prime \subseteq Q\) such that it minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j) + f\left\vert Q^\prime  \right\vert\).\footnote{We interpret the first summation as connection cost, the second term as opening cost.}
 \end{problem}
 
 \begin{eg}
@@ -52,21 +48,25 @@ where we interpret the first summation as connection cost, the second term as op
 \end{eg}
 
 We now write down the LP of \autoref{prb:facility-location}. Denote variables \(\left\{ y_{j} \right\}_{j\in Q}\) and \(\left\{ x_{ij} \right\}_{i\in P, j\in Q}\). Then the LP can be written as
-\begin{align*}
-	\min~    & \sum_{ij} d(i, j) x_{ij} + \sum_{j} y_{j} \cdot f                                     \\
-	         & \sum_{j}x_{ij} \geq 1                             & \forall i\in P &  & (\alpha _i)   \\
-	         & x_{ij} \leq y_j \iff y_j - x_{ij} \geq 0          & \forall i, j   &  & (\beta_{ij} ) \\
-	(P)\quad & x, y \geq 0.
-\end{align*}
+\[
+	\begin{aligned}
+		\min~    & \sum_{ij} d(i, j) x_{ij} + \sum_{j} y_{j} \cdot f                                     \\
+		         & \sum_{j}x_{ij} \geq 1                             & \forall i\in P &  & (\alpha _i)   \\
+		         & x_{ij} \leq y_j \iff y_j - x_{ij} \geq 0          & \forall i, j   &  & (\beta_{ij} ) \\
+		(P)\quad & x, y \geq 0.
+	\end{aligned}
+\]
 
 Denote the dual variables as \(\alpha _i\) and \(\beta_{ij} \), the dual is
 
-\begin{align*}
-	\max~    & \sum_{i} \alpha _i                                                 \\
-	         & \alpha _i - \beta _{ij} \leq d(i, j) & \forall i, j &  & (x_{ij} ) \\
-	         & \sum_{i} \beta _{ij} \leq f          & \forall j    &  & (y_i)     \\
-	(D)\quad & \alpha , \beta \geq 0.
-\end{align*}
+\[
+	\begin{aligned}
+		\max~    & \sum_{i} \alpha _i                                                 \\
+		         & \alpha _i - \beta _{ij} \leq d(i, j) & \forall i, j &  & (x_{ij} ) \\
+		         & \sum_{i} \beta _{ij} \leq f          & \forall j    &  & (y_i)     \\
+		(D)\quad & \alpha , \beta \geq 0.
+	\end{aligned}
+\]
 
 \begin{remark}
 	If \((\alpha , \beta )\) is feasible, redefine \(\beta _{ij} \coloneqq \max (0, \alpha _i - d(i, j))\), it's still feasible and will not affect the objective value. We see that we can drop \(\beta\) and only look at \(\alpha \).

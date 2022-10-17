@@ -1,34 +1,44 @@
 \lecture{9}{28 Sep. 10:30}{Euclidean \(k\)-Median}
-Consider the following problem.
+\section{Euclidean \(k\)-Median}
+If we now consider the \hyperref[def:metric]{metric space} to be exactly \((\mathbb{\MakeUppercase{r}} ^\ell , \left\lVert \cdot \right\rVert _2)\), we get some advantages from the structure of Euclidean \hyperref[def:metric]{metric}.
+
+\begin{intuition}
+	The problematic part is the old approach for \hyperref[prb:k-median]{\(k\)-median} problem is when \(i\) contributing to too many facilities at once. But we'll see that this can't happen if we're considering Euclidean \hyperref[def:metric]{metric}, which has some inherent geometric limitation in terms of volume.
+\end{intuition}
+
+Now, let's see the problem formulation.
 
 \begin{problem}[Euclidean \(k\)-median]\label{prb:Euclidean-k-median}
 Given a \hyperref[def:metric]{metric space} \((X, d) = (\mathbb{\MakeUppercase{r}} ^\ell, \left\lVert \cdot \right\rVert _2 )\) and \(P, Q\subseteq X\) with \(k\in \mathbb{\MakeUppercase{n}} \), find \(Q^\prime \subseteq Q\) with \(\left\vert Q^\prime  \right\vert = k\) which minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j)\).
 \end{problem}
 
-We see that \autoref{prb:Euclidean-k-median} is like \autoref{prb:k-median}, but with a specific \hyperref[def:metric]{metric space}, i.e., \((\mathbb{\MakeUppercase{r}} ^\ell , \left\lVert \cdot \right\rVert _2)\).
+It's natural to ask that whether we can solve \hyperref[prb:Euclidean-k-median]{Euclidean \(k\)-median} like how we solve \hyperref[prb:facility-location]{facility location} and \hyperref[prb:k-median]{\(k\)-median}. The answer is yes, and in particular, we're going to modify \autoref{algo:facility-location-PD} for \hyperref[prb:facility-location]{facility location} to get an \(\alpha \)-\hyperref[def:LMP]{LMP} approximation with \(\alpha < 3\), which essentially implies an \(\alpha \)-approximation algorithm for \(k\)-median using Euclidean \hyperref[def:metric]{metric}.
 
-\begin{note}
-	We assume that \(\ell \) is large. If it's not the case, then actually for all \(\epsilon > 0\), there exists a \((1+\epsilon )\)-approximation algorithm with running time \(2^{2^{O(\ell )}}\cdot \mathop{\mathrm{poly}}(n)\). Hence, if \(\ell \) is small (or constant), we can use this algorithm. But if it's not, what we're going to see is better.
-\end{note}
+\subsection{Euclidean Facility Location}
+Formally, we define the following problem.
 
-It's natural to ask that whether we can solve \autoref{prb:Euclidean-k-median} by the similar algorithm which solves \autoref{prb:facility-location} and \autoref{prb:k-median}. In particular, we're going to use \autoref{algo:facility-location-PD}.
+\begin{problem}[Euclidean facility location]\label{prb:Euclidean-facility-location}
+Given a \hyperref[rmk:metric-space]{metric space} \((X, d) = (\mathbb{\MakeUppercase{r}} ^\ell , \left\lVert \cdot \right\rVert _2)\) and \(P,  Q\subseteq X\), \(f\in \mathbb{\MakeUppercase{r}} ^+\) where \(P\) is the set of clients, \(Q\) is the set of (possible) facilities, we want to open \(Q^\prime \subseteq Q\) such that it minimizes \(\sum_{i\in P} \min _{j\in Q^\prime } d(i, j) + f\left\vert Q^\prime  \right\vert\).
+\end{problem}
 
-\begin{prev}[Dual LP for \autoref{prb:facility-location}]
-	Recall the dual of \autoref{prb:facility-location}
-	\begin{align*}
-		\max~    & \sum_{i} \alpha _i                                  \\
-		         & \alpha _i - \beta _{ij} \leq d(i, j) & \forall i, j \\
-		         & \sum_{i} \beta _{ij} \leq f          & \forall j    \\
-		(D)\quad & \alpha , \beta \geq 0
-	\end{align*}
-	and the \autoref{algo:facility-location-PD}.
+\begin{prev}
+	Recall the dual of \hyperref[prb:facility-location]{facility location} is
+	\[
+		\begin{aligned}
+			\max~    & \sum_{i} \alpha _i                                  \\
+			         & \alpha _i - \beta _{ij} \leq d(i, j) & \forall i, j \\
+			         & \sum_{i} \beta _{ij} \leq f          & \forall j    \\
+			(D)\quad & \alpha , \beta \geq 0
+		\end{aligned}
+	\]
+	and the \autoref{algo:facility-location-PD} uses primal-dual method, where we interpret \(\alpha _i\) is the time that \(i\) is connected.
 \end{prev}
 
-Again, we think of \(\alpha _i\) as the time that \(i\) is connected, and \(t_j\) be the time that \(j\) is open in \autoref{algo:facility-location-PD}, and the only thing we change is the phase two, i.e., how we trim down the solution. We now see the algorithm, which essentially achieves \(\rho \coloneqq (1 + \delta)\)-\hyperref[def:LMP]{LMP} approximation where \(\delta \coloneqq \sqrt{8 / 3} \approx 1.633\ldots\).\footnote{We'll see why we have this artificial number soon.}
+Let \(t_j\) be the time that \(j\) is open in \autoref{algo:facility-location-PD}, and the only thing we change is the phase two, i.e., how we trim down the solution. We now see the algorithm, which essentially achieves \(\rho \coloneqq (1 + \delta)\)-\hyperref[def:LMP]{LMP} approximation for \(\delta \coloneqq \sqrt{8 / 3} \approx 1.633\ldots\).
 
-\begin{algorithm}[H]\label{algo:Euclidean-k-median-PD}
+\begin{algorithm}[H]\label{algo:Euclidean-facility-location-PD}
 	\DontPrintSemicolon
-	\caption{\hyperref[prb:Euclidean-k-median]{Euclidean \(k\)-Median} -- Primal-Dual}
+	\caption{\hyperref[prb:Euclidean-facility-location]{Euclidean Facility Location} -- Primal-Dual}
 	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
 	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
 	\SetKw{Break}{break}
@@ -36,32 +46,31 @@ Again, we think of \(\alpha _i\) as the time that \(i\) is connected, and \(t_j\
 	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(O\):open facilities}
 	\;
 	\While(){\(S \neq P\)}{
-	\While(\label{algo:Euclidean-k-median-PD-while-2}){\textsf{True}}{
+	\While(\label{algo:Euclidean-facility-location-PD-while-2}){\textsf{True}}{
 	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}
 
-	\uIf(\label{algo:Euclidean-k-median-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
+	\uIf(\label{algo:Euclidean-facility-location-PD-if-1}\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P} \beta _{ij} = f\)}{
 		\Break
 	}
-	\ElseIf(\label{algo:Euclidean-k-median-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+	\ElseIf(\label{algo:Euclidean-facility-location-PD-if-2}\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
 		\Break
 	}
 	}
-	\(Q^\prime \gets\left\{ \text{tight facilities}\right\} \)\label{algo:Euclidean-k-median-PD-lin10}\Comment*[r]{Update \(Q^\prime \)}
-	\(S\gets \left\{ \text{clients connected to \(Q^\prime\)} \right\} \)\label{algo:Euclidean-k-median-PD-lin11}\Comment*[r]{Update \(S\)}
+	\(Q^\prime \gets\left\{ \text{tight facilities}\right\} \)\label{algo:Euclidean-facility-location-PD-lin10}\Comment*[r]{Update \(Q^\prime \)}
+	\(S\gets \left\{ \text{clients connected to \(Q^\prime\)} \right\} \)\label{algo:Euclidean-facility-location-PD-lin11}\Comment*[r]{Update \(S\)}
 	}
 	\;
-	\label{algo:Euclidean-k-median-PD-comment}\Comment{Trim down \(Q^\prime \)}
+	\label{algo:Euclidean-facility-location-PD-comment}\Comment{Trim down \(Q^\prime \)}
 	\(G = (Q^\prime , E\coloneqq \left\{ (j, j^\prime )\colon \exists i\in P \text{ such that } \mathcolor{red}{d(j, j^\prime ) \leq \delta \cdot \min (t_j , t_{j^\prime })}, j, j^\prime \in Q^\prime \right\})\)\;
 	Compute \(Q^{\prime\prime}\) s.t. \(\forall j\in Q^\prime \), either \(j\in Q^{\prime\prime}\) or \(\exists j^\prime\in Q^{\prime\prime} \) s.t. \((j, j^\prime )\in E\)\Comment*[r]{\hyperref[prb:max-strongly-independent-set]{max independent set}}
 	\Return{\(Q^{\prime\prime} \)}\;
 \end{algorithm}
 
-\begin{intuition}
-	The problematic part is when \(i\) contributing to too many facilities at once, but we'll see that this can't happen if we're considering Euclidean \hyperref[def:metric]{metric}.
-\end{intuition}
+\subsubsection{Analysis}
+As before, let \(w(i)\in Q^\prime\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)\) is the connected witness of \(i\).
 
 \begin{remark}
-	As before, let \(w(i)\in Q^\prime\) for all \(i\) such that \(\alpha \geq t_{w(i)}\), i.e., \(w(i)\) is the connected witness of \(i\). Then we have the following.
+	We have the following.
 	\begin{enumerate}[(a)]
 		\item \(\alpha \) is dual-feasible.
 		\item If \(\beta _{ij} > 0\), then \(\alpha _i \leq t_j\).
@@ -69,7 +78,7 @@ Again, we think of \(\alpha _i\) as the time that \(i\) is connected, and \(t_j\
 	\end{enumerate}
 \end{remark}
 
-We now do the analysis similarly. Fix a client \(i\in P\), then observe that given \(S = Q^{\prime\prime} \cap \left\{ j\colon \beta _{ij} > 0 \right\}\), if \(\delta = 2\), then \(\left\vert S \right\vert \leq 1\).\footnote{Since if both \(\beta _j\) and \(\beta _{j^\prime }\) is greater than \(0\), then \(d(j, j^\prime ) \leq 2\alpha _i \leq 2 \min (t_j , t_{j^\prime })\). This means \(j\) and \(j^\prime \) will have an edge but from the property of \hyperref[prb:max-strongly-independent-set]{max independent set}, one of them will not be included.} We see that
+We can do the analysis similarly. Fix a client \(i\in P\), then observe that given \(S = Q^{\prime\prime} \cap \left\{ j\colon \beta _{ij} > 0 \right\}\), if \(\delta = 2\), then \(\left\vert S \right\vert \leq 1\).\footnote{Since if both \(\beta _j\) and \(\beta _{j^\prime }\) is greater than \(0\), then \(d(j, j^\prime ) \leq 2\alpha _i \leq 2 \min (t_j , t_{j^\prime })\). This means \(j\) and \(j^\prime \) will have an edge but from the property of \hyperref[prb:max-strongly-independent-set]{max independent set}, one of them will not be included.} We see that
 \begin{enumerate}[(a)]
 	\item If \(\left\vert S \right\vert = 1\), \(S = \left\{ j \right\} \). We see that \(\mathop{\mathrm{conn}}(i) \leq d(i, j)\) and \(\mathop{\mathrm{open}}(i) = \alpha _i - d(i, j)\), so
 	      \[
@@ -87,7 +96,7 @@ Generally, our goal is to prove that for all \(i\),
 \end{equation}
 which implies
 \[
-	\frac{\mathop{\mathrm{conn}}}{\rho } + \left\vert Q^{\prime\prime}\right\vert f \leq \sum_{i} \alpha _i,
+	\frac{\mathop{\mathrm{conn}}}{\rho} + \left\vert Q^{\prime\prime}\right\vert f \leq \sum_{i} \alpha _i,
 \]
 i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
 
@@ -96,40 +105,40 @@ i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
 	\[
 		\frac{\min _{j\in S}d(i, j)}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j)) \leq \alpha _i.
 	\]
-	Furthermore, in the case of \(\delta =2\), we see that we can set \(\rho \coloneqq 1 + \delta = 3\).
 \end{note}
 
-\begin{remark}
-	We see that we get the exactly \(3\)-\hyperref[def:LMP]{LMP} approximation for \(\delta = 2\) case! Notice that in this case, since \(\left\vert S \right\vert \leq 1\) as we noted, \autoref{algo:Euclidean-k-median-PD} and \autoref{algo:facility-location-PD} are equivalent.
-\end{remark}
+In the case of \(\delta =2\), we see that we can set \(\rho \coloneqq 1 + \delta = 3\). We see that we get the exactly \(3\)-\hyperref[def:LMP]{LMP} approximation for \(\delta = 2\) case! Notice that in this case, since \(\left\vert S \right\vert \leq 1\) as we noted, \autoref{algo:Euclidean-facility-location-PD} and \autoref{algo:facility-location-PD} are equivalent.
 
-\begin{claim}
-	For \(\delta \coloneqq \sqrt{8 / 3}\) and \(S = Q^{\prime\prime} \cap \left\{ j\colon \beta _{ij} > 0\right\} \), \(\left\vert S \right\vert \leq 3\).
-\end{claim}
-\begin{explanation}
-	We first see two tricks, which we call them the \emph{\(k\)-means magic formulas}. Let \(i^\prime = \sum_{j\in S} j / \left\vert S \right\vert\). Then
+Now, we'll see how can we get advantages by further restricting \(\delta \), which utilizes the following.
+
+\begin{remark}[\(k\)-means magic formulas]\label{rmk:lec9}
+	There are two extremely useful tricks call \emph{\(k\)-means magic formulas} for Euclidean \hyperref[def:metric]{metric} related problems. Let \(i^\prime = \sum_{j\in S} j / \left\vert S \right\vert\). Then
 	\[
 		\begin{split}
 			\sum_{j\in S} \left\lVert j - i\right\rVert ^{2}
 			&= \sum_{j\in S} \left\langle j - i + i^\prime - i^\prime , j - i + i^\prime - i^\prime  \right\rangle \\
-			&= \sum_{j\in S} \left( \left\lVert j - i\right\rVert ^{2} + \left\lVert i^\prime - i\right\rVert ^{2} + 2\left\langle j - i^\prime , i^\prime - i \right\rangle  \right) \\
-			&= \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} + \left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} .
+			&= \sum_{j\in S} \left( \left\lVert j - i\right\rVert ^{2} + \left\lVert i^\prime - i\right\rVert ^{2} + 2\left\langle j - i^\prime , i^\prime - i \right\rangle  \right)
+			= \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} + \left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} .
 		\end{split}
 	\]
-	\begin{remark}[Fact]
-		One can actually show that \(i^\prime \) (i.e., the geometric mean) is the optimal solution for \hyperref[prb:Euclidean-k-median]{\(k\)-means}, and if we choose \(i\) rather than \(i^\prime \) to be the center, the deviation from \(\OPT\) is exactly \(\left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} \).
-	\end{remark}
 	Also,
 	\[
 		\begin{split}
 			\sum_{j, j^\prime \in S} \left\lVert j - j^\prime \right\rVert ^{2}
 			&= \sum_{j, j^\prime \in S}\left\langle j- j^\prime + i^\prime - i^\prime , j- j^\prime + i^\prime - i^\prime  \right\rangle  \\
-			&= \sum_{j, j^\prime \in S} \left( \left\lVert j - i^\prime \right\rVert^{2} + \left\lVert j^\prime - i^\prime \right\rVert ^{2} + 2 \left\langle j -i^\prime , i^\prime - j^\prime  \right\rangle   \right) \\
-			&= 2\left\vert S \right\vert \cdot \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} .
+			&= \sum_{j, j^\prime \in S} \left( \left\lVert j - i^\prime \right\rVert^{2} + \left\lVert j^\prime - i^\prime \right\rVert ^{2} + 2 \left\langle j -i^\prime , i^\prime - j^\prime  \right\rangle   \right)
+			= 2\left\vert S \right\vert \cdot \sum_{j\in S} \left\lVert j - i^\prime \right\rVert ^{2} .
 		\end{split}
 	\]
+\end{remark}
 
-	From the above tricks, we have
+One can actually show that \(i^\prime \) (i.e., the geometric mean) is the optimal solution for \hyperref[prb:Euclidean-k-median]{\(k\)-means}, and if we choose \(i\) rather than \(i^\prime \) to be the center, the deviation from \(\OPT\) is exactly \(\left\vert S \right\vert \left\lVert i^\prime - i\right\rVert ^{2} \). Nevertheless, we have the following.
+
+\begin{lemma}\label{lma:lec9}
+	For \(\delta \coloneqq \sqrt{8 / 3}\) and \(S = Q^{\prime\prime} \cap \left\{ j\colon \beta _{ij} > 0\right\} \), \(\left\vert S \right\vert \leq 3\).
+\end{lemma}
+\begin{proof}
+	From the \hyperref[rmk:lec9]{\(k\)-means magic formulas}, we have
 	\[
 		\left\vert S \right\vert \alpha _i^{2} \geq \sum_{j\in S} \left\lVert j - i\right\rVert ^{2} \geq \frac{1}{2\left\vert S \right\vert} \sum_{j, j^\prime \in S} \left\lVert j - j^\prime \right\rVert ^{2} > \frac{(s-1)\delta ^{2} \alpha _i^{2} }{2},
 	\]
@@ -138,26 +147,33 @@ i.e., we get a \(\rho \)-\hyperref[def:LMP]{LMP} approximation algorithm.
 		\left\vert S \right\vert \alpha _i ^{2} > \frac{(s-1)\delta ^{2} \alpha _i^{2} }{2} \implies \left\vert S \right\vert \left( \frac{\delta ^{2} }{2} - 1 \right) < \frac{\delta ^{2} }{2} \implies \left\vert S \right\vert < \frac{\delta ^{2} }{\delta ^{2} - 2} = 4
 	\]
 	by plugging in \(\delta = \sqrt{8 / 3} \), hence \(\left\vert S \right\vert \leq 3\) by integrality.
-\end{explanation}
+\end{proof}
 
-Now, given the fact that we already handle the case that \(\left\vert S \right\vert = 0\) and \( \left\vert S \right\vert = 1\), we now consider the cases that \(\left\vert S \right\vert = 2\) and \(\left\vert S \right\vert = 3\). If \(\left\vert S \right\vert = 2\), let \(S = \left\{ j_1, j_2 \right\}\), then \((\alpha _i - d(i, j_1)) + (\alpha _i - d(i, j_2)) \leq (2 - \delta )\alpha _i\). Since \(\mathop{\mathrm{conn}}(i) \leq \alpha _i\),
-\begin{equation}\label{eq:lec9-2}
-	\frac{d(i, j^{\ast} )}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j)) \leq \alpha _i \left( \frac{1}{\rho } + 2-\delta  \right) \leq \alpha _i,
-\end{equation}
-where the last inequality follows from \(1 / \rho + 2 - \delta \leq 1 \iff 1 / \rho \leq \delta -1\), which is satisfied by \(\rho \coloneqq 1 + \delta = 1 + \sqrt{8 / 3} \).
+From \autoref{lma:lec9}, we see that we already handle the case that \(\left\vert S \right\vert = 0\) and \( \left\vert S \right\vert = 1\), so the only cases left are \(\left\vert S \right\vert = 2\) and \(\left\vert S \right\vert = 3\). And by doing so, we obtain the following theorem.
 
-If \(\left\vert S \right\vert = 3\), let \(S = \left\{ j_1, j_2, j_3 \right\} \). Now, instead of looking at a more complicated geometric structure and try to optimize it, we simply add \autoref{eq:lec9-2} three times for \((j_1, j_2)\), \((j_2, j_3)\) and \((j_1, j_3)\), we have \(2 \sum_{j\in S} (\alpha _i - d(i, j)) \leq 3(2-\delta )\alpha _i\) hence
-\[
-	\frac{d(i, j^{\ast} )}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j) ) \leq \alpha _i \left( \frac{1}{\rho } + \frac{3(2-\delta )}{2} \right) \leq \alpha _i
-\]
-since \(1 / \rho + 3(2 - \delta ) / 2 \leq 1 \iff 1 / \rho \leq (3\delta - 4) / 2\), which is satisfied by \(\rho \coloneqq 1 + \delta = 1 + \sqrt{8 / 3} \)
+\begin{theorem}
+	\autoref{algo:Euclidean-facility-location-PD} is a \((1 + \sqrt{8 / 3})\)-\hyperref[def:LMP]{LMP} approximation algorithm.
+\end{theorem}
+\begin{proof}
+	As said, from \autoref{lma:lec9}, we only need to consider the case that \(\left\vert S \right\vert = 2\) and \(\left\vert S \right\vert = 3\). If \(\left\vert S \right\vert = 2\), let \(S = \left\{ j_1, j_2 \right\}\), then \((\alpha _i - d(i, j_1)) + (\alpha _i - d(i, j_2)) \leq (2 - \delta )\alpha _i\). Since \(\mathop{\mathrm{conn}}(i) \leq \alpha _i\),
+	\begin{equation}\label{eq:lec9-2}
+		\frac{d(i, j^{\ast} )}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j)) \leq \alpha _i \left( \frac{1}{\rho } + 2-\delta  \right) \leq \alpha _i,
+	\end{equation}
+	where the last inequality follows from \(1 / \rho + 2 - \delta \leq 1 \iff 1 / \rho \leq \delta -1\), which is satisfied by \(\rho \coloneqq 1 + \delta = 1 + \sqrt{8 / 3} \).
+
+	If \(\left\vert S \right\vert = 3\), let \(S = \left\{ j_1, j_2, j_3 \right\} \). Now, instead of looking at a more complicated geometric structure and try to optimize it, we simply add \autoref{eq:lec9-2} three times for \((j_1, j_2)\), \((j_2, j_3)\) and \((j_1, j_3)\), we have \(2 \sum_{j\in S} (\alpha _i - d(i, j)) \leq 3(2-\delta )\alpha _i\) hence
+	\[
+		\frac{d(i, j^{\ast} )}{\rho } + \sum_{j\in S} (\alpha _i - d(i, j) ) \leq \alpha _i \left( \frac{1}{\rho } + \frac{3(2-\delta )}{2} \right) \leq \alpha _i
+	\]
+	since \(1 / \rho + 3(2 - \delta ) / 2 \leq 1 \iff 1 / \rho \leq (3\delta - 4) / 2\), which is satisfied by \(\rho \coloneqq 1 + \delta = 1 + \sqrt{8 / 3} \)
+\end{proof}
 
 \begin{remark}[SOTA]
 	Compare general \hyperref[def:metric]{metric} \autoref{prb:k-median} and Euclidean \hyperref[def:metric]{metric} \autoref{prb:Euclidean-k-median}, we have the following.
 	% file:///Users/pbb/Developer/quiver/src/index.html?q=WzAsMTIsWzAsMiwiXFx0ZXh0e1xcaHlwZXJyZWZbYWxnbzpmYWNpbGl0eS1sb2NhdGlvbi1QRF17UHJpbWFsLUR1YWx9IFxcKDNcXCktXFxoeXBlcnJlZltkZWY6TE1QXXtMTVB9fSJdLFswLDMsIlxcdGV4dHtEdWFsIEZpdHRpbmd+XFxjaXRle2h0dHBzOi8vZG9pLm9yZy8xMC40ODU1MC9hcnhpdi4yMjA3LjA1MTUwfSBcXCgxLjlcXGxkb3RzIDkgXFwpLVxcaHlwZXJyZWZbZGVmOkxNUF17TE1QfX0iXSxbMSw0LCJcXHRleHR7XFxoeXBlcnJlZlthbGdvOmstbWVkaWFuLWJpcG9pbnQtcm91bmRpbmdde1xcKDJcXCktYmlwb2ludCByb3VuZGluZ319Il0sWzEsMywiXFx0ZXh0e1xcKDEuM1xcbGRvdHMgM1xcKS1iaXBvaW50IHJvdW5kaW5nfSJdLFsyLDIsIlxcdGV4dHtcXCgzXFwpLWFwcHJveGltYXRpb259Il0sWzIsMywiXFx0ZXh0e1xcKDIuNjdcXCktYXBwcm94aW1hdGlvbn0iXSxbMCw0LCJcXHRleHR7XFxoeXBlcnJlZlthbGdvOmstbWVkaWFuLWxvY2FsLXNlYXJjaF17TG9jYWwgU2VhcmNofSBcXCgzXFwpLVxcaHlwZXJyZWZbZGVmOkxNUF17TE1QfX0iXSxbMiw0LCJcXHRleHR7XFwoNFxcKS1hcHByb3hpbWF0aW9ufSJdLFswLDEsIlxcdGV4dHtcXGh5cGVycmVmW2FsZ286RXVjbGlkZWFuLWstbWVkaWFuLVBEXXtFdWNsaWRlYW4gUHJpbWFsLUR1YWx9IFxcKDIuNjNcXCktXFxoeXBlcnJlZltkZWY6TE1QXXtMTVB9fSJdLFsyLDEsIlxcdGV4dHtcXCgyLjYzXFwpLWFwcHJveGltYXRpb259Il0sWzAsMCwiXFx0ZXh0e1xcKDIuNDFcXCktXFxoeXBlcnJlZltkZWY6TE1QXXtMTVB9fVxcZm9vdG5vdGV7XFwoMi40MFxcKSBpcyB0aGUgU09UQS59Il0sWzIsMCwiXFx0ZXh0e1xcKDIuNDFcXCktYXBwcm94aW1hdGlvbn0iXSxbMSwzXSxbMyw1XSxbMCw0LCJcXHRleHR7Q29udmVyc2lvbn0iXSxbNiwyXSxbMiw3XSxbOCw5LCJcXHRleHR7Q29udmVyc2lvbn0iXSxbMTAsMTEsIlxcdGV4dHtDb252ZXJzaW9ufSJdXQ==
 	\[\begin{tikzcd}
 			{\text{\(2.41\)-\hyperref[def:LMP]{LMP}}\footnote{\(2.40\) is the SOTA.}} && {\text{\(2.41\)-approximation}} \\
-			{\text{\hyperref[algo:Euclidean-k-median-PD]{Euclidean Primal-Dual} \(2.63\)-\hyperref[def:LMP]{LMP}}} && {\text{\(2.63\)-approximation}} \\
+			{\text{\hyperref[algo:Euclidean-facility-location-PD]{Euclidean Primal-Dual} \(2.63\)-\hyperref[def:LMP]{LMP}}} && {\text{\(2.63\)-approximation}} \\
 			{\text{\hyperref[algo:facility-location-PD]{Primal-Dual} \(3\)-\hyperref[def:LMP]{LMP}}} && {\text{\(3\)-approximation}} \\
 			{\text{Dual Fitting~\cite{https://doi.org/10.48550/arxiv.2207.05150} \(1.9\ldots 9 \)-\hyperref[def:LMP]{LMP}}} & {\text{\(1.3\ldots 3\)-bipoint rounding}} & {\text{\(2.67\)-approximation}} \\
 			{\text{\hyperref[algo:k-median-local-search]{Local Search} \(3\)-\hyperref[def:LMP]{LMP}}} & {\text{\hyperref[algo:k-median-bipoint-rounding]{\(2\)-bipoint rounding}}} & {\text{\(4\)-approximation}}
@@ -171,3 +187,7 @@ since \(1 / \rho + 3(2 - \delta ) / 2 \leq 1 \iff 1 / \rho \leq (3\delta - 4) / 
 		\end{tikzcd}\]
 	Noticeably, \(2.41\)-\hyperref[def:LMP]{LMP} approximation is \(1 + \sqrt{2} \), which is exactly the threshold behavior in Euclidean \hyperref[def:metric]{metric} we're building our intuition upon.
 \end{remark}
+
+\begin{note}
+	We assume that \(\ell \) is large throughout. If it's not the case, then actually for all \(\epsilon > 0\), there exists a \((1+\epsilon )\)-approximation algorithm with running time \(2^{2^{O(\ell )}}\cdot \mathop{\mathrm{poly}}(n)\). Hence, if \(\ell \) is small (or constant), we can use this algorithm, otherwise, what we have discussed is better.
+\end{note}

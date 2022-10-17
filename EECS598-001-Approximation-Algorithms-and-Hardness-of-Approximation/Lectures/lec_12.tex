@@ -5,88 +5,252 @@ Let's prove \autoref{thm:num-small-mincuts}.
 
 	\begin{algorithm}[H]\label{algo:num-small-mincuts}
 		\DontPrintSemicolon
-		\caption{Small \(\alpha \)-Mincuts -- Random Contraction}
+		\caption{Small \(\alpha \)-Mincuts -- Karger's Algorithm~\cite{Karger1993GlobalMI}}
 		\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a weight function \(x\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), \(\alpha \)}
-		\KwResult{A \hyperref[def:tour]{tour} \(T\)}
+		\KwResult{An \(\alpha \)-mincut \(S\)}
 		\SetKw{Break}{break}
 		\SetKwFunction{Contract}{contract}
 		\SetKwFunction{rand}{rand}
+		\SetKwFunction{randsub}{rand-subset}
+		\SetKwFunction{Uncontract}{uncontract}
 		\BlankLine
 		\While(){\(\left\vert \mathcal{\MakeUppercase{v}} \right\vert > 2\alpha\)}{
-			Sample \(e\in \mathcal{\MakeUppercase{e}} \)  w.p. \(x_e\)\;
-			\Contract{\(e\)}\;
+			\(e\gets\)\rand{\(\mathcal{\MakeUppercase{e}} \), \(x_e\)}\Comment*[r]{Sample w.p. \(x_e\)}
+			\Contract{\(\mathcal{\MakeUppercase{g}} \), \(e\)}\Comment*[r]{new \(x\) is the sum of multi-edges' \(x\)}
 		}
-		\Return{\rand{\(\mathcal{\MakeUppercase{v}}\)}}\;
+		\(S\gets\)\randsub{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{\(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = 2\alpha \)}
+		\(S \gets\)\Uncontract{\(S\)}\;
+		\Return{\(S\)}\;
 	\end{algorithm}
 
-	Now, if \(S\) is an \(\alpha \)-mincut, we're interested in the probability of \(S\) is outputted from \autoref{algo:num-small-mincuts}. Denote \(\Pr(S \text{ survives when } \left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i) \eqqcolon P_i\), and suppose \(S\) survived until \(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i\), then we see that \(S\) is still an \(\alpha \)-mincut, and in the current \(\mathcal{\MakeUppercase{g}} \),
+	Now, if \(S\) is an \(\alpha \)-mincut, we're interested in the probability of \(S\) is outputted from \autoref{algo:num-small-mincuts}.
+	\begin{remark}
+		Observe that if \(e = (u, v)\) is contracted where \(u\in S\) while \(v \notin S\), then \(S\)  will definitely not be outputted.
+	\end{remark}
+	Denote \(\Pr(S \text{ survives when } \left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i) \eqqcolon P_i\), then if \(S\) survived until \(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i\), we see that \(S\) is still an \(\alpha \)-mincut, and in the current \(\mathcal{\MakeUppercase{g}} \), by considering a single vertex as a potential mincut, we have
 	\[
-		\lambda \leq \mathbb{E}_{v\in \mathcal{\MakeUppercase{v}} }\left[ \sum_{e\in \theta \left\{ v \right\} } x(e) \right] = \frac{2}{i} \sum_{e\in \mathcal{\MakeUppercase{e}} } x(e),
+		\frac{\sum_{e\in \partial S} x_e}{\alpha }
+		\leq \lambda
+		\leq \mathbb{E}_{v\in \mathcal{\MakeUppercase{v}} }\left[ \sum_{e\in \partial \left\{ v \right\} } x(e) \right] = \frac{2}{i} \sum_{e\in \mathcal{\MakeUppercase{e}} } x(e)
+		\implies P_i = 1 - \frac{\sum_{e\in \partial S} x(e)}{\sum_{e\in \mathcal{\MakeUppercase{e}} }x(e) } \geq 1 - \frac{2\alpha }{i} = \frac{i-2\alpha }{i}
 	\]
-	hence
-	\[
-		P_i \geq 1 - \frac{\sum_{e\in \partial S} x(e)}{\sum_{e\in \mathcal{\MakeUppercase{e}} }x(e) } \geq 1 - \frac{2\alpha }{i} = \frac{i-2\alpha }{i}.
-	\]
-
-	We then see that
+	since \(P_i= 1 - \Pr(\text{\(S\) does not survive when }\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i)\), while the latter event happens when one of the boundary edges in \(\partial S\) is picked to be contracted. We then see that
 	\[
 		\begin{split}
-			\Pr(S \text{ is outputted from \autoref{algo:num-small-mincuts}})
-			&\geq P_n \cdot P_{n-1}\cdot \ldots \cdot P_{2\alpha + 1} \cdot \frac{1}{2^{2\alpha }}\\
-			&= \left( \frac{n - 2\alpha }{n} \right) \left( \frac{n-1-2\alpha }{n-1} \right) \ldots \left( \frac{1}{2\alpha +1} \right) \cdot 2^{-2\alpha }\\
+			\Pr(\text{\(S\) is outputted})
+			&\geq P_n \cdot P_{n-1}\cdot \cdots \cdot P_{2\alpha + 1} \cdot \frac{1}{2^{2\alpha }}\\
+			&= \left( \frac{n - 2\alpha }{n} \right) \left( \frac{n-1-2\alpha }{n-1} \right) \cdots \left( \frac{1}{2\alpha +1} \right) \cdot 2^{-2\alpha }\\
 			&= \frac{(2\alpha )!}{n(n-1)\ldots (n-2\alpha +1) }\cdot 2^{-2\alpha }\\
-			&\geq \frac{1}{(2n)^{2\alpha }}.
+			&\geq \frac{1}{(2n)^{2\alpha }},
 		\end{split}
 	\]
-	Then the result follows because the probability should sum to \(1\).
+	then the result follows because the probability should sum to \(1\).
 \end{proof}
 
-Now, recall the Spanning Tree polytope \autoref{eq:lec10-1}. Given an optimal \(x\), define \(y_{uv} = x_{uv} + x_{vu}\) and \(z = \frac{n-1}{n}y\). We see that \(z\) is feasible for this Spanning tree polytope since
-\[
-	\sum_{e\in \mathcal{\MakeUppercase{e}} } z_e = n-1
-\]
-is trivial, while for all \(S \subsetneq \mathcal{\MakeUppercase{v}} \),
-\[
-	\sum_{e\in E(S)} x_e = \sum_{v\in S} \sum_{e\in \partial ^+ \left\{ v \right\} } x(e) - \sum_{e\in E(S, \overline{S} )} x(e) \leq \left\vert S \right\vert - 1,
-\]
-so \(z\) is feasible. Now, we can sample a random spanning tree \(T^\prime \) such that
-\begin{enumerate}[(a)]
-	\item for all \(e\in \mathcal{\MakeUppercase{e}} \), \(\Pr(e\in T^\prime ) \coloneqq z_e\)
-	\item For all \(S \subseteq \mathcal{\MakeUppercase{e}} \),
-\end{enumerate}
+\subsection{Random Thin Spanning Tree}
+Now, we're ready to show that a randomly sampled \hyperref[def:spanning-tree]{spanning tree} will be a \hyperref[def:thin]{thin} tree with high probability. Recall the \hyperref[def:spanning-tree]{spanning tree} polytope, i.e., \autoref{eq:lec10-1} with our LP formulation for \autoref{prb:ATSP}, i.e., \autoref{eq:lec11}. Then given an optimal \(x\) of \autoref{eq:lec11}, define \(y_{uv} = x_{uv} + x_{vu}\) and \(z = \frac{n-1}{n}y\) for \autoref{eq:lec10-1}.\footnote{Notice that the summation over \(y\) is exactly \(n\), but we want the sum to be \(n-1\), hence we scale it down.}
 
+\begin{remark}
+	\(z\) is feasible for the \hyperref[eq:lec10-1]{spanning tree polytope}.
+\end{remark}
+\begin{explanation}
+	Since we have scaled down \(y\), hence \(\sum_{e\in \mathcal{\MakeUppercase{e}} } z_e = n-1\). While for the second constraint, all \(\varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \), we have
+	\[
+		\sum_{e\in E(S)} x_e = \sum_{v\in S} \sum_{e\in \partial ^+ \left\{ v \right\} } x(e) - \sum_{e\in E(S, \overline{S} )} x(e) \leq \left\vert S \right\vert - 1,
+	\]
+	so \(z\) is feasible since the above sum doesn't care about direction as well, and we even decrease it a bit by down-scaling.
+\end{explanation}
+
+Now, we can sample a random \hyperref[def:spanning-tree]{spanning tree} \(T^\prime \) by using the \hyperref[algo:min-spanning-tree-randomized-pipage-rounding]{randomized pipage rounding} on \(z\). Specifically, we have the following algorithm.
+
+\begin{algorithm}[H]\label{algo:random-thin-spanning-tree}
+	\DontPrintSemicolon
+	\caption{Thin Spanning Tree -- Randomized Pipage-Rounding}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(z\) of \autoref{eq:lec10-1}}
+	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
+	\SetKwFunction{RPG}{\hyperref[algo:min-spanning-tree-randomized-pipage-rounding]{Randomized-Pipage-Rounding}}
+	\BlankLine
+	\(T^\prime \gets\)\RPG{\(\mathcal{\MakeUppercase{g}} \), \(w\), \(z\)}\;
+	\(T\gets \varnothing \)\;
+	\For(\Comment*[f]{Using the cheaper edge between \((u, v)\) and \((v, u)\)}){\(e=\left\{ u, v \right\} \in T^\prime \)}{
+		\uIf(){\(w((u, v)) \leq w((v, u))\)}{
+			\(T\gets T \cup \left\{ (u, v) \right\} \)\;
+		}
+		\Else(){
+			\(T\gets T \cup \left\{ (v, u) \right\} \)\;
+		}
+	}
+	\Return{\(T\)}\;
+\end{algorithm}
+
+We now show that \(T\) obtained from \autoref{algo:random-thin-spanning-tree} is indeed a \hyperref[def:thin]{thin} tree.
+
+\begin{lemma}\label{lma:lec12-1}
+	\(T\) output from \autoref{algo:random-thin-spanning-tree} satisfies \(\alpha =2\) for \hyperref[def:thin]{\((\alpha , \beta )\)-thinness} with probability at least \(2\).
+\end{lemma}
+\begin{proof}
+	Since
+	\[
+		\mathbb{E}\left[d(T) \right] \leq \frac{n-1}{n}\OPT_{\mathrm{LP} }
+	\]
+	since we have \(z_{uv}\cdot \min (d(u, v), d(v, u))\) v.s. \(x_{uv} d(u, v) + x_{uv} d(v, u)\). We then see that with probability at least \(1 / 2\) by simply using \href{https://en.wikipedia.org/wiki/Markov%27s_inequality}{Markov's inequality}, hence the first condition of \hyperref[def:thin]{thin} tree is satisfied with probability at least \(1 / 2\).
+\end{proof}
+
+\begin{lemma}\label{lma:lec12-2}
+	\(T\) output from \autoref{algo:random-thin-spanning-tree} satisfies \(\beta = 12\log n / \log \log n\) for \hyperref[def:thin]{\((\alpha , \beta )\)-thinness} with probability at least \(n^{-1} \).
+\end{lemma}
+\begin{proof}
+	Given any \(\beta \), we want to bound the probability that there's one \(\varnothing \neq S \subseteq v\) which violates the condition. To do this, let
+	\[
+		C_i \coloneqq \left\{ S \subseteq \mathcal{\MakeUppercase{v}} \mid z(\partial S) \in [i \lambda , (i+1)\lambda ) \right\} ,
+	\]
+	where we have
+	\[
+		\lambda = \min _{\varnothing \neq S \subseteq \mathcal{\MakeUppercase{v}} }z(\partial S) = 2\cdot \frac{n-1}{n} \geq 1.
+	\]
+
+	Now, recall that \autoref{algo:random-thin-spanning-tree} uses \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, hence \(e\in T^\prime \) satisfies the \hyperref[thm:negative-correlation]{negative correlation}, which essentially allows us to prove the \href{https://en.wikipedia.org/wiki/Chernoff_bound}{Chernoff bound}-like concentration in the similar manner. Specifically, we have
+	\begin{enumerate}[(a)]
+		\item for all \(e\in \mathcal{\MakeUppercase{e}} \), \(\Pr(e\in T^\prime ) \coloneqq z_e\),
+		\item For all \(\varnothing \neq S \subseteq \mathcal{\MakeUppercase{e}} \), \(\Pr(S \subseteq T^\prime) \leq \prod_{e\in \mathcal{\MakeUppercase{e}} } z_e\),
+	\end{enumerate}
+	and with this, the \href{https://en.wikipedia.org/wiki/Chernoff_bound}{Chernoff bound}-like concentration states that
+	\[
+		\Pr(\left\vert T^\prime \cap S \right\vert > \beta \cdot z(\partial S)) \leq \left( \frac{e}{\beta } \right) ^{\beta \cdot z(\partial S)}.
+	\]
+	Then, we have
+	\[
+		\Pr(\exists S\colon \left\vert T \cap \partial S \right\vert > \beta z(\partial S))
+		\leq \sum_{i=1} ^{\infty} \Pr(\exists S\in C_i \colon \left\vert T \cap \partial S \right\vert > \beta z(\partial S))
+		\leq \sum_{i=1}^{\infty} (2n)^{2(i+1)} \cdot \left( \frac{e}{\beta } \right) ^{\beta \cdot i}
+	\]
+	From the concentration bound, we see that by taking \(\beta = c\cdot \log n / \log \log n\) for some constant \(c\),
+	\[
+		\begin{split}
+			\left( \frac{e}{\beta } \right) ^{\beta \cdot i}
+			&= \left( \frac{e \log \log n}{c \log n} \right) ^{\frac{c\log n}{\log \log n}\cdot i}\\
+			&= \exp \left( \frac{c\cdot i\cdot \log n}{\log \log n}(1 + \log \log \log n) - c - \log \log n \right) \\
+			&\leq \exp \left( \frac{c\cdot i\cdot \log n}{\log \log n} \left( - \frac{\log \log n}{2} \right) \right) \\
+			&= \exp \left( - \frac{ci}{2}\log n \right) \\
+			&= n^{-6i},
+		\end{split}
+	\]
+	where the inequality holds when \(n\) is large, and the last equality is obtained from letting \(c \coloneqq 12\). Then, we see that
+	\[
+		\Pr(\exists S\colon \left\vert T \cap \partial S \right\vert > \beta z(\partial S))
+		\leq \sum_{i=1}^{\infty} (2n)^{2(i+1)} \cdot \left( \frac{e}{\beta } \right) ^{\beta \cdot i}
+		\leq \sum_{i=1}^{\infty} (2n)^{2(i+1)} \cdot n^{-6i} \leq \frac{1}{n},
+	\]
+	as desired.
+\end{proof}
+
+In all, we have the following.
+
+\begin{theorem}\label{thm:lec12-1}
+	\(T\) output from \autoref{algo:random-thin-spanning-tree} is a \hyperref[def:thin]{\((2, 12\log n / \log \log n)\)-thin tree} with probability at least \(1 / 2 - n^{-1} \).
+\end{theorem}
+\begin{proof}
+	Combining \autoref{lma:lec12-1} and \autoref{lma:lec12-2} and using a union bound argument, we have the desired result.
+\end{proof}
+
+\begin{corollary}
+	\autoref{algo:random-thin-spanning-tree} induces an algorithm which is a \((2 + 24\log n / \log \log n)\)-approximation algorithm for \autoref{prb:ATSP} with probability at least \(1 / 2 - n ^{-1} \).
+\end{corollary}
+\begin{proof}
+	By combining \autoref{thm:lec12-1} and \autoref{lma:lec11-2}, we have the result.
+\end{proof}
 
 
 \section{Symmetric Traveling Salesman Problem}
+Let's now look at a simpler version of \autoref{prb:ATSP}.
 
-\begin{problem}[Symmetric TSP]\label{prb:TSP}
-Given a complete bidirected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\) satisfying the \emph{directed} triangle inequality.\footnote{Compare to the regular triangle inequality, now the order matters, i.e., for all \(a, b, c\in \mathcal{\MakeUppercase{v}} \), \(d(a, c) \leq d(a, b) + d(b, c)\).} Find a \hyperref[def:tour]{tour} \((a_0, \ldots , a_k)\) which minimizes \(\sum_{i=0} ^{k-1}d(a_{i-1}, a_i)\).
+\begin{problem}[Symmetric TSP]\label{prb:STSP}
+Given a complete graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\) satisfying the triangle inequality. \emph{Symmetric TSP} asks to find a \hyperref[def:tour]{tour} \((a_0, \ldots , a_k)\) which minimizes \(\sum_{i=0} ^{k-1}d(a_{i-1}, a_i)\).
 \end{problem}
 
-\subsection{Minimum Spanning Tree}
+\subsection{Christofides-Serdyuko Algorithm}
+We first see a simple heuristic algorithm achieves \(1.5\)-approximation ratio of \autoref{prb:STSP} due to Christofides~\cite{Christofides2022WorstCaseAO} and Serdyukov~\cite{Anatoliy}, discovered independently. Remarkably, this simple heuristic algorithm achieves nearly the best approximation ratio we know for more than \(40\) years, and the SOTA result achieves \((1.5-10^{-36})\)-approximation ratio~\cite{10.1145/3406325.3451009}.
 
+\begin{algorithm}[H]\label{algo:Christofides-Serdyuko}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:STSP]{Symmetric TSP} -- Christofides-Serdyuko Algorithm~\cite{Christofides2022WorstCaseAO,Anatoliy}}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\)}
+	\KwResult{A \hyperref[def:tour]{tour} \(T\)}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{MST}{MST}
+	\SetKwFunction{Mmat}{Min-Matching}
+	\BlankLine
+	\(T \gets\)\MST{\(\mathcal{\MakeUppercase{g}} \), \(d\)}\label{algo:Christofides-Serdyuko-linea1}\Comment*[r]{Compute a minimum \hyperref[def:spanning-tree]{spanning tree}}
+	\(O\gets \left\{ v\in T \colon \deg(v)\text{ is odd}\right\} \)\label{algo:Christofides-Serdyuko-linea2}\;
+	\(M\gets\)\Mmat{\(O\), \(d\)}\label{algo:Christofides-Serdyuko-linea3}\Comment*[r]{Compute a minimum matching}
+	\(T\gets T \cup M\)\;
+	\Return{\(T\)}\;
+\end{algorithm}
 
+\begin{remark}
+	We see that \autoref{algo:Christofides-Serdyuko-linea2} and \autoref{algo:Christofides-Serdyuko-linea3} solves the degree problem we have.
+\end{remark}
+\begin{explanation}
+	Explicitly, since we want a \(T\) to be (connected and) \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerian}, given a \hyperref[def:spanning-tree]{spanning tree}, the only problematic part is the end leaf, and hence we can just match them to solve the problem.
+\end{explanation}
+
+Clearly, \autoref{algo:Christofides-Serdyuko} runs in polynomial time, and we're interested in bounding the approximation ratio.
+
+\begin{theorem}\label{thm:lec12-2}
+	\autoref{algo:Christofides-Serdyuko} is a \(1.5\)-approximation algorithm.
+\end{theorem}
+\begin{proof}
+	Denote any optimal solution of \autoref{prb:STSP} by \(T^{\ast} \), which is an optimal \hyperref[def:tour]{tour}. Then we simply observe that \(d(T^\prime ) \leq d(T^{\ast} )\) and \(d(M) \leq d(T^{\ast} ) / 2\), and we have
+	\[
+		d(T) = d(T^\prime ) + d(M) \leq 1.5\cdot d(T^{\ast} ),
+	\]
+	proving the claim.
+\end{proof}
+
+However, we get more insight by looking at the LP relaxation of \autoref{prb:STSP}, and in fact, the recent improvement is based on looking into the corresponding LP formulation.
 
 \subsection{Symmetric TSP Polytope}
-\begin{align*}
-	\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e d(e)                                                                     \\
-	      & \sum_{e\in \partial S} x_e \geq 2                 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
-	      & \sum_{e\in \partial \{v\}} x_e = 2                & \forall v\in \mathcal{\MakeUppercase{v}}                          \\
-	      & x \geq 0
-\end{align*}
+We now analyze the approximation ratio via LP formulation of \autoref{algo:Christofides-Serdyuko}. Indeed, we may follow the same strategy of how we solve \autoref{prb:ATSP}, i.e., we first define the \hyperref[eq:lec12-1]{spanning tree polytope}, and then try to build a \hyperref[def:tour]{tour} based on the \hyperref[def:spanning-tree]{spanning tree} we obtained from solving that \hyperref[eq:lec12-1]{polytope}. Since now there are no directions, we obtain the following \hyperref[def:spanning-tree]{spanning tree} polytope, which is considerably simpler than \autoref{eq:lec11} by a simple reduction.
 
-Let \(x\) be the LP optimal solution, we see that \(x\cdot \frac{n-1}{n}\) is in spanning tree polytope. This implies we can compute the spanning tree \(T\) such that \(d(T) \leq d(x)\). Let \(O\) be the set of odd-degree vertices w.r.t. \(T\).
+\begin{equation}\label{eq:lec12-1}
+	\begin{aligned}
+		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e d(e)                                                                     \\
+		      & \sum_{e\in \partial S} x_e \geq 2                 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
+		      & \sum_{e\in \partial \{v\}} x_e = 2                & \forall v\in \mathcal{\MakeUppercase{v}}                          \\
+		      & x \geq 0
+	\end{aligned}
+\end{equation}
 
-\begin{notation}[\(O\)-join]\label{def:O-join}
-	We say \(M \subseteq \mathcal{\MakeUppercase{e}} \) is \emph{\(O\)-join} if \(\deg_M(v)\) is odd when \(v\in O\), and \(\deg_M(v)\) is even if \(v \notin O\).
-\end{notation}
+Let \(x\) be this LP optimal solution, we see that \(x\cdot \frac{n-1}{n}\) is in the \hyperref[eq:lec12-1]{spanning tree polytope} as in the case of \autoref{prb:ATSP}. This implies we can compute the \hyperref[def:spanning-tree]{spanning tree} \(T\) such that \(d(T) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(x)x_e\).
 
-\hyperref[def:O-join]{\(O\)-join} LP
+Note that it's not enough to just get \(T\), we still need a matching \(M\). Let \(O\) be the set of odd-degree vertices w.r.t. \(T\) as defined in \autoref{algo:Christofides-Serdyuko-linea2}.
+\begin{note}
+	Notice that we may assume \(\left\vert O \right\vert \) is even.
+\end{note}
+
+We then define the following.
+
+\begin{definition}[\(O\)-join]\label{def:O-join}
+	Given \(O\subseteq \mathcal{\MakeUppercase{v}} \) and \(\left\vert O \right\vert \) even, \(M \subseteq \mathcal{\MakeUppercase{e}} \) is \emph{\(O\)-join} if \(\deg_M(v)\) is odd when \(v\in O\), and \(\deg_M(v)\) is even if \(v \notin O\).
+\end{definition}
+
+With this, we define the so-called \emph{\hyperref[def:O-join]{\(O\)-join} LP}.
+
+\begin{equation}\label{eq:lec12-2}
+	\begin{aligned}
+		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } y_e d(e)                                                                      \\
+		      & y(\partial S) \geq 1                              & \forall S\text{ s.t. }\left\vert S \cap O \right\vert \text{ odd}; \\
+		      & y\geq 0.
+	\end{aligned}
+\end{equation}
 
 \begin{theorem}
-	If \(y\) is feasible, then there exists an \hyperref[def:O-join]{\(O\)-join} \(M\) such that \(\sum_{e\in M}d(e) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} }y_e\).
+	The \hyperref[eq:lec12-2]{\(O\)-join LP} is exact, i.e., if \(y\) is feasible, then there exists an \hyperref[def:O-join]{\(O\)-join} \(M\) such that \(d(M) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(e)y_e\).
 \end{theorem}
 
-\begin{corollary}
-
-\end{corollary}
+\begin{remark}
+	\autoref{algo:Christofides-Serdyuko} is a \(1.5\)-approximation algorithm using LP relaxation analysis.
+\end{remark}
+\begin{explanation}
+	Since both \autoref{eq:lec12-1} and \autoref{eq:lec12-2} are valid LP relaxation of \autoref{algo:Christofides-Serdyuko-linea1} and \autoref{algo:Christofides-Serdyuko-linea3}, respectively, we see that \(d(T) \leq \frac{n-1}{n}\OPT_{\mathrm{LP}}\), also, \(d(M) \leq \OPT_{\mathrm{LP} } / 2\), hence \(d(T \cup M) \leq 1.5\cdot \OPT_{\mathrm{LP} }\) as desired.
+\end{explanation}

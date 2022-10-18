@@ -11,58 +11,44 @@ Given a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}, c
 Given a market, do the \hyperref[note:market-clearing-prices]{market clearing prices} exist? If they do, can we find them?
 \end{problem}
 \begin{answer}
-	Yes. We can find it in polynomial time by Hungarian algorithm. Also, by using \hyperref[thm:VCG]{VCG principle},
-	we can obtain specific \hyperref[note:market-clearing-prices]{market clearing prices}.
+	Yes. We can find it in polynomial time by Hungarian algorithm. Also, by using \hyperref[thm:VCG]{VCG principle}, we can obtain specific \hyperref[note:market-clearing-prices]{market clearing prices}.
 \end{answer}
 
 \begin{problem}[Social welfare]
-What's the connection between \hyperref[note:market-clearing-prices]{market clearing prices} and \hyperref[def:social-welfare]{social welfare}
-maximizing.
+What's the connection between \hyperref[note:market-clearing-prices]{market clearing prices} and \hyperref[def:social-welfare]{social welfare} maximizing.
 \end{problem}
 
 \section{Hopcroft-Karp Algorithm}\label{sec:Hopcroft-Karp-algorithm}
-To answer the first question, since we already have the powerful \autoref{thm:Konig-Hall-maximize-theorem} which characterize the existence of a
-\hyperref[def:perfect-matching]{perfect matching}, a simple way to idea is to check whether a \hyperref[def:constricted-set]{constricted set}
-exists or not. But a brute-force approach will require we to check for all subsets of \(\{1, 2, \ldots , N \}\), which is exponential.
+To answer the first question, since we already have the powerful \autoref{thm:Konig-Hall-maximize-theorem} which characterize the existence of a \hyperref[def:perfect-matching]{perfect matching}, a simple way to idea is to check whether a \hyperref[def:constricted-set]{constricted set} exists or not. But a brute-force approach will require we to check for all subsets of \(\{1, 2, \ldots , N \}\), which is exponential.
 
-Hence, another simple idea is to find a maximum matching and check whether it's \hyperref[def:perfect-matching]{perfect}, i.e.,
-whether a maximum matching has size \(N\). Note that we'll have to use \autoref{thm:Konig-Hall-maximize-theorem}. We first see some definitions which is important to
-understand the algorithm.
+Hence, another simple idea is to find a maximum matching and check whether it's \hyperref[def:perfect-matching]{perfect}, i.e., whether a maximum matching has size \(N\). Note that we'll have to use \autoref{thm:Konig-Hall-maximize-theorem}. We first see some definitions which is important to understand the algorithm.
 
 \begin{definition}[Augmenting path]\label{def:augmenting-path}
-	Let \(M\) be a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite} matching in \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} = L \bigsqcup  R, \mathcal{\MakeUppercase{E}})\).
-	Then we say that a \hyperref[def:simple-path]{simple path} \(P\) in \(\mathcal{\MakeUppercase{g}} \) is an \emph{augmenting path} w.r.t. \(M\)
-	if it starts at an unmatched vertex in \(L\), ends at an unmatched vertex in \(R\) with its edges belong alternately to \(M\) and \(E - M\).
+	Let \(M\) be a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite} matching in \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} = L \bigsqcup  R, \mathcal{\MakeUppercase{E}})\). Then we say that a \hyperref[def:simple-path]{simple path} \(P\) in \(\mathcal{\MakeUppercase{g}} \) is an \emph{augmenting path} w.r.t. \(M\) if it starts at an unmatched vertex in \(L\), ends at an unmatched vertex in \(R\) with its edges belong alternately to \(M\) and \(E - M\).
 \end{definition}
 
 \begin{note}
-	\autoref{def:augmenting-path} s related to, but different from, an augmenting path in a flow network algorithm like
-	\href{https://en.wikipedia.org/wiki/Ford%E2%80%93Fulkerson_algorithm}{Ford-Fulkerson algorithm}.
+	\autoref{def:augmenting-path} s related to, but different from, an augmenting path in a flow network algorithm like \href{https://en.wikipedia.org/wiki/Ford%E2%80%93Fulkerson_algorithm}{Ford-Fulkerson algorithm}.
 \end{note}
 
 \begin{intuition}
-	To find an \hyperref[def:augmenting-path]{augmenting path}, we utilize the idea of breadth-first search since it'll build up a level graphs
-	in its nature, and in the case of a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}, with some checking, we can
-	build up a level graph which the end points of edges alternating between matched and unmatched vertices.
+	To find an \hyperref[def:augmenting-path]{augmenting path}, we utilize the idea of breadth-first search since it'll build up a level graphs in its nature, and in the case of a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}, with some checking, we can build up a level graph which the end points of edges alternating between matched and unmatched vertices.
 \end{intuition}
 
-Then, we'll see that in the \hyperref[algo:Hopcroft-Karp-algorithm]{algorithm} we're going to develop, we'll need to find the
-shortest \hyperref[def:augmenting-path]{augmenting paths}, and this is done by using depth-first search.
+Then, we'll see that in the \hyperref[algo:Hopcroft-Karp-algorithm]{algorithm} we're going to develop, we'll need to find the shortest \hyperref[def:augmenting-path]{augmenting paths}, and this is done by using depth-first search.
 
-
-\par
 \begin{algorithm}[H]\label{algo:Hopcroft-Karp-algorithm}
 	\DontPrintSemicolon
-	\caption{Hopcroft-Karp Algorithm}
-	\SetKwRepeat{Do}{do}{while}
+	\caption{\href{https://en.wikipedia.org/wiki/Hopcroft-Karp_algorithm}{Hopcroft-Karp} Algorithm}
 	\KwData{A \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph} \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} = L \bigsqcup  R, \mathcal{\MakeUppercase{e}} )\)}
 	\KwResult{A maximum matching \(M\)}
+	\SetKwRepeat{Do}{do}{while}
 	\BlankLine
 
 	\(M\gets \varnothing \)\Comment*[r]{Initialize}
 	\Do{\(\mathcal{\MakeUppercase{P}}  \neq \varnothing \)}{
-	\(\mathcal{\MakeUppercase{P}} \gets \{P_i\}_{i=1}^k\)\Comment*[r]{Maximal set of \hyperref[def:vertex-independent]{disjoint} shortest \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\)}\label{algo:Hopcroft-Karp-algorithm:line3}
-	\(M = M \oplus (\bigcup_{i=1}^{k} P_i)\)\Comment*[r]{\(A \oplus B \coloneqq (A-B)\cup (B - A)\)}\label{algo:Hopcroft-Karp-algorithm:line4}
+	\(\mathcal{\MakeUppercase{P}} \gets \{P_i\}_{i=1}^k\)\label{algo:Hopcroft-Karp-algorithm:line3}\Comment*[r]{Maximal set of \hyperref[def:vertex-independent]{disjoint} shortest \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\)}
+	\(M = M \oplus (\bigcup_{i=1}^{k} P_i)\)\label{algo:Hopcroft-Karp-algorithm:line4}\Comment*[r]{\(A \oplus B \coloneqq (A-B)\cup (B - A)\)}
 	}
 	\Return{\(M\)}
 \end{algorithm}
@@ -70,35 +56,25 @@ shortest \hyperref[def:augmenting-path]{augmenting paths}, and this is done by u
 \begin{intuition}
 	We see that
 	\begin{itemize}
-		\item If there is an \hyperref[def:augmenting-path]{augmenting path}, we can augment the total size of the matching by
-		      \(1\) by altering this \hyperref[def:path]{path}. Specifically, if an \hyperref[def:augmenting-path]{augmenting path}
-		      exists, then flip all the labels of the edges, and label the free buyers and sellers to matched. This
-		      will increase the size of the matching by \(1\).
+		\item If there is an \hyperref[def:augmenting-path]{augmenting path}, we can augment the total size of the matching by \(1\) by altering this \hyperref[def:path]{path}. Specifically, if an \hyperref[def:augmenting-path]{augmenting path} exists, then flip all the labels of the edges, and label the free buyers and sellers to matched. This will increase the size of the matching by \(1\).
 		\item This is a polynomial time algorithm, since we will only explore every node once.
 	\end{itemize}
 \end{intuition}
 
 \begin{remark}[Finding maximal set of disjoing shortest augmenting paths w.r.t. \(M\)]\label{rmk:lec25-1}
-	We see that it's not entirely clear how should we find \(P_i\) in \autoref{algo:Hopcroft-Karp-algorithm:line3} at the first glance. It's basically just a
-	combination of \hyperref[algo:BFS]{BFS} and \hyperref[rmk:DFS]{DFS} as we'll see.
+	We see that it's not entirely clear how should we find \(P_i\) in \autoref{algo:Hopcroft-Karp-algorithm:line3} at the first glance. It's basically just a combination of \hyperref[algo:BFS]{BFS} and \hyperref[rmk:DFS]{DFS} as we'll see.
 \end{remark}
 \begin{explanation}
-	For each unmatched vertex in \(L\), we perform a modified \hyperref[algo:BFS]{BFS} to find the length of the shortest path to an unmatched vertex in \(R\). Modify the \hyperref[algo:BFS]{BFS}
-	to ensure that we only traverse an edge if it causes the \hyperref[def:path]{path} to alternate between an edge in \(M\) and an edge in \(E\setminus M\).
-	The first time an unmatched vertex in \(R\) is reached we know the length \(k\) of a shortest \hyperref[def:augmenting-path]{augmenting path}.
+	For each unmatched vertex in \(L\), we perform a modified \hyperref[algo:BFS]{BFS} to find the length of the shortest path to an unmatched vertex in \(R\). Modify the \hyperref[algo:BFS]{BFS} to ensure that we only traverse an edge if it causes the \hyperref[def:path]{path} to alternate between an edge in \(M\) and an edge in \(E\setminus M\). The first time an unmatched vertex in \(R\) is reached we know the length \(k\) of a shortest \hyperref[def:augmenting-path]{augmenting path}.
 
-	We can use this to stop our search early if at any point we have traversed more than that number of edges. To find disjoint \hyperref[def:path]{paths},
-	start at the vertices of \(R\) which were found at distance \(k\) in the \hyperref[algo:BFS]{BFS}. Run a DFS backwards from these, which maintains the property that the
-	next vertex we pick has distance one fewer, and the edges alternate between being in \(M\) and \(E\setminus M\).
-	As we build up a \hyperref[def:path]{path}, mark the vertices as used so that we never traverse them again.
+	We can use this to stop our search early if at any point we have traversed more than that number of edges. To find disjoint \hyperref[def:path]{paths}, start at the vertices of \(R\) which were found at distance \(k\) in the \hyperref[algo:BFS]{BFS}. Run a DFS backwards from these, which maintains the property that the next vertex we pick has distance one fewer, and the edges alternate between being in \(M\) and \(E\setminus M\). As we build up a \hyperref[def:path]{path}, mark the vertices as used so that we never traverse them again.
 \end{explanation}
 
 \begin{remark}
 	We see that \autoref{algo:Hopcroft-Karp-algorithm:line3} takes \(O(\left\vert \mathcal{\MakeUppercase{e}} \right\vert )\) to complete in the worst case.
 \end{remark}
 
-Now we analyze the \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} rigorously. We first prove that the correctness of
-\hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
+Now we analyze the \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} rigorously. We first prove that the correctness of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
 
 \subsection{Correctness Analysis}
 We first see an important lemma which characterizes the behavior of \autoref{algo:Hopcroft-Karp-algorithm:line3} and \autoref{algo:Hopcroft-Karp-algorithm:line4}.
@@ -113,137 +89,81 @@ We first see an important lemma which characterizes the behavior of \autoref{alg
 	is a matching with cardinality \(\left\vert M \right\vert + k\).
 \end{lemma}
 \begin{proof}
-	Suppose \(M\) is a matching and \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M\), then \(P\) consists of \(k\) edges in \(M\)
-	and \(k+1\) edges not in \(M\) by the \hyperref[def:augmenting-path]{definition}\footnote{Specifically, the first edge of \(P\) touches an unmatched vertex in \(L\),
-		so it cannot be in \(M\) Similarly, the last edge in \(P\) touches an unmatched vertex in \(R\), so the last edge cannot be in \(M\). Since
-		the edges alternate being in or not in \(M\), there must be exactly one more edge not in \(M\) than in \(M\).}.
+	Suppose \(M\) is a matching and \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M\), then \(P\) consists of \(k\) edges in \(M\) and \(k+1\) edges not in \(M\) by the \hyperref[def:augmenting-path]{definition}.\footnote{Specifically, the first edge of \(P\) touches an unmatched vertex in \(L\), so it cannot be in \(M\) Similarly, the last edge in \(P\) touches an unmatched vertex in \(R\), so the last edge cannot be in \(M\). Since the edges alternate being in or not in \(M\), there must be exactly one more edge not in \(M\) than in \(M\).}
 
 	This implies that
 	\[
 		\left\vert M\oplus P \right\vert = \left\vert M \right\vert + \left\vert P \right\vert - 2k = \left\vert M \right\vert + 2k + 1 - 2k = \left\vert M \right\vert + 1,
 	\]
-	since we must remove each edge of \(M\) within is in \(P\) from both \(M\) and \(P\). Now suppose \(P_1, P_2, \ldots  , P_k\) are
-	\hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths}
-	w.r.t. \(M\). Let \(k_i\) be the number of edges in \(P_{i} \) which are in \(M\), so that \(\left\vert P_{i}  \right\vert = 2k + i + 1\).
-	Then we have
+	since we must remove each edge of \(M\) within is in \(P\) from both \(M\) and \(P\). Now suppose \(P_1, P_2, \ldots  , P_k\) are \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\). Let \(k_i\) be the number of edges in \(P_{i} \) which are in \(M\), so that \(\left\vert P_{i}  \right\vert = 2k + i + 1\). Then we have
 	\[
 		M \oplus (P_1 \cup P_2 \cup  \ldots  \cup P_k)= \left\vert M \right\vert + \left\vert P_1 \right\vert + \ldots  + \left\vert P_k \right\vert
 		- 2k_1 - 2k_2 - \ldots  - 2k_k = \left\vert M \right\vert + k.
 	\]
 
-	To see that we in fact get a matching, suppose that there was some vertex \(v\) which had at least \(2\) incident edges \(e\) and \(e^\prime \).
-	They cannot both come from \(M\) since \(M\) is a matching. They cannot both come from \(P\) since \(P\) is \hyperref[def:simple-path]{simple}
-	and every other edge of \(P\) is removed. Thus, \(e\in M\) and \(e^\prime \in P\setminus M\). However, if
-	\(e\in M\), then \(e\in P\), so \(e \notin M\oplus P\), a contradiction. A similar argument gives the case of \(M\oplus (P_1 \cup \ldots \cup P_k )\).
+	To see that we in fact get a matching, suppose that there was some vertex \(v\) which had at least \(2\) incident edges \(e\) and \(e^\prime \). They cannot both come from \(M\) since \(M\) is a matching. They cannot both come from \(P\) since \(P\) is \hyperref[def:simple-path]{simple} and every other edge of \(P\) is removed. Thus, \(e\in M\) and \(e^\prime \in P\setminus M\). However, if \(e\in M\), then \(e\in P\), so \(e \notin M\oplus P\), a contradiction. A similar argument gives the case of \(M\oplus (P_1 \cup \ldots \cup P_k )\).
 \end{proof}
 
-We see that \autoref{lma:lec25-1} ensures that \(M\) is always a matching, also, \(M\) will increase \(k\) at each iteration. We now analyze why
-whenever there are no \hyperref[def:augmenting-path]{augmenting paths}, i.e., \(\mathcal{\MakeUppercase{p}} = \varnothing \), \(M\) is
-optimal\footnote{Note that optimal doesn't mean \hyperref[def:perfect-matching]{perfect}, just maximum.}.
+We see that \autoref{lma:lec25-1} ensures that \(M\) is always a matching, also, \(M\) will increase \(k\) at each iteration. We now analyze why whenever there are no \hyperref[def:augmenting-path]{augmenting paths}, i.e., \(\mathcal{\MakeUppercase{p}} = \varnothing \), \(M\) is optimal.\footnote{Note that optimal doesn't mean \hyperref[def:perfect-matching]{perfect}, just maximum.}
 
 \begin{theorem}\label{thm:lec25-1}
 	If a matching \(M\) is not optimal, then there exists at least one \hyperref[def:augmenting-path]{augmenting path}.
 \end{theorem}
 \begin{proof}
-	Suppose that a matching \(M\) is not optimal, and let \(P\) be the symmetric difference \(M\oplus M^{\ast} \) where \(M^{\ast} \) is an optimal
-	matching. Since \(M\) and \(M^{\ast} \) are both matchings, every vertex has \hyperref[def:degree]{degree} at most \(2\) in \(P\). So \(P\)
-	must form a collection of disjoint cycles, of \hyperref[def:path]{paths} with an equal number of matched and unmatched edges in \(M\) of
-	\hyperref[def:augmenting-path]{augmenting paths} for \(M\), and of \hyperref[def:augmenting-path]{augmenting paths} for \(M^{\ast} \).
-	But the latter is impossible because \(M^{\ast} \) is optimal.
+	Suppose that a matching \(M\) is not optimal, and let \(P\) be the symmetric difference \(M\oplus M^{\ast} \) where \(M^{\ast} \) is an optimal matching. Since \(M\) and \(M^{\ast} \) are both matchings, every vertex has \hyperref[def:degree]{degree} at most \(2\) in \(P\). So \(P\) must form a collection of disjoint cycles, of \hyperref[def:path]{paths} with an equal number of matched and unmatched edges in \(M\) of \hyperref[def:augmenting-path]{augmenting paths} for \(M\), and of \hyperref[def:augmenting-path]{augmenting paths} for \(M^{\ast} \). But the latter is impossible because \(M^{\ast} \) is optimal.
 
-	Now, the cycles and the \hyperref[def:path]{paths} with equal numbers of matched and unmatched vertices do not contribute to the difference in
-	size between \(M\) and \(M^{\ast} \), so this difference is equal to the number of \hyperref[def:augmenting-path]{augmenting paths} for \(M\)
-	in \(P\). Thus, whenever there exists a matching \(M^{\ast} \) larger than the current matching \(M\), there must also exist an
-	\hyperref[def:augmenting-path]{augmenting path}.
+	Now, the cycles and the \hyperref[def:path]{paths} with equal numbers of matched and unmatched vertices do not contribute to the difference in size between \(M\) and \(M^{\ast} \), so this difference is equal to the number of \hyperref[def:augmenting-path]{augmenting paths} for \(M\) in \(P\). Thus, whenever there exists a matching \(M^{\ast} \) larger than the current matching \(M\), there must also exist an \hyperref[def:augmenting-path]{augmenting path}.
 \end{proof}
 
 Hence, with \autoref{thm:lec25-1}, we see that \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} terminate with the desired
 result. We now want to know its time complexity.
 \begin{remark}[Finite termination]
-	Before doing a formal time complexity analysis, we note that just from \autoref{lma:lec25-1} and \autoref{thm:lec25-1}, we already have
-	finite termination guarantee for \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}. It's because that A maximum
-	matching \(M^{\ast} \) is always finite since we only consider a finite \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph},
-	and from \autoref{lma:lec25-1}, at each iteration before termination, we must find at least one \hyperref[def:augmenting-path]{augmenting path} \(P\),
-	and from \autoref{lma:lec25-1}, the corresponding new matching \(M\oplus P\) has cardinality increased at least by \(1\), hence we see that
-	we're guaranteed for a finite termination.
+	Before doing a formal time complexity analysis, we note that just from \autoref{lma:lec25-1} and \autoref{thm:lec25-1}, we already have finite termination guarantee for \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}. It's because that A maximum matching \(M^{\ast} \) is always finite since we only consider a finite \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}, and from \autoref{lma:lec25-1}, at each iteration before termination, we must find at least one \hyperref[def:augmenting-path]{augmenting path} \(P\), and from \autoref{lma:lec25-1}, the corresponding new matching \(M\oplus P\) has cardinality increased at least by \(1\), hence we see that we're guaranteed for a finite termination.
 \end{remark}
 
 \subsection{Time Complexity Analysis}
-In this section, we're going to prove that the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}
-is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{V}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\), hence it's
-indeed a polynomial time algorithm. We first see a lemma.
+In this section, we're going to prove that the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{V}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\), hence it's indeed a polynomial time algorithm. We first see a lemma.
 
 \begin{lemma}\label{lma:lec25-2}
-	Given two matchings \(M\) and \(M^{\ast} \) in \(\mathcal{\MakeUppercase{g}} \), then every vertex in the graph
-	\(\mathcal{\MakeUppercase{g}} ^\prime =(\mathcal{\MakeUppercase{v}} , M\oplus M^{\ast} )\) has \hyperref[def:degree]{degree} at most \(2\). Hence,
-	\(G^\prime \) is a disjoint union of \hyperref[def:simple-path]{simple paths} or cycles. Furthermore, the edges in each such \hyperref[def:simple-path]{simple path}
-	or cycle belong alternately to \(M\) or \(M^{\ast} \). And if \(\left\vert M \right\vert \leq \left\vert M^{\ast}  \right\vert \), then
-	\(M\oplus M^{\ast} \) contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint}
-	\hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\).
+	Given two matchings \(M\) and \(M^{\ast} \) in \(\mathcal{\MakeUppercase{g}} \), then every vertex in the graph \(\mathcal{\MakeUppercase{g}} ^\prime =(\mathcal{\MakeUppercase{v}} , M\oplus M^{\ast} )\) has \hyperref[def:degree]{degree} at most \(2\). Hence, \(G^\prime \) is a disjoint union of \hyperref[def:simple-path]{simple paths} or cycles. Furthermore, the edges in each such \hyperref[def:simple-path]{simple path} or cycle belong alternately to \(M\) or \(M^{\ast} \). And if \(\left\vert M \right\vert \leq \left\vert M^{\ast}  \right\vert \), then \(M\oplus M^{\ast} \) contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\).
 \end{lemma}
 \begin{proof}
-	Suppose some vertex in \(G^\prime \) has \hyperref[def:degree]{degree} at least \(3\). Since the edges of \(G^\prime \) come from \(M\oplus M^{\ast} \),
-	at least \(2\) of these edges come from the same matching. However, a matching never contains two edges with the same endpoint, so this is impossible.
-	Thus, every vertex has \hyperref[def:degree]{degree} at most \(2\), so \(G^\prime \) is a disjoint union of \hyperref[def:simple-path]{simple paths} and cycles.
+	Suppose some vertex in \(G^\prime \) has \hyperref[def:degree]{degree} at least \(3\). Since the edges of \(G^\prime \) come from \(M\oplus M^{\ast} \), at least \(2\) of these edges come from the same matching. However, a matching never contains two edges with the same endpoint, so this is impossible. Thus, every vertex has \hyperref[def:degree]{degree} at most \(2\), so \(G^\prime \) is a disjoint union of \hyperref[def:simple-path]{simple paths} and cycles.
 
-	If edge \((u, v)\) is followed by edge \((z, w)\) in a \hyperref[def:simple-path]{simple path} or cycle, then we must have \(v=z\). Since two edges with
-	the same endpoint cannot appear in a matching, they must belong alternately to \(M\) and \(M^{\ast} \). Since edges alternate, every cycle has
-	the same number of edges in each matching and every \hyperref[def:path]{path} has at most one more edge in one matching than in the other. Thus, if
-	\(\left\vert M \right\vert \leq \left\vert M^{\ast}  \right\vert \), there must be at least \(\left\vert M^{\ast} \right\vert - \left\vert M \right\vert \)
-	\hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\).
+	If edge \((u, v)\) is followed by edge \((z, w)\) in a \hyperref[def:simple-path]{simple path} or cycle, then we must have \(v=z\). Since two edges with the same endpoint cannot appear in a matching, they must belong alternately to \(M\) and \(M^{\ast} \). Since edges alternate, every cycle has the same number of edges in each matching and every \hyperref[def:path]{path} has at most one more edge in one matching than in the other. Thus, if \(\left\vert M \right\vert \leq \left\vert M^{\ast}  \right\vert \), there must be at least \(\left\vert M^{\ast} \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\).
 \end{proof}
 
-Now, let \(\ell \) be the length of a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t. a matching \(M\), and let \(P_1, P_2, \ldots  , P_k\)
-be a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} of length \(\ell \) w.r.t. \(M\).
-Let \(M^\prime \coloneqq M\oplus (P_1 \cup \ldots P_k )\), and suppose that \(P\) is a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M^\prime \).
+Now, let \(\ell \) be the length of a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t. a matching \(M\), and let \(P_1, P_2, \ldots  , P_k\) be a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} of length \(\ell \) w.r.t. \(M\). Let \(M^\prime \coloneqq M\oplus (P_1 \cup \ldots P_k )\), and suppose that \(P\) is a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M^\prime \).
 
 With the above notation, we see that following.
 
 \begin{lemma}\label{lma:lec25-3}
-	If \(P\) is a \hyperref[def:vertex-independent]{vertex-disjoint path} disjoint from \(P_1, P_2, \ldots , P_k \), then \(P\) has more than \(\ell \)
-	edges.
+	If \(P\) is a \hyperref[def:vertex-independent]{vertex-disjoint path} disjoint from \(P_1, P_2, \ldots , P_k \), then \(P\) has more than \(\ell \) edges.
 \end{lemma}
 \begin{proof}
-	Every vertex matched by \(M\) must be incident with some edge in \(M^\prime \). Since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t. \(M^\prime \),
-	the left endpoint of the first edge of \(P\) isn't incident to a vertex touched by an edge in \(M^\prime \). In particular, \(P\) starts at a vertex in \(L\)
-	which is unmatched by \(M\) since every vertex of \(M\) is incident with an edge in \(M^\prime \). Since \(P\) is \hyperref[def:vertex-independent]{vertex-disjoint}
-	from \(P_1, \ldots  , P_k\), any edge of \(P\) which is in \(M^\prime \) must in fact be in \(M\) and any edge of \(P\) which is not in \(M^\prime \)
-	cannot be in \(M\). Since \(P\) has edges alternately in \(M^\prime \) and \(E \setminus M^\prime \), \(P\) must in fact have edges alternately in \(M\) and
-	\(E \setminus M\). Finally, the last edge of \(P\) must be incident to a vertex in \(R\) which is unmatched by \(M^\prime \). Any vertex unmatched by \(M^\prime \)
-	is also unmatched by \(M\), so \(P\) is an \hyperref[def:augmenting-path]{augmenting path} for \(M\). \(P\) must have length at least \(\ell \) since \(\ell \)
-	is the length of the shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M\). If \(P\) had length exactly \(\ell \), then this would contradict the fact that
-	\(P_1 \cup P_2 \cup \ldots  \cup P_k\) is a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:path]{paths} of length \(\ell \)
-	because we would add \(P\) to the set. Thus, \(P\) has more than \(\ell \) edges.
+	Every vertex matched by \(M\) must be incident with some edge in \(M^\prime \). Since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t. \(M^\prime \), the left endpoint of the first edge of \(P\) isn't incident to a vertex touched by an edge in \(M^\prime \). In particular, \(P\) starts at a vertex in \(L\) which is unmatched by \(M\) since every vertex of \(M\) is incident with an edge in \(M^\prime \). Since \(P\) is \hyperref[def:vertex-independent]{vertex-disjoint} from \(P_1, \ldots  , P_k\), any edge of \(P\) which is in \(M^\prime \) must in fact be in \(M\) and any edge of \(P\) which is not in \(M^\prime \) cannot be in \(M\). Since \(P\) has edges alternately in \(M^\prime \) and \(E \setminus M^\prime \), \(P\) must in fact have edges alternately in \(M\) and \(E \setminus M\). Finally, the last edge of \(P\) must be incident to a vertex in \(R\) which is unmatched by \(M^\prime \). Any vertex unmatched by \(M^\prime \) is also unmatched by \(M\), so \(P\) is an \hyperref[def:augmenting-path]{augmenting path} for \(M\). \(P\) must have length at least \(\ell \) since \(\ell \) is the length of the shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M\). If \(P\) had length exactly \(\ell \), then this would contradict the fact that \(P_1 \cup P_2 \cup \ldots  \cup P_k\) is a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:path]{paths} of length \(\ell \) because we would add \(P\) to the set. Thus, \(P\) has more than \(\ell \) edges.
 \end{proof}
 
 \begin{lemma}\label{lma:lec25-4}
-	Suppose \(P\) is not \hyperref[def:vertex-independent]{vertex-disjoint} from \(P_1, P_2, \ldots , P_k \). Let \(A\) be the set of edges \((M\oplus M^\prime )\oplus P\).
-	Then \(A = (P_1\cup P_2 \cup \ldots \cup P_k )\oplus P\) and
+	Suppose \(P\) is not \hyperref[def:vertex-independent]{vertex-disjoint} from \(P_1, P_2, \ldots , P_k \). Let \(A\) be the set of edges \((M\oplus M^\prime )\oplus P\). Then \(A = (P_1\cup P_2 \cup \ldots \cup P_k )\oplus P\) and
 	\[
 		\left\vert A \right\vert \geq (k+1)\ell,
 	\]
 	hence \(P\) has more than \(\ell \) edges.
 \end{lemma}
 \begin{proof}
-	Any edge in \(M\oplus M^\prime \) is in exactly one of \(M\) or \(M^\prime \). Thus, the only possible contributing edges from \(M^\prime \) are from \(P_1 \cup \ldots  \cup P_k\).
-	An edge from \(M\) contribute if and only if it is not in exactly one of \(M\) and \(P_1 \cup \ldots  \cup P_k\), which means it must be in both. Thus, the edges from
-	\(M\) are redundant so \(M\oplus M^\prime = (P_1 \cup \ldots \cup P_k )\) which implies
+	Any edge in \(M\oplus M^\prime \) is in exactly one of \(M\) or \(M^\prime \). Thus, the only possible contributing edges from \(M^\prime \) are from \(P_1 \cup \ldots  \cup P_k\). An edge from \(M\) contribute if and only if it is not in exactly one of \(M\) and \(P_1 \cup \ldots  \cup P_k\), which means it must be in both. Thus, the edges from \(M\) are redundant so \(M\oplus M^\prime = (P_1 \cup \ldots \cup P_k )\) which implies
 	\[
 		A = (P_1 \cup \ldots  \cup P_k)\oplus P.
 	\]
 
-	Now we'll show that \(P\) is \hyperref[def:edge-independent]{edge disjoint} from each \(P_i\). Suppose that an edge \(e\) of \(P\) is also an edge of \(P_i\) for some \(i\).
-	Since \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M^\prime \), either \(e\in M^\prime \) or \(e\in \mathcal{\MakeUppercase{E}} \setminus M^\prime \).
+	Now we'll show that \(P\) is \hyperref[def:edge-independent]{edge disjoint} from each \(P_i\). Suppose that an edge \(e\) of \(P\) is also an edge of \(P_i\) for some \(i\). Since \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t. \(M^\prime \), either \(e\in M^\prime \) or \(e\in \mathcal{\MakeUppercase{E}} \setminus M^\prime \).
 	\begin{itemize}
-		\item \(e\in M^\prime \): Since \(P\) is also \hyperref[def:augmenting-path]{augmenting} w.r.t. \(M\), we must have \(e\in M\). However, if \(e\in M\) and also \(e\in M^\prime \),
-		      then \(e\) cannot be in any of the \(P_i\)'s by the definition of \(M^\prime \).
-		\item \(e\in \mathcal{\MakeUppercase{e}} \setminus M^\prime \): Then \(e\in \mathcal{\MakeUppercase{e}} \setminus M\) since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t. \(M\).
-		      Since \(e\) is an edge of \(P_i\), \(e\in \mathcal{\MakeUppercase{e}} \setminus M^\prime \) implies \(e\in M\), a contradiction.
+		\item \(e\in M^\prime \): Since \(P\) is also \hyperref[def:augmenting-path]{augmenting} w.r.t. \(M\), we must have \(e\in M\). However, if \(e\in M\) and also \(e\in M^\prime \), then \(e\) cannot be in any of the \(P_i\)'s by the definition of \(M^\prime \).
+		\item \(e\in \mathcal{\MakeUppercase{e}} \setminus M^\prime \): Then \(e\in \mathcal{\MakeUppercase{e}} \setminus M\) since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t. \(M\). Since \(e\) is an edge of \(P_i\), \(e\in \mathcal{\MakeUppercase{e}} \setminus M^\prime \) implies \(e\in M\), a contradiction.
 	\end{itemize}
 
-	Since \(P\) has edges alternately in \(M^\prime \) and \(\mathcal{\MakeUppercase{e}} \setminus M^\prime \) and is \hyperref[def:edge-independent]{edge disjoint} from
-	\(P_1 \cup \ldots  \cup P_k\), \(P\) is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\), which implies \(\left\vert P \right\vert \geq \ell \). Since
-	every edge in \(A\) is disjoint, we conclude that
+	Since \(P\) has edges alternately in \(M^\prime \) and \(\mathcal{\MakeUppercase{e}} \setminus M^\prime \) and is \hyperref[def:edge-independent]{edge disjoint} from \(P_1 \cup \ldots  \cup P_k\), \(P\) is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\), which implies \(\left\vert P \right\vert \geq \ell \). Since every edge in \(A\) is disjoint, we conclude that
 	\[
 		\left\vert A \right\vert \geq (k + 1) \ell .
 	\]
@@ -256,10 +176,7 @@ With the above notation, we see that following.
 	\]
 \end{lemma}
 \begin{proof}
-	Suppose \(M^{\ast} \) is a matching with strictly more than \(\left\vert M \right\vert + \left\vert \mathcal{\MakeUppercase{V}}  \right\vert / (\ell +1)\) edges.
-	Then by \autoref{lma:lec25-2}, there are strictly more than \(\left\vert \mathcal{\MakeUppercase{V}}  \right\vert / (\ell +1)\) \hyperref[def:vertex-independent]{vertex-disjoint}
-	\hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\). Each one of these contains at least \(\ell \) edges, so it is incident on \(\ell +1\) vertices. Since the
-	\hyperref[def:path]{paths} are \hyperref[def:vertex-independent]{vertex disjoint}, there are strictly more than
+	Suppose \(M^{\ast} \) is a matching with strictly more than \(\left\vert M \right\vert + \left\vert \mathcal{\MakeUppercase{V}}  \right\vert / (\ell +1)\) edges. Then by \autoref{lma:lec25-2}, there are strictly more than \(\left\vert \mathcal{\MakeUppercase{V}}  \right\vert / (\ell +1)\) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\). Each one of these contains at least \(\ell \) edges, so it is incident on \(\ell +1\) vertices. Since the \hyperref[def:path]{paths} are \hyperref[def:vertex-independent]{vertex disjoint}, there are strictly more than
 	\[
 		\left\vert \mathcal{\MakeUppercase{v}}  \right\vert (\ell + 1) / (\ell +1)
 	\]
@@ -270,57 +187,38 @@ With the above notation, we see that following.
 \end{proof}
 
 \begin{theorem}
-	The number of the iteration in \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is at most \(2\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \),
-	and the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\).
+	The number of the iteration in \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is at most \(2\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \), and the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\).
 \end{theorem}
 \begin{proof}
-	Consider what happens after iteration number \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \). Let \(M^{\ast} \) be a maximal matching in \(\mathcal{\MakeUppercase{g}} \),
-	then \(\left\vert M^{\ast}  \right\vert \geq \left\vert M \right\vert \), hence from \autoref{lma:lec25-2}, we have that \(M\oplus M^{\ast} \)
-	contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint}
-	\hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\). Then from \autoref{lma:lec25-3}, each of these is also an \hyperref[def:augmenting-path]{augmenting path}
-	for \(M\). Since each has length \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \), there can be at most \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \)
-	such \hyperref[def:path]{paths}, so
+	Consider what happens after iteration number \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \). Let \(M^{\ast} \) be a maximal matching in \(\mathcal{\MakeUppercase{g}} \), then \(\left\vert M^{\ast}  \right\vert \geq \left\vert M \right\vert \), hence from \autoref{lma:lec25-2}, we have that \(M\oplus M^{\ast} \) contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t. \(M\). Then from \autoref{lma:lec25-3}, each of these is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\). Since each has length \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \), there can be at most \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) such \hyperref[def:path]{paths}, so
 	\[
 		\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \leq \sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } .
 	\]
-	Hence, only \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) additional iterations of the repeated loop can occur, hence there are
-	at most \(2 \sqrt{ \left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) iteration in total for \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
+	Hence, only \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) additional iterations of the repeated loop can occur, hence there are at most \(2 \sqrt{ \left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) iteration in total for \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
 
-	Together with \hyperref[rmk:lec25-1]{the remark} we have seen, one iteration needs \(O(\left\vert \mathcal{\MakeUppercase{E}}  \right\vert )\), hence we conclude that
-	the total runtime is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\).
+	Together with \hyperref[rmk:lec25-1]{the remark} we have seen, one iteration needs \(O(\left\vert \mathcal{\MakeUppercase{E}}  \right\vert )\), hence we conclude that the total runtime is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\).
 \end{proof}
 
 \subsection{An Alternated Approach}
-Another way to answer whether a given market has \hyperref[def:perfect-matching]{perfect matching} is as follows.
-We first define a new label called \(\mathtt{exhausted}\)\footnote{Note that we only have \(\mathtt{matched}\) or \(\mathtt{free}\) before.},
-which means that for a free buyer node, no \hyperref[def:augmenting-path]{augmenting paths} are found.
-Then, with the notion of \hyperref[def:constricted-set]{constricted set}, we state a fundamental theorem about the \textbf{only} constraint when constructing
-a \hyperref[def:perfect-matching]{perfect matching}, without proving it.
+Another way to answer whether a given market has \hyperref[def:perfect-matching]{perfect matching} is as follows. We first define a new label called \(\mathtt{exhausted}\)\footnote{Note that we only have \(\mathtt{matched}\) or \(\mathtt{free}\) before.}, which means that for a free buyer node, no \hyperref[def:augmenting-path]{augmenting paths} are found. Then, with the notion of \hyperref[def:constricted-set]{constricted set}, we state a fundamental theorem about the \textbf{only} constraint when constructing a \hyperref[def:perfect-matching]{perfect matching}, without proving it.
 \begin{theorem}\label{thm:lec25-2}
-	If there are no exhausted buyer nodes, then we have a \hyperref[def:perfect-matching]{perfect matching}. Otherwise, if there are exhausted buyer nodes, then we
-	can find some \hyperref[def:constricted-set]{constricted sets}.
+	If there are no exhausted buyer nodes, then we have a \hyperref[def:perfect-matching]{perfect matching}. Otherwise, if there are exhausted buyer nodes, then we can find some \hyperref[def:constricted-set]{constricted sets}.
 \end{theorem}
 
 \begin{remark}
-	\autoref{thm:lec25-2} essentially tells us that the only obstacle one will meet when constructing a \hyperref[def:perfect-matching]{perfect matching}
-	is the existence of \hyperref[def:constricted-set]{constricted set}. Compare to \autoref{thm:Konig-Hall-maximize-theorem}, this is an even stronger
-	result in the sense that it gives us a useful characterization of \hyperref[def:constricted-set]{constricted set} when we want to actually check the
-	condition given in \autoref{thm:Konig-Hall-maximize-theorem} algorithmically.
+	\autoref{thm:lec25-2} essentially tells us that the only obstacle one will meet when constructing a \hyperref[def:perfect-matching]{perfect matching} is the existence of \hyperref[def:constricted-set]{constricted set}. Compare to \autoref{thm:Konig-Hall-maximize-theorem}, this is an even stronger result in the sense that it gives us a useful characterization of \hyperref[def:constricted-set]{constricted set} when we want to actually check the condition given in \autoref{thm:Konig-Hall-maximize-theorem} algorithmically.
 \end{remark}
 
-Now, we simply run a modified version of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} with the special label \(\mathtt{exhausted}\) and
-utilizing \autoref{thm:lec25-2}. But it's essentially just the same thing, hence we omit it here.
+Now, we simply run a modified version of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} with the special label \(\mathtt{exhausted}\) and utilizing \autoref{thm:lec25-2}. But it's essentially just the same thing, hence we omit it here.
 
 \section{Market Clearing Prices}
 We now come back to \hyperref[note:market-clearing-prices]{market clearing prices} problem.
 
 \begin{problem}
-Given \hyperref[def:valuation-matrix]{valuation matrix} \(V\) and price vector \(p\), is it always the case that a
-\hyperref[note:market-clearing-prices]{market clearing price} exists?
+Given \hyperref[def:valuation-matrix]{valuation matrix} \(V\) and price vector \(p\), is it always the case that a \hyperref[note:market-clearing-prices]{market clearing price} exists?
 \end{problem}
 \begin{answer}
-	Yes, and we can find it in polynomial time. (\href{https://en.wikipedia.org/wiki/Hungarian_algorithm}{Hungarian algorithm}
-	do it in \(O(n^{3})\), which is strongly polynomial time)
+	Yes, and we can find it in polynomial time. (\href{https://en.wikipedia.org/wiki/Hungarian_algorithm}{Hungarian algorithm} do it in \(O(n^{3})\), which is strongly polynomial time)
 \end{answer}
 
 Without loss of generality, as assume that \(V_{1}>V_{2}>V_{3}\geq \ldots \geq V_{N}\). Then we easily see that if
@@ -340,8 +238,7 @@ Without loss of generality, as assume that \(V_{1}>V_{2}>V_{3}\geq \ldots \geq V
 	      \end{itemize}
 \end{itemize}
 
-We claim that \hyperref[note:market-clearing-prices]{market clearing prices} always exists, and will follow so-called \emph{Lattice structure}. Says if
-\(p^{1}\) and \(p^{2}\) are both market clearing prices, then
+We claim that \hyperref[note:market-clearing-prices]{market clearing prices} always exists, and will follow so-called \emph{Lattice structure}. Says if \(p^{1}\) and \(p^{2}\) are both market clearing prices, then
 \[
 	\begin{split}
 		p^{1}\lor p^{2} &\coloneqq \text{element-wise max}\\
@@ -354,21 +251,20 @@ are also \hyperref[note:market-clearing-prices]{market clearing prices}, where
 	\item Min \hyperref[note:market-clearing-prices]{market clearing price} is by taking the minimum in all components.
 \end{itemize}
 
-
 \begin{remark}
 	There is a nice property for \hyperref[note:market-clearing-prices]{market clearing prices}: It's always \hyperref[def:social-welfare]{social welfare}
 	maximizing, respect to the \hyperref[def:reward]{utility} of all buyers and the sum of prices (seller made).
 \end{remark}
 
-We can actually formulate the above question as a linear programming. Define \(x_{ij} \in [0, 1]\) as the part of
-good \(j\) in assigned to buyer \(i\), namely we allow fractional assignment. Then we model the above question as
-
-\begin{align*}
-	V^{\ast} \coloneqq \max~ & \sum\limits_{i, j}V_{ij}x_{ij}       \\
-	                         & \sum\limits_{j}x_{ij} = 1\ \forall i \\
-	                         & \sum\limits_{i}x_{ij} = 1\ \forall j \\
-	                         & x_{ij}\in[0, 1].
-\end{align*}
+We can actually formulate the above question as a linear programming. Define \(x_{ij} \in [0, 1]\) as the part of good \(j\) in assigned to buyer \(i\), namely we allow fractional assignment. Then we model the above question as
+\[
+	\begin{aligned}
+		V^{\ast} \coloneqq \max~ & \sum\limits_{i, j}V_{ij}x_{ij}       \\
+		                         & \sum\limits_{j}x_{ij} = 1\ \forall i \\
+		                         & \sum\limits_{i}x_{ij} = 1\ \forall j \\
+		                         & x_{ij}\in[0, 1].
+	\end{aligned}
+\]
 \begin{intuition}
 	We see that
 	\begin{itemize}
@@ -378,29 +274,27 @@ good \(j\) in assigned to buyer \(i\), namely we allow fractional assignment. Th
 \end{intuition}
 
 If we further restrict the fractional assignment property, then we have the integer programming version of above, namely
-\begin{align*}
-	V^{\ast} \coloneqq \max~ & \sum\limits_{i, j}V_{ij}x_{ij}       \\
-	                         & \sum\limits_{j}x_{ij} = 1\ \forall i \\
-	                         & \sum\limits_{i}x_{ij} = 1\ \forall j \\
-	                         & x_{ij}\in\{0, 1\}.
-\end{align*}
+\[
+	\begin{aligned}
+		V^{\ast} \coloneqq \max~ & \sum\limits_{i, j}V_{ij}x_{ij}       \\
+		                         & \sum\limits_{j}x_{ij} = 1\ \forall i \\
+		                         & \sum\limits_{i}x_{ij} = 1\ \forall j \\
+		                         & x_{ij}\in\{0, 1\}.
+	\end{aligned}
+\]
 
 \begin{remark}
 	We see that
 	\begin{itemize}
 		\item \hyperref[def:perfect-matching]{Perfect matching} is the only possible solution.
 		\item Solving the linear programming leads to an integer solution.
-		\item The \hyperref[note:market-clearing-prices]{market clearing price} induced by \hyperref[def:perfect-matching]{perfect matching}
-		      will achieve \(V^{\ast}\) in the integer programming, which is \hyperref[def:social-welfare]{social welfare} maximizing.
+		\item The \hyperref[note:market-clearing-prices]{market clearing price} induced by \hyperref[def:perfect-matching]{perfect matching} will achieve \(V^{\ast}\) in the integer programming, which is \hyperref[def:social-welfare]{social welfare} maximizing.
 	\end{itemize}
 \end{remark}
 
 \section{Demange-Gale-Sotomayor Algorithm}
-Given an \hyperref[eg:English-auction]{English auction} for multiple goods, with valuations and prices being all in integers, we can run the
-so-called \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{Demange-Gale-Sotomayor (DGS) algorithm} and get a set of
-\hyperref[note:market-clearing-prices]{market clearing prices}.
+Given an \hyperref[eg:English-auction]{English auction} for multiple goods, with valuations and prices being all in integers, we can run the so-called \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{Demange-Gale-Sotomayor (DGS) algorithm} and get a set of \hyperref[note:market-clearing-prices]{market clearing prices}.
 
-\par
 \begin{algorithm}[H]\label{algo:Demange-Gale-Sotomayor-algorithm}
 	\DontPrintSemicolon
 	\caption{Demange-Gale-Sotomayor Algorithm}
@@ -439,27 +333,22 @@ so-called \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{Demange-Gale-Sotomayo
 \end{intuition}
 
 \begin{remark}[Polynomial time]
-	This algorithm will terminate in finite-time, further, it's actually a polynomial time algorithm since finding a \hyperref[def:constricted-set]{constricted set}
-	in this case is not exponential anymore with a maximum matching \(M\) given, and the fact that \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}
-	is a polynomial time algorithm, we have the desired result.
+	This algorithm will terminate in finite-time, further, it's actually a polynomial time algorithm since finding a \hyperref[def:constricted-set]{constricted set} in this case is not exponential anymore with a maximum matching \(M\) given, and the fact that \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is a polynomial time algorithm, we have the desired result.
 \end{remark}
 
 If one carefully enough for choosing \(S\), he will always terminate in the minimum \hyperref[note:market-clearing-prices]{market clearing prices}.
 
 \begin{note}
-	Note that it's easy to extend to the case that the market is not \hyperref[def:balance]{balance}, since
-	\hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} can deal with \hyperref[def:balance]{unbalance} market.
+	Note that it's easy to extend to the case that the market is not \hyperref[def:balance]{balance}, since \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} can deal with \hyperref[def:balance]{unbalance} market.
 \end{note}
 
 \section{Vickrey-Clarke-Groves Principle}
-Consider a \hyperref[eg:second-price-auction]{second price auction}. There is only \(1\) item to be sold with \(N\) buyers with valuation
-\(V_{1}, V_{2}, \ldots , V_{N}\). We further let
+Consider a \hyperref[eg:second-price-auction]{second price auction}. There is only \(1\) item to be sold with \(N\) buyers with valuation \(V_{1}, V_{2}, \ldots , V_{N}\). We further let
 \[
 	V_{1}>V_{2}>V_{3}\geq \ldots V_{N}.
 \]
 
-In this case, we see that \hyperref[def:player]{agent} \(1\) gets the good with price \(V_{2}\). We denote the \hyperref[def:reward]{utility}
-as \(\Delta\coloneqq V_{1}-V_{2}>0\).
+In this case, we see that \hyperref[def:player]{agent} \(1\) gets the good with price \(V_{2}\). We denote the \hyperref[def:reward]{utility} as \(\Delta\coloneqq V_{1}-V_{2}>0\).
 
 \begin{problem}
 What's the \hyperref[def:reward]{utility} of other \hyperref[def:player]{players}?
@@ -468,13 +357,9 @@ What's the \hyperref[def:reward]{utility} of other \hyperref[def:player]{players
 	\(0\).
 \end{answer}
 
-We now conduct a thought experiment. If we remove \hyperref[def:player]{agent} \(1\) and replace him with a dummy \hyperref[def:player]{agent},
-says \(\tilde{1}\), then we see that \hyperref[def:player]{agent} \(2\) will get the good with price \(V_{3}\). Further, we see that the sum of
-the values obtained by \hyperref[def:player]{agents} other than \(\tilde{1}\) is \(V_{2}\), since now \hyperref[def:player]{agent} \(2\) gets
-the good and his valuation is \(V_{2}\).
+We now conduct a thought experiment. If we remove \hyperref[def:player]{agent} \(1\) and replace him with a dummy \hyperref[def:player]{agent}, says \(\tilde{1}\), then we see that \hyperref[def:player]{agent} \(2\) will get the good with price \(V_{3}\). Further, we see that the sum of the values obtained by \hyperref[def:player]{agents} other than \(\tilde{1}\) is \(V_{2}\), since now \hyperref[def:player]{agent} \(2\) gets the good and his valuation is \(V_{2}\).
 
-We see that by the appearance of \hyperref[def:player]{agent} \(1\), other \hyperref[def:player]{agents} collectively lost \(V_{2}\) values.
-We call such collectively lost values as \emph{externality} \hyperref[def:player]{agent} \(1\) imposes.
+We see that by the appearance of \hyperref[def:player]{agent} \(1\), other \hyperref[def:player]{agents} collectively lost \(V_{2}\) values. We call such collectively lost values as \emph{externality} \hyperref[def:player]{agent} \(1\) imposes.
 
 With this view point to view a second price auction, we see the following principle.
 \begin{theorem}[Vickrey-Clarke-Groves principle]\label{thm:VCG}
@@ -485,9 +370,8 @@ With this view point to view a second price auction, we see the following princi
 	\begin{itemize}
 		\item \hyperref[def:player]{Agent} \(1\) should be charged with price \(V_2\)
 		\item \hyperref[def:player]{Agent} \(2\) should be charged with:
-		      \par In the original auction, the value of all other \hyperref[def:player]{agents} are \(V_{1}\). Now, replace \hyperref[def:player]{agent}
-		      \(2\) by a dummy \hyperref[def:player]{agent} \(\tilde{2}\), then the value of all \hyperref[def:player]{agents} other
-		      than \(\tilde{2}\) is \(V_{1}\). Hence, the difference is
+
+		      In the original auction, the value of all other \hyperref[def:player]{agents} are \(V_{1}\). Now, replace \hyperref[def:player]{agent} \(2\) by a dummy \hyperref[def:player]{agent} \(\tilde{2}\), then the value of all \hyperref[def:player]{agents} other than \(\tilde{2}\) is \(V_{1}\). Hence, the difference is
 		      \[
 			      \Delta_{2} = V_{1} - V_{1} = 0,
 		      \]
@@ -495,20 +379,17 @@ With this view point to view a second price auction, we see the following princi
 	\end{itemize}
 \end{eg}
 
-To apply \hyperref[thm:VCG]{VCG principle} in a matching market problem mathematically, we first denote the total set of sellers as \(S\), and the total
-set of buyers as \(B\). Recall the definition of \(V^{\ast}\), we further specify it by adding the superscript and subscript as
+To apply \hyperref[thm:VCG]{VCG principle} in a matching market problem mathematically, we first denote the total set of sellers as \(S\), and the total set of buyers as \(B\). Recall the definition of \(V^{\ast}\), we further specify it by adding the superscript and subscript as
 \[
 	V^{*, S}_{B}
 \]
-for considering \(S\) and \(B\) in the programming. Then, for \(i\in B\), denote \(j^{\ast} (i)\) as the matched seller respect to \(i\) in a perfect matching that
-maximize social welfare. Now, consider the \emph{reduced problem}, namely calculate
+for considering \(S\) and \(B\) in the programming. Then, for \(i\in B\), denote \(j^{\ast} (i)\) as the matched seller respect to \(i\) in a perfect matching that maximize social welfare. Now, consider the \emph{reduced problem}, namely calculate
 \[
 	V^{*, S-j^{\ast}(i)}_{B-i},
 \]
 which stands for the value of everyone else when \hyperref[def:player]{agent} \(i\) is not present.
 
-Lastly, we consider the \underline{alternate problem}, where we need to calculate the value that everyone else gets if \(i\) is not present, namely we
-calculate
+Lastly, we consider the \underline{alternate problem}, where we need to calculate the value that everyone else gets if \(i\) is not present, namely we calculate
 \[
 	V^{*, S}_{\widetilde{B}}
 \]
@@ -528,11 +409,7 @@ namely we make the price as \hyperref[rmk:posted]{posted price}.
 \begin{remark}
 	We finally note that
 	\begin{itemize}
-		\item It's a \hyperref[note:market-clearing-prices]{market clearing price}, furthermore, it's actually the minimum
-		      \hyperref[note:market-clearing-prices]{market clearing price}.
-		\item There is a conceptual difference between the \hyperref[thm:VCG]{VCG} approach and the \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{DGS algorithm}
-		      approach. One is \hyperref[rmk:posted]{posted}, one is not. We see that in \hyperref[thm:VCG]{VCG} approach, we determine
-		      the prices for each \hyperref[def:player]{agent} by their valuation, while this is not the case in
-		      \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{DGS algorithm} approach.
+		\item It's a \hyperref[note:market-clearing-prices]{market clearing price}, furthermore, it's actually the minimum \hyperref[note:market-clearing-prices]{market clearing price}.
+		\item There is a conceptual difference between the \hyperref[thm:VCG]{VCG} approach and the \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{DGS algorithm} approach. One is \hyperref[rmk:posted]{posted}, one is not. We see that in \hyperref[thm:VCG]{VCG} approach, we determine the prices for each \hyperref[def:player]{agent} by their valuation, while this is not the case in \hyperref[algo:Demange-Gale-Sotomayor-algorithm]{DGS algorithm} approach.
 	\end{itemize}
 \end{remark}

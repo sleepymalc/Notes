@@ -1,17 +1,12 @@
 \chapter{Network Partition}
 \lecture{5}{15 Sep. 12:30}{Partition Networks Hierarchically}
-In this chapter, we want to partition a network in order to study its structure. As we have seen before, the
-notion of \hyperref[def:bridge]{bridges} and \hyperref[def:local-bridge]{local bridge} is useful in this content.
-And from this chapter, we'll focus on algorithmic approach to reach our goal, as we'll see soon.
+In this chapter, we want to partition a network in order to study its structure. As we have seen before, the notion of \hyperref[def:bridge]{bridges} and \hyperref[def:local-bridge]{local bridge} is useful in this content. And from this chapter, we'll focus on algorithmic approach to reach our goal, as we'll see soon.
 
 \section{Shortest Path}
-Firstly, before we do anything serious, we should see fundamental algorithms on \hyperref[def:graph]{graph}. These algorithms will
-essentially traverse a given \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}} \) and can give us some interesting property
-while doing so. We first make the notion of distance between nodes rigorous, which help us proceed.
+Firstly, before we do anything serious, we should see fundamental algorithms on \hyperref[def:graph]{graph}. These algorithms will essentially traverse a given \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}} \) and can give us some interesting property while doing so. We first make the notion of distance between nodes rigorous, which help us proceed.
 
 \begin{definition}[Distance between nodes]\label{def:distance-between-nodes}
-	We usually let the length of the \hyperref[def:shortest-path]{shortest path} between two nodes in a \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}}\)
-	be the \emph{distance between these two nodes}, denotes as
+	We usually let the length of the \hyperref[def:shortest-path]{shortest path} between two nodes in a \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}}\) be the \emph{distance between these two nodes}, denotes as
 	\[
 		d_{\mathcal{G}}(\cdot, \cdot),
 	\]
@@ -19,9 +14,7 @@ while doing so. We first make the notion of distance between nodes rigorous, whi
 \end{definition}
 
 \begin{definition}[Shortest path]\label{def:shortest-path}
-	Given a \hyperref[def:graph]{graph}, a \emph{shortest path} between two nodes \(u, v\) is a \hyperref[def:path]{path} whose end nodes are
-	\(u, u\) while the sum of the weights
-	of its constituent edges is minimized.
+	Given a \hyperref[def:graph]{graph}, a \emph{shortest path} between two nodes \(u, v\) is a \hyperref[def:path]{path} whose end nodes are \(u, u\) while the sum of the weights of its constituent edges is minimized.
 \end{definition}
 
 \begin{remark}
@@ -36,13 +29,11 @@ Now, observe that the distance function \(d_{\mathcal{\MakeUppercase{g}} } \) ne
 \[
 	d_{\mathcal{\MakeUppercase{g}} } (i, j) = 1 + \min_{k\in N_{\mathcal{\MakeUppercase{g}} } (j)} d_{\mathcal{\MakeUppercase{g}} } (i, k)
 \]
-if we're talking about an unweighted \hyperref[def:graph]{graph}. Now, we see how we can utilize this idea and find the
-\hyperref[def:shortest-path]{shortest paths} algorithmically.
+if we're talking about an unweighted \hyperref[def:graph]{graph}. Now, we see how we can utilize this idea and find the \hyperref[def:shortest-path]{shortest paths} algorithmically.
 
 \subsection{Breadth-First Search}
-Firstly, we see a way to traverse a given graph \(\mathcal{\MakeUppercase{g}} \) called \hyperref[algo:BFS]{breadth-first search}, which owns its name
-since its natural behavior.
-\par
+Firstly, we see a way to traverse a given graph \(\mathcal{\MakeUppercase{g}} \) called \hyperref[algo:BFS]{breadth-first search}, which owns its name since its natural behavior.
+
 \begin{algorithm}[H]\label{algo:BFS}
 	\DontPrintSemicolon
 	\caption{Breadth-First Search}
@@ -71,42 +62,28 @@ since its natural behavior.
 	\Return{}\;
 \end{algorithm}
 
-This is a simple algorithm which has the nice properties. Firstly, we see that we can interpret the edges \((v, w)\in \mathcal{\MakeUppercase{e}} \) in
-\autoref{algo:BFS:line10} as either \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected} edges, hence the algorithm
-works on both \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected graphs}.
+This is a simple algorithm which has the nice properties. Firstly, we see that we can interpret the edges \((v, w)\in \mathcal{\MakeUppercase{e}} \) in \autoref{algo:BFS:line10} as either \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected} edges, hence the algorithm works on both \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected graphs}.
 
 \begin{intuition}[Level graph]
-	And if we look closely, we're essentially constructing a level graph, which means that we're exploring the graph from the root \(v^{\ast} \) layer by
-	layer (level by level) w.r.t. the \hyperref[def:distance-between-nodes]{distance} between \(v^{\ast}\). In other words, it'll first explore all nodes
-	which has \hyperref[def:distance-between-nodes]{distance} \(1\) from \(v^{\ast} \), then \(2\), and so on and so forth until all nodes in this \hyperref[def:connected]{connected}
-	component are explored.
+	And if we look closely, we're essentially constructing a level graph, which means that we're exploring the graph from the root \(v^{\ast} \) layer by layer (level by level) w.r.t. the \hyperref[def:distance-between-nodes]{distance} between \(v^{\ast}\). In other words, it'll first explore all nodes which has \hyperref[def:distance-between-nodes]{distance} \(1\) from \(v^{\ast} \), then \(2\), and so on and so forth until all nodes in this \hyperref[def:connected]{connected} component are explored.
 \end{intuition}
 
 \begin{remark}[Depth-first search]\label{rmk:DFS}
-	Just like \hyperref[algo:BFS]{breadth-first search}, we can change the iterator container of \(Q\) by a stack, which will essentially make this algorithm
-	turns into the so-called \emph{depth-first search}. In contrast, \hyperref[algo:BFS]{BFS}, DFS are not building level graph, i.e., it does not explore the
-	graph layer-by-layer from the root \(v^{\ast} \), it just randomly pick a direction and go as far as it can. Such property can have certain benefit
-	in some cases, but since we're interested in finding \hyperref[def:shortest-path]{shortest paths}, hence we simply omit a detail explanation.
+	Just like \hyperref[algo:BFS]{breadth-first search}, we can change the iterator container of \(Q\) by a stack, which will essentially make this algorithm turns into the so-called \emph{depth-first search}. In contrast, \hyperref[algo:BFS]{BFS}, DFS are not building level graph, i.e., it does not explore the graph layer-by-layer from the root \(v^{\ast} \), it just randomly pick a direction and go as far as it can. Such property can have certain benefit in some cases, but since we're interested in finding \hyperref[def:shortest-path]{shortest paths}, hence we simply omit a detail explanation.
 \end{remark}
 
-If we use the \hyperref[def:adjacency-matrix]{adjacency matrix} to represent \(\mathcal{\MakeUppercase{g}} \), then since we call for each vertex at most once,
-with the fact that the \hyperref[def:adjacency-matrix]{adjacency matrix} for each vertex is visited at most once when searching for \((v, w)\in \mathcal{\MakeUppercase{e}} \)
-in \autoref{algo:BFS:line10}, which costs \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert )\), hence in total this algorithm has a runtime as \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert^{2} )\).
+If we use the \hyperref[def:adjacency-matrix]{adjacency matrix} to represent \(\mathcal{\MakeUppercase{g}} \), then since we call for each vertex at most once, with the fact that the \hyperref[def:adjacency-matrix]{adjacency matrix} for each vertex is visited at most once when searching for \((v, w)\in \mathcal{\MakeUppercase{e}} \) in \autoref{algo:BFS:line10}, which costs \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert )\), hence in total this algorithm has a runtime as \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert^{2} )\).
 
 \begin{remark}[Adjacency list]
-	If we instead used something called \href{https://en.wikipedia.org/wiki/Adjacency_list#:~:text=In%20graph%20theory%20and%20computer,particular%20vertex%20in%20the%20graph.}{adjacency list}, 
-	then for each vertex, the list is visited at most once and if we assume that the set of edges is distributed over set of vertices uniformly, this step costs
-	\(O(1 + \left\vert \mathcal{\MakeUppercase{e}}  \right\vert / \left\vert \mathcal{\MakeUppercase{v}}  \right\vert )\), hence in total the algorithm costs
+	If we instead used something called \href{https://en.wikipedia.org/wiki/Adjacency_list#:~:text=In%20graph%20theory%20and%20computer,particular%20vertex%20in%20the%20graph.}{adjacency list}, then for each vertex, the list is visited at most once and if we assume that the set of edges is distributed over set of vertices uniformly, this step costs \(O(1 + \left\vert \mathcal{\MakeUppercase{e}}  \right\vert / \left\vert \mathcal{\MakeUppercase{v}}  \right\vert )\), hence in total the algorithm costs
 	\[
 		O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert (1 + \left\vert \mathcal{\MakeUppercase{e}}  \right\vert / \left\vert \mathcal{\MakeUppercase{v}}  \right\vert ))= O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert + \left\vert \mathcal{\MakeUppercase{e}}  \right\vert ),
 	\]
-	rather than \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert ^{2} )\). This is sometimes faster if the \hyperref[def:graph]{graph} is dense, but we'll not
-	go into this since this is not that relevant.
+	rather than \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert ^{2} )\). This is sometimes faster if the \hyperref[def:graph]{graph} is dense, but we'll not go into this since this is not that relevant.
 \end{remark}
 
-Now, since we have the intuition that the \hyperref[algo:BFS]{breadth-first search} is exploring the \hyperref[def:graph]{graph} in the fashion of
-constructing a level graph, then we can just check whether we get to our destination or not by the following modification.
-\par
+Now, since we have the intuition that the \hyperref[algo:BFS]{breadth-first search} is exploring the \hyperref[def:graph]{graph} in the fashion of constructing a level graph, then we can just check whether we get to our destination or not by the following modification.
+
 \begin{algorithm}[H]\label{algo:BFS-2}
 	\DontPrintSemicolon
 	\caption{Breadth-First Search ver.2}
@@ -147,8 +124,7 @@ constructing a level graph, then we can just check whether we get to our destina
 \end{intuition}
 
 \begin{remark}[Find the path]
-	If we somehow want the whole \hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(u^{\ast} \) rather than just the \hyperref[def:distance-between-nodes]{distance}
-	between them, we can then maintain a list which records the successor of every node we're going to explore, and we just trace back.
+	If we somehow want the whole \hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(u^{\ast} \) rather than just the \hyperref[def:distance-between-nodes]{distance} between them, we can then maintain a list which records the successor of every node we're going to explore, and we just trace back.
 \end{remark}
 
 \subsection{Dijkstra's Algorithm}
@@ -168,8 +144,7 @@ In what order?
 	Assign importance to \hyperref[def:local-bridge]{local bridge}.
 \end{answer}
 
-This idea is the backbone of the \hyperref[algo:Girvan-Newman-algorithm]{Girvan-Newman algorithm}. We first see a simple algorithmic to partition a network
-by utilizing the intuition.
+This idea is the backbone of the \hyperref[algo:Girvan-Newman-algorithm]{Girvan-Newman algorithm}. We first see a simple algorithmic to partition a network by utilizing the intuition.
 \begin{enumerate}
 	\item Rank all \hyperref[def:local-bridge]{local bridges}.
 	\item Remove the highest ranked one, which yields a partition.
@@ -187,19 +162,16 @@ How to rank order \hyperref[def:local-bridge]{local bridges}?
 \end{problem}
 
 \begin{intuition}
-	An edge is more important if more \hyperref[def:shortest-path]{shortest paths} use it. Notice that a \emph{normalization} is needed:
-	Between pairs of nodes, there should be lots of variation in the number of the \hyperref[def:shortest-path]{shortest paths}, and we want to balance these out.
+	An edge is more important if more \hyperref[def:shortest-path]{shortest paths} use it. Notice that a \emph{normalization} is needed: Between pairs of nodes, there should be lots of variation in the number of the \hyperref[def:shortest-path]{shortest paths}, and we want to balance these out.
 \end{intuition}
 
 This suggests the following notion.
 \begin{definition}[Betweenness]\label{def:betweenness}
-	Imagine that there is a unit flow of water between each (distinct) pair of nodes. If the flow has \(k\) different ways to go to,\footnote{Actually not only depends on where can the flow go, but also where were that node added into \hyperref[algo:BFS]{BFS} in the first place}
-	we divide this unit flow into \(1/k\). We then equally divide this flow amongst the \hyperref[def:shortest-path]{shortest paths} coming out of the starting node.
+	Imagine that there is a unit flow of water between each (distinct) pair of nodes. If the flow has \(k\) different ways to go to,\footnote{Actually not only depends on where can the flow go, but also where were that node added into \hyperref[algo:BFS]{BFS} in the first place} we divide this unit flow into \(1/k\). We then equally divide this flow amongst the \hyperref[def:shortest-path]{shortest paths} coming out of the starting node.
 \end{definition}
 
 With the definition of \hyperref[def:betweenness]{betweenness}, we give the pseudocode of \hyperref[algo:Girvan-Newman-algorithm]{Girvan-Newman algorithm}.
 
-\par
 \begin{algorithm}[H]\label{algo:Girvan-Newman-algorithm}
 	\DontPrintSemicolon
 	\caption{Girvan-Newman Algorithm}

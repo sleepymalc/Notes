@@ -3,12 +3,10 @@
 But how do we calculate \hyperref[def:betweenness]{betweenness} in reality?
 \end{problem}
 \begin{answer}
-	We see that the only obstacle we're facing is the fact that we don't know how to calculate the number of \hyperref[def:shortest-path]{shortest paths}.
-	And to calculate how many shortest paths are there between nodes, this can be done by using \hyperref[algo:BFS]{breadth-first search} in a slightly different manner.
+	We see that the only obstacle we're facing is the fact that we don't know how to calculate the number of \hyperref[def:shortest-path]{shortest paths}. And to calculate how many shortest paths are there between nodes, this can be done by using \hyperref[algo:BFS]{breadth-first search} in a slightly different manner.
 \end{answer}
 
-The key is that any sub-\hyperref[def:path]{path} to destination is also a \hyperref[def:shortest-path]{shortest path}. To calculate this
-with an algorithmic procedure, we use \hyperref[algo:BFS]{BFS}. In the \hyperref[algo:BFS]{BFS} exploration from \(v^{\ast} \) to \(u^{\ast} \), we have
+The key is that any sub-\hyperref[def:path]{path} to destination is also a \hyperref[def:shortest-path]{shortest path}. To calculate this with an algorithmic procedure, we use \hyperref[algo:BFS]{BFS}. In the \hyperref[algo:BFS]{BFS} exploration from \(v^{\ast} \) to \(u^{\ast} \), we have
 \[
 	\#\text{\hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(u^{\ast}\)} =  \#\text{\hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(j\)} +
 	\#\text{\hyperref[def:shortest-path]{shortest path} from \(v^{\ast} \) to \(k\)} + \ldots
@@ -20,25 +18,20 @@ suppose that there are edges between \(j, k, \ldots  \) to \(u^{\ast} \).
 	between \(v^{\ast} \) and \(u^{\ast} \) is \(n\).
 \end{remark}
 
-Finally, to calculate this, we can add \emph{another} counter when running \hyperref[algo:BFS]{BFS}. This is certainly a different type of counter from \(c\), which
-we call it \(d\). This time, the counter \(d\) is induced by the above equation, and that implies the updating rule being
+Finally, to calculate this, we can add \emph{another} counter when running \hyperref[algo:BFS]{BFS}. This is certainly a different type of counter from \(c\), which we call it \(d\). This time, the counter \(d\) is induced by the above equation, and that implies the updating rule being
 \[
 	d_{v}^{n} = \sum_{(u, v)\in \mathcal{\MakeUppercase{e}} }d^{n-1}_{u}
 \]
-where \(d_{v}^{n}\) maintains the number of \hyperref[def:shortest-path]{shortest path} to \(v\) where \(v\) is at
-layer \(n\), i.e., \(d_{\mathcal{\MakeUppercase{g}}}(v^{\ast} , v)=n\).\footnote{Note that only those \(d_v^n\) such that \(n=d_{\mathcal{\MakeUppercase{g}} }(v^{\ast} , v)=n \)
-is defined. It's nonsense to define \(d_v^{n^\prime }\) where \(d_{\mathcal{\MakeUppercase{g}} }(v^{\ast} , v)\neq n^\prime\) from the meaning we're trying to put on \(d\) and maintained.}
+where \(d_{v}^{n}\) maintains the number of \hyperref[def:shortest-path]{shortest path} to \(v\) where \(v\) is at layer \(n\), i.e., \(d_{\mathcal{\MakeUppercase{g}}}(v^{\ast} , v)=n\).\footnote{Note that only those \(d_v^n\) such that \(n=d_{\mathcal{\MakeUppercase{g}} }(v^{\ast} , v)=n \) is defined. It's nonsense to define \(d_v^{n^\prime }\) where \(d_{\mathcal{\MakeUppercase{g}} }(v^{\ast} , v)\neq n^\prime\) from the meaning we're trying to put on \(d\) and maintained.}
 
 The unit flow flows from nodes back from the \hyperref[def:path]{path} it is added into the \hyperref[algo:BFS]{BFS} algorithm needs to keep its own \(1\), and then distribute.
 
 \begin{remark}
-	By adding this counter \(d\), in the end, \(d_v\) (regardless of the supscript, since only one such \(d_v^{n^\prime }\) for any \(n^\prime \) will be defined) is
-	the number of shortest path from \(v^{\ast} \) to \(v\). Then we can just calculate the \hyperref[def:betweenness]{betweenness} from its definition.
+	By adding this counter \(d\), in the end, \(d_v\) (regardless of the supscript, since only one such \(d_v^{n^\prime }\) for any \(n^\prime \) will be defined) is the number of shortest path from \(v^{\ast} \) to \(v\). Then we can just calculate the \hyperref[def:betweenness]{betweenness} from its definition.
 \end{remark}
 
 \section{Homophily}
-Links in a (social) network are formed between people that are \emph{similar}. This is an important feature that leads to
-the formation of communities.
+Links in a (social) network are formed between people that are \emph{similar}. This is an important feature that leads to the formation of communities.
 
 \begin{problem}
 How can we define the notion of \emph{like} and \emph{opposite}?

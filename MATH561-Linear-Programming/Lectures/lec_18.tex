@@ -19,25 +19,31 @@
 Then the decomposition algorithm can be written as follows. We change the step 0. and 2. of the above \hyperref[algo:simplex-algorithm]{simplex algorithm} into the following.
 \begin{enumerate}
 	\item[0.] Reformulate \(Q\) as \(M\) and apply \hyperref[algo:simplex-algorithm]{simplex algorithm} to \(M\), where
-		\begin{align*}
-			\min~    & c^{\top}x \\
-			         & Ex \geq h \\
-			         & Ax = b    \\
-			(Q)\quad & x\geq 0
-		\end{align*}
+		\[
+			\begin{aligned}
+				\min~    & c^{\top}x \\
+				         & Ex \geq h \\
+				         & Ax = b    \\
+				(Q)\quad & x\geq 0
+			\end{aligned}
+		\]
 		and
-		\begin{align*}
-			\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^{\top}\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
-			         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h         \\
-			         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                                 \\
-			(M)\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
-		\end{align*}
+		\[
+			\begin{aligned}
+				\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^{\top}\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
+				         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h         \\
+				         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                                 \\
+				(M)\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
+			\end{aligned}
+		\]
 	\item[2.] Solve the sub-problem
-		\begin{align*}
-			-\overline{\sigma}+\min~ & \overline{c} - \overline{y}^{\top}E \\
-			                         & Ax = b                              \\
-			                         & x\geq 0
-		\end{align*}
+		\[
+			\begin{aligned}
+				-\overline{\sigma}+\min~ & \overline{c} - \overline{y}^{\top}E \\
+				                         & Ax = b                              \\
+				                         & x\geq 0
+			\end{aligned}
+		\]
 		\begin{itemize}
 			\item \hyperref[def:optimal-solution]{optimal} \& Objective value \(<0 \implies\) a \(\lambda\) variable can enter the \hyperref[def:basic]{basis}.
 			\item \hyperref[def:optimal-solution]{optimal} \& Objective value \(>0 \implies\) have an optimal for \((M)\).
@@ -65,12 +71,14 @@ Then the decomposition algorithm can be written as follows. We change the step 0
 
 \section{Lagrangian Relaxation}
 The motivation is to get a good lower bound of optimal objective value for
-\begin{align*}
-	z\coloneqq \min~ & c^{\top}x \\
-	                 & Ex \geq h \\
-	                 & Ax = b    \\
-	(Q)\quad         & x\geq 0
-\end{align*}
+\[
+	\begin{aligned}
+		z\coloneqq \min~ & c^{\top}x \\
+		                 & Ex \geq h \\
+		                 & Ax = b    \\
+		(Q)\quad         & x\geq 0
+	\end{aligned}
+\]
 
 Since the problem is large, hence we want to exit the algorithm whenever we get a \emph{good enough} solution such that it's not far away from the objective
 value. But the problem is, when should we stop? Do we stop at plateaus? What if there is a second drop in terms of objective value?
@@ -86,11 +94,13 @@ value. But the problem is, when should we stop? Do we stop at plateaus? What if 
 We first start with a specific problem which is important in our analysis.
 \begin{definition}[Lagrangian subproblem]\label{def:Lagrangian-subproblem}
 	We choose \(\hat{y}\geq \vec{0}\), and the corresponding \emph{Lagrangian subproblem} \(L_{\hat{y}}\) is defined as
-	\begin{align*}
-		v(\hat{y})\coloneqq \hat{y}^{\top}h + \min~ & (c^{\top} - \hat{y}^{\top}E)x \\
-		                                            & Ax = b                        \\
-		(L_{\hat{y}})\quad                          & x\geq 0
-	\end{align*}
+	\[
+		\begin{aligned}
+			v(\hat{y})\coloneqq \hat{y}^{\top}h + \min~ & (c^{\top} - \hat{y}^{\top}E)x \\
+			                                            & Ax = b                        \\
+			(L_{\hat{y}})\quad                          & x\geq 0
+		\end{aligned}
+	\]
 	where \(L\) stands for Lagrange\footnote{\url{https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange}}.
 \end{definition}
 
@@ -111,16 +121,20 @@ To characterize how good will this approximation be, we first see a simple resul
 \end{proof}
 
 Denote the \hyperref[def:dual]{dual} variables of \(Q\) as \(y\) and \(\pi\). The \hyperref[def:dual]{dual} of \(Q\) is
-\begin{align*}
-	\max~ & y^{\top}h + \pi^{\top} b             \\
-	      & y^{\top}E + \pi^{\top}A\leq c^{\top} \\
-	      & y\geq 0
-\end{align*}
+\[
+	\begin{aligned}
+		\max~ & y^{\top}h + \pi^{\top} b             \\
+		      & y^{\top}E + \pi^{\top}A\leq c^{\top} \\
+		      & y\geq 0
+	\end{aligned}
+\]
 and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
-\begin{align*}
-	\hat{y}^{\top}h + \max~ & \pi^{\top}b                                \\
-	                        & \pi^{\top}A\leq c^{\top} - \hat{y}^{\top}E \\
-\end{align*}
+\[
+	\begin{aligned}
+		\hat{y}^{\top}h + \max~ & \pi^{\top}b                                \\
+		                        & \pi^{\top}A\leq c^{\top} - \hat{y}^{\top}E \\
+	\end{aligned}
+\]
 \begin{note}
 	\(\hat{y}\) is not the variable.
 \end{note}
@@ -139,10 +153,12 @@ and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
 	We first make a note.
 	\begin{note}
 		In above, we want to find
-		\begin{align*}
-			z = \max~ & v(y)     \\
-			          & y\geq 0.
-		\end{align*}
+		\[
+			\begin{aligned}
+				z = \max~ & v(y)     \\
+				          & y\geq 0.
+			\end{aligned}
+		\]
 	\end{note}
 
 	\(x^{\ast}\) is \hyperref[def:feasible-solution]{feasible} for \(L_{\hat{y}}\) and \(\hat{y}\) and \(\hat{\pi}\) is \hyperref[def:feasible-solution]{feasible} for the
@@ -186,10 +202,12 @@ and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
 		z\geq v(\hat{y})= \hat{y}^{\top}h + (c^{\top} - \hat{y}^{\top}E)x^{\ast}= \hat{y}^{\top}h + \hat{\pi}^{\top}b = z
 	\]
 	by optimally for \(\hat{y}\) and \(\hat{\pi}\), hence we see that \(\hat{y}\) solves
-	\begin{align*}
-		\max~ & v(y)    \\
-		      & y\geq 0
-	\end{align*}
+	\[
+		\begin{aligned}
+			\max~ & v(y)    \\
+			      & y\geq 0
+		\end{aligned}
+	\]
 	and \(v(\hat{y}) = z\).
 \end{proof}
 

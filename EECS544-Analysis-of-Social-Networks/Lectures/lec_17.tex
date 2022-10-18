@@ -24,8 +24,7 @@ In practice, a real-world graph will have the following properties:
 	\item Lots of triangles
 \end{enumerate}
 
-Compare to the real-world \hyperref[def:graph]{graphs}, the \hyperref[sec:Erdos-Renyi-random-graphs-family]{Erdős-Rényi random graphs family}
-usually have the following properties, for each different settings:
+Compare to the real-world \hyperref[def:graph]{graphs}, the \hyperref[sec:Erdos-Renyi-random-graphs-family]{Erdős-Rényi random graphs family} usually have the following properties, for each different settings:
 \begin{itemize}
 	\item \hyperref[subsec:extremely-sparse-regime]{Extremely sparse regime}:
 	      \begin{itemize}
@@ -50,8 +49,7 @@ usually have the following properties, for each different settings:
 \end{itemize}
 
 \section{R-MAT Graphs}\label{sec:R-MAT-graphs}
-Besides \hyperref[sec:Erdos-Renyi-random-graphs-family]{Erdős-Rényi random graph family}, we can use different approaches to generate a
-random \hyperref[def:graph]{graph}. We now introduce so-called \emph{R-MAT graphs}.
+Besides \hyperref[sec:Erdos-Renyi-random-graphs-family]{Erdős-Rényi random graph family}, we can use different approaches to generate a random \hyperref[def:graph]{graph}. We now introduce so-called \emph{R-MAT graphs}.
 
 \begin{intuition}
 	The main idea is to \underline{recursively set an entry of the \hyperref[def:adjacency-matrix]{adjacency matrix}}.
@@ -80,7 +78,7 @@ be a distribution on \(\{1, 2, 3, 4\}\). Further, we denote
 \end{itemize}
 
 Then the algorithm to generate an R-MAT graph is as follows.
-\par
+
 \begin{algorithm}[H]\label{algo:R-MAT-graph-generator-algo}
 	\DontPrintSemicolon
 	\caption{R-MAT Graph Generator}
@@ -150,8 +148,7 @@ Then the algorithm to generate an R-MAT graph is as follows.
 	where we choose \(k = 3\) with the sequence \(2, 1, 3\).
 \end{eg}
 
-Note that in \autoref{algo:R-MAT-graph-generator-algo-clean-up}, we delete any entries on the diagonal and produce the \hyperref[def:adjacency-matrix]{adjacency matrix}
-\(A\) to produce a \hyperref[def:simple-graph]{simple} \hyperref[def:directed-graph]{directed graph}.
+Note that in \autoref{algo:R-MAT-graph-generator-algo-clean-up}, we delete any entries on the diagonal and produce the \hyperref[def:adjacency-matrix]{adjacency matrix} \(A\) to produce a \hyperref[def:simple-graph]{simple} \hyperref[def:directed-graph]{directed graph}.
 \begin{eg}[Clean up]
 	Let \(A\) be
 	\[
@@ -176,8 +173,7 @@ Note that in \autoref{algo:R-MAT-graph-generator-algo-clean-up}, we delete any e
 \begin{remark}
 	We can do some comparison between what we have already seen.
 	\begin{itemize}
-		\item \hyperref[sec:Erdos-Renyi-random-graphs-family]{Erdős-Rényi Random Graph}:
-		      Poisson \hyperref[def:degree]{degree} distribution with \(p = \frac{c}{V}\). Then the tail probability (CCDF) is
+		\item \hyperref[sec:Erdos-Renyi-random-graphs-family]{Erdős-Rényi Random Graph}: Poisson \hyperref[def:degree]{degree} distribution with \(p = \frac{c}{V}\). Then the tail probability (CCDF) is
 		      \[
 			      \Pr(\deg (i)\geq k)\cong c e^{-\alpha k},
 		      \]
@@ -207,8 +203,7 @@ Note that in \autoref{algo:R-MAT-graph-generator-algo-clean-up}, we delete any e
 \end{remark}
 
 \section{Preferential Attachment Directed Graph}
-Yet, we have another algorithm to produce a random \hyperref[def:graph]{graph}. Let the (\hyperref[def:undirected-graph]{undirected}) \hyperref[def:degree]{degree}
-distribution on \(V\) being
+Yet, we have another algorithm to produce a random \hyperref[def:graph]{graph}. Let the (\hyperref[def:undirected-graph]{undirected}) \hyperref[def:degree]{degree} distribution on \(V\) being
 \[
 	d_1, d_2, \ldots , d_V
 \]
@@ -227,7 +222,7 @@ We make the following assumptions for constructing a preferential attachment \hy
 \end{itemize}
 
 Now, with \(p\in(0, 1)\), the following algorithm will generate a preferential attachment \hyperref[def:graph]{graph}.
-\par
+
 \begin{algorithm}[H]\label{algo:preferential-attachment-graph-generator-algo}
 	\DontPrintSemicolon
 	\caption{Preferential Attachment Graph Generator}
@@ -355,17 +350,12 @@ where \(\alpha = \frac{1}{q} = \frac{1}{1 - p}\).
 \end{remark}
 
 \begin{note}[Formal Analysis]
-	A more formal setup is the following. Let \(\left\{X_j(t)\right\}_{j = 1, \ldots , V}\)
-	be a \hyperref[def:Markov-chain]{Markov chain}. Considering two aggregations:
+	A more formal setup is the following. Let \(\left\{X_j(t)\right\}_{j = 1, \ldots , V}\) be a \hyperref[def:Markov-chain]{Markov chain}. Considering two aggregations:
 	\begin{enumerate}
 		\item For \(i = 0, 1, \ldots \), we determine the fraction of nodes with \hyperref[def:in-degree]{in-degree} at least \(i\) at time \(t\). Then
 		      \[
 			      y_{i}(t) = \frac{1}{V}\sum\limits_{k=1}^{V} \sum\limits_{j=1}^{V} \mathbbm{1}_{\{ X_{j}(t) = k \}} = \frac{1}{V}\sum\limits_{j=1}^{V} \mathbbm{1}_{\{ X_{j}(t)\geq i \}}.
 		      \]
-		\item For \(s\in[0, 1]\), define \(t = \left\lfloor sV\right\rfloor \). Now, for \(i = 0, 1, \ldots \), set
-		      \(\widetilde{y}^V_t(s) = y_{i}(\left\lfloor sV\right\rfloor )\). Then the formal comparison of \(\widetilde{y}^V_i(s)\)
-		      can be made with an appropriate O.D.E. solution \(\left\{y_{i}(s)\right\}_{i = 0, 1, \ldots }\) for \(s\in [0, 1]\).
-		      This is the formal \href{https://en.wikipedia.org/wiki/Mean-field_theory}{mean-field} analysis that is not in the
-		      scope of the course. Hence, we give a flavor of the results using a hand-wavy argument.
+		\item For \(s\in[0, 1]\), define \(t = \left\lfloor sV\right\rfloor \). Now, for \(i = 0, 1, \ldots \), set \(\widetilde{y}^V_t(s) = y_{i}(\left\lfloor sV\right\rfloor )\). Then the formal comparison of \(\widetilde{y}^V_i(s)\) can be made with an appropriate O.D.E. solution \(\left\{y_{i}(s)\right\}_{i = 0, 1, \ldots }\) for \(s\in [0, 1]\). This is the formal \href{https://en.wikipedia.org/wiki/Mean-field_theory}{mean-field} analysis that is not in the scope of the course. Hence, we give a flavor of the results using a hand-wavy argument.
 	\end{enumerate}
 \end{note}

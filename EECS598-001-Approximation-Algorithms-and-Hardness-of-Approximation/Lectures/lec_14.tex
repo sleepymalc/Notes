@@ -1,1 +1,218 @@
-\lecture{14}{19 Oct. 10:30}{}
+\chapter{Constraint Satisfaction}
+\lecture{14}{19 Oct. 10:30}{Semidefinite Programming}
+
+In this chapter, we'll talk about the constraint satisfaction problem and solve it by \hyperref[def:SDP]{semidefinite programming} specifically. Toward doing this, we first develop some useful tools related to this.
+
+\section{Positive Semidefinite Matrix}
+In this section, an \(n\times n\) matrix \(A\) is usually symmetric with real entries. In such a case, we have the following theorem.
+
+\begin{prev}[\href{https://en.wikipedia.org/wiki/Spectral_theorem}{Spectrum theorem}]
+	Given an \(n\times n\) real and symmetric matrix \(A\),
+	\begin{enumerate}[(a)]
+		\item There exists \(n\) real eigenvalues \(\lambda _1 \geq \ldots \geq \lambda _n \).
+		\item There exists \(n\) eigenvectors \(v_1, \ldots  , v_n\) which form an orthonormal basis.
+	\end{enumerate}
+	This implies we can write \(A = \sum_{i=1}^n \lambda _i v_i v_i ^{\top}\).\footnote{Conversely, if \(A= \sum_{i=1}^n \lambda _i v_i v_i ^{\top}  \), then \(\lambda _i\) will be the eigenvalues with \(v_i\) being the corresponding eigenvector.}
+\end{prev}
+
+We now introduce the notion of \hyperref[def:PSD]{positive semidefinite} matrices, which is the building block of \hyperref[def:SDP]{semidefinite programmings}.
+
+\begin{definition}[Positive semidefinite]\label{def:PSD}
+	A matrix \(A\) is \emph{positive semidefinite (PSD)}, denote as \(A \succeq 0\), if for all \(x\in \mathbb{\MakeUppercase{r}} ^n\),
+	\[
+		x^{\top} A x = \sum_{ij} x_i A_{ij} x_j \geq 0.
+	\]
+\end{definition}
+
+\begin{notation}
+	The set of real and symmetric matrices is denoted as \(\mathbb{\MakeUppercase{s}} ^n\), and the set of \hyperref[def:PSD]{PSD} matrices is denoted as \(\mathbb{\MakeUppercase{s}} ^n_+\).
+\end{notation}
+
+An equivalent characterization is given by the following.
+
+\begin{lemma}\label{lma:PSD-non-negative-eigenvalue}
+	\(A \succeq 0 \) if and only if all eigenvalues of \(A\) is non-negative.
+\end{lemma}
+\begin{proof}
+	If \(\lambda _n < 0\), we have \(v_n ^{\top} A v_n = \lambda _n < 0\). On the other hand, for all \(x = \sum_{i=1}^n \lambda _i v_i \), we know that \(x^{\top} A x = \sum_{i} \alpha _i ^{2} \lambda _i \geq 0\).
+\end{proof}
+
+\begin{eg}
+	Covariance matrix, identity matrix are \hyperref[def:PSD]{PSD}. Also, given any \(V\), \(V V^{\top} \) is \hyperref[def:PSD]{PSD} as well.
+\end{eg}
+\begin{explanation}
+	For \(V V^{\top}\), we see that for all \(x\in \mathbb{\MakeUppercase{r}} ^n\), we have \(x^{\top} (V V^{\top} )x = \left\langle V^{\top} x, V^{\top} x \right\rangle \geq 0\).
+\end{explanation}
+
+We see that there is a deeper connection between a \hyperref[def:PSD]{PSD} matrix and the form of \(V V^{\top} \) for some \(V\), which indeed form another equivalent characterization of \hyperref[def:PSD]{PSD} matrices.
+
+\begin{lemma}\label{lma:lec14-1}
+	A matrix \(X\) is \hyperref[def:PSD]{PSD} if and only if \(X = V V^{\top} \) for some \(V\in \mathbb{\MakeUppercase{r}} ^{n\times k}\).
+\end{lemma}
+\begin{proof}
+	We already see that \(V V^{\top} \) is \hyperref[def:PSD]{PSD}. Now, given \(X \succeq 0\), we can write \(X = \sum_{i=1} ^n \lambda _i v_i v_i ^{\top} = V V^{\top} \) where
+	\[
+		V\coloneqq \mathop{\mathrm{diag}}\left( \left\{ \sqrt{\lambda _1}, \ldots , \sqrt{\lambda _n} \right\} \right)  \begin{bmatrix}
+			v_1 & v_2 & \ldots & v_n \\
+		\end{bmatrix}.
+	\]
+\end{proof}
+
+\begin{remark}
+	Given any two \hyperref[def:PSD]{PSD} \(A, B\) and \(\alpha , \beta \geq 0\), \(\alpha A + \beta B \succeq 0\).
+\end{remark}
+
+\section{Semidefinite Programming}
+Recall that the LP with variables \(x\in \mathbb{\MakeUppercase{r}} ^n\) is in the form of
+\[
+	\begin{aligned}
+		\max~ & \left\langle c, x \right\rangle                              \\
+		      & \left\langle a_i, x \right\rangle \leq b_i & i=1, \ldots , m \\
+		      & x \geq 0,
+	\end{aligned}
+\]
+with input \(c, a_i\in \mathbb{\MakeUppercase{r}} ^n\) and \(b_i\in \mathbb{\MakeUppercase{r}} \). We can generalize LP to a much border class of optimization problem by making vectors as matrices, which leads to the so-called \hyperref[def:SDP]{semidefinite programming}.
+
+\begin{definition}[Semidefinite programming]\label{def:SDP}
+	The \emph{semidefinite programming (SDP)} with variables \(X\in \mathbb{\MakeUppercase{s}} ^n\) is in the form of
+	\[
+		\begin{aligned}
+			\max~ & \left\langle C, X \right\rangle                              \\
+			      & \left\langle A_i, X \right\rangle \leq b_i & i=1, \ldots , m \\
+			      & X \succeq 0,
+		\end{aligned}
+	\]
+	with input \(C, A_i\in \mathbb{\MakeUppercase{s}} ^n\) and \(b_i\in \mathbb{\MakeUppercase{r}} \).
+\end{definition}
+
+\begin{remark}
+	We define the inner product between \(A, B\in \mathbb{\MakeUppercase{s}} ^n\) as
+	\[
+		\left\langle A, B \right\rangle \coloneqq \sum_{i, j\in [n]} A_{ij} B_{ij} = \tr(AB).
+	\]
+\end{remark}
+
+To see that \hyperref[def:SDP]{SDP} is a generalization of LP, we have the following.
+
+\begin{lemma}
+	\hyperref[def:SDP]{SDP} captures LP.
+\end{lemma}
+\begin{proof}
+	Given an instance of LP, i.e., given input \(c, a_i\in \mathbb{\MakeUppercase{r}} ^n\) and \(b_i\in \mathbb{\MakeUppercase{r}} \), then consider defining \(C\coloneqq \mathop{\mathrm{diag}}(c)\), \(A_i \coloneqq \mathop{\mathrm{diag}}(a_i)\). Then the corresponding \hyperref[def:SDP]{SDP} is exactly equal to the given LP.
+\end{proof}
+
+Unlike LP, where we can solve it exactly in polynomial time. Here, there's some pathological instances which cause the solution of an \hyperref[def:SDP]{SDP} exponential to the input size.\footnote{This is the so-called bit-complexity problem.} Nevertheless, we have the following.
+
+\begin{theorem}
+	Most of \hyperref[def:SDP]{SDPs} can be solved in polynomial time.
+\end{theorem}
+
+\subsection{Max Cut}
+We one can imagine, \hyperref[def:SDP]{SDP} is usually regarded as a continuous optimization problem, and we now see one application of \hyperref[def:SDP]{SDP} in approximation algorithm on a combinatorial optimization problem.
+
+\begin{problem}[Max cut]\label{prb:max-cut}
+Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), find a cut \(S\subseteq \mathcal{\MakeUppercase{v}} \) which maximizes \(\left\vert \partial S \right\vert \).
+\end{problem}
+
+\begin{remark}
+	There are various ways of achieving \(1 / 2\)-approximation for \hyperref[prb:max-cut]{max cut}, including greedy, local-search and also LP approaches. But we can prove that \(1 / 2\) is tight if we only use the above method, i.e., we can't even improve this approximation ratio a bit.
+\end{remark}
+
+Let \([n] \coloneqq \mathcal{\MakeUppercase{v}} \) given that \(n \coloneqq \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \), and denote the variables being \(x_i\) for \(i = 1, \ldots  , n\) be \(1\) if \(i\in S\), \(-1\) if \(i \notin S\). Then the following programming captures \hyperref[prb:max-cut]{max cut} when optimizing over \(x_i\in\mathbb{\MakeUppercase{r}} \):
+\[
+	\begin{aligned}
+		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}}} ( 1 - x_i x_j) / 2 \\
+		      & x_i ^{2} = 1.
+	\end{aligned}
+\]
+\begin{remark}
+	This is a quadratic programming.
+\end{remark}
+
+To solve this, we relax \(x_i\in \mathbb{\MakeUppercase{r}} \) to \(u_i\in \mathbb{\MakeUppercase{r}} ^n\), we have
+\[
+	\begin{aligned}
+		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}}} ( 1 - \left\langle u_i, u_j \right\rangle ) / 2 \\
+		      & \left\lVert u_i\right\rVert _2 ^{2} = 1.
+	\end{aligned}
+\]
+Now, from \autoref{lma:lec14-1}, we see that \(X \succeq 0 \iff X = V V^{\top} \) for some \(V\). This suggests that the above relaxed programming is a \hyperref[def:SDP]{SDP} with \(V = \begin{bmatrix}
+	u_1 ^{\top} & u_2 ^{\top} & \ldots & u_n ^{\top} \\
+\end{bmatrix}\) for \(u_i ^{\top} \in \mathbb{\MakeUppercase{r}} ^k\) such that
+\begin{equation}\label{eq:max-cut}
+	\begin{aligned}
+		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}}} ( 1 - X_{ij} ) / 2 \\
+		      & X_{ii} = 1                                                      \\
+		      & X \succeq 0
+	\end{aligned}
+\end{equation}
+where we let \(X_{ij} = \left\langle u_i, u_j \right\rangle \). Since this is a relaxation for \hyperref[prb:max-cut]{max cut}, we know that \(\OPT_{\mathrm{SDP} } \geq \OPT\).
+
+Just like how we do LP relaxation, we first solve \autoref{eq:max-cut} to get \(X\), and round the solution back to get \(\pm 1\) values for \(x_i\) to obtain a feasible solution for \hyperref[prb:max-cut]{max cut}. A naive rounding algorithm is the following.
+
+\begin{algorithm}[H]\label{algo:max-cut-randomized-rounding}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:max-cut]{Max Cut} -- Randomized Rounding}
+	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a solution \(X\) for \autoref{eq:max-cut}}
+	\KwResult{A cut \(S \subseteq \mathcal{\MakeUppercase{v}} \)}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{Eigen}{Eigendecomposition}
+	\BlankLine
+	\(V\gets\)\Eigen{\(X\)}\Comment*[r]{\(X = V V^{\top} \)}
+	\(\begin{bmatrix}u_1 ^{\top} & u_2 ^{\top} & \ldots & u_n ^{\top}\end{bmatrix}\gets V\)\;
+	\(g\gets\)\rand{\(S^{n-1}\)}\Comment*[r]{Choose a random direction}
+	\(S\gets \left\{ i\in \mathcal{\MakeUppercase{v}} \colon \left\langle g, u_i \right\rangle \geq 0 \right\} \)\Comment*[r]{Choose one side}
+	\Return{\(S\)}\;
+\end{algorithm}
+
+We see that given \((i, j)\in \mathcal{\MakeUppercase{e}} \), denote the contribution to the \hyperref[eq:max-cut]{SDP} as \(S_{ij} \), and we have
+\[
+	S_{ij}= \frac{1 - \left\langle u_i, u_j \right\rangle }{2}.
+\]
+On the other hand, the expected contribution from \((i, j)\) to \autoref{algo:max-cut-randomized-rounding}, denoted as \(P_{ij} \), is
+\[
+	P_{ij}\coloneqq  \Pr((i, j)\text{ is cut edge} ) = \Pr(i, j \text{ is separated by \(g\) } ).
+\]
+Now, the only thing we need to do is to find the ratio between \(P_{ij} \) and \(S_{ij} \). And indeed, this ratio is proved by Goemans-Williamson~\cite{goemans1995improved}.
+
+\begin{notation}[Goemans-Williamson constant]
+	The \emph{Goemans-Williamson constant} \(\alpha _{\mathrm{GW} }\) is
+	\[
+		\frac{2}{\pi }\min _{0 \leq \theta \leq \pi }\frac{\theta }{1 - \cos \theta }.
+	\]
+\end{notation}
+
+\begin{remark}
+	\(\alpha _{\mathrm{GW} }\approx 0.878\ldots \). Moreover, we can instead write \(\alpha _\mathrm{GW} \) as
+	\[
+		\alpha _{\mathrm{GW} } = \frac{2}{\pi }\min _{-1\leq \alpha \leq 1} \frac{\arccos(a)}{1 - a}.
+	\]
+\end{remark}
+
+\begin{lemma}\label{lma:lec14-2}
+	For all \((i, j)\in \mathcal{\MakeUppercase{e}} \), \(P_{ij} \geq \alpha _{\mathrm{GW} } \cdot S_{ij} \).
+\end{lemma}
+\begin{explanation}
+	This can be seen from the following picture.
+	\begin{center}
+		\incfig{GW-ratio}
+	\end{center}
+	We're interested in what choice of \(g\) will not separate \(u_i\) and \(u_j\). By drawing lines orthogonal to \(u_i\) and \(u_j\), we divide the plane into above four regions. We see that if \(g\) lies in the dotted region, then the two inner products \(\left\langle g, u_i \right\rangle \) and \(\left\langle g, u_j \right\rangle \) will have the same sign, hence they're not separated.
+
+	Now, since \(P_{ij} = 2\theta / 2\pi = \theta / \pi\), and recall that \(S_{ij} = (1 - \left\langle u_i, u_j \right\rangle) / 2 \), so the worst configuration producing the smallest ratio between \(P_{ij} \) and \(S_{ij} \) is
+	\[
+		\frac{P_{ij}}{S_{ij} } \geq \min _{a\in [-1, 1]} \frac{\arccos(a) / \pi }{(1-a) / 2} = \alpha _\mathrm{GW},
+	\]
+	where \(a \coloneqq \left\langle u_i, u_j \right\rangle\). This proves the result.
+\end{explanation}
+
+\begin{theorem}[\cite{goemans1995improved}]
+	\autoref{algo:max-cut-randomized-rounding} is an \(\alpha _\mathrm{GW}\)-approximation algorithm in expectation.
+\end{theorem}
+\begin{proof}
+	Given \(S\) outputted from \autoref{algo:max-cut-randomized-rounding}, we see that
+	\[
+		\frac{\mathbb{E}_{}\left[\left\vert S \right\vert \right] }{\OPT_{\mathrm{SDP} }} = \frac{\sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } P_{ij} }{\sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } S_{ij} } \geq \alpha _{\mathrm{GW} }
+	\]
+	from \autoref{lma:lec14-2}, which proves the result.
+\end{proof}

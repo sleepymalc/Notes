@@ -1,0 +1,132 @@
+\lecture{15}{20 Oct. 14:30}{Compactness in Banach Spaces}
+\section{Compact Sets in Banach Spaces}
+
+\subsection{Schauder Basis}
+\begin{definition}[\href{https://en.wikipedia.org/wiki/Schauder_basis}{Schauder basis}]\label{def:Schauder-basis}
+	Let \(X\) be a \hyperref[def:separable]{separable} \hyperref[def:Banach-space]{Banach space}. A sequence \(\left\{ x_k \right\} _{k\geq 1}\) is a \emph{Schauder basis} for \(X\) for every \(x\in X\) can be uniquely represented as a convergent series
+	\[
+		x = \sum_{k=1} ^{\infty} z_k x_k
+	\]
+	for \(a_k\in \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \).
+\end{definition}
+
+\begin{theorem}\label{thm:lec15}
+	Let \(\left\{ x_k \right\} _{k\geq 1}\) be a \hyperref[def:Schauder-basis]{Schauder basis} for a \hyperref[def:Banach-space]{Banach space} \(X\). Then there exists a \(M \geq 0\) with the property that for all \(n \geq 1\),
+	\[
+		\left\lVert \sum\limits_{k=1}^{n} a_k x_k\right\rVert \leq M \left\lVert x\right\rVert = M \left\lVert \sum\limits_{k=1}^{\infty} a_k x_k\right\rVert
+	\]
+	for \(x\in X\).
+\end{theorem}
+\begin{proof}
+	Define a sequence space
+	\[
+		E \coloneqq \left\{ a= \left\{ a_k \right\} _{k\geq 1}\colon \sum\limits_{k=1}^{\infty} a_k x_k \text{ converges in \(X\)} \right\}
+	\]
+	such that for \(a\in E\), define
+	\[
+		\left\lVert a\right\rVert = \sup _{n \geq 1} \left\lVert \sum\limits_{k=1}^{n} a_k x_k\right\rVert < \infty.
+	\]
+	We see that \(\left\lVert \cdot \right\rVert \) is a \hyperref[def:norm]{norm} on \(E\) since \(\left\lVert a\right\rVert = 0 \implies a=0\) follows from the uniqueness property for \hyperref[def:Schauder-basis]{Schauder basis} and the fact that \(E\) is a \hyperref[def:Banach-space]{Banach space}, so \(E\) is complete.
+
+	Now, define an \hyperref[def:linear-op]{linear operator} \(T\colon E\to X\) by
+	\[
+		Ta = \sum\limits_{k=1}^{\infty} a_k x_k,
+	\]
+	we have \(\left\lVert Ta\right\rVert \leq \left\lVert a\right\rVert \), so \(T\) is also \hyperref[def:bounded-linear-op]{bounded}, injective and surjective. From \hyperref[thm:open-mapping]{open mapping theorem},
+	\[
+		T ^{-1} \colon X\to E
+	\]
+	is \hyperref[def:bounded-linear-op]{bounded} such that \(\left\lVert T^{-1} \right\rVert \leq M < \infty\), i.e.,
+	\[
+		\left\lVert Ta\right\rVert \geq \frac{1}{M} \left\lVert a\right\rVert
+	\]
+	for all \(a\in E\). This is equivalent to say
+	\[
+		\sup _{n \geq 1} \left\lVert \sum\limits_{k=1}^{n} a_k x_k\right\rVert \leq M \left\lVert \sum\limits_{k=1}^{\infty} a_k x_k\right\rVert.
+	\]
+\end{proof}
+
+\begin{notation}[Basis constant]\label{not:basis-constant}
+	The \(M\geq 0\) in \autoref{thm:lec15} is called the \emph{basis constant}.
+\end{notation}
+
+We see that we can define a partial sum operators for \(n = 1, 2, \ldots  \) such that
+\[
+	S_n\colon X\to X,\quad S_n (x) = \sum\limits_{k=1}^{n} a_k x_k
+\]
+for \(x = \sum_{i=1}^{\infty }a_k x_k\). And we have shown that \(S_n\) is a \hyperref[def:bounded-linear-op]{bounded linear operator} and \(\sup _{n\geq 1} \left\lVert S_n\right\rVert < \infty \). Observe that \(a_k = a_k(x)\) is a \hyperref[def:linear-functional]{linear functional} on \(X\), which are called \emph{biorthogonal functionals} of the basis \(\left\{ x_k \right\} _{k\geq 1}\) and denoted by \(x_k ^{\ast} \) for \(k \geq 1\). We now show \(x_k^{\ast} \in X^{\ast} \), i.e., \(x_k^{\ast} \) is a \hyperref[def:bounded-linear-functional]{bounded linear functional}. to do this, we write
+\[
+	x_n^{\ast} (x) x_n = S_n(x) - S_{n-1}(x)
+\]
+for \(n \geq 1\). From \autoref{thm:lec15}, we have
+\[
+	\left\lVert x^{\ast} _n(x)x_n\right\rVert \leq \left\lVert S_n(x)\right\rVert + \left\lVert S_{n-1}(x) \right\rVert \leq 2M \left\lVert x\right\rVert,
+\]
+hence we conclude that \(x_n^{\ast} \in X^{\ast} \) and \(\sup _{n\geq 1} \left\lVert x_n^{\ast} \right\rVert \left\lVert x_n\right\rVert < \infty \).
+
+\subsection{Compactness}
+We first review some properties of compactness.
+
+\begin{definition}[Compact]\label{def:compact}
+	A subset \(A\) of a topological space is \emph{compact} if every open cover of \(A\) has a finite subcover.
+\end{definition}
+
+This means, given a cover \(A \subseteq \bigcup_{\alpha} U_\alpha \) for some collection of open sets \(U_\alpha \), then \(A \subseteq \bigcup_{k=1}^{n} U_{\alpha _k}\) for some finite subcollection.
+
+\begin{remark}
+	Properties of compact sets:
+	\begin{enumerate}[(a)]
+		\item \hyperref[def:compact]{Compact sets} of a Hausdorff space are closed.
+		\item Closed subsets of \hyperref[def:compact]{compact sets} are \hyperref[def:compact]{compact}.
+		\item The image of a \hyperref[def:compact]{compact set} under a continuous function is \hyperref[def:compact]{compact}.
+		\item Continuous functions on \hyperref[def:compact]{compact sets} are uniformly continuous and attain their maximum and minimum.
+	\end{enumerate}
+\end{remark}
+
+\begin{definition}[Precompact]\label{def:precompact}
+	A set \(A\) is \emph{precompact} if its closure \(\overline{A} \) is \hyperref[def:compact]{compact}.
+\end{definition}
+
+\begin{definition}[\(\epsilon \)-net]\label{def:eps-net}
+	Let \(A\) be a subset of a \hyperref[prev:metric]{metric space} \(X\). Then a subset \(\Omega _{\epsilon } \subseteq X\) is an \emph{\(\epsilon \)-net} for \(A\) if \(A\) can be covered by \hyperref[def:ball]{balls} of radius \(\epsilon \) centered at points of \(\Omega _{\epsilon }\), i.e.,
+	\[
+		A \subseteq \left\{ y\colon d(y, x) < \epsilon \text{ for some } x\in \Omega _\epsilon  \right\}.
+	\]
+\end{definition}
+
+\begin{theorem}
+	Let \(A\) be a subset of a complete \hyperref[prev:metric]{metric space} \(X\), the following are equivalent.
+	\begin{enumerate}[(a)]
+		\item \(A\) is \hyperref[def:precompact]{precompact}.
+		\item Every sequence \(\left\{ x_n \right\} \)  in \(A\) has a Cauchy subsequence which converges in \(X\).
+		\item For every \(\epsilon > 0\), there exists a finite \hyperref[def:eps-net]{\(\epsilon \)-net} for \(A\).
+	\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[\href{https://en.wikipedia.org/wiki/Heine-Borel_theorem}{Heine-Borel theorem}]\label{thm:Heine-Borel}
+	A subset \(A\) of a finite dimensional \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:precompact]{precompact} if and only if \(A\) is bounded.
+\end{theorem}
+
+We can extend \hyperref[thm:Heine-Borel]{Heine-Borel theorem} to infinite dimensional spaces.
+
+\begin{lemma}[Approximation by finite dimensional subspaces]\label{lma:appx-by-finite-dim-subspace}
+	A subspace \(A\) of a \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:precompact]{precompact} if and only if \(A\) is bounded. And for every \(\epsilon > 0\), there exists a finite dimensional subspace \(Y_{\epsilon}\) of \(X\) containing an \hyperref[def:eps-net]{\(\epsilon \)-net} for \(A\).
+\end{lemma}
+\begin{proof}
+	We first prove the necessity. Let \(A\) be \hyperref[def:precompact]{precompact} and \(\epsilon >0\). Then there exists a finite \hyperref[def:eps-net]{\(\epsilon \)-net} \(\Omega _\epsilon\) for \(A\). Now, take \(Y_{\epsilon } = \mathop{\mathrm{span}}(\Omega _\epsilon )\).
+
+	As for sufficiency, assume \(A\) is bounded, so \(A \subseteq R B_X\) for some \(R > 0\) where \(B_X\) is the unit \hyperref[def:ball]{ball} \(\left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \). Hence, we can restrict to points of \(\Omega _\epsilon \) contained in \((R+\epsilon )B_{Y_{\epsilon } }\). Hence,
+	\[
+		A \subseteq \left\{ x\in X\colon d(x, (R+\epsilon )B_{Y_{\epsilon } }) < \epsilon \right\},
+	\]
+	i.e., \((R+\epsilon )B_{Y_{\epsilon } }\) is \hyperref[def:compact]{compact}.
+
+	In all, \((R + \epsilon )B_{Y_{\epsilon } }\) is covered by a finite collection of \hyperref[def:ball]{balls} of radius \(\epsilon \).
+\end{proof}
+
+\begin{theorem}[Riesz's theorem]\label{thm:Riesz}
+	The unit \hyperref[def:ball]{ball} \(B_X\) of an infinite dimensional \hyperref[def:normed-vector-space]{normed space} is never \hyperref[def:compact]{compact}.
+\end{theorem}
+\begin{proof}
+	Suppose \(B_X= \left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \) is \hyperref[def:compact]{compact}. Then from \autoref{lma:appx-by-finite-dim-subspace}, we can find a finite dimensional subspace \(Y\) containing an \hyperref[def:eps-net]{\(\epsilon\)-net} with \(\epsilon = 1 / 2\)  for \(B_X\), i.e., \(d(x, Y) \leq 1 / 2\) for all \(x\in B_X\) where \(X\) is infinite dimensional, \(Y\) is finite dimensional. This means the \hyperref[def:quotient-space]{quotient space} \(\quotient{X}{Y} \) is nontrivial. Note that \(Y\) is a closed subspace of \(X\). Hence \hyperref[def:norm]{norm} on \(X\) induces a \hyperref[def:norm]{norm} on \(\quotient{X}{Y}\) by letting \(x\in X\) and \([x]\in \quotient{X}{Y} \) such that \(\left\lVert [x]\right\rVert = 0.9\) where \(\left\lVert [x]\right\rVert = \inf _{y\in Y} \left\lVert x - y\right\rVert \). Choose \(\overline{y} \in Y\) such that \(\left\lVert x - \overline{y} \right\rVert \leq 1\), meaning that \(x - \overline{y} \in B_X\) and \(d(x-\overline{y} , Y) = 0.9 > 1 / 2\).
+\end{proof}

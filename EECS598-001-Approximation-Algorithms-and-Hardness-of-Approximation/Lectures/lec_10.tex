@@ -46,13 +46,16 @@ But turns out that this formulation will give us an \hyperref[def:integrality-ga
 We see that the problems arise from the fact that there are not enough edges to span \(\mathcal{\MakeUppercase{g}} \), so we now require it explicitly in our LP formulation. Furthermore, to ensure there are no cycles, for any \(S \subseteq \mathcal{\MakeUppercase{v}} \), we again make sure that the total edges we have is less than \(\left\vert S \right\vert - 1\). Then, we have the following \hyperref[def:spanning-tree]{spanning tree} polytope.
 \begin{equation}\label{eq:spanning-tree-polytope}
 	\begin{aligned}
-		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                                                                         \\
-		      & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e = n-1                                                                                        \\
-		      & \sum_{e\in E(S, \overline{S} )} x_e \leq \left\vert S \right\vert - 1 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
-		      & x \geq 0.
+		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                                                          \\
+		      & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e = n-1                                                                         \\
+		      & \sum_{e\in E(S)} x_e \leq \left\vert S \right\vert - 1 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
+		      & x \geq 0
 	\end{aligned}
 \end{equation}
-
+where \(E(S)\) denotes the set of edges inside \(S\), i.e.,
+\[
+	E(S) \coloneqq \left\{ e=(u, v)\in \mathcal{\MakeUppercase{e}} \colon u, v\in \mathcal{\MakeUppercase{v}}  \right\}.
+\]
 This is not solvable just by throwing this into an LP solver since there are exponentially many constraints! Regardless, we note the following.
 \begin{remark}[Separation oracle]\label{rmk:separation-oracle}
 	Given a linear program \((P)\) with \(x\in \mathbb{\MakeUppercase{r}} ^n\) as variables, a \emph{separation oracle} is an algorithm which outputs

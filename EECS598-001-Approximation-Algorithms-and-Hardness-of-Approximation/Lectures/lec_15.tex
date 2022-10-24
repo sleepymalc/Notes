@@ -1,5 +1,8 @@
-\lecture{15}{24 Oct. 10:30}{}
-Recall \hyperref[prb:max-cut]{max cut} and its IP formulation and the SDP relaxation.
+\lecture{15}{24 Oct. 10:30}{Lasserre Hierarchy and Max Cut}
+\section{Lasserre Hierarchy}
+The Lasserre hierarchy is a systematic procedure to strengthen a relaxation for an optimization problem by adding additional variables and \hyperref[def:SDP]{SDP} constraints. In the last years this hierarchy moved into the focus of researchers in approximation algorithms as they obtain relaxations have provably nice properties.
+
+Firstly, recall \hyperref[prb:max-cut]{max cut} and its IP formulation and the \hyperref[def:SDP]{SDP} relaxation. We're interested in whether there's something \emph{between} the IP and this \hyperref[def:SDP]{SDP} relaxation?
 \[
 	\begin{aligned}
 		\max~            & \frac{1}{4} \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \left\lVert u_i - u_j\right\rVert _2^2                     \\
@@ -10,7 +13,7 @@ Recall \hyperref[prb:max-cut]{max cut} and its IP formulation and the SDP relaxa
 	\end{aligned}
 \]
 
-The upshot is that the SDP solutions are kind of telling us the second moment information. In order to see this, instead of optimizing over \(\pm 1\), we now optimize over \(\left\{ 0, 1 \right\} \).
+The upshot is that the \hyperref[def:SDP]{SDP} solutions are kind of telling us the second moment information. In order to see this, instead of optimizing over \(\pm 1\), we now optimize over \(\left\{ 0, 1 \right\} \).
 
 \[
 	\begin{aligned}
@@ -26,45 +29,44 @@ The upshot is that the SDP solutions are kind of telling us the second moment in
 Now, we ask the following question.
 
 \begin{problem*}
-	Say \(u_\phi \), \(\left\{ u_{i}  \right\} _{i\in [n]}\) are feasible to \(\left\{ 0, 1 \right\} \)-SDP, then what does it tell us about the integral solutions?
+	If \(u_\phi \), \(\left\{ u_{i}  \right\} _{i\in [n]}\) are feasible to \(\left\{ 0, 1 \right\} \)-SDP, what does it tell us about the integral solutions?
 \end{problem*}
-
-We see that if \(\left\{ u_i \right\} _{i\in [n]}\), \(u_\phi \) is \(1\)-dimensional, then this solution \(\left\{ v_i \right\} _{i\in [n]}\) encodes a cut \(S \subseteq \mathcal{\MakeUppercase{v}} \) such that
-\[
-	S = \left\{ i\in [n] \mid u_i = 1 \right\},
-\]
-in which case we can get
-\[
-	\left\langle u_i, u_j \right\rangle = \mathbbm{1}(i, j\in S)
-\]
-for all \(i, j\in [n]\).
-
-Now, if \(\left\{ u_i \right\} _{i\in [n]}\), \(u_\phi \) is \textbf{not} \(1\)-dimensional, then we can view the solution \(\left\{ v_i \right\} _{i\in [n]}\) is encoding a \emph{distribution} \(\mathcal{\MakeUppercase{d}} \) over cuts \(S \subseteq \mathcal{\MakeUppercase{v}} \), in which case, we can think of
-\[
-	\left\langle u_i, u_j \right\rangle = \mathbb{E}_{S\sim \mathcal{\MakeUppercase{D}} }\left[ \mathbbm{1}(i, j\in S)\right]
-\]
-for all \(i, j\in [n]\). But sadly, this is not true in its exact form since a \hyperref[def:PSD]{PSD matrix} doesn't always stand for a covariance matrix of some distribution over \(\left\{ 0, 1 \right\} \)-valued assignments.
+\begin{answer}
+	If \(\left\{ u_i \right\} _{i\in [n]}\), \(u_\phi \) is \(1\)-dimensional, then this solution \(\left\{ u_i \right\} _{i\in [n]}, u_\phi\) encodes a cut \(S \subseteq \mathcal{\MakeUppercase{v}} \) such that
+	\[
+		S = \left\{ i\in [n] \mid u_i = 1 \right\},
+	\]
+	in which case we can get
+	\[
+		\left\langle u_i, u_j \right\rangle = \mathbbm{1}(i, j\in S)
+	\]
+	for all \(i, j\in [n]\). Now, if \(\left\{ u_i \right\} _{i\in [n]}\), \(u_\phi \) is \textbf{not} \(1\)-dimensional, then we hope that we can view the solution \(\left\{ u_i \right\} _{i\in [n]}, u_\phi \) is encoding a \emph{distribution} \(\mathcal{\MakeUppercase{d}} \) over cuts \(S \subseteq \mathcal{\MakeUppercase{v}} \), in which case, we can think of
+	\[
+		\left\langle u_i, u_j \right\rangle = \mathbb{E}_{S\sim \mathcal{\MakeUppercase{D}} }\left[ \mathbbm{1}(i, j\in S)\right]
+	\]
+	for all \(i, j\in [n]\), i.e., a covariance matrix. But sadly, this is not true in this exact form since a \hyperref[def:PSD]{PSD matrix} doesn't always stand for a covariance matrix of some distribution over \(\left\{ 0, 1 \right\} \)-valued assignments.
+\end{answer}
 
 \subsection{Local Distributions}
-To get at least some version of what we just said, we first introduce a special kind of distribution.
+To get at least some versions of what we want, we first introduce a special kind of distribution called \hyperref[def:2-local-distribution]{\(2\)-local distribution}.
 
-\begin{itemize}
-	\item \(\widetilde{P} _i\): distribution over \(\left\{ 0, 1 \right\} \)-assignments for \(X_i= \mathbbm{1}(i\in S) \) for all \(i\in [n]\).
-	\item \(\widetilde{P} _{ij}\): distribution over \(\left\{ 0, 1 \right\} \)-assignments for \((X_i, X_j)\) for all \((i, j)\in [n]\times [n]\).
-\end{itemize}
-
-\begin{definition}[Local consistency]\label{def:local-consistency}
-	For all \(i, j\in [n]\) and for all \(\theta \in \left\{ 0, 1 \right\} \), \emph{local consistency} means
+\begin{definition}[\(2\)-local distribution]\label{def:2-local-distribution}
+	A \emph{\(2\)-local distribution} is a set of distributions consisting of
+	\begin{itemize}
+		\item \(\widetilde{P} _i\): distribution over \(\left\{ 0, 1 \right\} \)-assignments for \(X_i= \mathbbm{1}(i\in S) \) for all \(i\in [n]\);
+		\item \(\widetilde{P} _{ij}\): distribution over \(\left\{ 0, 1 \right\} \)-assignments for \((X_i, X_j)\) for all \((i, j)\in [n]\times [n]\),
+	\end{itemize}
+	such that For all \(i, j\in [n]\) and for all \(\theta \in \left\{ 0, 1 \right\} \), \emph{local consistency} means
 	\[
 		\widetilde{P} _i(X_i = \theta ) = \sum_{\theta ^\prime \in \left\{ 0, 1 \right\} } \widetilde{P} _{ij}(X_i=\theta , X_j = \theta ^\prime )= \widetilde{P} _{ij}(X_i = \theta ).
 	\]
 \end{definition}
 
 \begin{eg}
-	If \(\widetilde{P} _i (X_i = \theta ) = 1\) and \(\widetilde{P} _{ij}(X_i = \theta ) = 0\), then it's not \hyperref[def:local-consistency]{local consistent}.
+	If \(\widetilde{P} _i (X_i = \theta ) = 1\) and \(\widetilde{P} _{ij}(X_i = \theta ) = 0\), then this set is not a \hyperref[def:2-local-distribution]{\(2\)-local distribution}.
 \end{eg}
 
-Now, consider the \(\left\{ 0, 1 \right\} \)-SDP with local probabilities. The \hyperref[def:local-consistency]{\(2\)-local} variables are \(\{ \widetilde{P} _i \} _{i\in [n]} \cup  \{ \widetilde{P} _{ij} \}_{i, j\in [n]} \) with \(\left\{ v_i \right\} _{i\in [n]}\) and \(v_\phi \). Then the SDP is defined as
+Now, consider the \(\left\{ 0, 1 \right\} \)-SDP with local probabilities. The \hyperref[def:2-local-distribution]{\(2\)-local} variables are \(\{ \widetilde{P} _i \} _{i\in [n]} \cup  \{ \widetilde{P} _{ij} \}_{i, j\in [n]} \) with \(\left\{ v_i \right\} _{i\in [n]}\) and \(v_\phi \). Then the SDP for \hyperref[prb:max-cut]{max cut} is defined as
 \[
 	\begin{aligned}
 		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left\lVert u_i - u_j\right\rVert _2^2                       \\
@@ -74,7 +76,7 @@ Now, consider the \(\left\{ 0, 1 \right\} \)-SDP with local probabilities. The \
 \]
 
 \begin{remark}
-	Technically, we should also introduce another distribution \(\widetilde{P} _{\phi }(X_\phi) = 1\), and \(\widetilde{P} _{ij}\) is defined for all \((i, j)\in ([n]\cup \left\{ \phi  \right\} )\times ([n]\cup \left\{ \phi  \right\} )\). In this case, the SDP constraint reduces to
+	Technically, we should also introduce another distribution \(\widetilde{P} _{\phi }(X_\phi) = 1\), and \(\widetilde{P} _{ij}\) is defined for all \((i, j)\in ([n]\cup \left\{ \phi  \right\} )\times ([n]\cup \left\{ \phi  \right\} )\). In this case, the \hyperref[def:SDP]{SDP} constraint reduces to
 	\[
 		\left\langle  u_i, u_j \right\rangle = \widetilde{P} _{ij}(X_{i} = X_{j} =1)
 	\]
@@ -96,37 +98,36 @@ Also, observe that
 \[
 	\left\langle u_i, u_j \right\rangle = \mathbb{E}_{\widetilde{P} _{ij}}\left[ x_i x_j\right],
 \]
-we create a matrix \(M\in \mathbb{\MakeUppercase{r}} ^{([n] \cup \left\{ \phi  \right\} )\times ([n] \times \left\{ \phi  \right\} )}\) such that \(M_{ij} = \mathbb{E}_{_{\widetilde{P} _{ij}}}\left[ x_i x_j\right] \), i.e., \(M = U U ^{\top} \). Finally, we see that in this case, the original constraint implies that \(M\) is \hyperref[def:PSD]{PSD}, hence overall, the SDP becomes
+hence we create a matrix \(M\in \mathbb{\MakeUppercase{r}} ^{([n] \cup \left\{ \phi  \right\} )\times ([n] \times \left\{ \phi  \right\} )}\) such that \(M_{ij} = \mathbb{E}_{_{\widetilde{P} _{ij}}}\left[ x_i x_j\right] \), i.e., \(M = U U ^{\top} \). In this case, the original constraint implies that \(M\) is \hyperref[def:PSD]{PSD}, hence overall, the \hyperref[def:SDP]{SDP} becomes
 \[
 	\begin{aligned}
-		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \widetilde{P} _{ij} (X_i \neq X_j)                                                                       \\
-		      & \widetilde{P} _i, \widetilde{P} _{ij}\text{ are \hyperref[def:local-consistency]{\(2\)-local} distribution}                                            \\
-		      & M = \left( \mathbb{E}_{\widetilde{P} _{ij}}\left[X_i X_j \right] \right) _{i, j\in [n]\cup \left\{ \phi  \right\} }\text{ is \hyperref[def:PSD]{PSD}},
+		\max~                               & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \widetilde{P} _{ij} (X_i \neq X_j)                                                                       \\
+		                                    & \{\widetilde{P} _i\}\cup \{\widetilde{P} _{ij}\}\text{ is a \hyperref[def:2-local-distribution]{\(2\)-local distribution}}                             \\
+		(\mathcal{\MakeUppercase{p}} )\quad & M = \left( \mathbb{E}_{\widetilde{P} _{ij}}\left[X_i X_j \right] \right) _{i, j\in [n]\cup \left\{ \phi  \right\} }\text{ is \hyperref[def:PSD]{PSD}},
 	\end{aligned}
 \]
-where we call this SDP \(\mathcal{\MakeUppercase{p}} \). We see that we can now look at the so-called \(R\)-local distribution.
-\begin{itemize}
-	\item \(\{ \widetilde{P} _A \}_{A \subseteq [n] \cup \left\{ \phi  \right\}, \left\vert A \right\vert \leq R} \).
-\end{itemize}
+where we call this \hyperref[def:SDP]{SDP} \(\mathcal{\MakeUppercase{p}} \).
 
-\begin{definition}[Local consistency]
-	For all \(A, B \subseteq [n]\cup \left\{ \phi  \right\} \) with \(\left\vert A \cup B \right\vert \leq R\), for all \(C \subseteq A \cup B\) and \(\theta _i \in \left\{ 0, 1 \right\} \),
+We see that the notion of \hyperref[def:2-local-distribution]{\(2\)-local distribution} can be generalized to arbitrary number \(R\), i.e., we can now look at the so-called \(R\)-\hyperref[def:local-distribution]{local distribution}.
+
+\begin{definition}[Local distribution]\label{def:local-distribution}
+	The set of distributions \(\{ \widetilde{P} _A \}_{A \subseteq [n] \cup \left\{ \phi  \right\}, \left\vert A \right\vert \leq R} \) is an \emph{\(R\)-local distribution} if for all \(A, B \subseteq [n]\cup \left\{ \phi  \right\} \) with \(\left\vert A \cup B \right\vert \leq R\), for all \(C \subseteq A \cup B\) and \(\theta _i \in \left\{ 0, 1 \right\} \),
 	\[
 		\widetilde{P} _C (X_i = \theta _i\ \forall i\in C)
 		= \widetilde{P} _A (X_i = \theta _i\ \forall i\in C)
-		= \widetilde{P} _B (X_i = \theta _i\ \forall i\in C)
+		= \widetilde{P} _B (X_i = \theta _i\ \forall i\in C).
 	\]
 \end{definition}
 
-Now, the \(R\)-local version of \(\mathcal{\MakeUppercase{p}} \) becomes
+Now, the \(R\)-\hyperref[def:local-distribution]{local version} of \(\mathcal{\MakeUppercase{p}} \) becomes
 \[
 	\begin{aligned}
 		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \widetilde{P} _{ij} (X_i \neq X_j)                                                                                           \\
-		      & \{\widetilde{P} _A\}_{\left\vert A \right\vert \leq R} \text{ are \hyperref[def:local-consistency]{\(R\)-local} distribution}                                              \\
+		      & \{\widetilde{P} _A\}_{\left\vert A \right\vert \leq R} \text{ are \hyperref[def:2-local-distribution]{\(R\)-local} distribution}                                           \\
 		      & M = \left( \widetilde{\mathbb{\MakeUppercase{e}} }_{\widetilde{P} _{A \cup B}} \left[ \prod_{i\in A \cup B} X_i \right] \right) _{A, B}\text{ is \hyperref[def:PSD]{PSD}},
 	\end{aligned}
 \]
-where we call this SDP \(\mathop{\mathrm{Lass}}_R(\mathcal{\MakeUppercase{p}} )\).
+where we call this \hyperref[def:SDP]{SDP} \(\mathop{\mathrm{Lass}}_R(\mathcal{\MakeUppercase{p}} )\), which is how we define Lasserre hierarchy.
 
 \begin{note}
 	Notice that \(M\in \mathbb{\MakeUppercase{r}} ^{\binom{[n]}{\leq R / 2} \times \binom{[n]}{\leq R / 2}}\)

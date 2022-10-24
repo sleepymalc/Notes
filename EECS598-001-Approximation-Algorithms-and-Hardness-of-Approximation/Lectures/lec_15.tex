@@ -1,0 +1,133 @@
+\lecture{15}{24 Oct. 10:30}{}
+Recall \hyperref[prb:max-cut]{max cut} and its IP formulation and the SDP relaxation.
+\[
+	\begin{aligned}
+		\max~            & \frac{1}{4} \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \left\lVert u_i - u_j\right\rVert _2^2                     \\
+		(\text{IP})\quad & \left\lVert u_i\right\rVert _2^2 = 1                                                             & \forall i\in [n],
+	\end{aligned} \to \ldots \to \begin{aligned}
+		\max~             & \frac{1}{4} \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} }  (x_i - x_j)^{2}                     \\
+		(\text{SDP})\quad & x_i \in \left\{ \pm 1 \right\}                                             & \forall i\in [n].
+	\end{aligned}
+\]
+
+The upshot is that the SDP solutions are kind of telling us the second moment information. In order to see this, instead of optimizing over \(\pm 1\), we now optimize over \(\left\{ 0, 1 \right\} \).
+
+\[
+	\begin{aligned}
+		\max~            & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \left\lVert u_i - u_j\right\rVert _2^2                    \\
+		(\text{IP})\quad & \left\lVert u_{\phi}\right\rVert _2^2 = 1                                            & \forall i\in [n] \\
+		                 & \left\langle u_i, u_{\phi } \right\rangle = \left\lVert u_i\right\rVert _2^2         & \forall i\in [n]
+	\end{aligned} \to \ldots \to \begin{aligned}
+		\max~             & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} }  (x_i - x_j)^{2}                     \\
+		(\text{SDP})\quad & x_i \in \left\{ 0, 1 \right\}                                  & \forall i\in [n].
+	\end{aligned}
+\]
+
+Now, we ask the following question.
+
+\begin{problem*}
+	Say \(u_\phi \), \(\left\{ u_{i}  \right\} _{i\in [n]}\) are feasible to \(\left\{ 0, 1 \right\} \)-SDP, then what does it tell us about the integral solutions?
+\end{problem*}
+
+We see that if \(\left\{ u_i \right\} _{i\in [n]}\), \(u_\phi \) is \(1\)-dimensional, then this solution \(\left\{ v_i \right\} _{i\in [n]}\) encodes a cut \(S \subseteq \mathcal{\MakeUppercase{v}} \) such that
+\[
+	S = \left\{ i\in [n] \mid u_i = 1 \right\},
+\]
+in which case we can get
+\[
+	\left\langle u_i, u_j \right\rangle = \mathbbm{1}(i, j\in S)
+\]
+for all \(i, j\in [n]\).
+
+Now, if \(\left\{ u_i \right\} _{i\in [n]}\), \(u_\phi \) is \textbf{not} \(1\)-dimensional, then we can view the solution \(\left\{ v_i \right\} _{i\in [n]}\) is encoding a \emph{distribution} \(\mathcal{\MakeUppercase{d}} \) over cuts \(S \subseteq \mathcal{\MakeUppercase{v}} \), in which case, we can think of
+\[
+	\left\langle u_i, u_j \right\rangle = \mathbb{E}_{S\sim \mathcal{\MakeUppercase{D}} }\left[ \mathbbm{1}(i, j\in S)\right]
+\]
+for all \(i, j\in [n]\). But sadly, this is not true in its exact form since a \hyperref[def:PSD]{PSD matrix} doesn't always stand for a covariance matrix of some distribution over \(\left\{ 0, 1 \right\} \)-valued assignments.
+
+\subsection{Local Distributions}
+To get at least some version of what we just said, we first introduce a special kind of distribution.
+
+\begin{itemize}
+	\item \(\widetilde{P} _i\): distribution over \(\left\{ 0, 1 \right\} \)-assignments for \(X_i= \mathbbm{1}(i\in S) \) for all \(i\in [n]\).
+	\item \(\widetilde{P} _{ij}\): distribution over \(\left\{ 0, 1 \right\} \)-assignments for \((X_i, X_j)\) for all \((i, j)\in [n]\times [n]\).
+\end{itemize}
+
+\begin{definition}[Local consistency]\label{def:local-consistency}
+	For all \(i, j\in [n]\) and for all \(\theta \in \left\{ 0, 1 \right\} \), \emph{local consistency} means
+	\[
+		\widetilde{P} _i(X_i = \theta ) = \sum_{\theta ^\prime \in \left\{ 0, 1 \right\} } \widetilde{P} _{ij}(X_i=\theta , X_j = \theta ^\prime )= \widetilde{P} _{ij}(X_i = \theta ).
+	\]
+\end{definition}
+
+\begin{eg}
+	If \(\widetilde{P} _i (X_i = \theta ) = 1\) and \(\widetilde{P} _{ij}(X_i = \theta ) = 0\), then it's not \hyperref[def:local-consistency]{local consistent}.
+\end{eg}
+
+Now, consider the \(\left\{ 0, 1 \right\} \)-SDP with local probabilities. The \hyperref[def:local-consistency]{\(2\)-local} variables are \(\{ \widetilde{P} _i \} _{i\in [n]} \cup  \{ \widetilde{P} _{ij} \}_{i, j\in [n]} \) with \(\left\{ v_i \right\} _{i\in [n]}\) and \(v_\phi \). Then the SDP is defined as
+\[
+	\begin{aligned}
+		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left\lVert u_i - u_j\right\rVert _2^2                       \\
+		      & \left\langle u_i, u_\phi  \right\rangle = \widetilde{P} _i(X_i = 1)                 & \forall i\in [n]    \\
+		      & \left\langle u_i, u_j  \right\rangle = \widetilde{P} _{ij}(X_i = X_j = 1)           & \forall i, j\in [n] \\
+	\end{aligned}
+\]
+
+\begin{remark}
+	Technically, we should also introduce another distribution \(\widetilde{P} _{\phi }(X_\phi) = 1\), and \(\widetilde{P} _{ij}\) is defined for all \((i, j)\in ([n]\cup \left\{ \phi  \right\} )\times ([n]\cup \left\{ \phi  \right\} )\). In this case, the SDP constraint reduces to
+	\[
+		\left\langle  u_i, u_j \right\rangle = \widetilde{P} _{ij}(X_{i} = X_{j} =1)
+	\]
+	for all \((i, j)\in ([n]\cup \left\{ \phi  \right\} )\times ([n]\cup \left\{ \phi \right\} )\).
+\end{remark}
+
+We first investigate the objective. We see that
+\[
+	\begin{split}
+		\left\lVert u_i - u_j\right\rVert _2^2
+		&= \left\lVert u_i\right\rVert _2^2 + \left\lVert u_j\right\rVert _2^2 - 2\left\langle u_{i} , u_{j}  \right\rangle \\
+		&= \widetilde{P} _i(X_i = 1)+ \widetilde{P} _i(X_j = 1) - 2 \widetilde{P} _{ij} ( X_i = X_j = 1)\\
+		&= \widetilde{P} _{ij}(X_i = 1)+ \widetilde{P} _{ij}(X_j = 1) - 2 \widetilde{P} _{ij} ( X_i = X_j = 1)
+		= \widetilde{P} _{ij} ( X_i \neq X_j).
+	\end{split}
+\]
+
+Also, observe that
+\[
+	\left\langle u_i, u_j \right\rangle = \mathbb{E}_{\widetilde{P} _{ij}}\left[ x_i x_j\right],
+\]
+we create a matrix \(M\in \mathbb{\MakeUppercase{r}} ^{([n] \cup \left\{ \phi  \right\} )\times ([n] \times \left\{ \phi  \right\} )}\) such that \(M_{ij} = \mathbb{E}_{_{\widetilde{P} _{ij}}}\left[ x_i x_j\right] \), i.e., \(M = U U ^{\top} \). Finally, we see that in this case, the original constraint implies that \(M\) is \hyperref[def:PSD]{PSD}, hence overall, the SDP becomes
+\[
+	\begin{aligned}
+		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \widetilde{P} _{ij} (X_i \neq X_j)                                                                       \\
+		      & \widetilde{P} _i, \widetilde{P} _{ij}\text{ are \hyperref[def:local-consistency]{\(2\)-local} distribution}                                            \\
+		      & M = \left( \mathbb{E}_{\widetilde{P} _{ij}}\left[X_i X_j \right] \right) _{i, j\in [n]\cup \left\{ \phi  \right\} }\text{ is \hyperref[def:PSD]{PSD}},
+	\end{aligned}
+\]
+where we call this SDP \(\mathcal{\MakeUppercase{p}} \). We see that we can now look at the so-called \(R\)-local distribution.
+\begin{itemize}
+	\item \(\{ \widetilde{P} _A \}_{A \subseteq [n] \cup \left\{ \phi  \right\}, \left\vert A \right\vert \leq R} \).
+\end{itemize}
+
+\begin{definition}[Local consistency]
+	For all \(A, B \subseteq [n]\cup \left\{ \phi  \right\} \) with \(\left\vert A \cup B \right\vert \leq R\), for all \(C \subseteq A \cup B\) and \(\theta _i \in \left\{ 0, 1 \right\} \),
+	\[
+		\widetilde{P} _C (X_i = \theta _i\ \forall i\in C)
+		= \widetilde{P} _A (X_i = \theta _i\ \forall i\in C)
+		= \widetilde{P} _B (X_i = \theta _i\ \forall i\in C)
+	\]
+\end{definition}
+
+Now, the \(R\)-local version of \(\mathcal{\MakeUppercase{p}} \) becomes
+\[
+	\begin{aligned}
+		\max~ & \sum_{(i, j)\in \mathcal{\MakeUppercase{e}} } \widetilde{P} _{ij} (X_i \neq X_j)                                                                                           \\
+		      & \{\widetilde{P} _A\}_{\left\vert A \right\vert \leq R} \text{ are \hyperref[def:local-consistency]{\(R\)-local} distribution}                                              \\
+		      & M = \left( \widetilde{\mathbb{\MakeUppercase{e}} }_{\widetilde{P} _{A \cup B}} \left[ \prod_{i\in A \cup B} X_i \right] \right) _{A, B}\text{ is \hyperref[def:PSD]{PSD}},
+	\end{aligned}
+\]
+where we call this SDP \(\mathop{\mathrm{Lass}}_R(\mathcal{\MakeUppercase{p}} )\).
+
+\begin{note}
+	Notice that \(M\in \mathbb{\MakeUppercase{r}} ^{\binom{[n]}{\leq R / 2} \times \binom{[n]}{\leq R / 2}}\)
+\end{note}

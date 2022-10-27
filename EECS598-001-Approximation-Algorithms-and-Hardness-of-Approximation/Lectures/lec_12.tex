@@ -86,7 +86,7 @@ Now, we can sample a random \hyperref[def:spanning-tree]{spanning tree} \(T^\pri
 We now show that \(T\) obtained from \autoref{algo:random-thin-spanning-tree} is indeed a \hyperref[def:thin]{thin} tree.
 
 \begin{lemma}\label{lma:lec12-1}
-	\(T\) output from \autoref{algo:random-thin-spanning-tree} satisfies \(\alpha =2\) for \hyperref[def:thin]{\((\alpha , \beta )\)-thinness} with probability at least \(2\).
+	\(T\) output from \autoref{algo:random-thin-spanning-tree} satisfies \(\alpha =2\) for \hyperref[def:thin]{\((\alpha , \beta )\)-thinness} with probability at least \(1/2\).
 \end{lemma}
 \begin{proof}
 	Since
@@ -97,10 +97,10 @@ We now show that \(T\) obtained from \autoref{algo:random-thin-spanning-tree} is
 \end{proof}
 
 \begin{lemma}\label{lma:lec12-2}
-	\(T\) output from \autoref{algo:random-thin-spanning-tree} satisfies \(\beta = 12\log n / \log \log n\) for \hyperref[def:thin]{\((\alpha , \beta )\)-thinness} with probability at least \(n^{-1} \).
+	\(T\) output from \autoref{algo:random-thin-spanning-tree} satisfies \(\beta = 12\log n / \log \log n\) for \hyperref[def:thin]{\((\alpha , \beta )\)-thinness} with probability at least \(1 - n^{-1} \).
 \end{lemma}
 \begin{proof}
-	Given any \(\beta \), we want to bound the probability that there's one \(\varnothing \neq S \subseteq v\) which violates the condition. To do this, let
+	Given any \(\beta \), we want to bound the probability that there's one \(\varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \) which violates the condition. To do this, let
 	\[
 		C_i \coloneqq \left\{ S \subseteq \mathcal{\MakeUppercase{v}} \mid z(\partial S) \in [i \lambda , (i+1)\lambda ) \right\} ,
 	\]
@@ -112,7 +112,7 @@ We now show that \(T\) obtained from \autoref{algo:random-thin-spanning-tree} is
 	Now, recall that \autoref{algo:random-thin-spanning-tree} uses \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, hence \(e\in T^\prime \) satisfies the \hyperref[thm:negative-correlation]{negative correlation}, which essentially allows us to prove \autoref{thm:lec11}. Specifically, we have
 	\begin{enumerate}[(a)]
 		\item for all \(e\in \mathcal{\MakeUppercase{e}} \), \(\Pr(e\in T^\prime ) \coloneqq z_e\),
-		\item For all \(\varnothing \neq S \subseteq \mathcal{\MakeUppercase{e}} \), \(\Pr(S \subseteq T^\prime) \leq \prod_{e\in \mathcal{\MakeUppercase{e}} } z_e\),
+		\item for all \(\varnothing \neq E \subseteq \mathcal{\MakeUppercase{e}} \), \(\Pr(E \subseteq T^\prime) \leq \prod_{e\in \mathcal{\MakeUppercase{e}} } z_e\),
 	\end{enumerate}
 	and with this, the \hyperref[thm:lec11]{Chernoff bound-like concentration} states that
 	\[
@@ -120,11 +120,14 @@ We now show that \(T\) obtained from \autoref{algo:random-thin-spanning-tree} is
 	\]
 	Then, we have
 	\[
-		\Pr(\exists S\colon \left\vert T \cap \partial S \right\vert > \beta z(\partial S))
-		\leq \sum_{i=1} ^{\infty} \Pr(\exists S\in C_i \colon \left\vert T \cap \partial S \right\vert > \beta z(\partial S))
-		\leq \sum_{i=1}^{\infty} (2n)^{2(i+1)} \cdot \left( \frac{e}{\beta } \right) ^{\beta \cdot i}
+		\begin{split}
+			\Pr(\exists S\colon \left\vert T \cap \partial S \right\vert > \beta z(\partial S))
+			&\leq \sum_{i=1} ^{\infty} \Pr(\exists S\in C_i \colon \left\vert T \cap \partial S \right\vert > \beta z(\partial S))\\
+			&\leq \sum_{i=1}^{\infty} (2n)^{2(i+1)} \cdot \left( \frac{e}{\beta } \right) ^{\beta \cdot i\cdot \lambda}\\
+			&\leq \sum_{i=1}^{\infty} (2n)^{2(i+1)} \cdot \left( \frac{e}{\beta } \right) ^{\beta \cdot i},
+		\end{split}
 	\]
-	From the concentration bound, we see that by taking \(\beta = c\cdot \log n / \log \log n\) for some constant \(c\),
+	where we drop \(\lambda\) since \(\lambda \geq 1\) as we have shown, which is an even-weaker bound. From the concentration bound, we see that by taking \(\beta = c\cdot \log n / \log \log n\) for some constant \(c\),
 	\[
 		\begin{split}
 			\left( \frac{e}{\beta } \right) ^{\beta \cdot i}

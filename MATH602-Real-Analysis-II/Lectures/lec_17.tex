@@ -1,1 +1,113 @@
 \lecture{17}{27 Oct. 14:30}{Weak Topology}
+\begin{theorem}[Weak convergence in \(C(K)\)]\label{thm:weak-convergence-in-CK}
+	Let \(K\) be a \hyperref[def:compact]{compact} Hausdorff space and \(C(K)\) be the space of continuous functions \(f\colon K\to \mathbb{\MakeUppercase{r}} \) with \(\left\lVert f\right\rVert = \sup _{t\in K} \left\vert f(t) \right\vert \). Then a sequence \(\left\{ x_n \right\}_{n \geq 1} \) in \(C(K)\) \hyperref[def:weakly-convergence]{converges weakly} to \(x\in C(K)\)  if and only if the sequence \(\left\{ x_n \right\} _{n\geq 1}\) is bounded in \(C(K)\) and \(\lim_{n \to \infty} x_n(t)=x(t)\) for all \(t\in K\).
+\end{theorem}
+\begin{proof}
+	Suppose \(\left\{ x_n \right\} _{n \geq 1}\) \hyperref[def:weakly-convergence]{converges weakly} to \(x\), then \(\sup _{n\geq 1} \left\lVert x_n\right\rVert < \infty \). By \autoref{prop:weak-closedness}, if \(t\in K\), then \(\delta _t\in C(K)^{\ast} \) where \(\delta _t(x) = x(t)\). We see that
+	\[
+		\lim_{n \to \infty} \delta _t(x_n) = \delta _t(x)\implies x_n(t) \to x(t).
+	\]
+
+	Conversely, assume \(\sup _{n\geq 1}\left\lVert x_n\right\rVert < \infty \) and \(\lim_{n \to \infty} x_n(t) = x(t)\) for all \(t\in K\). We now need to show that \(\lim_{n \to \infty} f(x_{n} ) = f(x)\) for all \(f\in C(K)^{\ast} \). Since \(C(K)^{\ast} \) is the space of bounded signed measures \(\mu \) on \(K\),\footnote{This is just a variant of \hyperref[thm:Riesz-representation]{Riesz representation theorem}.} and \(\left\lVert \mu \right\rVert = TV(\mu )\). What we want to show is
+	\[
+		\lim_{n \to \infty} \int _K x_n \,\mathrm{d} \mu = \int x \,\mathrm{d} \mu,
+	\]
+	which follows from the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{dominated convergence theorem}.
+\end{proof}
+
+\section{Weak* Topology}
+This is a topology on the \hyperref[def:dual-space]{dual} \(X^{\ast} \) of a \hyperref[def:Banach-space]{Banach space} \(X\). Intuitively, it's analogous to the \hyperref[def:weak-topology]{weak topology} on \(X^{\ast} \), which only the same if \(X\) is \hyperref[def:reflexive-space]{reflexive}, i.e., \(X^{\ast\ast} \equiv X\).
+
+\begin{definition}[Weak* convergence]\label{def:weak*-convergence}
+	Let \(X\) be a \hyperref[def:Banach-space]{Banach space}, a sequence \(\left\{ f_{n} \right\}_{n\geq 1} \) in \(X^{\ast} \) is \emph{weak* converging} to \(f\) in \(X^{\ast}\) if
+	\[
+		\lim_{n \to \infty} f_n(x) = f(x)
+	\]
+	for all \(x\in X\).
+\end{definition}
+
+\begin{notation}
+	If \(\left\{ f_n \right\} \) is \hyperref[def:weak*-convergence]{weak* converging} to \(f\), we write \(f_n \overset{w^{\ast}}{\to } f\).
+\end{notation}
+
+\begin{definition}[Weak* topology]\label{def:weak*-topology}
+
+\end{definition}
+
+\begin{note}[Completeness]
+	If \(\left\{ f_n \right\}_{n \geq 1}\) is \hyperref[def:weak*-convergence]{weak*} Cauchy, then \hyperref[thm:uniform-boundedness]{uniform boundedness principle} implies that there exists \(f\in X^{\ast} \) such that \(f_n \overset{w^{\ast} }{\to } f\).
+\end{note}
+
+The base of the \hyperref[def:weak*-topology]{weak* topology} is given by the \emph{cylinders}
+\[
+	\left\{ f\in X^{\ast} \colon \left\vert (f-f_0)(x_k) \right\vert < \epsilon , k = 1, \ldots , N \right\}.
+\]
+Hence, we view \(X^{\ast} \) with \hyperref[def:weak*-topology]{weak* topology} as embedded in an infinite product of \(\mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \) such that
+\[
+	X^{\ast} \to \mathbb{\MakeUppercase{r}} ^{\infty },\quad f\mapsto \left[ f(x)\colon x\in X \right] .
+\]
+\begin{theorem}[Banach-Alaoglu theorem]\label{thm:Banach-Alaoglu}
+	Let \(X\) be a \hyperref[def:Banach-space]{Banach space} with \hyperref[def:dual-space]{dual} \(X^{\ast} \), then the unit \hyperref[def:ball]{ball} \(B_{X^{\ast} }= \left\{ f\in X^{\ast} \colon \left\lVert f\right\rVert \leq 1 \right\}\) in \(X^{\ast} \) is \hyperref[def:compact]{compact} in the \hyperref[def:weak*-topology]{weak* topology}.
+\end{theorem}
+\begin{proof}
+	Embed \(B_{X^{\ast} }\) into product space of intervals, i.e.,
+	\[
+		f\in B_{X^{\ast} }\implies \left\vert f(x) \right\vert \leq \left\lVert x\right\rVert
+	\]
+	for \(x\in X\). Hence, \(B_{X^{\ast} }\) embeds into \(\prod_{x\in X} [-\left\lVert x\right\rVert , \left\lVert x\right\rVert]\), which is the product of \hyperref[def:compact]{compact} spaces. \href{https://en.wikipedia.org/wiki/Tychonoff's_theorem}{Tychonoff's theorem} implies that this product is \hyperref[def:compact]{compact}. We now need to show the embedding
+	\[
+		B_{X^{\ast} } \to \prod_{x\in X} [-\left\lVert x\right\rVert , \left\lVert x\right\rVert ]
+	\]
+	is to a closed subset, hence \hyperref[def:compact]{compact}. Let \(x, y\in X\), \(a, b\in \mathbb{\MakeUppercase{r}} \), and let
+	\[
+		B_{x, y, a, b} = \left\{ f\in K\colon f(ax+by) = af(x) + bf(y) \right\}
+	\]
+	with \(K = \prod_{x\in X}[-\left\lVert x\right\rVert , \left\lVert x\right\rVert ]\). The image of \(B_{X^{\ast} }\) in \(K\) is just
+	\[
+		\bigcap_{\substack{x, y\in X\\ a, b\in \mathbb{\MakeUppercase{r}} }}B_{x, y, a, b},
+	\]
+	we see that it's sufficient to show \(B_{x, y, a, b}\) is closed in \(K\).but since \(B_{x, y, a, b}\) is the preimage of \(\left\{ 0 \right\} \) under mapping \(f \to f(ax+by) - af(x) - bf(y)\), so it's closed.
+\end{proof}
+
+Let's see some applications. Consider spaces \(L^p(\mu )\) with \(1 < p < \infty\), we know that these are \hyperref[def:reflexive-space]{reflexive}, then the unit \hyperref[def:ball]{ball} in \(L^p(\mu )\) is \hyperref[def:compact]{compact} in the \hyperref[def:weak-topology]{weak topology}. i.e., let \(f_n\in L^p(\mu )\) for \(n \geq 1\) be bounded, then there exists a subsequence \(f_{n_k}\) for \(k\geq 1\) and \(f\in L^p(\mu )\) such that
+\[
+	\lim_{n \to \infty} \int f_{n_k}g\,\mathrm{d} \mu = \int fg\,\mathrm{d} \mu
+\]
+for all \(g\in L^{q}(\mu )\) with \(1 / p + 1 / q = 1\).
+
+Another example is that let the \hyperref[def:Banach-space]{Banach space} be \(C(K)\), the \hyperref[def:dual-space]{dual} \(C(K)^{\ast} \) is the space of finite signed measure \(\mu\) on \(K\) with \(TV(\mu )< \infty \). Let \(\mu _n\) be a sequence of measures on \(K\) such that \(\sup _{n\geq 1} TV(\mu _n) < \infty \), then \(\left\{ \mu _n \right\}_{n\geq 1} \) is bounded in \(C(K)^{\ast} \). We see that there exists a subsequence \(\mu _{n_k}\) for \(k\geq 1\) such that \(\mu _{n_k}\overset{w^{\ast} }{\to } \mu \in C(K)^{\ast} \), i.e.,
+\[
+	\lim_{n \to \infty} \int _K f\,\mathrm{d} \mu _{n_k} = \int _K f\,\mathrm{d} \mu
+\]
+for all \(f\in C(K)\).
+
+\begin{note}
+	This is generally referred to as \emph{weak convergence of measures}.
+\end{note}
+
+\chapter{Compact Operators}
+A \hyperref[def:compact-op]{compact operator} \(T\colon X\to Y\) on \hyperref[def:Banach-space]{Banach spaces} \(X, Y\) is a natural generalization of operators with finite rank, i.e., \(\im(T)\) is finite dimensional.
+
+\begin{definition}[Compact operator]\label{def:compact-op}
+	Let \(X, Y\) be \hyperref[def:Banach-space]{Banach spaces}, we say a \hyperref[def:bounded-map]{bounded operator} \(T\colon X\to Y\) is \emph{compact} if it maps bounded sequence in \(X\) to \hyperref[def:precompact]{precompact sets} in \(Y\).
+\end{definition}
+
+In other words, the closure of \(T(B_X)\) is \hyperref[def:compact]{compact} for \(T\) being \hyperref[def:compact-op]{compact}.
+
+\begin{notation}
+	The set of \hyperref[def:compact-op]{compact operators} \(T\colon X\to Y\) is denoted as \(K(X, Y)\).
+\end{notation}
+
+\begin{proposition}
+	Let \(X, Y\) be \hyperref[def:Banach-space]{Banach spaces}, then
+	\begin{enumerate}[(a)]
+		\item \(K(X, Y)\) is a closed \hyperref[def:linear-vector-space]{linear subspace} of \(\mathcal{\MakeUppercase{l}} (X, Y)\).
+		\item For \(T\in K(X, Y)\) and \(S\) is \hyperref[def:bounded-map]{bounded}, if \(S\colon Y\to Z\), then \(ST\) is \hyperref[def:compact-op]{compact}; if \(S\colon Z\to X\), then \(TS\) is \hyperref[def:compact-op]{compact}.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	Let's prove this one by one.
+	\begin{enumerate}[(a)]
+		\item Linearity follows since the sum of two \hyperref[def:precompact]{precompact sets} is \hyperref[def:precompact]{precompact}. For closedness, let \(T_n\in Kx, Y\), \(T\in \mathcal{\MakeUppercase{l}} (X, Y)\) with \(\lim_{n \to \infty} \left\lVert T_n - T\right\rVert = 0\), we need to show \(T\) is \hyperref[def:compact-op]{compact}. We can show this by showing that we can cover \(T(B_X)\) by a finite \hyperref[def:eps-net]{\(\epsilon \)-net}. Choose \(N\) such that \(\left\lVert T_N - T\right\rVert < \epsilon / 2\) and \(\Omega _\epsilon \) finite \hyperref[def:eps-net]{\(\epsilon /2\)-net} which covers \(T_N(B_X)\), i.e., \(\Omega _\epsilon \) is an \hyperref[def:eps-net]{\(\epsilon \)-net} for \(T(B_X)\).
+	\end{enumerate}
+\end{proof}

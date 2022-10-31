@@ -1,0 +1,120 @@
+\lecture{17}{31 Oct. 10:30}{Graph Coloring}
+Let's first prove \autoref{thm:PTAS-for-max-cut}.
+
+\begin{proof}[Proof of \autoref{thm:PTAS-for-max-cut}]
+	The running time for \autoref{algo:max-cut-PTAS} is clear. Denote \(p_i = \widetilde{P} ^\prime (X_i = 1)\), then we see that the expected fraction of edges cuts is
+	\[
+		\begin{split}
+			&\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ \Pr\nolimits_{\mathrm{ALG}}(X_i \neq X_j) \right]\\
+			=& \mathbb{E}_{X_S}\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[p_i + p_j - 2 p_i p_j \right]\\
+			\geq& \mathbb{E}_{X_S}\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ p_i + p_j - 2 \mathbb{E}_{\widetilde{P} ^\prime }\left[X_i X_j \right] - 2 \left\vert p_i p_j - \mathbb{E}_{\widetilde{P} ^\prime }\left[X_i X_j \right]  \right\vert  \right]\\
+			=& \underbrace{\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ \mathbb{E}_{\widetilde{P} }\left[X_i \right] + \mathbb{E}_{\widetilde{P} }\left[X_j \right] - 2 \mathbb{E}_{\widetilde{P} }\left[ X_i X_j\right]  \right]}_{\mathrm{Lass}} - \underbrace{2 \mathbb{E}_{X_S} \mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ p_i p_j - \mathbb{E}_{\widetilde{P} ^\prime }\left[ X_i X_j\right] \right]}_{\mathrm{Err}}.
+		\end{split}
+	\]
+	Recall that previously, we only have control on \(\mathop{\mathrm{Cov}}\nolimits_{\widetilde{P} ^\prime }^{2} = \mathop{\mathrm{Cov}}^2(\widetilde{P} \mid X_S\gets \alpha _S)\), which is over the whole \(i, j\sim[n]\). But now the error term (the second term) is only over \((i, j)\sim \mathcal{\MakeUppercase{e}} \), hence we define
+	\[
+		\mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{E}} }^2\left[ \widetilde{P} \mid X_S \gets \alpha _S\right]
+		= \mathbb{E}_{X_S} \mathbb{E}_{(i, j)\sim \mathcal{\MakeUppercase{e}} }\left[ \mathop{\mathrm{Cov}}\nolimits_{}\left[X_i , X_j \mid S_S \right]^{2}\right].
+	\]
+	\begin{claim}
+		\(\mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{e}} }^2 [ \widetilde{P} \mid S ] \leq \mathop{\mathrm{Cov}}\nolimits_{}[\widetilde{P} \mid X_S \gets \alpha _S ] / \epsilon \leq \epsilon ^3 \).
+	\end{claim}
+	\begin{explanation}
+		We see that
+		\[
+			\begin{split}
+				n^2\cdot \mathop{\mathrm{Cov}}\nolimits_{}^2\left[\widetilde{P} \mid X_S \gets \alpha _S \right]
+				&= \mathop{\mathrm{Cov}}\nolimits_{\Sigma }^2\left[\widetilde{P} \mid X_S\gets \alpha _S \right] \\
+				&\geq \mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{e}} , \Sigma }^2\left[\widetilde{P} \mid X_S\gets \alpha _S \right]
+				= m \cdot \mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{e}} }^2\left[\widetilde{P} \mid X_S \gets \alpha _S \right],
+			\end{split}
+		\]
+		where subscript \(\Sigma \) is when we replace the expectation by summation in the covariance. With the fact that \(m\gets \epsilon n^2\), we're done.
+	\end{explanation}
+	Now, since we know that \(\mathrm{Lass} \geq \OPT \geq 1 / 2\), we have
+	\[
+		\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ \Pr\nolimits_{\mathrm{ALG}}(X_i \neq X_j) \right]
+		\geq \mathrm{Lass} - 2 \epsilon \geq \mathrm{Lass}(1 - 4 \epsilon ),
+	\]
+	finishing the proof.
+\end{proof}
+
+\section{Graph Coloring}
+We now return to the usual \hyperref[def:SDP]{SDP}.
+
+\begin{definition}[Coloring]\label{def:coloring}
+	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a \emph{(valid) coloring} \(\chi \colon \mathcal{\MakeUppercase{v}} \to [c]\) such that for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), \(\chi (i) \neq \chi (j)\).
+\end{definition}
+
+Now, consider the following problem.
+
+\begin{problem}[Graph coloring]\label{prb:graph-coloring}
+Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), find a \hyperref[def:coloring]{coloring} \(\chi \colon \mathcal{\MakeUppercase{v}} \to [c]\) while minimizing \(c\).
+\end{problem}
+
+Before trying to solve the \hyperref[prb:graph-coloring]{graph coloring}, we note that this is extremely hard.
+
+\begin{theorem}
+	For all \(\epsilon > 0\), it's \(\NP\) to get \(n^{1 - \epsilon }\)-approximation.
+\end{theorem}
+
+From here, people start to consider some promise version of which, i.e., if \(\mathcal{\MakeUppercase{g}} \) admits a \(c\)-\hyperref[def:coloring]{coloring}, then what can we say?
+\begin{itemize}
+	\item \(c = 1\): \(\mathcal{\MakeUppercase{g}} \) has no edges.
+	\item \(c = 2\): \(\mathcal{\MakeUppercase{g}} \) is bipartite.
+	\item \(c = 3\): \(\NP\)!
+\end{itemize}
+
+\(\widetilde{O} (n^{1 / 4})\)
+
+\begin{definition}[Independent set]\label{def:independent-set}
+	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a set \(S \subseteq \mathcal{\MakeUppercase{v}} \) is \emph{independent} if for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), either \(i \notin S\) or \(j \notin S\).
+\end{definition}
+
+\begin{lemma}
+	For a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), then \(\mathcal{\MakeUppercase{g}} \) is \(c\)-\hyperref[def:coloring]{colorable} if and only if \(\mathcal{\MakeUppercase{v}} \) can be partitioned to \(V_1, \ldots, Vc\) such that \(V_i\) is \hyperref[def:independent-set]{independent}.
+\end{lemma}
+
+\begin{theorem}
+	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, we can find \hyperref[def:independent-set]{independent set} of size \(\widetilde{\Omega} (n\cdot \Delta ^{-1 / 3})\) where \(\Delta \coloneqq \Delta (\mathcal{\MakeUppercase{G}} )\coloneqq \max_{v\in \mathcal{\MakeUppercase{v}} } \deg(v)\).
+\end{theorem}
+
+Since we don't have an actual objective function, we have the following \hyperref[def:SDP]{SDP} with vector \(v_i\) for \(i\in \mathcal{\MakeUppercase{v}} \).
+
+\begin{equation}\label{eq:graph-coloring}
+	\begin{aligned}
+		\min~ & 0                                                                                             \\
+		      & \left\langle v_i, v_i \right\rangle = 1      & \forall i\in \mathcal{\MakeUppercase{v}}       \\
+		      & \left\langle v_i, v_j \right\rangle = -1 / 2 & \forall (i, j)\in \mathcal{\MakeUppercase{e}}.
+	\end{aligned}
+\end{equation}
+\begin{claim}
+	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, there exists \(\left\{ v_i \right\}_{i\in \mathcal{\MakeUppercase{v}} } \) that are feasible for \autoref{eq:graph-coloring}.
+\end{claim}
+\begin{explanation}
+	Consider \(3\) colors \(C_1\), \(C_2\), and \(C_3\), then if \(i\) has \(C_j\), we let \(i\) gets vector \(u_j\) with all vectors \(u_j\), \(u_{j^\prime }\) are \(120^{\circ } \) away.
+	\begin{center}
+		\incfig{3-coloring}
+	\end{center}
+\end{explanation}
+
+Instead of
+
+This suggests the following algorithm.
+
+\begin{algorithm}[H]\label{algo:graph-coloring-SDP-rounding}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \hyperref[def:SDP]{SDP} Rounding}
+	\KwData{A graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with \(\left\vert \mathcal{\MakeUppercase{e}}  \right\vert \geq \epsilon n^{2} \), \(\epsilon > 0\)}
+	\KwResult{A cut \(S\)}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{Ber}{Ber}
+	\SetKwFunction{Sol}{Solve}
+	\SetKwFunction{Red}{\hyperref[algo:thm-lec16]{Reduce-Variance}}
+	\BlankLine
+	\(\left\{ v_i \in \mathbb{\MakeUppercase{r}} ^d\right\} _{i=1}^n \gets\)\Sol{\hyperref[eq:graph-coloring]{SDP}}\;
+	\(r \gets \mathcal{\MakeUppercase{n}} (0, I_d)\)\Comment*[r]{\(r_i \sim \mathcal{\MakeUppercase{n}} (0, 1)\)}
+	\(S(\epsilon )\gets\left\{ i\in \mathcal{\MakeUppercase{v}} \colon \left\langle r, v_i \right\rangle \geq \epsilon   \right\} \)\Comment*[r]{\(\epsilon = \sqrt{2 / 3\cdot \ln \Delta } \) }
+	\(S^\prime (\epsilon )= \left\{ i\in S(\epsilon )\colon \nexists j\in S(\epsilon ) \text{ s.t. } (i, j)\in \mathcal{\MakeUppercase{e}} \right\} \)\;
+	\Return{\(S\)}\;
+\end{algorithm}

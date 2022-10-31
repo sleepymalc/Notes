@@ -141,44 +141,38 @@ Apart from this, we also see that
 	\autoref{thm:lec16} says that suppose we have a \hyperref[def:local-distribution]{local distribution} over \(n\) variables with sufficient large locality. Then turns out that there's a small subset of variables, if we fix them, they'll almost determine all other variables.
 \end{remark}
 
-\begin{theorem}[\href{https://en.wikipedia.org/wiki/Polynomial-time_approximation_scheme}{PTAS} for max cut]\label{thm:PTAS-for-max-cut}
-	For any \(\epsilon >0\), given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) such that \(\left\vert \mathcal{\MakeUppercase{e}}  \right\vert \geq \epsilon n^{2} \), there exists a \((1 - 6\epsilon )\)-approximation algorithm runs in \(n^{O(1 / \epsilon ^4)}\)-time.
-\end{theorem}
-\begin{proof}
-	Again, we give a constructive proof here.
+Finally, we have the following algorithm.
 
-	\begin{algorithm}[H]\label{algo:max-cut-PTAS}
-		\DontPrintSemicolon
-		\caption{\hyperref[prb:max-cut]{Max Cut} -- \href{https://en.wikipedia.org/wiki/Polynomial-time_approximation_scheme}{PTAS}}
-		\KwData{A dense graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with \(\left\vert \mathcal{\MakeUppercase{e}}  \right\vert \geq \epsilon n^{2} \), \(\epsilon > 0\)}
-		\KwResult{A cut \(S\)}
-		\SetKwFunction{rand}{rand}
-		\SetKwFunction{Ber}{Ber}
-		\SetKwFunction{Sol}{Solve}
-		\SetKwFunction{Red}{\hyperref[algo:thm-lec16]{Reduce-Variance}}
-		\BlankLine
-		\(R\gets 1 / \epsilon ^4 + 2\)\;
-		\(\widetilde{P} \coloneqq \{ \widetilde{P} _A \}_{\left\vert A \right\vert \leq R} \gets\)\Sol{\(\mathop{\mathrm{Lass}}_R(\mathcal{\MakeUppercase{p}})\)}\;
-		\(\widetilde{P} ^\prime \gets\)\Red{\(\widetilde{P}\)}\Comment*[r]{\(\mathbb{E}_{ij\sim [n]}\left[\mathop{\mathrm{Cov}}\nolimits_{\widetilde{P} ^\prime }\left[X_i, X_j \right]^{2} \right] \leq \epsilon ^4 / 4\)}
-		\;
-		\label{algo:PTAS-max-cut-comment}\Comment{Rounding}
-		\For(){\(i\in \mathcal{\MakeUppercase{v}} \)}{
-			\(\lambda _i\gets\)\Ber{\(\widetilde{P} ^\prime (X_i = 1)\)}\;
-		}
-		\(S\gets \left\{ i\in \mathcal{\MakeUppercase{v}} \colon \lambda _i = 1 \right\} \)\;
-		\Return{\(S\)}\;
-	\end{algorithm}
-
-	The running time for \autoref{algo:max-cut-PTAS} is clear. For correctness, we skip the formal proof here, but the intuition is that if \((i, j)\in \mathcal{\MakeUppercase{e}} \), then \(\widetilde{P} ^\prime (X_i \neq X_j)\) is the probability that \emph{the \hyperref[def:SDP]{SDP} thinks \((i, j)\) is a cut edge}. On the other hand, the probability of \((i, j)\) is actually a cut edge is given by
-	\[
-		\Pr_{}(X_i = 1) \Pr_{}(X_j = 0) + \Pr_{}(X_i = 0) \Pr_{}(X_j = 1)
-	\]
-	in a randomized algorithm. The covariance being small means that these two quantities are close (on average \((i, j)\) pairs), so that the independent rounding is not too far from the \hyperref[def:SDP]{SDP} value.\footnote{Recall that when \(R=n\), we get the exact IP formulation.}
-\end{proof}
-
-
-We see that as long as the graph is dense enough, we can spend more and more time to get a better approximation, which is the whole point of Lasserre hierarchy.
+\begin{algorithm}[H]\label{algo:max-cut-PTAS}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:max-cut]{Max Cut} -- \href{https://en.wikipedia.org/wiki/Polynomial-time_approximation_scheme}{PTAS}}
+	\KwData{A dense graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with \(\left\vert \mathcal{\MakeUppercase{e}}  \right\vert \geq \epsilon n^{2} \), \(\epsilon > 0\)}
+	\KwResult{A cut \(S\)}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{Ber}{Ber}
+	\SetKwFunction{Sol}{Solve}
+	\SetKwFunction{Red}{\hyperref[algo:thm-lec16]{Reduce-Variance}}
+	\BlankLine
+	\(R\gets 1 / \epsilon ^4 + 2\)\;
+	\(\widetilde{P} \coloneqq \{ \widetilde{P} _A \}_{\left\vert A \right\vert \leq R} \gets\)\Sol{\(\mathop{\mathrm{Lass}}_R(\mathcal{\MakeUppercase{p}})\)}\;
+	\(\widetilde{P} ^\prime \gets\)\Red{\(\widetilde{P}\)}\Comment*[r]{\(\mathbb{E}_{ij\sim [n]}\left[\mathop{\mathrm{Cov}}\nolimits_{\widetilde{P} ^\prime }\left[X_i, X_j \right]^{2} \right] \leq \epsilon ^4 / 4\)}
+	\;
+	\label{algo:PTAS-max-cut-comment}\Comment{Rounding}
+	\For(){\(i\in \mathcal{\MakeUppercase{v}} \)}{
+		\(\lambda _i\gets\)\Ber{\(\widetilde{P} ^\prime (X_i = 1)\)}\;
+	}
+	\(S\gets \left\{ i\in \mathcal{\MakeUppercase{v}} \colon \lambda _i = 1 \right\} \)\;
+	\Return{\(S\)}\;
+\end{algorithm}
 
 \begin{remark}
 	The rounding method in \autoref{algo:max-cut-PTAS} (i.e., \autoref{algo:PTAS-max-cut-comment}) is ridiculously simple compare to \autoref{algo:max-cut-randomized-rounding}! \(\widetilde{P} ^\prime \) basically tells you everything.
 \end{remark}
+
+We indeed have the following guarantee.
+
+\begin{theorem}[\href{https://en.wikipedia.org/wiki/Polynomial-time_approximation_scheme}{PTAS} for max cut]\label{thm:PTAS-for-max-cut}
+	For any \(\epsilon >0\), given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) such that \(\left\vert \mathcal{\MakeUppercase{e}}  \right\vert \geq \epsilon n^{2} \), there exists a \((1 - 4\epsilon )\)-approximation algorithm runs in \(n^{O(1 / \epsilon ^4)}\)-time.
+\end{theorem}
+
+We see that as long as the graph is dense enough, we can spend more and more time to get a better approximation, which is the whole point of Lasserre hierarchy.

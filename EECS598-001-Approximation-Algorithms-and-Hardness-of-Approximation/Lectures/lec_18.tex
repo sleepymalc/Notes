@@ -1,1 +1,115 @@
-\lecture{18}{2 NOv. 10:30}{Graph Coloring}
+\lecture{18}{2 Nov. 10:30}{Graph Coloring}
+\begin{prev}
+	The probability density function for Gaussian distribution is
+	\[
+		p(x) = \frac{1}{\sqrt{2\pi } }e^{- x^{2} / 2},
+	\]
+	and the cumulated density function is
+	\[
+		\Phi (x) = \Pr_{g}(g \leq x) = \int_{-\infty}^{x} p(x) \,\mathrm{d}s, \quad \overline{\Phi }(x) = \Pr_{g}(g \geq x) = 1 - \Phi (x).
+	\]
+\end{prev}
+
+To analyze \autoref{algo:graph-coloring-independent-set}, since the \(r\) sampled in \autoref{algo:graph-coloring-independent-set-r} is Gaussian, from the spherical symmetry, we have \(\left\langle r, v_i \right\rangle \sim \mathcal{\MakeUppercase{n}} (0, 1)\) for all \(i\in \mathcal{\MakeUppercase{v}} \). Moreover, since the probability of \(i\) being in \(S(\epsilon )\) is exactly \(\overline{\Phi }(\epsilon )\), from the linearity of expectation, we have \(\mathbb{E}_{}\left[\left\vert S(\epsilon ) \right\vert\right] = n\cdot \overline{\Phi }(\epsilon )\).
+
+\begin{lemma}\label{lma:lec18-1}
+	\(\Pr_{}(i \notin S^\prime (\epsilon )\mid i\in S(\epsilon )) \leq \Delta \overline{\Phi }(\sqrt{3}\epsilon)\).
+\end{lemma}
+\begin{proof}
+	Fix any \((i, j)\in \mathcal{\MakeUppercase{e}} \), it's sufficient to show \(\Pr_{}(j\in S(\epsilon )\mid i\in S(\epsilon )) \leq \overline{\Phi}(\sqrt{3}\epsilon)\). And from the fact that all \(v_j\) are \(120^{\circ } \) apart, we hence can write
+	\[
+		v_j = - \frac{1}{2} v_i + \frac{\sqrt{3}}{2} u
+	\]
+	where \(\left\lVert u\right\rVert = 1\) and \(u\perp v_i\). If \(j\in S(\epsilon )\), then
+	\[
+		\left\langle v_j , r \right\rangle \geq \epsilon
+		\implies \underbrace{\left\langle -\frac{1}{2}v_i, r \right\rangle}_{\leq - \epsilon / 2} + \left\langle \frac{\sqrt{3}}{2}u, r \right\rangle \geq \epsilon
+		\implies \left\langle \frac{\sqrt{3} }{2} u, r \right\rangle \geq \frac{3\epsilon}{2}
+		\implies \left\langle u, r \right\rangle \geq \sqrt{3}\epsilon .
+	\]
+	Since if \(u\perp v\in \mathbb{\MakeUppercase{r}} ^d\), \(\left\langle u, r \right\rangle \) and \(\left\langle v, r \right\rangle \) are independent, so \(\Pr_{}(j\in S(\epsilon )\mid i\in S(\epsilon )) \leq \overline{\Phi }(\sqrt{3} \epsilon )\) as desired.
+\end{proof}
+
+\begin{lemma}\label{lma:lec18-2}
+	If \(x \geq 10\),
+	\[
+		\frac{1}{2x} p(x) \leq \overline{\Phi }(x) \leq \frac{1}{x}p(x).
+	\]
+\end{lemma}
+\begin{proof}
+	Since we know that
+	\[
+		\frac{x}{1+x^{2} } p(x) \leq \overline{\Phi }(x) \leq \frac{1}{x}p(x)
+	\]
+	for all \(x\), if \(x \geq 10\), \(x / (1 + x^{2} ) \geq 1 / 2x\), hence we're done.
+\end{proof}
+
+We can now prove \autoref{thm:lec17}.
+
+\begin{proof}[Proof of \autoref{thm:lec17}]
+	We see that
+	\[
+		\mathbb{E}_{}\left[\left\vert S^\prime (\epsilon ) \right\vert  \right]
+		= \sum_{i\in \mathcal{\MakeUppercase{v}} } \underbrace{\Pr_{}(i\in S(\epsilon ))}_{\overline{\Phi }(\epsilon )}\cdot \Pr_{}(i\in S^\prime (\epsilon )\mid i\in S(\epsilon ))
+		\leq  \sum_{i\in \mathcal{\MakeUppercase{v}} } \overline{\Phi }(\epsilon )\cdot \left( 1 - \Delta \overline{\Phi }(\sqrt{3}\epsilon  ) \right),
+	\]
+	from \autoref{lma:lec18-1}. And since \(\overline{\Phi }(\epsilon )\geq p(\epsilon ) / 2\epsilon \) with \(\overline{\Phi }(\sqrt{3}\epsilon) \leq p(\sqrt{3}\epsilon) / \epsilon\)\todo{\(\sqrt{3}\epsilon  \)?} from \autoref{lma:lec18-2}, and
+	\[
+		p(\sqrt{3} \epsilon ) = \frac{1}{\sqrt{2\pi } } e^{- 3\cdot (2 / 3 \cdot \ln \Delta ) / 2} = \frac{1}{\sqrt{2\pi } }\cdot \frac{1}{\Delta },
+	\]
+	and
+	\[
+		p(\epsilon ) = \frac{1}{\sqrt{2\pi } }\frac{1}{\Delta ^{1 / 3}},
+	\]
+	we further have
+	\[
+		\mathbb{E}_{}\left[\left\vert S^\prime (\epsilon ) \right\vert  \right]
+		\geq \sum_{i\in \mathcal{\MakeUppercase{v}} } \underbrace{\left( \frac{1}{2\epsilon }\cdot p(\epsilon ) \right)}_{\geq \Omega (\frac{1}{\sqrt{\ln \Delta } } \frac{1}{\Delta ^{1 / 3}})} \cdot \underbrace{\left( 1 - \Delta \cdot \frac{1}{\epsilon }\cdot p(\sqrt{3} \epsilon ) \right)}_{\geq 1 / 2}
+		\geq \Omega (n\cdot \Delta ^{-1 / 3} \ln ^{-1 / 2}\Delta ).
+	\]
+\end{proof}
+
+Before we see the final algorithm, we introduce a cute trick.
+
+\begin{remark}[Wigderson's trick]\label{rmk:Wigderson-trick}
+	We can always \(3\)-\hyperref[def:coloring]{color} \(\left\{ v \right\} \cup \mathcal{\MakeUppercase{n}} (v)\) for all \(v\in \mathcal{\MakeUppercase{v}} \) if \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}.
+\end{remark}
+\begin{explanation}
+	Since for a \(3\)-\hyperref[def:coloring]{colorable} graph, for all \(v\in \mathcal{\MakeUppercase{v}} \), \(\mathcal{\MakeUppercase{g}} [N(v)]\) is bipartite (all \(u\in N(v)\) already links with \(v\), so the degree will be at most \(2\) in \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{n}} (v)]\)). And as mentioned before, we can always \(2\)-\hyperref[def:coloring]{colors} a bipartite graph. And we just use another new color for \(v\) to do the \(3\)-\hyperref[def:coloring]{coloring}.
+\end{explanation}
+
+Now, we see the final algorithm.
+
+\begin{algorithm}[H]\label{algo:graph-coloring}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \(3\)-\hyperref[def:coloring]{Colorable} Graph}
+	\KwData{A \(3\)-\hyperref[def:coloring]{colorable} graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
+	\KwResult{A \hyperref[def:coloring]{colored} \(\mathcal{\MakeUppercase{g}} \)}
+	\SetKwFunction{rand}{rand}
+	\SetKwFunction{Ber}{Ber}
+	\SetKwFunction{Sol}{Solve}
+	\SetKwFunction{Red}{\hyperref[algo:thm-lec16]{Reduce-Variance}}
+	\BlankLine
+	\(n_0\gets \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \)\;
+	\While(){\(\Delta (\mathcal{\MakeUppercase{g}} ) \geq n_0 ^{3 / 4}\)}{
+	\(v\gets\)\rand{\(\mathcal{\MakeUppercase{v}}\)}\;
+	\(3\) colors \(\left\{ v \right\} \cup N(v)\)\Comment*[r]{\hyperref[rmk:Wigderson-trick]{Wigderson's trick}}
+	\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\text{uncolored vertices}]\)\;
+	}
+	\While(){\(\Delta (\mathcal{\MakeUppercase{g}} ) \geq 100\)}{
+		\(S\gets\)\hyperref[def:independent-set]{independent set} from \autoref{thm:lec17}\Comment*[r]{\(\left\vert S \right\vert \geq c\cdot n\cdot \Delta ^{-1 / 3} \ln ^{-1 / 2}\Delta \)}
+		\(1\) colors \(S\)\;
+		\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\text{uncolored vertices}]\)\;
+	}
+	\(\Delta (\mathcal{\MakeUppercase{g}} ) + 1\) colors \(\mathcal{\MakeUppercase{g}} \)\Comment*[r]{\(\Delta (\mathcal{\MakeUppercase{g}} ) < 100\)}
+	\Return{\(\mathcal{\MakeUppercase{g}} \)}\;
+\end{algorithm}
+
+Notice that in \autoref{algo:graph-coloring}, whenever we do a \hyperref[def:coloring]{coloring}, we use a brand-new color to avoid any collision.
+
+\begin{theorem}
+	\autoref{algo:graph-coloring} is an \(\widetilde{O} (n^{1 / 4})\)-approximation algorithm for \hyperref[prb:graph-coloring]{graph coloring}.
+\end{theorem}
+\begin{proof}
+
+\end{proof}

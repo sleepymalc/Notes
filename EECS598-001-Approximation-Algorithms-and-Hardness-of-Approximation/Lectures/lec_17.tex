@@ -40,10 +40,10 @@ Let's first prove \autoref{thm:PTAS-for-max-cut}.
 \end{proof}
 
 \section{Graph Coloring}
-We now return to problems and try to use the usual \hyperref[def:SDP]{SDP} to solve them. First, we introduce a new definition.
+Return to the \hyperref[def:SDP]{SDP}, first, we introduce a new definition.
 
 \begin{definition}[Coloring]\label{def:coloring}
-	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a \emph{(valid) coloring} \(\chi \colon \mathcal{\MakeUppercase{v}} \to [c]\) such that for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), \(\chi (i) \neq \chi (j)\).
+	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a \emph{(valid) coloring} \(\chi \colon \mathcal{\MakeUppercase{v}} \to [c]\) is a function \(\chi \) such that for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), \(\chi (i) \neq \chi (j)\).
 \end{definition}
 
 Now, consider the following problem.
@@ -69,7 +69,7 @@ People start to consider some promise version of \hyperref[prb:graph-coloring]{g
 \end{remark}
 
 \subsection{Independent Sets}
-We're going to focus on the case that \(c=3\). But before that, we introduce the so-called \hyperref[def:independent-set]{independent set}.
+Focusing on the case that \(c=3\). But before that, we introduce the so-called \hyperref[def:independent-set]{independent set}.
 \begin{definition}[Independent set]\label{def:independent-set}
 	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a set \(S \subseteq \mathcal{\MakeUppercase{v}} \) is \emph{independent} if for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), either \(i \notin S\) or \(j \notin S\).
 \end{definition}
@@ -80,19 +80,21 @@ The notion of \hyperref[def:independent-set]{independent set} is useful since we
 	For a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), then \(\mathcal{\MakeUppercase{g}} \) is \(c\)-\hyperref[def:coloring]{colorable} if and only if \(\mathcal{\MakeUppercase{v}} \) can be partitioned to \(V_1, \ldots, V_c\) such that \(V_i\) is \hyperref[def:independent-set]{independent}.
 \end{lemma}
 
-The proof of \autoref{lma:lec17} is quite trivial and intuitive. And we see that now, if we can find large enough \hyperref[def:independent-set]{independent sets} and partition the graph into not too many components (\hyperref[def:independent-set]{independent sets}), we're done. Turns out that the size of \hyperref[def:independent-set]{independent sets} is highly related to the maximum degree in a graph.
+With \autoref{lma:lec17}, if we can find large \hyperref[def:independent-set]{independent sets} and partition the graph into not too many of those, we're done. Turns out that the size of \hyperref[def:independent-set]{independent sets} is related to the maximum degree.
 
 \begin{notation}
-	We let \(\Delta \) to denote the maximum degree of a graph \(\mathcal{\MakeUppercase{g}} \), i.e., \(\Delta \coloneqq \Delta (\mathcal{\MakeUppercase{G}} )\coloneqq \max_{v\in \mathcal{\MakeUppercase{v}} } \deg(v)\).
+	We denote the maximum degree of a graph \(\mathcal{\MakeUppercase{g}}=(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \) by \(\Delta \coloneqq \Delta (\mathcal{\MakeUppercase{G}} )\coloneqq \max_{v\in \mathcal{\MakeUppercase{v}} } \deg(v)\).
 \end{notation}
 
-\begin{theorem}
-	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, we can find \hyperref[def:independent-set]{independent set} of size \(\widetilde{\Omega} (n\cdot \Delta ^{-1 / 3})\).
+Given \(\Delta \) , we will have a trivial \(\Delta \)-\hyperref[def:coloring]{coloring}, which is why \(\Delta \) is used here.
+
+\begin{theorem}\label{thm:lec17}
+	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, we can find \hyperref[def:independent-set]{independent set} of size \(\Omega (n\cdot \Delta ^{-1 / 3}\log^{-1 / 2} \Delta )\).
 \end{theorem}
 
-Since we don't have an actual objective function, we have the following \hyperref[def:SDP]{SDP} with vector \(v_i\) for \(i\in \mathcal{\MakeUppercase{v}} \).
+To prove \autoref{thm:lec17}, we design the following \hyperref[eq:independent-set]{SDP}. since we don't have an actual objective function, we have the following \hyperref[def:SDP]{SDP} with vector \(v_i\) for \(i\in \mathcal{\MakeUppercase{v}} \).
 
-\begin{equation}\label{eq:graph-coloring}
+\begin{equation}\label{eq:independent-set}
 	\begin{aligned}
 		\min~ & 0                                                                                             \\
 		      & \left\langle v_i, v_i \right\rangle = 1      & \forall i\in \mathcal{\MakeUppercase{v}}       \\
@@ -100,7 +102,7 @@ Since we don't have an actual objective function, we have the following \hyperre
 	\end{aligned}
 \end{equation}
 \begin{claim}
-	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, there exists \(\left\{ v_i \right\}_{i\in \mathcal{\MakeUppercase{v}} } \) that are feasible for \autoref{eq:graph-coloring}.
+	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, there exists \(\left\{ v_i \right\}_{i\in \mathcal{\MakeUppercase{v}} } \) that are feasible for \autoref{eq:independent-set}.
 \end{claim}
 \begin{explanation}
 	Consider \(3\) colors \(C_1\), \(C_2\), and \(C_3\), then if \(i\) has \(C_j\), we let \(i\) gets vector \(v_j\) with all vectors \(v_j\), \(v_{j^\prime }\) are \(120^{\circ } \) away.
@@ -109,7 +111,7 @@ Since we don't have an actual objective function, we have the following \hyperre
 	\end{center}
 \end{explanation}
 
-Now, after solving \autoref{eq:graph-coloring}, we see that we need to round the solution, but consider the following.
+Now, after solving \autoref{eq:independent-set}, we see that we need to round the solution, but consider the following.
 
 \begin{figure}[H]
 	\centering
@@ -120,9 +122,9 @@ Now, after solving \autoref{eq:graph-coloring}, we see that we need to round the
 
 This suggests the following algorithm.
 
-\begin{algorithm}[H]\label{algo:graph-coloring-SDP-rounding}
+\begin{algorithm}[H]\label{algo:graph-coloring-independent-set}
 	\DontPrintSemicolon
-	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \hyperref[def:SDP]{SDP} Rounding}
+	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \hyperref[def:independent-set]{Independent Set}}
 	\KwData{A \(3\)-\hyperref[def:coloring]{colorable} graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
 	\KwResult{An \hyperref[def:independent-set]{independent set} \(S\)}
 	\SetKwFunction{rand}{rand}
@@ -130,9 +132,9 @@ This suggests the following algorithm.
 	\SetKwFunction{Sol}{Solve}
 	\SetKwFunction{Red}{\hyperref[algo:thm-lec16]{Reduce-Variance}}
 	\BlankLine
-	\(\left\{ v_i \in \mathbb{\MakeUppercase{r}} ^d\right\} _{i=1}^n \gets\)\Sol{\hyperref[eq:graph-coloring]{SDP}}\;
-	\(r \gets \mathcal{\MakeUppercase{n}} (0, I_d)\)\Comment*[r]{\(r_i \sim \mathcal{\MakeUppercase{n}} (0, 1)\)}
+	\(\left\{ v_i \in \mathbb{\MakeUppercase{r}} ^d\right\} _{i=1}^n \gets\)\Sol{\hyperref[eq:independent-set]{SDP}}\;
+	\(r \gets \mathcal{\MakeUppercase{n}} (0, I_d)\)\label{algo:graph-coloring-independent-set-r}\Comment*[r]{\(r_i \sim \mathcal{\MakeUppercase{n}} (0, 1)\)}
 	\(S(\epsilon )\gets\left\{ i\in \mathcal{\MakeUppercase{v}} \colon \left\langle r, v_i \right\rangle \geq \epsilon   \right\} \)\Comment*[r]{\(\epsilon = \sqrt{2 / 3\cdot \ln \Delta } \) }
 	\(S^\prime (\epsilon )= \left\{ i\in S(\epsilon )\colon \nexists j\in S(\epsilon ) \text{ s.t. } (i, j)\in \mathcal{\MakeUppercase{e}} \right\} \)\;
-	\Return{\(S\)}\;
+	\Return{\(S^\prime (\epsilon )\)}\;
 \end{algorithm}

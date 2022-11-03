@@ -1,5 +1,7 @@
-\lecture{18}{2 Nov. 10:30}{Graph Coloring}
-\begin{prev}
+\lecture{18}{2 Nov. 10:30}{Graph Coloring via Independent Sets Decomposition}
+We're now interested in how large the \hyperref[def:independent-set]{independent set} \autoref{algo:graph-coloring-independent-set} outputs. To start analyzing, since the \(r\) sampled in \autoref{algo:graph-coloring-independent-set-r} is Gaussian, recall the following.
+
+\begin{prev}[\href{https://en.wikipedia.org/wiki/Normal_distribution}{Gaussian distribution}]
 	The probability density function for Gaussian distribution is
 	\[
 		p(x) = \frac{1}{\sqrt{2\pi } }e^{- x^{2} / 2},
@@ -10,9 +12,9 @@
 	\]
 \end{prev}
 
-To analyze \autoref{algo:graph-coloring-independent-set}, since the \(r\) sampled in \autoref{algo:graph-coloring-independent-set-r} is Gaussian, from the spherical symmetry, we have \(\left\langle r, v_i \right\rangle \sim \mathcal{\MakeUppercase{n}} (0, 1)\) for all \(i\in \mathcal{\MakeUppercase{v}} \). Moreover, since the probability of \(i\) being in \(S(\epsilon )\) is exactly \(\overline{\Phi }(\epsilon )\), from the linearity of expectation, we have \(\mathbb{E}_{}\left[\left\vert S(\epsilon ) \right\vert\right] = n\cdot \overline{\Phi }(\epsilon )\).
+From the spherical symmetry, we have \(\left\langle r, v_i \right\rangle \sim \mathcal{\MakeUppercase{n}} (0, 1)\) for all \(i\in \mathcal{\MakeUppercase{v}} \). Moreover, since the probability of \(i\) being in \(S(\epsilon )\) is exactly \(\overline{\Phi }(\epsilon )\), from the linearity of expectation, we have \(\mathbb{E}_{}\left[\left\vert S(\epsilon ) \right\vert\right] = n\cdot \overline{\Phi }(\epsilon )\).
 
-\begin{lemma}\label{lma:lec18-1}
+\begin{lemma}\label{lma:lec18}
 	\(\Pr_{}(i \notin S^\prime (\epsilon )\mid i\in S(\epsilon )) \leq \Delta \overline{\Phi }(\sqrt{3}\epsilon)\).
 \end{lemma}
 \begin{proof}
@@ -30,46 +32,50 @@ To analyze \autoref{algo:graph-coloring-independent-set}, since the \(r\) sample
 	Since if \(u\perp v\in \mathbb{\MakeUppercase{r}} ^d\), \(\left\langle u, r \right\rangle \) and \(\left\langle v, r \right\rangle \) are independent, so \(\Pr_{}(j\in S(\epsilon )\mid i\in S(\epsilon )) \leq \overline{\Phi }(\sqrt{3} \epsilon )\) as desired.
 \end{proof}
 
-\begin{lemma}\label{lma:lec18-2}
-	If \(x \geq 10\),
-	\[
-		\frac{1}{2x} p(x) \leq \overline{\Phi }(x) \leq \frac{1}{x}p(x).
-	\]
-\end{lemma}
+We can now prove that the \hyperref[def:independent-set]{independent set} found by \autoref{algo:graph-coloring-independent-set} is large.
+
+\begin{theorem}\label{thm:lec18}
+	\autoref{algo:graph-coloring-independent-set} finds an \hyperref[def:independent-set]{independent set} of size \(\Omega (n\cdot \Delta ^{-1 / 3}\log^{-1 / 2} \Delta )\) for any \(3\)-\hyperref[def:coloring]{colorable} \(\mathcal{\MakeUppercase{g}} \).
+\end{theorem}
 \begin{proof}
-	Since we know that
-	\[
-		\frac{x}{1+x^{2} } p(x) \leq \overline{\Phi }(x) \leq \frac{1}{x}p(x)
-	\]
-	for all \(x\), if \(x \geq 10\), \(x / (1 + x^{2} ) \geq 1 / 2x\), hence we're done.
-\end{proof}
-
-We can now prove \autoref{thm:lec17}.
-
-\begin{proof}[Proof of \autoref{thm:lec17}]
 	We see that
 	\[
 		\mathbb{E}_{}\left[\left\vert S^\prime (\epsilon ) \right\vert  \right]
 		= \sum_{i\in \mathcal{\MakeUppercase{v}} } \underbrace{\Pr_{}(i\in S(\epsilon ))}_{\overline{\Phi }(\epsilon )}\cdot \Pr_{}(i\in S^\prime (\epsilon )\mid i\in S(\epsilon ))
-		\leq  \sum_{i\in \mathcal{\MakeUppercase{v}} } \overline{\Phi }(\epsilon )\cdot \left( 1 - \Delta \overline{\Phi }(\sqrt{3}\epsilon  ) \right),
+		\geq  \sum_{i\in \mathcal{\MakeUppercase{v}} } \overline{\Phi }(\epsilon )\cdot \left( 1 - \Delta \overline{\Phi }(\sqrt{3}\epsilon  ) \right),
 	\]
-	from \autoref{lma:lec18-1}. And since \(\overline{\Phi }(\epsilon )\geq p(\epsilon ) / 2\epsilon \) with \(\overline{\Phi }(\sqrt{3}\epsilon) \leq p(\sqrt{3}\epsilon) / \epsilon\)\todo{\(\sqrt{3}\epsilon  \)?} from \autoref{lma:lec18-2}, and
+	from \autoref{lma:lec18}. Now, observe the following.
+
+	\begin{claim}
+		If \(x \geq 10\), \(p(x) / 2x \leq \overline{\Phi}(x) \leq p(x) / x\).
+	\end{claim}
+	\begin{explanation}
+		Since we know that
+		\[
+			\frac{x}{1+x^{2} }\cdot p(x) \leq \overline{\Phi }(x) \leq \frac{1}{x}\cdot p(x)
+		\]
+		for all \(x\), if \(x \geq 10\), \(x / (1 + x^{2} ) \geq 1 / 2x\), hence we're done.
+	\end{explanation}
+
+	With the above claim, we have \(\overline{\Phi }(\epsilon )\geq p(\epsilon ) / 2\epsilon \) with \(\overline{\Phi }(\sqrt{3}\epsilon) \leq p(\sqrt{3}\epsilon) / 3\epsilon\), hence
 	\[
-		p(\sqrt{3} \epsilon ) = \frac{1}{\sqrt{2\pi } } e^{- 3\cdot (2 / 3 \cdot \ln \Delta ) / 2} = \frac{1}{\sqrt{2\pi } }\cdot \frac{1}{\Delta },
+		p(\sqrt{3} \epsilon )
+		= \frac{1}{\sqrt{2\pi } } e^{- 3\cdot (2 / 3 \cdot \ln \Delta ) / 2}
+		= \frac{1}{\sqrt{2\pi } }\cdot \frac{1}{\Delta }
+		\text{ and }p(\epsilon )
+		= \frac{1}{\sqrt{2\pi } } e^{- 2 / 3 \cdot \ln \Delta / 2}
+		= \frac{1}{\sqrt{2\pi } }\frac{1}{\Delta ^{1 / 3}},
 	\]
-	and
-	\[
-		p(\epsilon ) = \frac{1}{\sqrt{2\pi } }\frac{1}{\Delta ^{1 / 3}},
-	\]
-	we further have
+	leading to
 	\[
 		\mathbb{E}_{}\left[\left\vert S^\prime (\epsilon ) \right\vert  \right]
-		\geq \sum_{i\in \mathcal{\MakeUppercase{v}} } \underbrace{\left( \frac{1}{2\epsilon }\cdot p(\epsilon ) \right)}_{\geq \Omega (\frac{1}{\sqrt{\ln \Delta } } \frac{1}{\Delta ^{1 / 3}})} \cdot \underbrace{\left( 1 - \Delta \cdot \frac{1}{\epsilon }\cdot p(\sqrt{3} \epsilon ) \right)}_{\geq 1 / 2}
+		\geq \sum_{i\in \mathcal{\MakeUppercase{v}} } \underbrace{\left( \frac{1}{2\epsilon }\cdot p(\epsilon ) \right)}_{\geq \Omega (\frac{1}{\sqrt{\ln \Delta } } \frac{1}{\Delta ^{1 / 3}})} \cdot \underbrace{\left( 1 - \Delta \cdot \frac{1}{3\epsilon }\cdot p(\sqrt{3} \epsilon ) \right)}_{\geq 1 / 2}
 		\geq \Omega (n\cdot \Delta ^{-1 / 3} \ln ^{-1 / 2}\Delta ).
 	\]
 \end{proof}
 
-Before we see the final algorithm, we introduce a cute trick.
+\subsection{Independent Sets Decomposition}
+From \autoref{lma:lec17}, we can iteratively find large \hyperref[def:independent-set]{independent sets} by \autoref{algo:graph-coloring-independent-set} as guaranteed by \autoref{thm:lec18}. But before we see the final algorithm, we introduce a cute trick.
 
 \begin{remark}[Wigderson's trick]\label{rmk:Wigderson-trick}
 	We can always \(3\)-\hyperref[def:coloring]{color} \(\left\{ v \right\} \cup \mathcal{\MakeUppercase{n}} (v)\) for all \(v\in \mathcal{\MakeUppercase{v}} \) if \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}.
@@ -82,26 +88,29 @@ Now, we see the final algorithm.
 
 \begin{algorithm}[H]\label{algo:graph-coloring}
 	\DontPrintSemicolon
-	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \(3\)-\hyperref[def:coloring]{Colorable} Graph}
+	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \hyperref[def:independent-set]{Independent Set} Decomposition of \(3\)-\hyperref[def:coloring]{Colorable} Graph}
 	\KwData{A \(3\)-\hyperref[def:coloring]{colorable} graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
 	\KwResult{A \hyperref[def:coloring]{colored} \(\mathcal{\MakeUppercase{g}} \)}
-	\SetKwFunction{rand}{rand}
-	\SetKwFunction{Ber}{Ber}
-	\SetKwFunction{Sol}{Solve}
-	\SetKwFunction{Red}{\hyperref[algo:thm-lec16]{Reduce-Variance}}
+	\SetKwFunction{Ind}{\hyperref[algo:graph-coloring-independent-set]{Independent-Set}}
 	\BlankLine
 	\(n_0\gets \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \)\;
-	\While(){\(\Delta (\mathcal{\MakeUppercase{g}} ) \geq n_0 ^{3 / 4}\)}{
-	\(v\gets\)\rand{\(\mathcal{\MakeUppercase{v}}\)}\;
+	\;
+	\Comment{Phase 1}
+	\While(\label{algo:graph-coloring-phase-1}){\(\Delta (\mathcal{\MakeUppercase{g}} ) \geq n_0 ^{3 / 4}\)}{
+	\(v\gets \arg\max _{i\in \mathcal{\MakeUppercase{v}} } \deg(i)\)\;
 	\(3\) colors \(\left\{ v \right\} \cup N(v)\)\Comment*[r]{\hyperref[rmk:Wigderson-trick]{Wigderson's trick}}
-	\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\text{uncolored vertices}]\)\;
+	\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus (\left\{ v \right\} \cup N(v))]\)\;
 	}
-	\While(){\(\Delta (\mathcal{\MakeUppercase{g}} ) \geq 100\)}{
-		\(S\gets\)\hyperref[def:independent-set]{independent set} from \autoref{thm:lec17}\Comment*[r]{\(\left\vert S \right\vert \geq c\cdot n\cdot \Delta ^{-1 / 3} \ln ^{-1 / 2}\Delta \)}
+	\;
+	\Comment{Phase 2}
+	\While(\label{algo:graph-coloring-phase-2}\Comment*[f]{\(\Delta (\mathcal{\MakeUppercase{g}} ) < n_0^{3 / 4}\)}){\(\Delta (\mathcal{\MakeUppercase{g}} ) \geq 100\)}{
+		\(S\gets\)\Ind{\(\mathcal{\MakeUppercase{g}}\)}\Comment*[r]{\(\left\vert S \right\vert \geq cn\Delta ^{-1 / 3} \ln ^{-1 / 2}\Delta \) from \autoref{thm:lec18}}
 		\(1\) colors \(S\)\;
-		\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\text{uncolored vertices}]\)\;
+		\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus S]\)\;
 	}
-	\(\Delta (\mathcal{\MakeUppercase{g}} ) + 1\) colors \(\mathcal{\MakeUppercase{g}} \)\Comment*[r]{\(\Delta (\mathcal{\MakeUppercase{g}} ) < 100\)}
+	\;
+	\Comment{Phase 3}
+	\(\Delta (\mathcal{\MakeUppercase{g}} ) + 1\) colors \(\mathcal{\MakeUppercase{g}} \)\label{algo:graph-coloring-phase-3}\Comment*[r]{\(\Delta (\mathcal{\MakeUppercase{g}} ) < 100\)}
 	\Return{\(\mathcal{\MakeUppercase{g}} \)}\;
 \end{algorithm}
 
@@ -111,5 +120,22 @@ Notice that in \autoref{algo:graph-coloring}, whenever we do a \hyperref[def:col
 	\autoref{algo:graph-coloring} is an \(\widetilde{O} (n^{1 / 4})\)-approximation algorithm for \hyperref[prb:graph-coloring]{graph coloring}.
 \end{theorem}
 \begin{proof}
-
+	We see that
+	\begin{itemize}
+		\item \hyperref[algo:graph-coloring-phase-1]{Phase 1}: color at least \(n_0^{3 / 4}\) vertices with \(3\) colors in each iteration, hence need at most \(n_0^{1 / 4} (= 3\cdot n_0 / n_0^{3 / 4})\) colors.
+		\item \hyperref[algo:graph-coloring-phase-2]{Phase 2}: from \autoref{thm:lec18}, \(\left\vert S \right\vert \geq n c n_0^{-1 / 4} \log ^{-1 / 2} n_0 \eqqcolon n \gamma \), then the induced graph will have vertices less than \(n(1 - \gamma )\).\footnote{Notice the different between \(n\) and \(n_0\): \(n\) is updating, while \(n_0\) is the original graph size.} Hence, we can run this at most \(k\) iteration since \(n \geq 1\), i.e.,
+		      \[
+			      1 \leq n \leq n_0 (1 - \gamma )^k \leq n_0 e^{-\gamma k} \implies k \leq \frac{1}{\gamma} \ln n_0 = \frac{1}{c} n_0^{1 / 4}\log ^{1 / 2}n_0\cdot \ln n_0
+		      \]
+		\item \hyperref[algo:graph-coloring-phase-3]{Phase 3}: Clean-up phase, only uses constant amount (\(< 100\)) more colors.
+	\end{itemize}
+	In all, \autoref{algo:graph-coloring} uses at most
+	\[
+		3n_0^{1 / 4} + \frac{1}{c} n_0^{1 / 4} \log ^{3 / 2}n_0 + 100 = \widetilde{O} (n^{1 / 4})
+	\]
+	colors.
 \end{proof}
+
+\begin{remark}
+	We can use the similar approach for small constant \(c\), e.g., \(c=4\), \(c=5\), etc.
+\end{remark}

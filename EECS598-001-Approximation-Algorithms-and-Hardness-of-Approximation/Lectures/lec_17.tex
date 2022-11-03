@@ -68,8 +68,33 @@ People start to consider some promise version of \hyperref[prb:graph-coloring]{g
 	For \(c = 3\), someone showed that we can do \(\widetilde{O} (n^{0.199\ldots  })\), i.e., around \(\widetilde{O} ^{1 / 5}\). Also, \(\omega (1)\)-approximation is \(\NP\)!
 \end{remark}
 
+Analogous to \hyperref[prb:max-cut]{max cut}, we design the following \hyperref[eq:graph-coloring]{SDP} relaxation of \hyperref[prb:graph-coloring]{graph coloring} with variables being vectors \(v_i\) for \(i\in \mathcal{\MakeUppercase{v}} \).
+
+\begin{equation}\label{eq:graph-coloring}
+	\begin{aligned}
+		\min~ & 0                                                                                             \\
+		      & \left\langle v_i, v_i \right\rangle = 1      & \forall i\in \mathcal{\MakeUppercase{v}}       \\
+		      & \left\langle v_i, v_j \right\rangle = -1 / 2 & \forall (i, j)\in \mathcal{\MakeUppercase{e}}.
+	\end{aligned}
+\end{equation}
+
+\begin{note}
+	We don't have an actual objective function!
+\end{note}
+
+\begin{claim}
+	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, there exists \(\left\{ v_i \right\}_{i\in \mathcal{\MakeUppercase{v}} } \) that are feasible for \autoref{eq:graph-coloring}.
+\end{claim}
+\begin{explanation}
+	Consider \(3\) colors \(C_1\), \(C_2\), and \(C_3\), then if \(i\) has \(C_j\), we let \(i\) gets vector \(v_j\) with all vectors \(v_j\), \(v_{j^\prime }\) are \(120^{\circ } \) away.
+	\begin{center}
+		\incfig{3-coloring}
+	\end{center}
+\end{explanation}
+
 \subsection{Independent Sets}
-Focusing on the case that \(c=3\). But before that, we introduce the so-called \hyperref[def:independent-set]{independent set}.
+Turns out that the \hyperref[def:independent-set]{independent set} is highly related to solving just \autoref{eq:graph-coloring}, as we'll soon see.
+
 \begin{definition}[Independent set]\label{def:independent-set}
 	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a set \(S \subseteq \mathcal{\MakeUppercase{v}} \) is \emph{independent} if for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), either \(i \notin S\) or \(j \notin S\).
 \end{definition}
@@ -80,61 +105,44 @@ The notion of \hyperref[def:independent-set]{independent set} is useful since we
 	For a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), then \(\mathcal{\MakeUppercase{g}} \) is \(c\)-\hyperref[def:coloring]{colorable} if and only if \(\mathcal{\MakeUppercase{v}} \) can be partitioned to \(V_1, \ldots, V_c\) such that \(V_i\) is \hyperref[def:independent-set]{independent}.
 \end{lemma}
 
-With \autoref{lma:lec17}, if we can find large \hyperref[def:independent-set]{independent sets} and partition the graph into not too many of those, we're done. Turns out that the size of \hyperref[def:independent-set]{independent sets} is related to the maximum degree.
+With \autoref{lma:lec17}, if we can find large \hyperref[def:independent-set]{independent sets} and partition the graph into not too many of those, we're done. Note that the size of \hyperref[def:independent-set]{independent sets} is related to the maximum degree.
 
 \begin{notation}
 	We denote the maximum degree of a graph \(\mathcal{\MakeUppercase{g}}=(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \) by \(\Delta \coloneqq \Delta (\mathcal{\MakeUppercase{G}} )\coloneqq \max_{v\in \mathcal{\MakeUppercase{v}} } \deg(v)\).
 \end{notation}
 
-Given \(\Delta \) , we will have a trivial \(\Delta \)-\hyperref[def:coloring]{coloring}, which is why \(\Delta \) is used here.
-
-\begin{theorem}\label{thm:lec17}
-	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, we can find \hyperref[def:independent-set]{independent set} of size \(\Omega (n\cdot \Delta ^{-1 / 3}\log^{-1 / 2} \Delta )\).
-\end{theorem}
-
-To prove \autoref{thm:lec17}, we design the following \hyperref[eq:independent-set]{SDP}. since we don't have an actual objective function, we have the following \hyperref[def:SDP]{SDP} with vector \(v_i\) for \(i\in \mathcal{\MakeUppercase{v}} \).
-
-\begin{equation}\label{eq:independent-set}
-	\begin{aligned}
-		\min~ & 0                                                                                             \\
-		      & \left\langle v_i, v_i \right\rangle = 1      & \forall i\in \mathcal{\MakeUppercase{v}}       \\
-		      & \left\langle v_i, v_j \right\rangle = -1 / 2 & \forall (i, j)\in \mathcal{\MakeUppercase{e}}.
-	\end{aligned}
-\end{equation}
-\begin{claim}
-	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, there exists \(\left\{ v_i \right\}_{i\in \mathcal{\MakeUppercase{v}} } \) that are feasible for \autoref{eq:independent-set}.
-\end{claim}
+\begin{remark}[Usefullness of \(\Delta \)]
+	Given \(\Delta \), we will have a trivial \(\Delta \)-\hyperref[def:coloring]{coloring}; also, we know that we can find \hyperref[def:independent-set]{independent set} with size \(n / (\Delta +1) = \Omega (n \Delta ^{-1} )\).
+\end{remark}
 \begin{explanation}
-	Consider \(3\) colors \(C_1\), \(C_2\), and \(C_3\), then if \(i\) has \(C_j\), we let \(i\) gets vector \(v_j\) with all vectors \(v_j\), \(v_{j^\prime }\) are \(120^{\circ } \) away.
-	\begin{center}
-		\incfig{3-coloring}
-	\end{center}
+	The coloring part is clear. As for finding \hyperref[def:independent-set]{independent set}, we see that by randomly include one vertex to our \hyperref[def:independent-set]{independent set}, we at most \(\Delta \) vertices will be ruled out: they can't be in the \hyperref[def:independent-set]{independent set} now.
 \end{explanation}
 
-Now, after solving \autoref{eq:independent-set}, we see that we need to round the solution, but consider the following.
+Now, after solving \autoref{eq:graph-coloring}, notice that we only have feasibility, with the fact that the solution are not guaranteed to be perfectly aligned in exactly three vectors, hence it's a bit confusing what to do next. However, recall that it's also good enough to find a large \hyperref[def:independent-set]{independent set}, and recall the \hyperref[prb:max-cut]{max cut} problem, where we want to maximize the number of edges crossing a cut set, which is similar to what we're trying to do here. So, inspired by which, we can round the solution, but observe the following.
 
 \begin{figure}[H]
 	\centering
 	\incfig{3-coloring-threshold}
-	\caption{If we do the rounding as in \hyperref[prb:max-cut]{max cut}, we may end-up include more than we want, so we set up some threshold.}
+	\caption{If we do the rounding as in \hyperref[prb:max-cut]{max cut}, we may end-up including more than we want, so we set up some threshold.}
 	\label{fig:3-coloring-threshold}
 \end{figure}
 
-This suggests the following algorithm.
+This suggests that we round it with threshold, i.e., consider the following algorithm.
 
 \begin{algorithm}[H]\label{algo:graph-coloring-independent-set}
 	\DontPrintSemicolon
-	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \hyperref[def:independent-set]{Independent Set}}
+	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \hyperref[def:independent-set]{Independent Set} Rounding of \(3\)-\hyperref[def:coloring]{Colorable} Graph}
 	\KwData{A \(3\)-\hyperref[def:coloring]{colorable} graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
 	\KwResult{An \hyperref[def:independent-set]{independent set} \(S\)}
-	\SetKwFunction{rand}{rand}
-	\SetKwFunction{Ber}{Ber}
 	\SetKwFunction{Sol}{Solve}
-	\SetKwFunction{Red}{\hyperref[algo:thm-lec16]{Reduce-Variance}}
 	\BlankLine
-	\(\left\{ v_i \in \mathbb{\MakeUppercase{r}} ^d\right\} _{i=1}^n \gets\)\Sol{\hyperref[eq:independent-set]{SDP}}\;
+	\(\left\{ v_i \in \mathbb{\MakeUppercase{r}} ^d\right\} _{i=1}^n \gets\)\Sol{\hyperref[eq:graph-coloring]{SDP}}\;
 	\(r \gets \mathcal{\MakeUppercase{n}} (0, I_d)\)\label{algo:graph-coloring-independent-set-r}\Comment*[r]{\(r_i \sim \mathcal{\MakeUppercase{n}} (0, 1)\)}
 	\(S(\epsilon )\gets\left\{ i\in \mathcal{\MakeUppercase{v}} \colon \left\langle r, v_i \right\rangle \geq \epsilon   \right\} \)\Comment*[r]{\(\epsilon = \sqrt{2 / 3\cdot \ln \Delta } \) }
-	\(S^\prime (\epsilon )= \left\{ i\in S(\epsilon )\colon \nexists j\in S(\epsilon ) \text{ s.t. } (i, j)\in \mathcal{\MakeUppercase{e}} \right\} \)\;
+	\(S^\prime (\epsilon )= \left\{ i\in S(\epsilon )\colon \nexists j\in S(\epsilon ) \text{ s.t. } (i, j)\in \mathcal{\MakeUppercase{e}} \right\} \)\Comment*[r]{Make \(S\) \hyperref[def:independent-set]{independent}}
 	\Return{\(S^\prime (\epsilon )\)}\;
 \end{algorithm}
+
+\begin{remark}
+	\autoref{algo:graph-coloring-independent-set} is the rounding algorithm of \autoref{eq:graph-coloring} in the sense of feasibility,\footnote{Recall that there's no objective in \autoref{eq:graph-coloring}} and notice that it gives us an \hyperref[def:independent-set]{independent set}, rather than a \hyperref[def:coloring]{coloring}.
+\end{remark}

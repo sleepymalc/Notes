@@ -1,5 +1,5 @@
 \lecture{12}{6 Oct. 14:30}{Open Mapping Theorem}
-Let's start with \hyperref[prop:Baire-category]{Baire category theorem}.
+Let's start with \hyperref[prop:Baire-category]{Baire category theorem}, which essentially states that every complete \hyperref[prev:metric]{metric} space is a set of second category.\footnote{See \href{https://en.wikipedia.org/wiki/Meagre_set}{Meagre set}. Notice that this is nothing to do with the category theory.}
 
 \begin{proposition}[Baire category theorem]\label{prop:Baire-category}
 	A complete \hyperref[prev:metric]{metric} space \(M\) is never the union of a countable number of \hyperref[def:nowhere-dense]{nowhere dense} sets.
@@ -130,31 +130,34 @@ Clearly, \(\Gamma (T)\) is a \hyperref[def:linear-vector-space]{linear subspace}
 	The \hyperref[def:graph]{graph} \(\Gamma (T)\) of \(T\) is \emph{closed} if it is a closed subspace of \(X \times Y\).
 \end{definition}
 
-Hence, if \(\left\{ x_n \right\} _{n\geq 1}\) is a sequence in \(X\) such that both \(\left\{ x_n \right\} _{n\geq 1}\) and \(\left\{ Tx_n \right\}_{n\geq 1} \) are Cauchy, then there exists \(x_\infty \in X\) such that \(x_n \to x_\infty \) and \(Tx_\infty \to y_\infty \) for \(y_\infty = Tx_\infty \).
+Comparing the continuity of \(T\) and \hyperref[def:closed-graph]{closeness} of \(\Gamma (T)\), we see that \(T\) is continuous if and only if \(x_n \to x\in X\) implies \(Tx_n \to Tx\); while \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed} if and only if \(x_n \to x\in X\) and \(Tx_n \to y\in Y\) implies \(y = Tx\). We see that continuity always implies the graph is \hyperref[def:closed-graph]{closed}, and indeed, the converse is also true.
 
 \begin{theorem}[Closed graph theorem]\label{thm:closed-graph}
 	Let \(T\colon X\to Y\) be a \hyperref[def:linear-op]{linear operator} between \hyperref[def:Banach-space]{Banach spaces} \(X\) and \(Y\). Then \(T\) is \hyperref[def:bounded-linear-op]{bounded} (continuous) if and only if \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}.
 \end{theorem}
 \begin{proof}
-	The forward direction is easy since if \(T\) is \hyperref[def:bounded-linear-op]{bounded}, then \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}.
+	We have already shown that if \(T\) is \hyperref[def:bounded-linear-op]{bounded}, then \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}.
 
 	Now assume \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}, then we see that \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space}, so we can now use \hyperref[thm:open-mapping]{open mapping theorem}. Define a \hyperref[def:norm]{norm} on \(X \times Y\) by
 	\[
 		\left\lVert (x, y)\right\rVert = \left\lVert x\right\rVert + \left\lVert y\right\rVert,
 	\]
-	then \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space} with this \hyperref[def:norm]{norm}. Define \(u\colon \Gamma (T)\to X\) by \(u(x, Tx)=x\) for \(x\in X\), then \(u\) is \hyperref[rmk:bounded-op]{bounded} wince \(\left\lVert u\right\rVert \leq 1\). From \hyperref[thm:open-mapping]{open mapping theorem}, we know that \(u\) is surjective and injective implies \(u^{-1} \colon X\to \Gamma (T)\) is \hyperref[rmk:bounded-op]{bounded}, hence
-	\[
-		\left\lVert u(x, Tx)\right\rVert \geq c \left\lVert (x, Tx)\right\rVert
-	\]
-	for all \(x\in X\) and some \(c> 0\), i.e.,
+	then \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space} with this \hyperref[def:norm]{norm}. Define \(u\colon \Gamma (T)\to X\) by \(u(x, Tx)=x\) for \(x\in X\), then \(u\) is \hyperref[rmk:bounded-op]{bounded} since \(\left\lVert u\right\rVert \leq 1\). From \hyperref[thm:open-mapping]{open mapping theorem}, we know that \(u\) is surjective and injective, implying \(u^{-1} \colon X\to \Gamma (T)\) is \hyperref[rmk:bounded-op]{bounded} from \hyperref[thm:inverse-mapping]{inverse mapping theorem}. Hence, we have \(\left\lVert u(x, Tx)\right\rVert \geq c \left\lVert (x, Tx)\right\rVert\) for all \(x\in X\) and some \(c> 0\), i.e.,
 	\[
 		\left\lVert x\right\rVert \geq c \left( \left\lVert x\right\rVert + \left\lVert Tx\right\rVert  \right) \implies \left\lVert Tx\right\rVert \leq \left( \frac{1}{c}- 1 \right) \left\lVert x\right\rVert
 	\]
 	for all \(x\in X\), so \(T\) is \hyperref[rmk:bounded-op]{bounded}.
 \end{proof}
 
+\begin{remark}
+	When trying to prove \(T\) is continuous by showing \(x_n \to x\in X\) implying \(Tx_n \to Tx\), we can always assume \(Tx_n\) converges in \(Y\).
+\end{remark}
+\begin{explanation}
+	From \hyperref[thm:closed-graph]{closed graph theorem}, checking \(x_n \to x\in X\) implies \(Tx_n \to Tx\) is equivalent to check \(x_n \to x\in X\) and \(Tx_n \to y\in Y\) implies \(y = Tx\), so we may just assume the limit exists at the first place.
+\end{explanation}
+
 \subsection{Symmetric Operators on Hilbert Spaces}
-One application to self-\hyperref[def:adjoint-op]{adjoint (symmetric) operator}, i.e., \(T^{\ast} = T\), on \hyperref[def:Hilbert-space]{Hilbert space} is the following.
+One application of \hyperref[thm:closed-graph]{closed graph theorem} to self-\hyperref[def:adjoint-op]{adjoint (symmetric) operator}, i.e., \(T^{\ast} = T\), on \hyperref[def:Hilbert-space]{Hilbert space} is the following.
 
 \begin{theorem}[Hellinger-Toeplitz theorem]\label{thm:Hellinger-Toeplitz}
 	Let \(T\colon \mathcal{\MakeUppercase{h}} \to \mathcal{\MakeUppercase{h}} \) be a \hyperref[def:linear-op]{linear operator}. If \(T\) is self-\hyperref[def:adjoint-op]{adjoint}, i.e., \(\left\langle Tx, y \right\rangle  = \left\langle x, Ty \right\rangle\) for \(x, y\in \mathcal{\MakeUppercase{h}} \), then \(T\) is \hyperref[rmk:bounded-op]{bounded}.

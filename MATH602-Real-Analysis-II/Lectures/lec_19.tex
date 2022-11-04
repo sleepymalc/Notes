@@ -1,0 +1,60 @@
+\lecture{19}{3 Nov. 14:30}{}
+\begin{lemma}\label{lma:lec19}
+	Let \(X\) be a \hyperref[def:Banach-space]{Banach space} and \(T\) a \hyperref[def:compact-op]{compact operator} on \(X\). Then the operator \(I-T\) has closed image \(\im(I-T)\).
+\end{lemma}
+\begin{proof}
+	Let \(A=I-T\), then \(\ker (A)\) is closed, and we let
+	\[
+		\widetilde{A} \colon \quotient{X}{\ker(A)}\to X
+	\]
+	be induced operator \(\widetilde{A} ([x])=Ax\) for all \(x\in X\), and \(\im(A) = \im(\widetilde{A} )\). Hence, it's sufficient to show \(\im(\widetilde{A} )\) is closed. To show this, we show \(\widetilde{A} \) is bounded below, i.e., \(\exists c>0\) such that
+	\[
+		\lVert \widetilde{A} [x]\rVert \geq c\left\lVert [x]\right\rVert
+	\]
+	for all \(x\in X\). We prove the lower bound by contradiction. Suppose there exists a sequence \(\left\{ x_k \right\} _{k\geq 1}\) in \(X\) such that \(\left\lVert [x_{k} ]\right\rVert = 1\) for all \(k\geq 1\) and \(\lVert \widetilde{A} [x] \rVert \to 0\) as \(k \to \infty \). We can then choose \(\left\{ x_{k}  \right\}_{k\geq 1} \) such that \(\left\lVert x_{k} \right\rVert \leq 2\), with \(\inf_{y\in \ker(A)} \left\lVert x_{k} -y\right\rVert=1 \). So as \(k\to \infty \), \(Ax_{k} = \widetilde{A} ([x_{k} ])\to 0\) where \(Ax_{k} = x_{k} - Tx_{k} \). From the fact that \(T\) is \hyperref[def:compact-op]{compact}, \(\left\{ Tx_{k}  \right\}_{k\geq 1} \) has a converging subsequence, so we can assume \(Tx_{k} \to z\) as \(k\to \infty \) and \(x_{k} - Tx_{k} \to 0\). Hence, \(x_{k} \to z\) as \(k\to  \infty \) and \(Az = 0\). But we know that \(\inf _{y\in \ker(A)} \left\lVert z - y\right\rVert = 1\), contradiction since \(z\in \ker(A)\).
+\end{proof}
+
+\begin{theorem}[Fredholm alternative]\label{thm:Fredholm-alternative}
+	Let \(X\) be a \hyperref[def:Banach-space]{Banach space}, \(T\colon X\to  X\) be \hyperref[def:compact-op]{compact}. Then \(I - T\) is injective if and only if \(I - T\) is surjective.
+\end{theorem}
+\begin{proof}
+	Assume that \(A\coloneqq I - T\) is injective but not surjective, then we can obtain a contradiction. We just need to find a sequence \(\left\{ f_{n}  \right\}_{n\geq 1} \) in \(X^{\ast} \) with \(\lVert f_{n}  \rVert = 1\) with \(n\geq 1\) such that the sequence \(\left\{ T^{\ast} f_n \right\}_{n\geq 1} \) has no converging subsequence, which contradicts the fact that \(T^{\ast} (B_{X^{\ast} })\) is \hyperref[def:precompact]{precompact}.
+
+	To do this, we first observe since we assume \(A\) is not surjective, \(\im(A) \neq X\) and we let \(Y_n = \im(A^n)\) for \(n\geq 1\), so we have \(Y_1 \subsetneq X\).
+	\begin{claim}
+		\(Y_{n\geq 1} \subsetneq Y_n\).
+	\end{claim}
+	\begin{explanation}
+		Consider \(y \notin \im(A)\), and suppose \(\im(A^{n+1})= \im(A^n)\), then there exists \(x\) such that \(A^{n+1}x = A^n y\), i.e., \(A^n (Ax - y) = 0\). From the injectivity of \(A\), \(\ker(A^n) = 0\), os \(Ax - y = 0\), implying \(y\in \im(A)\), contradiction, so \(Y_{n+1}\) is properly contained in \(Y_n\) for all \(n\geq 1\).
+	\end{explanation}
+
+	From \autoref{lma:lec19}, the spaces \(Y_n\) are closed in \(X\) for \(n\geq 1\). Furthermore, notice that \(Y_n = \im(A^n) = \im((I-T)^n)\) where
+	\[
+		(I-T)^n = I - ST = I - \widetilde{T}
+	\]
+	for \(S\) being \hyperref[def:bounded-map]{bounded} and \(T\) being \hyperref[def:compact-op]{compact}, hence \(\widetilde{T} = ST\)  is \hyperref[def:compact-op]{compact} from \autoref{prop:lec17}. Now, since \(\quotient{Y_n}{Y_{n+1}} \) is a \hyperref[def:Banach-space]{Banach space}, let \(\widetilde{f} _n \colon \quotient{Y_n}{Y_{n+1}} \to  \mathbb{\MakeUppercase{r}} \) be a \hyperref[def:bounded-linear-functional]{bounded linear functional} with \(\lVert \widetilde{f} _n \rVert=1 \). Define \(f_{n} \colon T_n \to  \mathbb{\MakeUppercase{r}} \) by
+	\[
+		f_n (y) = \widetilde{f} _n([y])
+	\]
+	for \(y\in Y_n\), and \(f_n(y) = 0\)  if \(y\in Y_{n+1}\). From \hyperref[thm:Hahn-Banach]{Hahn Banach theorem} we can extend \(f_{n} \) to \(f_{n} \colon X\to \mathbb{\MakeUppercase{r}} \) with \(\lVert f_{n}  \rVert = 1\). Then, \(f_{n} (y) = 0\) if \(y\in Y_{n+1}\), implying \(f_{n} \in Y^{\perp} _{n+1}\) for \(n\geq 1\). We now show the sequence \(\left\{ T^{\ast} f_{n}  \right\} _{n\geq 1}\) has no converging subsequence. Let \(n > m \geq 1\),
+	\[
+		T^{\ast} f_{n} - T^{\ast} f_m= T^{\ast} (f_{n} - f_{m}) = (I-T^{\ast} )(f_m-f_{n})+ (f_{n} -f_{m})
+	\]
+	where \(f_m\in Y^{\perp} _{m+1} \subseteq Y^{\perp} _n\). Also, \(f_n - f_m\in Y^{\perp} _{n+1}\), hence
+	\[
+		(I-T^{\ast} )(f_m - f_n)\in Y^{\perp} _n.
+	\]
+	Let \(x\in Y_n\), then \(T^{\ast} (f_{n} - f_m)(x) = (f_n - f_m)(x)=f_n(x)\) since \(m < n\). Hence,
+	\[
+		\lVert T^{\ast} f_n - T^{\ast} f_m \rVert
+		= \sup _{\lVert x \rVert = 1} \lVert [T^{\ast} f_n - T^{\ast} f_m] (x)\rVert
+		= \sup _{\lVert x \rVert = 1} \lVert f_n(x) \rVert
+		= \lVert f_n \rVert
+		= 1,
+	\]
+	hence there's no converging subsequence for \(\left\{ T^{\ast} f_n \right\}_{n\geq 1} \), which is the desired contradiction. So we conclude that \(I-T\) is injective implies \(I-T\) is surjective.
+
+	Conversely, assume \(I-T\) is surjective, we want to prove that \(I-T\) is injective. Again, let \(A\coloneqq I-T\), \(\im(A) = X\) and \(\ker(A^{\ast} )= (\im A)^{\perp} \). This implies \(\ker(A^{\ast} ) = \left\{ 0\right\} \), so \(A^{\ast} \) is injective. Since \(A^{\ast} = I-T^{\ast} \), where \(T^{\ast} \) is \hyperref[def:compact-op]{compact}. The previous result implies \(A^{\ast} \) is surjective, Note that \((\ker A)^{\perp} \supseteq (\im A^{\ast} )= X^{\ast}\), hence \(\ker(A) = \left\{ 0 \right\} \), so \(A\) is injective.
+\end{proof}
+
+We see that the spectrum in infinite dimension is much more complicated compared to the finite dimension case.

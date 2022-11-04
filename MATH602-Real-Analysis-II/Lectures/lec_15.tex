@@ -1,16 +1,26 @@
 \lecture{15}{20 Oct. 14:30}{Compactness in Banach Spaces}
-\section{Compact Sets in Banach Spaces}
-
 \subsection{Schauder Basis}
+Finally, we introduce a useful basis called \hyperref[def:Schauder-basis]{Schauder basis}. Recall that some bases we have seen is uncountable, making them hard to work with in practice, on the other hand, \hyperref[def:Schauder-basis]{Schauder basis} is countable and with nice properties.
+
 \begin{definition}[\href{https://en.wikipedia.org/wiki/Schauder_basis}{Schauder basis}]\label{def:Schauder-basis}
-	Let \(X\) be a \hyperref[def:separable]{separable} \hyperref[def:Banach-space]{Banach space}. A sequence \(\left\{ x_k \right\} _{k\geq 1}\) is a \emph{Schauder basis} for \(X\) for every \(x\in X\) can be uniquely represented as a convergent series
+	Let \(X\) be a \hyperref[def:separable]{separable} \hyperref[def:Banach-space]{Banach space}. A sequence \(\left\{ x_k \right\} _{k\geq 1}\) is a \emph{Schauder basis} for \(X\) if every \(x\in X\) can be uniquely represented as a convergent series
 	\[
 		x = \sum_{k=1} ^{\infty} a_k x_k
 	\]
 	for \(a_k\in \mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \).
 \end{definition}
 
-\begin{theorem}\label{thm:lec15}
+\begin{remark}
+	We can show that only \hyperref[def:separable]{separable} spaces can have \hyperref[def:Schauder-basis]{Schauder basis}, which is why we require it directly in \autoref{def:Schauder-basis}.
+\end{remark}
+
+It's clearly that if \(\left\{ x_k \right\} _{k\geq 1}\) is a \hyperref[def:Schauder-basis]{Schauder basis}, it's linear independent and complete. However, \autoref{def:Schauder-basis} is stronger than these: for completeness, given any \(\epsilon > 0\), we can find \(\left\{ a_k \right\} _{k=1}^n\) such that
+\[
+	\lVert x - \sum_{k=1}^n a_{k} x_{k} \rVert \leq \epsilon.
+\]
+But it might be the case that \(a_k\) actually depends on \(\epsilon \), and hence \(\lim_{\epsilon \to 0}a_k(\epsilon )\) generally does not exist. In contrast, \autoref{def:Schauder-basis} guarantees that one can achieve higher accuracy by using more and more terms without changing the previous \(a_k\).
+
+\begin{theorem}[Partial sums of a Schauder basis]\label{thm:partial-sum-of-a-Schauder-basis}
 	Let \(\left\{ x_k \right\} _{k\geq 1}\) be a \hyperref[def:Schauder-basis]{Schauder basis} for a \hyperref[def:Banach-space]{Banach space} \(X\). Then there exists an \(M \geq 0\) such that for all \(n \geq 1\),
 	\[
 		\left\lVert \sum\limits_{k=1}^{n} a_k x_k\right\rVert \leq M \left\lVert x\right\rVert = M \left\lVert \sum\limits_{k=1}^{\infty} a_k x_k\right\rVert
@@ -47,23 +57,39 @@
 \end{proof}
 
 \begin{notation}[Basis constant]\label{not:basis-constant}
-	The \(M\geq 0\) in \autoref{thm:lec15} is called the \emph{basis constant}.
+	The \(M\geq 0\) in \autoref{thm:partial-sum-of-a-Schauder-basis} is called the \emph{basis constant}.
 \end{notation}
 
-We see that we can define a partial sum operators for \(n = 1, 2, \ldots  \) such that
+\begin{definition}[Biorthogonal functional]\label{def:biorthogonal-functional}
+	Given a \hyperref[def:Schauder-basis]{Schauder basis} \(\left\{ x_k \right\} _{k\geq 1}\) and \(x\in X\), the set \(\left\{ a_k(x) \right\} _{k\geq 1} \eqqcolon \left\{ x^{\ast} _k (x)\right\}_{k\geq 1} \) is called \emph{biorthogonal functional} such that \(x = \sum_{k=1}^n a_k x_k \).
+\end{definition}
+
+The reason we call \(\left\{ a_k \right\} _{k\geq 1}\) for a specific \(x\) the \hyperref[def:biorthogonal-functional]{biorthogonal functional} is as follows. We can define a partial sum operators for \(n = 1, 2, \ldots  \) such that
 \[
 	S_n\colon X\to X,\quad S_n (x) = \sum\limits_{k=1}^{n} a_k x_k
 \]
-for \(x = \sum_{i=1}^{\infty }a_k x_k\). And we have shown that \(S_n\) is a \hyperref[def:bounded-linear-op]{bounded linear operator} and \(\sup _{n\geq 1} \left\lVert S_n\right\rVert < \infty \). Observe that \(a_k = a_k(x)\) is a \hyperref[def:linear-functional]{linear functional} on \(X\), which are called \emph{biorthogonal functionals} of the basis \(\left\{ x_k \right\} _{k\geq 1}\) and denoted by \(x_k ^{\ast} \) for \(k \geq 1\). We now show \(x_k^{\ast} \in X^{\ast} \), i.e., \(x_k^{\ast} \) is a \hyperref[def:bounded-linear-functional]{bounded linear functional}. to do this, we write
-\[
-	x_n^{\ast} (x) x_n = S_n(x) - S_{n-1}(x)
-\]
-for \(n \geq 1\). From \autoref{thm:lec15}, we have
-\[
-	\left\lVert x^{\ast} _n(x)x_n\right\rVert \leq \left\lVert S_n(x)\right\rVert + \left\lVert S_{n-1}(x) \right\rVert \leq 2M \left\lVert x\right\rVert,
-\]
-hence we conclude that \(x_n^{\ast} \in X^{\ast} \) and \(\sup _{n\geq 1} \left\lVert x_n^{\ast} \right\rVert \left\lVert x_n\right\rVert < \infty \).
+for \(x = \sum_{i=1}^{\infty }a_k x_k\), and we have shown that \(S_n\) is a \hyperref[def:bounded-linear-op]{bounded linear operator} and \(\sup _{n\geq 1} \left\lVert S_n\right\rVert < \infty \). Observe that \(a_k = a_k(x)\) is a \hyperref[def:linear-functional]{linear functional} on \(X\). This resembles the \hyperref[def:Fourier-series]{Fourier series} with respect to \hyperref[def:orthogonal-system]{orthogonal} bases in a \hyperref[def:Hilbert-space]{Hilbert space}, except now we discuss this in general \hyperref[def:Banach-space]{Banach spaces}.
 
+\begin{proposition}
+	The \hyperref[def:biorthogonal-functional]{biorthogonal functional} \(\left\{ x_k^{\ast} \right\} _{k\geq 1}\) of a \hyperref[def:Schauder-basis]{Schauder basis} \(\left\{ x_k \right\} _{k\geq 1}\) are \hyperref[def:uniformly-bounded]{uniformly bounded}, i.e.,
+	\[
+		\sup _{k\in \mathbb{\MakeUppercase{n}} }\lVert x_k ^{\ast}  \rVert \lVert x_{k}  \rVert < \infty .
+	\]
+\end{proposition}
+\begin{proof}
+	To do this, we write
+	\[
+		x_n^{\ast} (x) x_n = S_n(x) - S_{n-1}(x)
+	\]
+	for \(n \geq 1\). From \autoref{thm:partial-sum-of-a-Schauder-basis}, we have
+	\[
+		\left\lVert x^{\ast} _n(x)x_n\right\rVert \leq \left\lVert S_n(x)\right\rVert + \left\lVert S_{n-1}(x) \right\rVert \leq 2M \left\lVert x\right\rVert,
+	\]
+	hence we conclude that \(x_n^{\ast} \in X^{\ast} \) and \(\sup _{n\geq 1} \left\lVert x_n^{\ast} \right\rVert \left\lVert x_n\right\rVert < \infty \).
+\end{proof}
+
+\section{Compact Sets in Banach Spaces}
+\hyperref[def:compact]{Compactness} is a useful substitute of finite dimensionality as we'll see. Let's give a brief review.
 \subsection{Compactness}
 We first review some properties of compactness.
 
@@ -94,7 +120,7 @@ This means, given a cover \(A \subseteq \bigcup_{\alpha} U_\alpha \) for some co
 	\]
 \end{definition}
 
-\begin{theorem}
+\begin{theorem}\label{thm:precompact}
 	Let \(A\) be a subset of a complete \hyperref[prev:metric]{metric space} \(X\), the following are equivalent.
 	\begin{enumerate}[(a)]
 		\item \(A\) is \hyperref[def:precompact]{precompact}.
@@ -107,26 +133,33 @@ This means, given a cover \(A \subseteq \bigcup_{\alpha} U_\alpha \) for some co
 	A subset \(A\) of a finite dimensional \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:precompact]{precompact} if and only if \(A\) is bounded.
 \end{theorem}
 
+\subsection{Compactness in Infinite-Dimensional Normed Spaces}
 We can extend \hyperref[thm:Heine-Borel]{Heine-Borel theorem} to infinite dimensional spaces.
 
 \begin{lemma}[Approximation by finite dimensional subspaces]\label{lma:appx-by-finite-dim-subspace}
-	A subspace \(A\) of a \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:precompact]{precompact} if and only if \(A\) is bounded. And for every \(\epsilon > 0\), there exists a finite dimensional subspace \(Y_{\epsilon}\) of \(X\) containing an \hyperref[def:eps-net]{\(\epsilon \)-net} for \(A\).
+	A subspace \(A\) of a \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:precompact]{precompact} if and only if \(A\) is bounded, and for every \(\epsilon > 0\), there exists a finite dimensional subspace \(Y_{\epsilon}\) of \(X\) containing an \hyperref[def:eps-net]{\(\epsilon \)-net} for \(A\).
 \end{lemma}
 \begin{proof}
-	We first prove the necessity. Let \(A\) be \hyperref[def:precompact]{precompact} and \(\epsilon >0\). Then there exists a finite \hyperref[def:eps-net]{\(\epsilon \)-net} \(\Omega _\epsilon\) for \(A\). Now, take \(Y_{\epsilon } = \mathop{\mathrm{span}}(\Omega _\epsilon )\).
+	We first prove the necessity. Let \(A\) be \hyperref[def:precompact]{precompact} and \(\epsilon >0\). Then there exists a finite \hyperref[def:eps-net]{\(\epsilon \)-net} \(\Omega _\epsilon\) for \(A\). Now, take \(Y_{\epsilon } = \mathop{\mathrm{span}}(\Omega _\epsilon )\), which is finite-dimensional.
 
-	As for sufficiency, assume \(A\) is bounded, so \(A \subseteq R B_X\) for some \(R > 0\) where \(B_X\) is the unit \hyperref[def:ball]{ball} \(\left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \). Hence, we can restrict to points of \(\Omega _\epsilon \) contained in \((R+\epsilon )B_{Y_{\epsilon } }\). Hence,
+	As for sufficiency, assume \(A\) is bounded, so \(A \subseteq r B_X\) for some \(r > 0\) where \(B_X\) is the unit \hyperref[def:ball]{ball} \(\left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \). Also, given \(\epsilon \), we have a finite-dimensional subspace \(Y_{\epsilon }\) as an \hyperref[def:eps-net]{\(\epsilon \)-net} of \(A\). Observe that we can restrict to points of \(Y _\epsilon \) contained in \((r+\epsilon )B_{Y_{\epsilon } }\) since
 	\[
-		A \subseteq \left\{ x\in X\colon d(x, (R+\epsilon )B_{Y_{\epsilon } }) < \epsilon \right\},
+		A \subseteq \left\{ x\in X\colon d(x, (r + \epsilon )B_{Y_{\epsilon } }) < \epsilon \right\},
 	\]
-	i.e., \((R+\epsilon )B_{Y_{\epsilon } }\) is \hyperref[def:compact]{compact}.
-
-	In all, \((R + \epsilon )B_{Y_{\epsilon } }\) is covered by a finite collection of \hyperref[def:ball]{balls} of radius \(\epsilon \).
+	i.e., \((r+\epsilon )B_{Y_{\epsilon } }\) is also an \hyperref[def:eps-net]{\(\epsilon \)-net} of \(A\). Since \(Y\) is finite-dimensional, from \hyperref[thm:Heine-Borel]{Heine-Borel theorem}, \((r+\epsilon )B_{Y_{\epsilon } }\) is \hyperref[def:precompact]{precompact}, i.e., we find a \hyperref[def:precompact]{precompact}  \hyperref[def:eps-net]{\(\epsilon \)-net} of \(A\), therefore \(A\) itself is \hyperref[def:precompact]{precompact} from \autoref{thm:precompact}.
 \end{proof}
+
+On the other hand, from \hyperref[thm:Heine-Borel]{Heine-Borel theorem} states that the unit \hyperref[def:ball]{ball} \(B_X\) of a finite-dimensional \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:compact]{compact}, but this never holds in infinite-dimensional case.
 
 \begin{theorem}[Riesz's theorem]\label{thm:Riesz}
 	The unit \hyperref[def:ball]{ball} \(B_X\) of an infinite dimensional \hyperref[def:normed-vector-space]{normed space} is never \hyperref[def:compact]{compact}.
 \end{theorem}
 \begin{proof}
-	Suppose \(B_X= \left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \) is \hyperref[def:compact]{compact}. Then from \autoref{lma:appx-by-finite-dim-subspace}, we can find a finite dimensional subspace \(Y\) containing an \hyperref[def:eps-net]{\(\epsilon\)-net} with \(\epsilon = 1 / 2\)  for \(B_X\), i.e., \(d(x, Y) \leq 1 / 2\) for all \(x\in B_X\) where \(X\) is infinite dimensional, \(Y\) is finite dimensional. This means the \hyperref[def:quotient-space]{quotient space} \(\quotient{X}{Y} \) is nontrivial. Note that \(Y\) is a closed subspace of \(X\). Hence, \hyperref[def:norm]{norm} on \(X\) induces a \hyperref[def:norm]{norm} on \(\quotient{X}{Y}\) by letting \(x\in X\) and \([x]\in \quotient{X}{Y} \) such that \(\left\lVert [x]\right\rVert = 0.9\) where \(\left\lVert [x]\right\rVert = \inf _{y\in Y} \left\lVert x - y\right\rVert \). Choose \(\overline{y} \in Y\) such that \(\left\lVert x - \overline{y} \right\rVert \leq 1\), meaning that \(x - \overline{y} \in B_X\) and \(d(x-\overline{y} , Y) = 0.9 > 1 / 2\).
+	Suppose \(B_X= \left\{ x\in X\colon \left\lVert x\right\rVert \leq 1 \right\} \) is \hyperref[def:compact]{compact}. Then from \autoref{lma:appx-by-finite-dim-subspace}, we can find a finite dimensional subspace \(Y\) containing an \hyperref[def:eps-net]{\(\epsilon\)-net} with \(\epsilon = 1 / 2\)  for \(B_X\), i.e., \(d(x, Y) \leq 1 / 2\) for all \(x\in B_X\).
+
+	Recall that \(X\) is infinite dimensional, \(Y\) is finite dimensional, hence the \hyperref[def:quotient-space]{quotient space} \(\quotient{X}{Y} \) is nontrivial. Note that \(Y\) is a closed subspace of \(X\),\footnote{Since it's finite-dimensional.} hence, the \hyperref[def:norm]{norm} on \(X\) induces a \hyperref[def:norm]{norm} on \(\quotient{X}{Y}\) such that
+	\[
+		\left\lVert [x]\right\rVert = \inf _{y\in Y} \left\lVert x - y\right\rVert.
+	\]
+	We can then find an \(x\in X\) and \([x]\in \quotient{X}{Y} \) such that \(\left\lVert [x]\right\rVert = 0.9\), i.e., there's an \(\overline{y} \in Y\) such that \(\left\lVert x - \overline{y} \right\rVert \leq 1\). In this case, \(x - \overline{y} \in B_X\) and \(d(x-\overline{y} , Y) = \lVert [x] \rVert = 0.9 > 1 / 2\), a contradiction.
 \end{proof}

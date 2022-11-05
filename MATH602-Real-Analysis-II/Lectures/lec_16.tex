@@ -76,7 +76,7 @@ Let's first formally introduce the definitions.
 \end{definition*}
 
 \begin{notation}
-	If \(\left\{ x_n \right\} _{n \geq 1}\) converges to \(x\) \hyperref[def:weakly-convergence]{weakly}, we write \(x_n \overset{\text{w}}{\to } x\).
+	If \(\left\{ x_n \right\} _{n \geq 1}\) is \hyperref[def:weakly-convergence]{weakly converging} to \(x\), we write \(x_n \overset{\text{w}}{\to } x\).
 \end{notation}
 
 \begin{remark}[Strong and weak]
@@ -124,39 +124,40 @@ There are some known criteria of \hyperref[def:weakly-convergence]{weak converge
 \end{note}
 
 \subsection{Weak Topology}
+Indeed, \hyperref[def:weakly-convergence]{weak convergence} is just an induced concept from \hyperref[def:weak-topology]{weak topology}, so we now study it directly. And in fact, this allows us to further consider other weak properties as we'll soon see.
+
 \begin{definition}[Weak topology]\label{def:weak-topology}
-	The \emph{weak topology} on a \hyperref[def:Banach-space]{Banach space} \(X\) is the weakest topology such that all maps \(f\in X^{\ast} \) are continuous.
+	The \emph{weak topology} on a \hyperref[def:normed-vector-space]{normed space} \(X\) is the weakest topology such that all maps \(f\in X^{\ast} \) are continuous.
 \end{definition}
 
-Recall that \hyperref[def:weakly-convergence]{weak convergence} means \(\lim_{n \to \infty} f(x_n) = f(x)\). And if \(f\) is continuous at \(x_0\), we know that the preimage of a \(\epsilon \)-\hyperref[def:ball]{ball}
-\[
-	\left\{ x\in X\colon \left\vert f(x) - f(x_0) \right\vert < \epsilon  \right\}
-\]
-is open. Intuitively, the base of the \hyperref[def:weak-topology]{weak topology} are \emph{cylinders} of the form
+\begin{note}[Strong topology]\label{note:strong-topology}
+	To distinguish two natural topologies on \(X\), the \hyperref[def:norm]{norm} topology is sometimes called \emph{strong topology} on \(X\).
+\end{note}
+
+Intuitively, if \(f\) is continuous at \(x_0\), the preimage of an \(\epsilon \)-\hyperref[def:ball]{ball} \(\left\{ x\in X\colon \left\vert f(x) - f(x_0) \right\vert < \epsilon  \right\}\) around \(f(x_0)\) is open, i.e., the base of the \hyperref[def:weak-topology]{weak topology} are \href{https://en.wikipedia.org/wiki/Cylinder_set}{cylinders} of the form
 \[
 	\left\{ x\in X\colon \left\vert f_k(x - x_0) \right\vert < \epsilon , k = 1, 2, \ldots , N \right\}
 \]
-where \(x_0\in X\), \(f_k\in X^{\ast} \), \(k = 1, \ldots  , N\) for \(\epsilon > 0\), \(N \geq 1\).
+where \(x_0\in X\), \(f_k\in X^{\ast} \), \(k = 1, \ldots  , N\) for \(\epsilon > 0\), \(N \geq 1\). In all, these cylinders form a local base of \hyperref[def:weak-topology]{weak topology} at point \(x_0\).
 
-\begin{remark}
-	This is equivalent to embedding \(X\) into an infinite product of \(\mathbb{\MakeUppercase{r}} \) or \(\mathbb{\MakeUppercase{c}} \), i.e.,
+\begin{remark}[\(\mathbb{\MakeUppercase{r}} ^{\infty} \) embedding]
+	Consider the embedding from \(X\) to an infinite product of \(\mathbb{\MakeUppercase{r}} \) such that
 	\[
-		X\to \mathbb{\MakeUppercase{r}} ^{\infty} ,\quad x\mapsto \left[ f(x)\colon f\in X^{\ast} \right]
+		X\to \mathbb{\MakeUppercase{r}} ^{\infty} ,
+		\quad x\mapsto (f(x))_{f\in X^{\ast}} = (f_1(x), f_2(x), \ldots )
 	\]
-	where the coordinates of \(x\) in \(\mathbb{\MakeUppercase{r}} ^{\infty} \) are \(f(x)\) given \(f\in X^{\ast} \). Then, \hyperref[def:weak-topology]{weak topology} induced on products of reals. This is the same as in \href{https://www.pbb.wtf/posts/Notes#algebraic-topology-math592-umich}{algebraic topology}!
+	given \(\left\{ f_i \right\} _{i \geq 1}\) in \(X^{\ast}\):\footnote{There may be uncountable many of \(f_i\).} \hyperref[def:weak-topology]{weak topology} is induced from the products of reals.
 \end{remark}
 
+\begin{note}[Realtion between CW complex]
+	The weak topology in \href{https://www.pbb.wtf/posts/Notes#algebraic-topology-math592-umich}{algebraic topology} is actually the strongest one, i.e., it's the \href{https://en.wikipedia.org/wiki/Final_topology}{final topology}. See \href{https://math.stackexchange.com/questions/921744/any-relations-between-the-weak-topology-on-a-banach-space-and-the-weak-topology}{here} for a further discussion.
+\end{note}
+
+Although there are lots of difference between \hyperref[def:weak-topology]{weak} and the corresponding \hyperref[note:strong-topology]{strong} properties, some are equivalent.
+
 \begin{proposition}[Weak closedness]\label{prop:weak-closedness}
-	Let \(K\) be a \hyperref[def:convex-set]{convex subset} of a \hyperref[def:Banach-space]{Banach space}. Then \(K\) is weakly closed if and only if \(K\) is strongly closed.
+	Let \(K\) be a \hyperref[def:convex-set]{convex subset} of a \hyperref[def:Banach-space]{Banach space}. Then \(K\) is \hyperref[def:weak-topology]{weakly} closed if and only if \(K\) is \hyperref[note:strong-topology]{strongly} closed.
 \end{proposition}
 \begin{proof}
-	Weak closure implies strong closure, which does not involve \hyperref[def:convex-set]{convexity}. Suppose \(\left\{ x_n \right\} _{n\geq 1}\subseteq K\), \(x_n \overset{s}{\to } x\), then \(x_n \overset{\text{w}}{\to } x\). If \(K\) is weak closed, then \(x\in K\). Also, we know that a strongly closed \hyperref[def:convex-set]{convex set} \(K\) is the intersection of all \hyperref[def:hyperplane]{hyperplane} containing \(K\) (implied by \hyperref[thm:separation-of-convex-sets]{separating hyperplane theorem}), i.e.,
-	\[
-		K = \bigcap_{f, a} A_{f, a}
-	\]
-	were \(A_{f, a}\coloneqq \left\{ x\in X \colon f(x) \leq a, f\in X^{\ast} \right\} \), which is weakly closed since
-	\[
-		A_{f, a}= f^{-1} ((-\infty , a])
-	\]
-	and \(f\) is continuous in \hyperref[def:weak-topology]{weak topology}.
+	Clearly, \hyperref[def:weak-topology]{weak} closure implies \hyperref[note:strong-topology]{strong} closure.\footnote{Notice that this case doesn't involve \hyperref[def:convex-set]{convexity} since we only use the coarser relation between topologies.} Conversely, if \(K\) is a \hyperref[note:strong-topology]{strongly} closed \hyperref[def:convex-set]{convex set}, it is the intersection of all \hyperref[def:hyperplane]{hyperplane} containing \(K\) from \autoref{col:lec10}, i.e., \(K = \bigcap_{f, a} A_{f, a}\) where \(A_{f, a}\coloneqq \left\{ x\in X \colon f(x) \leq a, f\in X^{\ast} \right\} \). Since it is \hyperref[def:weak-topology]{weakly} closed from \(A_{f, a}= f^{-1} ((-\infty , a])\),\footnote{Since \(f\) is continuous, \(f^{-1} \) maps closed set in \(\mathbb{\MakeUppercase{r}}\) (\((-\infty , a]\)) to (\hyperref[def:weak-topology]{weakly}) closed set in \(X\) with \hyperref[def:weak-topology]{weak topology}.} the intersection of them is also \hyperref[def:weak-topology]{weakly} closed, proving the result.
 \end{proof}

@@ -2,25 +2,26 @@
 \section{Fredholm Theory}
 Fredholm theory studies operators of the form \emph{identity plus \hyperref[def:compact-op]{compact}}. They are conveniently put in the form \(I - T\) for \(I\) being the identity operator on some \hyperref[def:Banach-space]{Banach space} \(X\) and \(T\in K(X, X)\).
 
-Furthermore, Fredholm theory is motivated by two applications: One is for solving linear equations \(\lambda x - Tx = b\), and in particular, integral equations.\footnote{\(T\) being an integral operator.} Another is in spectral theory, where the spectrum of \(T\) consists of numbers \(\lambda \) for which the operator \(\lambda I - T\) is invertible.
+Furthermore, Fredholm theory is motivated by two applications. One is for solving linear equations \(\lambda x - Tx = b\), and in particular, integral equations.\footnote{\(T\) being an integral operator.} Another is in spectral theory, where the spectrum of \(T\) consists of numbers \(\lambda \) for which the operator \(\lambda I - T\) is invertible.
 \subsection{Closed Image}
 \begin{lemma}\label{lma:lec19}
 	Let \(X\) be a \hyperref[def:Banach-space]{Banach space} and \(T\in K(X, X)\). Then the operator \(I-T\) has closed image \(\im(I-T)\).
 \end{lemma}
 \begin{proof}
-	Let \(A=I-T\), then \(\ker (A)\) is closed, and we let
-	\[
-		\widetilde{A} \colon \quotient{X}{\ker(A)}\to X
-	\]
-	be induced operator \(\widetilde{A} ([x])=Ax\) for all \(x\in X\), and \(\im(A) = \im(\widetilde{A} )\). Hence, it's sufficient to show \(\im(\widetilde{A} )\) is closed. To show this, we show \(\widetilde{A} \) is bounded below, i.e., \(\exists c>0\) such that
+	Let \(A=I-T\), since \(\ker (A)\) is closed, we consider the injectivization \(\widetilde{A} \colon \quotient{X}{\ker(A)}\to X\) be the induced operator \(\widetilde{A} ([x])=Ax\) for all \(x\in X\). Since \(\im(A) = \im(\widetilde{A} )\), it's sufficient to show \(\im(\widetilde{A} )\) is closed, which is equivalent to show that \(\widetilde{A} \) is bounded below from \autoref{prop:isomorphic-embedding}, i.e., \(\exists c>0\) such that
 	\[
 		\lVert \widetilde{A} [x]\rVert \geq c\left\lVert [x]\right\rVert
 	\]
-	for all \(x\in X\). We prove the lower bound by contradiction. Suppose there exists a sequence \(\left\{ x_k \right\} _{k\geq 1}\) in \(X\) such that \(\left\lVert [x_{k} ]\right\rVert = 1\) for all \(k\geq 1\) and \(\lVert \widetilde{A} [x] \rVert \to 0\) as \(k \to \infty \). We can then choose \(\left\{ x_{k}  \right\}_{k\geq 1} \) such that \(\left\lVert x_{k} \right\rVert \leq 2\), with \(\inf_{y\in \ker(A)} \left\lVert x_{k} -y\right\rVert=1 \). So as \(k\to \infty \), \(Ax_{k} = \widetilde{A} ([x_{k} ])\to 0\) where \(Ax_{k} = x_{k} - Tx_{k} \). From the fact that \(T\) is \hyperref[def:compact-op]{compact}, \(\left\{ Tx_{k}  \right\}_{k\geq 1} \) has a converging subsequence, so we can assume \(Tx_{k} \to z\) as \(k\to \infty \) and \(x_{k} - Tx_{k} \to 0\). Hence, \(x_{k} \to z\) as \(k\to  \infty \) and \(Az = 0\). But we know that \(\inf _{y\in \ker(A)} \left\lVert z - y\right\rVert = 1\), contradiction since \(z\in \ker(A)\).
+	for all \(x\in X\). Toward a contradiction, suppose \(\widetilde{A} \) is not bounded below, then there exists a sequence \(\left\{ x_k \right\} _{k\geq 1}\) in \(X\) such that \(\left\lVert [x_{k} ]\right\rVert = 1\) for all \(k\geq 1\) and \(\lVert \widetilde{A} [x_k] \rVert \to 0\) as \(k \to \infty \). We can then choose \(\left\{ x_{k}  \right\}_{k\geq 1} \) such that \(\left\lVert x_{k} \right\rVert \leq 2\), with \(\inf_{y\in \ker(A)} \left\lVert x_{k} -y\right\rVert=1 \). So as \(k\to \infty \),
+	\[
+		x_{k} - Tx_{k} = Ax_{k} = \widetilde{A} ([x_{k} ])\to 0.
+	\]
+
+	From the fact that \(T\) is \hyperref[def:compact-op]{compact}, \(\left\{ Tx_{k}  \right\}_{k\geq 1} \) has a converging subsequence, so we can assume \(Tx_{k} \to z\) as \(k\to \infty \), with \(x_{k} - Tx_{k} \to 0\), we have \(x_{k} \to z\) as \(k \to \infty \) and \(Az = 0\), i.e., \(z\in \ker(A)\). But from \(\inf _{y\in \ker(A)} \left\lVert z - y\right\rVert = 1\), a contradiction since this distance should be \(0\) if \(z\in \ker(A)\).
 \end{proof}
 
 \subsection{Fredholm Alternative}
-We now study a partial case of the so-called \hyperref[def:Fredholm-alternative]{Fredholm alternative}.
+We now study a partial case of the so-called \hyperref[thm:Fredholm-alternative]{Fredholm alternative}.
 
 \begin{theorem}[Fredholm alternative]\label{thm:Fredholm-alternative}
 	Let \(X\) be a \hyperref[def:Banach-space]{Banach space}, \(T\colon X\to  X\) be \hyperref[def:compact-op]{compact}. Then \(I - T\) is injective if and only if \(I - T\) is surjective.
@@ -33,7 +34,7 @@ We now study a partial case of the so-called \hyperref[def:Fredholm-alternative]
 		\(Y_{n\geq 1} \subsetneq Y_n\).
 	\end{claim}
 	\begin{explanation}
-		Consider \(y \notin \im(A)\), and suppose \(\im(A^{n+1})= \im(A^n)\), then there exists \(x\) such that \(A^{n+1}x = A^n y\), i.e., \(A^n (Ax - y) = 0\). From the injectivity of \(A\), \(\ker(A^n) = 0\), os \(Ax - y = 0\), implying \(y\in \im(A)\), contradiction, so \(Y_{n+1}\) is properly contained in \(Y_n\) for all \(n\geq 1\).
+		Consider \(y \notin \im(A)\), and suppose \(\im(A^{n+1})= \im(A^n)\), then there exists \(x\) such that \(A^{n+1}x = A^n y\), i.e., \(A^n (Ax - y) = 0\). From the injectivity of \(A\), \(\ker(A^n) = 0\), so \(Ax - y = 0\), implying \(y\in \im(A)\), contradiction, so \(Y_{n+1}\) is properly contained in \(Y_n\) for all \(n\geq 1\).
 	\end{explanation}
 
 	From \autoref{lma:lec19}, the spaces \(Y_n\) are closed in \(X\) for \(n\geq 1\). Furthermore, notice that \(Y_n = \im(A^n) = \im((I-T)^n)\) where

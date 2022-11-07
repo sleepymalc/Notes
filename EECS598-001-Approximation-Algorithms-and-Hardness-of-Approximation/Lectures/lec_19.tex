@@ -1,0 +1,140 @@
+\chapter{Hardness of Approximation}
+\lecture{19}{7 Nov. 10:30}{Complexity theory for Approximation Algorithm}
+Recall how we define the \hyperref[def:combinatorial-optimization]{combinatorial optimization}.
+
+\begin{prev}
+	Given a set of all possible inputs \(\mathcal{\MakeUppercase{i}} \) for a \hyperref[def:combinatorial-optimization]{combinatorial optimization} problem \(P\), the goal is to find \(x\in X_I\) to maximize/minimize \(f_I (x)\) where \(f_I \colon X_I \to \mathbb{\MakeUppercase{r}} ^+\) is an objective function, and \(X_I\) is a set of feasible solutions.
+\end{prev}
+
+Now, we're going to discuss the complexity of doing approximation problem. But since the classical complexity theory is under the context of decision problems, we now try to generalize it.
+
+\section{Approximation Complexity}
+In this section, we're going to consider maximization problems primarily. Since we now care about decision problem, so given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with goal being finding an objective in \(\mathbb{\MakeUppercase{r}} \), we have the following decision version.
+
+\begin{definition}[Decision-\(P\)]\label{def:decision-P}
+	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\), the \emph{decision-\(P\)} is the decision version of \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \), \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which output \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) otherwise.
+\end{definition}
+
+And we have the following characterization of \(P\) and \hyperref[def:decision-P]{decision-\(P\)} in terms of complexity class.
+
+\begin{definition}
+	\(P\) is \(\NP\) if \hyperref[def:decision-P]{decision-\(P\)} is \(\NP\).
+\end{definition}
+
+Apparently, this is not enough since what we care is the approximation version, and hence we have the following generalization.
+
+\begin{definition}[\(\alpha \)-gap \(P\)]\label{def:gap-P}
+	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with \(\alpha < 1\), the \emph{\(\alpha \)-gap \(P\)} is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < \alpha c\), and anything else (don't care) otherwise.
+\end{definition}
+
+Since we see that we may ignore some outputs, we divide the output into two different sets.
+
+\begin{notation}
+	Let \(\mathcal{\MakeUppercase{i}} \) be a set of all inputs, \(Y\) be a set of all \(\textsf{True}\) inputs, \(N\) be a set of all \(\textsf{False}\) inputs.\footnote{We have \(Y \cap N = \varnothing \), while not necessarily have \(N \cup Y = \mathcal{\MakeUppercase{i}} \).} Then given an input \(I\in \mathcal{\MakeUppercase{i}} \), output \(\textsf{True}\) if \(I\in Y\), \(\textsf{False}\) if \(I\in N\), anything otherwise.
+\end{notation}
+
+\begin{remark}
+	If there is an \(\alpha \)-approximation algorithm for \(P\), then there is an algorithm for \hyperref[def:gap-P]{\(\alpha \)-gap \(P\)}.
+\end{remark}
+\begin{explanation}
+	Given \(I\) and \(c\), we run the \(\alpha \)-approximation algorithm for \(P\) to get a solution with value \(c^\prime \). Notice that we necessarily have
+	\[
+		\alpha \OPT_I \leq c^\prime \leq \OPT_I,
+	\]
+	hence we can design a new algorithm which outputs \(\textsf{True}\) if \(c^\prime \geq c \cdot \alpha \), \(\textsf{False}\) otherwise. This is a correct algorithm for \hyperref[def:gap-P]{\(\alpha \)-gap \(P\)} since
+	\begin{itemize}
+		\item If \(\OPT_I \geq c\), then \(c^\prime \geq \alpha \OPT_I \geq \alpha c\), which is the \(\textsf{True}\) case.
+		\item If \(\OPT_I < \alpha c\), then \(c^\prime \leq \OPT_I < \alpha c\), which is the \(\textsf{False}\) case.
+	\end{itemize}
+\end{explanation}
+
+Again, we have the following characterization of \(P\) and \hyperref[def:gap-P]{\(\alpha \)-gap \(P\)} in terms of complexity class.
+
+\begin{definition}
+	We say an \(\alpha \)-approximating \(P\) is \(\NP\) if \(\alpha \)-gap \(P\) is \(\NP\).
+\end{definition}
+
+\section{Constraint Satisfaction Problem}
+We now study one of the most important problems in theoretical computer science, the \hyperref[prb:CSP]{CSP} problem. This is important since it's the reduction for many important problems.
+
+\begin{prev}[Reduction]
+	Given two problems \(P_1\), \(P_2\), the reduction from \(P_1\) to \(P_2\) is a \(\poly\)-time algorithm \(R\) such that given an input \(I_1\in \mathcal{\MakeUppercase{l}} \), output \(I_2\in \mathcal{\MakeUppercase{l}} _2\) such that
+	\begin{itemize}
+		\item if \(I_1\in Y_1\), then \(I_2\in Y_2\);
+		\item if \(I_1\in N\), then \(I_2\in N_2\).
+	\end{itemize}
+\end{prev}
+
+The reason why we care about reduction is that if there exists an algorithm for \(P_2\), then there exists an algorithm for \(P_1\) for \(P_2\) being a reduction from \(P_1\). Hence, if we have a good algorithm for \hyperref[prb:CSP]{CSP}, we automatically get lots of other problems solved.
+
+\begin{problem}[CSP]\label{prb:CSP}
+Given an input \((x_1, \ldots , x_n) = X\), \(C_1, \ldots  , C_m\) where \(C_i = (a_i, b_{i_1}, \ldots , b_{i_k})\) be the set of clauses where \(a_i\in {\ell }\), \(b_{i_j}\in [n]\), the \emph{constraint satisfaction problem of \(\Sigma, \Phi \)}\footnote{\(\Sigma \) is the alphabet set and \(\Phi = \left\{ \phi _1, \ldots , \phi _{\ell }  \right\} \) is a family of constraints where \(\phi _i \colon \Sigma ^k \to \left\{ 0, 1 \right\} \).} is to find \(\alpha \colon X\to \Sigma \) maximizing the number of satisfied clauses, i.e., \(\alpha _{a_i}(x_{b_1},\ldots , x_{b_k} )=1\).
+\end{problem}
+
+\begin{remark}[Problem description and problem instance]
+	There's an important distinction between problem description and problem instance. That is, the \hyperref[prb:CSP]{CSP} with respect to \(\Sigma, \Phi \) is the problem description of a class of problems, and after given some variables \(X\) and clauses \(C_i\), it becomes a problem instance, which can be solved.
+\end{remark}
+
+\begin{notation}[Problem description]
+	The problem description of \hyperref[prb:CSP]{CSP} with respect to \(\Sigma \) and \(\Phi \) is denoted as \(\mathop{\mathrm{CSP}}(\Sigma , \Phi )\).
+\end{notation}
+
+Notice that we can equivalently maximize the fraction instead of maximize the number of satisfied clauses, i.e., the objective is now \(\#\text{ satisfied clauses} / m \). It's because it's convenient to normalize the objective to be in \([0, 1]\).
+
+\begin{remark}
+
+\end{remark}
+
+\begin{eg}[Max-cut as CSP]
+
+\end{eg}
+
+\subsection{Probabilistically Checkable Proofs}
+As mentioned, there's lots of reduction can be done between fundamental problems considered in TCS to \hyperref[prb:CSP]{CSP}, we now see some important result. Firstly, let \(P = \mathop{\mathrm{CSP}}(\Sigma , \Phi )\), with \(0 < s \leq c \leq 1\), the \((c, s)\)-gap \(P\) is a problem such that given an instance of \(P\) as an input, output \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < s\).
+
+\begin{remark}
+
+\end{remark}
+
+Then, we have the following.
+
+\begin{theorem}[Cook-Levin theorem~\cite{10.1145/800157.805047}]
+	\((1, 1)\)-3SAT is \(\NP\)-hard.
+\end{theorem}
+
+\begin{theorem}[Karp~\cite{karp1972reducibility}]
+	There exists \(\epsilon > 0\) such that \((1-\epsilon , 1-\epsilon )\)-\hyperref[prb:max-cut]{max cut} is \(\NP\)-hard.
+\end{theorem}
+
+\begin{note}
+	\((1, 1)\)-\hyperref[prb:max-cut]{max cut} is \(\P\).
+\end{note}
+
+\begin{theorem}[PCP theorem]\label{thm:PCP}
+	There exists an \(\epsilon > 0\), such that \((1, 1-\epsilon )\)-gap 3SAT is \(\NP\).
+\end{theorem}
+
+PCP stands for probabilistically checkable proofs.
+
+\begin{prev}[\(\NP\)]
+	A language \(L \subseteq \left\{ 0, 1 \right\} ^{\ast}\) is in\(\NP\) if there exists a Turing machine \(V\) runs in \(\poly(\vert x \vert )\) such that given \(x\),
+	\begin{itemize}
+		\item \(x\in L\), then \(\exists y\) such that \(V(x, y) = 1\);
+		\item \(x \notin L\), then \(\forall y\) such that \(V(x, y) = 0\).
+	\end{itemize}
+\end{prev}
+
+Then, \(\PCP_{c, s}(r(n), q(n))\) is that \(L\in \PCP_{c, s}(r, q)\) if there exists a randomized Turing machine \(V\) runs in \(\poly(\vert x \vert )\) such that given \(x\),
+\begin{itemize}
+	\item can only flip \(r\) coins, i.e., the set of all random string is \(R=\left\{ 0, 1 \right\} ^r\)
+	\item decides \(Q_1, \ldots  , Q_q\) and \(\phi _R\colon \left\{ 0, 1 \right\} ^q \to \left[ 0, 1 \right] \) such that
+	      \begin{itemize}
+		      \item \(x\in L\), then \(\exists y\) such that \(\Pr_{R}(\phi (y_{Q_1}, \ldots , y_{Q_q} ) = 1) \geq c\);
+		      \item \(x\notin L\), then \(\forall y\) such that \(\Pr_{R}(\phi (y_{Q_1}, \ldots , y_{Q_q} ) = 1) < s\).
+	      \end{itemize}
+\end{itemize}
+
+Then, with this characterization, \autoref{thm:PCP} is equivalent as saying that there exists \(\epsilon > 0\) such that
+\[
+	\NP = \PCP_{1, 1-\epsilon }(O(\log n), O(1)).
+\]

@@ -23,8 +23,8 @@ And we have the following characterization of \(P\) and \hyperref[def:decision-P
 
 Apparently, this is not enough since what we care is the approximation version, and hence we have the following generalization.
 
-\begin{definition}[\(\alpha \)-gap \(P\)]\label{def:gap-P}
-	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with \(\alpha < 1\), the \emph{\(\alpha \)-gap \(P\)} is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < \alpha c\), and anything else (don't care) otherwise.
+\begin{definition}[\(\alpha \)-gap]\label{def:gap}
+	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with \(\alpha < 1\), the \emph{\(\alpha \)-gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < \alpha c\), and anything else (don't care) otherwise.
 \end{definition}
 
 Since we see that we may ignore some outputs, we divide the output into two different sets.
@@ -34,21 +34,21 @@ Since we see that we may ignore some outputs, we divide the output into two diff
 \end{notation}
 
 \begin{remark}
-	If there is an \(\alpha \)-approximation algorithm for \(P\), then there is an algorithm for \hyperref[def:gap-P]{\(\alpha \)-gap \(P\)}.
+	If there is an \(\alpha \)-approximation algorithm for \(P\), then there is an algorithm for \hyperref[def:gap]{\(\alpha\)-gap} \(P\).
 \end{remark}
 \begin{explanation}
 	Given \(I\) and \(c\), we run the \(\alpha \)-approximation algorithm for \(P\) to get a solution with value \(c^\prime \). Notice that we necessarily have
 	\[
 		\alpha \OPT_I \leq c^\prime \leq \OPT_I,
 	\]
-	hence we can design a new algorithm which outputs \(\textsf{True}\) if \(c^\prime \geq c \cdot \alpha \), \(\textsf{False}\) otherwise. This is a correct algorithm for \hyperref[def:gap-P]{\(\alpha \)-gap \(P\)} since
+	hence we can design a new algorithm which outputs \(\textsf{True}\) if \(c^\prime \geq c \cdot \alpha \), \(\textsf{False}\) otherwise. This is a correct algorithm for \hyperref[def:gap]{\(\alpha \)-gap \(P\)} since
 	\begin{itemize}
 		\item If \(\OPT_I \geq c\), then \(c^\prime \geq \alpha \OPT_I \geq \alpha c\), which is the \(\textsf{True}\) case.
 		\item If \(\OPT_I < \alpha c\), then \(c^\prime \leq \OPT_I < \alpha c\), which is the \(\textsf{False}\) case.
 	\end{itemize}
 \end{explanation}
 
-Again, we have the following characterization of \(P\) and \hyperref[def:gap-P]{\(\alpha \)-gap \(P\)} in terms of complexity class.
+Again, we have the following characterization of \(P\) and \hyperref[def:gap]{\(\alpha \)-gap \(P\)} in terms of complexity class.
 
 \begin{definition}
 	We say an \(\alpha \)-approximating \(P\) is \(\NP\) if \(\alpha \)-gap \(P\) is \(\NP\).
@@ -68,73 +68,92 @@ We now study one of the most important problems in theoretical computer science,
 The reason why we care about reduction is that if there exists an algorithm for \(P_2\), then there exists an algorithm for \(P_1\) for \(P_2\) being a reduction from \(P_1\). Hence, if we have a good algorithm for \hyperref[prb:CSP]{CSP}, we automatically get lots of other problems solved.
 
 \begin{problem}[CSP]\label{prb:CSP}
-Given an input \((x_1, \ldots , x_n) = X\), \(C_1, \ldots  , C_m\) where \(C_i = (a_i, b_{i_1}, \ldots , b_{i_k})\) be the set of clauses where \(a_i\in {\ell }\), \(b_{i_j}\in [n]\), the \emph{constraint satisfaction problem of \(\Sigma, \Phi \)}\footnote{\(\Sigma \) is the alphabet set and \(\Phi = \left\{ \phi _1, \ldots , \phi _{\ell }  \right\} \) is a family of constraints where \(\phi _i \colon \Sigma ^k \to \left\{ 0, 1 \right\} \).} is to find \(\alpha \colon X\to \Sigma \) maximizing the number of satisfied clauses, i.e., \(\alpha _{a_i}(x_{b_1},\ldots , x_{b_k} )=1\).
+Given an input \((x_1, \ldots , x_n) = X\), \(C_1, \ldots  , C_m\) where \(C_i = (a_i, b_{i_1}, \ldots , b_{i_k})\) be the set of clauses where \(a_i\in {\ell }\), \(b_{i_j}\in [n]\), the \emph{constraint satisfaction problem of \(\Sigma, \Phi \)}\footnote{\(\Sigma \) is the alphabet set and \(\Phi = \left\{ \phi _1, \ldots , \phi _{\ell }  \right\} \) is a family of constraints where \(\phi _i \colon \Sigma ^k \to \left\{ 0, 1 \right\} \).} is to find \(\sigma \colon X\to \Sigma \) maximizing the number of satisfied clauses, i.e., \(\sigma _{a_i}(x_{b_1},\ldots , x_{b_k} )=1\).
 \end{problem}
 
-\begin{remark}[Problem description and problem instance]
-	There's an important distinction between problem description and problem instance. That is, the \hyperref[prb:CSP]{CSP} with respect to \(\Sigma, \Phi \) is the problem description of a class of problems, and after given some variables \(X\) and clauses \(C_i\), it becomes a problem instance, which can be solved.
-\end{remark}
+There's an important distinction between problem description and problem instance. That is, the \hyperref[prb:CSP]{CSP} with respect to \(\Sigma, \Phi \) is the problem description of a class of problems, and after given some variables \(X\) and clauses \(C_i\), it becomes a problem instance, which can be solved.
 
 \begin{notation}[Problem description]
 	The problem description of \hyperref[prb:CSP]{CSP} with respect to \(\Sigma \) and \(\Phi \) is denoted as \(\mathop{\mathrm{CSP}}(\Sigma , \Phi )\).
 \end{notation}
 
-Notice that we can equivalently maximize the fraction instead of maximize the number of satisfied clauses, i.e., the objective is now \(\#\text{ satisfied clauses} / m \). It's because it's convenient to normalize the objective to be in \([0, 1]\).
+Notice that we can equivalently maximize the fraction instead of maximize the number of satisfied clauses, i.e., the objective is now \(\#\text{satisfied clauses} / m \). It's because it's convenient to normalize the objective to be in \([0, 1]\).
 
-\begin{remark}
-
-\end{remark}
+\begin{note}
+	Notice that to represent \(\phi _i \colon \Sigma ^k \to \left\{ 0, 1 \right\} \), it's often more convenient just to denote it as \(\phi _i ^{-1} (\left\{ 1 \right\} )\), i.e., the set of accepted string in \(\Sigma ^k\) w.r.t. \(\phi _i\).
+\end{note}
 
 \begin{eg}[Max-cut as CSP]
+	\hyperref[prb:max-cut]{Max cut} is equivalent to \(\mathop{\mathrm{CSP}}(\Sigma , \Phi )\) where \(\Sigma = \left\{ 0, 1 \right\} \), \(\Phi = \left\{ \phi _1 \right\} \) with \(\phi _1 = \left\{ 01, 10 \right\}\).
+\end{eg}
+\begin{explanation}
+	If we model \hyperref[prb:max-cut]{max cut} in this way, given an instance of \hyperref[prb:max-cut]{max cut}, i.e., given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with \(n\) nodes, \(C_i = (1, u, v)\) for \((u, v)\in \mathcal{\MakeUppercase{e}} \). The first entry is \(1\) since there are only one constraint to check whether a node is in the cut or not, and we create \(C_i\) for every edge \((u, v)\).
+\end{explanation}
 
+\begin{eg}[Max-2SAT as CSP]
+	MAX-2SAT is equivalent to \(\mathop{\mathrm{CSP}}(\Sigma , \Phi )\) where \(\Sigma = \left\{ 0, 1 \right\} \), \(\Phi =\left\{ \phi _1, \ldots , \phi _4  \right\} \) with
+	\[
+		\begin{split}
+			\phi _1 = \left\{ 01, 10, 11 \right\} \iff (x_i \lor x_j), &\quad
+			\phi _2 = \left\{ 01, 10, 00 \right\} \iff (\overline{x}_i \lor \overline{x}_j),\\
+			\phi _3 = \left\{ 01, 00, 11 \right\} \iff (\overline{x}_i \lor x_j), &\quad
+			\phi _4 = \left\{ 00, 10, 11 \right\} \iff (x_i \lor \overline{x}_j).
+		\end{split}
+	\]
 \end{eg}
 
 \subsection{Probabilistically Checkable Proofs}
-As mentioned, there's lots of reduction can be done between fundamental problems considered in TCS to \hyperref[prb:CSP]{CSP}, we now see some important result. Firstly, let \(P = \mathop{\mathrm{CSP}}(\Sigma , \Phi )\), with \(0 < s \leq c \leq 1\), the \((c, s)\)-gap \(P\) is a problem such that given an instance of \(P\) as an input, output \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < s\).
+As mentioned, there's lots of reduction can be done between fundamental problems considered in TCS to \hyperref[prb:CSP]{CSP}, we now see some important result. In order to do this, we need a more fine-grained version of \autoref{def:gap}.
+
+\begin{definition}[\((c, s)\)-gap]\label{def:c-s-gap}
+	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with \(0 < s \leq c \leq 1\), the \emph{\((c, s)\)-gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < s\), and anything else (don't care) otherwise.
+\end{definition}
+
+One thing we should note is that the reason why we let \(s, c\in (0, 1]\) is that we have normalized \(\OPT_I\) to be in \([0, 1]\).
 
 \begin{remark}
-
+	We see that by setting \(s = \alpha \cdot c\), we recover \autoref{def:gap} from \autoref{def:c-s-gap}.
 \end{remark}
 
 Then, we have the following.
 
-\begin{theorem}[Cook-Levin theorem~\cite{10.1145/800157.805047}]
-	\((1, 1)\)-3SAT is \(\NP\)-hard.
+\begin{theorem}[Cook-Levin theorem~\cite{10.1145/800157.805047}]\label{thm:Cook-Levin}
+	The \hyperref[def:c-s-gap]{\((1, 1)\)-gap} 3SAT is \(\NP\)-hard.
 \end{theorem}
 
-\begin{theorem}[Karp~\cite{karp1972reducibility}]
-	There exists \(\epsilon > 0\) such that \((1-\epsilon , 1-\epsilon )\)-\hyperref[prb:max-cut]{max cut} is \(\NP\)-hard.
+\begin{theorem}[Karp~\cite{karp1972reducibility}]\label{thm:Karp}
+	There exists \(\epsilon > 0\) such that \hyperref[def:c-s-gap]{\((1-\epsilon , 1-\epsilon )\)-gap} \hyperref[prb:max-cut]{max cut} is \(\NP\)-hard.
 \end{theorem}
 
 \begin{note}
-	\((1, 1)\)-\hyperref[prb:max-cut]{max cut} is \(\P\).
+	The \hyperref[def:c-s-gap]{\((1, 1)\)-gap} \hyperref[prb:max-cut]{max cut} is \(\P\).
 \end{note}
 
+
+
 \begin{theorem}[PCP theorem]\label{thm:PCP}
-	There exists an \(\epsilon > 0\), such that \((1, 1-\epsilon )\)-gap 3SAT is \(\NP\).
+	There exists an \(\epsilon > 0\) such that \hyperref[def:c-s-gap]{\((1, 1-\epsilon )\)-gap} 3SAT is \(\NP\)-hard.
 \end{theorem}
 
-PCP stands for probabilistically checkable proofs.
+The proof is omitted since it worth a complete course dedicated on which. But to understand \href{thm:PCP}, we need to understand the class \hyperref[def:PCP]{PCP}. First, recall the definition of \(\NP\).
 
 \begin{prev}[\(\NP\)]
-	A language \(L \subseteq \left\{ 0, 1 \right\} ^{\ast}\) is in\(\NP\) if there exists a Turing machine \(V\) runs in \(\poly(\vert x \vert )\) such that given \(x\),
+	A language \(L \subseteq \left\{ 0, 1 \right\} ^{\ast}\) is in \(\NP\) if there exists a Turing machine \(V\) runs in \(\poly(\vert x \vert )\) such that given \(x\),
 	\begin{itemize}
 		\item \(x\in L\), then \(\exists y\) such that \(V(x, y) = 1\);
 		\item \(x \notin L\), then \(\forall y\) such that \(V(x, y) = 0\).
 	\end{itemize}
 \end{prev}
 
-Then, \(\PCP_{c, s}(r(n), q(n))\) is that \(L\in \PCP_{c, s}(r, q)\) if there exists a randomized Turing machine \(V\) runs in \(\poly(\vert x \vert )\) such that given \(x\),
-\begin{itemize}
-	\item can only flip \(r\) coins, i.e., the set of all random string is \(R=\left\{ 0, 1 \right\} ^r\)
-	\item decides \(Q_1, \ldots  , Q_q\) and \(\phi _R\colon \left\{ 0, 1 \right\} ^q \to \left[ 0, 1 \right] \) such that
-	      \begin{itemize}
-		      \item \(x\in L\), then \(\exists y\) such that \(\Pr_{R}(\phi (y_{Q_1}, \ldots , y_{Q_q} ) = 1) \geq c\);
-		      \item \(x\notin L\), then \(\forall y\) such that \(\Pr_{R}(\phi (y_{Q_1}, \ldots , y_{Q_q} ) = 1) < s\).
-	      \end{itemize}
-\end{itemize}
+\begin{definition}[\(\PCP\)]\label{def:PCP}
+	The class \emph{probabilistically checkable proofs}, or \(\PCP_{c, s}(r(n), q(n))\),\footnote{We implicitly assume that \(r\) and \(q\) depends on the length of the input \(\vert x \vert = n\).} is defined as \(L\in \PCP_{c, s}(r, q)\) if there exists a poly-time randomized Turing machine \(V\) which can only flip \(r\) coins\footnote{It only accepts random string \(R\) with length \(r\), i.e., is \(R \in \left\{ 0, 1 \right\} ^r\).} and given an input \(x\), \(V\) can look at \(x\) on \(q\) position \(Q_1, \ldots  , Q_q\) by \(\phi _R\colon \left\{ 0, 1 \right\} ^q \to \left[ 0, 1 \right] \) where
+	\begin{itemize}
+		\item \(x\in L\), then \(\exists y\) such that \(\Pr_{R}(\phi (y_{Q_1}, \ldots , y_{Q_q} ) = 1) \geq c\);
+		\item \(x\notin L\), then \(\forall y\) such that \(\Pr_{R}(\phi (y_{Q_1}, \ldots , y_{Q_q} ) = 1) < s\).
+	\end{itemize}
+\end{definition}
 
-Then, with this characterization, \autoref{thm:PCP} is equivalent as saying that there exists \(\epsilon > 0\) such that
+To decipher \autoref{def:PCP}, a randomized Turing machine \(V\) decides both the position (\(Q_1, \ldots , Q_q \)) are allowed to access, and also a function \(\phi _R\) which only looks at \(x_{Q_1}, x_{Q_2}, \ldots  , x_{Q_q}\), acting as a decider for \(V\). With this characterization, \autoref{thm:PCP} is equivalent as saying that there exists \(\epsilon > 0\) such that
 \[
 	\NP = \PCP_{1, 1-\epsilon }(O(\log n), O(1)).
 \]

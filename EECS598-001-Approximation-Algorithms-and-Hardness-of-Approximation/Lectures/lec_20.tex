@@ -1,0 +1,96 @@
+\lecture{20}{9 Nov. 10:30}{FGLSS Graph}
+\begin{remark}
+	\autoref{thm:PCP} is equivalent as saying that there exists \(\epsilon > 0\) such that
+	\[
+		\NP = \PCP_{1, 1-\epsilon }(O(\log n), O(1)).
+	\]
+\end{remark}
+\begin{explanation}
+	We see one direction, \(\text{3SAT}\in \PCP_{c, s}(r, q) \). Suppose that \(q = 2\), \(\psi = \left\{ 01, 10 \right\} \). Then there exists \(V\) such that given a 3CNF formula \(\phi \), it runs in \(\poly(\vert \phi  \vert )\) and only flips \(r\) random coins \(R\in \left\{ 0, 1 \right\} ^r\), which decides \(Q_1^R, Q_2^R\) such that
+	\begin{itemize}
+		\item if \(\phi \) is satisfiable, \(\exists y\) such that \(\Pr_{R}(\psi (y_{Q_1^R}, y_{Q_2^R}) = 1) \geq c\);
+		\item if \(\phi \) is not satisfiable, \(\forall y\) such that \(\Pr_{R}(\psi (y_{Q_1^R}, y_{Q_2^R}) = 1) \leq s\).
+	\end{itemize}
+	We see that there are at most \(2^r \leq n^{O(1)}\) possible \(R\)'s, so \(v\) will access at most \(N\coloneqq 2\cdot 2^r\) positions. Now, assume \(\max _R (Q_1^R, Q_2^R) \leq N\), consider the optimization problem that finds \(y\in \left\{ 0, 1 \right\} ^N\) to maximize the probability of accepting. In this viewpoint, this is just like \hyperref[prb:max-cut]{max cut} on \(\mathcal{\MakeUppercase{g}} =([N], \left\{ (Q_1^R, Q_2^R)\colon R\in \left\{ 0, 1 \right\} ^r \right\} )\).
+\end{explanation}
+
+It's easy to see that \(\NP \supseteq \PCP_{1, 1-\epsilon }(O(\log n), O(1))\) just by considering iterating through all the possible \(R\). Another direction worth a whole class, so we're not going to dive into that.
+
+\section{FGLSS Graph}
+\cite{10.1145/226643.226652}
+\begin{problem}[Vertex cover]\label{prb:vertex-cover}
+Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), find the smallest \(C \subseteq \mathcal{\MakeUppercase{v}} \) that covers all \(\mathcal{\MakeUppercase{e}} \).
+\end{problem}
+
+\begin{problem}[Independent set]\label{prb:independent-set}
+Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), find the largest \(I \subseteq \mathcal{\MakeUppercase{v}} \) that contains no edge.
+\end{problem}
+
+\begin{claim}
+	For all \(\mathcal{\MakeUppercase{g}} \), \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}}}(\mathcal{\MakeUppercase{g}} ) = \vert \mathcal{\MakeUppercase{v}} \vert - \OPT_{\hyperref[prb:independent-set]{\text{IS}}}(\mathcal{\MakeUppercase{g}} )\).
+\end{claim}
+\begin{explanation}
+	Observe that for all \(C \subseteq \mathcal{\MakeUppercase{v}} \), \(C\) is a \hyperref[prb:vertex-cover]{vertex cover} if and only if \(\mathcal{\MakeUppercase{v}} \setminus C\) is an \hyperref[prb:independent-set]{independent set}.
+\end{explanation}
+
+We now see the hardness of \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[prb:independent-set]{independent set}. From \hyperref[def:c-s-gap]{\((1, s)\)-gap} 3SAT with \(s < 1\), given the input
+\begin{itemize}
+	\item 3CNF formula \(\phi \);
+	\item \(n\) variables \(\left\{ x_1, \ldots , x_n\right\} \eqqcolon X\);
+	\item \(2n\) literals \(\left\{ x_1, \overline{x}_1, x_2, \overline{x}_2, \ldots \right\} \eqqcolon L\);
+	\item \(m\) clauses with three literals.
+\end{itemize}
+
+The, the output is a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) such that
+\begin{itemize}
+	\item \(\mathcal{\MakeUppercase{v}} = [m]\times \left( \left\{ T, F \right\} ^3 \setminus (F, F, F) \right)\) with \(\vert \mathcal{\MakeUppercase{v}}  \vert = 7m\)
+	\item \(\big((i, \ell _{i_1}, \ell _{i_2}, \ell _{i_3}), (j, \ell _{j_1}, \ell _{j_2}, \ell _{j_3})\big)\in \mathcal{\MakeUppercase{e}} \) if they \emph{contradict}.
+\end{itemize}
+
+\begin{note}[FGLSS graph]
+	Such a graph is called a FGLSS graph.
+\end{note}
+
+For \hyperref[prb:independent-set]{independent set}, \(c = m\); and for \hyperref[prb:vertex-cover]{vertex cover}, \(c = 6m\).
+
+\paragraph*{Completeness.}
+Suppose \(\phi \) is satisfiable, then there exists \(\sigma \colon X \to \left\{ T, F \right\} \) that satisfies every \(C_i\). Then from each \(V_i\), choose a vertex \emph{consistent} with \(\sigma \), i.e., \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq m\), and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq 6m\).
+
+\paragraph*{Soundness.}
+We want to show that \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq s\cdot m\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq (7+s)m\), which implies \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\phi) \geq s\). Let \(I \subseteq \mathcal{\MakeUppercase{v}} \) be an \hyperref[def:independent-set]{independent set} such that \(\vert I \vert \geq s\cdot m\), and let \(\sigma \colon X \to \left\{ T, F \right\} \) such that for all \(C_i\) with \(\vert I \cap V_i \vert = 1\), then assign variables in \(C_i\) according to \(I \cap V_i\).\footnote{This is well-defined, i.e., there are no contradictions since \(I\) is an \hyperref[def:independent-set]{independent set}.} We then extend it arbitrarily for unassigned variables, then for all \(C_i\), such that \(\vert I \cap  Vvi \vert = 1\), i.e, \(C_i\) is satisfied by \(\sigma \). We see that \(\beta = s < 1\), \(\alpha = (7-s) / 6 > 1\).
+
+\subsection{Label Cover}
+Consider the following problem.
+
+\begin{problem}[Label cover]\label{prb:label-cover}
+Given a bipartite graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{u}} \cup \mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with label sets \(L\) (for \(\mathcal{\MakeUppercase{u}} \)) and \(R\) (for \(\mathcal{\MakeUppercase{v}} \)) with \(\vert R \vert \geq \vert L \vert \) such that for all \(e=(u, v)\in \mathcal{\MakeUppercase{e}} \), we have \(\Pi _e \colon [R]\to [L]\). Find an assignment \(\sigma \) such that
+\[
+	\sigma = \begin{dcases}
+		\mathcal{\MakeUppercase{u}} \to L; \\
+		\mathcal{\MakeUppercase{v}} \to R
+	\end{dcases}
+\]
+that satisfies the maximum number of edge, where \(e=(u, v)\) is satisfied by \(\sigma \) if \(\Pi _e(\sigma (v)) = \sigma (u)\).
+\end{problem}
+
+For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert \mathcal{\MakeUppercase{u}}  \vert, \vert \mathcal{\MakeUppercase{v}}  \vert , \vert \mathcal{\MakeUppercase{e}}  \vert , L, R\).
+
+\begin{remark}[Baseline]
+	There is a trivial \(1/L\)-approximation algorithm.
+\end{remark}
+\begin{explanation}
+	Consider a random assignment \(\sigma \) such that
+	\begin{itemize}
+		\item for all \(v\in \mathcal{\MakeUppercase{v}} \), \(\sigma (v)\) randomly from \([R]\);
+		\item for all \(u\in \mathcal{\MakeUppercase{u}} \), \(\sigma (u)\) randomly from \([L]\).
+	\end{itemize}
+	Fix \(e=(u, v)\), we see that \(\Pr_{}(\Pi _e(\sigma (v)) = \sigma (u)) = 1 / L \).
+\end{explanation}
+
+\begin{theorem}[PCP theorem with parallel repetitoin theorem]
+	For all \(\epsilon > 0\), there exists \(L, R\) such that the \hyperref[def:c-s-gap]{\((1, \epsilon )\)-gap} \hyperref[prb:label-cover]{label cover} for \(L, R\) is \(\NP\)-hard.
+\end{theorem}
+
+\subsection{Hardness of Max \(k\)-Coverage}
+
+

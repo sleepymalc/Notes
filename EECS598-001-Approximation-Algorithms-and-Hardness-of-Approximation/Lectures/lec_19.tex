@@ -12,19 +12,19 @@ Now, we're going to discuss the complexity of doing approximation problem. But s
 In this section, we're going to consider maximization problems primarily. Since we now care about decision problem, so given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with goal being finding an objective in \(\mathbb{\MakeUppercase{r}} \), we have the following decision version.
 
 \begin{definition}[Decision-\(P\)]\label{def:decision-P}
-	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\), the \emph{decision-\(P\)} is the decision version of \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \), \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which output \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) otherwise.
+	Given a \hyperref[def:combinatorial-optimization]{maximization problem} \(P\), the \emph{decision-\(P\)} is the decision version of \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \), \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which output \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) otherwise.
 \end{definition}
 
 And we have the following characterization of \(P\) and \hyperref[def:decision-P]{decision-\(P\)} in terms of complexity class.
 
 \begin{definition}
-	\(P\) is \(\NP\) if \hyperref[def:decision-P]{decision-\(P\)} is \(\NP\).
+	A \hyperref[def:combinatorial-optimization]{maximization problem} \(P\) is \(\NP\) if \hyperref[def:decision-P]{decision-\(P\)} is \(\NP\).
 \end{definition}
 
 Apparently, this is not enough since what we care is the approximation version, and hence we have the following generalization.
 
-\begin{definition}[\(\alpha \)-gap]\label{def:gap}
-	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with \(\alpha < 1\), the \emph{\(\alpha \)-gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < \alpha c\), and anything else (don't care) otherwise.
+\begin{definition}[\(\alpha \)-Gap]\label{def:gap}
+	Given a \hyperref[def:combinatorial-optimization]{maximization problem} \(P\) with \(\alpha < 1\), the \emph{\(\alpha \)-Gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < \alpha c\), and anything else (don't care) otherwise.
 \end{definition}
 
 Since we see that we may ignore some outputs, we divide the output into two different sets.
@@ -34,38 +34,71 @@ Since we see that we may ignore some outputs, we divide the output into two diff
 \end{notation}
 
 \begin{remark}
-	If there is an \(\alpha \)-approximation algorithm for \(P\), then there is an algorithm for \hyperref[def:gap]{\(\alpha\)-gap} \(P\).
+	If there is an \(\alpha \)-approximation algorithm for \(P\), then there is an algorithm for \hyperref[def:gap]{\(\alpha\)-Gap} \(P\).
 \end{remark}
 \begin{explanation}
 	Given \(I\) and \(c\), we run the \(\alpha \)-approximation algorithm for \(P\) to get a solution with value \(c^\prime \). Notice that we necessarily have
 	\[
 		\alpha \OPT_I \leq c^\prime \leq \OPT_I,
 	\]
-	hence we can design a new algorithm which outputs \(\textsf{True}\) if \(c^\prime \geq c \cdot \alpha \), \(\textsf{False}\) otherwise. This is a correct algorithm for \hyperref[def:gap]{\(\alpha \)-gap \(P\)} since
+	hence we can design a new algorithm which outputs \(\textsf{True}\) if \(c^\prime \geq c \cdot \alpha \), \(\textsf{False}\) otherwise. This is a correct algorithm for \hyperref[def:gap]{\(\alpha \)-Gap \(P\)} since
 	\begin{itemize}
 		\item If \(\OPT_I \geq c\), then \(c^\prime \geq \alpha \OPT_I \geq \alpha c\), which is the \(\textsf{True}\) case.
 		\item If \(\OPT_I < \alpha c\), then \(c^\prime \leq \OPT_I < \alpha c\), which is the \(\textsf{False}\) case.
 	\end{itemize}
+
+	Conversely, it there is no polynomial time algorithm for \hyperref[def:gap]{\(\alpha \)-Gap \(P\)}, there is no \(\alpha \)-approximation algorithm for \(P\).
 \end{explanation}
 
-Again, we have the following characterization of \(P\) and \hyperref[def:gap]{\(\alpha \)-gap \(P\)} in terms of complexity class.
+Again, we have the following characterization of \(P\) and \hyperref[def:gap]{\(\alpha \)-Gap \(P\)} in terms of complexity class.
 
 \begin{definition}
-	We say an \(\alpha \)-approximating \(P\) is \(\NP\) if \(\alpha \)-gap \(P\) is \(\NP\).
+	An \(\alpha \)-approximating problem \(P\) is \(\NP\) if the \hyperref[def:gap]{\(\alpha \)-Gap \(P\)} is \(\NP\).
 \end{definition}
 
-\section{Constraint Satisfaction Problem}
-We now study one of the most important problems in theoretical computer science, the \hyperref[prb:CSP]{CSP} problem. This is important since it's the reduction for many important problems.
+\subsection{Approximation Reduction}
+Finally, we briefly review the \hyperref[def:reduction]{reduction}.
 
 \begin{prev}[Reduction]
-	Given two problems \(P_1\), \(P_2\), the reduction from \(P_1\) to \(P_2\) is a \(\poly\)-time algorithm \(R\) such that given an input \(I_1\in \mathcal{\MakeUppercase{l}} \), output \(I_2\in \mathcal{\MakeUppercase{l}} _2\) such that
-	\begin{itemize}
-		\item if \(I_1\in Y_1\), then \(I_2\in Y_2\);
-		\item if \(I_1\in N\), then \(I_2\in N_2\).
-	\end{itemize}
+	Given two problems \(P_1\), \(P_2\), a \emph{reduction} from \(P_1\) to \(P_2\) is a polynomial time algorithm \(R\) such that given an input \(I_1\in \mathcal{\MakeUppercase{l}}_1 \), output \(I_2\in \mathcal{\MakeUppercase{l}} _2\) satisfying both \hyperref[def:completeness]{completeness} and \hyperref[def:soundness]{soundness}.
+	\begin{prev}[Completeness]
+		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{completeness} if it transforms an accepted input for \(P_1\) to an accepted input for \(P_2\), i.e., if \(I_1\in Y_1\), then \(I_2\in Y_2\).
+	\end{prev}
+	\begin{prev}[Soundness]
+		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{completeness} if it transforms a rejected input for \(P_1\) to a rejected input for \(P_2\), i.e., if \(I_1\in N_1\), then \(I_2\in N_2\).
+	\end{prev}
 \end{prev}
 
-The reason why we care about reduction is that if there exists an algorithm for \(P_2\), then there exists an algorithm for \(P_1\) for \(P_2\) being a reduction from \(P_1\). Hence, if we have a good algorithm for \hyperref[prb:CSP]{CSP}, we automatically get lots of other problems solved.
+The reason why we care about \hyperref[def:reduction]{reduction} is that given a reduction \(R\) from \(P_1\) to \(P_2\), if there exists an algorithm for \(P_2\), then we have an algorithm for \(P_1\). by the following.
+
+\begin{algorithm}[H]\label{algo:reduction}
+	\DontPrintSemicolon
+	\caption{\hyperref[def:reduction]{Reduction}}
+	\KwData{Algorithm \(\mathcal{\MakeUppercase{a}} _2\) for \(P_2\), \hyperref[def:reduction]{reduction} \(R\) from \(P_1\) to \(P_2\), input \(I_1 \in \mathcal{\MakeUppercase{l}} _1\) for \(P_1\)}
+	\KwResult{Decision of \(I_1\)}
+	\SetKwFunction{Reduction}{\(R\)}
+	\SetKwFunction{Alg}{\(\mathcal{\MakeUppercase{a}} _2\)}
+	\BlankLine
+	\(I_2\gets\)\Reduction{\(I_2\)}\;
+	\Return{\Alg{\(I_2\)}}
+\end{algorithm}
+
+Similarly, since we care about approximation algorithm, we can define the approximation \hyperref[def:reduction]{reduction} from \hyperref[def:gap]{\(\alpha \)-Gap} \(P_1\) to \hyperref[def:gap]{\(\beta \)-Gap} \(P_2\).
+
+\begin{definition}[Reduction]\label{def:reduction}
+	Given two problems \(P_1\), \(P_2\), a \emph{reduction} from \(P_1\) to \(P_2\) is a polynomial time algorithm \(R\) such that given an input \(I_1\in \mathcal{\MakeUppercase{l}}_1 \) and \(c_1\), output \(I_2\in \mathcal{\MakeUppercase{l}} _2\) and \(c_2\) satisfying both \hyperref[def:completeness]{completeness} and \hyperref[def:soundness]{soundness}.
+	\begin{definition}[Completeness]\label{def:completeness}
+		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{completeness} if it transforms an accepted input for \(P_1\) to an accepted input for \(P_2\), i.e., if \(\OPT_{I_1}\leq c_1\), then \(\OPT_{I_2}\leq c_2\).
+	\end{definition}
+	\begin{definition}[Soundness]\label{def:soundness}
+		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{completeness} if it transforms a rejected input for \(P_1\) to a rejected input for \(P_2\), i.e., if \(\OPT_{I_1}> \alpha c_1\), then \(\OPT_{I_2}> \beta c_2\).
+	\end{definition}
+\end{definition}
+
+And again, given a \hyperref[def:reduction]{reduction} \(R\) if there is a polynomial time algorithm for \hyperref[def:gap]{\(\beta \)-Gap} \(P_2\), then we have a polynomial time algorithm for \hyperref[def:gap]{\(\alpha \)-Gap} \(P_1\); on the other hand, if there is no polynomial time algorithm for \hyperref[def:gap]{\(\alpha \)-Gap} \(P_1\), then there is no polynomial time algorithm for \hyperref[def:gap]{\(\beta \)-Gap} \(P_2\), so there is no \(\beta \)-approximation algorithm for \(P_2\).
+
+\section{Constraint Satisfaction Problem}
+We now study one of the most important problems in theoretical computer science, the \hyperref[prb:CSP]{CSP} problem. This is important since it's the \hyperref[def:reduction]{reduction} for many important problems, and form the discussion, if we have a good algorithm for \hyperref[prb:CSP]{CSP}, we automatically get lots of other problems solved.
 
 \begin{problem}[CSP]\label{prb:CSP}
 Given an input \((x_1, \ldots , x_n) = X\), \(C_1, \ldots  , C_m\) where \(C_i = (a_i, b_{i_1}, \ldots , b_{i_k})\) be the set of clauses where \(a_i\in {\ell }\), \(b_{i_j}\in [n]\), the \emph{constraint satisfaction problem of \(\Sigma, \Phi \)}\footnote{\(\Sigma \) is the alphabet set and \(\Phi = \left\{ \phi _1, \ldots , \phi _{\ell }  \right\} \) is a family of constraints where \(\phi _i \colon \Sigma ^k \to \left\{ 0, 1 \right\} \).} is to find \(\sigma \colon X\to \Sigma \) maximizing the number of satisfied clauses, i.e., \(\sigma _{a_i}(x_{b_1},\ldots , x_{b_k} )=1\).
@@ -102,37 +135,40 @@ Notice that we can equivalently maximize the fraction instead of maximize the nu
 	\]
 \end{eg}
 
-\subsection{Probabilistically Checkable Proofs}
-As mentioned, there's lots of reduction can be done between fundamental problems considered in TCS to \hyperref[prb:CSP]{CSP}, we now see some important result. In order to do this, we need a more fine-grained version of \autoref{def:gap}.
+\section{Probabilistically Checkable Proofs}
+As mentioned, there's lots of \hyperref[def:reduction]{reduction} can be done between fundamental problems considered in TCS to \hyperref[prb:CSP]{CSP}, we now see some important result. In order to do this, we need a more fine-grained version of \autoref{def:gap}.
 
-\begin{definition}[\((c, s)\)-gap]\label{def:c-s-gap}
-	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with \(0 < s \leq c \leq 1\), the \emph{\((c, s)\)-gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < s\), and anything else (don't care) otherwise.
+\begin{definition}[\((c, s)\)-Gap]\label{def:c-s-Gap}
+	Given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with \(0 < s \leq c \leq 1\), the \emph{\((c, s)\)-Gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{\MakeUppercase{i}} \) and \(c\in \mathbb{\MakeUppercase{r}} ^+\), finds an algorithm which outputs \(\textsf{True}\) if \(\OPT_I \geq c\), \(\textsf{False}\) if \(\OPT_I < s\), and anything else (don't care) otherwise.
 \end{definition}
 
-One thing we should note is that the reason why we let \(s, c\in (0, 1]\) is that we have normalized \(\OPT_I\) to be in \([0, 1]\).
+\begin{note}
+	We implicitly assume that \hyperref[def:c-s-Gap]{\((c, s)\)-Gap} \(P\) is only defined for \(P\) being a \hyperref[prb:CSP]{CSP}, or can be \hyperref[def:reduction]{reduced} to \hyperref[prb:CSP]{CSP}.
+\end{note}
 
 \begin{remark}
-	We see that by setting \(s = \alpha \cdot c\), we recover \autoref{def:gap} from \autoref{def:c-s-gap}.
+	We see that by setting \(s = \alpha \cdot c\), we recover \autoref{def:gap} from \autoref{def:c-s-Gap}.
 \end{remark}
 
 Then, we have the following.
 
 \begin{theorem}[Cook-Levin theorem~\cite{10.1145/800157.805047}]\label{thm:Cook-Levin}
-	The \hyperref[def:c-s-gap]{\((1, 1)\)-gap} 3SAT is \(\NP\)-hard.
+	The \hyperref[def:c-s-Gap]{\((1, 1)\)-Gap} \hyperref[prb:max-3SAT]{3SAT} is \(\NP\)-hard.
 \end{theorem}
 
 \begin{theorem}[Karp~\cite{karp1972reducibility}]\label{thm:Karp}
-	There exists \(\epsilon > 0\) such that \hyperref[def:c-s-gap]{\((1-\epsilon , 1-\epsilon )\)-gap} \hyperref[prb:max-cut]{max cut} is \(\NP\)-hard.
+	For all fixed \(\epsilon > 0\), \hyperref[def:c-s-Gap]{\((1-\epsilon , 1-\epsilon )\)-Gap} \hyperref[prb:max-cut]{max cut} is \(\NP\)-hard.
 \end{theorem}
 
 \begin{note}
-	The \hyperref[def:c-s-gap]{\((1, 1)\)-gap} \hyperref[prb:max-cut]{max cut} is \(\P\).
+	The \hyperref[def:c-s-Gap]{\((1, 1)\)-Gap} \hyperref[prb:max-cut]{max cut} is \(\P\).
 \end{note}
+\begin{explanation}
+	Recall that if we transform \hyperref[prb:max-cut]{max cut} into \hyperref[prb:CSP]{CSP}, the optimal value is always \(1\),\footnote{i.e., we're not comparing to the optimal value of one instance of \(\mathcal{\MakeUppercase{g}} \).} i.e., every edge is cut edge, so in this case the graph must be bipartite. This can be easily check.
+\end{explanation}
 
-
-
-\begin{theorem}[PCP theorem]\label{thm:PCP}
-	There exists an \(\epsilon > 0\) such that \hyperref[def:c-s-gap]{\((1, 1-\epsilon )\)-gap} 3SAT is \(\NP\)-hard.
+\begin{theorem}[PCP theorem~\cite{Feige1991ApproximatingCI, 10.1145/278298.278306}]\label{thm:PCP}
+	There exists an \(\epsilon > 0\) such that \hyperref[def:c-s-Gap]{\((1, 1-\epsilon )\)-Gap} \hyperref[prb:max-3SAT]{3SAT} is \(\NP\)-hard.
 \end{theorem}
 
 To understand \href{thm:PCP}, we need to understand the class \hyperref[def:PCP]{PCP}. First, recall the definition of \(\NP\).
@@ -158,3 +194,5 @@ In \autoref{def:PCP}, the randomized Turing machine \(V\) decides both the posit
 \begin{note}
 	Everything is decided before looking at any input.
 \end{note}
+
+Just like \hyperref[thm:Cook-Levin]{Cook-Levin theorem} is the mother of all \emph{exact hardness}, \hyperref[thm:PCP]{PCP theorem} is the mother of all \emph{hardness of approximation}.

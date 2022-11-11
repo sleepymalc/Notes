@@ -1,0 +1,103 @@
+\lecture{21}{10 Nov. 14:30}{Spectral Radius of a Bounded Linear Operator}
+\begin{proof}[Proof of \autoref{prop:lec20-2} (Continued)]
+	Now, the next goal is to show that \(\sigma (T)\) is nonempty.
+	\begin{claim}
+		\(\sigma (T)\) is nonempty
+	\end{claim}
+	\begin{explanation}
+		Toward a contradiction, assume that \(\rho (T) = \mathbb{\MakeUppercase{c}} \), then \(R(\lambda ) = (T-\lambda I)^{-1} \). Defined all \(\lambda \in \mathbb{\MakeUppercase{c}} \) such that \(\lVert R(\lambda ) \rVert \leq \frac{1}{\vert \lambda  \vert - \lVert T \rVert }\) if \(\vert \lambda  \vert > \lVert T \rVert \), hence \(\lim_{\vert \lambda  \vert \to \infty} \lVert R(\lambda ) \rVert = 0\). Let \(f(\cdot)\) be a \hyperref[def:bounded-linear-functional]{bounded linear functional} on \(\mathcal{\MakeUppercase{l}} (X, X)\), i.e., \(f\in \mathcal{\MakeUppercase{l}} (X, X)^{\ast} \). Set \(g(\lambda ) = f(R(\lambda ))\), for any \(\lambda _0\in \rho (T)\),
+		\[
+			R(\mu ) = \left( \sum_{n=0}^{\infty} (\mu -\lambda )^n R(\lambda )^n  \right) R(\lambda ),
+		\]
+		implying that \(g(\lambda )\) is a analytic function since it's locally given by a convergent power series. Also, since \(\lim_{\vert \lambda \vert \to \infty} \vert g(\lambda ) \vert = 0\), \href{https://en.wikipedia.org/wiki/Liouville's_theorem_(complex_analysis)}{Liouville's theorem} implies \(g(\cdot) \equiv 0\), so \(f(R(\lambda ))\equiv 0\) for all \(f\in \mathcal{\MakeUppercase{l}} (X, X)^{\ast} \). From \hyperref[thm:Hahn-Banach]{Hahn-Banach theorem}, \(R(\lambda ) = 0\), which is a contradiction since \(R(\lambda )(T-\lambda I) = I\).
+	\end{explanation}
+
+	\begin{claim}
+		\(r(T) \leq \lim_{n \to \infty} \lVert T^n \rVert ^{1 / n}\).
+	\end{claim}
+	\begin{explanation}
+		To see this, we use the fact that if \(\lambda \in \mathbb{\MakeUppercase{c}} \), we have \(\lambda ^n \in \rho (T^n)\), i.e., \((T^n - \lambda ^n I)^{-1} \) exists, then \(\lambda \in \rho (T)\) because \((T^n - \lambda ^n I) = (T - \lambda I)\sum_{j=0}^{n-1} \lambda ^j T^{n-1-j}\), we have
+		\[
+			(T-\lambda I)^{-1} = (T^n - \lambda ^n I)^{-1} \sum_{j=0}^{n-1} \lambda ^j T^{n-1-j}.
+		\]
+		Hence, \(\vert \lambda ^n \vert > \lVert T^n \rVert \), implying that \(\lambda \in \rho (T)\), so \(r(T) \leq \lVert T^n \rVert ^{1 / n}\) for all \(n\geq 1\).
+	\end{explanation}
+
+	Finally, we show the following.
+	\begin{claim}
+		\(r(T) \geq \limsup_{n \geq 1} \lVert T^n \rVert ^{1 / n} \).
+	\end{claim}
+	\begin{explanation}
+		We use the Taylor expansion
+		\[
+			R(\lambda ) = (T - \lambda I)^{-1} = - \sum_{n=0}^{\infty} \lambda ^{-(n+1)}T^n.
+		\]
+		Let \(f\in \mathcal{\MakeUppercase{l}} (X, X)^{\ast} \), set \(g(\lambda ) = f(R(\lambda ))\), we have
+		\[
+			g(\lambda ) = - \sum_{n=0}^{\infty} \lambda ^{-(n+1)} f(T^n),
+		\]
+		where \(g(\lambda )\) is analytic for \(\vert \lambda  \vert > r(T)\). Hence, the Laurent series for \(g(\lambda )\) converges if \(\vert \lambda  \vert > r(T)\), i.e., \(\sup _{n\geq 1} \vert \lambda ^{-n} f(T^n) \vert < \infty\) if \(\vert \lambda  \vert > r(T)\), which is true for all \(f\in \mathcal{\MakeUppercase{l}} (X, X)^{\ast} \). From the \hyperref[thm:uniform-boundedness]{uniform boundedness theorem}, \(\sup _{n\geq 1} \vert \lambda  \vert^{-n} \lVert T^n \rVert < \infty\) if \(\vert \lambda  \vert > r(T) \), i.e., if \(\vert \lambda  \vert > r(T) \), then \(\vert \lambda \vert \geq \limsup_{n \to \infty} \lVert T^n \rVert ^{1 / n}\), implying \(r(T) \geq \limsup_{n \to \infty} \lVert T^n \rVert ^{1 / n}\).
+	\end{explanation}
+
+	In all, we conclude that \(r(T) = \lim_{n \to \infty} \lVert T^n \rVert ^{1 / n}\), proving the result.
+\end{proof}
+
+\begin{theorem}[Point spectrum of compact operators]\label{thm:point-spectrum-of-compact-op}
+	Let \(T\in \mathcal{\MakeUppercase{l}} (X, X)\) be \hyperref[def:compact-op]{compact} on a \hyperref[def:Banach-space]{Banach space} \(X\). Then for every \(\epsilon > 0\), there exists a finite number of linearly independent eigenvectors corresponding to eigenvalues \(\lambda \in \mathbb{\MakeUppercase{c}} \) with \(\vert \lambda  \vert > \epsilon \).
+\end{theorem}
+\begin{proof}
+	We prove this by contradiction. Firstly, we obtain a sequence \(\left\{ y_n \right\} _{n\geq 1}\) such that \(\lVert y_n \rVert = 1\) for all \(n\geq 1\), but the sequence \(\left\{ Ty_n \right\} _{n\geq 1}\) has no converging subsequence. Assume there exists a sequence \(\{x_k\}_{k\geq 1}\) in \(X\) such that \(x_k \neq 0\) and are all linearly independent vectors with \(Tx_k = \lambda _k x_k\) and \(\vert \lambda _k \vert \geq \epsilon > 0\) for all \(k\geq 1\). Let \(E_n\) be the span of \(\left\{ x_1, \ldots , x_n \right\}\), so \(E_1 \subseteq E_2 \subseteq \ldots \). Choose \(y_n \in E_n\), \(\lVert y_n \rVert = 1\), we have \(\inf _{y\in E_{n-1}} \lVert y_n - y \rVert \geq 1 / 2\). Since
+	\[
+		y_n = \sum_{k=1}^{n} a_k^{(n)} x_k = a_n ^{(n)} x_n + u_{n-1}
+	\]
+	for \(u_{n-1} \in E_{n-1}\), \(Ty_n = a_n^{(n)} \lambda _n x_n + v_{n-1}\), \(v_{n-1}\in E_{n-1}\) and \(v_{n-1} = Tu_{n-1}\). Let \(n > m\), then
+	\[
+		\lVert Ty_n - Ty_m \rVert = \lVert \lambda _n a_n ^{(n)} x_n + w_{n-1}\rVert
+	\]
+	where \(w_{n-1} \in E_{n-1}\), i.e., \(\lVert Ty_n - Ty_m \rVert = \lVert \lambda _n y_n + \widetilde{y}  \rVert \) for \(\widetilde{y} \in E_{n-1}\), which is further equal to \(\vert \lambda _n \vert \lVert y_n + \widetilde{y} ^\prime  \rVert \) for \(\widetilde{y} ^\prime \in E_{n-1}\). And since \(\lVert y_n + \widetilde{y} ^\prime  \rVert \geq 1 / 2\) if \(\widetilde{y} \in E_{n-1}\), we conclude that
+	\[
+		\lVert Ty_n - Ty_m \rVert \geq \frac{\vert \lambda _n \vert }{2} \geq \frac{\epsilon}{2}
+	\]
+	if \(n > m\), so there are no converging subsequences for \(\left\{ Ty_n \right\} _{n\geq 1}\). If \(y_n\in B_X\) for \(n\geq 1\), if \(T\) is \hyperref[def:compact-op]{compact}, \(TB_X\) is \hyperref[def:precompact]{precompact}, which is a contradiction.
+\end{proof}
+
+\begin{corollary}[Classification of spectrum of compact operators]
+	Let \(T\in \mathcal{\MakeUppercase{l}} (X, X)\) be \hyperref[def:compact-op]{compact}, then \(\sigma _p(T)\) is countable and \(\sigma (T) = \sigma _p(T) \cup \left\{ 0 \right\} \).
+\end{corollary}
+\begin{proof}
+	\autoref{thm:point-spectrum-of-compact-op} implies that there are countable many \hyperref[def:point-spectrum]{point spectrums}, and the only possible accumulation point is \(0\). By non\hyperref[def:compact]{compactness} of unit \hyperref[def:ball]{ball} from \autoref{thm:Riesz}, \(0\in \sigma (T)\). Note that if \(\lambda \neq 0\), \((T - \lambda I)\) is not surjective, and hence \(\lambda \) is an eigenvalue by \hyperref[thm:Fredholm-alternative]{Fredholm alternative}.
+\end{proof}
+
+Recall that if \(T\in \mathcal{\MakeUppercase{l}} (X, X)\), then \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (X^{\ast} , X^{\ast} )\), and we have \(\lVert T^{\ast}  \rVert = \lVert T \rVert \). And we now want to show \(\sigma (T^{\ast} ) = \sigma (T)\).
+
+\begin{theorem}
+	Let \(T\in \mathcal{\MakeUppercase{l}} (X, X)\) and \(T^{\ast} \in \mathcal{\MakeUppercase{l}} (X^{\ast} , X^{\ast} )\), then we have the following.
+	\begin{enumerate}[(a)]
+		\item \(\sigma (T^{\ast} ) = \sigma (T)\).
+		\item If \(\lambda \in \sigma _r(T)\), then \(\lambda \in \sigma _p(T^{\ast} )\).
+		\item If \(\lambda \in \sigma _p(T)\), then \(\lambda \in \sigma _p(T^{\ast} ) \cup \sigma _r(T^{\ast} )\).
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	We prove this one by one.
+	\begin{enumerate}[(a)]
+		\item We first show that \(\rho (T) \subseteq \rho (T^{\ast})\). Suppose \(\lambda \in \rho (T)\), i.e., \((T-\lambda I)^{-1} \) exists. Then \(T\pm \lambda I\) is invertible and
+		      \[
+			      (T\pm \lambda I)^{-1} = \left[ (T-\lambda I)^{-1}  \right] ^{\ast}.
+		      \]
+		      Hence, \(\lambda \in \rho (T^{\ast} )\), so we have \(\rho (T) \subseteq \rho (T^{\ast})\). To show that \(\rho (T^{\ast}) \subseteq \rho (T)\), we need to show that if \(S\in \mathcal{\MakeUppercase{l}} (X, X)\) and \(S^{\ast} \) is invertible, then \(S\) is invertible. We first show that \(S\) is injective, i.e., \(\ker(S)= \left\{ 0 \right\} \). Suppose not, then there exists \(x \neq 0\) such that \(Sx = 0\), implying \(S^{\ast} f(x) = f(Sx) = 0\) for all \(f\in X^{\ast} \). But since \(S^{\ast} \) is invertible, i.e., \(\im S^{\ast} = X^{\ast} \), implying \(g(x) = 0\) for all \(g\in X^{\ast} \). Then from \hyperref[thm:Hahn-Banach]{Hahn-Banach theorem}, \(x = 0\), which is a contradiction. Next, we want to show \(S\) is surjective, i.e., \(\im(S) = X\). Since \(S^{\ast} \) is invertible, there exists \(\epsilon >0\) such that
+		      \[
+			      \lVert S^{\ast} f \rVert _{X^{\ast} }\geq \epsilon \lVert f \rVert _{X^{\ast}}
+		      \]
+		      for all \(f\in X^{\ast} \). We now use this to show that \(\overline{SB_X}\) contains a \hyperref[def:ball]{ball} of radius \(\epsilon \). Let \(x_0\in X\) lies outside \(\overline{SB_X}\). Since \(\overline{SB_X}\) is closed and \hyperref[def:convex-set]{convex}, the \hyperref[thm:separation-of-a-point-from-a-convex-set]{separation theorem} states that there exists \(f_0\in X^{\ast} \) such that \(f_0(x_0)>1\) and \(f_0(y) \leq 1\) for all \(y\in \overline{SB_X}\). Note that \(S^{\ast} f_0(x) = f_0(Sx) \leq 1\) for all \(x\in B_X\), we have \(\lVert S^{\ast} f_0 \rVert_{X^{\ast} }\leq 1 \). Hence, we conclude that
+		      \[
+			      \epsilon
+			      < \epsilon f_0(x_0)
+			      \leq \epsilon \lVert f_0 \rVert _{X^{\ast} } \lVert x_0 \rVert _X
+			      \leq \lVert S^{\ast} f_0 \rVert _{X^{\ast} } \lVert x_0 \rVert _X
+			      \leq \lVert x_0 \rVert _X,
+		      \]
+		      so \(\epsilon B_X \subseteq \overline{SB_X}\). Now, we use the argument from \hyperref[thm:open-mapping]{open mapping theorem} to conclude that \(\overline{SB_X} \subseteq S(2B_X)\). Hence, \(S(2B_X) \subseteq \epsilon B_X\), i.e., \(S\) is surjective.
+		\item
+	\end{enumerate}
+\end{proof}

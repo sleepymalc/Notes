@@ -1,274 +1,203 @@
-\lecture{4}{12 Sep. 10:30}{Feedback Vertex Set}
-\section{Feedback Vertex Set}
+\lecture{6}{19 Sep. 10:30}{Facility Location with LMP Approximation}
+\subsection{Hardness}
+For \autoref{prb:facility-location}, we have the following.
+\begin{enumerate}[(a)]
+	\item \(1.488\)-approximation~\cite{LI201345}
+	\item \(1.463\)-approximation is \(\NP\)-hard~\cite{GUHA1999228}
+\end{enumerate}
 
-Following the discussion on primal-dual method, we see another \hyperref[def:covering]{covering} problem.
+Turns out that specifically for \autoref{prb:facility-location}, we can have a more refine notion of approximation ratio defined below.
 
-\subsection{Introduction}
-We consider the following problem.
-
-\begin{problem}[Feedback vertex set]\label{prb:feedback-vertex-set}
-Given a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a weight function \(c\colon \mathcal{\MakeUppercase{v}} \to \mathbb{\MakeUppercase{r}} ^+\), we want to find \(F\subseteq \mathcal{\MakeUppercase{v}} \) with \(\min c(F)\) such that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) has no cycle.\footnote{This is equivalent as saying that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) is a forest.}
-\end{problem}
-
-\begin{note}[Feedback]
-	The name \emph{feedback} comes from the fact that if there's a cycle in \(\mathcal{\MakeUppercase{g}} \), then it kind of creates \emph{feedback}.
-\end{note}
-
-\begin{note}[Edge version]
-	The \emph{edge version} of \autoref{prb:feedback-vertex-set} can be solved by finding \(T\subseteq \mathcal{\MakeUppercase{e}} \) be the maximum weight forest,\footnote{This can be found exactly in polynomial time.} and let \(F \coloneqq \mathcal{\MakeUppercase{e}} \setminus T\).
-\end{note}
-
-\begin{notation}
-	In this lecture, when talking about cycle, we're referring to the vertices in which. But the meaning can vary from context to context.
-\end{notation}
-
-\begin{remark}
-	This is a \emph{special case} of \autoref{prb:set-cover}.
-\end{remark}
-\begin{explanation}
-	Let \(\mathcal{\MakeUppercase{C}} \coloneqq \left\{ \text{set of all (simple) cycles}  \right\}\) and consider \autoref{prb:set-cover} on the set system \((\mathcal{\MakeUppercase{C}} , \mathcal{\MakeUppercase{v}} )\), i.e., we want to find \(F\subseteq \mathcal{\MakeUppercase{v}} \) such that \(\forall C\in \mathcal{\MakeUppercase{C}} \), \(\left\vert F \cap C \right\vert \geq 1\).
-\end{explanation}
-
-\begin{note}
-	The naive algorithm by directly applying methods discussed for \autoref{prb:set-cover}, we see that since \(\min (\log k, d) = \Omega (n)\) for \(k\) being the maximum set size (which is \(2^{\Omega (n)}\)) and \(d = n\), the approximation ratio we can get is \(\Omega (n)\), which depends on the size of the input.
-\end{note}
-
-Now, the goal in this section is to show the following.
-\begin{theorem}\label{thm:lec4-1}
-	There exists a \(4\)-approximation algorithm for \autoref{prb:feedback-vertex-set}.
-\end{theorem}
-
-\begin{remark}
-	Actually, there exists a \(2\)-approximation algorithm.
-\end{remark}
-
-We also have a hardness of \autoref{prb:feedback-vertex-set}.
-\begin{theorem}
-	Achieving \((2 - \epsilon )\)-approximation algorithm if \(\NP\)-hard for all \(\epsilon > 0\) assuming the unique games conjecture.
-\end{theorem}
-\begin{proof}
-	See Homework \(1\).
-\end{proof}
-
-\subsection{Cycle Covering LP}\label{subsec:cycle-covering-LP}
-The most natural LP which models \autoref{prb:feedback-vertex-set} is the so-called \emph{cycle covering LP}, which can be defined as
-\[
-	\begin{aligned}
-		\min~ & \sum_{v\in \mathcal{\MakeUppercase{V}} } c(v) x_v                                                               \\
-		      & \sum_{v\in C} x_v \geq 1                         \quad \forall \text{ cycle } C \in \mathcal{\MakeUppercase{C}} \\
-		      & x \geq 0,
-	\end{aligned}
-\]
-with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v}} }\) such that \(x_{v} = \mathbbm{1}_{v\in F}\).
-
-\begin{remark}
-	We see that this cycle covering LP has \(2^{\Omega (n)}\) constraints. But we can actually solve this and get an \(O(\log n)\)-approximation ratio by smartly rounding the solution.\footnote{See homework \(1\).} And we can show that this approximation ratio is optimal in terms of this particular LP.
-\end{remark}
-
-\subsection{Density LP}
-
-A more sophisticated LP is the so-called \emph{density LP}, defined as
-\[
-	\begin{aligned}
-		\min~ & \sum_{v\in \mathcal{\MakeUppercase{v}} } c(v) x_v                                                                                                  \\
-		      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1\quad \forall S\subseteq \mathcal{\MakeUppercase{v}} \\
-		      & x\geq 0
-	\end{aligned}
-\]
-with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v}} }\).
-
-\begin{notation}
-	The \(E(S)\) denotes the edge set in the induced graph \(\mathcal{\MakeUppercase{g}} [S] = (S, E(S))\), while \(d_v^S\) denotes the degree of \(v\) in \(\mathcal{\MakeUppercase{g}} [S]\).
-\end{notation}
-
-\begin{intuition}
-	The constraint is equivalent as  saying that for every induced graph, \(\# e \leq \# v - 1\), i.e., we require it to be a forest. Explicitly, \(S\subseteq \mathcal{\MakeUppercase{v}} \),
+\begin{definition}[LMP approximation]\label{def:LMP}
+	An algorithm \(\mathrm{ALG}\) which solves \hyperref[prb:facility-location]{facility location} is called \emph{\(\gamma \)-Lagrangian multiplier preserving approximation} (LMP-approximation) if
 	\[
-		\left\vert E(S) \right\vert - \sum_{v\in S} x_v d_v^S\leq \left\vert S \right\vert - \sum_{v\in S}x_v - 1.
+		\frac{\mathop{\mathrm{conn}}(\mathrm{ALG})}{\gamma }+ \mathop{\mathrm{open}}(\mathrm{ALG}) \leq \sum_{i} \alpha _i
 	\]
-	Note that in the constraint, the right-hand side is just a lower-bound of \(\# e\).
-\end{intuition}
-
-We see that the above LP is not exactly a \hyperref[def:covering-LP]{covering LP} since the coefficients can be negative if a set \(S\) is not \hyperref[def:irreducible]{irreducible}.
-
-\begin{definition}[Irreducible]\label{def:irreducible}
-	The set \(S\subseteq \mathcal{\MakeUppercase{v}} \) is \emph{irreducible} if for all \(v\in S\), \(v\) belongs to some cycles in \(G[S]\).
+	for some \(\gamma > 0\).\footnote{The opening cost is just \(k^\prime f\) if \(\mathrm{ALG}\) opens \(k^\prime \) centers.}
 \end{definition}
+\begin{remark}
+	The notion of \hyperref[def:LMP]{LMP approximation} is due to Lagrangian multiplier in the field of optimization, where the dual variables  are treated as a Lagrangian multipliers. And \autoref{def:LMP} says that we're not approximating \(k^\prime f\) at all, hence it's \emph{preserving}.
+\end{remark}
 
-Now, it's clear that by looking at \(\mathcal{\MakeUppercase{S}} = \left\{ S\subseteq \mathcal{\MakeUppercase{v}} \mid S \text{ is \hyperref[def:irreducible]{irreducible}}\right\} \), we have a \hyperref[def:covering-LP]{covering LP} defined as
-\[
-	\begin{aligned}
-		\min~ & \sum_{v\in \mathcal{\MakeUppercase{v}} } c(v) x_v                                                                                                          \\
-		      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1 \eqqcolon b_S\quad \forall S\in \mathcal{\MakeUppercase{S}} \\
-		      & x\geq 0.
-	\end{aligned}
-\]
+And indeed, we now have a more refined characterization about \autoref{algo:facility-location-PD}.
 
-We first see why this LP models \autoref{prb:feedback-vertex-set}.
+\begin{corollary}
+	\autoref{algo:facility-location-PD} is a \(3\)-\hyperref[def:LMP]{LMP approximation} algorithm.
+\end{corollary}
 
-\begin{lemma}\label{lma:lec4-1}
-	The integer version of density LP (denote as IP) is equivalent to \autoref{prb:feedback-vertex-set}.
-\end{lemma}
-\begin{proof}
-	If \(x\) is feasible for \autoref{prb:feedback-vertex-set}, then \(x\) is feasible for the IP. On the other hand, if \(x\) is feasible for IP, then for every cycle \(C\in \mathcal{\MakeUppercase{C}} \), \(x\) deletes at least \(1\) vertex from \(C\).
-\end{proof}
+\begin{remark}[SOTA]
+	If we look at the SOTA result in terms of \hyperref[def:LMP]{LMP}, we have the following.
+	\begin{enumerate}[(a)]
+		\item \(3\)-\hyperref[def:LMP]{LMP approximation}~\cite{10.1145/375827.375845}
+		\item \(2\)-\hyperref[def:LMP]{LMP approximation}~\cite{10.1145/509907.510012}
+		\item \(1.99\ldots 9 \)-\hyperref[def:LMP]{LMP approximation}~\cite{https://doi.org/10.48550/arxiv.2207.05150}
+		\item \(1.73\)-\hyperref[def:LMP]{LMP approximation}\footnote{The number comes from \(1 + 2 / e\).} is \(\NP\)-hard~\cite{10.1145/509907.510012}
+	\end{enumerate}
+\end{remark}
 
-\subsection{Primal-Dual Method}
-Now we're ready to solve this LP via primal-dual method. Denote the dual variables as \(\left\{ y_S \right\} _{S\in \mathcal{\MakeUppercase{S}} }\), then the dual is
-\[
-	\begin{aligned}
-		\max~ & \sum_{S\in \mathcal{\MakeUppercase{S}} } y_S b_S                                       \\
-		      & \sum_{S\ni v}(d_{v} ^S - 1)y_S \leq c(v)\quad \forall v\in \mathcal{\MakeUppercase{v}} \\
-		      & y\geq 0.
-	\end{aligned}
-\]
+\subsection{Greedy Method}
+Let's take another look at \autoref{prb:facility-location} and see it as an instance of \autoref{prb:set-cover} where the universe is all the clients \(P\), while the collection of sets are pairs of facility and its connected clients, i.e., \hyperref[def:cluster]{clusters}. Then, it's natural to consider using a similar algorithm as \autoref{algo:set-cover-greedy} to solve this.
 
-\begin{note}
-	For the density LP and its dual, the constraint is still exponentially many, and no one knows how to solve this. But the power of primal-dual method is that we don't really solve this, rather, we just maintain two sets of solutions for both primal and dual. Moreover, we can maintain the primal solution in integral, while the dual solution in fractional.
-\end{note}
-
-We now have the following algorithm.\par
-
-\begin{algorithm}[H]\label{algo:feedback-vertex-set-PD}
+\begin{algorithm}[H]\label{algo:facility-location-greedy}
 	\DontPrintSemicolon
-	\caption{\hyperref[prb:feedback-vertex-set]{Feedback vertex set} -- Primal-Dual}
-	\KwData{A graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
-	\KwResult{A minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set} \(F^\prime \)}
-	\SetKwFunction{reduce}{reduce}
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)\footnote{We didn't use it explicitly in the algorithm since we hide it in the cost function \(c(\cdot)\).}}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
+	\SetKw{Break}{break}
 	\BlankLine
 
-	\(S\gets \mathcal{\MakeUppercase{v}} \), \(c^\prime = c\), \(y\gets 0\)\Comment*[r]{\(c^\prime \in \mathbb{\MakeUppercase{r}} ^n\) keeps track of slackness of \(c\)}
-	\;
-	\While(){\(S \neq \varnothing \)}{
-		\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{\MakeUppercase{G}} [S]\right\}\)}
-		\((\alpha, v) \gets \min _{v\in S} c^\prime (v) / (d_v^S - 1)\)\footnote{Note that we also get the argument \(v\).}\Comment*[r]{\(y_S\) gets tight by increasing unit weight}
-		\(y_S\gets \alpha\)\label{algo:feedback-vertex-set-PD:line6}\;
-		\(c^\prime (v)\gets c^\prime (v) - \alpha (d_v^S - 1)\)\label{algo:feedback-vertex-set-PD:line7}\;
-		\(Z\gets \left\{ v\in S\colon c^\prime (v) = 0 \right\} \)\;
-		\(F\gets F\cup Z\), \(S\gets S \setminus Z\)\;
+	\(S \gets \varnothing \), \(Q^\prime \gets \varnothing\)\;
+	\While(){\(S \neq P \)}{
+		choose \((j, T)\in Q \times \mathcal{\MakeUppercase{p}} (P\setminus X)\) with minimum \(c((j, T)) / \left\vert T \right\vert \)\;
+		\(Q^\prime \gets Q^\prime  \cup \left\{ j \right\}\)\;
+		\(S \gets S \cup T\)\;
 	}
-	\;
-	\Comment{Compute a minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
-	\(F^\prime \gets F = \left\{ v_1, \ldots , v_{\ell} \right\} \)\Comment*[r]{\(v_1\) is deleted first, \(v_{\ell}\) is deleted last}
-	\For(\label{algo:feedback-vertex-set-PD:for}\Comment*[f]{\hyperref[rmk:reversed-greedy]{reversed greedy}}){\(i = \ell , \ldots  , 1\)}{
-		\If(){\(F^\prime \setminus \left\{ v_i \right\}\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} for \(\mathcal{\MakeUppercase{g}} \)}{
-			\(F^\prime \gets F^\prime \setminus \left\{ v_i \right\} \)\;
-		}
-	}
-	\Return{\(F^\prime \)}\;
+	\Return{\(Q^\prime \)}\;
 \end{algorithm}
 
-We see that in \autoref{algo:feedback-vertex-set-PD}, we first use primal-dual method to obtain a feasible \hyperref[prb:feedback-vertex-set]{feedback vertex set}, and then run a \hyperref[rmk:reversed-greedy]{reversed greedy} algorithm to further ensure we get a good approximation ratio.
-
-\begin{claim}
-	\(F\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} and \(y\) is dual-feasible.
-\end{claim}
-\begin{explanation}
-	It should be clear that why \(F\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set}. As for the reason why \(y\) is dual-feasible, observe that we have one constraint for each \(v\). After raising \(y_S\) for chosen \(v\) in \autoref{algo:feedback-vertex-set-PD:line6} and deduce \(c^\prime (v)\) in \autoref{algo:feedback-vertex-set-PD:line7}, \(v\) will get removed so the constraint corresponding to \(v\) will be satisfied throughout.
-\end{explanation}
-
-\begin{remark}[Reversed greedy]\label{rmk:reversed-greedy}
-	The method we turn \(F\) into its minimal is called \emph{reversed greedy}. This just checks that if we remove a vertex \(v\) from \(F^\prime \) while \(F^\prime \) is still feasible, then we just do it. Additionally, we iterate through \(v\) in the \textbf{reversed} order w.r.t. how \(v\) is being added into.
-\end{remark}
-
-We want to compare the primal cost and the dual cost. The primal cost is
-\[
-	c(F) = \sum_{v\in F}c(v) = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{\MakeUppercase{S}}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1),
-\]
-while the dual cost is \(\sum_{S\in \mathcal{\MakeUppercase{S}} }y_S b_S\).
+This is just \autoref{algo:set-cover-greedy}, hence we have \(H_n\)-approximation. But as we have seen in \autoref{thm:lec5}, we have achieved a constant approximation ratio for \autoref{prb:facility-location}. Hence, we should be able to do better based on \autoref{algo:facility-location-greedy}.
 
 \begin{remark}
-	This is where the primal-dual method is powerful. i.e., by switching the order of summation, if we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for every \(S\), we're done. On caveat is that since \(S\) is changing when running \autoref{algo:feedback-vertex-set-PD}, so the final solution \(F\) may not be good for this particular \(S\). We need to guarantee some ratio for this \(F\) \textbf{for all \(S\)}.\footnote{At least for \(S\) with positive \(y_S\).}
+	If we modify \autoref{algo:facility-location-greedy} such that for all \((j, T)\), if \(j\) is open, then we define the cost of this \hyperref[def:cluster]{cluster} as
+	\[
+		c((j, T))\coloneqq \frac{\sum_{i\in T} d(i, j)}{\left\vert T \right\vert }.
+	\]
+	We'll achieve \(1.861\)-approximation, but the analysis is complex.
 \end{remark}
 
-\begin{lemma}\label{lma:lec4-2}
-	For all \(S\in \mathcal{\MakeUppercase{S}} \), if \(F\) is \emph{minimal} in \(S\),\footnote{i.e., in \(\mathcal{\MakeUppercase{g}} [S]\), no \(F^\prime \subsetneq F \cap S\) in \hyperref[prb:feedback-vertex-set]{feedback vertex set}.} then we have
-	\[
-		\sum_{v\in S \cap F}(d_{v} ^S - 1) \leq 4\cdot b_S = 4(\left\vert E(S) \right\vert - \left\vert S \right\vert + 1).
-	\]
+Instead, we're going to see other variations based on \autoref{algo:facility-location-greedy}.
+
+\subsubsection{First Modification}
+We see observe that \(c((j, T)) / \left\vert T \right\vert \) is increasing in \autoref{algo:facility-location-greedy}.\todo{proof!} Also, if \(\alpha \coloneqq c((j, T)) / \left\vert T \right\vert\), then for all \(i\in T\), \(d(i, j) \leq \alpha \) where we interpret this as \(i\) \emph{pays} \(\alpha _i\) to cover the connection cost \(d(i, j)\) and the opening cost \(\alpha _i - d(i, j)\) of \(j\). Following this intuition, if we change \autoref{algo:facility-location-PD-if-1} in \autoref{algo:facility-location-PD} (with only first phase) such that the summation is over \(P\setminus S\), it becomes exactly \autoref{algo:facility-location-greedy}.
+
+\begin{algorithm}[H]\label{algo:facility-location-greedy-I}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification I}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(Q^\prime \):open facilities}
+	\;
+	\While(){\(S \neq P\)}{
+	\While(){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}\;
+	\uIf(\Comment*[f]{\(j\) gets tight (open)}){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in P\mathcolor{red}{\setminus S}} \beta _{ij} = f\)}{
+		\Break
+	}
+	\ElseIf(\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+		\Break
+	}
+	}
+	\(Q^\prime \gets \mathcolor{red}{Q^\prime  \cup \left\{ j \right\}}\)\Comment*[r]{Update \(Q^\prime \)}
+	\(S\gets \mathcolor{red}{S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} }\)\Comment*[r]{Update \(S\)}
+	}
+	\Return{\(Q^\prime \)}\;
+\end{algorithm}
+
+\begin{remark}
+	Since \autoref{algo:facility-location-PD-if-1} and \autoref{algo:facility-location-PD-if-2} can happen simultaneously, while what we just said assumes the opposite, so we need to further modify \autoref{algo:facility-location-PD} in \autoref{algo:facility-location-PD-lin10} and \autoref{algo:facility-location-PD-lin11}.
+\end{remark}
+
+\subsubsection{Second Modification}
+Another potential modification gives us a \(1.61\)-approximation. We essentially allow \(i\in S\) to \emph{switch} in \autoref{algo:facility-location-greedy-I}, i.e., after \(i\) connects to \(j\), if \(j^\prime \) is closer to \(i\) later, \(i\) can \emph{offer} with \(d(i, j) - d(i, j^\prime )\) to other facilities.
+
+\begin{algorithm}[H]\label{algo:facility-location-greedy-II}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification II}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(Q^\prime \):open facilities}
+	\;
+	\While(){\(S \neq P\)}{
+	\While(){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}\;
+	\If(){some \(j\in Q\setminus Q^\prime \) s.t. \(\mathcolor{red}{\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ } + \sum_{i\in P\setminus S} \beta _{ij} = f\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
+			\Break
+		}
+		\If(\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+			\Break
+		}
+	}
+	\(Q^\prime \gets Q^\prime  \cup \left\{ j \right\} \)\Comment*[r]{Update \(Q^\prime \)}
+	\(S\gets S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} \)\Comment*[r]{Update \(S\)}
+	}
+	\Return{\(Q^\prime \)}\;
+\end{algorithm}
+
+\subsubsection{Third Modification}
+If we run \autoref{algo:facility-location-greedy-II} with facility cost being \(\hat{f} \coloneqq 2f\), we can have a \(2\)-\hyperref[def:LMP]{LMP approximation} algorithm as follows.
+
+\begin{algorithm}[H]\label{algo:facility-location-greedy-III}
+	\DontPrintSemicolon
+	\caption{\hyperref[prb:facility-location]{Facility location} -- Greedy Modification III}
+	\KwData{A set of clients \(P\subseteq X\), a set of (possible) facilities \(Q\subseteq X\), facility cost \(f\)}
+	\KwResult{A set of opened facilities \(Q^\prime \subseteq Q\)}
+	\SetKw{Break}{break}
+	\BlankLine
+	\(S\gets \varnothing \), \(Q^\prime \gets \varnothing \), \(\alpha \gets 0\) \Comment*[r]{\(S\):connected clients, \(Q^\prime \):open facilities}
+	\;
+	\While(){\(S \neq P\)}{
+	\While(){\textsf{True}}{
+	increase all \(\left\{ \alpha _i \right\}_{i\in P\setminus S} \) by a \emph{unit}\;
+	\If(){some \(j\in Q\setminus Q^\prime \) s.t. \(\sum_{i\in S} (d(i, w(i)) - d(i, j))^+ + \sum_{i\in P\setminus S} \beta _{ij} = \mathcolor{red}{\hat{f}}\)\footnote{We define \(a^+ \coloneqq \max (a, 0)\) and also, \(w(i)\) is now the \emph{current} facility \(i\) is connected to.}}{
+			\Break
+		}
+		\If(\Comment*[f]{\(i\) can connect to \(j\in Q^\prime \)}){some \(i\in P\setminus S\) s.t. \(\alpha_i \geq d(i, j)\)}{
+			\Break
+		}
+	}
+	\(Q^\prime \gets Q^\prime  \cup \left\{ j \right\} \)\Comment*[r]{Update \(Q^\prime \)}
+	\(S\gets S \cup \left\{ i\in P\setminus S\colon \alpha _i \geq d(i, j)\right\} \)\Comment*[r]{Update \(S\)}
+	}
+	\Return{\(Q^\prime \)}\;
+\end{algorithm}
+
+It's clear that in \autoref{algo:facility-location-greedy-III}, the connection cost plus \(2\) times the opening cost is \(\sum_{i\in P} \alpha _i\) from how we design the algorithm by changing the facility cost from \(f\) to \(\hat{f} \coloneqq 2f\). Now, a crucial lemma is the following.
+
+\begin{lemma}\label{lma:lec6}
+	\((\alpha ^\prime , \beta ^\prime )\) is dual feasible, where \(\alpha ^\prime \coloneqq \alpha  / 2\), \(\beta ^\prime _{ij}\coloneqq (\alpha ^\prime _{i} - d(i, j))^+\).
 \end{lemma}
 \begin{proof}
-	Let's first see a simple case.
-	\begin{intuition}
-		If the graph is \(3\)-regular, then we see that the left-hand side is \(\leq 2\cdot \left\vert S \right\vert \) by summing over the whole \(S\) instead of \(S\cap F\), while the right-hand side is \(2\cdot \left\vert S \right\vert + 4\) since \(\left\vert E(S) \right\vert = 1.5 \left\vert S \right\vert \).
-
-		This shows that in a \(3\)-regular graph, deleting every vertex in \(S\) is actually \(4\)-approximated. And this intuition generalized to general graph with degree greater than \(3\).
-	\end{intuition}
-
-	Since we assume \(S\) to be \hyperref[def:irreducible]{irreducible}, so we're not interested in degree \(0\) or \(1\) vertices (there are no such vertices in an \hyperref[def:irreducible]{irreducible} \(S\)). So the only problematic guy is degree-\(2\) vertex. And the only place a degree-\(2\) vertex can live is in a long path.
-
-	\begin{figure}[H]
-		\centering
-		\incfig{FBV-path}
-		\caption{If there are two \(v\in F\), by minimality of \(F\), one of \(v\) will be strictly unnecessary to break this path in a cycle.}
-		\label{fig:FBV-path}
-	\end{figure}
-	\begin{note}
-		Observe that we only need to delete at most one vertex in any path, and sometimes this may be loose since we can delete one branch node joining two paths, i.e., deleting \(1\) nodes for two paths.
-	\end{note}
-
-	Let \(A\) be the set of degree \(2\) vertices, and \(B\) be the set of vertices with degree larger than \(3\). Now, consider line segment in the graph. If \(\ell \) is a line segment,
-	\begin{enumerate}[(a)]
-		\item \(\left\vert F \cap  \ell  \right\vert \leq 1\), i.e., we delete at most one point in \(\ell \).
-		\item If \(F\) contains one of the endpoints of \(\ell \), then \(\left\vert F \cap \ell  \right\vert = 0\).
-	\end{enumerate}
-
-	Since \(F\) is minimal, the left-hand side is
-	\[
-		\left\vert A \cap  F \right\vert + \sum_{v\in B \cap F}(d_{v} ^S - 1) \leq \sum_{v\in B \setminus F} d_{v} ^S / 2 + \sum_{v\in B \cap F}(d_{v} ^S - 1) \leq \sum_{v\in B}(d_{v}^S - 1 ),
-	\]
-	where the first inequality comes from the fact that if we delete vertices in \(A\), i.e., in the line segment, then we know we don't delete its end points, and by \emph{distributed} that \(1\) cost into its two end points, each \(1 / 2\).
-	\begin{figure}[H]
-		\centering
-		\incfig{FBV-line-segment}
-		\caption{Distribute the cost of \(F\).}
-		\label{fig:FBV-line-segment}
-	\end{figure}
-	Similarly, in the right-hand side, the crucial term is
-	\[
-		\left\vert E(S) \right\vert - \left\vert S \right\vert = \sum_{v\in S}(d_{v} ^S / 2 - 1) = \sum_{v\in B} (d_{v} ^S / 2 - 1)
-	\]
-	where the last equality holds since for \(v\in A\), the summand is just \(2 / 2 - 1 = 0\). It's clear that since \(\forall v\in B\), \(d_v^S - 1 \leq 4 (d_{v} ^S / 2 - 1)\), rearranging this inequality gives the result.
-\end{proof}
-
-To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the result follows form \autoref{lma:lec4-1}. Hence, after obtaining \(F\), \autoref{algo:feedback-vertex-set-PD} further convert \(F\) into \(F^\prime \) and  try to obtain a minimal version of \(F\). Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}, and the minimality of \(F^\prime \) is guaranteed by the following lemma.
-
-\begin{lemma}\label{lma:lec4-3}
-	\(F^\prime \) is minimal in every \(S_i\), where \(S_i\) is the corresponding \(S\) in \autoref{algo:feedback-vertex-set-PD} when \(v_i\) is deleted.
-\end{lemma}
-\begin{proof}
-	Suppose this is not the case. Then there exists \(v_j\in F^\prime \) such that in \(\mathcal{\MakeUppercase{g}} [S_i]\), \((F \cap S_i) \setminus \left\{ v_{j}  \right\}\) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} [S_j]\). Notice that we only need to consider the case that \(i = j\) since \(v_{j}\in S_i\) means \(i \geq j\) from how we order them. In this case, \(S_j \subseteq S_i\), hence to check the minimality of \(F^\prime \) it's enough to just consider the case that \(i = j\). Hence, we consider \((F \cap S_j) \setminus \left\{ v_{j}  \right\}\) instead.
-
-	\begin{note}
-		Here we only consider \(G[S_j]\), i.e., we want to say that if \(v_j\) is not minimal in \(G[S_j]\), then \(v_j\) should really be deleted even w.r.t. the whole graph.
-	\end{note}
-
-	Now, observe the following picture in step \(j\) of \autoref{algo:feedback-vertex-set-PD:for} with cycles contained \(v_j\):
-	\begin{figure}[H]
-		\centering
-		\incfig{FBV-minimality}
-	\end{figure}
-
-	Observe that the middle cycles in \(G[S_j]\) must exist from our assumption of \((F \cap S_j) \setminus \left\{ v_{j}  \right\}\) being still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}, i.e., if a cycle exists in \(G[S_j]\), then it must contain another nodes other than \(v_j\) that's also in \(F^\prime \). But we see that when we consider cycles outside \(G[S_j]\), we have the following.
-	\begin{claim}
-		No vertices outside \(S_j\) which is also in \(F\setminus F^\prime \) at step \(j\) of \autoref{algo:feedback-vertex-set-PD:for}
-	\end{claim}
-	\begin{explanation}
-		Since \(S_j\) is growing, i.e., for \(i \leq j\), \(S_i \leq S_j\), and we just can't delete something we haven't considered.
-	\end{explanation}
+	It's sufficient to consider \(j\in Q\) and prove that \(\sum_{i\in P^\prime } \beta ^\prime _{ij} \leq f \) where \(P^\prime \coloneqq \left\{ i\colon \beta ^\prime _{ij} > 0 \right\} = [n]\) where we're overloading \(n\) here. Let's order \(\alpha _i\) such that \(\alpha _1 \leq \ldots \leq \alpha _n \) where \(\alpha _i\) is the time \(i\) when \(i\) is \emph{first connected}.
 
 	\begin{claim}
-		There are no cycles \(C\ni v_j\) such that \(C\setminus S_j\) is disjoint from \(F\).
+		For all \(i, k\in P^\prime \) such that \(\alpha _k \leq \alpha _i\), at time (right before) \(\alpha _i\), offer from \(k\) to \(j\)\footnote{We assume \(k\) currently (or is going to) connects to \(j^\prime \).} is at most \(\alpha _i - d(i, j) - 2d(k, j)\) for any \(j\in Q\).
 	\end{claim}
 	\begin{explanation}
-		Observe that there are only two ways for a vertex being deleted from the graph, either \(v\in Z\), i.e., its dual constraint is tight, or \(v\in S\) is deleted since it prevent \(S\) being \hyperref[def:irreducible]{irreducible}. Only the latter case will make \(v \notin F\), we see that there's no way such a cycle \(C\) exists with all vertices outside \(S_j\) are preventing \(s\) being \hyperref[def:irreducible]{irreducible}, since this cycle \(C\) itself is a cycle...
+		We see that if \(\alpha _i = \alpha _k\), the offer is just \((\alpha _k - d(i, j))^+\). Otherwise, we have \(\alpha _k < \alpha _i\). If \(\alpha _i > d(k, j^\prime ) + d(k, j) + d(i, j)\), we immediately get a contradiction since from triangle inequality, \(\alpha _i > d(i, j^\prime )\), i.e., \(i\) already connect to \(j^\prime \). Hence,
+		\[
+			\alpha _i \leq d(k, j^\prime )+ d(k, j) + d(i, j).
+		\]
+		Then, the offer from \(k\) to \(j\) is \((d(k, j^\prime ) - d(k, j))^+ \geq \alpha _i - d(i, j) - 2d(k, j)\).
 	\end{explanation}
 
-	This implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD} since such a problematic cycle can't exist,\footnote{Explicitly, if this exists, then delete \(v_j\) will make \(F^\prime\) fail to intersect such a cycle.} which contradicts with the minimality of \(F^\prime\).
+	Observe that for all \(i\in [n]\), we have
+	\begin{equation}\label{eq:lec6}
+		\sum_{k=1} ^{i-1} (\alpha _i - d(i, j) - 2d(k, j)) + \sum_{k=i} ^n (\alpha _i - d(k, j)) \leq \hat{f}
+	\end{equation}
+	by considering the total offer from \(k\) to \(j\) at time (right before) \(\alpha _i\). Now, we add \autoref{eq:lec6} for all \(i\in [n]\), we have
+	\[
+		n \sum_{i=1} ^n \alpha _i - \sum_{i=1} ^n (i-1)d(i, j) - 2 \sum_{k=1} ^n (n - k)d(k, j) - \sum_{i=1} ^n k\cdot d(k, j) \leq n \hat{f} = 2n f.
+	\]
+	Since the summation over \(k\) is just indexes, we can change it to \(i\), hence
+	\[
+		\begin{split}
+			2n f &\geq n \sum_{i=1} ^n \alpha _i - \sum_{i=1} ^n (i-1)d(i, j) - 2 \sum_{i=1} ^n (n - i)d(i, j) - \sum_{i=1} ^n i\cdot d(i, j)\\
+			&\geq n \sum_{i=1} ^n \alpha _i - \sum_{i=1} ^n id(i, j) - 2 \sum_{i=1} ^n (n - i)d(i, j) - \sum_{i=1} ^n i\cdot d(i, j) = n \sum_{i=1} ^n \alpha _i - \sum\limits_{i=1}^{n} 2n d(i, j)
+		\end{split}
+	\]
+	where we turn the factor \((i-1)\) into \(i\) and gather the terms together. Clean up a bit, we have
+	\[
+		n \sum\limits_{i=1}^{n} \alpha _i - 2n \sum\limits_{i=1}^{n} d(i, j) \leq 2nf \iff \frac{\sum_{i=1} ^n \alpha _i}{2} - \sum_{i=1} ^n d(i, j) \leq f,
+	\]
+	finishing the proof.
 \end{proof}
 
-Finally, we see that we can prove \autoref{thm:lec4-1}.
+From \autoref{lma:lec6}, we immediately have the following.
 
-\begin{proof}[Proof of \autoref{thm:lec4-1}]
-	Firstly, \autoref{algo:feedback-vertex-set-PD} gives a \(4\)-approximation of the density IP guaranteed by \autoref{lma:lec4-2} and \autoref{lma:lec4-3}. Finally, from \autoref{lma:lec4-1}, we see that \autoref{prb:feedback-vertex-set} and the density IP is equivalent, proving the theorem.
-\end{proof}
+\begin{theorem}
+	\autoref{algo:facility-location-greedy-III} is a \(2\)-\hyperref[def:LMP]{LMP approximation} algorithm w.r.t. the original \(f\).
+\end{theorem}

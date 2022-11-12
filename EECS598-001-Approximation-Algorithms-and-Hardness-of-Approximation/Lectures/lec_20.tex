@@ -1,14 +1,25 @@
 \lecture{20}{9 Nov. 10:30}{FGLSS Graph}
-\subsection{An Equivalent PCP Theorem}
-With \autoref{def:PCP}, \hyperref[thm:PCP]{PCP theorem} is equivalent as saying that there exists \(\epsilon > 0\) such that
-\[
-	\NP = \PCP_{1, 1-\epsilon }(O(\log n), O(1)).
-\]
-It's easy to see that \(\NP \supseteq \PCP_{1, 1-\epsilon }(O(\log n), O(1))\) just by considering iterating through all the possible \(R\). Another direction worth a whole class, so we're not going to dive into that.
+With \autoref{def:PCP}, \hyperref[thm:PCP]{PCP theorem} is equivalent to saying the following.
 
-Nevertheless, if we accept that \(\NP = \PCP_{1, 1-\epsilon }(O(\log n), O(1))\), we can actually show the equivalence between this and the \hyperref[thm:PCP]{PCP theorem}, i.e., why \hyperref[thm:PCP]{PCP theorem} implies hardness of approximation, specifically, the \hyperref[def:c-s-Gap]{\((1, 1-\epsilon )\)-Gap} \hyperref[prb:max-3SAT]{3SAT} problem.
+\begin{theorem}[Equivalent \autoref{thm:PCP}]\label{thm:PCP-equivalent}
+	The \hyperref[thm:PCP]{PCP theorem} is equivalent as saying that there exists \(\epsilon > 0\) such that
+	\[
+		\NP = \PCP_{1, 1-\epsilon }(O(\log n), O(1)).
+	\]
+\end{theorem}
+\begin{proof}
+	It's easy to see that \(\NP \supseteq \PCP_{1, 1-\epsilon }(O(\log n), O(1))\) just by considering iterating through all the possible \(R\). Another direction worth a whole class, so we're not going to dive into that.
+\end{proof}
 
-Firstly, from \hyperref[thm:Cook-Levin]{Cook-Levin theorem}, \hyperref[prb:max-3SAT]{3SAT} is \(\NP=\PCP_{1, 1-\epsilon }(O(\log n), O(1))\) from assumption. Explicitly, we assume \(q = 2\), \(\psi = \left\{ 01, 10 \right\} \), and \(r = O(\log n)\). Then there exists \(V\) such that given a \hyperref[def:k-CNF]{\(3\)-CNF formula} \(\phi \), it runs in \(\poly(\vert \phi  \vert )\) and only flips \(r\) random coins \(R\in \left\{ 0, 1 \right\} ^r\), which decides \(Q_1^R, Q_2^R\) such that
+Nevertheless, if we accept that \(\NP = \PCP_{1, 1-\epsilon }(O(\log n), O(1))\), we can actually show the equivalence between \autoref{thm:PCP-equivalent} and the \hyperref[thm:PCP]{PCP theorem} by showing that \autoref{thm:PCP-equivalent} implies hardness of approximation, specifically, the \hyperref[def:c-s-Gap]{\((1, 1-\epsilon )\)-Gap} \hyperref[prb:max-3SAT]{3SAT} problem.
+
+Firstly, from \hyperref[thm:Cook-Levin]{Cook-Levin theorem}, \hyperref[prb:max-3SAT]{3SAT} is \(\NP=\PCP_{1, 1-\epsilon }(O(\log n), O(1))\) from assumption. But instead of demonstrate the \hyperref[def:reduction]{reduction} to \hyperref[prb:max-3SAT]{3SAT}, we consider \hyperref[prb:max-cut]{max cut} instead.
+
+\begin{remark}
+	Generally, between two \hyperref[def:c-s-Gap]{Gap} \hyperref[prb:CSP]{CSPs} with \((c_1, s_1)\) and \((c_2, s_2)\), the hardness is preserve, so we may consider \hyperref[prb:max-cut]{max cut} instead since it can be modeled as \hyperref[prb:CSP]{CSP}, and use the machinery to show the hardness for \hyperref[prb:max-3SAT]{3SAT}.\footnote{For more detailed explanation, see \href{https://piazza.com/class/l79tk1phe7k6h1/post/45}{Piazza}.}
+\end{remark}
+
+Assume \(q = 2\), \(\psi = \left\{ 01, 10 \right\} \), and \(r = O(\log n)\). Then there exists \(V\) such that given a \hyperref[def:k-CNF]{\(3\)-CNF formula} \(\phi \), it runs in \(\poly(\vert \phi  \vert )\) and only flips \(r\) random coins \(R\in \left\{ 0, 1 \right\} ^r\), which decides \(Q_1^R, Q_2^R\) such that
 \begin{itemize}
 	\item if \(\phi \) is satisfiable, \(\exists y\) such that \(\Pr_{R}(\psi (y_{Q_1^R}, y_{Q_2^R}) = 1) \geq c\);
 	\item if \(\phi \) is not satisfiable, \(\forall y\) such that \(\Pr_{R}(\psi (y_{Q_1^R}, y_{Q_2^R}) = 1) \leq s\).
@@ -16,7 +27,6 @@ Firstly, from \hyperref[thm:Cook-Levin]{Cook-Levin theorem}, \hyperref[prb:max-3
 Notice that the above event \(\psi (y_{Q_1^R}, y_{Q_2^R})\) is exactly \(y_{Q_1^R} \neq y_{Q_2^R}\). We see that there are at most \(2^r \leq n^{O(1)}\) possible \(R\)'s, and for each \(R\), we access exactly \(2\) positions, so \(V\) will access at most \(N\coloneqq 2\cdot 2^r\) positions. Now, without loss of generality, we may assume that \(\max _R (Q_1^R, Q_2^R) \leq N\).\footnote{Since \(V\) is going to access at most \(N\) positions anyway, we can just rearrange it.}
 
 Consider the optimization problem that finds \(y\in \left\{ 0, 1 \right\} ^N\) to maximize the probability of accepting. In this viewpoint, this is just like \hyperref[prb:max-cut]{max cut} on \(\mathcal{\MakeUppercase{g}} =([N], \left\{ (Q_1^R, Q_2^R)\colon R\in \left\{ 0, 1 \right\} ^r \right\} )\). Namely, we find a \hyperref[def:reduction]{reduction} from \hyperref[prb:max-3SAT]{3SAT} to \hyperref[def:c-s-Gap]{\((c, s)\)-Gap} \hyperref[prb:max-cut]{max cut}.
-
 
 \section{FGLSS Graph}
 To see how we utilize \hyperref[thm:PCP]{PCP theorem}, we first see one example.
@@ -37,47 +47,92 @@ Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mat
 	Observe that for all \(C \subseteq \mathcal{\MakeUppercase{v}} \), \(C\) is a \hyperref[prb:vertex-cover]{vertex cover} if and only if \(\mathcal{\MakeUppercase{v}} \setminus C\) is an \hyperref[prb:independent-set]{independent set}.
 \end{explanation}
 
-We now see the hardness of \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[prb:independent-set]{independent set} by using the so-called FGLSS graph.~\cite{10.1145/226643.226652} This allows us to do \hyperref[def:reduction]{reduction} from From \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:max-3SAT]{3SAT} with \(s < 1\), given the input
-\begin{itemize}
-	\item \hyperref[def:k-CNF]{\(3\)CNF formula} \(\phi \);
-	\item \(n\) variables \(\left\{ x_1, \ldots , x_n\right\} \eqqcolon X\);
-	\item \(2n\) literals \(\left\{ x_1, \overline{x}_1, x_2, \overline{x}_2, \ldots \right\} \eqqcolon L\);
-	\item \(m\) clauses with three literals.
-\end{itemize}
+\subsection{Hardness of Vertex Cover and Independent Set}
+The hardness of \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[prb:independent-set]{independent set} can be shown by using the FGLSS graph~\cite{10.1145/226643.226652}, which allows us to do \hyperref[def:reduction]{reduction} from \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:max-3SAT]{3SAT} with \(s < 1\), which is \(\NP\)-hard from the \hyperref[thm:PCP]{PCP theorem}.
 
-The, the output is a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) such that
+Consider the input of the \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:max-3SAT]{3SAT} being a \hyperref[def:k-CNF]{\(3\)CNF formula} \(\phi \), \(n\) variables \(X=\left\{ x_1, \ldots , x_n\right\}\) and \(2n\) literals \(L = \left\{ x_1, \overline{x}_1, x_2, \overline{x}_2, \ldots \right\}\) with \(m\) clauses \(\left\{ C_1, \ldots , C_m \right\} \) with three literals in each, i.e., \(C_i = (\ell _{i_1} \lor \ell _{i_2} \lor \ell _{i_3}) \) with \(\ell _{i_j}\in L\).
+
+Then, the goal is to find a \hyperref[def:reduction]{reduction} from this input to an input (in both cases, it's a graph) of \hyperref[def:Gap]{\(\alpha\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(\beta \)-Gap} \hyperref[prb:independent-set]{independent set} for some \(\alpha , \beta \). Toward this goal, we consider the so-called FGLSS graph~\cite{10.1145/226643.226652} \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) such that
 \begin{itemize}
-	\item \(\mathcal{\MakeUppercase{v}} = [m]\times \left( \left\{ T, F \right\} ^3 \setminus (F, F, F) \right)\) with \(\vert \mathcal{\MakeUppercase{v}}  \vert = 7m\)
+	\item \(\mathcal{\MakeUppercase{v}} = [m]\times \left( \left\{ \textsf{T}, \textsf{F} \right\} ^3 \setminus (\textsf{F}, \textsf{F}, \textsf{F}) \right)\) with \(\vert \mathcal{\MakeUppercase{v}}  \vert = 7m\);
 	\item \(\big((i, \ell _{i_1}, \ell _{i_2}, \ell _{i_3}), (j, \ell _{j_1}, \ell _{j_2}, \ell _{j_3})\big)\in \mathcal{\MakeUppercase{e}} \) if they \emph{contradict}.
 \end{itemize}
+The interpretation is that each vertex \((i, t_1, t_2, t_3)\) indicates value of \((\ell _{i_1}, \ell _{i_2}, \ell _{i_3})\), i.e., it's a partial assignment for only \(3\) variables in \(C_i\).
 
-\begin{note}[FGLSS graph]
-	Such a graph is called a FGLSS graph.
-\end{note}
+\begin{notation}[Contradiction]
+	If the partial assignment given by two vertices in a FGLSS graph is not consistent, we say they are \emph{contradicting}.
+\end{notation}
+\begin{eg}
+	Given \(C_1=(\overline{x}_1 \lor x_2 \lor \overline{x}_3)\) and \(C_2 = (x_3\lor x_4\lor x_5)\) with two vertices \(v=(1, \textsf{T}, \textsf{T}, \textsf{T})\) and \(u=(2, \textsf{T}, \textsf{F}, \textsf{F})\), they are contradicting to each other.
+\end{eg}
+\begin{explanation}
+	Since \(v\) states that \(\overline{x}_3\) is \(\textsf{T}\) (\(x_3\) is \(\textsf{F}\)); while \(u\) states that \(x_3\) is \(\textsf{T}\), they contradict.
+\end{explanation}
 
-For \hyperref[prb:independent-set]{independent set}, \(c = m\); and for \hyperref[prb:vertex-cover]{vertex cover}, \(c = 6m\).
+This actually finishes the \hyperref[def:reduction]{reduction}, and the only thing left to do is to determine what \(\alpha \) and \(\beta \) is. To do this, observe that following.
+\begin{remark}
+	Denote \(V_i \coloneqq \left\{ i \right\} \times \left( \left\{ \textsf{T}, \textsf{F} \right\} ^3 \setminus (\textsf{F}, \textsf{F}, \textsf{F}) \right)\), we see that \(V_i\) is a clique with size \(7\) since they all contradict to each other.
+\end{remark}
 
-\paragraph*{Completeness.}
-Suppose \(\phi \) is satisfiable, then there exists \(\sigma \colon X \to \left\{ T, F \right\} \) that satisfies every \(C_i\). Then from each \(V_i\), choose a vertex \emph{consistent} with \(\sigma \), i.e., \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq m\), and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq 6m\).
+This means that for \hyperref[prb:independent-set]{independent set}, \(c = m\); and for \hyperref[prb:vertex-cover]{vertex cover}, \(c = \vert \mathcal{\MakeUppercase{v}}  \vert - m = 7m - m = 6m\). We first show the \hyperref[def:completeness]{completeness}.
 
-\paragraph*{Soundness.}
-We want to show that \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq s\cdot m\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq (7+s)m\), which implies \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\phi) \geq s\). Let \(I \subseteq \mathcal{\MakeUppercase{v}} \) be an \hyperref[def:independent-set]{independent set} such that \(\vert I \vert \geq s\cdot m\), and let \(\sigma \colon X \to \left\{ T, F \right\} \) such that for all \(C_i\) with \(\vert I \cap V_i \vert = 1\), then assign variables in \(C_i\) according to \(I \cap V_i\).\footnote{This is well-defined, i.e., there are no contradictions since \(I\) is an \hyperref[def:independent-set]{independent set}.} We then extend it arbitrarily for unassigned variables, then for all \(C_i\), such that \(\vert I \cap  Vvi \vert = 1\), i.e, \(C_i\) is satisfied by \(\sigma \). We see that \(\beta = s < 1\), \(\alpha = (7-s) / 6 > 1\).
+\begin{claim}
+	If \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}} (\phi) = 1\), then \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq m\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq 6m\).
+\end{claim}
+\begin{explanation}
+	Since \(\phi \) is satisfiable, then there exists \(\sigma \colon X \to \left\{ \textsf{T}, \textsf{F} \right\} \) that satisfies every \(C_i\). Then from each \(V_i\), choose a vertex \emph{consistent} with \(\sigma \).\footnote{There are exactly one for each \(i\).}
 
-\subsection{Label Cover}
-Consider the following problem.
+	And since they come from the same assignment \(\sigma \), there are no contradiction hence no edges between these vertices, i.e., they form a \hyperref[prb:independent-set]{independent set}. Hence, \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq m\), and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq 6m\).
+\end{explanation}
+
+We now show the \hyperref[def:soundness]{soundness}. In particular, we will always deal with contrapositive in this course, i.e., instead of find a bad input from a bad input, we find a good input from a good input, but backwards.
+
+\begin{claim}
+	If	\(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}} (\phi) < s\), then \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) < sm\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) > (7-s)m\).
+\end{claim}
+\begin{explanation}
+	Consider the contrapositive, i.e., we show that \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq sm\) (hence \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq (7-s)m\)), then \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}} }(\phi) \geq s\).
+
+	Let \(I \subseteq \mathcal{\MakeUppercase{v}} \) be an \hyperref[def:independent-set]{independent set} such that \(\vert I \vert \geq sm\), and let \(\sigma \colon X \to \left\{ \textsf{T}, \textsf{F} \right\} \) such that for all \(C_i\) with \(\vert I \cap V_i \vert = 1\),\footnote{It can only be the case that \(I\) doesn't include vertices from some \(V_i\), but if it does, no more than \(1\) can be included since \(V_i\) is a clique.} assign variables in \(C_i\) according to \(I \cap V_i\).\footnote{This is well-defined since there are no contradictions with \(I\) being an \hyperref[def:independent-set]{independent set}.} Finally, we extend it arbitrarily for unassigned variables if needed. We see that for all \(C_i\) such that \(\vert I \cap  V_i \vert = 1\), this assignment \(\sigma \) satisfies \(C_i\), hence \(\sigma \) satisfies exactly \(\vert I \vert \geq sm\) clauses, i.e., the normalized optimal solution for \hyperref[prb:max-3SAT]{3SAT} is \(\geq sm/m = s\) as required.
+\end{explanation}
+
+With the above discussion, we see that the \hyperref[def:Gap]{Gap} is \(\beta = s < 1\), \(\alpha = (7-s) / 6 > 1\). Hence, there exists a \hyperref[def:reduction]{reduction} from \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:max-3SAT]{SAT} to \hyperref[def:Gap]{\((7 - s) / 6\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(s\)-Gap} \hyperref[prb:independent-set]{independent set}.
+
+\begin{remark}
+	Actually, it's also easy to check that there exists a \hyperref[def:reduction]{reduction} from \hyperref[def:c-s-Gap]{\((c, s)\)-Gap} \(P\) to \hyperref[def:Gap]{\((f-s) / (f-c)\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(s / c\)-Gap} \hyperref[def:independent-set]{independent set} for any \hyperref[prb:CSP]{CSP} \(P\) with \(f\) being the number of satisfying assignments.
+\end{remark}
+
+From this, we have the following.
+
+\begin{theorem}
+	For all \(\epsilon > 0\), there exists a \hyperref[prb:CSP]{CSP} \(P\) such that \hyperref[def:c-s-Gap]{\((1, \epsilon )\)-Gap} \(P\) is \(\NP\)-hard.
+\end{theorem}
+\begin{corollary}
+	For all \(c > 0\), there exists no \(c\)-approximation algorithm for \hyperref[prb:independent-set]{independent set}.
+\end{corollary}
+
+The state-of-the-art in-approximation result for \hyperref[prb:independent-set]{independent set} result is the following.
+
+\begin{theorem}
+	For all \(\epsilon > 0\), there exists no \(1 / n^{1-\epsilon }\)-approximation algorithm for \hyperref[prb:independent-set]{independent set}.
+\end{theorem}
+
+\section{Label Cover}
+Although \hyperref[thm:PCP]{PCP theorem} is powerful as we just saw, but there is also another useful problem to study when doing \hyperref[def:reduction]{reduction}, the \hyperref[prb:label-cover]{label cover}.
 
 \begin{problem}[Label cover]\label{prb:label-cover}
-Given a bipartite graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{u}} \cup \mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with label sets \(L\) (for \(\mathcal{\MakeUppercase{u}} \)) and \(R\) (for \(\mathcal{\MakeUppercase{v}} \)) with \(\vert R \vert \geq \vert L \vert \) such that for all \(e=(u, v)\in \mathcal{\MakeUppercase{e}} \), we have \(\Pi _e \colon [R]\to [L]\). Find an assignment \(\sigma \) such that
+Given a bipartite graph \(\mathcal{\MakeUppercase{g}} =(U\sqcup V , \mathcal{\MakeUppercase{e}} )\) with label sets \(L\) (for \(U\)) and \(R\) (for \(V \)) with \(\vert R \vert \geq \vert L \vert \) such that for all \(e=(u, v)\in \mathcal{\MakeUppercase{e}} \), we have a projection \(\Pi _e \colon [R]\to [L]\). The \emph{label cover} problem asks for an assignment \(\sigma\colon U \sqcup V \to L \cup R\) such that
 \[
-	\sigma = \begin{dcases}
-		\mathcal{\MakeUppercase{u}} \to L; \\
-		\mathcal{\MakeUppercase{v}} \to R
-	\end{dcases}
+	\at{\sigma }{U}{} \colon U \to L,\quad \at{\sigma }{V}{} \colon V \to R,
 \]
-that satisfies the maximum number of edge, where \(e=(u, v)\) is satisfied by \(\sigma \) if \(\Pi _e(\sigma (v)) = \sigma (u)\).
+which satisfies the maximum number of edge.\footnote{The edge \(e=(u, v)\) is satisfied by \(\sigma \) if \(\Pi _e(\sigma (v)) = \sigma (u)\).}
 \end{problem}
 
-For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert \mathcal{\MakeUppercase{u}}  \vert, \vert \mathcal{\MakeUppercase{v}}  \vert , \vert \mathcal{\MakeUppercase{e}}  \vert , L, R\).
+\begin{center}
+	\incfig{label-cover}
+\end{center}
+
+For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert U \vert, \vert V \vert , \vert \mathcal{\MakeUppercase{e}}  \vert , L, R\), and we sometimes for simplicity, use \(L\) and \(R\) to also denote the size of \(L\) and \(R\).
 
 \begin{remark}[Baseline]
 	There is a trivial \(1/L\)-approximation algorithm.
@@ -85,16 +140,44 @@ For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert \mathcal
 \begin{explanation}
 	Consider a random assignment \(\sigma \) such that
 	\begin{itemize}
-		\item for all \(v\in \mathcal{\MakeUppercase{v}} \), \(\sigma (v)\) randomly from \([R]\);
-		\item for all \(u\in \mathcal{\MakeUppercase{u}} \), \(\sigma (u)\) randomly from \([L]\).
+		\item for all \(v\in V\), \(\sigma (v)\) randomly from \([R]\);
+		\item for all \(u\in U\), \(\sigma (u)\) randomly from \([L]\).
 	\end{itemize}
 	Fix \(e=(u, v)\), we see that \(\Pr_{}(\Pi _e(\sigma (v)) = \sigma (u)) = 1 / L \).
 \end{explanation}
 
-\begin{theorem}[PCP theorem with parallel repetitoin theorem]
+\begin{theorem}
 	For all \(\epsilon > 0\), there exists \(L, R\) such that the \hyperref[def:c-s-Gap]{\((1, \epsilon )\)-Gap} \hyperref[prb:label-cover]{label cover} for \(L, R\) is \(\NP\)-hard.
 \end{theorem}
+\begin{proof}
+	This is based on the \hyperref[thm:PCP]{PCP theorem} with \href{https://www.wisdom.weizmann.ac.il/~/ranraz/publications/Pparrepsur.pdf}{parallel repetition theorem}.
+\end{proof}
 
 \subsection{Hardness of Max \(k\)-Coverage}
+Recall the \hyperref[prb:max-k-coverage]{max \(k\)-coverage} problem.
 
+\begin{problem}[Max \(k\)-coverage]\label{prb:max-k-coverage}
+Given a \hyperref[def:set-system]{set system} \(\Omega , \mathcal{\MakeUppercase{s}} \) and \(k\), finds \(\mathcal{\MakeUppercase{s}} ^\prime \subseteq \mathcal{\MakeUppercase{s}} \) such that \(\vert \mathcal{\MakeUppercase{s}}  \vert = k\) which maximizes \(\vert \bigcup_{S\in \mathcal{\MakeUppercase{S}} ^\prime } S \vert \).
+\end{problem}
 
+We're going to see the hardness of the \hyperref[prb:max-k-coverage]{max \(k\)-coverage} problem, and our goal is to prove the following.
+
+\begin{theorem}\label{thm:max-k-coverage}
+	For all \(\epsilon >0\), there is no \((3 / 4 + \epsilon )\)-approximation algorithm for \hyperref[prb:max-k-coverage]{max \(k\)-coverage}.
+\end{theorem}
+
+Interestingly, the state-of-the-art result is the following.
+
+\begin{theorem}\label{thm:max-k-coverage-SOTA}
+	For all \(\epsilon >0\), there is no \((1 - 1/e + \epsilon )\)-approximation algorithm for \hyperref[prb:max-k-coverage]{max \(k\)-coverage}.
+\end{theorem}
+
+By proving \autoref{thm:max-k-coverage}, we almost prove \autoref{thm:max-k-coverage-SOTA}! Let's first see the reduction. Given a \hyperref[prb:label-cover]{label cover} instance \(\mathcal{\MakeUppercase{g}} =(U \sqcup V, \mathcal{\MakeUppercase{e}} )\), \(L, R\) and \(\left\{ \Pi _e \right\} _{e\in \mathcal{\MakeUppercase{e}} }\), consider
+\[
+	\Omega \coloneqq \mathcal{\MakeUppercase{e}} \times \left\{ 0, 1 \right\} ^L
+\]
+such that \((e, x_1, \ldots , x_L  )\in \Omega \) with \(\vert \Omega  \vert = \vert \mathcal{\MakeUppercase{e}}  \vert \cdot 2 ^L\). Then, the reduction is given by
+\begin{itemize}
+	\item For all \(u\in U\), \(i\in [L]\), \(S_{u, i} = \left\{ (e, x_1, \ldots , x_L ) \colon e\ni u, x_i = 0 \right\} \).
+	\item For all \(v\in V\), \(i\in [R]\), \(S_{v, i} = \left\{ (e, x_1, \ldots , x_L ) \colon e\ni v, x_{\Pi_e(i)} = 0 \right\} \).
+\end{itemize}

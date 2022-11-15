@@ -121,7 +121,7 @@ The state-of-the-art in-approximation result for \hyperref[prb:independent-set]{
 Although \hyperref[thm:PCP]{PCP theorem} is powerful as we just saw, but there is also another useful problem to study when doing \hyperref[def:reduction]{reduction}, the \hyperref[prb:label-cover]{label cover}.
 
 \begin{problem}[Label cover]\label{prb:label-cover}
-Given a bipartite graph \(\mathcal{\MakeUppercase{g}} =(U\sqcup V , \mathcal{\MakeUppercase{e}} )\) with label sets \(L\) (for \(U\)) and \(R\) (for \(V \)) with \(\vert R \vert \geq \vert L \vert \) such that for all \(e=(u, v)\in \mathcal{\MakeUppercase{e}} \), we have a projection \(\Pi _e \colon [R]\to [L]\). The \emph{label cover} problem asks for an assignment \(\sigma\colon U \sqcup V \to L \cup R\) such that
+Given a \(d\)-regular bipartite graph \(\mathcal{\MakeUppercase{g}} =(U\sqcup V , \mathcal{\MakeUppercase{e}} )\) with \(\vert U \vert = \vert V \vert = n\), with label sets \(L\) (for \(U\)) and \(R\) (for \(V \)) with \(\vert R \vert \geq \vert L \vert \) such that for all \(e=(u, v)\in \mathcal{\MakeUppercase{e}} \), we have a projection \(\Pi _e \colon [R]\to [L]\). The \emph{label cover} problem asks for an assignment \(\sigma\colon U \sqcup V \to L \cup R\) such that
 \[
 	\at{\sigma }{U}{} \colon U \to L,\quad \at{\sigma }{V}{} \colon V \to R,
 \]
@@ -146,7 +146,7 @@ For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert U \vert,
 	Fix \(e=(u, v)\), we see that \(\Pr_{}(\Pi _e(\sigma (v)) = \sigma (u)) = 1 / L \).
 \end{explanation}
 
-\begin{theorem}
+\begin{theorem}\label{thm:PCP-parallel-repetition}
 	For all \(\epsilon > 0\), there exists \(L, R\) such that the \hyperref[def:c-s-Gap]{\((1, \epsilon )\)-Gap} \hyperref[prb:label-cover]{label cover} for \(L, R\) is \(\NP\)-hard.
 \end{theorem}
 \begin{proof}
@@ -157,7 +157,7 @@ For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert U \vert,
 Recall the \hyperref[prb:max-k-coverage]{max \(k\)-coverage} problem.
 
 \begin{problem}[Max \(k\)-coverage]\label{prb:max-k-coverage}
-Given a \hyperref[def:set-system]{set system} \(\Omega , \mathcal{\MakeUppercase{s}} \) and \(k\), finds \(\mathcal{\MakeUppercase{s}} ^\prime \subseteq \mathcal{\MakeUppercase{s}} \) such that \(\vert \mathcal{\MakeUppercase{s}}  \vert = k\) which maximizes \(\vert \bigcup_{S\in \mathcal{\MakeUppercase{S}} ^\prime } S \vert \).
+Given a \hyperref[def:set-system]{set system} \((\Omega , \mathcal{\MakeUppercase{s}}) \) and \(k\), finds \(\mathcal{\MakeUppercase{s}} ^\prime \subseteq \mathcal{\MakeUppercase{s}} \) such that \(\vert \mathcal{\MakeUppercase{s}}\vert ^\prime = k\) which maximizes \(\vert \bigcup_{S\in \mathcal{\MakeUppercase{S}} ^\prime } S \vert / \vert \Omega \vert \).
 \end{problem}
 
 We're going to see the hardness of the \hyperref[prb:max-k-coverage]{max \(k\)-coverage} problem, and our goal is to prove the following.
@@ -172,12 +172,4 @@ Interestingly, the state-of-the-art result is the following.
 	For all \(\epsilon >0\), there is no \((1 - 1/e + \epsilon )\)-approximation algorithm for \hyperref[prb:max-k-coverage]{max \(k\)-coverage}.
 \end{theorem}
 
-By proving \autoref{thm:max-k-coverage}, we almost prove \autoref{thm:max-k-coverage-SOTA}! Let's first see the reduction. Given a \hyperref[prb:label-cover]{label cover} instance \(\mathcal{\MakeUppercase{g}} =(U \sqcup V, \mathcal{\MakeUppercase{e}} )\), \(L, R\) and \(\left\{ \Pi _e \right\} _{e\in \mathcal{\MakeUppercase{e}} }\), consider
-\[
-	\Omega \coloneqq \mathcal{\MakeUppercase{e}} \times \left\{ 0, 1 \right\} ^L
-\]
-such that \((e, x_1, \ldots , x_L  )\in \Omega \) with \(\vert \Omega  \vert = \vert \mathcal{\MakeUppercase{e}}  \vert \cdot 2 ^L\). Then, the reduction is given by
-\begin{itemize}
-	\item For all \(u\in U\), \(i\in [L]\), \(S_{u, i} = \left\{ (e, x_1, \ldots , x_L ) \colon e\ni u, x_i = 0 \right\} \).
-	\item For all \(v\in V\), \(i\in [R]\), \(S_{v, i} = \left\{ (e, x_1, \ldots , x_L ) \colon e\ni v, x_{\Pi_e(i)} = 0 \right\} \).
-\end{itemize}
+By proving \autoref{thm:max-k-coverage}, we almost prove \autoref{thm:max-k-coverage-SOTA}!

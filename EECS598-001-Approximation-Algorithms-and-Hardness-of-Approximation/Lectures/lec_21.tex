@@ -1,1 +1,128 @@
-\lecture{21}{13 Nov. 10:30}{}
+\lecture{21}{14 Nov. 10:30}{Reduction to Max \(k\)-Coverage}
+We now see the reduction from \hyperref[def:c-s-Gap]{\((1, \epsilon _0)\)-Gap} \hyperref[prb:label-cover]{label cover} to \hyperref[def:c-s-Gap]{\((1, 3 / 4 + \epsilon )\)-Gap} \hyperref[prb:max-k-coverage]{max \(k\)-coverage} and use \autoref{thm:PCP-parallel-repetition} to prove \autoref{thm:max-k-coverage}. Specifically, we'll show that \(\epsilon _0 = \epsilon ^3 / 2000\). Given a \hyperref[prb:label-cover]{label cover} instance \(\mathcal{\MakeUppercase{g}} =(U \sqcup V, \mathcal{\MakeUppercase{e}} )\), \(L, R\) and \(\left\{ \Pi _e \right\} _{e\in \mathcal{\MakeUppercase{e}} }\), consider
+\[
+	\Omega \coloneqq \mathcal{\MakeUppercase{e}} \times \left\{ 0, 1 \right\} ^L
+\]
+such that \((e, x_1, \ldots , x_L  )\in \Omega \) with \(\vert \Omega  \vert = \vert \mathcal{\MakeUppercase{e}}  \vert \cdot 2 ^L\). Then, the reduction is given by
+\begin{itemize}
+	\item For all \(u\in U\), \(i\in [L]\), \(S_{u, i} = \left\{ (e, x_1, \ldots , x_L ) \colon e\ni u, x_i = 0 \right\} \).
+	\item For all \(v\in V\), \(i\in [R]\), \(S_{v, i} = \left\{ (e, x_1, \ldots , x_L ) \colon e\ni v, x_{\Pi_e(i)} = 1 \right\} \).
+	\item \(k = 2n = \vert U \vert + \vert V \vert\).
+\end{itemize}
+
+We first show the \hyperref[def:completeness]{completeness}, where we want to show that if \(\OPT_{\hyperref[prb:max-k-coverage]{\text{M-\(k\)-C}} } =1 \), then \(\OPT_{\hyperref[prb:label-cover]{\text{LC}} } = 1\). Given an accepted (perfect) instance of \hyperref[prb:label-cover]{label cover}, there exists \(\sigma \) such that for all \(e=(u, v)\), \(\sigma (u) = \Pi _e(\sigma (v))\). Then, we construct
+\[
+	\mathcal{\MakeUppercase{s}} ^\prime \coloneqq \left\{ S_{u, \sigma (u)} \right\} _{u\in U} \cup \left\{ S_{v, \sigma (v)} \right\} _{v\in V}.
+\]
+Indeed, \(\mathcal{\MakeUppercase{s}} ^\prime \) covers every element in \(\Omega \) since for all \((e, x)\in \Omega \),
+\[
+	\begin{dcases}
+		(e, x) = ((u ,v), x)\in S_{u, \sigma (u)}, & \text{ if } x_{\sigma (u)} = 0 ; \\
+		(e, x) = ((u, v), x)\in S_{v, \sigma (v)}, & \text{ if } x_{\sigma (u)} = 1 ,
+	\end{dcases}
+\]
+where the later one is from \(\Pi _e(\sigma (v)) = \sigma (u)\).
+
+To prove \hyperref[def:soundness]{soundness}, we consider the contrapositive, namely if \(\OPT_{\hyperref[prb:max-k-coverage]{\text{M-\(k\)-C}} } \geq (3 / 4 + \epsilon )\), then \(\OPT_{\hyperref[prb:label-cover]{\text{LC}} } \geq \epsilon _0\).
+
+To start with, assume that there exists \(\mathcal{\MakeUppercase{s}} ^\prime \) such that \(\vert \mathcal{\MakeUppercase{s}} ^\prime  \vert = k = 2n\) which covers at least \((3 / 4 + \epsilon )\) fraction of \(\Omega \).
+\begin{enumerate}[(a)]
+	\item Suppose for all \(u\in U\), \(\vert \mathcal{\MakeUppercase{s}} ^\prime \cap \left\{ S_{u, i} \colon i\in [L] \right\}  \vert = 1\) and for all \(v\in V\), \(\vert \mathcal{\MakeUppercase{s}} ^\prime \cap \left\{ S_{v, i} \colon i\in [R] \right\} \vert = 1\).\footnote{This case is a warm-up case such that one vertex can only choose one set.} Then we let \(\sigma \) be the labeling which is consistent with \(\mathcal{\MakeUppercase{s}} ^\prime \). This is indeed a good solution since for every \(e=(u, v)\in \mathcal{\MakeUppercase{e}} \), \(S_{u, \sigma (u)}\) and \(S_{v, \sigma (v)}\) cover
+	      \[
+		      \begin{dcases}
+			      1,     & \text{ if } \Pi _e(\sigma (v)) = \sigma (u) ; \\
+			      3 / 4, & \text{ otherwise}
+		      \end{dcases}
+	      \]
+	      fraction of \(C_e\), where \(C_e\) is the hypercube corresponding to \(e\).\footnote{I.e., \(C_e \coloneqq \left\{ x\in \left\{ 0, 1 \right\} ^L \colon (e, x)\in \Omega  \right\} \).} This is because if \((e, x)\) is not covered, then \(x_{\sigma (u)} = 1\) and \(x_{\Pi _e(\sigma (v))}=0\), which is exactly \(1 / 4\) of \(C_e\). Hence,
+	      \[
+		      \underbrace{\overbrace{\text{fraction of elements satisfied by \(\sigma\)}}^{a} \cdot 1 + \overbrace{\text{fraction of elements unsatisfied by \(\sigma\)}}^{1-a} \cdot \frac{3}{4}}_{\text{fraction of elements covered by \(\mathcal{S}'\)}}
+		      \geq \frac{3}{4} + \epsilon
+	      \]
+	      from the assumption. Then, \(a + (1 - a)\cdot 3 / 4 \geq 3 / 4 + \epsilon\), which implies \(a \geq 4\epsilon \geq \epsilon^3 / 2000\).
+	\item For all \(u\in U\), let \(\ell (u) \coloneqq \left\{ i\in L\colon S_{u, i}\in \mathcal{\MakeUppercase{s}} ^\prime  \right\} \), and for all \(v\in V\), let \(\ell (v)\coloneqq \left\{ i\in R\colon S_{v, i}\in \mathcal{\MakeUppercase{s}} ^\prime \right\} \). Then,
+	      \[
+		      \mathbb{E}_{v\in U \sqcup V}\left[ \vert \ell (v) \vert \right] = 1
+	      \]
+	      since there are \(k=2n\) labels, and we have exactly \(k=2n\) sets in \(\mathcal{\MakeUppercase{s}} \). Hence, since \(\vert \mathcal{\MakeUppercase{e}}  \vert = nd \) from \(d\)-regularity,
+	      \[
+		      \begin{split}
+			      \mathbb{E}_{e=(u, v)\in \mathcal{\MakeUppercase{e}} }\left[ \vert \ell (u) \vert + \vert \ell (v) \vert \right]
+			      &= \frac{1}{nd} \sum_{e=(u, v)\in \mathcal{\MakeUppercase{e}} } \left[ \vert \ell (u) \vert + \vert \ell (v) \vert  \right]\\
+			      &= \frac{1}{nd}\cdot d \left( \sum_{u\in V} \vert \ell (u) \vert + \sum_{v\in V} \vert \ell (v) \vert \right)
+			      = 2
+		      \end{split}
+	      \]
+	      \begin{intuition}
+		      We see that in expectation, this general case is same as the first warm-up case.
+	      \end{intuition}
+	      Now, to construct a \hyperref[prb:label-cover]{label cover} \(\sigma \), we define for all \(u\), \(\sigma (u)\) be a random element from \(\ell (u)\), and nothing if \(\ell (u) = \varnothing \). We say \(e=(u, v)\) is consistent if \(\Pr_{\sigma }(e \text{ is satisfied} ) > 0\), which is equivalent to say \(\ell (u) \cap \Pi _e(\ell (v)) \neq \varnothing \).
+	      \begin{claim}
+		      If \(e\) is not consistent, then \(\mathcal{\MakeUppercase{S}} ^\prime \) covers
+		      \[
+			      1 - 2^{- (\vert \ell (u) \vert + \vert \Pi (\ell (v)) \vert )} \leq 1 - 2^{- (\vert \ell (u) \vert + \vert \ell (v) \vert )}
+		      \]
+		      fraction of \(C_e\).
+	      \end{claim}
+	      \begin{explanation}
+		      Without loss of generality, let \(\ell (u) = \left\{ 1, \ldots , a  \right\} \), and \(\Pi (\ell (v)) = \left\{ a+1, \ldots , a+b \right\} \). Then for \(x\in \left\{ 0, 1 \right\} ^L\), \((e, x)\) is covered if and only if \(x_i = 0\) for some \(i\in \left\{ 1, \ldots , a  \right\} \) and \(x_j = 1\) for some \(j\in \left\{ a+1, \ldots , a+b  \right\} \). Hence, exactly \(1-2^{-(a+b)}\) fraction of elements in \(C_e\) are covered.
+	      \end{explanation}
+
+	      Finally, we say \(e=(u, v)\) is frugal if \(\vert \ell (u) \vert + \vert \ell (v) \vert \leq 10 / \epsilon \), and is good if \(e\) is both consistent and frugal. Then, we see that
+	      \[
+		      \Pr_{}(e\text{ is satisfied}) \geq \frac{\epsilon ^{2} }{100}.
+	      \]
+	      Then if \(\epsilon / 20\) fraction of edges is good, then the fraction of satisfied edges is larger than
+	      \[
+		      \frac{\epsilon}{20}\cdot \frac{\epsilon ^{2} }{100} = \frac{\epsilon ^3}{2000} = \epsilon _0.
+	      \]
+	      So, now we just need to show that there are actually \(\epsilon / 20\) fraction of edges is good.
+	      \begin{claim}
+		      At least \(\epsilon / 20\) fraction of edges is good.
+	      \end{claim}
+	      \begin{explanation}
+		      Assume otherwise. Then
+		      \[
+			      \begin{split}
+				      \Pr_{e}(e\text{ is consistent})
+				      &= \Pr_{}(e\text{ is good}) + \Pr_{}(e\text{ is consistent but not frugal} )\\
+				      &\leq \underbrace{\Pr_{}(e\text{ is good})}_{\leq \epsilon / 20} + \underbrace{\Pr_{}(e\text{ is not frugal} )}_{\leq 2\epsilon / 10}\\
+				      &\leq \frac{\epsilon}{4},
+			      \end{split}
+		      \]
+		      where the bound follows from the Markov inequality.\footnote{If not true, then \(\mathbb{E}_{e}\left[\vert \ell (u) \vert + \vert \ell (v) \vert \right] > 2\epsilon / 10 \cdot 10 / \epsilon \geq 2\), which contradicts to what we have shown.} Finally, we see that
+		      \[
+			      \begin{split}
+				      2&= \mathbb{E}_{e=(u, v)}\left[\vert \ell (u) \vert + \vert \ell (v) \vert  \right] \\
+				      &= \Pr_{}(e\text{ is consistent} ) \cdot \mathbb{E}_{}\left[\vert \ell (u) \vert + \vert \ell (v) \vert \mid e\text{ is consistent}  \right] \\
+				      &\quad + \Pr_{}(e\text{ is not consistent} ) \cdot \mathbb{E}_{}\left[\vert \ell (u) \vert + \vert \ell (v) \vert \mid e\text{ is not consistent}  \right] \\
+				      &\eqqcolon \Pr_{}(e\text{ is consistent} ) \cdot a + \Pr_{}(e\text{ is not consistent} ) \cdot b.
+			      \end{split}
+		      \]
+		      Since \(a \geq 2\) from the fact that for \(e\) being consistent, we need at least two labels, so \(b \leq 2\) since the overall expectation is \(2\). Now, define \(r_e\) to be
+		      \[
+			      r_e = \frac{\left\vert \bigcup_{S\in \mathcal{\MakeUppercase{s}} ^\prime } (S \cap C_e) \right\vert}{\vert C_e \vert},
+		      \]
+		      i.e., the fraction of elements in \(C_e\) covered by \(\mathcal{\MakeUppercase{S}} ^\prime \). Then,
+		      \[
+			      \begin{split}
+				      \mathbb{E}_{e=(u, v)}\left[r_e \mid e \text{ is not consistent} \right]
+				      &\leq \mathbb{E}_{e=(u, v)}\left[1 - 2^{-\vert \ell (u) \vert + \vert \ell (v) \vert } \mid e \text{ is not consistent} \right]\\
+				      &\leq 1 - 2^{-\mathbb{E}_{e=(u, v)}\left[\vert \ell (u) \vert + \vert \ell (v) \vert \mid e \text{ is not consistent} \right]}
+				      \leq 1 - 2^{2} = \frac{3}{4},
+			      \end{split}
+		      \]
+		      from the \href{https://en.wikipedia.org/wiki/Jensen's_inequality}{Jensen's inequality} since \(-2^{-x}\) is a concave function. Hence,
+		      \[
+			      \begin{split}
+				      \mathbb{E}_{e\in \mathcal{\MakeUppercase{e}} }\left[r_e \right]
+				      &= \mathbb{E}_{e\in \mathcal{\MakeUppercase{e}} }\left[ r_e \mid e\text{ is consistent} \right] \cdot \Pr_{}(e\text{ is consistent}) \\
+				      &\quad + \mathbb{E}_{e\in \mathcal{\MakeUppercase{e}} }\left[ r_e \mid e\text{ is not consistent} \right] \cdot \Pr_{}(e\text{ is not consistent})
+				      \leq \frac{\epsilon}{4} + \frac{3}{4} < \frac{3}{4} + \epsilon,
+			      \end{split}
+		      \]
+		      which is contradiction since we assume \(\mathcal{\MakeUppercase{s}} ^\prime \) covers at least \(3 / 4 + \epsilon \) fraction of elements.
+	      \end{explanation}
+\end{enumerate}
+
+In all, we see that \autoref{thm:max-k-coverage} is proved with \autoref{thm:PCP-parallel-repetition} since we have a valid \hyperref[def:reduction]{reduction}.

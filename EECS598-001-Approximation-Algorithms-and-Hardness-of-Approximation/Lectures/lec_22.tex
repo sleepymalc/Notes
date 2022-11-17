@@ -1,1 +1,160 @@
-\lecture{22}{16 Nov. 10:30}{}
+\lecture{22}{16 Nov. 10:30}{3LIN and 3SAT}
+\section{3LIN and Boolean Functions}
+Let consider the following problem.
+\begin{problem}[3LIN]\label{prb:3LIN}
+Given \(X\coloneqq \left\{ x_1, \ldots , x_n  \right\} \), \(\Sigma = \mathbb{\MakeUppercase{f}} _2\), and a set of \(m\) equations in the form of \(x_i + x_j + x_k = 0\) or \(1\). The problem \emph{3LIN} asks to find \(\sigma \colon X\to \mathbb{\MakeUppercase{f}} _2\) to maximize the fraction of the satisfied equations.
+\end{problem}
+
+\begin{remark}
+	A trivial approximation for \hyperref[prb:3LIN]{3LIN} is just to do a random assignment, which gives us a \(1 / 2\)-approximation.
+\end{remark}
+
+We're going to show the hardness of \hyperref[prb:3LIN]{3LIN}.
+
+\begin{theorem}[\cite{10.1145/258533.258536}]
+	The \hyperref[def:c-s-Gap]{\((1 - \epsilon , 1 / 2 + \epsilon )\)-Gap} \hyperref[prb:3LIN]{3LIN} is \(\NP\)-hard.
+\end{theorem}
+
+Given \hyperref[prb:3LIN]{3LIN} input, we create an \hyperref[prb:max-3SAT]{3SAT} instance
+\[
+	(x_i + x_j + x_k) = 0 \implies \begin{dcases}
+		\overline{x} _i \lor x_j \lor x_k;   \\
+		x _i \lor \overline{x} _j \lor x_k;  \\
+		x _i \lor x _j \lor \overline{x} _k; \\
+		\overline{x} _i \lor \overline{x} _j \lor \overline{x} _k;
+	\end{dcases},\quad
+	(x_i + x_j + x_k) = 1 \implies \begin{dcases}
+		\overline{x} _i \lor \overline{x} _j \lor x_k;   \\
+		x _i \lor \overline{x} _j \lor \overline{x} _k;  \\
+		\overline{x}  _i \lor x _j \lor \overline{x} _k; \\
+		x_i \lor x _j \lor x _k.
+	\end{dcases}
+\]
+
+\begin{corollary}
+	The \hyperref[def:c-s-Gap]{\((3 / 4 + (1 - \epsilon ) / 4, 3 / 4 + (1 / 2 + \epsilon ) / 4)\)-Gap} \hyperref[prb:max-3SAT]{3SAT} is \(\NP\)-hard.
+\end{corollary}
+
+\subsection{Analysis of Boolean Functions}
+
+\begin{definition*}
+	Let \(\mathbb{\MakeUppercase{f}} _2\) be the additive group over \(\mathbb{\MakeUppercase{f}} _2 = \left\{ 0, 1 \right\} \) and consider the conical isomorphism to the multiplicative group \(\left\{ \pm 1 \right\} \).
+	\begin{definition}[Boolean funciton]\label{def:boolean-function}
+		A function \(f\) is a \emph{boolean function} if \(f\colon \left\{ \pm 1 \right\} ^n \to \mathbb{\MakeUppercase{r}} \).
+	\end{definition}
+
+	\begin{definition}[Boolean-valued]\label{def:boolean-valued}
+		If the range of a \hyperref[def:boolean-function]{boolean function} \(f\) is \(\left\{ \pm 1 \right\} \), we say \(f\) is a \emph{boolean-valued} function.
+	\end{definition}
+\end{definition*}
+
+Consider viewing the set of \hyperref[def:boolean-function]{boolean functions} as a Hilbert space, we then define the following inner product between \(f, g\) as
+\[
+	\left\langle f, g \right\rangle
+	= \frac{1}{2^n} \sum_{x\in \left\{ \pm 1 \right\} ^n} f(x) g(x)
+	= \mathbb{E}_{x}\left[f(x) g(x) \right] .
+\]
+\begin{note}
+	We have \(\lVert f \rVert _2 ^2 = \left\langle f, f \right\rangle = \mathbb{E}_{x}\left[f(x)^2 \right] \).
+\end{note}
+
+Now, we want to know what are the orthonormal basis for the set of \hyperref[def:boolean-function]{boolean functions}. There are two important examples:
+\begin{enumerate}[(a)]
+	\item Standard basis: For all \(x\in \left\{ \pm 1\right\}^n\),
+	      \[
+		      f_x \colon \left\{ \pm 1 \right\} ^n \to  \mathbb{\MakeUppercase{r}} ,\quad
+		      f_x (y) = \begin{dcases}
+			      2^{n / 2}, & \text{ if } x=y ;   \\
+			      0,         & \text{ otherwise} .
+		      \end{dcases}
+	      \]
+	      We see that \(\left\{ f_x \right\} _{x\in \left\{ \pm 1 \right\} ^n}\) is an orthonormal basis.
+	\item Fourier basis: For all \(S \subseteq [n]\), define
+	      \[
+		      \chi _S \colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} ,\quad
+		      \chi _S (x) = \prod_{i\in S} x_i \eqqcolon x^S.
+	      \]
+	      We see that \(\left\{ \chi _S \right\}_{S \subseteq [n]} \) is an orthonormal basis.
+\end{enumerate}
+
+We'll study the Fourier basis primarily. Firstly, we see that \(\mathbb{E}_{x}\left[\chi _S(x)^2 \right] = 1\), and
+\[
+	\left\langle \chi _S, \chi _T \right\rangle
+	= \mathbb{E}_{x}\left[\chi _S(x) \chi _T(x) \right]
+	= \mathbb{E}_{x}\left[x^S x^T \right]
+	= \mathbb{E}_{x}\left[x^{S \Delta T} \right]
+	= \begin{dcases}
+		0, & \text{ if } S \neq T ; \\
+		1, & \text{ if } S = T .
+	\end{dcases}
+\]
+Then, we have the following decomposition of \(f\colon \left\{ \pm 1 \right\} ^n \to  \mathbb{\MakeUppercase{r}} \) as
+\[
+	f = \sum_{S \subseteq [n]} \hat{f} (S) \chi _S,
+\]
+where we call \(\hat{f} (S)\) the Fourier coefficient. Now, here is some basic facts and theorem.
+
+\begin{remark}
+	\(\hat{f} (S) = \left\langle f, \chi _S \right\rangle \).
+\end{remark}
+\begin{explanation}
+	We have
+	\[
+		\left\langle f, \chi _S \right\rangle
+		= \left\langle \sum_{T \subseteq [n]} \hat{f} (T) \chi _T, \chi _S \right\rangle
+		= \sum_{T} \hat{f} (T) \left\langle \chi _T, \chi _S \right\rangle
+		= \hat{f} (S).
+	\]
+\end{explanation}
+
+\begin{theorem}[Plancherel's theorem]\label{thm:Plancherel}
+	\(\left\langle f, g \right\rangle = \sum_{S} \hat{f} (S) \hat{g} (S)\)
+\end{theorem}
+\begin{proof}
+	We have
+	\[
+		\left\langle \sum_{S} \hat{f} (S) \chi _S, \sum_{T} \hat{f} (T) \chi _T \right\rangle
+		= \sum_{S, T} \hat{f} (S) \hat{g} (T) \left\langle \chi _S, \chi _T  \right\rangle .
+	\]
+\end{proof}
+
+\begin{theorem}[Parseval's theorem]\label{thm:Parseval}
+	\(\lVert f \rVert _2^2 = \sum_{S} \hat{f} (S)^2\).
+\end{theorem}
+\begin{proof}
+	We have
+	\[
+		\mathbb{E}_{x}\left[f(x) \cdot 1\right]
+		= \mathbb{E}_{x}\left[f(x) \cdot \chi _\varnothing (x)\right]
+		= \hat{f} (\varnothing ).
+	\]
+\end{proof}
+
+Finally, we see that
+\[
+	\mathbb{E}_{x}\left[f(x) \right]
+	= \mathbb{E}_{x}\left[\chi _\varnothing (x) f(x) \right]
+	= \hat{f} (\varnothing ),
+\]
+and
+\[
+	\mathop{\mathrm{Var}}\nolimits_{}\left[f \right]
+	= \mathbb{E}_{x}\left[f^2 \right] - \left( \mathbb{E}_{x}\left[f \right]  \right) ^2
+	= \left( \sum_{S} \hat{f} (S)^2 \right) - \hat{f} (\varnothing )^2
+	= \sum_{S \neq \varnothing } \hat{f} (S)^2.
+\]
+
+\subsection{Reduction from Label Cover to 3LIN}
+Our goal is to design a \hyperref[prb:3LIN]{3LIN} instance on variables \(\left\{ \pm 1 \right\} ^n\) such that if assigning \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \) is \emph{close} to some \(\chi _S\), the value of \(f\) is large; otherwise if \(f\) is far from any \(\chi _S\), the value of \(f\) should be small.
+
+To do this, for all \(x, y\in \left\{ \pm 1 \right\} ^n\) and equations \(f(x) \cdot f(y) \cdot f(xy) = 1\), since if \(f = \chi _S\), then
+\[
+	f(x) \cdot f(y) \cdot f(xy) = \chi _S(x) \cdot \chi _S(y) \cdot \chi _S(xy) = 1,
+\]
+where we let \((xy)_i = x_i \cdot y_i\).
+
+
+\begin{notation}[Dictation funtion]
+	The \emph{dictation function}, or \emph{dictator} of \(i\) is \(\chi _i(x) \coloneqq \chi _{\left\{ i \right\} } (x) = x_i\).
+\end{notation}
+

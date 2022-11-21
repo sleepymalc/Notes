@@ -1,41 +1,106 @@
-\lecture{22}{16 Nov. 10:30}{3LIN and 3SAT}
+\lecture{22}{16 Nov. 10:30}{Optimal Hardness for 3LIN and 3SAT}
 \section{3LIN and Boolean Functions}
 Let consider the following problem.
-\begin{problem}[3LIN]\label{prb:3LIN}
-Given \(X\coloneqq \left\{ x_1, \ldots , x_n  \right\} \), \(\Sigma = \mathbb{\MakeUppercase{f}} _2\), and a set of \(m\) equations in the form of \(x_i + x_j + x_k = 0\) or \(1\). The problem \emph{3LIN} asks to find \(\sigma \colon X\to \mathbb{\MakeUppercase{f}} _2\) to maximize the fraction of the satisfied equations.
+\begin{problem}[MAX-3LIN]\label{prb:max-3LIN}
+Given \(X\coloneqq \left\{ x_1, \ldots , x_n  \right\} \), \(\Sigma = \mathbb{\MakeUppercase{f}} _2\), and a set of \(m\) equations in the form of \(x_i + x_j + x_k = 0\) or \(1\). The problem \emph{MAX-3LIN} asks to find \(\sigma \colon X\to \mathbb{\MakeUppercase{f}} _2\) that maximizes the fraction of the satisfied equations.
 \end{problem}
 
 \begin{remark}
-	A trivial approximation for \hyperref[prb:3LIN]{3LIN} is just to do a random assignment, which gives us a \(1 / 2\)-approximation.
+	We often call \hyperref[prb:max-3LIN]{MAX-3LIN} as 3LIN for brevity.
 \end{remark}
 
-We're going to show the hardness of \hyperref[prb:3LIN]{3LIN}.
+We're going to show the hardness of \hyperref[prb:max-3LIN]{3LIN}, but first, note the following.
+\begin{claim}
+	\hyperref[def:c-s-Gap]{\((1, 1)\)-Gap} \hyperref[prb:max-3LIN]{3LIN} can be solved in polynomial time.
+\end{claim}
+\begin{explanation}
+	Consider solving
+	\[
+		\begin{bmatrix}
+			1      & 0      & \ldots & 1      & 1      \\
+			1      & 1      & \ldots & 0      & 1      \\
+			\vdots & \vdots & \ddots & \vdots & \vdots \\
+			1      & 0      & \ldots & 0      & 0      \\
+		\end{bmatrix}_{m\times n} \begin{bmatrix}
+			x_1    \\
+			x_2    \\
+			\vdots \\
+			x_n    \\
+		\end{bmatrix}_{n\times 1} = \begin{bmatrix}
+			b_1    \\
+			b_2    \\
+			\vdots \\
+			b_m    \\
+		\end{bmatrix}_{m\times 1},
+	\]
+	where the coefficient matrix has only three non-zero entries for each row. Then, if this is an accepted instance, this system of equations has a solution, and we can check this just by Gaussian elimination over \(\mathbb{\MakeUppercase{f}} _2\).
+\end{explanation}
 
-\begin{theorem}[\cite{10.1145/258533.258536}]
-	The \hyperref[def:c-s-Gap]{\((1 - \epsilon , 1 / 2 + \epsilon )\)-Gap} \hyperref[prb:3LIN]{3LIN} is \(\NP\)-hard.
+But what if the instance has \(\OPT = 1 - \epsilon \) for some small \(\epsilon > 0\)? In this case, this question is actually hard.
+
+\begin{remark}
+	A trivial approximation for \hyperref[prb:max-3LIN]{3LIN} is just to do a random assignment, which gives us a \(1 / 2\)-approximation.
+\end{remark}
+
+The hardness result of \hyperref[prb:max-3LIN]{3LIN} we're going see is the following.
+
+\begin{theorem}[\cite{10.1145/258533.258536}]\label{thm:3LIN}
+	For every constant \(\epsilon >0\), the \hyperref[def:c-s-Gap]{\((1 - \epsilon , 1 / 2 + \epsilon )\)-Gap} \hyperref[prb:max-3LIN]{3LIN} is \(\NP\)-hard.
 \end{theorem}
 
-Given \hyperref[prb:3LIN]{3LIN} input, we create an \hyperref[prb:max-3SAT]{3SAT} instance
-\[
-	(x_i + x_j + x_k) = 0 \implies \begin{dcases}
-		\overline{x} _i \lor x_j \lor x_k;   \\
-		x _i \lor \overline{x} _j \lor x_k;  \\
-		x _i \lor x _j \lor \overline{x} _k; \\
-		\overline{x} _i \lor \overline{x} _j \lor \overline{x} _k;
-	\end{dcases},\quad
-	(x_i + x_j + x_k) = 1 \implies \begin{dcases}
-		\overline{x} _i \lor \overline{x} _j \lor x_k;   \\
-		x _i \lor \overline{x} _j \lor \overline{x} _k;  \\
-		\overline{x}  _i \lor x _j \lor \overline{x} _k; \\
-		x_i \lor x _j \lor x _k.
-	\end{dcases}
-\]
+Which implies the following.
 
 \begin{corollary}
-	The \hyperref[def:c-s-Gap]{\((3 / 4 + (1 - \epsilon ) / 4, 3 / 4 + (1 / 2 + \epsilon ) / 4)\)-Gap} \hyperref[prb:max-3SAT]{3SAT} is \(\NP\)-hard.
+	For every constant \(\epsilon > 0\), the \hyperref[def:c-s-Gap]{\((1-\epsilon , 7 / 8 + \epsilon )\)-Gap} \hyperref[prb:max-3SAT]{3SAT} is \(\NP\)-hard.
 \end{corollary}
+\begin{proof}
+	Given \hyperref[prb:max-3LIN]{3LIN} instance, we create an \hyperref[prb:max-3SAT]{3SAT} instance
+	\[
+		(x_i + x_j + x_k = 0) \implies \begin{dcases}
+			(\overline{x} _i \lor x_j \lor x_k);   \\
+			(x _i \lor \overline{x} _j \lor x_k);  \\
+			(x _i \lor x _j \lor \overline{x} _k); \\
+			(\overline{x} _i \lor \overline{x} _j \lor \overline{x} _k);
+		\end{dcases},\quad
+		(x_i + x_j + x_k = 1) \implies \begin{dcases}
+			(\overline{x} _i \lor \overline{x} _j \lor x_k);   \\
+			(x _i \lor \overline{x} _j \lor \overline{x} _k);  \\
+			(\overline{x}  _i \lor x _j \lor \overline{x} _k); \\
+			(x_i \lor x _j \lor x _k).
+		\end{dcases}
+	\]
+	We see that
+	\begin{itemize}
+		\item a \hyperref[prb:max-3LIN]{3LIN} equation is satisfied \(\iff \) \(4\) corresponding \hyperref[prb:max-3SAT]{3SAT} clauses are satisfied;
+		\item a \hyperref[prb:max-3LIN]{3LIN} equation is unsatisfied \(\iff \) \(3\) corresponding \hyperref[prb:max-3SAT]{3SAT} clauses are satisfied.
+	\end{itemize}
+	So,
+	\[
+		\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}}
+		= \OPT_{\hyperref[prb:max-3LIN]{\text{3LIN}}} \cdot \frac{4}{4} + \left( 1 - \OPT_{\hyperref[prb:max-3LIN]{\text{3LIN}}} \right) \cdot \frac{3}{4}
+		= \frac{3}{4} + \frac{1}{4}\cdot \OPT_{\hyperref[prb:max-3LIN]{\text{3LIN}}},
+	\]
+	and hence the \hyperref[def:c-s-Gap]{\((1 - \epsilon , 1 / 2 + \epsilon )\)-Gap} hardness for \hyperref[prb:max-3LIN]{3LIN} from \autoref{thm:3LIN} implies the \hyperref[def:c-s-Gap]{\((1-\epsilon , 7 / 8 + \epsilon )\)-Gap} hardness for \hyperref[prb:max-3SAT]{3SAT}.
+\end{proof}
 
-\subsection{Analysis of Boolean Functions}
+\begin{remark}
+	Actually, with more work, \hyperref[def:c-s-Gap]{\((1 , 7 / 8 + \epsilon )\)-Gap} \hyperref[prb:max-3SAT]{3SAT} is also \(\NP\)-hard.
+\end{remark}
+
+\begin{note}
+	Recall that a random assignment of \hyperref[prb:max-3SAT]{3SAT} satisfies \(7 / 8\) fraction of clauses. This suggests that both \hyperref[prb:max-3SAT]{3SAT} and \hyperref[prb:max-3LIN]{3LIN} is hard: we can't do better than random assignment.
+\end{note}
+
+So, we will embark a long journey to prove \autoref{thm:3LIN} from \hyperref[prb:label-cover]{label cover}, i.e., we again want to find a good assignment \(\sigma \colon U \sqcup L \to L \sqcup R\) by using the hypercube construction. But compared to the \hyperref[prb:max-k-coverage]{max \(k\)-coverage}, now the hypercubes are variables.
+
+\begin{center}
+	\incfig{MkC-compare-to-3LIN}
+\end{center}
+
+Ideally, \(u, x\) gets \(x_{\sigma (u)}\).
+
+\subsection{Boolean Functions and Boolean-Valued Functions}
+We're now going to see how to prove \autoref{thm:3LIN}. This is often done by Fourier analysis over \(\left\{ \pm 1 \right\} ^n\) of a \hyperref[def:boolean-function]{boolean function}.
 
 \begin{definition*}
 	Let \(\mathbb{\MakeUppercase{f}} _2\) be the additive group over \(\mathbb{\MakeUppercase{f}} _2 = \left\{ 0, 1 \right\} \) and consider the conical isomorphism to the multiplicative group \(\left\{ \pm 1 \right\} \).
@@ -47,6 +112,10 @@ Given \hyperref[prb:3LIN]{3LIN} input, we create an \hyperref[prb:max-3SAT]{3SAT
 		If the range of a \hyperref[def:boolean-function]{boolean function} \(f\) is \(\left\{ \pm 1 \right\} \), we say \(f\) is a \emph{boolean-valued} function.
 	\end{definition}
 \end{definition*}
+
+\begin{note}
+	Since the domain of a \hyperref[def:boolean-function]{boolean function} has cardinality \(2^n\), we can identify it as a \(2^n\)-dimensional vector.
+\end{note}
 
 Consider viewing the set of \hyperref[def:boolean-function]{boolean functions} as a Hilbert space, we then define the following inner product between \(f, g\) as
 \[
@@ -68,84 +137,85 @@ Now, we want to know what are the orthonormal basis for the set of \hyperref[def
 			      0,         & \text{ otherwise} .
 		      \end{dcases}
 	      \]
-	      We see that \(\left\{ f_x \right\} _{x\in \left\{ \pm 1 \right\} ^n}\) is an orthonormal basis.
-	\item Fourier basis: For all \(S \subseteq [n]\), define
+	      We see that \(\left\{ f_x \right\} _{x\in \left\{ \pm 1 \right\} ^n}\) is an orthonormal basis since for all \(x\), \(\lVert f_x \rVert _2^2 = 1\) and \(\left\langle f_x, f_y \right\rangle = 0\) for all \(x \neq y\).
+	\item Fourier basis: For all \(S \subseteq [n]\), define\footnote{We let \(\chi _\varnothing (x) \coloneqq 1\).}
 	      \[
 		      \chi _S \colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} ,\quad
 		      \chi _S (x) = \prod_{i\in S} x_i \eqqcolon x^S.
 	      \]
-	      We see that \(\left\{ \chi _S \right\}_{S \subseteq [n]} \) is an orthonormal basis.
+	      We see that \(\left\{ \chi _S \right\}_{S \subseteq [n]} \) is an orthonormal basis since \(\mathbb{E}_{x}\left[\chi _S(x)^2 \right] = 1\), and
+	      \[
+		      \left\langle \chi _S, \chi _T \right\rangle
+		      = \mathbb{E}_{x}\left[\chi _S(x) \chi _T(x) \right]
+		      = \mathbb{E}_{x}\left[x^S x^T \right]
+		      = \mathbb{E}_{x}\left[x^{S \Delta T} \right]
+		      = \begin{dcases}
+			      0, & \text{ if } S \neq T ; \\
+			      1, & \text{ if } S = T .
+		      \end{dcases}
+	      \]
 \end{enumerate}
 
-We'll study the Fourier basis primarily. Firstly, we see that \(\mathbb{E}_{x}\left[\chi _S(x)^2 \right] = 1\), and
-\[
-	\left\langle \chi _S, \chi _T \right\rangle
-	= \mathbb{E}_{x}\left[\chi _S(x) \chi _T(x) \right]
-	= \mathbb{E}_{x}\left[x^S x^T \right]
-	= \mathbb{E}_{x}\left[x^{S \Delta T} \right]
-	= \begin{dcases}
-		0, & \text{ if } S \neq T ; \\
-		1, & \text{ if } S = T .
-	\end{dcases}
-\]
-Then, we have the following decomposition of \(f\colon \left\{ \pm 1 \right\} ^n \to  \mathbb{\MakeUppercase{r}} \) as
+\subsection{Fourier Analysis over Boolean Functions}
+We'll study the Fourier basis primarily. Firstly, we have the following decomposition of \(f\colon \left\{ \pm 1 \right\} ^n \to  \mathbb{\MakeUppercase{r}} \) as
 \[
 	f = \sum_{S \subseteq [n]} \hat{f} (S) \chi _S,
 \]
 where we call \(\hat{f} (S)\) the Fourier coefficient. Now, here is some basic facts and theorem.
 
-\begin{remark}
-	\(\hat{f} (S) = \left\langle f, \chi _S \right\rangle \).
-\end{remark}
-\begin{explanation}
-	We have
-	\[
-		\left\langle f, \chi _S \right\rangle
-		= \left\langle \sum_{T \subseteq [n]} \hat{f} (T) \chi _T, \chi _S \right\rangle
-		= \sum_{T} \hat{f} (T) \left\langle \chi _T, \chi _S \right\rangle
-		= \hat{f} (S).
-	\]
-\end{explanation}
+\begin{proposition}
+	Given an orthonormal basis \(\left\{ \chi _S \right\}_{S\subseteq [n]} \) of the space of \hyperref[def:boolean-function]{boolean functions}, then \(\hat{f} (S) = \left\langle f, \chi _S \right\rangle \).
+\end{proposition}
+\begin{proof}
+	Since \(\left\langle f, \chi _S \right\rangle
+	= \left\langle \sum_{T \subseteq [n]} \hat{f} (T) \chi _T, \chi _S \right\rangle
+	= \sum_{T} \hat{f} (T) \left\langle \chi _T, \chi _S \right\rangle
+	= \hat{f} (S)\).
+\end{proof}
 
 \begin{theorem}[Plancherel's theorem]\label{thm:Plancherel}
-	\(\left\langle f, g \right\rangle = \sum_{S} \hat{f} (S) \hat{g} (S)\)
+	Given two \hyperref[def:boolean-function]{boolean functions} \(f, g\), we have
+	\[
+		\left\langle f, g \right\rangle = \mathbb{E}_{x}\left[f(x)g(x) \right] = \sum_{S \subseteq [n]} \hat{f} (S) \hat{g} (S).
+	\]
 \end{theorem}
 \begin{proof}
-	We have
-	\[
-		\left\langle \sum_{S} \hat{f} (S) \chi _S, \sum_{T} \hat{f} (T) \chi _T \right\rangle
-		= \sum_{S, T} \hat{f} (S) \hat{g} (T) \left\langle \chi _S, \chi _T  \right\rangle .
-	\]
+	Since \(\left\langle f, g \right\rangle
+	= \left\langle \sum_{S} \hat{f} (S) \chi _S, \sum_{T} \hat{f} (T) \chi _T \right\rangle
+	= \sum_{S, T} \hat{f} (S) \hat{g} (T) \left\langle \chi _S, \chi _T  \right\rangle
+	= \sum_S \hat{f}(S)\hat{g}(S)\).
 \end{proof}
 
 \begin{theorem}[Parseval's theorem]\label{thm:Parseval}
-	\(\lVert f \rVert _2^2 = \sum_{S} \hat{f} (S)^2\).
+	Given a \hyperref[def:boolean-function]{boolean function} \(f\), \(\lVert f \rVert _2^2 = \sum_{S \subseteq [n]} \hat{f} (S)^2\).
 \end{theorem}
 \begin{proof}
-	We have
-	\[
-		\mathbb{E}_{x}\left[f(x) \cdot 1\right]
-		= \mathbb{E}_{x}\left[f(x) \cdot \chi _\varnothing (x)\right]
-		= \hat{f} (\varnothing ).
-	\]
+	This directly follows from \hyperref[thm:Plancherel]{Plancherel's theorem} with \(\lVert f \rVert _2^2 = \left\langle f, f \right\rangle \).
 \end{proof}
 
-Finally, we see that
-\[
-	\mathbb{E}_{x}\left[f(x) \right]
+\begin{claim}
+	Given a \hyperref[def:boolean-function]{boolean function} \(f\), \(\mathbb{E}_{x}\left[f(x) \right] = \hat{f} (\varnothing )\).
+\end{claim}
+\begin{explanation}
+	Since \(\mathbb{E}_{x}\left[f(x) \right]
+	= \mathbb{E}_{x}\left[f(x) \cdot 1 \right]
 	= \mathbb{E}_{x}\left[\chi _\varnothing (x) f(x) \right]
-	= \hat{f} (\varnothing ),
-\]
-and
-\[
-	\mathop{\mathrm{Var}}\nolimits_{}\left[f \right]
+	= \left\langle \chi _\varnothing , f \right\rangle
+	= \hat{f} (\varnothing )\).
+\end{explanation}
+
+\begin{claim}
+	Given a \hyperref[def:boolean-function]{boolean function} \(f\), \(\mathop{\mathrm{Var}}\nolimits_{}\left[f \right] = \sum_{S \neq \varnothing } \hat{f} (S)^{2}  \).
+\end{claim}
+\begin{explanation}
+	Since \(\mathop{\mathrm{Var}}\nolimits_{}\left[f \right]
 	= \mathbb{E}_{x}\left[f^2 \right] - \left( \mathbb{E}_{x}\left[f \right]  \right) ^2
-	= \left( \sum_{S} \hat{f} (S)^2 \right) - \hat{f} (\varnothing )^2
-	= \sum_{S \neq \varnothing } \hat{f} (S)^2.
-\]
+	= \sum_{S \subseteq [n]} \hat{f} (S)^2 - \hat{f} (\varnothing )^2
+	= \sum_{S \neq \varnothing } \hat{f} (S)^2\).
+\end{explanation}
 
 \subsection{Reduction from Label Cover to 3LIN}
-Our goal is to design a \hyperref[prb:3LIN]{3LIN} instance on variables \(\left\{ \pm 1 \right\} ^n\) such that if assigning \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \) is \emph{close} to some \(\chi _S\), the value of \(f\) is large; otherwise if \(f\) is far from any \(\chi _S\), the value of \(f\) should be small.
+Our goal is to design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(\left\{ \pm 1 \right\} ^n\) such that if assigning \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \) is \emph{close} to some \(\chi _S\), the value of \(f\) is large; otherwise if \(f\) is far from any \(\chi _S\), the value of \(f\) should be small.
 
 To do this, for all \(x, y\in \left\{ \pm 1 \right\} ^n\) and equations \(f(x) \cdot f(y) \cdot f(xy) = 1\), since if \(f = \chi _S\), then
 \[

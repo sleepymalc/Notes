@@ -1,5 +1,8 @@
+\chapter{Unique Games and the Conjecture}
 \lecture{22}{16 Nov. 10:30}{Optimal Hardness for 3LIN and 3SAT}
-\section{3LIN and Boolean Functions}
+
+In this section, we're going to study a special problem of \hyperref[prb:label-cover]{label cover}, called the \hyperref[prb:unique-game]{unique games}. As we have already seen, the hardness of \hyperref[prb:label-cover]{label cover} already implies the hardness of problems like \hyperref[prb:max-k-coverage]{max \(k\)-coverage} (\autoref{thm:max-k-coverage}), but actually a more interesting case is when we restrict ourselves to a slightly more constrained setup. Toward that end, we start by considering another important problem called \hyperref[prb:max-3LIN]{3LIN}.
+\section{3LIN}
 Let consider the following problem.
 \begin{problem}[MAX-3LIN]\label{prb:max-3LIN}
 Given \(X\coloneqq \left\{ x_1, \ldots , x_n  \right\} \), \(\Sigma = \mathbb{\MakeUppercase{f}} _2\), and a set of \(m\) equations in the form of \(x_i + x_j + x_k = 0\) or \(1\). The problem \emph{MAX-3LIN} asks to find \(\sigma \colon X\to \mathbb{\MakeUppercase{f}} _2\) that maximizes the fraction of the satisfied equations.
@@ -91,16 +94,10 @@ Which implies the following.
 	Recall that a random assignment of \hyperref[prb:max-3SAT]{3SAT} satisfies \(7 / 8\) fraction of clauses. This suggests that both \hyperref[prb:max-3SAT]{3SAT} and \hyperref[prb:max-3LIN]{3LIN} is hard: we can't do better than random assignment.
 \end{note}
 
-So, we will embark a long journey to prove \autoref{thm:3LIN} from \hyperref[prb:label-cover]{label cover}, i.e., we again want to find a good assignment \(\sigma \colon U \sqcup L \to L \sqcup R\) by using the hypercube construction. But compared to the \hyperref[prb:max-k-coverage]{max \(k\)-coverage}, now the hypercubes are variables.
-
-\begin{center}
-	\incfig{MkC-compare-to-3LIN}
-\end{center}
-
-Ideally, \(u, x\) gets \(x_{\sigma (u)}\).
+So, we will embark a long journey to prove \autoref{thm:3LIN} from \hyperref[prb:label-cover]{label cover}, i.e., we again want to find a good assignment \(\sigma \colon U \sqcup L \to L \sqcup R\) by using the hypercube construction. To do this, we need to study Fourier analysis over \(\left\{ \pm 1 \right\} ^n\) of a \hyperref[def:boolean-function]{boolean function}.
 
 \subsection{Boolean Functions and Boolean-Valued Functions}
-We're now going to see how to prove \autoref{thm:3LIN}. This is often done by Fourier analysis over \(\left\{ \pm 1 \right\} ^n\) of a \hyperref[def:boolean-function]{boolean function}.
+Firstly, we introduce the \hyperref[def:boolean-function]{boolean function}.
 
 \begin{definition*}
 	Let \(\mathbb{\MakeUppercase{f}} _2\) be the additive group over \(\mathbb{\MakeUppercase{f}} _2 = \left\{ 0, 1 \right\} \) and consider the conical isomorphism to the multiplicative group \(\left\{ \pm 1 \right\} \).
@@ -214,17 +211,25 @@ where we call \(\hat{f} (S)\) the Fourier coefficient. Now, here is some basic f
 	= \sum_{S \neq \varnothing } \hat{f} (S)^2\).
 \end{explanation}
 
-\subsection{Reduction from Label Cover to 3LIN}
-Our goal is to design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(\left\{ \pm 1 \right\} ^n\) such that if assigning \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \) is \emph{close} to some \(\chi _S\), the value of \(f\) is large; otherwise if \(f\) is far from any \(\chi _S\), the value of \(f\) should be small.
+\section{BLR Test: Reduction to 3LIN}
+Our goal is to design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(U \times \left\{ \pm 1 \right\} ^L\) identified by hypercube. Compared to the \hyperref[prb:max-k-coverage]{max \(k\)-coverage}, now the hypercubes are variables.
+\begin{center}
+	\incfig{MkC-compare-to-3LIN}
+\end{center}
 
-To do this, for all \(x, y\in \left\{ \pm 1 \right\} ^n\) and equations \(f(x) \cdot f(y) \cdot f(xy) = 1\), since if \(f = \chi _S\), then
-\[
-	f(x) \cdot f(y) \cdot f(xy) = \chi _S(x) \cdot \chi _S(y) \cdot \chi _S(xy) = 1,
-\]
-where we let \((xy)_i = x_i \cdot y_i\).
+Ideally, \((u, x)\) gets \(x_{\sigma (u)}\).
 
+\begin{intuition}
+	Consider assignment \(\alpha \colon \left\{ \text{variables of \hyperref[prb:max-3LIN]{3LIN}}\right\} = U \times \left\{ \pm 1 \right\}^L \to \left\{ \pm 1 \right\} \), then fix \(u\in U\), and let \(f\colon \left\{ \pm 1 \right\} ^L \to  \left\{ \pm 1 \right\} \) given by \(f(x) = \alpha (u, x)\). Ideally, \(f(x) = \chi _{\sigma (u)}\), which means \(f\in \left\{ \chi _1, \ldots , \chi _L  \right\} \).
+\end{intuition}
 
-\begin{notation}[Dictation funtion]
+\begin{notation}[Dictation]\label{not:dictation}
 	The \emph{dictation function}, or \emph{dictator} of \(i\) is \(\chi _i(x) \coloneqq \chi _{\left\{ i \right\} } (x) = x_i\).
 \end{notation}
 
+\begin{problem*}
+	But since the number of possible \(f\)'s is \(2^{2^L}\), how can we \emph{force} \(f\) to be in \(\left\{ \chi _i \right\}_{i = 1}^L\), or even \(\left\{ \chi _S \right\}_{S \subseteq [L]} \)?
+\end{problem*}
+\begin{answer}
+	Turns out that we can design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(\left\{ \pm 1 \right\} ^n\) such that if the \emph{assignment} \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \) is \emph{close} to some \(\chi _S\), \(\mathop{\mathrm{OBJ}}(f)\)\footnote{The \(\mathop{\mathrm{OBJ}}(f)\) is the fraction of equations satisfied by \(f\).} is large; if it is \emph{far} from any \(\chi _S\), then \(\mathop{\mathrm{OBJ}}(f)\) is small.
+\end{answer}

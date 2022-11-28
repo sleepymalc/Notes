@@ -1,5 +1,5 @@
 \lecture{20}{8 Nov. 14:30}{Spectrum Theory}
-\hyperref[thm:Fredholm-alternative]{Fredholm alternative} does not hold if \(T\) is not \hyperref[def:compact-op]{compact}.
+\hyperref[thm:Fredholm-alternative]{Fredholm alternative} does not hold if \(T\) is not \hyperref[def:compact-op]{compact}, see the following example.
 \begin{eg}[Shift operator]
 	Consider the shift operators on \(\ell _2 = \left\{ (a_1, a_2, \ldots ), a_j\in \mathbb{\MakeUppercase{r}}, \sum_{j=1}^{\infty}  a_j^2 < \infty \right\} \). The right shift \(T_r\) is defined as
 	\[
@@ -12,21 +12,42 @@
 	which is surjective but not injective.
 \end{eg}
 
+The name \hyperref[thm:Fredholm-alternative]{Fredholm alternative} is explained by the following application to solving linear equations of the form
+\[
+	\lambda x - Tx = b
+\]
+where \(T\in \mathcal{\MakeUppercase{k}} (X, X)\), \(\lambda \in \mathbb{\MakeUppercase{c}} \), \(b\in X\). One is interested in existence and uniqueness of solution. \hyperref[thm:Fredholm-alternative]{Fredholm alternative} states that exactly one of the following statements holds for every \(\lambda \neq 0\):
+\begin{itemize}
+	\item \emph{either} the homogeneous equation \(\lambda x - Tx = 0\) has a nontrivial solution,
+	\item \emph{or} the inhomogeneous equation \(\lambda x - Tx = b\) has a solution for every \(b\), where this solution is automatically unique.
+\end{itemize}
+
+Also, this alternative is particularly useful for studying integral equations, since for the integral operator
+\[
+	(Tf)(t) = \int_{0}^{1} k(t, x)f(s) \,\mathrm{d}s ,
+\]
+the homogeneous Fredholm equation is
+\[
+	\lambda f(t) - \int_{0}^{1} k(t, x)f(s) \,\mathrm{d}s = 0,
+\]
+while the inhomogeneous Fredholm equation (\emph{of second kind}) is
+\[
+	\lambda f(t) - \int_{0}^{1} k(t, s) f(s) \,\mathrm{d}s = b(t).
+\]
+
 \section{Spectrum of Bounded Linear Operators}
 Studying \hyperref[def:linear-op]{linear operators} through their spectral properties is a powerful approach in analysis and mathematical physics. Recall from linear algebra that the \hyperref[def:spectrum-point]{spectrum} of a \hyperref[def:linear-op]{linear operator} \(T\) acting on \(\mathbb{\MakeUppercase{c}} ^n\) consists of the \emph{eigenvalues} of \(T\), which are the numbers \(\lambda \in \mathbb{\MakeUppercase{c}} \) such that \(Tx = \lambda x\) for some nonzero vector \(x\in \mathbb{\MakeUppercase{c}} ^n\); such \(x\) are called the \emph{eigenvectors} of \(T\).
 
-\begin{remark}
-	Eigenvalues always exist by the \href{https://en.wikipedia.org/wiki/Fundamental_theorem_of_algebra}{fundamental theorem of algebra}, as they are the roots of the characteristic polynomial \(\det(T - \lambda I) = 0 \). There are at most \(n\) eigenvalues of \(T\), or one can say exactly \(n\) counting multiplicities. Eigenvectors corresponding to different eigenvalues are linearly independent.
-\end{remark}
-
-However, the eigenvalues do not need to form a basis of \(\mathbb{\MakeUppercase{c}} ^n\). The dimension of the span of eigenvectors corresponding to a given eigenvalue (the eigenspace) may be strictly less than the multiplicity of that root. This happens, for example, for the Jordan block
+There are at most \(n\) eigenvalues of \(T\), or one can say exactly \(n\) counting multiplicities.\footnote{Eigenvalues always exist by the \href{https://en.wikipedia.org/wiki/Fundamental_theorem_of_algebra}{fundamental theorem of algebra}, as they are the roots of the characteristic polynomial \(\det(T - \lambda I) = 0 \).} Eigenvectors corresponding to different eigenvalues are linearly independent. However, the eigenvalues do not need to form a basis of \(\mathbb{\MakeUppercase{c}} ^n\). The dimension of the span of eigenvectors corresponding to a given eigenvalue (the eigenspace) may be strictly less than the multiplicity of that root. This happens, for example, for the Jordan block
 \[
 	T = \begin{pmatrix}
 		\lambda & 1       \\
 		0       & \lambda \\
 	\end{pmatrix}.
 \]
-An \hyperref[def:orthonormal-system]{orthonormal} basis of eigenvectors exists if and only if \(T\) is \hyperref[def:normal-op]{normal}, i.e. \(T^{\ast} T = TT^{\ast} \). We now formalize the above concepts formally.
+An \hyperref[def:orthonormal-system]{orthonormal} basis of eigenvectors exists if and only if \(T\) is \hyperref[def:normal-op]{normal}, i.e. \(T^{\ast} T = TT^{\ast} \).
+
+To start our formal discussion, we first formally define the notion of \hyperref[def:spectrum-point]{spectrum points}.
 
 \begin{definition*}
 	Let \(X\) be a complex \hyperref[def:Banach-space]{Banach space}, and \(T\colon X \to X\) be a \hyperref[def:bounded-linear-op]{bounded linear operator}.
@@ -49,10 +70,30 @@ An \hyperref[def:orthonormal-system]{orthonormal} basis of eigenvectors exists i
 From definitions, we know that \(\sigma (T) = \mathbb{\MakeUppercase{c}} - \rho (T)\).
 
 \subsection{Classification of Spectrum}
-For operators \(T\) acting on a finite dimensional space, the \hyperref[def:spectrum-point]{spectrum} consists of eigenvalues of \(T\); in infinite dimensions, this is not true, as there are various reason why \(T - \lambda I\) may be non-invertible. These reasons cause the following different types of \hyperref[def:spectrum-point]{spectrum}.
+For operators \(T\) acting on a finite dimensional space, the \hyperref[def:spectrum-point]{spectrum} consists of eigenvalues of \(T\); in infinite dimensions, this is not true, as there are various reason why \(T - \lambda I\) may be non-invertible.
+
+Let's first see some examples illustrating the fact that the \hyperref[def:spectrum-point]{spectrum} is a richer concept in infinite-dimensional spaces than in finite-dimensional spaces.
+
+\begin{eg}[Uncountable number of eigenvalues]
+	Consider the differential operator \(T = \mathrm{d} / \mathrm{d}t \) acting on \(C^1(\mathbb{\MakeUppercase{c}} )\). Suppose \(\lambda \) is an eigenvalue of \(T\) with eigenvector \(u\in C^1(\mathbb{\MakeUppercase{c}} )\). This implies that the ordinary differential equation \(u^\prime = \lambda u\) holds. The solution has the form \(u(t) = C e^{\lambda t}\), so every \(\lambda \in \mathbb{\MakeUppercase{c}} \) is an eigenvalue of \(T\).
+\end{eg}
+
+\begin{eg}[No eigenvalues]
+	Consider a multiplication operator on \(L^2([0, 1])\) acting as
+	\[
+		(Tf)(t) = tf(t).
+	\]
+	Suppose \(\lambda \) is an eigenvalue of \(T\) with eigenvector \(f\in L^2([0, 1])\). This implies
+	\[
+		tf(t) = \lambda f(t)
+	\]
+	for all \(t\in [0, 1]\). But this means \(f=0\), so \(T\) has no eigenvalues.
+\end{eg}
+
+These reasons cause the following different types of \hyperref[def:spectrum-point]{spectrum}.
 
 \begin{definition*}[Classification of spectrum]
-	Let \(T\) be a \hyperref[def:bounded-linear-op]{bounded linear operator} on \(X\) with \(\sigma (T)\).
+	Let \(T\) be a \hyperref[def:bounded-linear-op]{bounded linear operator} on \(X\).
 	\begin{definition}[Point spectrum]\label{def:point-spectrum}
 		The \emph{point spectrum} \(\sigma _p(T)\) contains \(\lambda \) such that \(\ker(T - \lambda I) \neq \left\{ 0 \right\} \), i.e., \(T - \lambda I\) is not injective, i.e., \(\lambda \in \sigma _p(T)\) if \(\lambda \) is an eigenvalue of \(T\).
 	\end{definition}
@@ -71,52 +112,57 @@ The above suggests that
 Let's now compute and classify the \hyperref[def:spectrum-point]{spectrum} of some basic \hyperref[def:linear-op]{linear operators}.
 
 \begin{eg}[Diagonal operator on \(\ell _2\)]
-	Let \(\left\{ \lambda _k \right\} _{k \geq 1}\) be a sequence in \(\mathbb{\MakeUppercase{c}} \) such that \(\lim_{k \to \infty} \lambda _k = 0\). Define \(T\colon \ell _2 \to \ell _2\) by
+	Let \(\left\{ \lambda _k \right\} _{k \geq 1}\) be a sequence in \(\mathbb{\MakeUppercase{c}} \setminus \left\{ 0 \right\} \) such that \(\lim\limits_{k \to \infty} \lambda _k = 0\). Define \(T\colon \ell _2 \to \ell _2\) by
 	\[
 		T(\left\{ x_k \right\} _{k\geq 1})= \left\{ \lambda_k x_k \right\} _{k\geq 1}
 	\]
-	where the sequence \(\left\{ \lambda _k \right\} _{k\geq 1}\) is bounded. Hence, \(T\) is a \hyperref[def:bounded-linear-op]{bounded linear operator}. Then, \((T-\lambda I) x = \left\{ (\lambda _k - \lambda )x_k \right\} _{k\geq 1}\), so given \(y = \left\{ y_k \right\} _{k\geq 1}\),
+	where the sequence \(\left\{ \lambda _k \right\} _{k\geq 1}\) is bounded, hence \(T\) is a \hyperref[def:bounded-linear-op]{bounded linear operator}. Then, \((T-\lambda I) x = \left\{ (\lambda _k - \lambda )x_k \right\} _{k\geq 1}\), so given \(y = \left\{ y_k \right\} _{k\geq 1}\),
 	\[
 		(T-\lambda I)^{-1} y = \left\{ \frac{y_k}{\lambda _k - \lambda } \right\} _{k\geq 1},
 	\]
-	which implies \((T-\lambda I)^{-1} \) is \hyperref[rmk:bounded-op]{bounded} on \(\ell _2\) if \(\sup _{k\geq 1} \vert \lambda _k - \lambda \vert ^{-1} < \infty \). Indeed, since \(\lim_{k \to \infty} \lambda _k = 0\),
-	\[
-		\sup _{k\geq 1} \frac{1}{\vert \lambda _k - \lambda  \vert }< \infty
-	\]
-	if \(\lambda \notin \left\{ \lambda _k \right\}_{k\geq 1} \cup \left\{ 0 \right\}\). Further, since
+	which implies \((T-\lambda I)^{-1} \) is \hyperref[rmk:bounded-op]{bounded} on \(\ell _2\) if \(\sup _{k\geq 1} \vert \lambda _k - \lambda \vert ^{-1} < \infty \). Indeed, since \(\lim\limits_{k \to \infty} \lambda _k = 0\), \(\sup _{k\geq 1} \vert \lambda _k - \lambda \vert ^{-1} < \infty\) if \(\lambda \notin \left\{ \lambda _k \right\}_{k\geq 1} \cup \left\{ 0 \right\}\). Further,
 	\begin{itemize}
 		\item if \(\lambda =\lambda _k\) then \(\ker(T - \lambda I) \neq \left\{ 0 \right\} \);
-		\item if \(\lambda=0\), then \(\im(T - \lambda I)\) is dense in \(\ell _2\) but \(\ker(T-\lambda I) = \left\{ 0 \right\} \).
+		\item if \(\lambda=0\), then \(\im(T - \lambda I)\) is dense in \(\ell _2\), and notice that \(\ker(T-\lambda I) = \left\{ 0 \right\} \),\footnote{Notice that \(\lambda _k \in \mathbb{\MakeUppercase{c}} \setminus \left\{ 0 \right\} \).} so \(0\) is in the \hyperref[def:continuous-spectrum]{continuous spectrum}.
 	\end{itemize}
 
-	So \(\im(T)\) contains all sequences \(x = \left\{ x_k \right\} _{k\geq 1}\) with only finite number of \(k\) such that \(x_k \neq 0\), i.e., \(\im(T)\) is dense in \(\ell _2\). Hence, \(\sigma (T) = \left\{ \lambda _k \right\}_{k\geq 1} \cup \left\{ 0 \right\}\) with \(\sigma _p(T) = \left\{ \lambda _k \right\}_{k\geq 1} \), \(\sigma _c(T) = \left\{ 0 \right\} \) with \(\sigma _r(T) = \varnothing \).
+	Hence, \(\sigma (T) = \left\{ \lambda _k \right\}_{k\geq 1} \cup \left\{ 0 \right\}\) with \(\sigma _p(T) = \left\{ \lambda _k \right\}_{k\geq 1} \), \(\sigma _c(T) = \left\{ 0 \right\} \) with \(\sigma _r(T) = \varnothing \).
 \end{eg}
+
+Let's revisit previous example on the multiplication operator on \(L^2\).
 
 \begin{eg}[Multiplication operator on \(L^2\)]
 	Consider the multiplication on \(L^2([0, 1])\) such that \(Tf(t) = tf(t)\) for \(0 < t < 1\). Then
 	\[
 		(T-\lambda I)f(t) = (t - \lambda )f(t) \implies (T-\lambda I)^{-1} g(t) = \frac{g(t)}{t - \lambda }
 	\]
-	for \(0 < t < 1\). Hence, \(T-\lambda I\) is invertible if \(\lambda \notin [0, 1]\). And if \(\lambda \in [0, 1]\), then \(\ker(T - \lambda I) = 0\), i.e., \(\sigma _p(T)=\varnothing \). Lastly, since \(\im(T-\lambda I)\) is dense in \(L^2([0, 1])\) if \(\lambda \in [0, 1]\), hence \(\sigma _c(T) = [0, 1]\) and \(\sigma _r(T)\) is empty.
+	for \(0 < t < 1\). Hence, \(T-\lambda I\) is invertible if \(\lambda \notin [0, 1]\), so \(\sigma (T) = [0, 1]\). And if \(\lambda \in [0, 1]\), then \(\ker(T - \lambda I) = 0\), i.e., \(\sigma _p(T)=\varnothing \). Lastly, since \(\im(T-\lambda I)\) is dense in \(L^2([0, 1])\) if \(\lambda \in [0, 1]\), hence \(\sigma _c(T) = [0, 1]\), so \(\sigma _r(T) = \varnothing \).
 \end{eg}
 
 \subsection{Properties of Spectrum}
 In this section, let \(X\) denotes a \hyperref[def:Banach-space]{Banach space} and \(T\in \mathcal{\MakeUppercase{l}} (X, X)\). We'll see that studying the \hyperref[def:spectrum-point]{spectrum} of \(T\) is convenient via the so-called \hyperref[def:resolvent-op]{resolvent operator}.
 
 \begin{definition}[Resolvent operator]\label{def:resolvent-op}
-	To each \hyperref[def:regular-point]{regular point} \(\lambda \in \rho (T)\) for \(T\in \mathcal{\MakeUppercase{l}} (X, X)\), the associated \emph{resolvent operator} \(R(\lambda )\colon \rho (T) \to \mathcal{\MakeUppercase{l}} (X, X)\) is defined as \((T-\lambda I)^{-1} \).
+	To each \hyperref[def:regular-point]{regular point} \(\lambda \in \rho (T)\) for \(T\in \mathcal{\MakeUppercase{l}} (X, X)\), the associated \emph{resolvent operator} \(R(\lambda) = (T-\lambda I)^{-1}\) is defined by \(R\colon \rho (T) \to \mathcal{\MakeUppercase{l}} (X, X)\).\footnote{This is the so-called resolvent function.}
 \end{definition}
 
 The \hyperref[def:resolvent-op]{resolvent operator} can be computed in terms of series expansion involving \(T\). This technique is based on the following simple lemma.
 
-\begin{lemma}[Von Neumann]
+\begin{lemma}[Von Neumann]\label{lma:Von-Neumann}
 	Let \(S\in \mathcal{\MakeUppercase{l}} (X, X)\) such that \(\lVert S \rVert < 1\), then \(I-S\) is invertible and \((I-S)^{-1} \) is given by the geometric series
 	\[
-		(I-S)^{-1} = \sum_{j=0} ^{\infty} S^j \text{ and }\lVert (I-S)^{-1} \rVert \leq \frac{1}{1 - \lVert S \rVert} .
+		(I-S)^{-1} = \sum_{k=0} ^{\infty} S^k \text{ and }\lVert (I-S)^{-1} \rVert \leq \frac{1}{1 - \lVert S \rVert} .
 	\]
 \end{lemma}
 \begin{proof}
-	From the inequality \(\lVert S^j \rVert \leq \lVert S \rVert ^j\) for all \(j\geq 1\).
+	From the inequality \(\lVert S^k \rVert \leq \lVert S \rVert ^k\) for all \(k\), \(\sum_{k=0}^{\infty} S^k\) converges absolutely. Hence,
+	\[
+		(I-S) \sum_{k=0}^{\infty} S^k = \sum_{k=0}^{\infty} S^k(I-S) = I
+	\]
+	by telescoping series. Finally,
+	\[
+		\lVert (I-S)^{-1} \rVert \leq \sum_{k=0}^{\infty} \lVert S \rVert ^k \leq \frac{1}{1 - \lVert S \rVert }.
+	\]
 \end{proof}
 
 \begin{proposition}\label{prop:lec20-1}
@@ -129,18 +175,18 @@ The \hyperref[def:resolvent-op]{resolvent operator} can be computed in terms of 
 		= - \lambda ^{-1} (I-\lambda ^{-1} T)^{-1}
 		= - \lambda ^{-1} (I-S),
 	\]
-	by letting \(S = T / \lambda \), we have \(\lVert S \rVert < 1\) if \(\vert \lambda \vert > \lVert T \rVert \), hence
+	by letting \(S = T / \lambda \), we have \(\lVert S \rVert < 1\) if \(\vert \lambda \vert > \lVert T \rVert \), hence by \autoref{lma:Von-Neumann},
 	\[
 		\lVert (T-\lambda I)^{-1} \rVert
 		\leq \frac{1}{\vert \lambda  \vert } \frac{1}{1 - \lVert S \rVert }
 		= \frac{1}{\vert \lambda  \vert } \frac{1}{1 - \vert \lambda  \vert^{-1} \lVert T \rVert  }
 		= \frac{1}{\vert \lambda  \vert - \lVert T \rVert },
 	\]
-	i.e., if \(\vert \lambda  \vert > \lVert T \rVert \), then \(\lambda \in \rho (T)\). We now show \(\rho (T)\) is open. Since
+	i.e., if \(\vert \lambda  \vert > \lVert T \rVert \), then \(\lambda \in \rho (T)\). To show \(\rho (T)\) is open, since
 	\[
 		\frac{1}{x - \lambda } - \frac{1}{x-\mu } = \frac{\lambda -\mu }{(x-\lambda )(x-\mu )}
 	\]
-	for all \(\mu , \lambda \in \mathbb{\MakeUppercase{c}} \) and \(x\in \mathbb{\MakeUppercase{c}} \), we can generalize this to
+	for all \(\mu , \lambda \in \mathbb{\MakeUppercase{c}} \) and \(x\in \mathbb{\MakeUppercase{c}} \), we can generalize this to\footnote{This is known as the resolvent identity.}
 	\[
 		R(\lambda ) - R(\mu ) = (\lambda -\mu )R(\lambda )R(\mu )
 	\]
@@ -150,11 +196,25 @@ The \hyperref[def:resolvent-op]{resolvent operator} can be computed in terms of 
 		= \left[ I-(\mu -\lambda )R(\lambda ) \right] ^{-1} R(\lambda )
 		= (I-S)^{-1} R(\lambda ),
 	\]
-	so \(R(\mu )\) is \hyperref[rmk:bounded-op]{bounded} if \(\lVert S \rVert < 1\), i.e., \(\vert \mu -\lambda  \vert \lVert R(\lambda ) \rVert < 1\). We see that \(\lambda \in \rho (T)\) implies that the disk \(D(\lambda , r) \subseteq \rho (T)\) if \(r \lVert R(\lambda ) \rVert < 1\), i.e., \(\rho (T)\) is open. We have shown that \(\sigma (T)\) is a closed set and \(\sigma (T)\) is bounded with \(\sigma (T) \subseteq \overline{D(0, \lVert T \rVert )}\).
+	so \(R(\mu )\) is \hyperref[rmk:bounded-op]{bounded} if \(\lVert S \rVert < 1\), i.e., \(\vert \mu -\lambda  \vert \lVert R(\lambda ) \rVert < 1\). We see that \(\lambda \in \rho (T)\) implies that the disk \(D(\lambda , r) \subseteq \rho (T)\) if \(r \lVert R(\lambda ) \rVert < 1\), i.e., \(\rho (T)\) is open.
+\end{proof}
+
+\autoref{prop:lec20-1} implies the following.
+
+\begin{proposition}\label{prop:lec20-2}
+	The \hyperref[def:spectrum-point]{spectrum} \(\sigma (T)\) is a bounded set with
+	\[
+		\sigma (T) \subseteq \left\{ \lambda \in \mathbb{\MakeUppercase{c}} \mid \vert \lambda \vert \leq \lVert T \rVert \right\}.
+	\]
+\end{proposition}
+\begin{proof}
+	From \autoref{prop:lec20-1}, we have shown that \(\sigma (T)\) is a closed set since \(\rho (T)\) is open and \(\mathbb{\MakeUppercase{c}} \setminus \rho (T) = \sigma (T)\), together with \(\sigma (T)\) being bounded such that \(\sigma (T) \subseteq \overline{D(0, \lVert T \rVert )}\).
 \end{proof}
 
 \subsection{Spectral Radius}
-The \hyperref[def:spectrum-point]{spectrum} of any operator \(T\in \mathcal{\MakeUppercase{l}} (X, X)\) is a bounded set by \autoref{prop:lec20-1}, and moreover, we have a quantitative bound \(\vert \lambda  \vert \leq \lVert T \rVert  \) for all \(\lambda \in \sigma (T)\). This bound is not always sharp, and we will try to come up with a sharper bound.
+The \hyperref[def:spectrum-point]{spectrum} of any operator \(T\in \mathcal{\MakeUppercase{l}} (X, X)\) is a bounded set by \autoref{prop:lec20-2}, and moreover, we have a quantitative bound \(\vert \lambda  \vert \leq \lVert T \rVert  \) for all \(\lambda \in \sigma (T)\). This bound is not always sharp, and we will try to come up with a sharper bound.
+
+To do this, we first introduce the notion of \hyperref[def:spectral-radius]{spectral radius}.
 
 \begin{definition}[Spectral radius]\label{def:spectral-radius}
 	The \emph{spectral radius} of an operator \(T\in \mathcal{\MakeUppercase{l}} (X, X)\) is defined as
@@ -163,7 +223,10 @@ The \hyperref[def:spectrum-point]{spectrum} of any operator \(T\in \mathcal{\Mak
 	\]
 \end{definition}
 
-From \autoref{prop:lec20-1}, \(r(T) \leq \lVert T \rVert \), but actually the equality can be achieved.
+From \autoref{prop:lec20-2}, \(r(T) \leq \lVert T \rVert \), but actually the equality sometimes can not be achieved. However, we have the \hyperref[thm:Gelfand-formula]{Gelfand's formula}, which characterizes the asymptomatic behavior of \(r(T)\), essentially stating that
+\[
+	\lVert T^n \rVert \sim r(T)^n.
+\]
 
 \begin{theorem}[Gelfand's formula]\label{thm:Gelfand-formula}
 	Let \(T\) be a \hyperref[def:bounded-linear-op]{bounded linear operator} on \hyperref[def:Banach-space]{Banach space} \(X\) with \(r(T)\). Then

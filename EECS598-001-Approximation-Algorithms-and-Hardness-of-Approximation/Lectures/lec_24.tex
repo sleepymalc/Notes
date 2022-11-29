@@ -1,0 +1,124 @@
+\lecture{24}{28 Nov. 10:30}{From Unique Games to 3LIN}
+\subsection{Unique Games to 3LIN}
+Given a \hyperref[prb:unique-game]{unique game} instance \(\mathcal{\MakeUppercase{g}} =(U \sqcup V, \mathcal{\MakeUppercase{e}} )\) and bijection \(\left\{ \Pi _e \right\}_{e\in \mathcal{\MakeUppercase{e}} } \) with label set \(R\), we construct a \hyperref[prb:max-3LIN]{3LIN} instance as usual (parametrized by \(\epsilon \)):
+\begin{itemize}
+	\item Variable: \((U \sqcup V) \times \left\{ \pm 1 \right\} ^R\)
+	\item Assignment: \(C_v = \left\{ v \right\} \times \left\{ \pm 1 \right\} ^R\). And given assignment, \(f_v \colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) be assignment restricted to \(C_v\).
+	\item Equation:\footnote{Again, described in probability language.} How to sample an equation such that
+	      \[
+		      w(\text{eq.}) = \Pr_{}(\text{eq. is sampled} ).
+	      \]
+	      \begin{itemize}
+		      \item Sample \((u, v)\in \mathcal{\MakeUppercase{e}} \), and \(x\in \left\{ \pm 1 \right\} ^R, y\in \left\{ \pm 1 \right\} ^R, b\in \left\{ \pm 1 \right\} \)
+		      \item For all \(i\in [R]\),
+		            \[
+			            z_i = \begin{dcases}
+				            x_{\Pi_e (i)} y_i b,  & \text{ w.p. } 1-\epsilon  ; \\
+				            -x_{\Pi_e (i)} y_i b, & \text{ w.p. } \epsilon  .
+			            \end{dcases}
+		            \]
+		      \item Output \(f_u(x) f_v(y) f_v(z) = b\).
+	      \end{itemize}
+\end{itemize}
+
+\begin{remark}
+	We can instead let \(f_u(x) f_v(y) f_u(z) = b\) (with some index-changes) since in this case, \(u\) and \(v\) are symmetric. But if we do the reduction from \hyperref[prb:label-cover]{label cover}, it's important that we assign \(z\) to the larger side (the right-side), i.e., \(v\).
+\end{remark}
+
+To show the \hyperref[def:completeness]{completeness}, there exists \(\sigma \colon U \sqcup V \to R\) that satisfies \((1 - \epsilon _0)\) fraction of \(\mathcal{\MakeUppercase{e}} \). Then the solution for \hyperref[prb:max-3LIN]{3LIN} is \((v, x) \gets x_{\sigma (v)}\), i.e., \(f_v = \chi _{\left\{ \sigma (v) \right\} }\), or by using the notion of \hyperref[not:dictation]{dictator}, \(f_v g \chi _{\sigma (v)}\). Given that \(e=(u, v)\) is sampled and \(e\) is satisfied. Then \(\sigma (u) = \Pi _e(\sigma (v))\), so the equation is satisfied if \(f_u(x) f_v(y) f_v(z) = b\), i.e.,
+\[
+	x_{\sigma (u)} y_{\sigma (v)} z_{\sigma (v)} = b
+	\iff x_{\Pi_e (\sigma (v))} y_{\sigma (v)} z_{\sigma (v)} = b,
+\]
+which implies the equation is satisfied with probability at least \(1 - \epsilon\). Finally, since we assume that there is \((1-\epsilon _0)\) fraction of \(\mathcal{\MakeUppercase{e}} \) is satisfied, we know that the total fraction of satisfied equations is at least \((1-\epsilon _0) (1-\epsilon )\), which completes the \hyperref[def:completeness]{completeness}.
+
+To show the \hyperref[def:soundness]{soundness}, given \(\left\{ f_v \right\} _{v\in U \sqcup V}\), fix \(e=(u, v)\). Now, let \(g\coloneqq f_v\) and
+\[
+	f(x) \coloneqq f_u(x^\prime ) \text{ where \(x_i = x'_{\Pi_e(i)}\) }.
+\]
+\begin{note}
+	We're enforcing \(f\) and \(g\) to use the same coordinate essentially. Furthermore, in this case, for all \(i\in [R]\)
+	\[
+		z_i g \begin{dcases}
+			x_i y_i b,  & \text{ w.p. } 1-\epsilon  ; \\
+			-x_i y_i b, & \text{ w.p. } \epsilon  ,
+		\end{dcases}
+	\]
+	i.e., we permute the coordinate back in terms of \(z\), which simplifies the analysis.
+\end{note}
+
+Given \(e\),
+\[
+	\begin{split}
+		\Pr_{x^\prime , y, z, b}(f_u(x^\prime ) f_v(y) f_v(z) = b)
+		&= \Pr_{x , y, z, b}(f(x) g(y) g(z) = b)\\
+		&= \frac{1}{2} + \frac{1}{2} \mathbb{E}_{x, y, z, b}\left[f(x) g(y) g(z) b \right]\\
+		&= \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [R]} \hat{f} (S) \hat{g} (T) \hat{g} (U) \mathbb{E}_{}\left[\chi _S(x) \chi _T (y) \chi _U(z) b \right].
+	\end{split}
+\]
+We now see that we get back \(\mathbb{E}_{}\left[\chi _S(x) \chi _T (y) \chi _U(z) b \right]\)!
+\begin{prev}
+	From the previous analysis, we have
+	\[
+		\mathbb{E}_{}\left[\chi _S(x) \chi _T (y) \chi _U(z) b \right]
+		= \begin{dcases}
+			(1-2\epsilon )^{\vert S \vert }, & \text{ if } S=T=U \text{ with \(\vert S \vert \) odd}  ; \\
+			0,                               & \text{ otherwise}  .
+		\end{dcases}
+	\]
+\end{prev}
+
+Hence, we have
+\[
+	\begin{split}
+		\Pr_{x^\prime, y, z, b}(f_u(x^\prime ) f_v(y) f_v(z) = b)
+		&= \frac{1}{2} + \frac{1}{2} \sum_{\text{\(S\) odd}} \underbrace{\hat{f} (S) \hat{g} (S)^{2} (1-2\epsilon ) ^{\vert S \vert }}_{(\hat{f} (S)\hat{g} (S) (1-2\epsilon )^{2 \vert S \vert })\cdot \hat{g} (S)}\\
+		&\leq \frac{1}{2} + \frac{1}{2} \left( \sum_{\text{\(S\) odd}} \hat{f} (S)^2 \hat{g} (S)^2 (1-2\epsilon )^{2 \vert S \vert } \right)^{1/2} \underbrace{\left( \sum_{\text{\(S\) odd}} \hat{g} (S)^2 \right) ^{1 / 2}}_{\leq 1}\\
+		&\leq \frac{1}{2} + \frac{1}{2} \underbrace{\left( \sum_{\text{\(S\) odd}} \hat{f} (S)^2 \hat{g} (S)^2 (1-2\epsilon )^{2 \vert S \vert } \right) ^{1 / 2}}_{\coloneqq \delta (e)}.
+	\end{split}
+\]
+Now, to construct a \hyperref[prb:unique-game]{unique game} instance, for all \(v\in U \sqcup V\), we sample \(S \subseteq [R]\) with probability \(\hat{f} (S)^2\), and then we just let \(\sigma (v)\) to be a random element from \(S\).
+
+\begin{intuition}
+
+\end{intuition}
+
+Let \(t\in \mathbb{\MakeUppercase{n}} \) to be undetermined. We say \(S\) is \emph{big} if \(\vert S \vert > t\), otherwise \emph{small}. Then
+\[
+	\begin{split}
+		\delta (e)
+		&\leq \sum_{\text{\(S\) odd, small}} \hat{f} (S)^2 \hat{g} (S)^2 + \sum_{\text{\(S\) odd, big}} \hat{f} (S)^2 \hat{g} (S)^2 (1-2\epsilon )^t\\
+		&= \sum_{\text{\(S\) odd, small}} \hat{f} (S)^2 \hat{g} (S)^2 + (1-2\epsilon )^t \underbrace{\sum_{\text{\(S\) odd, big}} \hat{f} (S)^2 \hat{g} (S)^2}_{\leq \sum_{S, T} \hat{f} (S)^2 \hat{g} (S)^2 = 1}\\
+		&\leq \sum_{\text{\(S\) odd, small}} \hat{f} (S)^2 \hat{g} (S)^2 + (1-2\epsilon )^t.
+	\end{split}
+\]
+Formally, given a \hyperref[prb:max-3LIN]{3LIN} instance, \(\left\{ f_v \right\} _{v}\) with \(\mathop{\mathrm{OBJ}} > 1/2 + \gamma \), we have at least \(\gamma / 2\) fraction of \(e\in \mathcal{\MakeUppercase{e}} \) has \(\mathop{\mathrm{OBJ}}_e \geq 1 / 2 + \gamma /2\).
+
+\begin{note}
+	This is true, since otherwise, the objective value is at most
+	\[
+		\frac{\gamma}{2}\cdot 1 + \left( 1 - \frac{\gamma}{2} \right) \left( \frac{1}{2}+ \frac{\gamma}{2} \right)  < \frac{1}{2} + \gamma ,
+	\]
+	which is a contradiction.
+\end{note}
+
+Fix a good \(e=(u, v)\) with \(\delta (e) \geq \gamma ^{2}\), i.e.,
+\[
+	\sum_{\text{\(S\) odd, small}} \hat{f} (S)^{2} \hat{g} (S)^{2} + (1-2\epsilon )^t \geq \gamma ^2.
+\]
+Recall that \(g = f_v\), \(f(x) = f_u(x^\prime )\) with \(x_i = x^\prime _{\Pi (i)}\), we have
+\[
+	\hat{f} (S) = \hat{f} _u(\Pi (S)) \text{ where } \Pi (S) g \left\{ \Pi (i)\colon i\in S \right\},
+\]
+so we have
+\[
+	\sum_{\text{\(S\) odd, small}} \hat{f} _v(S)^{2} \hat{f} _u(\Pi (S))^2 \geq \gamma ^2 - (1-2\epsilon )^t.
+\]
+Then, we have
+\[
+	\Pr_{}(e \text{ is satisfied by the \hyperref[prb:unique-game]{UG} assignment} )  \geq \frac{\gamma ^2 - (1 - 2\epsilon )^t}{t},
+\]
+implying
+\[
+	\Pr_{\text{overall}}(\text{\hyperref[prb:unique-game]{UG} assignment satisfied}) \geq \left( \frac{\gamma}{2} \right) \left( \frac{\gamma ^{2} - (1 - 2\epsilon )^t}{t} \right).
+\]

@@ -11,6 +11,8 @@
 	\end{enumerate}
 \end{proof}
 
+To finish this section, we see one final example.
+
 \begin{eg}[Shift operator]
 	Let \(T\) be the left shift operator on \(\ell _1\), i.e.,
 	\[
@@ -75,11 +77,33 @@ Throughout this chapter, \(\mathcal{\MakeUppercase{h}} \) will denote a \hyperre
 	\]
 \end{definition}
 
+There are lots of examples of \hyperref[def:self-adjoint-op]{self-adjoint operators}.
+
+\begin{eg}[Hermitian matrix]
+	The linear operators on \(\mathbb{\MakeUppercase{c}} ^n\) given by Hermitian matrices \(A = (a_{ij} )\) is \hyperref[def:self-adjoint-op]{self-adjoint}.
+\end{eg}
+\begin{explanation}
+	Since \(a_{ij} = \overline{a_{ij}}\).
+\end{explanation}
+
+\begin{eg}[Integral operator]
+	The integral operators \(T\) on \(L^2([0, 1])\) with Hermitian symmetric kernels \(k(s, t)\) given by
+	\[
+		(Tf)(t) = \int_{0}^{1} k(s, t)f(s) \,\mathrm{d}s
+	\]
+	is \hyperref[def:self-adjoint-op]{self-adjoint}.
+\end{eg}
+\begin{explanation}
+	Since \(k(s, t) = \overline{k(s, t)}\).
+\end{explanation}
+
+Also, the \hyperref[def:orthogonal-projection]{orthogonal projection} \(P\) on \(\mathcal{\MakeUppercase{h}} \) is \hyperref[def:self-adjoint-op]{self-adjoint}.
+
 \begin{remark}
 	Every \(A\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) can be represented as \(A = T+iS\) with \(T, S\) \hyperref[def:self-adjoint-op]{self-adjoint}.
 \end{remark}
 \begin{explanation}
-	Simply let
+	If \(A = T + iS\), then \(A^{\ast} = T - iS\). Solving these two equations gives
 	\[
 		T = \frac{A + A^{\ast} }{2},\quad S = \frac{A - A^{\ast} }{2i}.
 	\]
@@ -96,14 +120,17 @@ for \(x\in \mathcal{\MakeUppercase{h}} \), where \(f(\cdot)\) is real since \(\l
 \]
 Since \(f(\cdot)\) determines \(T\) uniquely, we should be able to compute properties of \(T\) using \(f\). The first property is the following.
 \begin{proposition}
-	\(\lVert T \rVert = \sup _{\lVert x \rVert = 1} \vert \left\langle Tx, x \right\rangle  \vert \).
+	For every \hyperref[def:self-adjoint-op]{self-adjoint operator} \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\), one has
+	\[
+		\lVert T \rVert = \sup _{\lVert x \rVert = 1} \vert \left\langle Tx, x \right\rangle  \vert.
+	\]
 \end{proposition}
 \begin{proof}
 	Firstly, from \hyperref[thm:Cauchy-Schwarz-ineq]{Cauchy-Schwarz}, we have \(\vert \left\langle Tx, x \right\rangle \vert \leq \lVert Tx \rVert \lVert x \rVert \), implying that
 	\[
 		\sup _{\lVert x \rVert = 1} \vert \left\langle Tx, x \right\rangle  \vert \leq \sup _{\lVert x \rVert = 1} \lVert Tx \rVert = \lVert T \rVert .
 	\]
-	To get the equality, we use the \hyperref[lma:parallelogram-law]{parallelogram law}, where
+	To get the equality, we use the \hyperref[lma:polarization-identity]{polarization identity}, where
 	\[
 		\Re \left\langle Tx, y \right\rangle
 		= \frac{1}{4} \left[ \left\langle T(x+ y) , x+y\right\rangle - \left\langle T(x-y), x-y \right\rangle  \right].
@@ -112,38 +139,37 @@ Since \(f(\cdot)\) determines \(T\) uniquely, we should be able to compute prope
 	\[
 		\Re\left\langle Tx, y \right\rangle
 		\leq \frac{M}{4} \left[ \lVert x+y \rVert ^{2} + \lVert x-y \rVert ^{2}  \right]
-		= \frac{M}{4} \left[ 2\lVert x \rVert ^{2} + 2 \lVert y \rVert ^{2} \right].
+		= \frac{M}{4} \left[ 2\lVert x \rVert ^{2} + 2 \lVert y \rVert ^{2} \right],
 	\]
-	This implies that
+	where the last equality follows from the \hyperref[lma:parallelogram-law]{parallelogram law}. This implies that
 	\[
-		\lVert T \rVert = \sup _{\lVert x \rVert = \lVert y \rVert = 1} \Re \left\langle Tx, y \right\rangle  \leq M.
+		\lVert T \rVert
+		= \sup _{\lVert x \rVert = \lVert y \rVert = 1} \vert \left\langle Tx, y \right\rangle \vert
+		= \sup _{\lVert x \rVert = \lVert y \rVert = 1} \Re \left\langle Tx, y \right\rangle
+		\leq M.
 	\]
 \end{proof}
 
 \subsection{Criterion of Spectrum Points}
-We now study the \hyperref[def:spectrum-point]{spectrum} of \hyperref[def:self-adjoint-op]{self adjoint operators} \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\).
+We now study the \hyperref[def:spectrum-point]{spectrum} of \hyperref[def:self-adjoint-op]{self adjoint operators} \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\). We're going to show that the whole \hyperref[def:spectrum-point]{spectrum} of \(T\) is real for \(T\) being a \hyperref[def:self-adjoint-op]{self-adjoint operator}, i.e., \(\sigma (T) \subseteq \mathbb{\MakeUppercase{r}} \). Let's start with some basic facts.
+
 \begin{lemma}
-	Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) be a \hyperref[def:self-adjoint-op]{self-adjoint}. Then
-	\begin{enumerate}[(a)]
-		\item \(\sigma _p(T) \subseteq \mathbb{\MakeUppercase{r}} \).
-		\item \(\sigma _r(T) = \varnothing \).
-	\end{enumerate}
+	Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) be a \hyperref[def:self-adjoint-op]{self-adjoint}. Then \(\sigma _p(T) \subseteq \mathbb{\MakeUppercase{r}} \) and \(\sigma _r(T) = \varnothing \).
 \end{lemma}
 \begin{proof}
-	We prove this one by one.
-	\begin{enumerate}[(a)]
-		\item Suppose \(Tx=\lambda x\), then
-		      \[
-			      \begin{dcases}
-				      \left\langle Tx, x \right\rangle = \left\langle \lambda x, x \right\rangle = \lambda \lVert x^{2}  \rVert ; \\
-				      \left\langle x, Tx \right\rangle = \left\langle x, \lambda x \right\rangle = \overline{\lambda} \lVert x^{2}  \rVert
-			      \end{dcases}
-			      \implies (\lambda - \overline{\lambda}) \lVert x \rVert ^{2} = 0 \implies \lambda \in \mathbb{\MakeUppercase{r}} .
-		      \]
-		\item Let \(\lambda \in \sigma _r(T)\), then \(\ker (T-\lambda I) = \left\{ 0 \right\} \) and \(\im (T-\lambda I)\) not dense in \(\mathcal{\MakeUppercase{h}} \). Since \(\lambda \notin \sigma _p(T)\), then \(\overline{\lambda} \notin \sigma _p(T)\). We then have \(\left\{ 0 \right\} = \ker (T-\overline{\lambda} I) = \ker (T-\lambda I)^{\ast} \) since \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint} and \(T^{\ast} = T\), \(\lambda ^{\ast} = \overline{\lambda} \). But then we have
-		      \[
-			      \ker (T-\lambda I)^{\ast} = \im (T-\lambda I)^{\perp} ,
-		      \]
-		      with \(\im (T-\lambda I)^{\perp} \neq \left\{ 0 \right\} \) if \(\lambda \in \sigma _r(T)\). This implies \(\lambda \) does not exist, i.e., \(\sigma _r(T)= \varnothing \).
-	\end{enumerate}
+	Let's first show that \(\sigma _p(T) \subseteq \mathbb{\MakeUppercase{r}} \). Suppose \(Tx=\lambda x\), then
+	\[
+		\begin{dcases}
+			\left\langle Tx, x \right\rangle = \left\langle \lambda x, x \right\rangle = \lambda \lVert x^{2}  \rVert ; \\
+			\left\langle x, Tx \right\rangle = \left\langle x, \lambda x \right\rangle = \overline{\lambda} \lVert x^{2}  \rVert
+		\end{dcases}
+		\implies (\lambda - \overline{\lambda}) \lVert x \rVert ^{2} = 0.
+	\]
+	Since \(x \neq 0\), this implies that \(\lambda - \overline{\lambda} = 0\), i.e., \(\lambda \in \mathbb{\MakeUppercase{r}} \).
+
+	To show \(\sigma _r(T) = \varnothing \), let \(\lambda \in \sigma _r(T)\), then \(\ker (T-\lambda I) = \left\{ 0 \right\} \) and \(\im (T-\lambda I)\) is not dense in \(\mathcal{\MakeUppercase{h}} \). Notice that since \(\lambda \notin \sigma _p(T)\), then \(\overline{\lambda} \notin \sigma _p(T)\) as we just proved. We then have \(\left\{ 0 \right\} = \ker (T-\overline{\lambda} I) = \ker (T-\lambda I)^{\ast} \) since \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint} and \(T^{\ast} = T\), \(\lambda ^{\ast} = \overline{\lambda} \). But then we have
+	\[
+		\im (T-\lambda I)^{\perp} = \ker (T-\lambda I)^{\ast} = \ker (T - \overline{\lambda} I) = \left\{ 0 \right\} ,
+	\]
+	hence \(\im (T - \lambda I)\) is dense in \(\mathcal{\MakeUppercase{h}} \), a contradiction. So \(\lambda \) does not exist, proving that \(\sigma _r(T)= \varnothing \).
 \end{proof}

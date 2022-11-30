@@ -1,4 +1,4 @@
-\lecture{23}{17 Nov. 14:30}{The Spectrum Interval}
+\lecture{23}{17 Nov. 14:30}{Spectral Theorems, Continuous Functional Calculus}
 \begin{lemma}[Invertibility criterion]\label{lma:invertibility-criterion}
 	Let \(T\) be a \hyperref[rmk:bounded-op]{bounded} \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(\mathcal{\MakeUppercase{h}} \), then \(T\) is invertible if and only if \(T\) is bounded below, i.e., for all \(x\in \mathcal{\MakeUppercase{h}} \), there exists \(c>0\) such that \(\lVert Tx \rVert \geq c\lVert x \rVert \).
 \end{lemma}
@@ -98,7 +98,7 @@ As a consequence, \(\sigma (T) = \lVert T \rVert \) for \(T\) being a \hyperref[
 
 \subsection{Invariant Subspaces}
 \begin{proposition}[Eigenvectors orthogonal]\label{prop:eigenvectors-orthogonal}
-	Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) be a \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(\mathcal{\MakeUppercase{h}} \). Then its eigenvectors corresponding to distinct eigenvalues are \hyperref[def:orthogonal-dsystem]{orthogonal}.
+	Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) be a \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(\mathcal{\MakeUppercase{h}} \). Then its eigenvectors corresponding to distinct eigenvalues are \hyperref[def:orthogonal-system]{orthogonal}.
 \end{proposition}
 \begin{proof}
 	If \(Tx_1 = \lambda _1 x_1\) and \(Tx_2 = \lambda _2 x_2\), then
@@ -121,7 +121,7 @@ As a consequence, \(\sigma (T) = \lVert T \rVert \) for \(T\) being a \hyperref[
 
 One of the most well-known open problems in functional analysis is the \emph{invariant subspace problem}. It asks whether every operator \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) has a proper \hyperref[def:invariant-subspace]{invariant subspace}, i.e., different from \(\left\{ 0 \right\} \) and \(\mathcal{\MakeUppercase{h}} \).
 
-\begin{proposition}
+\begin{proposition}\label{prop:lec23}
 	Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) be a \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(\mathcal{\MakeUppercase{h}} \). If \(E \subseteq \mathcal{\MakeUppercase{h}} \) is an \hyperref[def:invariant-subspace]{invariant subspace} of \(T\), then \(E^{\perp} \) is also an \hyperref[def:invariant-subspace]{invariant subspace} of \(T\).
 \end{proposition}
 \begin{proof}
@@ -139,29 +139,35 @@ The following result is known as the Hilbert-Schmidt theorem.
 	Let \(T\) be a \hyperref[def:compact-op]{compact} \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(\mathcal{\MakeUppercase{h}} \) and \(\mathcal{\MakeUppercase{h}} \) is \hyperref[def:separable]{separable}. Then there exists an \hyperref[def:orthonormal-system]{orthonormal} basis of \(\mathcal{\MakeUppercase{h}} \) consisting of eigenvectors of \(T\).
 \end{theorem}
 \begin{proof}
-	We already showed that \(\sigma (T)\) is nonempty, which also follows from \autoref{thm:spectrum-interval} since \(\lVert T \rVert \) or \(-\lVert T \rVert \) is in \(\sigma (T)\). Now, since \(T\) is \hyperref[def:compact-op]{compact}, we know
+	Let's first prove that \(T\) has at least one eigenvector. Firstly, since \(T\) is \hyperref[def:compact-op]{compact}, by \autoref{prop:classification-of-spectrum-of-compact-op},
 	\[
 		\sigma (T) = \sigma _p(T) \cup \left\{ 0 \right\}.
 	\]
-	Hence, if \(\sigma _p(T)= \varnothing \), \(r(T) = \lVert T \rVert = 0\), i.e., \(T \equiv 0\). In this case, any \hyperref[def:orthonormal-system]{orthonormal} basis gives a basis of eigenvectors, so the result follows by showing that if \(E\) is a closed subspace of \(\mathcal{\MakeUppercase{h}} \), then \(T(E) \subseteq E\) implies \(T(E^{\perp} ) \subseteq E^{\perp} \). To see this, let \(x \perp y \in E\), then \(T(E) \subseteq E\) implies \(\left\langle x, Ty \right\rangle = 0\) for \(y\in E\), i.e., \(\left\langle Tx, y \right\rangle = 0\) for \(y\in E\), so \(Tx\in E^{\perp} \).
+	So if \(\sigma (T) \neq \left\{ 0 \right\} \), then \(\sigma _p(T) \neq \varnothing \), i.e., \(T\) has an eigenvector. Otherwise, if \(\sigma (T) = \left\{ 0 \right\} \), then from \autoref{thm:spectrum-interval}, \(\lVert T \rVert \) or \(-\lVert T \rVert \) is in \(\sigma (T)\), so \(r(T) = \lVert T \rVert = 0\), i.e., \(T \equiv 0\). In this case, any \hyperref[def:orthonormal-system]{orthonormal} basis gives a basis of eigenvectors. With the fact that \(\mathcal{\MakeUppercase{h}} \) is \hyperref[def:separable]{separable}, all such basis are at most countable, so from \href{https://en.wikipedia.org/wiki/Zorn%27s_lemma}{Zorn's lemma}, this family has a maximal element \(\left\{ \phi _k \right\}_{k\geq 1} \), so the result follows by showing that 
+	\[
+		E \coloneqq \overline{\mathop{\mathrm{span}}(\left\{ \phi _k \right\}_{k\geq 1} )} = \mathcal{\MakeUppercase{h}} .
+	\]
+	Suppose \(E \neq \mathcal{\MakeUppercase{h}} \). Since \(E\) is an \hyperref[def:invariant-subspace]{invariant subspace} of \(T\), \(E^{\perp} \neq \left\{ 0 \right\} \) is also an \hyperref[def:invariant-subspace]{invariant subspace} of \(T\) by \autoref{prop:lec23}. By using the first part of the proof for the restriction \(\at{T}{E^{\perp} }{} \) which is a \hyperref[def:compact-op]{compact} \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(E^{\perp} \). It follows that \(\at{T}{E^{\perp} }{} \), and thus \(T\) itself, has an eigenvector in \(E^{\perp} \). But this contradicts the maximality of \(\left\{ \phi _k \right\}_{k\geq 1} \).
 \end{proof}
+
+Finally, we introduce a new kind of operators called \hyperref[def:normal-op]{normal operators}, where the above result generalizes to which.
 
 \begin{definition}[Normal operator]\label{def:normal-op}
 	An operator \(T\) is \emph{normal} if \(T T^{\ast} = T^{\ast} T\).
 \end{definition}
 
 \begin{remark}
-	The spectral theorems for \hyperref[def:self-adjoint-op]{self-adjoint operators} extend to \hyperref[def:normal-op]{normal operator}.
+	The \hyperref[thm:spectral-theorem-for-compact-self-adjoint-op]{spectral theorems for compact self-adjoint operators} extend to \hyperref[def:normal-op]{normal operator}.
 \end{remark}
 
-However, spectrum of \hyperref[def:normal-op]{normal operators} do not have to be real,\footnote{For example, the unitary operators \(U^{\ast} U = U U^{\ast} = I\).} we only have \(\sigma (T) \subseteq \left\{ \lambda \in \mathbb{\MakeUppercase{c}} \colon \vert \lambda  \vert =1 \right\} \).
+However, \hyperref[def:spectrum-point]{spectrum} of \hyperref[def:normal-op]{normal operators} do not have to be real,\footnote{For example, the unitary operators \(U^{\ast} U = U U^{\ast} = I\).} we only have \(\sigma (T) \subseteq \left\{ \lambda \in \mathbb{\MakeUppercase{c}} \colon \vert \lambda  \vert =1 \right\} \).
 
 \section{Continuous Functional Calculus}
-In this section, we develop the analogy between numbers and operators in the following way. We introduce a partial order on the set of \hyperref[def:self-adjoint-op]{self-adjoint operators} on \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\), and we define an operator \(f(T) \in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) for every continuous function \(f\colon \mathbb{\MakeUppercase{c}} \to \mathbb{\MakeUppercase{c}} \). In other words, we develop what is called the \emph{functional calculus} of operators.
+In this section, we develop the analogy between numbers and operators by introducing a \hyperref[def:partial-order]{partial order} on the set of \hyperref[def:self-adjoint-op]{self-adjoint operators} on \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\), and we define an operator \(f(T) \in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) for every continuous function \(f\colon \mathbb{\MakeUppercase{c}} \to \mathbb{\MakeUppercase{c}} \). This is the so-called \emph{functional calculus} of operators.
 
 \subsection{Positive Operators}
 \begin{definition}[Positive operator]\label{def:positive-op}
-	A \hyperref[def:self-adjoint-op]{self-adjoint operator} \(T\ni \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) is called \emph{positive} if \(\left\langle Tx, x \right\rangle \geq 0\) for all \(x\in \mathcal{\MakeUppercase{H}} \).
+	A \hyperref[def:self-adjoint-op]{self-adjoint operator} \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) is called \emph{positive} if \(\left\langle Tx, x \right\rangle \geq 0\) for all \(x\in \mathcal{\MakeUppercase{H}} \).
 \end{definition}
 
 \begin{remark}[Positive semi-definite]
@@ -174,29 +180,23 @@ We see that \hyperref[def:positive-op]{positive operators} are generalizations o
 	\(T^2\) for every \hyperref[def:self-adjoint-op]{self-adjoint} \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) is \hyperref[def:positive-op]{positive}.
 \end{eg}
 \begin{explanation}
-	Since \(\left\langle T^2, x, x \right\rangle = \left\langle Tx, Tx \right\rangle \geq 0\).
+	Since \(\left\langle T^2 x, x \right\rangle = \left\langle Tx, Tx \right\rangle \geq 0\).
 \end{explanation}
 
 \begin{eg}
-	Hermitian matrices with non-negative eigenvalues is \hyperref[def:positive-op]{positive}.
+	Hermitian matrices, or more generally, \hyperref[def:compact-op]{compact} \hyperref[def:self-adjoint-op]{self-adjoint operators} on \(\mathcal{\MakeUppercase{h}} \) with non-negative eigenvalues are \hyperref[def:positive-op]{positive}.
 \end{eg}
 
-\begin{eg}
-	More generally, \hyperref[def:compact-op]{compact} \hyperref[def:self-adjoint-op]{self-adjoint operators} on \(\mathcal{\MakeUppercase{h}} \) with non-negative eigenvalues.
-\end{eg}
+Just like in the linear algebra, where we define \(A \succeq B\) by \(A - B \succeq 0\) (i.e., \(A-B\) is positive semi-definite), we define the same thing for \hyperref[def:self-adjoint-op]{self-adjoint operators}.
 
 \begin{definition}[Partial order]\label{def:partial-order}
 	For \hyperref[def:self-adjoint-op]{self-adjoint operators} \(S, T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\), we say \(S \leq T\) if \(T - S \geq 0\).
 \end{definition}
 
-We see that \autoref{def:partial-order} defines a partial order on \(\mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\). Finally, we may restate the \hyperref[thm:spectrum-interval]{spectrum interval theorem} by these new notions.
+\autoref{def:partial-order} defines a \href{https://en.wikipedia.org/wiki/Partially_ordered_set}{partial order} on \(\mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\), and we may restate the \hyperref[thm:spectrum-interval]{spectrum interval theorem} with this new notion.
 
 \begin{theorem}[Spectrum interval]\label{thm:spectrum-interval-2}
-	Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) be a \hyperref[def:self-adjoint-op]{self-adjoint operator}, and let \(m, M\) be the smallest and the largest numbers such that
-	\[
-		mI \leq T \leq MI.
-	\]
-	Then \(\sigma (T) \subseteq [m, M]\) and \(m, M\in \sigma (T)\).
+	Let \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) be a \hyperref[def:self-adjoint-op]{self-adjoint operator}, and let \(m, M\) be the smallest and the largest numbers such that \(mI \leq T \leq MI\). Then \(\sigma (T) \subseteq [m, M]\) and \(m, M\in \sigma (T)\).
 \end{theorem}
 
 As an immediate corollary, \(T\) is \hyperref[def:positive-op]{positive} if and only if its \hyperref[def:spectrum-point]{spectrum} is positive.
@@ -208,17 +208,30 @@ As an immediate corollary, \(T\) is \hyperref[def:positive-op]{positive} if and 
 \subsection{Polynomials of Operators}
 We start to develop a functional calculus for \hyperref[def:self-adjoint-op]{self-adjoint operators} \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) by defining polynomials of \(T\), and then we extend the definition to continuous functions of \(T\) by approximation. Working with polynomials is straightforward, and the result of this subsection remain valid for every \hyperref[def:bounded-linear-op]{bounded linear operator} \(T\) on a general \hyperref[def:Banach-space]{Banach space} \(X\).
 
-\begin{definition}[Polynomials of an operator]\label{def:polynomials-of-an-op}
+\begin{definition}[Polynomial operator]\label{def:polynomial-op}
 	Consider a polynomial \(p(t) = a_0 + a_1 t + \ldots  + a_n t^n\), then for an operator \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\), we define
 	\[
 		p(T) \coloneqq a_0 I + a_1 T + \ldots  + a_n T^n.
 	\]
 \end{definition}
 
-We first note that if \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint}, then \(p(T)\) is also \hyperref[def:self-adjoint-op]{self-adjoint}. Moreover, we have the following.
+We first note that if \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint}, then \(p(T)\) is also \hyperref[def:self-adjoint-op]{self-adjoint} if \(p\) is real since
+\[
+	\begin{split}
+		\left\langle p(T) x, y \right\rangle
+		&= \left\langle (a_0 I + a_1 T + \ldots  + a_n T^n)x, y \right\rangle \\
+		&= a_0 \left\langle x, y \right\rangle + a_1 \left\langle Tx, y \right\rangle + \ldots + a_n \left\langle T^n x, y \right\rangle \\
+		&= \left\langle x, \overline{a_0} y \right\rangle + \left\langle x, \overline{a_1}Ty \right\rangle + \ldots + \left\langle x, \overline{a_n}T^n y \right\rangle \\
+		&= \left\langle x, a_0 y \right\rangle + \left\langle x, a_1 Ty \right\rangle + \ldots + \left\langle x, a_n T^n y \right\rangle \\
+		&= \left\langle x, (a_0 I + a_1 T + \ldots + a_n T^n) y \right\rangle \\
+		&= \left\langle x, p(T)y \right\rangle.
+	\end{split}
+\]
 
-\begin{proposition}
-	Let \(p, q\) be \(2\) polynomials, then
+Moreover, we have the following properties for \hyperref[def:polynomial-op]{polynomial operators}.
+
+\begin{proposition}\label{prop:polynomial-op}
+	Let \(p, q\) be \(2\) complex polynomials and an operator \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\). Then the following holds.
 	\begin{enumerate}[(a)]
 		\item \((ap + bq)(T) = ap(T) + bq(T)\) for \(a, b\in \mathbb{\MakeUppercase{c}} \).
 		\item \((pq)(T) = p(T) q(T)\).
@@ -226,9 +239,24 @@ We first note that if \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint}, the
 	\end{enumerate}
 \end{proposition}
 
-\subsection{Spectral Mapping Theorem for Polynomials}
+The following example may serve us as a test case for many future results.
 
-\begin{lemma}[Invertibility]\label{lma:invertibility}
+\begin{eg}
+	Let \(T\) be a \hyperref[def:self-adjoint-op]{self-adjoint} linear operator on an \(n\)-dimensional \hyperref[def:Hilbert-space]{Hilbert space}. In an \hyperref[def:orthonormal-system]{orthonormal} basis of eigenvectors, \(T\) can be identified with the \(n \times n\) diagonal matrix
+	\[
+		T = \diag (\lambda _1, \ldots , \lambda _n),
+	\]
+	where \(\lambda _k\) are the eigenvalues of \(T\). Then for every polynomial \(p(t)\), we have
+	\[
+		p(T) = \diag (p(\lambda _1), \ldots  , p(\lambda _n)).
+	\]
+	This can be generalized for all \hyperref[def:compact-op]{compact} \hyperref[def:self-adjoint-op]{self-adjoint operators} \(T\) on a general \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{\MakeUppercase{h}} \).
+\end{eg}
+
+\subsection{Spectral Mapping Theorem for Polynomial Operators}
+Let's study some important theorem for the \hyperref[def:polynomial-op]{polynomial operators}.
+
+\begin{lemma}[Invertibility for polynomial operator]\label{lma:invertibility-for-polynomial-op}
 	Suppose \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\), then the operator \(\rho (T)\) is invertible if and only if \(p(t) \neq 0\) for all \(t\in \sigma (T)\).
 \end{lemma}
 \begin{proof}
@@ -240,31 +268,35 @@ We first note that if \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint}, the
 	\[
 		p(T) = a_n (T-t_1 I)\ldots  (T-t_n I).
 	\]
-	Next, observe that if \(S, R\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) and \(SR\) is invertible, then both \(S\) and \(R\) are invertible.\footnote{Since if \(SR\) is invertible, then \(S^{-1} = R(SR)^{-1} \).} Hence, if \(p(T)\) is invertible, then \(t_1, \ldots  , t_n\in \rho (T)\), and conversely, i.e., \(p(t) \neq 0\) for \(t\in \sigma (T)\).
+	Next, observe that if \(S, R\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\) and \(SR\) is invertible, then both \(S\) and \(R\) are invertible.\footnote{Since if \(SR\) is invertible, then \(S^{-1} = R(SR)^{-1} \).} Hence, if \(p(T)\) is invertible, then \(t_1, \ldots  , t_n\in \rho (T)\), and conversely, \(p(t) \neq 0\) for \(t\in \sigma (T)\).
 \end{proof}
 
 The \hyperref[def:spectrum-point]{spectrum} of a polynomial \(p(T)\) can be easily computed from the \hyperref[def:spectrum-point]{spectrum} of \(T\).
-\begin{theorem}[Spectral mapping theorem]\label{thm:spectral-mapping}
-	Let \(p(\cdot)\) be a polynomial and \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\). Then
+
+\begin{theorem}[Spectral mapping theorem for polynomial operator]\label{thm:spectral-mapping-for-polynomial-op}
+	Let \(p(t)\) be a polynomial and \(T\in \mathcal{\MakeUppercase{l}} (\mathcal{\MakeUppercase{h}} )\). Then
 	\[
-		\sigma (p(T)) = p(\sigma (T)).
+		\sigma (p(T)) = p(\sigma (T))
 	\]
+	where \(p(\sigma (T)) \coloneqq \left\{ p(t) \colon t\in \sigma (T) \right\} \).
 \end{theorem}
 \begin{proof}
-	Since \(\lambda \in \sigma (p(T))\) if and only if \(p(T) - \lambda I\) is not invertible, which is equivalent to say \(p(t) - \lambda = 0\) for some \(t\in \sigma (T)\), i.e., \(\lambda \in p(\sigma (T))\).
+	Since \(\lambda \in \sigma (p(T))\) if and only if \(p(T) - \lambda I\) is not invertible, which from \autoref{lma:invertibility-for-polynomial-op}, it is equivalent to say \(p(t) - \lambda = 0\) for some \(t\in \sigma (T)\), i.e., \(\lambda \in p(\sigma (T))\).
 \end{proof}
 
-Using the \hyperref[thm:spectral-mapping]{spectral mapping theorem}, one can in particular easily compute the \hyperref[def:norm]{norm} of \hyperref[def:polynomials-of-an-op]{operator polynomials}.
+Using the \hyperref[thm:spectral-mapping-for-polynomial-op]{spectral mapping theorem for polynomial operator}, one can in particular easily compute the \hyperref[def:norm]{norm} of \hyperref[def:polynomial-op]{polynomial operator}.
 
-\begin{corollary}[Operator norm of polynomials]\label{col:op-norm-of-polynomials}
-	Suppose \(T\) is a \hyperref[rmk:bounded-op]{bounded} \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(\mathcal{\MakeUppercase{h}} \) and \(p(\cdot)\) is a polynomial with real coefficients. Then \(p(T)\) is \hyperref[def:self-adjoint-op]{self-adjoint operator} and
+\begin{corollary}[Operator norm of polynomial operator]\label{col:op-norm-of-polynomial-op}
+	Suppose \(T\) is a \hyperref[rmk:bounded-op]{bounded} \hyperref[def:self-adjoint-op]{self-adjoint operator} on \(\mathcal{\MakeUppercase{h}} \) and \(p(t)\) is a polynomial with real coefficients. Then \(p(T)\) is \hyperref[def:self-adjoint-op]{self-adjoint operator} and
 	\[
 		\lVert p(T) \rVert = \sup _{t\in \sigma (T)}\vert p(t) \vert.
 	\]
 \end{corollary}
 \begin{proof}
-	We see that \(p(T)\) is \hyperref[def:self-adjoint-op]{self-adjoint} since \(\overline{p} = p\), and
+	Firstly, \(p(T)\) is \hyperref[def:self-adjoint-op]{self-adjoint} since \(\overline{p} = p\) as noted in the beginning of the section, with the \autoref{col:spectral-radius} and \hyperref[thm:spectral-mapping-for-polynomial-op]{spectral mapping theorem for polynomial operator} yielding
 	\[
-		\lVert p(T) \rVert = \sup _{t\in \sigma (p(T))} \vert t \vert = \max _{s\in \sigma (T)} \vert p(s) \vert .
+		\lVert p(T) \rVert = r(p(T)) = \sup _{t\in \sigma (p(T))} \vert t \vert = \max _{t\in p(\sigma (T))} \vert t \vert = \max _{s\in \sigma (T)} \vert p(s) \vert .
 	\]
 \end{proof}
+
+\autoref{col:op-norm-of-polynomial-op} generalizes \autoref{col:spectral-radius} which states that \(r(T) = \lVert T \rVert \) for the \hyperref[def:spectral-radius]{spectral radius} of \hyperref[def:self-adjoint-op]{self-adjoint operators} \(T\).

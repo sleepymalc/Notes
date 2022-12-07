@@ -1,7 +1,8 @@
 \lecture{25}{30 Nov. 10:30}{Hardness of Max-Cut}
 \section{Hardness of Max-Cut}
 In this section, we will see that if we assume the \hyperref[conj:unique-game]{unique game conjecture}, then \autoref{thm:max-cut} is actually the best we can do, i.e., we have the following.
-\begin{theorem}
+
+\begin{theorem}[\cite{1366234}]\label{thm:max-cut}
 	Assuming \hyperref[conj:unique-game]{unique game conjecture}, for every \(\epsilon > 0 \), it's \(\NP\)-hard to approximate \hyperref[prb:max-cut]{max cut}  within a factor of \(\alpha _{\mathrm{GW} }+\epsilon \).
 \end{theorem}
 
@@ -19,6 +20,7 @@ Just like \hyperref[prb:max-3LIN]{3LIN}, we design a \hyperref[not:dictation]{di
 	\item \emph{cuts far from dictator cuts} get small value.
 \end{itemize}
 
+\subsection{Noisy Hypercube}
 To start with, let \(\rho \in [-1, +1]\), let \(\mathcal{\MakeUppercase{g}} _{\rho} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with edge-weight such that the total weight sums up to \(1\). This allows us to sample an edge by first sample \(x\in \left\{ \pm 1 \right\} ^R\) uniformly, and for all \(i\in [R]\), let
 \[
 	y_i = \begin{dcases}
@@ -106,7 +108,14 @@ since \(T_\rho \chi _T = \rho ^{\vert T \vert }\cdot \chi _T\). So if \(f = \chi
 \[
 	\frac{1}{2} - \frac{1}{2} \mathop{\mathrm{Stab}}_\rho (f) = \frac{1}{2} - \frac{1}{2}\rho
 \]
-for \(\rho < 0\), so a dictator cuts indeed get good value. Consider \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) as voting rules:
+for \(\rho < 0\), so a dictator cuts indeed get good value.
+
+\begin{problem*}
+	How we define \emph{far from dictators} and prove they have small values?
+\end{problem*}
+
+\subsection{Majority is The Stablest Theorem}
+Consider \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) as voting rules:
 \begin{itemize}
 	\item \(R\) people;
 	\item \(x\in \left\{ \pm 1 \right\} ^R\) corresponds to a voting outcome;
@@ -208,7 +217,7 @@ Now, we say that \(i\) is \emph{influential} if \(\mathop{\mathrm{Inf}}_i^\delta
 Finally, we by the following theorem, we are done.
 
 \begin{theorem}[Majority is the Stablest]\label{thm:MIST}
-	Fix \(0 < \rho < 1\), and \(f\colon \left\{ \pm 1 \right\} ^n \to [-1, 1]\) with \(\mathbb{E}_{}\left[f \right] = 0\). Suppose \(\mathop{\mathrm{Inf}}_i^{1 / \log (1 / \epsilon )}(f)\leq \epsilon \), then
+	Given \(0 < \rho < 1\) and \(\epsilon > 0\), and \(f\colon \left\{ \pm 1 \right\} ^n \to [-1, 1]\) with \(\mathbb{E}_{}\left[f \right] = 0\). Suppose \(\mathop{\mathrm{Inf}}_i^{1 / \log (1 / \epsilon )}(f)\leq \epsilon \), then
 	\[
 		\mathop{\mathrm{Stab}}\nolimits_\rho (f) \leq \left( \frac{2}{\pi } \right) \arcsin \rho + O\left( \frac{\log \log 1 / \epsilon }{\log 1 / \epsilon } \right).
 	\]

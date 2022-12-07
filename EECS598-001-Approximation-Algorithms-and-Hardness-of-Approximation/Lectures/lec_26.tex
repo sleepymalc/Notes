@@ -1,0 +1,85 @@
+\lecture{26}{7 Dec. 10:30}{A Final Reduction from Unique Games}
+\begin{proof}[Proof sketch]
+	From \(\mathop{\mathrm{Stab}}_\rho [f] = \mathbb{E}_{x \underset{\rho }{\sim } y}\left[f(x) f(y) \right] \), we want to say that this is equal to \(\mathbb{E}_{g \underset{\rho }{\sim } h}\left[ f(h) f(h) \right] \) where \(g \underset{\rho }{\sim } h\) means for all \(i\in [R]\), \(g_i \sim \mathcal{N} (0, 1)\), \(h_i = \rho \cdot g + \sqrt{1 - \rho ^{2} }\mathcal{N} (0, 1) \). In this case, though \(f\colon \left\{ 0, 1 \right\} ^[R] \to \left\{ 0, 1 \right\} \) doesn't make sense, but if we look at the Fourier decomposition, we have
+	\[
+		f(x) = \sum_{S \subseteq [R]} \hat{f} (S) x^S \implies f(g) = \sum_{S \subseteq [R]} \hat{f} (S) g^S.
+	\]
+
+	\begin{remark}[Invariance principle]
+		If \(f\) is low-influence, then \((f(x), f(y))\) is similarly distributed as \((f(g), f(h))\).
+	\end{remark}
+	Now, consider \(f\colon \mathbb{\MakeUppercase{r}} ^R \to \left\{ \pm 1 \right\} \) such that \(\mathbb{E}\left[f \right] =0\). With the mean condition, \(f\) is essentially deciding a set with the measure being a half. Furthermore, for \(g \underset{\rho }{\sim } h\), we want if \(g\) is in the set, \(h\) will be in the set as well. This is done by minimize the boundary of the set \(f\) is deciding, which turns out to be a half-space. This corresponds to the majority vote directly, so we're done.
+\end{proof}
+
+\begin{corollary}
+	Given \(\rho < 0\) and \(\epsilon > 0\), and \(f\colon \left\{ \pm 1 \right\} ^n \to [-1, 1]\) with \(\mathbb{E}_{}\left[f \right] = 0\). Suppose \(\mathop{\mathrm{Inf}}_i^{1 / \log (1 / \epsilon )}(f)\leq \epsilon \), then
+	\[
+		\mathop{\mathrm{Stab}}\nolimits_\rho (f) \geq \left( \frac{2}{\pi } \right) \arcsin \rho + O\left( \frac{\log \log 1 / \epsilon }{\log 1 / \epsilon } \right).
+	\]
+\end{corollary}
+
+\subsection{Reduction from Unique Game}
+Let \(\rho \approx -0.7\), such that
+\[
+	c = \frac{1}{2} - \frac{1}{2}\rho \approx 0.85, \quad s = \frac{1}{2} - \frac{1}{\pi }\arcsin \rho \approx 0.75,
+\]
+and \(0.85 / 0.75 = \alpha _{\mathrm{GW} }\). Fix \(\epsilon _1 > 0\), choose \(\epsilon _0\) and give reduction from \hyperref[def:c-s-Gap]{\((1-\epsilon _0, \epsilon _0)\)-Gap} \hyperref[prb:unique-game]{unique game} to \hyperref[def:c-s-Gap]{\((c-\epsilon _1, s+\epsilon _1)\)-Gap} \hyperref[prb:max-cut]{max cut}.
+
+Given a \hyperref[prb:unique-game]{unique game} instance \(\mathcal{G} = (U \sqcup V , \mathcal{E} )\) which is regular, \(\left\{ \Pi _e \right\}_{e\in \mathcal{E} } \), \([R]\), our \hyperref[prb:max-cut]{max cut} instance is designed as
+\begin{itemize}
+	\item Vertex: \(U \times \left\{ \pm 1 \right\} ^R\).
+	\item Edges:
+	      \begin{enumerate}
+		      \item sample \(v\in V\)
+		      \item sample \(u_1, u_2 \sim N(v)\) (\(e_1 = (u_1, v), e_2 = (u_2, v)\))
+		      \item sample \(x \underset{\rho }{\sim } y\)
+		      \item output \(\big( (u_1, \Pi _1(u)), (u_2, \Pi _2(u))\big)\) where \(\big(\Pi _1(x)\big)_{\Pi (i)} = x_i\).
+	      \end{enumerate}
+\end{itemize}
+
+To show \hyperref[def:completeness]{completeness}, if \(\sigma \colon U \sqcup V \to [R]\) satisfies \(1 - \epsilon _0\) fraction of \(\mathcal{E} \), the cut is indicated by \(f_u(x) = x_{\sigma (u)}\) for all \(u\in U\) with probability \(\geq 1 - 2 \epsilon \). Then,
+\[
+	\Pr_{}(f_{u_1}(\Pi _1(x)) \neq f_{u_2}(\Pi _2(y)))
+	= \Pr_{}(\big(\Pi _1(x)\big)_{\sigma (u_1)} \neq \big(\Pi _2(y)\big)_{\sigma (u_2)})
+	= \Pr_{}(X_{\sigma (v) \neq y_{\sigma (v)}})
+	g \frac{1-\rho }{2},
+\]
+where \(\Pi _1(\sigma (u)) = \sigma (u_1)\) and \(\Pi _2(\sigma (u)) = \sigma (u_2)\).
+
+To prove \hyperref[def:soundness]{soundness}, suppose \(\left\{ f_u \right\} _{u\in U}\) such that \(f_u\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) with value \(\geq 1 / 2 - 1 / \pi \arcsin \rho + \epsilon _1\), we then have
+\[
+	\mathbb{E}_{v, u_1, u_2, x, y}\left[f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \right]
+	\leq \left( \frac{2}{\pi } \right) \arcsin \rho - 2\epsilon _1.
+\]
+
+For all \(v\in V\), \(f_v \colon \left\{ \pm 1 \right\} ^R \to [-1, 1]\) such that
+\[
+	f_v(x) \coloneqq \mathbb{E}_{u \sim N(v)}\left[f_u (\Pi _{uv} (x) ) \right].
+\]
+We see that
+\[
+	\begin{split}
+		\mathbb{E}_{v, u_1, u_2, x, y}\left[f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \right]
+		&= \mathbb{E}_{v, x, y}\left[ \mathbb{E}_{u_1, u_2}\left[ f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \mid v, x, y\right] \right] \\
+		&= \mathbb{E}_{v, x, y}\left[ \mathbb{E}_{u_1}\left[ f_{u_1}(\Pi _1(x)) \mid v, x\right] \cdot \mathbb{E}_{u_2}\left[f_{u_2}(\Pi _2(y)) \mid v, y \right] \right] \\
+		&= \mathbb{E}_{v, x, y}\left[ f_v(x) f_v(y) \right] \\
+	\end{split}
+\]
+By Markov inequality, for \(\geq \epsilon _1\) fraction of \(v\),
+\[
+	\mathbb{E}_{x, y}\left[f_v(x) f_v(y) \right] \leq \left( \frac{2}{\pi } \right) \arcsin \rho - \epsilon _1
+\]
+From \autoref{thm:MIST}, there exists \(i\) such that \(\mathop{\mathrm{Inf}}_i^\delta (f_v)\geq \epsilon\).
+
+\begin{remark}[Fact]
+	\[
+		\begin{aligned}
+			\epsilon
+			\leq \mathop{\mathrm{Inf}}\nolimits_i^\delta (f_v)
+			 & = \sum_{S \ni i} \hat{f} _v(S)^2(1-\delta )^{\vert S \vert - 1}                                            & \hat{f} (S) = \mathbb{E}_{u}\left[\hat{f} _u(\Pi _{uv}(S)) \right] \\
+			 & = \sum_{S \ni i} (1-\delta )^{\vert S \vert - 1}\mathbb{E}_{u}\left[\hat{f} _u(\Pi _{uv}(S)) \right] ^2                                                                         \\
+			 & \leq \mathbb{E}_{u}\left[\sum_{S \ni i} (1-\delta )^{\vert S \vert - 1} \hat{f} _u(\Pi _{uv}(S))^2 \right]                                                                      \\
+			 & = \mathbb{E}_{u}\left[\mathop{\mathrm{Inf}}\nolimits_{\Pi _{uv}(i)}^i[f_u] \right].
+		\end{aligned}
+	\]
+\end{remark}

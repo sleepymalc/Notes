@@ -1,9 +1,10 @@
 \lecture{23}{21 Nov. 10:30}{Noisy BLR Test and Unique Games Conjecture}
+\subsection{BLR Test}
 To do this, we consider creating a \emph{weighted} \hyperref[prb:max-3LIN]{3LIN} instance.
 \begin{enumerate}[(a)]
 	\item Each equation has weight.
 	\item Weights sum to \(1\).
-	\item \(\mathop{\mathrm{OBJ}}(f) = \sum_{C_i \text{ is satisfied}} w(C_i)\).
+	\item \(\mathop{\mathrm{obj}}(f) = \sum_{C_i \text{ is satisfied}} w(C_i)\).
 \end{enumerate}
 In this way, we can interpret one instance as the probability distribution over equations. Rather than construct the equation directly, we can specify how we are going to sample equations via specifying a probability distribution!
 
@@ -29,16 +30,16 @@ To see why this is what we want, notice that if \(f = \chi _S\) for some \(S \su
 \[
 	f(x) f(y) f(z) = x^S y^S (x\cdot y)^S = 1,
 \]
-hence \(\mathop{\mathrm{OBJ}}(f) = 1\)! On the other hand, if \(f\) has \(k\) nonzero Fourier coefficients (i.e., \(f\) is far from any \(\chi _S\)) of value \(1 / \sqrt{k} \), then \(\mathop{\mathrm{OBJ}}(f) \approx 1 / 2\). This construction is known as BLR test~\cite{10.1145/100216.100225}.
+hence \(\mathop{\mathrm{obj}}(f) = 1\)! On the other hand, if \(f\) has \(k\) nonzero Fourier coefficients (i.e., \(f\) is far from any \(\chi _S\)) of value \(1 / \sqrt{k} \), then \(\mathop{\mathrm{obj}}(f) \approx 1 / 2\). This construction is known as BLR test~\cite{10.1145/100216.100225}.
 
 \begin{theorem}[\cite{10.1145/100216.100225}]\label{thm:BLR}
-	\(\mathop{\mathrm{OBJ}}(f) = 1 / 2 + 1 / 2 \cdot \sum_{S \subseteq [n]} \hat{f} (S)^3 \).
+	Under the construction, \(\mathop{\mathrm{obj}}(f) = 1 / 2 + 1 / 2 \cdot \sum_{S \subseteq [n]} \hat{f} (S)^3 \).
 \end{theorem}
 \begin{proof}
 	Observe that
 	\[
 		\begin{split}
-			\mathop{\mathrm{OBJ}}(f)
+			\mathop{\mathrm{obj}}(f)
 			&= \mathbb{E}_{x, y}\left[\mathbbm{1}\left[ f(x)f(y)f(z) = 1 \right] \right]\\
 			&= \mathbb{E}_{x, y}\left[\frac{1}{2} + \frac{1}{2} f(x)f(y)f(z) = 1 \right]
 			= \frac{1}{2} + \frac{1}{2} \mathbb{E}_{x, y}\left[f(x)f(y)f(z) \right].
@@ -47,7 +48,7 @@ hence \(\mathop{\mathrm{OBJ}}(f) = 1\)! On the other hand, if \(f\) has \(k\) no
 	Now, we decompose \(f(x), f(y), f(z)\) with respect to the Fourier basis, i.e., \(f(x) = \sum_{S} \hat{f} (s)\chi _S(x)\) we have
 	\[
 		\begin{split}
-			\mathop{\mathrm{OBJ}}(f)
+			\mathop{\mathrm{obj}}(f)
 			&= \frac{1}{2} + \frac{1}{2} \mathbb{E}_{x, y}\left[\sum_{S, T, U \subseteq [n]} \hat{f} (S)\hat{f} (T)\hat{f} (U) \cdot \chi _S(x) \chi _T(y) \chi _U(z)\right]\\
 			&= \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S)\hat{f} (T)\hat{f} (U) \cdot \mathbb{E}_{x, y}\left[\chi _S(x) \chi _T(y) \chi _U(z)\right].
 		\end{split}
@@ -67,7 +68,7 @@ hence \(\mathop{\mathrm{OBJ}}(f) = 1\)! On the other hand, if \(f\) has \(k\) no
 	\]
 	Hence,
 	\[
-		\mathop{\mathrm{OBJ}}(f)
+		\mathop{\mathrm{obj}}(f)
 		= \frac{1}{2} + \frac{1}{2} \sum_{S \subseteq [n]} \hat{f} (S)^3 .
 	\]
 \end{proof}
@@ -75,7 +76,7 @@ hence \(\mathop{\mathrm{OBJ}}(f) = 1\)! On the other hand, if \(f\) has \(k\) no
 We see that if we only require \(f\) to have high value when it is corresponding to \(\chi _S\), then we're done. But actually, what we want is when \(S\) is a singleton set, and hence we need more works.
 
 \subsection{Noisy BLR Test}
-In particular, we want to eliminate the case that when \(S = \varnothing \) and \([n]\), \(\mathop{\mathrm{OBJ}}(f) = 1\), i.e., we want to implement \hyperref[not:dictation]{dictation} test. This can be done via introducing noise. Firstly, consider the following new \hyperref[prb:max-3LIN]{3LIN} instances.
+In particular, we want to eliminate the case that when \(S = \varnothing \) and \([n]\), \(\mathop{\mathrm{obj}}(f) = 1\), i.e., we want to implement \hyperref[def:dictation]{dictation} test. This can be done via introducing noise. Firstly, consider the following new \hyperref[prb:max-3LIN]{3LIN} instances.
 
 \begin{itemize}
 	\item Variables: \(\left\{ \pm 1 \right\} ^n\) (hence, the assignment is a \hyperref[def:boolean-function]{boolean function} \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \)).
@@ -91,13 +92,13 @@ In particular, we want to eliminate the case that when \(S = \varnothing \) and 
 \end{itemize}
 
 \begin{remark}[Sanity check]
-	If \(f = \chi _\varnothing \), \(\mathop{\mathrm{OBJ}}(f) = 1/2\); if \(f = \chi _{[n]}\), \(\mathop{\mathrm{OBJ}}(f) \approx 1 / 2\).
+	If \(f = \chi _\varnothing \), \(\mathop{\mathrm{obj}}(f) = 1/2\); if \(f = \chi _{[n]}\), \(\mathop{\mathrm{obj}}(f) \approx 1 / 2\).
 \end{remark}
 \begin{explanation}
 	We see that
 	\begin{itemize}
-		\item If \(f = \chi _\varnothing \) (i.e., \(f(x) = 1\) for all \(x\)): \(\mathop{\mathrm{OBJ}}(f) = 1 / 2\).
-		\item If \(f = \chi _{[n]}\) (i.e., \(f(x) = x_1 x_2 \ldots  x_n\)): \(\mathop{\mathrm{OBJ}}(f) = \mathbb{E}_{x, y, z, b}\left[1 / 2 + 1 / 2 f(x)f(y)f(z)b \right] \). Since
+		\item If \(f = \chi _\varnothing \) (i.e., \(f(x) = 1\) for all \(x\)): \(\mathop{\mathrm{obj}}(f) = 1 / 2\).
+		\item If \(f = \chi _{[n]}\) (i.e., \(f(x) = x_1 x_2 \ldots  x_n\)): \(\mathop{\mathrm{obj}}(f) = \mathbb{E}_{x, y, z, b}\left[1 / 2 + 1 / 2 f(x)f(y)f(z)b \right] \). Since
 		      \[
 			      \begin{split}
 				      \mathbb{E}_{}\left[f(x) f(y) f(z) b \right]
@@ -110,13 +111,13 @@ In particular, we want to eliminate the case that when \(S = \varnothing \) and 
 				      \end{dcases}
 			      \end{split}
 		      \]
-		      So, if \(n \gg 1 / \epsilon \), then \((1 - 2 \epsilon )^n \leq e^{-2 \epsilon n} \approx 0\), i.e., \(\mathop{\mathrm{OBJ}}(f) \approx 1 / 2\).
+		      So, if \(n \gg 1 / \epsilon \), then \((1 - 2 \epsilon )^n \leq e^{-2 \epsilon n} \approx 0\), i.e., \(\mathop{\mathrm{obj}}(f) \approx 1 / 2\).
 	\end{itemize}
 \end{explanation}
 
-The above remark holds for a general \(f\), i.e., when \(f\) is far from \hyperref[not:dictation]{dictation}, the value will be less than \(1\) significantly. To see this, let \(f(x) = \sum_{S \subseteq [n]} \hat{f} (S)\chi _S\), recall that
+The above remark holds for a general \(f\), i.e., when \(f\) is far from \hyperref[def:dictation]{dictation}, the value will be less than \(1\) significantly. To see this, let \(f(x) = \sum_{S \subseteq [n]} \hat{f} (S)\chi _S\), recall that
 \[
-	\mathop{\mathrm{OBJ}}(f)
+	\mathop{\mathrm{obj}}(f)
 	= \mathbb{E}_{x, y, z, b}\left[\frac{1}{2} + \frac{1}{2} f(x) f(y) f(z) b \right]
 	= \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S) \hat{f} (T) \hat{f} (U) \mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) b \right],
 \]
@@ -181,22 +182,22 @@ And hence,
 implying that
 \[
 	\begin{split}
-		\mathop{\mathrm{OBJ}}(f)
+		\mathop{\mathrm{obj}}(f)
 		&= \mathbb{E}_{x, y, z, b}\left[\frac{1}{2} + \frac{1}{2} f(x) f(y) f(z) b \right] \\
 		&= \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S) \hat{f} (T) \hat{f} (U) \mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) b \right] \\
 		&= \frac{1}{2} + \frac{1}{2} \sum_{\vert S \vert \text{ odd}} \hat{f} (S)^3 (1 - 2\epsilon )^{\vert S \vert }.
 	\end{split}
 \]
-We then conclude that if \(f = \chi _i\), then \(\mathop{\mathrm{OBJ}}(f) = 1 - \epsilon \); and if \(f = \chi _S\),
+We then conclude that if \(f = \chi _i\), then \(\mathop{\mathrm{obj}}(f) = 1 - \epsilon \); and if \(f = \chi _S\),
 \[
-	\mathop{\mathrm{OBJ}}(f) = \begin{dcases}
+	\mathop{\mathrm{obj}}(f) = \begin{dcases}
 		\frac{1}{2} + \frac{1}{2} (1-2\epsilon )^{\vert S \vert }, & \text{ if \(\vert S \vert \) is odd};  \\
 		\frac{1}{2},                                               & \text{ if \(\vert S \vert \) is even}.
 	\end{dcases}
 \]
 So \(f\) has \(1 / \epsilon ^2\) Fourier coefficients of \(\epsilon \), leading to
 \[
-	\mathop{\mathrm{OBJ}}(f) \leq \frac{1}{2} + \frac{1}{2}\frac{1}{\epsilon ^2} \epsilon ^3 = \frac{1}{2} + \frac{\epsilon}{2}.
+	\mathop{\mathrm{obj}}(f) \leq \frac{1}{2} + \frac{1}{2}\frac{1}{\epsilon ^2} \epsilon ^3 = \frac{1}{2} + \frac{\epsilon}{2}.
 \]
 Although this is nice and is what we want, but to do the full reduction from \hyperref[prb:label-cover]{label cover} to \hyperref[prb:max-3LIN]{3LIN}, we will need a lot more work.
 
@@ -217,7 +218,7 @@ Given a \(d\)-regular bipartite graph \(\mathcal{G} =(U\sqcup V , \mathcal{E} )\
 
 The uniqueness plays an important role here: since an assignment to one vertex uniquely determines all its neighbors, which implies the following.
 \begin{claim}
-	\hyperref[def:c-s-Gap]{\((1, 1)\)-Gap} \hyperref[prb:unique-game]{unique game} has a polynomial time algorithm.
+	The \hyperref[def:c-s-Gap]{\((1, 1)\)-Gap} \hyperref[prb:unique-game]{unique game} has a polynomial time algorithm.
 \end{claim}
 \begin{explanation}
 	Assume that \(\mathcal{G} \) is connected, then pick an arbitrary vertex \(v\), we just try all labels and propagate. If there is an assignment satisfying every edge, we can find it this way.
@@ -226,10 +227,10 @@ The uniqueness plays an important role here: since an assignment to one vertex u
 On the other hand, given a \hyperref[prb:label-cover]{label cover} instance, even if we are told that there is a perfect assignment, we still can't find it. But interestingly, we hypothesize the following.
 
 \begin{conjecture}[Unique games conjecture~\cite{10.1145/509907.510017}]\label{conj:unique-game}
-	For every \(\epsilon > 0\), there exists \(R\)\footnote{\(R\) is depending on \(\epsilon \).} such that the \hyperref[def:c-s-Gap]{\((1-\epsilon , \epsilon )\)-Gap} \hyperref[prb:unique-game]{unique game} is \(\NP\)-hard with \(R\).
+	For every \(\epsilon > 0\), there exists \(R = R(\epsilon )\) such that the \hyperref[def:c-s-Gap]{\((1-\epsilon , \epsilon )\)-Gap} \hyperref[prb:unique-game]{unique game} is \(\NP\)-hard with \(R\).
 \end{conjecture}
 
-Compared to \autoref{thm:label-cover}, which states that the \hyperref[def:c-s-Gap]{\((1, \epsilon )\)-Gap} \hyperref[prb:label-cover]{label cover} is \(\NP\)-hard, we see that the \hyperref[conj:unique-game]{unique game conjecture} suggests that the only difference between \hyperref[prb:unique-game]{unique game} and \hyperref[prb:label-cover]{label cover} is at the \hyperref[def:c-s-Gap]{\((1, 1)\)-Gap} version, i.e., we can solve the exact \hyperref[prb:unique-game]{unique game}, but this is the only thing we can do additionally compared to \hyperref[prb:label-cover]{label cover}.
+While \autoref{thm:label-cover} states that the \hyperref[def:c-s-Gap]{\((1, \epsilon )\)-Gap} \hyperref[prb:label-cover]{label cover} is \(\NP\)-hard, \hyperref[conj:unique-game]{unique game conjecture} suggests that the only difference between \hyperref[prb:unique-game]{unique game} and \hyperref[prb:label-cover]{label cover} is at the \hyperref[def:c-s-Gap]{\((1, 1)\)-Gap} version, i.e., we can solve the exact \hyperref[prb:unique-game]{unique game}, but this is the only thing we can do additionally compared to \hyperref[prb:label-cover]{label cover}.
 
 \begin{remark}[Optimal hardness]
 	Assuming the \hyperref[conj:unique-game]{unique game conjecture}, for all \(\epsilon > 0\), it is \(\NP\)-hard to
@@ -238,6 +239,7 @@ Compared to \autoref{thm:label-cover}, which states that the \hyperref[def:c-s-G
 		\item \(c\)-approximate multicut for all \(c > 1\);
 		\item \((\alpha _{\mathrm{GW} } + \epsilon )\)-approximate \hyperref[prb:max-cut]{max cut}.
 	\end{enumerate}
+	And the above are all optimal since we have seen the corresponding approximation algorithms before.
 \end{remark}
 
-We're going to see how we can deduce the hardness of \hyperref[prb:max-3LIN]{3LIN} from \hyperref[conj:unique-game]{unique game conjecture}.
+Additionally, if the \hyperref[conj:unique-game]{unique game conjecture} is true, then the Lasserre hierarchy is the best algorithms for all \hyperref[prb:CSP]{CSPs}.

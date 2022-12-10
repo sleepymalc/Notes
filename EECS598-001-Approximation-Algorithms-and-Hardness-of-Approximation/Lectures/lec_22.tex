@@ -1,8 +1,11 @@
 \chapter{Unique Games and the Conjecture}
-\lecture{22}{16 Nov. 10:30}{Optimal Hardness for 3LIN and 3SAT}
+\lecture{22}{16 Nov. 10:30}{3LIN and BLR Test}
 
-In this section, we're going to study a special problem of \hyperref[prb:label-cover]{label cover}, called the \hyperref[prb:unique-game]{unique games}. As we have already seen, the hardness of \hyperref[prb:label-cover]{label cover} already implies the hardness of problems like \hyperref[prb:max-k-coverage]{max \(k\)-coverage} (\autoref{thm:max-k-coverage}), but actually a more interesting case is when we restrict ourselves to a slightly more constrained setup. Toward that end, we start by considering another important problem called \hyperref[prb:max-3LIN]{3LIN}.
-\section{3LIN}
+In this section, we're going to study a special problem of \hyperref[prb:label-cover]{label cover}, called the \hyperref[prb:unique-game]{unique games}. As we have already seen, the hardness of \hyperref[prb:label-cover]{label cover} already implies the hardness of problems like \hyperref[prb:max-k-coverage]{max \(k\)-coverage}, as shown in \autoref{thm:max-k-coverage}.
+
+In particular, if we assume a hardness conjecture called \hyperref[conj:unique-game]{unique game conjecture}, we can show the optimal hardness for \hyperref[prb:max-3LIN]{3LIN}, \hyperref[prb:max-3SAT]{3SAT}, and \hyperref[prb:max-cut]{max cut}. Let's first consider the first two.
+
+\section{Optimal Hardness for 3LIN and 3SAT}
 Let consider the following problem.
 \begin{problem}[MAX-3LIN]\label{prb:max-3LIN}
 Given \(X\coloneqq \left\{ x_1, \ldots , x_n  \right\} \), \(\Sigma = \mathbb{F} _2\), and a set of \(m\) equations in the form of \(x_i + x_j + x_k = 0\) or \(1\). The problem \emph{MAX-3LIN} asks to find \(\sigma \colon X\to \mathbb{F} _2\) that maximizes the fraction of the satisfied equations.
@@ -96,6 +99,7 @@ Which implies the following.
 
 So, we will embark a long journey to prove \autoref{thm:3LIN} from \hyperref[prb:label-cover]{label cover}, i.e., we again want to find a good assignment \(\sigma \colon U \sqcup V \to L \sqcup R\) by using the hypercube construction. To do this, we need to study Fourier analysis over \(\left\{ \pm 1 \right\} ^n\) of a \hyperref[def:boolean-function]{boolean function}.
 
+\section{Fourier Analysis of Boolean Functions}
 \subsection{Boolean Functions and Boolean-Valued Functions}
 Firstly, we introduce the \hyperref[def:boolean-function]{boolean function}.
 
@@ -135,7 +139,7 @@ Now, we want to know what are the orthonormal basis for the set of \hyperref[def
 		      \end{dcases}
 	      \]
 	      We see that \(\left\{ f_x \right\} _{x\in \left\{ \pm 1 \right\} ^n}\) is an orthonormal basis since for all \(x\), \(\lVert f_x \rVert _2^2 = 1\) and \(\left\langle f_x, f_y \right\rangle = 0\) for all \(x \neq y\).
-	\item Fourier basis: For all \(S \subseteq [n]\), define\footnote{We let \(\chi _\varnothing (x) \coloneqq 1\).}
+	\item Fourier basis: For all \(S \subseteq [n]\), define \(\chi _\varnothing (x) \coloneqq 1\) and
 	      \[
 		      \chi _S \colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} ,\quad
 		      \chi _S (x) = \prod_{i\in S} x_i \eqqcolon x^S.
@@ -202,34 +206,36 @@ where we call \(\hat{f} (S)\) the Fourier coefficient. Now, here is some basic f
 \end{explanation}
 
 \begin{claim}
-	Given a \hyperref[def:boolean-function]{boolean function} \(f\), \(\mathop{\mathrm{Var}}\nolimits_{}\left[f \right] = \sum_{S \neq \varnothing } \hat{f} (S)^{2}  \).
+	Given a \hyperref[def:boolean-function]{boolean function} \(f\), \(\Var_{}\left[f \right] = \sum_{S \neq \varnothing } \hat{f} (S)^{2}  \).
 \end{claim}
 \begin{explanation}
-	Since \(\mathop{\mathrm{Var}}\nolimits_{}\left[f \right]
+	Since \(\Var_{}\left[f \right]
 	= \mathbb{E}_{x}\left[f^2 \right] - \left( \mathbb{E}_{x}\left[f \right]  \right) ^2
 	= \sum_{S \subseteq [n]} \hat{f} (S)^2 - \hat{f} (\varnothing )^2
 	= \sum_{S \neq \varnothing } \hat{f} (S)^2\).
 \end{explanation}
 
-\subsection{BLR Test}
-Our goal is to design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(U \times \left\{ \pm 1 \right\} ^L\) identified by hypercube. Compared to the \hyperref[prb:max-k-coverage]{max \(k\)-coverage}, now the hypercubes are variables.
+\section{BLR Test and the Noisy BLR Test}
+Our goal is to show the \hyperref[def:reduction]{reduction} from \hyperref[prb:label-cover]{label cover} to \hyperref[prb:max-3LIN]{3LIN} by designing a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(U \times \left\{ \pm 1 \right\} ^L\) identified by hypercube. Compared to the \hyperref[prb:max-k-coverage]{max \(k\)-coverage}, now the hypercubes are variables.
 \begin{center}
 	\incfig{MkC-compare-to-3LIN}
 \end{center}
 
-Ideally, \((u, x)\) gets \(x_{\sigma (u)}\).
+Ideally, \((u, x)\) gets \(x_{\sigma (u)}\), which is just a particular base of the Fourier basis called \hyperref[def:dictation]{dictation}.
+
+\begin{definition}[Dictation]\label{def:dictation}
+	The \emph{dictation function} of \(i\) is defined as \(\chi _i(x) \coloneqq \chi _{\left\{ i \right\} } (x) = x_i\).
+\end{definition}
+
+For convenience, we sometimes call a \hyperref[def:dictation]{dictation function} as \emph{dictator} for short.
 
 \begin{intuition}
 	Consider assignment \(\alpha \colon \left\{ \text{variables of \hyperref[prb:max-3LIN]{3LIN}}\right\} = U \times \left\{ \pm 1 \right\}^L \to \left\{ \pm 1 \right\} \), then fix \(u\in U\), and let \(f\colon \left\{ \pm 1 \right\} ^L \to  \left\{ \pm 1 \right\} \) given by \(f(x) = \alpha (u, x)\). Ideally, \(f(x) = \chi _{\sigma (u)}\), which means \(f\in \left\{ \chi _1, \ldots , \chi _L  \right\} \).
 \end{intuition}
 
-\begin{notation}[Dictation]\label{not:dictation}
-	The \emph{dictation function}, or \emph{dictator} of \(i\) is \(\chi _i(x) \coloneqq \chi _{\left\{ i \right\} } (x) = x_i\).
-\end{notation}
-
 \begin{problem*}
 	But since the number of possible \(f\)'s is \(2^{2^L}\), how can we \emph{force} \(f\) to be in \(\left\{ \chi _i \right\}_{i = 1}^L\), or even \(\left\{ \chi _S \right\}_{S \subseteq [L]} \)?
 \end{problem*}
 \begin{answer}
-	Turns out that we can design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(\left\{ \pm 1 \right\} ^n\) such that if the \emph{assignment} \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \) is \emph{close} to some \(\chi _S\), \(\mathop{\mathrm{OBJ}}(f)\)\footnote{The \(\mathop{\mathrm{OBJ}}(f)\) is the fraction of equations satisfied by \(f\).} is large; if it is \emph{far} from any \(\chi _S\), then \(\mathop{\mathrm{OBJ}}(f)\) is small.
+	We can design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(\left\{ \pm 1 \right\} ^n\) such that if the \emph{assignment} \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \) is \emph{close} to some \(\chi _S\), \(\mathop{\mathrm{obj}}(f)\)\footnote{The \(\mathop{\mathrm{obj}}(f)\) is the fraction of equations satisfied by \(f\).} is large; if it is \emph{far} from any \(\chi _S\), then \(\mathop{\mathrm{obj}}(f)\) is small.
 \end{answer}

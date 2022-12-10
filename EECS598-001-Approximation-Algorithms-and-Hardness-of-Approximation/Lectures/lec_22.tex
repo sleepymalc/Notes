@@ -5,7 +5,7 @@ In this section, we're going to study a special problem of \hyperref[prb:label-c
 \section{3LIN}
 Let consider the following problem.
 \begin{problem}[MAX-3LIN]\label{prb:max-3LIN}
-Given \(X\coloneqq \left\{ x_1, \ldots , x_n  \right\} \), \(\Sigma = \mathbb{\MakeUppercase{f}} _2\), and a set of \(m\) equations in the form of \(x_i + x_j + x_k = 0\) or \(1\). The problem \emph{MAX-3LIN} asks to find \(\sigma \colon X\to \mathbb{\MakeUppercase{f}} _2\) that maximizes the fraction of the satisfied equations.
+Given \(X\coloneqq \left\{ x_1, \ldots , x_n  \right\} \), \(\Sigma = \mathbb{F} _2\), and a set of \(m\) equations in the form of \(x_i + x_j + x_k = 0\) or \(1\). The problem \emph{MAX-3LIN} asks to find \(\sigma \colon X\to \mathbb{F} _2\) that maximizes the fraction of the satisfied equations.
 \end{problem}
 
 \begin{remark}
@@ -36,7 +36,7 @@ We're going to show the hardness of \hyperref[prb:max-3LIN]{3LIN}, but first, no
 			b_m    \\
 		\end{bmatrix}_{m\times 1},
 	\]
-	where the coefficient matrix has only three non-zero entries for each row. Then, if this is an accepted instance, this system of equations has a solution, and we can check this just by Gaussian elimination over \(\mathbb{\MakeUppercase{f}} _2\).
+	where the coefficient matrix has only three non-zero entries for each row. Then, if this is an accepted instance, this system of equations has a solution, and we can check this just by Gaussian elimination over \(\mathbb{F} _2\).
 \end{explanation}
 
 But what if the instance has \(\OPT = 1 - \epsilon \) for some small \(\epsilon > 0\)? In this case, this question is actually hard.
@@ -94,15 +94,15 @@ Which implies the following.
 	Recall that a random assignment of \hyperref[prb:max-3SAT]{3SAT} satisfies \(7 / 8\) fraction of clauses. This suggests that both \hyperref[prb:max-3SAT]{3SAT} and \hyperref[prb:max-3LIN]{3LIN} is hard: we can't do better than random assignment.
 \end{note}
 
-So, we will embark a long journey to prove \autoref{thm:3LIN} from \hyperref[prb:label-cover]{label cover}, i.e., we again want to find a good assignment \(\sigma \colon U \sqcup L \to L \sqcup R\) by using the hypercube construction. To do this, we need to study Fourier analysis over \(\left\{ \pm 1 \right\} ^n\) of a \hyperref[def:boolean-function]{boolean function}.
+So, we will embark a long journey to prove \autoref{thm:3LIN} from \hyperref[prb:label-cover]{label cover}, i.e., we again want to find a good assignment \(\sigma \colon U \sqcup V \to L \sqcup R\) by using the hypercube construction. To do this, we need to study Fourier analysis over \(\left\{ \pm 1 \right\} ^n\) of a \hyperref[def:boolean-function]{boolean function}.
 
 \subsection{Boolean Functions and Boolean-Valued Functions}
 Firstly, we introduce the \hyperref[def:boolean-function]{boolean function}.
 
 \begin{definition*}
-	Let \(\mathbb{\MakeUppercase{f}} _2\) be the additive group over \(\mathbb{\MakeUppercase{f}} _2 = \left\{ 0, 1 \right\} \) and consider the conical isomorphism to the multiplicative group \(\left\{ \pm 1 \right\} \).
+	Let \(\mathbb{F} _2\) be the additive group over \(\mathbb{F} _2 = \left\{ 0, 1 \right\} \) and consider the conical isomorphism to the multiplicative group \(\left\{ \pm 1 \right\} \).
 	\begin{definition}[Boolean funciton]\label{def:boolean-function}
-		A function \(f\) is a \emph{boolean function} if \(f\colon \left\{ \pm 1 \right\} ^n \to \mathbb{\MakeUppercase{r}} \).
+		A function \(f\) is a \emph{boolean function} if \(f\colon \left\{ \pm 1 \right\} ^n \to \mathbb{R} \).
 	\end{definition}
 
 	\begin{definition}[Boolean-valued]\label{def:boolean-valued}
@@ -118,7 +118,7 @@ Consider viewing the set of \hyperref[def:boolean-function]{boolean functions} a
 \[
 	\left\langle f, g \right\rangle
 	= \frac{1}{2^n} \sum_{x\in \left\{ \pm 1 \right\} ^n} f(x) g(x)
-	= \mathbb{E}_{x}\left[f(x) g(x) \right] .
+	\eqqcolon \mathbb{E}_{x}\left[f(x) g(x) \right] .
 \]
 \begin{note}
 	We have \(\lVert f \rVert _2 ^2 = \left\langle f, f \right\rangle = \mathbb{E}_{x}\left[f(x)^2 \right] \).
@@ -128,7 +128,7 @@ Now, we want to know what are the orthonormal basis for the set of \hyperref[def
 \begin{enumerate}[(a)]
 	\item Standard basis: For all \(x\in \left\{ \pm 1\right\}^n\),
 	      \[
-		      f_x \colon \left\{ \pm 1 \right\} ^n \to  \mathbb{\MakeUppercase{r}} ,\quad
+		      f_x \colon \left\{ \pm 1 \right\} ^n \to  \mathbb{R} ,\quad
 		      f_x (y) = \begin{dcases}
 			      2^{n / 2}, & \text{ if } x=y ;   \\
 			      0,         & \text{ otherwise} .
@@ -154,7 +154,7 @@ Now, we want to know what are the orthonormal basis for the set of \hyperref[def
 \end{enumerate}
 
 \subsection{Fourier Analysis over Boolean Functions}
-We'll study the Fourier basis primarily. Firstly, we have the following decomposition of \(f\colon \left\{ \pm 1 \right\} ^n \to  \mathbb{\MakeUppercase{r}} \) as
+We'll study the Fourier basis primarily. Firstly, we have the following decomposition of \(f\colon \left\{ \pm 1 \right\} ^n \to  \mathbb{R} \) as
 \[
 	f = \sum_{S \subseteq [n]} \hat{f} (S) \chi _S,
 \]
@@ -211,7 +211,7 @@ where we call \(\hat{f} (S)\) the Fourier coefficient. Now, here is some basic f
 	= \sum_{S \neq \varnothing } \hat{f} (S)^2\).
 \end{explanation}
 
-\section{BLR Test: Reduction to 3LIN}
+\subsection{BLR Test}
 Our goal is to design a \hyperref[prb:max-3LIN]{3LIN} instance on variables \(U \times \left\{ \pm 1 \right\} ^L\) identified by hypercube. Compared to the \hyperref[prb:max-k-coverage]{max \(k\)-coverage}, now the hypercubes are variables.
 \begin{center}
 	\incfig{MkC-compare-to-3LIN}

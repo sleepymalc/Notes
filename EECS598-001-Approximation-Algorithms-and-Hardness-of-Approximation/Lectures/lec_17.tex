@@ -5,19 +5,19 @@ Let's first prove \autoref{thm:PTAS-for-max-cut}.
 	The running time for \autoref{algo:max-cut-PTAS} is clear. Denote \(p_i = \widetilde{P} ^\prime (X_i = 1)\), then we see that the expected fraction of edges cuts is
 	\[
 		\begin{split}
-			&\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ \Pr\nolimits_{\mathrm{ALG}}(X_i \neq X_j) \right]\\
-			=& \mathbb{E}_{X_S}\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[p_i + p_j - 2 p_i p_j \right]\\
-			\geq& \mathbb{E}_{X_S}\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ p_i + p_j - 2 \mathbb{E}_{\widetilde{P} ^\prime }\left[X_i X_j \right] - 2 \left\vert p_i p_j - \mathbb{E}_{\widetilde{P} ^\prime }\left[X_i X_j \right]  \right\vert  \right]\\
-			=& \underbrace{\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ \mathbb{E}_{\widetilde{P} }\left[X_i \right] + \mathbb{E}_{\widetilde{P} }\left[X_j \right] - 2 \mathbb{E}_{\widetilde{P} }\left[ X_i X_j\right]  \right]}_{\mathrm{Lass}} - \underbrace{2 \mathbb{E}_{X_S} \mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ p_i p_j - \mathbb{E}_{\widetilde{P} ^\prime }\left[ X_i X_j\right] \right]}_{\mathrm{Err}}.
+			&\mathbb{E}_{(i, j)\in \mathcal{E} }\left[ \Pr\nolimits_{\mathrm{ALG}}(X_i \neq X_j) \right]\\
+			=& \mathbb{E}_{X_S}\mathbb{E}_{(i, j)\in \mathcal{E} }\left[p_i + p_j - 2 p_i p_j \right]\\
+			\geq& \mathbb{E}_{X_S}\mathbb{E}_{(i, j)\in \mathcal{E} }\left[ p_i + p_j - 2 \mathbb{E}_{\widetilde{P} ^\prime }\left[X_i X_j \right] - 2 \left\vert p_i p_j - \mathbb{E}_{\widetilde{P} ^\prime }\left[X_i X_j \right]  \right\vert  \right]\\
+			=& \underbrace{\mathbb{E}_{(i, j)\in \mathcal{E} }\left[ \mathbb{E}_{\widetilde{P} }\left[X_i \right] + \mathbb{E}_{\widetilde{P} }\left[X_j \right] - 2 \mathbb{E}_{\widetilde{P} }\left[ X_i X_j\right]  \right]}_{\mathrm{Lass}} - \underbrace{2 \mathbb{E}_{X_S} \mathbb{E}_{(i, j)\in \mathcal{E} }\left[ p_i p_j - \mathbb{E}_{\widetilde{P} ^\prime }\left[ X_i X_j\right] \right]}_{\mathrm{Err}}.
 		\end{split}
 	\]
-	Recall that previously, we only have control on \(\mathop{\mathrm{Cov}}\nolimits_{\widetilde{P} ^\prime }^{2} = \mathop{\mathrm{Cov}}^2(\widetilde{P} \mid X_S\gets \alpha _S)\), which is over the whole \(i, j\sim[n]\). But now the error term (the second term) is only over \((i, j)\sim \mathcal{\MakeUppercase{e}} \), hence we define
+	Recall that previously, we only have control on \(\mathop{\mathrm{Cov}}\nolimits_{\widetilde{P} ^\prime }^{2} = \mathop{\mathrm{Cov}}^2(\widetilde{P} \mid X_S\gets \alpha _S)\), which is over the whole \(i, j\sim[n]\). But now the error term (the second term) is only over \((i, j)\sim \mathcal{E} \), hence we define
 	\[
-		\mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{E}} }^2\left[ \widetilde{P} \mid X_S \gets \alpha _S\right]
-		= \mathbb{E}_{X_S} \mathbb{E}_{(i, j)\sim \mathcal{\MakeUppercase{e}} }\left[ \mathop{\mathrm{Cov}}\nolimits_{}\left[X_i , X_j \mid S_S \right]^{2}\right].
+		\mathop{\mathrm{Cov}}\nolimits_{\mathcal{E} }^2\left[ \widetilde{P} \mid X_S \gets \alpha _S\right]
+		= \mathbb{E}_{X_S} \mathbb{E}_{(i, j)\sim \mathcal{E} }\left[ \mathop{\mathrm{Cov}}\nolimits_{}\left[X_i , X_j \mid S_S \right]^{2}\right].
 	\]
 	\begin{claim}
-		\(\mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{e}} }^2 [ \widetilde{P} \mid S ] \leq \mathop{\mathrm{Cov}}\nolimits_{}[\widetilde{P} \mid X_S \gets \alpha _S ] / \epsilon \leq \epsilon ^3 \).
+		\(\mathop{\mathrm{Cov}}\nolimits_{\mathcal{E} }^2 [ \widetilde{P} \mid S ] \leq \mathop{\mathrm{Cov}}\nolimits_{}[\widetilde{P} \mid X_S \gets \alpha _S ] / \epsilon \leq \epsilon ^3 \).
 	\end{claim}
 	\begin{explanation}
 		We see that
@@ -25,15 +25,15 @@ Let's first prove \autoref{thm:PTAS-for-max-cut}.
 			\begin{split}
 				n^2\cdot \mathop{\mathrm{Cov}}\nolimits_{}^2\left[\widetilde{P} \mid X_S \gets \alpha _S \right]
 				&= \mathop{\mathrm{Cov}}\nolimits_{\Sigma }^2\left[\widetilde{P} \mid X_S\gets \alpha _S \right] \\
-				&\geq \mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{e}} , \Sigma }^2\left[\widetilde{P} \mid X_S\gets \alpha _S \right]
-				= m \cdot \mathop{\mathrm{Cov}}\nolimits_{\mathcal{\MakeUppercase{e}} }^2\left[\widetilde{P} \mid X_S \gets \alpha _S \right],
+				&\geq \mathop{\mathrm{Cov}}\nolimits_{\mathcal{E} , \Sigma }^2\left[\widetilde{P} \mid X_S\gets \alpha _S \right]
+				= m \cdot \mathop{\mathrm{Cov}}\nolimits_{\mathcal{E} }^2\left[\widetilde{P} \mid X_S \gets \alpha _S \right],
 			\end{split}
 		\]
 		where subscript \(\Sigma \) is when we replace the expectation by summation in the covariance. With the fact that \(m\gets \epsilon n^2\), we're done.
 	\end{explanation}
 	Now, since we know that \(\mathrm{Lass} \geq \OPT \geq 1 / 2\), we have
 	\[
-		\mathbb{E}_{(i, j)\in \mathcal{\MakeUppercase{e}} }\left[ \Pr\nolimits_{\mathrm{ALG}}(X_i \neq X_j) \right]
+		\mathbb{E}_{(i, j)\in \mathcal{E} }\left[ \Pr\nolimits_{\mathrm{ALG}}(X_i \neq X_j) \right]
 		\geq \mathrm{Lass} - 2 \epsilon \geq \mathrm{Lass}(1 - 4 \epsilon ),
 	\]
 	finishing the proof.
@@ -43,13 +43,13 @@ Let's first prove \autoref{thm:PTAS-for-max-cut}.
 Return to the \hyperref[def:SDP]{SDP}, first, we introduce a new definition.
 
 \begin{definition}[Coloring]\label{def:coloring}
-	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a \emph{(valid) coloring} \(\chi \colon \mathcal{\MakeUppercase{v}} \to [c]\) is a function \(\chi \) such that for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), \(\chi (i) \neq \chi (j)\).
+	Given a graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\), a \emph{(valid) coloring} \(\chi \colon \mathcal{V} \to [c]\) is a function \(\chi \) such that for all \((i, j)\in \mathcal{E} \), \(\chi (i) \neq \chi (j)\).
 \end{definition}
 
 Now, consider the following problem.
 
 \begin{problem}[Graph coloring]\label{prb:graph-coloring}
-Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), find a \hyperref[def:coloring]{coloring} \(\chi \colon \mathcal{\MakeUppercase{v}} \to [c]\) while minimizing \(c\).
+Given a graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\), find a \hyperref[def:coloring]{coloring} \(\chi \colon \mathcal{V} \to [c]\) while minimizing \(c\).
 \end{problem}
 
 Before trying to solve the \hyperref[prb:graph-coloring]{graph coloring}, we note that it's trivial to get \(n\)-\hyperref[def:coloring]{coloring} (by using different color for every node). But in fact, this is the best we can do: \hyperref[prb:graph-coloring]{graph coloring} is extremely hard!
@@ -58,23 +58,23 @@ Before trying to solve the \hyperref[prb:graph-coloring]{graph coloring}, we not
 	For all \(\epsilon > 0\), it's \(\NP\) to get \(n^{1 - \epsilon }\)-approximation.
 \end{theorem}
 
-People start to consider some promise version of \hyperref[prb:graph-coloring]{graph coloring}, i.e., if we directly assume that \(\mathcal{\MakeUppercase{g}} \) admits a \(c\)-\hyperref[def:coloring]{coloring}, what can we say?
+People start to consider some promise version of \hyperref[prb:graph-coloring]{graph coloring}, i.e., if we directly assume that \(\mathcal{G} \) admits a \(c\)-\hyperref[def:coloring]{coloring}, what can we say?
 \begin{itemize}
-	\item \(c = 1\): \(\mathcal{\MakeUppercase{g}} \) has no edges, hence trivial.
-	\item \(c = 2\): \(\mathcal{\MakeUppercase{g}} \) is bipartite, so we can color the graph alternatively, so this can be solved exactly.
+	\item \(c = 1\): \(\mathcal{G} \) has no edges, hence trivial.
+	\item \(c = 2\): \(\mathcal{G} \) is bipartite, so we can color the graph alternatively, so this can be solved exactly.
 	\item \(c = 3\): We can do \(\widetilde{O} (n^{1 / 4})\)-approximation (quite shameful...)
 \end{itemize}
 \begin{remark}[SOTA for \(c=3\)]
 	For \(c = 3\), someone showed that we can do \(\widetilde{O} (n^{0.199\ldots  })\), i.e., around \(\widetilde{O} ^{1 / 5}\). Also, \(\omega (1)\)-approximation is \(\NP\)!
 \end{remark}
 
-Analogous to \hyperref[prb:max-cut]{max cut}, we design the following \hyperref[eq:graph-coloring]{SDP} relaxation of \hyperref[prb:graph-coloring]{graph coloring} with variables being vectors \(v_i\) for \(i\in \mathcal{\MakeUppercase{v}} \).
+Analogous to \hyperref[prb:max-cut]{max cut}, we design the following \hyperref[eq:graph-coloring]{SDP} relaxation of \hyperref[prb:graph-coloring]{graph coloring} with variables being vectors \(v_i\) for \(i\in \mathcal{V} \).
 
 \begin{equation}\label{eq:graph-coloring}
 	\begin{aligned}
-		\min~ & 0                                                                                             \\
-		      & \left\langle v_i, v_i \right\rangle = 1      & \forall i\in \mathcal{\MakeUppercase{v}}       \\
-		      & \left\langle v_i, v_j \right\rangle = -1 / 2 & \forall (i, j)\in \mathcal{\MakeUppercase{e}}.
+		\min~ & 0                                                                             \\
+		      & \left\langle v_i, v_i \right\rangle = 1      & \forall i\in \mathcal{V}       \\
+		      & \left\langle v_i, v_j \right\rangle = -1 / 2 & \forall (i, j)\in \mathcal{E}.
 	\end{aligned}
 \end{equation}
 
@@ -83,7 +83,7 @@ Analogous to \hyperref[prb:max-cut]{max cut}, we design the following \hyperref[
 \end{note}
 
 \begin{claim}
-	If \(\mathcal{\MakeUppercase{g}} \) is \(3\)-\hyperref[def:coloring]{colorable}, there exists \(\left\{ v_i \right\}_{i\in \mathcal{\MakeUppercase{v}} } \) that are feasible for \autoref{eq:graph-coloring}.
+	If \(\mathcal{G} \) is \(3\)-\hyperref[def:coloring]{colorable}, there exists \(\left\{ v_i \right\}_{i\in \mathcal{V} } \) that are feasible for \autoref{eq:graph-coloring}.
 \end{claim}
 \begin{explanation}
 	Consider \(3\) colors \(C_1\), \(C_2\), and \(C_3\), then if \(i\) has \(C_j\), we let \(i\) gets vector \(v_j\) with all vectors \(v_j\), \(v_{j^\prime }\) are \(120^{\circ } \) away.
@@ -96,19 +96,19 @@ Analogous to \hyperref[prb:max-cut]{max cut}, we design the following \hyperref[
 Turns out that the \hyperref[def:independent-set]{independent set} is highly related to solving just \autoref{eq:graph-coloring}, as we'll soon see.
 
 \begin{definition}[Independent set]\label{def:independent-set}
-	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a set \(S \subseteq \mathcal{\MakeUppercase{v}} \) is \emph{independent} if for all \((i, j)\in \mathcal{\MakeUppercase{e}} \), either \(i \notin S\) or \(j \notin S\).
+	Given a graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\), a set \(S \subseteq \mathcal{V} \) is \emph{independent} if for all \((i, j)\in \mathcal{E} \), either \(i \notin S\) or \(j \notin S\).
 \end{definition}
 
 The notion of \hyperref[def:independent-set]{independent set} is useful since we can transform the \hyperref[prb:graph-coloring]{graph coloring} problem into finding \hyperref[def:independent-set]{independent sets} as suggests by \autoref{lma:lec17}.
 
 \begin{lemma}\label{lma:lec17}
-	For a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), then \(\mathcal{\MakeUppercase{g}} \) is \(c\)-\hyperref[def:coloring]{colorable} if and only if \(\mathcal{\MakeUppercase{v}} \) can be partitioned to \(V_1, \ldots, V_c\) such that \(V_i\) is \hyperref[def:independent-set]{independent}.
+	For a graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), then \(\mathcal{G} \) is \(c\)-\hyperref[def:coloring]{colorable} if and only if \(\mathcal{V} \) can be partitioned to \(V_1, \ldots, V_c\) such that \(V_i\) is \hyperref[def:independent-set]{independent}.
 \end{lemma}
 
 With \autoref{lma:lec17}, if we can find large \hyperref[def:independent-set]{independent sets} and partition the graph into not too many of those, we're done. Note that the size of \hyperref[def:independent-set]{independent sets} is related to the maximum degree.
 
 \begin{notation}
-	We denote the maximum degree of a graph \(\mathcal{\MakeUppercase{g}}=(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \) by \(\Delta \coloneqq \Delta (\mathcal{\MakeUppercase{G}} )\coloneqq \max_{v\in \mathcal{\MakeUppercase{v}} } \deg(v)\).
+	We denote the maximum degree of a graph \(\mathcal{G}=(\mathcal{V} , \mathcal{E} ) \) by \(\Delta \coloneqq \Delta (\mathcal{G} )\coloneqq \max_{v\in \mathcal{V} } \deg(v)\).
 \end{notation}
 
 \begin{remark}[Usefullness of \(\Delta \)]
@@ -132,14 +132,14 @@ This suggests that we round it with threshold, i.e., consider the following algo
 \begin{algorithm}[H]\label{algo:graph-coloring-independent-set}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:graph-coloring]{Graph Coloring} -- \hyperref[def:independent-set]{Independent Set} Rounding of \(3\)-\hyperref[def:coloring]{Colorable} Graph}
-	\KwData{A \(3\)-\hyperref[def:coloring]{colorable} graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
+	\KwData{A \(3\)-\hyperref[def:coloring]{colorable} graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\)}
 	\KwResult{An \hyperref[def:independent-set]{independent set} \(S\)}
 	\SetKwFunction{Sol}{Solve}
 	\BlankLine
-	\(\left\{ v_i \in \mathbb{\MakeUppercase{r}} ^d\right\} _{i=1}^n \gets\)\Sol{\hyperref[eq:graph-coloring]{SDP}}\;
-	\(r \gets \mathcal{\MakeUppercase{n}} (0, I_d)\)\label{algo:graph-coloring-independent-set-r}\Comment*[r]{\(r_i \sim \mathcal{\MakeUppercase{n}} (0, 1)\)}
-	\(S(\epsilon )\gets\left\{ i\in \mathcal{\MakeUppercase{v}} \colon \left\langle r, v_i \right\rangle \geq \epsilon   \right\} \)\Comment*[r]{\(\epsilon = \sqrt{2 / 3\cdot \ln \Delta } \) }
-	\(S^\prime (\epsilon )= \left\{ i\in S(\epsilon )\colon \nexists j\in S(\epsilon ) \text{ s.t. } (i, j)\in \mathcal{\MakeUppercase{e}} \right\} \)\Comment*[r]{Make \(S\) \hyperref[def:independent-set]{independent}}
+	\(\left\{ v_i \in \mathbb{R} ^d\right\} _{i=1}^n \gets\)\Sol{\hyperref[eq:graph-coloring]{SDP}}\;
+	\(r \gets \mathcal{N} (0, I_d)\)\label{algo:graph-coloring-independent-set-r}\Comment*[r]{\(r_i \sim \mathcal{N} (0, 1)\)}
+	\(S(\epsilon )\gets\left\{ i\in \mathcal{V} \colon \left\langle r, v_i \right\rangle \geq \epsilon   \right\} \)\Comment*[r]{\(\epsilon = \sqrt{2 / 3\cdot \ln \Delta } \) }
+	\(S^\prime (\epsilon )= \left\{ i\in S(\epsilon )\colon \nexists j\in S(\epsilon ) \text{ s.t. } (i, j)\in \mathcal{E} \right\} \)\Comment*[r]{Make \(S\) \hyperref[def:independent-set]{independent}}
 	\Return{\(S^\prime (\epsilon )\)}\;
 \end{algorithm}
 

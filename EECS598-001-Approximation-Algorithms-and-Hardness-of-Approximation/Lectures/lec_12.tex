@@ -6,7 +6,7 @@ Let's prove \autoref{thm:num-small-mincuts}.
 	\begin{algorithm}[H]\label{algo:num-small-mincuts}
 		\DontPrintSemicolon
 		\caption{Small \(\alpha \)-Mincuts -- Karger's Algorithm~\cite{Karger1993GlobalMI}}
-		\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a weight function \(x\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), \(\alpha \)}
+		\KwData{A connected graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), a weight function \(x\colon \mathcal{E} \to \mathbb{R} ^+\), \(\alpha \)}
 		\KwResult{An \(\alpha \)-mincut \(S\)}
 		\SetKw{Break}{break}
 		\SetKwFunction{Contract}{contract}
@@ -14,11 +14,11 @@ Let's prove \autoref{thm:num-small-mincuts}.
 		\SetKwFunction{randsub}{rand-subset}
 		\SetKwFunction{Uncontract}{uncontract}
 		\BlankLine
-		\While(){\(\left\vert \mathcal{\MakeUppercase{v}} \right\vert > 2\alpha\)}{
-			\(e\gets\)\rand{\(\mathcal{\MakeUppercase{e}} \), \(x_e\)}\Comment*[r]{Sample w.p.\ \(x_e\)}
-			\Contract{\(\mathcal{\MakeUppercase{g}} \), \(e\)}\Comment*[r]{new \(x\) is the sum of multi-edges' \(x\)}
+		\While(){\(\left\vert \mathcal{V} \right\vert > 2\alpha\)}{
+			\(e\gets\)\rand{\(\mathcal{E} \), \(x_e\)}\Comment*[r]{Sample w.p.\ \(x_e\)}
+			\Contract{\(\mathcal{G} \), \(e\)}\Comment*[r]{new \(x\) is the sum of multi-edges' \(x\)}
 		}
-		\(S\gets\)\randsub{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{\(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = 2\alpha \)}
+		\(S\gets\)\randsub{\(\mathcal{V}\)}\Comment*[r]{\(\left\vert \mathcal{V}  \right\vert = 2\alpha \)}
 		\(S \gets\)\Uncontract{\(S\)}\;
 		\Return{\(S\)}\;
 	\end{algorithm}
@@ -27,14 +27,14 @@ Let's prove \autoref{thm:num-small-mincuts}.
 	\begin{remark}
 		Observe that if \(e = (u, v)\) is contracted where \(u\in S\) while \(v \notin S\), then \(S\)  will definitely not be outputted.
 	\end{remark}
-	Denote \(\Pr(S \text{ survives when } \left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i) \eqqcolon P_i\), then if \(S\) survived until \(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i\), we see that \(S\) is still an \(\alpha \)-mincut, and in the current \(\mathcal{\MakeUppercase{g}} \), by considering a single vertex as a potential mincut, we have
+	Denote \(\Pr(S \text{ survives when } \left\vert \mathcal{V}  \right\vert = i) \eqqcolon P_i\), then if \(S\) survived until \(\left\vert \mathcal{V}  \right\vert = i\), we see that \(S\) is still an \(\alpha \)-mincut, and in the current \(\mathcal{G} \), by considering a single vertex as a potential mincut, we have
 	\[
 		\frac{\sum_{e\in \partial S} x_e}{\alpha }
 		\leq \lambda
-		\leq \mathbb{E}_{v\in \mathcal{\MakeUppercase{v}} }\left[ \sum_{e\in \partial \left\{ v \right\} } x(e) \right] = \frac{2}{i} \sum_{e\in \mathcal{\MakeUppercase{e}} } x(e)
-		\implies P_i = 1 - \frac{\sum_{e\in \partial S} x(e)}{\sum_{e\in \mathcal{\MakeUppercase{e}} }x(e) } \geq 1 - \frac{2\alpha }{i} = \frac{i-2\alpha }{i}
+		\leq \mathbb{E}_{v\in \mathcal{V} }\left[ \sum_{e\in \partial \left\{ v \right\} } x(e) \right] = \frac{2}{i} \sum_{e\in \mathcal{E} } x(e)
+		\implies P_i = 1 - \frac{\sum_{e\in \partial S} x(e)}{\sum_{e\in \mathcal{E} }x(e) } \geq 1 - \frac{2\alpha }{i} = \frac{i-2\alpha }{i}
 	\]
-	since \(P_i= 1 - \Pr(\text{\(S\) does not survive when }\left\vert \mathcal{\MakeUppercase{v}}  \right\vert = i)\), while the latter event happens when one of the boundary edges in \(\partial S\) is picked to be contracted. We then see that
+	since \(P_i= 1 - \Pr(\text{\(S\) does not survive when }\left\vert \mathcal{V}  \right\vert = i)\), while the latter event happens when one of the boundary edges in \(\partial S\) is picked to be contracted. We then see that
 	\[
 		\begin{split}
 			\Pr(\text{\(S\) is outputted})
@@ -54,7 +54,7 @@ Now, we're ready to show that a randomly sampled \hyperref[def:spanning-tree]{sp
 	\(z\) is feasible for the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope}.
 \end{remark}
 \begin{explanation}
-	Since we have scaled down \(y\), hence \(\sum_{e\in \mathcal{\MakeUppercase{e}} } z_e = n-1\). While for the second constraint, all \(\varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \), we have
+	Since we have scaled down \(y\), hence \(\sum_{e\in \mathcal{E} } z_e = n-1\). While for the second constraint, all \(\varnothing \neq S \subsetneq \mathcal{V} \), we have
 	\[
 		\sum_{e\in E(S)} x_e = \sum_{v\in S} \sum_{e\in \partial ^+ \left\{ v \right\} } x(e) - \sum_{e\in E(S, \overline{S} )} x(e) \leq \left\vert S \right\vert - 1,
 	\]
@@ -66,11 +66,11 @@ Now, we can sample a random \hyperref[def:spanning-tree]{spanning tree} \(T^\pri
 \begin{algorithm}[H]\label{algo:random-thin-spanning-tree}
 	\DontPrintSemicolon
 	\caption{\hyperref[def:thin]{Thin} \hyperref[def:spanning-tree]{Spanning Tree} -- Randomized Pipage-Rounding}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(z\) of \autoref{eq:spanning-tree-polytope}}
+	\KwData{A connected graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), weight \(w\colon \mathcal{E} \to \mathbb{R} ^+\), solution \(z\) of \autoref{eq:spanning-tree-polytope}}
 	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
 	\SetKwFunction{RPG}{\hyperref[algo:min-spanning-tree-randomized-pipage-rounding]{Randomized-Pipage-Rounding}}
 	\BlankLine
-	\(T^\prime \gets\)\RPG{\(\mathcal{\MakeUppercase{g}} \), \(w\), \(z\)}\;
+	\(T^\prime \gets\)\RPG{\(\mathcal{G} \), \(w\), \(z\)}\;
 	\(T\gets \varnothing \)\;
 	\For(\Comment*[f]{Using the cheaper edge between \((u, v)\) and \((v, u)\)}){\(e=\left\{ u, v \right\} \in T^\prime \)}{
 		\uIf(){\(w((u, v)) \leq w((v, u))\)}{
@@ -100,19 +100,19 @@ We now show that \(T\) obtained from \autoref{algo:random-thin-spanning-tree} is
 	\(T\) output from \autoref{algo:random-thin-spanning-tree} satisfies \(\beta = 12\log n / \log \log n\) for \hyperref[def:thin]{\((\alpha , \beta )\)-thinness} with probability at least \(1 - n^{-1} \).
 \end{lemma}
 \begin{proof}
-	Given any \(\beta \), we want to bound the probability that there's one \(\varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \) which violates the condition. To do this, let
+	Given any \(\beta \), we want to bound the probability that there's one \(\varnothing \neq S \subsetneq \mathcal{V} \) which violates the condition. To do this, let
 	\[
-		C_i \coloneqq \left\{ S \subseteq \mathcal{\MakeUppercase{v}} \mid z(\partial S) \in [i \lambda , (i+1)\lambda ) \right\} ,
+		C_i \coloneqq \left\{ S \subseteq \mathcal{V} \mid z(\partial S) \in [i \lambda , (i+1)\lambda ) \right\} ,
 	\]
 	where we have
 	\[
-		\lambda = \min _{\varnothing \neq S \subseteq \mathcal{\MakeUppercase{v}} }z(\partial S) = 2\cdot \frac{n-1}{n} \geq 1.
+		\lambda = \min _{\varnothing \neq S \subseteq \mathcal{V} }z(\partial S) = 2\cdot \frac{n-1}{n} \geq 1.
 	\]
 
 	Now, recall that \autoref{algo:random-thin-spanning-tree} uses \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, hence \(e\in T^\prime \) satisfies the \hyperref[thm:negative-correlation]{negative correlation}, which essentially allows us to prove \autoref{thm:lec11}. Specifically, we have
 	\begin{enumerate}[(a)]
-		\item for all \(e\in \mathcal{\MakeUppercase{e}} \), \(\Pr(e\in T^\prime ) \coloneqq z_e\),
-		\item for all \(\varnothing \neq E \subseteq \mathcal{\MakeUppercase{e}} \), \(\Pr(E \subseteq T^\prime) \leq \prod_{e\in \mathcal{\MakeUppercase{e}} } z_e\),
+		\item for all \(e\in \mathcal{E} \), \(\Pr(e\in T^\prime ) \coloneqq z_e\),
+		\item for all \(\varnothing \neq E \subseteq \mathcal{E} \), \(\Pr(E \subseteq T^\prime) \leq \prod_{e\in \mathcal{E} } z_e\),
 	\end{enumerate}
 	and with this, the \hyperref[thm:lec11]{Chernoff bound-like concentration} states that
 	\[
@@ -159,12 +159,12 @@ In all, we have the following.
 \begin{algorithm}[H]\label{algo:random-construct-tour}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:ATSP]{Asymmetric TSP} -- Randomized Construction}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(z\) of \autoref{eq:spanning-tree-polytope}}
+	\KwData{A connected graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), weight \(w\colon \mathcal{E} \to \mathbb{R} ^+\), solution \(z\) of \autoref{eq:spanning-tree-polytope}}
 	\KwResult{A \hyperref[def:tour]{tour} \(T\)}
 	\SetKwFunction{TSP}{\hyperref[algo:random-thin-spanning-tree]{Thin-Spanning-Tree}}
 	\SetKwFunction{Construct}{\hyperref[lma:lec11-2]{Thin-Tree-to-Tour}}
 	\BlankLine
-	\(T^\prime\gets\)\TSP{\(\mathcal{\MakeUppercase{g}} \), \(w\), \(z\)}\;
+	\(T^\prime\gets\)\TSP{\(\mathcal{G} \), \(w\), \(z\)}\;
 	\(T\gets\)\Construct{\(T^\prime \)}\;
 	\Return{\(T\)}\;
 \end{algorithm}
@@ -183,7 +183,7 @@ We finally have the following.
 Let's now look at a simpler version of \autoref{prb:ATSP}.
 
 \begin{problem}[Symmetric TSP]\label{prb:STSP}
-Given a complete graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\) satisfying the triangle inequality. \emph{Symmetric TSP} asks to find a \hyperref[def:tour]{tour} \((a_0, \ldots , a_k)\) which minimizes \(\sum_{i=0} ^{k-1}d(a_{i-1}, a_i)\).
+Given a complete graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) and a distance function \(d\colon \mathcal{E} \to \mathbb{R} ^+\) satisfying the triangle inequality. \emph{Symmetric TSP} asks to find a \hyperref[def:tour]{tour} \((a_0, \ldots , a_k)\) which minimizes \(\sum_{i=0} ^{k-1}d(a_{i-1}, a_i)\).
 \end{problem}
 
 \subsection{Christofides-Serdyuko Algorithm}
@@ -192,13 +192,13 @@ We first see a simple heuristic algorithm achieves \(1.5\)-approximation ratio o
 \begin{algorithm}[H]\label{algo:Christofides-Serdyuko}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:STSP]{Symmetric TSP} -- Christofides-Serdyuko Algorithm~\cite{Christofides2022WorstCaseAO,Anatoliy}}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\)}
+	\KwData{A connected graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), a distance function \(d\colon \mathcal{E} \to \mathbb{R} ^+\)}
 	\KwResult{A \hyperref[def:tour]{tour} \(T\)}
 	\SetKwFunction{rand}{rand}
 	\SetKwFunction{MST}{MST}
 	\SetKwFunction{Mmat}{Min-Matching}
 	\BlankLine
-	\(T \gets\)\MST{\(\mathcal{\MakeUppercase{g}} \), \(d\)}\label{algo:Christofides-Serdyuko-linea1}\Comment*[r]{Compute a minimum \hyperref[def:spanning-tree]{spanning tree}}
+	\(T \gets\)\MST{\(\mathcal{G} \), \(d\)}\label{algo:Christofides-Serdyuko-linea1}\Comment*[r]{Compute a minimum \hyperref[def:spanning-tree]{spanning tree}}
 	\(O\gets \left\{ v\in T \colon \deg(v)\text{ is odd}\right\} \)\label{algo:Christofides-Serdyuko-linea2}\;
 	\(M\gets\)\Mmat{\(O\), \(d\)}\label{algo:Christofides-Serdyuko-linea3}\Comment*[r]{Compute a minimum matching}
 	\(T\gets T \cup M\)\;
@@ -231,9 +231,9 @@ However, we get more insight by looking at the LP relaxation of \autoref{prb:STS
 We now analyze the approximation ratio via LP formulation of \autoref{algo:Christofides-Serdyuko}. Indeed, since there are no directions now, we may follow the same strategy of how we solve \autoref{prb:ATSP}, i.e., we first define the \hyperref[eq:STSP-polytope]{symmetric TSP polytope} via a simple reduction from the \hyperref[eq:ATSP-polytope]{asymmetric TSP polytope}.
 \begin{equation}\label{eq:STSP-polytope}
 	\begin{aligned}
-		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e d(e)                                                                     \\
-		      & \sum_{e\in \partial S} x_e \geq 2                 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
-		      & \sum_{e\in \partial \{v\}} x_e = 2                & \forall v\in \mathcal{\MakeUppercase{v}}                          \\
+		\min~ & \sum_{e\in \mathcal{E} } x_e d(e)                                                      \\
+		      & \sum_{e\in \partial S} x_e \geq 2  & \forall \varnothing \neq S \subsetneq \mathcal{V} \\
+		      & \sum_{e\in \partial \{v\}} x_e = 2 & \forall v\in \mathcal{V}                          \\
 		      & x \geq 0
 	\end{aligned}
 \end{equation}
@@ -244,25 +244,25 @@ Let \(x\) be this LP optimal solution, we now try to build a \hyperref[def:tour]
 \end{enumerate}
 
 \subsubsection{Analysis}
-To do the analysis, observe that \(x\cdot \frac{n-1}{n}\) is in the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope} as in the case of \autoref{prb:ATSP}, which implies if we can find a \hyperref[prb:min-spanning-tree]{minimum spanning tree} \(T\), then \(d(T) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(x)x_e\).
+To do the analysis, observe that \(x\cdot \frac{n-1}{n}\) is in the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope} as in the case of \autoref{prb:ATSP}, which implies if we can find a \hyperref[prb:min-spanning-tree]{minimum spanning tree} \(T\), then \(d(T) \leq \sum_{e\in \mathcal{E} } d(x)x_e\).
 
 Note that it's not enough to just get \(T\), we still need a matching \(M\). Let \(O\) be the set of odd-degree vertices w.r.t.\ \(T\) as defined in \autoref{algo:Christofides-Serdyuko-linea2}. Notice that we may assume \(\left\vert O \right\vert \) is even, we then define the following.
 
 \begin{definition}[\(O\)-join]\label{def:O-join}
-	Given \(O\subseteq \mathcal{\MakeUppercase{v}} \) and \(\left\vert O \right\vert \) even, \(M \subseteq \mathcal{\MakeUppercase{e}} \) is \emph{\(O\)-join} if \(\deg_M(v)\) is odd when \(v\in O\), and \(\deg_M(v)\) is even if \(v \notin O\).
+	Given \(O\subseteq \mathcal{V} \) and \(\left\vert O \right\vert \) even, \(M \subseteq \mathcal{E} \) is \emph{\(O\)-join} if \(\deg_M(v)\) is odd when \(v\in O\), and \(\deg_M(v)\) is even if \(v \notin O\).
 \end{definition}
 
 With this, we define the so-called \emph{\hyperref[def:O-join]{\(O\)-join} LP}.
 \begin{equation}\label{eq:O-join-LP}
 	\begin{aligned}
-		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } y_e d(e)                                                                      \\
-		      & y(\partial S) \geq 1                              & \forall S\text{ s.t. }\left\vert S \cap O \right\vert \text{ odd}; \\
+		\min~ & \sum_{e\in \mathcal{E} } y_e d(e)                                                                      \\
+		      & y(\partial S) \geq 1              & \forall S\text{ s.t. }\left\vert S \cap O \right\vert \text{ odd}; \\
 		      & y\geq 0.
 	\end{aligned}
 \end{equation}
 
 \begin{lemma}\label{lma:lec12-3}
-	The \hyperref[eq:O-join-LP]{\(O\)-join LP} is exact, i.e., if \(y\) is feasible, then there exists an \hyperref[def:O-join]{\(O\)-join} \(M\) such that \(d(M) \leq \sum_{e\in \mathcal{\MakeUppercase{e}} } d(e)y_e\).
+	The \hyperref[eq:O-join-LP]{\(O\)-join LP} is exact, i.e., if \(y\) is feasible, then there exists an \hyperref[def:O-join]{\(O\)-join} \(M\) such that \(d(M) \leq \sum_{e\in \mathcal{E} } d(e)y_e\).
 \end{lemma}
 We omit the proof here, but if we believe \autoref{lma:lec12-3} is true, then we have the following.
 

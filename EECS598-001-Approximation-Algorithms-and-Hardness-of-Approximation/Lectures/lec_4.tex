@@ -7,15 +7,15 @@ Following the discussion on primal-dual method, we see another \hyperref[def:cov
 We consider the following problem.
 
 \begin{problem}[Feedback vertex set]\label{prb:feedback-vertex-set}
-Given a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a weight function \(c\colon \mathcal{\MakeUppercase{v}} \to \mathbb{\MakeUppercase{r}} ^+\), we want to find \(F\subseteq \mathcal{\MakeUppercase{v}} \) with \(\min c(F)\) such that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) has no cycle.\footnote{This is equivalent as saying that \(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} \setminus F]\) is a forest.}
+Given a graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\) and a weight function \(c\colon \mathcal{V} \to \mathbb{R} ^+\), we want to find \(F\subseteq \mathcal{V} \) with \(\min c(F)\) such that \(\mathcal{G} [\mathcal{V} \setminus F]\) has no cycle.\footnote{This is equivalent as saying that \(\mathcal{G} [\mathcal{V} \setminus F]\) is a forest.}
 \end{problem}
 
 \begin{note}[Feedback]
-	The name \emph{feedback} comes from the fact that if there's a cycle in \(\mathcal{\MakeUppercase{g}} \), then it kind of creates \emph{feedback}.
+	The name \emph{feedback} comes from the fact that if there's a cycle in \(\mathcal{G} \), then it kind of creates \emph{feedback}.
 \end{note}
 
 \begin{note}[Edge version]
-	The \emph{edge version} of \autoref{prb:feedback-vertex-set} can be solved by finding \(T\subseteq \mathcal{\MakeUppercase{e}} \) be the maximum weight forest,\footnote{This can be found exactly in polynomial time.} and let \(F \coloneqq \mathcal{\MakeUppercase{e}} \setminus T\).
+	The \emph{edge version} of \autoref{prb:feedback-vertex-set} can be solved by finding \(T\subseteq \mathcal{E} \) be the maximum weight forest,\footnote{This can be found exactly in polynomial time.} and let \(F \coloneqq \mathcal{E} \setminus T\).
 \end{note}
 
 \begin{notation}
@@ -26,7 +26,7 @@ Given a graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \ma
 	This is a \emph{special case} of \autoref{prb:set-cover}.
 \end{remark}
 \begin{explanation}
-	Let \(\mathcal{\MakeUppercase{C}} \coloneqq \left\{ \text{set of all (simple) cycles}  \right\}\) and consider \autoref{prb:set-cover} on the set system \((\mathcal{\MakeUppercase{C}} , \mathcal{\MakeUppercase{v}} )\), i.e., we want to find \(F\subseteq \mathcal{\MakeUppercase{v}} \) such that \(\forall C\in \mathcal{\MakeUppercase{C}} \), \(\left\vert F \cap C \right\vert \geq 1\).
+	Let \(\mathcal{C} \coloneqq \left\{ \text{set of all (simple) cycles}  \right\}\) and consider \autoref{prb:set-cover} on the set system \((\mathcal{C} , \mathcal{V} )\), i.e., we want to find \(F\subseteq \mathcal{V} \) such that \(\forall C\in \mathcal{C} \), \(\left\vert F \cap C \right\vert \geq 1\).
 \end{explanation}
 
 \begin{note}
@@ -54,12 +54,12 @@ We also have a hardness of \autoref{prb:feedback-vertex-set}.
 The most natural LP which models \autoref{prb:feedback-vertex-set} is the so-called \emph{cycle covering LP}, which can be defined as
 \[
 	\begin{aligned}
-		\min~ & \sum_{v\in \mathcal{\MakeUppercase{V}} } c(v) x_v                                                               \\
-		      & \sum_{v\in C} x_v \geq 1                         \quad \forall \text{ cycle } C \in \mathcal{\MakeUppercase{C}} \\
+		\min~ & \sum_{v\in \mathcal{V} } c(v) x_v                                                               \\
+		      & \sum_{v\in C} x_v \geq 1                         \quad \forall \text{ cycle } C \in \mathcal{C} \\
 		      & x \geq 0,
 	\end{aligned}
 \]
-with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v}} }\) such that \(x_{v} = \mathbbm{1}_{v\in F}\).
+with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{V} }\) such that \(x_{v} = \mathbbm{1}_{v\in F}\).
 
 \begin{remark}
 	We see that this cycle covering LP has \(2^{\Omega (n)}\) constraints. But we can actually solve this and get an \(O(\log n)\)-approximation ratio by smartly rounding the solution.\footnote{See homework \(1\).} And we can show that this approximation ratio is optimal in terms of this particular LP.
@@ -70,19 +70,19 @@ with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v
 A more sophisticated LP is the so-called \emph{density LP}, defined as
 \[
 	\begin{aligned}
-		\min~ & \sum_{v\in \mathcal{\MakeUppercase{v}} } c(v) x_v                                                                                                  \\
-		      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1\quad \forall S\subseteq \mathcal{\MakeUppercase{v}} \\
+		\min~ & \sum_{v\in \mathcal{V} } c(v) x_v                                                                                                  \\
+		      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1\quad \forall S\subseteq \mathcal{V} \\
 		      & x\geq 0
 	\end{aligned}
 \]
-with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v}} }\).
+with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{V} }\).
 
 \begin{notation}
-	The \(E(S)\) denotes the edge set in the induced graph \(\mathcal{\MakeUppercase{g}} [S] = (S, E(S))\), while \(d_v^S\) denotes the degree of \(v\) in \(\mathcal{\MakeUppercase{g}} [S]\).
+	The \(E(S)\) denotes the edge set in the induced graph \(\mathcal{G} [S] = (S, E(S))\), while \(d_v^S\) denotes the degree of \(v\) in \(\mathcal{G} [S]\).
 \end{notation}
 
 \begin{intuition}
-	The constraint is equivalent as  saying that for every induced graph, \(\# e \leq \# v - 1\), i.e., we require it to be a forest. Explicitly, \(S\subseteq \mathcal{\MakeUppercase{v}} \),
+	The constraint is equivalent as  saying that for every induced graph, \(\# e \leq \# v - 1\), i.e., we require it to be a forest. Explicitly, \(S\subseteq \mathcal{V} \),
 	\[
 		\left\vert E(S) \right\vert - \sum_{v\in S} x_v d_v^S\leq \left\vert S \right\vert - \sum_{v\in S}x_v - 1.
 	\]
@@ -92,14 +92,14 @@ with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{\MakeUppercase{v
 We see that the above LP is not exactly a \hyperref[def:covering-LP]{covering LP} since the coefficients can be negative if a set \(S\) is not \hyperref[def:irreducible]{irreducible}.
 
 \begin{definition}[Irreducible]\label{def:irreducible}
-	The set \(S\subseteq \mathcal{\MakeUppercase{v}} \) is \emph{irreducible} if for all \(v\in S\), \(v\) belongs to some cycles in \(G[S]\).
+	The set \(S\subseteq \mathcal{V} \) is \emph{irreducible} if for all \(v\in S\), \(v\) belongs to some cycles in \(G[S]\).
 \end{definition}
 
-Now, it's clear that by looking at \(\mathcal{\MakeUppercase{S}} = \left\{ S\subseteq \mathcal{\MakeUppercase{v}} \mid S \text{ is \hyperref[def:irreducible]{irreducible}}\right\} \), we have a \hyperref[def:covering-LP]{covering LP} defined as
+Now, it's clear that by looking at \(\mathcal{S} = \left\{ S\subseteq \mathcal{V} \mid S \text{ is \hyperref[def:irreducible]{irreducible}}\right\} \), we have a \hyperref[def:covering-LP]{covering LP} defined as
 \[
 	\begin{aligned}
-		\min~ & \sum_{v\in \mathcal{\MakeUppercase{v}} } c(v) x_v                                                                                                          \\
-		      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1 \eqqcolon b_S\quad \forall S\in \mathcal{\MakeUppercase{S}} \\
+		\min~ & \sum_{v\in \mathcal{V} } c(v) x_v                                                                                                          \\
+		      & \sum_{v\in S} x_v(d_v^{S} - 1) \geq \left\vert E(S) \right\vert - \left\vert S \right\vert + 1 \eqqcolon b_S\quad \forall S\in \mathcal{S} \\
 		      & x\geq 0.
 	\end{aligned}
 \]
@@ -110,15 +110,15 @@ We first see why this LP models \autoref{prb:feedback-vertex-set}.
 	The integer version of density LP (denote as IP) is equivalent to \autoref{prb:feedback-vertex-set}.
 \end{lemma}
 \begin{proof}
-	If \(x\) is feasible for \autoref{prb:feedback-vertex-set}, then \(x\) is feasible for the IP. On the other hand, if \(x\) is feasible for IP, then for every cycle \(C\in \mathcal{\MakeUppercase{C}} \), \(x\) deletes at least \(1\) vertex from \(C\).
+	If \(x\) is feasible for \autoref{prb:feedback-vertex-set}, then \(x\) is feasible for the IP. On the other hand, if \(x\) is feasible for IP, then for every cycle \(C\in \mathcal{C} \), \(x\) deletes at least \(1\) vertex from \(C\).
 \end{proof}
 
 \subsection{Primal-Dual Method}
-Now we're ready to solve this LP via primal-dual method. Denote the dual variables as \(\left\{ y_S \right\} _{S\in \mathcal{\MakeUppercase{S}} }\), then the dual is
+Now we're ready to solve this LP via primal-dual method. Denote the dual variables as \(\left\{ y_S \right\} _{S\in \mathcal{S} }\), then the dual is
 \[
 	\begin{aligned}
-		\max~ & \sum_{S\in \mathcal{\MakeUppercase{S}} } y_S b_S                                       \\
-		      & \sum_{S\ni v}(d_{v} ^S - 1)y_S \leq c(v)\quad \forall v\in \mathcal{\MakeUppercase{v}} \\
+		\max~ & \sum_{S\in \mathcal{S} } y_S b_S                                       \\
+		      & \sum_{S\ni v}(d_{v} ^S - 1)y_S \leq c(v)\quad \forall v\in \mathcal{V} \\
 		      & y\geq 0.
 	\end{aligned}
 \]
@@ -132,15 +132,15 @@ We now have the following algorithm.\par
 \begin{algorithm}[H]\label{algo:feedback-vertex-set-PD}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:feedback-vertex-set]{Feedback vertex set} -- Primal-Dual}
-	\KwData{A graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\)}
+	\KwData{A graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\)}
 	\KwResult{A minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set} \(F^\prime \)}
 	\SetKwFunction{reduce}{reduce}
 	\BlankLine
 
-	\(S\gets \mathcal{\MakeUppercase{v}} \), \(c^\prime = c\), \(y\gets 0\)\Comment*[r]{\(c^\prime \in \mathbb{\MakeUppercase{r}} ^n\) keeps track of slackness of \(c\)}
+	\(S\gets \mathcal{V} \), \(c^\prime = c\), \(y\gets 0\)\Comment*[r]{\(c^\prime \in \mathbb{R} ^n\) keeps track of slackness of \(c\)}
 	\;
 	\While(){\(S \neq \varnothing \)}{
-		\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{\MakeUppercase{G}} [S]\right\}\)}
+		\(S\gets\) \reduce{\(S\) }\Comment*[r]{Compute \(\left\{ v\in S\colon v\text{ belongs to some cycles in }\mathcal{G} [S]\right\}\)}
 		\((\alpha, v) \gets \min _{v\in S} c^\prime (v) / (d_v^S - 1)\)\footnote{Note that we also get the argument \(v\).}\Comment*[r]{\(y_S\) gets tight by increasing unit weight}
 		\(y_S\gets \alpha\)\label{algo:feedback-vertex-set-PD:line6}\;
 		\(c^\prime (v)\gets c^\prime (v) - \alpha (d_v^S - 1)\)\label{algo:feedback-vertex-set-PD:line7}\;
@@ -151,7 +151,7 @@ We now have the following algorithm.\par
 	\Comment{Compute a minimal \hyperref[prb:feedback-vertex-set]{feedback vertex set}}
 	\(F^\prime \gets F = \left\{ v_1, \ldots , v_{\ell} \right\} \)\Comment*[r]{\(v_1\) is deleted first, \(v_{\ell}\) is deleted last}
 	\For(\label{algo:feedback-vertex-set-PD:for}\Comment*[f]{\hyperref[rmk:reversed-greedy]{reversed greedy}}){\(i = \ell , \ldots  , 1\)}{
-		\If(){\(F^\prime \setminus \left\{ v_i \right\}\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} for \(\mathcal{\MakeUppercase{g}} \)}{
+		\If(){\(F^\prime \setminus \left\{ v_i \right\}\) is a \hyperref[prb:feedback-vertex-set]{feedback vertex set} for \(\mathcal{G} \)}{
 			\(F^\prime \gets F^\prime \setminus \left\{ v_i \right\} \)\;
 		}
 	}
@@ -173,16 +173,16 @@ We see that in \autoref{algo:feedback-vertex-set-PD}, we first use primal-dual m
 
 We want to compare the primal cost and the dual cost. The primal cost is
 \[
-	c(F) = \sum_{v\in F}c(v) = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{\MakeUppercase{S}}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1),
+	c(F) = \sum_{v\in F}c(v) = \sum_{v\in F}\sum_{S\ni v} (d_{v} ^S - 1) y_S = \sum_{S\in \mathcal{S}}y_S \sum_{v\in F \cap S}(d_{v} ^S - 1),
 \]
-while the dual cost is \(\sum_{S\in \mathcal{\MakeUppercase{S}} }y_S b_S\).
+while the dual cost is \(\sum_{S\in \mathcal{S} }y_S b_S\).
 
 \begin{remark}
 	This is where the primal-dual method is powerful. i.e., by switching the order of summation, if we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for every \(S\), we're done. On caveat is that since \(S\) is changing when running \autoref{algo:feedback-vertex-set-PD}, so the final solution \(F\) may not be good for this particular \(S\). We need to guarantee some ratio for this \(F\) \textbf{for all \(S\)}.\footnote{At least for \(S\) with positive \(y_S\).}
 \end{remark}
 
 \begin{lemma}\label{lma:lec4-2}
-	For all \(S\in \mathcal{\MakeUppercase{S}} \), if \(F\) is \emph{minimal} in \(S\),\footnote{i.e., in \(\mathcal{\MakeUppercase{g}} [S]\), no \(F^\prime \subsetneq F \cap S\) in \hyperref[prb:feedback-vertex-set]{feedback vertex set}.} then we have
+	For all \(S\in \mathcal{S} \), if \(F\) is \emph{minimal} in \(S\),\footnote{i.e., in \(\mathcal{G} [S]\), no \(F^\prime \subsetneq F \cap S\) in \hyperref[prb:feedback-vertex-set]{feedback vertex set}.} then we have
 	\[
 		\sum_{v\in S \cap F}(d_{v} ^S - 1) \leq 4\cdot b_S = 4(\left\vert E(S) \right\vert - \left\vert S \right\vert + 1).
 	\]
@@ -237,7 +237,7 @@ To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the resu
 	\(F^\prime \) is minimal in every \(S_i\), where \(S_i\) is the corresponding \(S\) in \autoref{algo:feedback-vertex-set-PD} when \(v_i\) is deleted.
 \end{lemma}
 \begin{proof}
-	Suppose this is not the case. Then there exists \(v_j\in F^\prime \) such that in \(\mathcal{\MakeUppercase{g}} [S_i]\), \((F \cap S_i) \setminus \left\{ v_{j}  \right\}\) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} [S_j]\). Notice that we only need to consider the case that \(i = j\) since \(v_{j}\in S_i\) means \(i \geq j\) from how we order them. In this case, \(S_j \subseteq S_i\), hence to check the minimality of \(F^\prime \) it's enough to just consider the case that \(i = j\). Hence, we consider \((F \cap S_j) \setminus \left\{ v_{j}  \right\}\) instead.
+	Suppose this is not the case. Then there exists \(v_j\in F^\prime \) such that in \(\mathcal{G} [S_i]\), \((F \cap S_i) \setminus \left\{ v_{j}  \right\}\) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{G} [S_j]\). Notice that we only need to consider the case that \(i = j\) since \(v_{j}\in S_i\) means \(i \geq j\) from how we order them. In this case, \(S_j \subseteq S_i\), hence to check the minimality of \(F^\prime \) it's enough to just consider the case that \(i = j\). Hence, we consider \((F \cap S_j) \setminus \left\{ v_{j}  \right\}\) instead.
 
 	\begin{note}
 		Here we only consider \(G[S_j]\), i.e., we want to say that if \(v_j\) is not minimal in \(G[S_j]\), then \(v_j\) should really be deleted even w.r.t.\ the whole graph.
@@ -264,7 +264,7 @@ To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the resu
 		Observe that there are only two ways for a vertex being deleted from the graph, either \(v\in Z\), i.e., its dual constraint is tight, or \(v\in S\) is deleted since it prevent \(S\) being \hyperref[def:irreducible]{irreducible}. Only the latter case will make \(v \notin F\), we see that there's no way such a cycle \(C\) exists with all vertices outside \(S_j\) are preventing \(s\) being \hyperref[def:irreducible]{irreducible}, since this cycle \(C\) itself is a cycle...
 	\end{explanation}
 
-	This implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{\MakeUppercase{g}} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD} since such a problematic cycle can't exist,\footnote{Explicitly, if this exists, then delete \(v_j\) will make \(F^\prime\) fail to intersect such a cycle.} which contradicts with the minimality of \(F^\prime\).
+	This implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{G} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD} since such a problematic cycle can't exist,\footnote{Explicitly, if this exists, then delete \(v_j\) will make \(F^\prime\) fail to intersect such a cycle.} which contradicts with the minimality of \(F^\prime\).
 \end{proof}
 
 Finally, we see that we can prove \autoref{thm:lec4-1}.

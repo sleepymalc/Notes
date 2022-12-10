@@ -24,7 +24,7 @@ To answer the first question, since we already have the powerful \autoref{thm:Ko
 Hence, another simple idea is to find a maximum matching and check whether it's \hyperref[def:perfect-matching]{perfect}, i.e., whether a maximum matching has size \(N\). Note that we'll have to use \autoref{thm:Konig-Hall-maximize-theorem}. We first see some definitions which is important to understand the algorithm.
 
 \begin{definition}[Augmenting path]\label{def:augmenting-path}
-	Let \(M\) be a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite} matching in \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} = L \bigsqcup  R, \mathcal{\MakeUppercase{E}})\). Then we say that a \hyperref[def:simple-path]{simple path} \(P\) in \(\mathcal{\MakeUppercase{g}} \) is an \emph{augmenting path} w.r.t.\ \(M\) if it starts at an unmatched vertex in \(L\), ends at an unmatched vertex in \(R\) with its edges belong alternately to \(M\) and \(E - M\).
+	Let \(M\) be a \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite} matching in \(\mathcal{G} = (\mathcal{V} = L \bigsqcup  R, \mathcal{E})\). Then we say that a \hyperref[def:simple-path]{simple path} \(P\) in \(\mathcal{G} \) is an \emph{augmenting path} w.r.t.\ \(M\) if it starts at an unmatched vertex in \(L\), ends at an unmatched vertex in \(R\) with its edges belong alternately to \(M\) and \(E - M\).
 \end{definition}
 
 \begin{note}
@@ -40,14 +40,14 @@ Then, we'll see that in the \hyperref[algo:Hopcroft-Karp-algorithm]{algorithm} w
 \begin{algorithm}[H]\label{algo:Hopcroft-Karp-algorithm}
 	\DontPrintSemicolon
 	\caption{\href{https://en.wikipedia.org/wiki/Hopcroft-Karp_algorithm}{Hopcroft-Karp} Algorithm}
-	\KwData{A \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph} \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} = L \bigsqcup  R, \mathcal{\MakeUppercase{e}} )\)}
+	\KwData{A \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph} \(\mathcal{G} = (\mathcal{V} = L \bigsqcup  R, \mathcal{E} )\)}
 	\KwResult{A maximum matching \(M\)}
 	\SetKwRepeat{Do}{do}{while}
 	\BlankLine
 
 	\(M\gets \varnothing \)\Comment*[r]{Initialize}
-	\Do{\(\mathcal{\MakeUppercase{P}}  \neq \varnothing \)}{
-	\(\mathcal{\MakeUppercase{P}} \gets \{P_i\}_{i=1}^k\)\label{algo:Hopcroft-Karp-algorithm:line3}\Comment*[r]{Maximal set of \hyperref[def:vertex-independent]{disjoint} shortest \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\)}
+	\Do{\(\mathcal{P}  \neq \varnothing \)}{
+	\(\mathcal{P} \gets \{P_i\}_{i=1}^k\)\label{algo:Hopcroft-Karp-algorithm:line3}\Comment*[r]{Maximal set of \hyperref[def:vertex-independent]{disjoint} shortest \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\)}
 	\(M = M \oplus (\bigcup_{i=1}^{k} P_i)\)\label{algo:Hopcroft-Karp-algorithm:line4}\Comment*[r]{\(A \oplus B \coloneqq (A-B)\cup (B - A)\)}
 	}
 	\Return{\(M\)}
@@ -71,7 +71,7 @@ Then, we'll see that in the \hyperref[algo:Hopcroft-Karp-algorithm]{algorithm} w
 \end{explanation}
 
 \begin{remark}
-	We see that \autoref{algo:Hopcroft-Karp-algorithm:line3} takes \(O(\left\vert \mathcal{\MakeUppercase{e}} \right\vert )\) to complete in the worst case.
+	We see that \autoref{algo:Hopcroft-Karp-algorithm:line3} takes \(O(\left\vert \mathcal{E} \right\vert )\) to complete in the worst case.
 \end{remark}
 
 Now we analyze the \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} rigorously. We first prove that the correctness of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
@@ -104,7 +104,7 @@ We first see an important lemma which characterizes the behavior of \autoref{alg
 	To see that we in fact get a matching, suppose that there was some vertex \(v\) which had at least \(2\) incident edges \(e\) and \(e^\prime \). They cannot both come from \(M\) since \(M\) is a matching. They cannot both come from \(P\) since \(P\) is \hyperref[def:simple-path]{simple} and every other edge of \(P\) is removed. Thus, \(e\in M\) and \(e^\prime \in P\setminus M\). However, if \(e\in M\), then \(e\in P\), so \(e \notin M\oplus P\), a contradiction. A similar argument gives the case of \(M\oplus (P_1 \cup \ldots \cup P_k )\).
 \end{proof}
 
-We see that \autoref{lma:lec25-1} ensures that \(M\) is always a matching, also, \(M\) will increase \(k\) at each iteration. We now analyze why whenever there are no \hyperref[def:augmenting-path]{augmenting paths}, i.e., \(\mathcal{\MakeUppercase{p}} = \varnothing \), \(M\) is optimal.\footnote{Note that optimal doesn't mean \hyperref[def:perfect-matching]{perfect}, just maximum.}
+We see that \autoref{lma:lec25-1} ensures that \(M\) is always a matching, also, \(M\) will increase \(k\) at each iteration. We now analyze why whenever there are no \hyperref[def:augmenting-path]{augmenting paths}, i.e., \(\mathcal{P} = \varnothing \), \(M\) is optimal.\footnote{Note that optimal doesn't mean \hyperref[def:perfect-matching]{perfect}, just maximum.}
 
 \begin{theorem}\label{thm:lec25-1}
 	If a matching \(M\) is not optimal, then there exists at least one \hyperref[def:augmenting-path]{augmenting path}.
@@ -122,10 +122,10 @@ result. We now want to know its time complexity.
 \end{remark}
 
 \subsection{Time Complexity Analysis}
-In this section, we're going to prove that the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{V}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\), hence it's indeed a polynomial time algorithm. We first see a lemma.
+In this section, we're going to prove that the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is \(O(\sqrt{\left\vert \mathcal{V}  \right\vert } \left\vert \mathcal{E}  \right\vert )\), hence it's indeed a polynomial time algorithm. We first see a lemma.
 
 \begin{lemma}\label{lma:lec25-2}
-	Given two matchings \(M\) and \(M^{\ast} \) in \(\mathcal{\MakeUppercase{g}} \), then every vertex in the graph \(\mathcal{\MakeUppercase{g}} ^\prime =(\mathcal{\MakeUppercase{v}} , M\oplus M^{\ast} )\) has \hyperref[def:degree]{degree} at most \(2\). Hence, \(G^\prime \) is a disjoint union of \hyperref[def:simple-path]{simple paths} or cycles. Furthermore, the edges in each such \hyperref[def:simple-path]{simple path} or cycle belong alternately to \(M\) or \(M^{\ast} \). And if \(\left\vert M \right\vert \leq \left\vert M^{\ast}  \right\vert \), then \(M\oplus M^{\ast} \) contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\).
+	Given two matchings \(M\) and \(M^{\ast} \) in \(\mathcal{G} \), then every vertex in the graph \(\mathcal{G} ^\prime =(\mathcal{V} , M\oplus M^{\ast} )\) has \hyperref[def:degree]{degree} at most \(2\). Hence, \(G^\prime \) is a disjoint union of \hyperref[def:simple-path]{simple paths} or cycles. Furthermore, the edges in each such \hyperref[def:simple-path]{simple path} or cycle belong alternately to \(M\) or \(M^{\ast} \). And if \(\left\vert M \right\vert \leq \left\vert M^{\ast}  \right\vert \), then \(M\oplus M^{\ast} \) contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\).
 \end{lemma}
 \begin{proof}
 	Suppose some vertex in \(G^\prime \) has \hyperref[def:degree]{degree} at least \(3\). Since the edges of \(G^\prime \) come from \(M\oplus M^{\ast} \), at least \(2\) of these edges come from the same matching. However, a matching never contains two edges with the same endpoint, so this is impossible. Thus, every vertex has \hyperref[def:degree]{degree} at most \(2\), so \(G^\prime \) is a disjoint union of \hyperref[def:simple-path]{simple paths} and cycles.
@@ -157,13 +157,13 @@ With the above notation, we see that following.
 		A = (P_1 \cup \ldots  \cup P_k)\oplus P.
 	\]
 
-	Now we'll show that \(P\) is \hyperref[def:edge-independent]{edge disjoint} from each \(P_i\). Suppose that an edge \(e\) of \(P\) is also an edge of \(P_i\) for some \(i\). Since \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M^\prime \), either \(e\in M^\prime \) or \(e\in \mathcal{\MakeUppercase{E}} \setminus M^\prime \).
+	Now we'll show that \(P\) is \hyperref[def:edge-independent]{edge disjoint} from each \(P_i\). Suppose that an edge \(e\) of \(P\) is also an edge of \(P_i\) for some \(i\). Since \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M^\prime \), either \(e\in M^\prime \) or \(e\in \mathcal{E} \setminus M^\prime \).
 	\begin{itemize}
 		\item \(e\in M^\prime \): Since \(P\) is also \hyperref[def:augmenting-path]{augmenting} w.r.t.\ \(M\), we must have \(e\in M\). However, if \(e\in M\) and also \(e\in M^\prime \), then \(e\) cannot be in any of the \(P_i\)'s by the definition of \(M^\prime \).
-		\item \(e\in \mathcal{\MakeUppercase{e}} \setminus M^\prime \): Then \(e\in \mathcal{\MakeUppercase{e}} \setminus M\) since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t.\ \(M\). Since \(e\) is an edge of \(P_i\), \(e\in \mathcal{\MakeUppercase{e}} \setminus M^\prime \) implies \(e\in M\), a contradiction.
+		\item \(e\in \mathcal{E} \setminus M^\prime \): Then \(e\in \mathcal{E} \setminus M\) since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t.\ \(M\). Since \(e\) is an edge of \(P_i\), \(e\in \mathcal{E} \setminus M^\prime \) implies \(e\in M\), a contradiction.
 	\end{itemize}
 
-	Since \(P\) has edges alternately in \(M^\prime \) and \(\mathcal{\MakeUppercase{e}} \setminus M^\prime \) and is \hyperref[def:edge-independent]{edge disjoint} from \(P_1 \cup \ldots  \cup P_k\), \(P\) is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\), which implies \(\left\vert P \right\vert \geq \ell \). Since every edge in \(A\) is disjoint, we conclude that
+	Since \(P\) has edges alternately in \(M^\prime \) and \(\mathcal{E} \setminus M^\prime \) and is \hyperref[def:edge-independent]{edge disjoint} from \(P_1 \cup \ldots  \cup P_k\), \(P\) is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\), which implies \(\left\vert P \right\vert \geq \ell \). Since every edge in \(A\) is disjoint, we conclude that
 	\[
 		\left\vert A \right\vert \geq (k + 1) \ell .
 	\]
@@ -172,31 +172,31 @@ With the above notation, we see that following.
 \begin{lemma}\label{lma:lec25-5}
 	If a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M\) has \(\ell \) edges, the size of the maximum matching is at most
 	\[
-		\left\vert M \right\vert + \left\vert \mathcal{\MakeUppercase{v}}  \right\vert / (\ell +1).
+		\left\vert M \right\vert + \left\vert \mathcal{V}  \right\vert / (\ell +1).
 	\]
 \end{lemma}
 \begin{proof}
-	Suppose \(M^{\ast} \) is a matching with strictly more than \(\left\vert M \right\vert + \left\vert \mathcal{\MakeUppercase{V}}  \right\vert / (\ell +1)\) edges. Then by \autoref{lma:lec25-2}, there are strictly more than \(\left\vert \mathcal{\MakeUppercase{V}}  \right\vert / (\ell +1)\) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\). Each one of these contains at least \(\ell \) edges, so it is incident on \(\ell +1\) vertices. Since the \hyperref[def:path]{paths} are \hyperref[def:vertex-independent]{vertex disjoint}, there are strictly more than
+	Suppose \(M^{\ast} \) is a matching with strictly more than \(\left\vert M \right\vert + \left\vert \mathcal{V}  \right\vert / (\ell +1)\) edges. Then by \autoref{lma:lec25-2}, there are strictly more than \(\left\vert \mathcal{V}  \right\vert / (\ell +1)\) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\). Each one of these contains at least \(\ell \) edges, so it is incident on \(\ell +1\) vertices. Since the \hyperref[def:path]{paths} are \hyperref[def:vertex-independent]{vertex disjoint}, there are strictly more than
 	\[
-		\left\vert \mathcal{\MakeUppercase{v}}  \right\vert (\ell + 1) / (\ell +1)
+		\left\vert \mathcal{V}  \right\vert (\ell + 1) / (\ell +1)
 	\]
 	distinct vertices incident with these \hyperref[def:path]{paths}, a contradiction. Thus, the size of the maximum matching is at most
 	\[
-		\left\vert M \right\vert + \left\vert \mathcal{\MakeUppercase{v}}  \right\vert / (\ell +1).
+		\left\vert M \right\vert + \left\vert \mathcal{V}  \right\vert / (\ell +1).
 	\]
 \end{proof}
 
 \begin{theorem}
-	The number of the iteration in \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is at most \(2\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \), and the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\).
+	The number of the iteration in \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is at most \(2\sqrt{\left\vert \mathcal{V}  \right\vert } \), and the time complexity of \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm} is \(O(\sqrt{\left\vert \mathcal{V}  \right\vert } \left\vert \mathcal{E}  \right\vert )\).
 \end{theorem}
 \begin{proof}
-	Consider what happens after iteration number \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \). Let \(M^{\ast} \) be a maximal matching in \(\mathcal{\MakeUppercase{g}} \), then \(\left\vert M^{\ast}  \right\vert \geq \left\vert M \right\vert \), hence from \autoref{lma:lec25-2}, we have that \(M\oplus M^{\ast} \) contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\). Then from \autoref{lma:lec25-3}, each of these is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\). Since each has length \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \), there can be at most \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) such \hyperref[def:path]{paths}, so
+	Consider what happens after iteration number \(\sqrt{\left\vert \mathcal{V}  \right\vert } \). Let \(M^{\ast} \) be a maximal matching in \(\mathcal{G} \), then \(\left\vert M^{\ast}  \right\vert \geq \left\vert M \right\vert \), hence from \autoref{lma:lec25-2}, we have that \(M\oplus M^{\ast} \) contains at least \(\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\). Then from \autoref{lma:lec25-3}, each of these is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\). Since each has length \(\sqrt{\left\vert \mathcal{V}  \right\vert } \), there can be at most \(\sqrt{\left\vert \mathcal{V}  \right\vert } \) such \hyperref[def:path]{paths}, so
 	\[
-		\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \leq \sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } .
+		\left\vert M^{\ast}  \right\vert - \left\vert M \right\vert \leq \sqrt{\left\vert \mathcal{V}  \right\vert } .
 	\]
-	Hence, only \(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) additional iterations of the repeated loop can occur, hence there are at most \(2 \sqrt{ \left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \) iteration in total for \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
+	Hence, only \(\sqrt{\left\vert \mathcal{V}  \right\vert } \) additional iterations of the repeated loop can occur, hence there are at most \(2 \sqrt{ \left\vert \mathcal{V}  \right\vert } \) iteration in total for \hyperref[algo:Hopcroft-Karp-algorithm]{Hopcroft-Karp algorithm}.
 
-	Together with \hyperref[rmk:lec25-1]{the remark} we have seen, one iteration needs \(O(\left\vert \mathcal{\MakeUppercase{E}}  \right\vert )\), hence we conclude that the total runtime is \(O(\sqrt{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert } \left\vert \mathcal{\MakeUppercase{e}}  \right\vert )\).
+	Together with \hyperref[rmk:lec25-1]{the remark} we have seen, one iteration needs \(O(\left\vert \mathcal{E}  \right\vert )\), hence we conclude that the total runtime is \(O(\sqrt{\left\vert \mathcal{V}  \right\vert } \left\vert \mathcal{E}  \right\vert )\).
 \end{proof}
 
 \subsection{An Alternated Approach}
@@ -314,12 +314,12 @@ Given an \hyperref[eg:English-auction]{English auction} for multiple goods, with
 	}
 	\;
 	\Do{\textsf{True}}{
-		\(\mathcal{\MakeUppercase{g}} \gets\) \prefer{\(p\)}\Comment*[r]{Get the \hyperref[def:preferred-sellers-list]{preferred sellers} \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}}
-		\(M\gets\) \HK{\(\mathcal{\MakeUppercase{g}} \)}\Comment*[r]{Get a maximum matching of \(\mathcal{\MakeUppercase{g}} \)}
+		\(\mathcal{G} \gets\) \prefer{\(p\)}\Comment*[r]{Get the \hyperref[def:preferred-sellers-list]{preferred sellers} \href{https://en.wikipedia.org/wiki/Bipartite_graph}{bipartite graph}}
+		\(M\gets\) \HK{\(\mathcal{G} \)}\Comment*[r]{Get a maximum matching of \(\mathcal{G} \)}
 		\uIf(\Comment*[f]{If \(M\) is \hyperref[def:perfect-matching]{perfect}}){\(\left\vert M \right\vert = N\)}{
 			\Return{\(M\), \(p\)}\;
 		}\Else(){
-			\(N\gets\) \FC{\(\mathcal{\MakeUppercase{g}} \), \(M\)}\Comment*[r]{Find \(B^\prime \subseteq B\) s.t. \(\left\vert N(B^\prime) \right\vert < \left\vert B^\prime \right\vert\)}
+			\(N\gets\) \FC{\(\mathcal{G} \), \(M\)}\Comment*[r]{Find \(B^\prime \subseteq B\) s.t. \(\left\vert N(B^\prime) \right\vert < \left\vert B^\prime \right\vert\)}
 			\(S\gets\)\rand{\(N\)} \Comment*[r]{Pick any \(S\subseteq N(B)\) s.t. \(S \neq \varnothing \)}
 			\For(){\(i=1, \ldots  , N\)}{
 				\(p_i\gets p_i + 1\)\;

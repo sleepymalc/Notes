@@ -2,36 +2,36 @@
 \section{Hardness of Max-Cut}
 In this section, we will see that if we assume the \hyperref[conj:unique-game]{unique game conjecture}, then \autoref{thm:max-cut} is actually the best we can do, i.e., we have the following.
 
-\begin{theorem}[\cite{1366234}]\label{thm:max-cut}
-	Assuming \hyperref[conj:unique-game]{unique game conjecture}, for every \(\epsilon > 0 \), it's \(\NP\)-hard to approximate \hyperref[prb:max-cut]{max cut}  within a factor of \(\alpha _{\mathrm{GW} }+\epsilon \).
+\begin{theorem}[\cite{KKMO04}]\label{thm:max-cut-hardness}
+	Assuming the \hyperref[conj:unique-game]{unique game conjecture}, for every \(\epsilon > 0 \), it's \(\NP\)-hard to approximate \hyperref[prb:max-cut]{max cut}  within a factor of \(\alpha _{\mathrm{GW} }+\epsilon \).
 \end{theorem}
 
 \begin{prev}
-	Recall that
+	Recall that the \hyperref[not:GW]{Goemans-Williamson constant} \(\alpha _{\mathrm{GW} }\) is defined as
 	\[
-		\alpha _{\mathrm{GW} } \coloneqq \max _{a\in [-1, 1]}\frac{\arccos (a) / \pi }{(1 - a) / 2} \approx 0.878
+		\alpha _{\mathrm{GW} } \coloneqq \max _{a\in [-1, 1]}\frac{\arccos (a) / \pi }{(1 - a) / 2} \approx 0.878,
 	\]
-	is the approximation ratio achieved by \autoref{algo:max-cut-randomized-rounding}.
+	which is the approximation ratio achieved by \autoref{algo:max-cut-randomized-rounding}.
 \end{prev}
 
-Just like \hyperref[prb:max-3LIN]{3LIN}, we design a \hyperref[not:dictation]{dictator-ship} test, namely for \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) for \(\mathcal{\MakeUppercase{v}} \coloneqq \left\{ \pm 1 \right\} ^R\),
+Just like \hyperref[prb:max-3LIN]{3LIN}, we design a \hyperref[not:dictation]{dictator-ship} test, namely to create an instance (a graph) \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) for \(\mathcal{V} \coloneqq \left\{ \pm 1 \right\} ^R\) such that
 \begin{itemize}
-	\item \emph{dictator cuts} get good value;
-	\item \emph{cuts far from dictator cuts} get small value.
+	\item \emph{dictator cuts} (for some \(i\in [R]\), \(S = \{ x\in \left\{ \pm 1 \right\} ^R \colon x_i = 1 \} \)) get good value (cut many edges);
+	\item cuts \emph{far from dictator} get small value (don't cut many edges).
 \end{itemize}
 
 \subsection{Noisy Hypercube}
-To start with, let \(\rho \in [-1, +1]\), let \(\mathcal{\MakeUppercase{g}} _{\rho} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) with edge-weight such that the total weight sums up to \(1\). This allows us to sample an edge by first sample \(x\in \left\{ \pm 1 \right\} ^R\) uniformly, and for all \(i\in [R]\), let
+To start with, let \(\rho \in [-1, +1]\), let \(\mathcal{G} _{\rho} = (\mathcal{V} , \mathcal{E} )\) with edge-weight such that the total weight sums up to \(1\). This allows us to sample an edge by first sample \(x\in \left\{ \pm 1 \right\} ^R\) uniformly, and for all \(i\in [R]\), let
 \[
 	y_i = \begin{dcases}
 		x_i,  & \text{ w.p.\ } (1 + \rho ) / 2 ; \\
 		-x_i, & \text{ w.p.\ } (1 - \rho ) / 2,
 	\end{dcases}
 \]
-and output \((x, y)\in \mathcal{\MakeUppercase{e}} \).
+and output \((x, y)\in \mathcal{E} \).
 
 \begin{notation}
-	For any \((x, y)\in \mathcal{\MakeUppercase{e}} \) in \(\mathcal{\MakeUppercase{g}} _\rho \), we denote \(x \underset{\rho }{\sim } y\).
+	For any \((x, y)\in \mathcal{E} \) in \(\mathcal{G} _\rho \), we denote \(x \underset{\rho }{\sim } y\).
 \end{notation}
 
 We see that for all \(i\in [R]\), \(\mathbb{E}_{x \underset{\rho }{\sim }y }\left[x_i y_i \right] = 1\cdot (1+\rho )/2 - 1\cdot (1 - \rho ) / 2 = \rho \).
@@ -40,13 +40,13 @@ We see that for all \(i\in [R]\), \(\mathbb{E}_{x \underset{\rho }{\sim }y }\lef
 	At the end, we'll try \(\rho < 0\).
 \end{note}
 
-Let \(T_\rho \in \mathbb{\MakeUppercase{r}} ^{2^R \times 2^R}\) be the normalized adjacency matrix of \(\mathcal{\MakeUppercase{g}} _\rho \) such that
+Let \(T_\rho \in \mathbb{R} ^{2^R \times 2^R}\) be the normalized adjacency matrix of \(\mathcal{G} _\rho \) such that
 \[
 	T_{\rho } (x, y)
 	= \Pr_{}(\text{\(y\) is sampled} \mid \text{\(x\) is sampled} )
 	= \Pr_{}(\text{\((x, y)\) is sampled} ) \cdot 2^R.
 \]
-We see that the sum of entries is \(2^R\), and rows and columns sum up to \(1\). Given a cut \((S, T)\), consider \(f\colon \mathcal{\MakeUppercase{v}} \to \left\{ \pm 1 \right\} \) such that
+We see that the sum of entries is \(2^R\), and rows and columns sum up to \(1\). Given a cut \((S, T)\), consider \(f\colon \mathcal{V} \to \left\{ \pm 1 \right\} \) such that
 \[
 	f(x) = \begin{dcases}
 		1,  & \text{ if } x\in S ; \\
@@ -55,7 +55,7 @@ We see that the sum of entries is \(2^R\), and rows and columns sum up to \(1\).
 \]
 
 \begin{claim}
-	Given \((S, T)\), the total weight of edges cut by \((S, T)\) in \(\mathcal{\MakeUppercase{g}} _{\rho }\) is equal to
+	Given \((S, T)\), the total weight of edges cut by \((S, T)\) in \(\mathcal{G} _{\rho }\) is equal to
 	\[
 		\frac{1}{2} (1 - \left\langle f, T_\rho f \right\rangle ).
 	\]
@@ -64,13 +64,13 @@ We see that the sum of entries is \(2^R\), and rows and columns sum up to \(1\).
 	The total weigh of cut edges is equal to
 	\[
 		\mathbb{E}_{x \underset{\rho }{\sim }y }\left[ \frac{1}{2} (1 - f(x) f(y)) \right]
-		= \sum_{(x, y)\in \mathcal{\MakeUppercase{e}} } w(x, y)\cdot \frac{1}{2}(1 - f(x) f(y)).
+		= \sum_{(x, y)\in \mathcal{E} } w(x, y)\cdot \frac{1}{2}(1 - f(x) f(y)).
 	\]
 	Then, since
 	\[
 		\mathbb{E}_{x \underset{\rho }{\sim } y}\left[f(x) f(y) \right]
-		= \sum_{x\in \mathcal{\MakeUppercase{v}} } \sum_{y\in \mathcal{\MakeUppercase{v}} } \frac{1}{2^R} \Pr_{}(y\mid x) f(x) f(y)
-		= \frac{1}{2^R} \sum_{x\in \mathcal{\MakeUppercase{v}} } f(x) \underbrace{\sum_{y\in \mathcal{\MakeUppercase{v}} } \Pr_{}(y\mid x) f(y)}_{(T_\rho f)(x) = \mathbb{E}_{y \underset{\rho }{\sim } y}\left[ f(y)\right] }
+		= \sum_{x\in \mathcal{V} } \sum_{y\in \mathcal{V} } \frac{1}{2^R} \Pr_{}(y\mid x) f(x) f(y)
+		= \frac{1}{2^R} \sum_{x\in \mathcal{V} } f(x) \underbrace{\sum_{y\in \mathcal{V} } \Pr_{}(y\mid x) f(y)}_{(T_\rho f)(x) = \mathbb{E}_{y \underset{\rho }{\sim } y}\left[ f(y)\right] }
 		= \left\langle f, T_{\rho } f \right\rangle,
 	\]
 	so we're done.
@@ -208,7 +208,7 @@ Now, we say that \(i\) is \emph{influential} if \(\mathop{\mathrm{Inf}}_i^\delta
 			&\approx \mathbb{E}_{g, h}\left[\sgn (g)\sgn (h) \right]
 		\end{split}
 	\]
-	where \(g, h \sim \mathcal{\MakeUppercase{n}} (0, 1)\) are \(\rho \)-correlated by \(2\)-dimensional central limit theorem. Notice that we interpret the term \(\rho \)-correlated as \(g=\left\langle a, t \right\rangle = t_1\), \(h=\left\langle b, t \right\rangle \) where we sample \(t \coloneqq (t_1, t_2)\sim \mathcal{\MakeUppercase{n}} (0, 1)^2\).\footnote{We implicitly rotate \(t_1\) to the \(x\)-axis from \(g=\left\langle a, t \right\rangle = t_1\).} In this case, we have the same geometric interpretation as in \autoref{lma:lec14-2}, we have
+	where \(g, h \sim \mathcal{N} (0, 1)\) are \(\rho \)-correlated by \(2\)-dimensional central limit theorem. Notice that we interpret the term \(\rho \)-correlated as \(g=\left\langle a, t \right\rangle = t_1\), \(h=\left\langle b, t \right\rangle \) where we sample \(t \coloneqq (t_1, t_2)\sim \mathcal{N} (0, 1)^2\).\footnote{We implicitly rotate \(t_1\) to the \(x\)-axis from \(g=\left\langle a, t \right\rangle = t_1\).} In this case, we have the same geometric interpretation as in \autoref{lma:lec14-2}, we have
 	\[
 		\Pr_{}(\sgn (g) = \sgn (h)) = \frac{\pi - \arccos \rho }{\pi }.
 	\]

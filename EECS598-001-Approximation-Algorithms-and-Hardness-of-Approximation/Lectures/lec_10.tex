@@ -6,60 +6,60 @@ Instead of discussing general network design problems, we focus on traveling sal
 We first look at the definition of a \hyperref[def:spanning-tree]{spanning tree}.
 
 \begin{definition}[Spanning tree]\label{def:spanning-tree}
-	A \emph{spanning tree} \(T\) of a connected graph \(\mathcal{\MakeUppercase{g}}=(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) is an induced subgraph of \(\mathcal{\MakeUppercase{g}} \) which spans \(\mathcal{\MakeUppercase{g}} \), i.e., \(V(T) = \mathcal{\MakeUppercase{v}}\) and \(E(T) \subseteq \mathcal{\MakeUppercase{e}} \).
+	A \emph{spanning tree} \(T\) of a connected graph \(\mathcal{G}=(\mathcal{V} , \mathcal{E} )\) is an induced subgraph of \(\mathcal{G} \) which spans \(\mathcal{G} \), i.e., \(V(T) = \mathcal{V}\) and \(E(T) \subseteq \mathcal{E} \).
 \end{definition}
 
 \begin{remark}
-	A \hyperref[def:spanning-tree]{spanning tree} of a connected graph \(\mathcal{\MakeUppercase{g}} \) can also be defined as a maximal set of edges of \(\mathcal{\MakeUppercase{g}} \) that contains no cycle, or as a minimal set of edges that connect all vertices.
+	A \hyperref[def:spanning-tree]{spanning tree} of a connected graph \(\mathcal{G} \) can also be defined as a maximal set of edges of \(\mathcal{G} \) that contains no cycle, or as a minimal set of edges that connect all vertices.
 \end{remark}
 
 Then, we're interested in the following problem.
 
 \begin{problem}[Minimum spanning tree]\label{prb:min-spanning-tree}
-Given a connected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and an edge-weight function \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), find a \hyperref[def:spanning-tree]{spanning tree} \(T\) which minimizes \(w(T)\).
+Given a connected graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) and an edge-weight function \(w\colon \mathcal{E} \to \mathbb{R} ^+\), find a \hyperref[def:spanning-tree]{spanning tree} \(T\) which minimizes \(w(T)\).
 \end{problem}
 
 There are lots of different algorithms which solve \autoref{prb:min-spanning-tree}, e.g., \href{https://en.wikipedia.org/wiki/Prim%27s_algorithm}{Prim's algorithm}, \href{https://en.wikipedia.org/wiki/Kruskal%27s_algorithm}{Kruskal's Algorithm}, etc. in undergraduate algorithm courses. But turns out that by looking at the LP formulation of this problem, we get some non-trivial result. 
 
 \subsection{Spanning Tree Polytope}
-Denote the variables as \(\left\{ x_e \right\} _{e\in \mathcal{\MakeUppercase{e}} }\), where we interpret \(x_e = 1\) if \(e\) is in the final \hyperref[def:spanning-tree]{spanning tree}, otherwise if it's \(0\), then \(e\) is not in the final \hyperref[def:spanning-tree]{spanning tree}.
+Denote the variables as \(\left\{ x_e \right\} _{e\in \mathcal{E} }\), where we interpret \(x_e = 1\) if \(e\) is in the final \hyperref[def:spanning-tree]{spanning tree}, otherwise if it's \(0\), then \(e\) is not in the final \hyperref[def:spanning-tree]{spanning tree}.
 
 One natural formulation is
 \[
 	\begin{aligned}
-		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                  \\
-		      & \sum_{e\in \partial S} x_e \geq 1                 & \forall S\subseteq \mathcal{V} \\
+		\min~ & \sum_{e\in \mathcal{E} } x_e w(e)                                  \\
+		      & \sum_{e\in \partial S} x_e \geq 1 & \forall S\subseteq \mathcal{V} \\
 		      & x \geq 0,
 	\end{aligned}
 \]
-where the second constraint is trying to model that for every cut set \(S \subseteq \mathcal{\MakeUppercase{v}} \), our \hyperref[def:spanning-tree]{spanning tree} need to include at least one edge from the boundary, i.e., \(\partial S\).
+where the second constraint is trying to model that for every cut set \(S \subseteq \mathcal{V} \), our \hyperref[def:spanning-tree]{spanning tree} need to include at least one edge from the boundary, i.e., \(\partial S\).
 
 \begin{notation}
-	If \(S \subseteq \mathcal{\MakeUppercase{v}} \), then we denote \(\partial S = E(S, \overline{S} )\) be the edges between \(S\) and \(\overline{S} \).
+	If \(S \subseteq \mathcal{V} \), then we denote \(\partial S = E(S, \overline{S} )\) be the edges between \(S\) and \(\overline{S} \).
 \end{notation}
 
-But turns out that this formulation will give us an \hyperref[def:integrality-gap]{integrality gap} of \(2\), since for a cycle graph, just by choosing half of the edges, i.e., \(x_e = 1 / 2\) for all \(e\in \mathcal{\MakeUppercase{e}} \), the constraints are satisfied while we know we need to include all but one edge to form a valid \hyperref[def:spanning-tree]{spanning tree}.
+But turns out that this formulation will give us an \hyperref[def:integrality-gap]{integrality gap} of \(2\), since for a cycle graph, just by choosing half of the edges, i.e., \(x_e = 1 / 2\) for all \(e\in \mathcal{E} \), the constraints are satisfied while we know we need to include all but one edge to form a valid \hyperref[def:spanning-tree]{spanning tree}.
 
 \begin{remark}
 	There are ways to strengthen the second constraints by looking at \textbf{directed} \hyperref[def:spanning-tree]{spanning trees} rather than the usual undirected ones to give us an LP which solves \autoref{prb:min-spanning-tree} exactly.
 \end{remark}
 
-We see that the problems arise from the fact that there are not enough edges to span \(\mathcal{\MakeUppercase{g}} \), so we now require it explicitly in our LP formulation. Furthermore, to ensure there are no cycles, for any \(S \subseteq \mathcal{\MakeUppercase{v}} \), we again make sure that the total edges we have is less than \(\left\vert S \right\vert - 1\). Then, we have the following \hyperref[def:spanning-tree]{spanning tree} polytope.
+We see that the problems arise from the fact that there are not enough edges to span \(\mathcal{G} \), so we now require it explicitly in our LP formulation. Furthermore, to ensure there are no cycles, for any \(S \subseteq \mathcal{V} \), we again make sure that the total edges we have is less than \(\left\vert S \right\vert - 1\). Then, we have the following \hyperref[def:spanning-tree]{spanning tree} polytope.
 \begin{equation}\label{eq:spanning-tree-polytope}
 	\begin{aligned}
-		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                                                                          \\
-		      & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e = n-1                                                                         \\
-		      & \sum_{e\in E(S)} x_e \leq \left\vert S \right\vert - 1 & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
+		\min~ & \sum_{e\in \mathcal{E} } x_e w(e)                                                                          \\
+		      & \sum_{e\in \mathcal{E} } x_e = n-1                                                                         \\
+		      & \sum_{e\in E(S)} x_e \leq \left\vert S \right\vert - 1 & \forall \varnothing \neq S \subsetneq \mathcal{V} \\
 		      & x \geq 0
 	\end{aligned}
 \end{equation}
 where \(E(S)\) denotes the set of edges inside \(S\), i.e.,
 \[
-	E(S) \coloneqq \left\{ e=(u, v)\in \mathcal{\MakeUppercase{e}} \colon u, v\in \mathcal{\MakeUppercase{v}}  \right\}.
+	E(S) \coloneqq \left\{ e=(u, v)\in \mathcal{E} \colon u, v\in \mathcal{V}  \right\}.
 \]
 This is not solvable just by throwing this into an LP solver since there are exponentially many constraints! Regardless, we note the following.
 \begin{remark}[Separation oracle]\label{rmk:separation-oracle}
-	Given a linear program \((P)\) with \(x\in \mathbb{\MakeUppercase{r}} ^n\) as variables, a \emph{separation oracle} is an algorithm which outputs
+	Given a linear program \((P)\) with \(x\in \mathbb{R} ^n\) as variables, a \emph{separation oracle} is an algorithm which outputs
 	\begin{itemize}
 		\item \textsf{Yes} if \(x\) is feasible.
 		\item \textsf{No} with \emph{the violating constraint} if \(x\) is not feasible.
@@ -68,13 +68,13 @@ This is not solvable just by throwing this into an LP solver since there are exp
 	And if we have a polynomial time separation oracle, we can solve any LP in polynomial time by using the \href{https://en.wikipedia.org/wiki/Ellipsoid_method}{ellipsoid algorithm}.
 \end{remark}
 
-Now, we just state that there's a \hyperref[rmk:separation-oracle]{separation oracle} for the above LP, so we can solve it in polynomial time and get a fractional solution \(\left\{ x_e \right\} _{e\in \mathcal{\MakeUppercase{e}}}\). So our next task is to round it into an integral one.
+Now, we just state that there's a \hyperref[rmk:separation-oracle]{separation oracle} for the above LP, so we can solve it in polynomial time and get a fractional solution \(\left\{ x_e \right\} _{e\in \mathcal{E}}\). So our next task is to round it into an integral one.
 
 \subsection{Pipage Rounding}
 The reason we call \autoref{eq:spanning-tree-polytope} the \emph{polytope} is that there's a way to transform the any optimal (potentially fractional) solution to this LP can be transformed to an integral one while maintaining the objective value. This can be done via the so-called \emph{pipage rounding} as we'll now see.
 
 \begin{notation}[Tight]\label{not:tight}
-	The set \(S\subseteq \mathcal{\MakeUppercase{v}} \) is \emph{tight} if \(\sum_{e\in E(S, \overline{S})} x_e = \left\vert S \right\vert - 1 \).
+	The set \(S\subseteq \mathcal{V} \) is \emph{tight} if \(\sum_{e\in E(S, \overline{S})} x_e = \left\vert S \right\vert - 1 \).
 \end{notation}
 
 \begin{lemma}[Uncrossing]\label{lma:uncrossing}
@@ -98,13 +98,13 @@ Finally, we call a \hyperref[not:tight]{tight} \(T\) \emph{integral} if and only
 \begin{algorithm}[H]\label{algo:min-spanning-tree-pipage-rounding}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:min-spanning-tree]{Minimum Spanning Tree} -- Pipage-Rounding}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), edge weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(x\) of \autoref{eq:spanning-tree-polytope}\footnote{By using \hyperref[rmk:separation-oracle]{separation oracle}.}}
+	\KwData{A connected graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), edge weight \(w\colon \mathcal{E} \to \mathbb{R} ^+\), solution \(x\) of \autoref{eq:spanning-tree-polytope}\footnote{By using \hyperref[rmk:separation-oracle]{separation oracle}.}}
 	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
 	\SetKw{Break}{break}
 	\SetKwFunction{Swap}{swap}
 	\SetKwFunction{SG}{Subgraph}
 	\BlankLine
-	\While(\Comment*[f]{not integral}){\(x \notin \mathbb{\MakeUppercase{n}} ^{m}\)}{
+	\While(\Comment*[f]{not integral}){\(x \notin \mathbb{N} ^{m}\)}{
 		\(T\gets\) minimal \hyperref[not:tight]{tight} fraction set\label{algo:min-spanning-tree-pipage-rounding-min-tight-set}\Comment*[r]{inclusion-wise minimal\footnote{i.e., \(\nexists T^\prime \subsetneq T\) \hyperref[not:tight]{tight} fractional set.}}
 		\(f, g\gets \) fractional edges\Comment*[r]{\(f, g \in E(T)\)}
 		\If(\Comment*[f]{ensure \(w(f) \leq w(g)\)}){\(w(f) > w(g)\)}{
@@ -119,7 +119,7 @@ Finally, we call a \hyperref[not:tight]{tight} \(T\) \emph{integral} if and only
 			}
 		}
 	}
-	\(T\gets\)\SG{\(\mathcal{\MakeUppercase{g}} \),\(x\)}\Comment*[r]{construct a \hyperref[def:spanning-tree]{spanning tree}}
+	\(T\gets\)\SG{\(\mathcal{G} \),\(x\)}\Comment*[r]{construct a \hyperref[def:spanning-tree]{spanning tree}}
 	\Return{\(T\)}\;
 \end{algorithm}
 
@@ -129,20 +129,20 @@ Finally, we call a \hyperref[not:tight]{tight} \(T\) \emph{integral} if and only
 		\item \autoref{algo:min-spanning-tree-pipage-rounding-increase}: This continuous process is done by taking \(\delta \) from solving the following LP as the total unit we should increase/decrease:
 		      \begin{equation}\label{eq:lec10}
 			      \begin{aligned}
-				      \max~ & \delta                                                                                                    \\
-				            & y = x+\delta e_f - \delta e_g                                                                             \\
-				            & \sum_{e\in E(S)} y- e \leq \left\vert S \right\vert - 1 & \forall S \subseteq \mathcal{\MakeUppercase{v}} \\
+				      \max~ & \delta                                                                                    \\
+				            & y = x+\delta e_f - \delta e_g                                                             \\
+				            & \sum_{e\in E(S)} y- e \leq \left\vert S \right\vert - 1 & \forall S \subseteq \mathcal{V} \\
 				            & 0 \leq y \leq 1,
 			      \end{aligned}
 		      \end{equation}
 		      where \(e_i\) is the unit vector with \(1\) at entry \(i\). Again, this is in the similar form as \autoref{eq:spanning-tree-polytope}, and there's a \hyperref[rmk:separation-oracle]{separation oracle} which solves this LP in polynomial-time.
-		\item \autoref{algo:min-spanning-tree-pipage-rounding-min-tight-set}: Start from the whole vertex set \(\mathcal{\MakeUppercase{v}} \), and we simply look at \(f\) which is none-integral edge and ask can we increase it or not, i.e., we ask the \hyperref[rmk:separation-oracle]{separation oracle} for \autoref{eq:lec10}, and if there's a smaller \hyperref[not:tight]{tight} fraction set inside \(T\), \(\delta > 0\) strictly, and we just keep searching in this way. We'll see what does this mean exactly in \autoref{lma:lec10-1}.
+		\item \autoref{algo:min-spanning-tree-pipage-rounding-min-tight-set}: Start from the whole vertex set \(\mathcal{V} \), and we simply look at \(f\) which is none-integral edge and ask can we increase it or not, i.e., we ask the \hyperref[rmk:separation-oracle]{separation oracle} for \autoref{eq:lec10}, and if there's a smaller \hyperref[not:tight]{tight} fraction set inside \(T\), \(\delta > 0\) strictly, and we just keep searching in this way. We'll see what does this mean exactly in \autoref{lma:lec10-1}.
 	\end{itemize}
 \end{remark}
 
-Our goal now is to show that during the \hyperref[algo:min-spanning-tree-pipage-rounding]{pipage rounding}, \(x\) remains feasible and \(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\) will not increase.
+Our goal now is to show that during the \hyperref[algo:min-spanning-tree-pipage-rounding]{pipage rounding}, \(x\) remains feasible and \(\sum_{e\in \mathcal{E} } x_e w(e)\) will not increase.
 
-We first show that \(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\) will not increase. This is because from our design, \(\sum_{e\in \mathcal{\MakeUppercase{e}} }x_e \) remains unchanged, while we increase \(x_f\) while decrease \(x_g\) for \(w(f) \leq w(g)\), hence the total cost for the \hyperref[def:spanning-tree]{spanning tree} decreases.
+We first show that \(\sum_{e\in \mathcal{E} } x_e w(e)\) will not increase. This is because from our design, \(\sum_{e\in \mathcal{E} }x_e \) remains unchanged, while we increase \(x_f\) while decrease \(x_g\) for \(w(f) \leq w(g)\), hence the total cost for the \hyperref[def:spanning-tree]{spanning tree} decreases.
 
 To show \(x\) remains feasible, first note that the non-\hyperref[not:tight]{tight} sets are handled (captured) in \autoref{algo:min-spanning-tree-pipage-rounding-elif}, as for \hyperref[not:tight]{tight} sets, we have \autoref{lma:lec10-1}.
 
@@ -188,14 +188,14 @@ And indeed, we have a randomized version of \autoref{algo:min-spanning-tree-pipa
 \begin{algorithm}[H]\label{algo:min-spanning-tree-randomized-pipage-rounding}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:min-spanning-tree]{Minimum Spanning Tree} -- Randomized Pipage-Rounding}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), edge weight \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), solution \(x\) of \autoref{eq:spanning-tree-polytope}\footnote{Again, by using \hyperref[rmk:separation-oracle]{separation oracle}.}}
+	\KwData{A connected graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), edge weight \(w\colon \mathcal{E} \to \mathbb{R} ^+\), solution \(x\) of \autoref{eq:spanning-tree-polytope}\footnote{Again, by using \hyperref[rmk:separation-oracle]{separation oracle}.}}
 	\KwResult{A minimum \hyperref[def:spanning-tree]{spanning tree} \(T\)}
 	\SetKw{Break}{break}
 	\SetKwFunction{Swap}{swap}
 	\SetKwFunction{SG}{Subgraph}
 	\SetKwFunction{Rand}{rand}
 	\BlankLine
-	\While(\Comment*[f]{not integral}){\(x \notin \mathbb{\MakeUppercase{n}} ^{m}\)}{
+	\While(\Comment*[f]{not integral}){\(x \notin \mathbb{N} ^{m}\)}{
 		\(T\gets\) minimal \hyperref[not:tight]{tight} fraction set\Comment*[r]{inclusion-wise minimal\footnote{i.e., \(\nexists T^\prime \subsetneq T\) \hyperref[not:tight]{tight} fractional set.}}
 		\(f, g\gets \) fractional edges\label{algo:min-spanning-tree-randomized-pipage-rounding-fg}\Comment*[r]{\(f, g \in E(T)\)}
 		\If(\Comment*[f]{ensure \(w(f) \leq w(g)\)}){\(w(f) > w(g)\)}{
@@ -209,7 +209,7 @@ And indeed, we have a randomized version of \autoref{algo:min-spanning-tree-pipa
 			\(x_f \gets x_f - b\), \(x_g \gets x_g + b\)\;
 		}
 	}
-	\(T\gets\)\SG{\(\mathcal{\MakeUppercase{g}} \),\(x\)}\Comment*[r]{construct a \hyperref[def:spanning-tree]{spanning tree}}
+	\(T\gets\)\SG{\(\mathcal{G} \),\(x\)}\Comment*[r]{construct a \hyperref[def:spanning-tree]{spanning tree}}
 	\Return{\(T\)}\;
 \end{algorithm}
 
@@ -225,14 +225,14 @@ As in the \hyperref[algo:min-spanning-tree-pipage-rounding]{deterministic versio
 	\]
 	hence any possible \(x^{\text{final} }\) satisfies
 	\[
-		\sum_{e\in \mathcal{\MakeUppercase{e}} } x^{\text{final}}_e w(e)= \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e^{\text{LP}} w(e),
+		\sum_{e\in \mathcal{E} } x^{\text{final}}_e w(e)= \sum_{e\in \mathcal{E} } x_e^{\text{LP}} w(e),
 	\]
 	hence we get a \(1\)-approximation algorithm, i.e., \autoref{algo:min-spanning-tree-randomized-pipage-rounding} solves \autoref{prb:min-spanning-tree} exactly.
 \end{proof}
 
 From \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, \(x^{\text{final} }\) can be interpreted as the distribution of \hyperref[def:spanning-tree]{spanning trees}, i.e., we have
 \[
-	\mathbb{E}\left[x^{\text{final} } \right] = x^{\text{LP} } \iff \forall e\in \mathcal{\MakeUppercase{e}}, \Pr(e\in T) = x_e^{\text{LP} },
+	\mathbb{E}\left[x^{\text{final} } \right] = x^{\text{LP} } \iff \forall e\in \mathcal{E}, \Pr(e\in T) = x_e^{\text{LP} },
 \]
 where the probability depends on the randomness introduce in \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, i.e., \(x_e^{\text{final} } \). So, from now on, when we say we sample a \hyperref[def:spanning-tree]{spanning tree} from \(x\), what we mean is to construct a \hyperref[def:spanning-tree]{spanning tree} w.r.t.\ the solution \(x\) to the \hyperref[eq:spanning-tree-polytope]{spanning tree polytope} using \autoref{algo:min-spanning-tree-randomized-pipage-rounding}.
 
@@ -244,7 +244,7 @@ One of the reasons why we're interested in \autoref{algo:min-spanning-tree-rando
 But since we know that \(x_e^{\text{final} }\) are not independent for sure since they depend on a sequence of steps executed by \autoref{algo:min-spanning-tree-randomized-pipage-rounding}, it's non-trivial to analyze. We now see the main result in this section.
 
 \begin{theorem}[Negative correlation]\label{thm:negative-correlation}
-	For all \(S \subseteq \mathcal{\MakeUppercase{e}} \),
+	For all \(S \subseteq \mathcal{E} \),
 	\[
 		\mathbb{E}\left[\prod_{e\in S} x^{\text{final} }_e \right] = \Pr(S \subseteq T) \leq \prod_{e\in S} \Pr(e\in T) = \prod_{e\in S} x^{\text{LP} }_e.
 	\]

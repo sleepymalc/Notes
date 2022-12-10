@@ -13,9 +13,9 @@ We first dive into \hyperref[eg:branch-and-bound]{branch and bound algorithm} as
 We now focus on the following integer programming,
 \[
 	\begin{aligned}
-		\max~                   & y^{\top}b(\eqqcolon z)                                                                              \\
-		                        & y^{\top}A\leq c^{\top}                                                                              \\
-		(D_{\mathcal{I} })\quad & y\in\mathbb{\MakeUppercase{R}}^m(y_{i}\in\mathbb{\MakeUppercase{Z}} \text{ for } i\in \mathcal{I}),
+		\max~                   & y^{\top}b(\eqqcolon z)                                              \\
+		                        & y^{\top}A\leq c^{\top}                                              \\
+		(D_{\mathcal{I} })\quad & y\in\mathbb{R}^m(y_{i}\in\mathbb{Z} \text{ for } i\in \mathcal{I}),
 	\end{aligned}
 \]
 where \(\mathcal{I} \subseteq \{1, 2, \ldots , m\}\). By taking the \hyperref[def:dual]{dual}, we have
@@ -29,7 +29,7 @@ where \(\mathcal{I} \subseteq \{1, 2, \ldots , m\}\). By taking the \hyperref[de
 
 We'll see that the branch and bound algorithm maintains the following:
 \begin{itemize}
-	\item \(\mathcal{L} \): A list \(\mathcal{L} \) of \emph{subproblems} that have the form of \((D_{\mathcal{I^\prime } })\) where \(\mathcal{\MakeUppercase{i}} ^\prime \subset \mathcal{\MakeUppercase{i}}\)
+	\item \(\mathcal{L} \): A list \(\mathcal{L} \) of \emph{subproblems} that have the form of \((D_{\mathcal{I^\prime } })\) where \(\mathcal{I} ^\prime \subset \mathcal{I}\)
 	\item \(\mathrm{LB} \): The current best lower bound on \(z\) such that \(\mathrm{LB}\leq z \).
 	\item \(\overline{y}_{\mathrm{LB}}\): The \(\overline{y}\) corresponds to \(\mathrm{LB}\).
 \end{itemize}
@@ -65,31 +65,31 @@ its continuous relaxation \((\widetilde{D})\) and proceed. Rigorously, we have t
 	\DontPrintSemicolon
 	\caption{Branch and Bound Algorithm}
 	\SetKwData{result}{result}
-	\KwData{(Mixed) Integer programming \((D_{\mathcal{\MakeUppercase{i}} } )\) with \emph{feasible} \((P)\)\footnote{This makes sure that the \hyperref[def:feasible-region]{feasible region} of the continuous relaxation \((\widetilde{D})\) of any \((\widetilde{D} _{\mathcal{\MakeUppercase{i}} ^\prime })\) is a bounded set, so we can guarantee finite termination.}}
-	\KwResult{\hyperref[def:optimal-solution]{optimal solution} \(\overline{y}\) and \hyperref[def:optimal-solution]{optimal} value, or report \textsf{\((D_{\mathcal{\MakeUppercase{i}} } )\) is infeasible}}
+	\KwData{(Mixed) Integer programming \((D_{\mathcal{I} } )\) with \emph{feasible} \((P)\)\footnote{This makes sure that the \hyperref[def:feasible-region]{feasible region} of the continuous relaxation \((\widetilde{D})\) of any \((\widetilde{D} _{\mathcal{I} ^\prime })\) is a bounded set, so we can guarantee finite termination.}}
+	\KwResult{\hyperref[def:optimal-solution]{optimal solution} \(\overline{y}\) and \hyperref[def:optimal-solution]{optimal} value, or report \textsf{\((D_{\mathcal{I} } )\) is infeasible}}
 
 	\SetKwFunction{help}{SolveContRelax}
 
 	\BlankLine
-	\(\mathcal{\MakeUppercase{l}} \gets \{D_{\mathcal{\MakeUppercase{i}}^\prime } \colon \mathcal{\MakeUppercase{i}}^\prime  \subseteq \mathcal{\MakeUppercase{i}}  \}\)\;
+	\(\mathcal{L} \gets \{D_{\mathcal{I}^\prime } \colon \mathcal{I}^\prime  \subseteq \mathcal{I}  \}\)\;
 	\(\mathrm{LB} \gets -\infty \)\;
 	\(\overline{y} _{\mathrm{LB}}\gets\) random vector\;
 	\;
-	\While{\(\mathcal{\MakeUppercase{l}} \neq \varnothing \)}{
-	\(D_{\mathcal{\MakeUppercase{i}}^\prime}  \gets \) an element in \(\mathcal{\MakeUppercase{l}} \)\Comment*[r]{See \autoref{subsec:node-selection}}
-	\(\mathcal{\MakeUppercase{l}} \gets \mathcal{\MakeUppercase{l}} \setminus \{D_{\mathcal{\MakeUppercase{i}} ^\prime }\}\)\;
-	\(\result\gets\)\help{\(D_{\mathcal{\MakeUppercase{i}}^\prime }\)}\;\label{algo:branch-and-bound-algorithm:line8}
+	\While{\(\mathcal{L} \neq \varnothing \)}{
+	\(D_{\mathcal{I}^\prime}  \gets \) an element in \(\mathcal{L} \)\Comment*[r]{See \autoref{subsec:node-selection}}
+	\(\mathcal{L} \gets \mathcal{L} \setminus \{D_{\mathcal{I} ^\prime }\}\)\;
+	\(\result\gets\)\help{\(D_{\mathcal{I}^\prime }\)}\;\label{algo:branch-and-bound-algorithm:line8}
 	\If{\textsf{\(\result\neq\) infeasible}}{
 	\(\overline{y} \gets \result\)\Comment*[r]{Retrieve \hyperref[def:basic-solution]{basic} \hyperref[def:optimal-solution]{optimal solution}}
 	\If{\(\overline{y} ^{\top} b > \mathrm{LB}\)}{
-	\uIf(\Comment*[f]{\(\overline{y}\) solves \(D _\mathcal{\MakeUppercase{i}}\)}){\(\overline{y} _{i} ^{\top} \in \mathbb{\MakeUppercase{z}} \) for \(i\in \mathcal{\MakeUppercase{i}}\)}{
+	\uIf(\Comment*[f]{\(\overline{y}\) solves \(D _\mathcal{I}\)}){\(\overline{y} _{i} ^{\top} \in \mathbb{Z} \) for \(i\in \mathcal{I}\)}{
 		\(\mathrm{LB}\gets \overline{y} ^{\top} b \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal} value}
 		\(\overline{y} _\mathrm{LB} \gets \overline{y} \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal solution}}
-	}\Else(\Comment*[f]{\(\overline{y}\) doesn't solve \(D _\mathcal{\MakeUppercase{i}}\), \(\overline{y} _{i} ^{\top} \notin \mathbb{\MakeUppercase{z}} \) for some \(i\in \mathcal{\MakeUppercase{i}}\)}){
-	\(i^{\ast} \gets\) an \(i\in \mathcal{\MakeUppercase{i}} \) such that \(\overline{y} _{i} \notin \mathbb{\MakeUppercase{z}} \)\label{algo:branch-and-bound-algorithm:line16}\Comment*[r]{See \autoref{subsec:branching-variable-selection}}
-	\(D ^\text{u}_{\mathcal{\MakeUppercase{i}} ^\prime }\gets D _{\mathcal{\MakeUppercase{i}}^\prime } \) with \(y_{i^{\ast} }\geq \left\lceil \overline{y}_{i^{\ast} } \right\rceil\)\Comment*[r]{\hyperref[rmk:up-branch]{Up branch}}
-	\(D ^\text{d}_{\mathcal{\MakeUppercase{i}} ^\prime }\gets D _{\mathcal{\MakeUppercase{i}}^\prime } \) with \(y_{i^{\ast} }\leq \left\lfloor \overline{y}_{i^{\ast} } \right\rfloor\)\footnote{To match the form, we use \(-y_{i}\leq -\left\lceil \overline{y}_{i}\right\rceil\).}\Comment*[r]{\hyperref[rmk:down-branch]{Down branch}}
-	\(\mathcal{\MakeUppercase{l}} \gets \mathcal{\MakeUppercase{l}} \cup \{D ^\text{u}_{\mathcal{\MakeUppercase{i}} ^\prime }, D ^\text{d}_{\mathcal{\MakeUppercase{i}} ^\prime }\}\)\;
+	}\Else(\Comment*[f]{\(\overline{y}\) doesn't solve \(D _\mathcal{I}\), \(\overline{y} _{i} ^{\top} \notin \mathbb{Z} \) for some \(i\in \mathcal{I}\)}){
+	\(i^{\ast} \gets\) an \(i\in \mathcal{I} \) such that \(\overline{y} _{i} \notin \mathbb{Z} \)\label{algo:branch-and-bound-algorithm:line16}\Comment*[r]{See \autoref{subsec:branching-variable-selection}}
+	\(D ^\text{u}_{\mathcal{I} ^\prime }\gets D _{\mathcal{I}^\prime } \) with \(y_{i^{\ast} }\geq \left\lceil \overline{y}_{i^{\ast} } \right\rceil\)\Comment*[r]{\hyperref[rmk:up-branch]{Up branch}}
+	\(D ^\text{d}_{\mathcal{I} ^\prime }\gets D _{\mathcal{I}^\prime } \) with \(y_{i^{\ast} }\leq \left\lfloor \overline{y}_{i^{\ast} } \right\rfloor\)\footnote{To match the form, we use \(-y_{i}\leq -\left\lceil \overline{y}_{i}\right\rceil\).}\Comment*[r]{\hyperref[rmk:down-branch]{Down branch}}
+	\(\mathcal{L} \gets \mathcal{L} \cup \{D ^\text{u}_{\mathcal{I} ^\prime }, D ^\text{d}_{\mathcal{I} ^\prime }\}\)\;
 	}
 	}
 	}
@@ -103,25 +103,25 @@ its continuous relaxation \((\widetilde{D})\) and proceed. Rigorously, we have t
 \end{algorithm}
 
 \begin{remark}[Finite termination]
-	We see that there are only finitely many (though exponential) \(D_{\mathcal{\MakeUppercase{i}} ^\prime}\) can be added into \(\mathcal{\MakeUppercase{l}} \),
+	We see that there are only finitely many (though exponential) \(D_{\mathcal{I} ^\prime}\) can be added into \(\mathcal{L} \),
 	hence \hyperref[algo:branch-and-bound-algorithm]{branch and bound algorithm} is finitely terminating.
 \end{remark}
 
 Because the above algorithm maintains the key invariant for \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, i.e.,
-every \hyperref[def:feasible-solution]{feasible solution} of \((D_{\mathcal{\MakeUppercase{i}} } )\) with greater objective value
-than \(\mathrm{LB}\) is \hyperref[def:feasible-solution]{feasible} for a problem on the list \(\mathcal{\MakeUppercase{l}} \) we
+every \hyperref[def:feasible-solution]{feasible solution} of \((D_{\mathcal{I} } )\) with greater objective value
+than \(\mathrm{LB}\) is \hyperref[def:feasible-solution]{feasible} for a problem on the list \(\mathcal{L} \) we
 have the following result.
 \begin{theorem}\label{thm:lec23-1}
 	Suppose that \((P)\) is feasible. Then at termination of \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, we have
-	\(\mathrm{LB}=-\infty\) if \((\widetilde{D} _\mathcal{\MakeUppercase{i}})\) is infeasible, or with \(\overline{y} _{\mathrm{LB}}\)
-	being an \hyperref[def:optimal-solution]{optimal solution} of \((D_{\mathcal{\MakeUppercase{i}} } )\).
+	\(\mathrm{LB}=-\infty\) if \((\widetilde{D} _\mathcal{I})\) is infeasible, or with \(\overline{y} _{\mathrm{LB}}\)
+	being an \hyperref[def:optimal-solution]{optimal solution} of \((D_{\mathcal{I} } )\).
 \end{theorem}
 
 \begin{remark}[Detail of the algorithm]
 	We make some remark on \hyperref[algo:branch-and-bound-algorithm]{branch and bound algorithm} we have above.
 	\begin{itemize}
 		\item When calling \autoref{algo:branch-and-bound-algorithm:line8}, we first obtain the continuous relaxation \((\widetilde{D})\) of
-		      \((D_{\mathcal{\MakeUppercase{i}} ^\prime })\) and its \hyperref[def:primal]{primal} \((\widetilde{P} )\) as follows.
+		      \((D_{\mathcal{I} ^\prime })\) and its \hyperref[def:primal]{primal} \((\widetilde{P} )\) as follows.
 		      \[
 			      \begin{alignedat}{5}
 				      \max ~&y^{\top}b\qquad\qquad	&&\min~		&&c^{\top}x\\
@@ -132,7 +132,7 @@ have the following result.
 		      Then what we're really doing is solving \((\widetilde{P})\) instead of \((\widetilde{D} )\) by \hyperref[algo:simplex-algorithm]{simplex algorithm}
 		      and get an \hyperref[def:optimal-solution]{optimal} basis \(\beta\), and this give us an \hyperref[def:optimal-solution]{optimal}
 		      \hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}^{\top}\coloneqq c^{\top}_{\beta}A^{-1} _{\beta}\).
-		\item When calling \autoref{algo:branch-and-bound-algorithm:line16}, after choosing \(i^{\ast} \), adding a constraint to \((D_{\mathcal{\MakeUppercase{i}} ^\prime })\)
+		\item When calling \autoref{algo:branch-and-bound-algorithm:line16}, after choosing \(i^{\ast} \), adding a constraint to \((D_{\mathcal{I} ^\prime })\)
 		      effectively adds a variable to the corresponding continuous relaxation \((\widetilde{D})\), hence adds a variable to the \hyperref[def:standard-form]{standard form}
 		      problem \((\widetilde{P} )\). So, a \hyperref[def:basic]{basis} for \((\widetilde{P})\) remains \hyperref[def:feasible-solution]{feasible} after we introduce
 		      such a variable.
@@ -172,7 +172,7 @@ have the following result.
 \end{remark}
 
 \begin{remark}[Partially solving \(\widetilde{P}\)]
-	In practice, when solving \((\widetilde{P})\) (induced from any \((D_{\mathcal{\MakeUppercase{i}} ^\prime})\)) via \hyperref[algo:simplex-algorithm]{simplex algorithm}, we are
+	In practice, when solving \((\widetilde{P})\) (induced from any \((D_{\mathcal{I} ^\prime})\)) via \hyperref[algo:simplex-algorithm]{simplex algorithm}, we are
 	generating a sequence of \emph{decreasing objective values} of \((\widetilde{P})\), each one of which is an upper-bound on the \hyperref[def:optimal-solution]{optimal} value of its parent, and it's
 	also a \emph{potential new \(\mathrm{LB}\)}. We see that when the \hyperref[def:optimal-solution]{optimal} value of \((\widetilde{P})\) \(\leq \mathrm{LB}\), we terminate immediately since solving this \((\widetilde{P})\) will not
 	improve \(\mathrm{LB}\).
@@ -210,7 +210,7 @@ Node Selection means which problem to select from \(\mathcal{L} \) to process. T
 
 \subsection{Branching Variable selection}\label{subsec:branching-variable-selection}
 \begin{enumerate}
-	\item Random: Choose randomly among \(y_{i}\) such that \(\overline{y}_{i}\notin\mathbb{\MakeUppercase{Z}}\).
+	\item Random: Choose randomly among \(y_{i}\) such that \(\overline{y}_{i}\notin\mathbb{Z}\).
 	\item Biggest Cost: Choose based on the biggest \(c_{i}\).
 	\item Most Fractional: Choose \(i\) with \(\overline{y}_{i}\) \emph{most fractional}.
 	\item \textbf{Pseudo Cost Branching}

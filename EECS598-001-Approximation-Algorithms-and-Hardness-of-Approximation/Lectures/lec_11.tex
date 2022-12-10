@@ -2,14 +2,14 @@
 \begin{prev}
 	We have shown that given any feasible \(x\), there's a distribution of \hyperref[def:spanning-tree]{spanning tree} \(T\) such that
 	\begin{enumerate}[(a)]
-		\item For all \(e\in \mathcal{\MakeUppercase{e}} \), \(\Pr(e\in T) = x_e\)
-		\item For all \(S \subseteq \mathcal{\MakeUppercase{e}} \), \(\Pr(S \subseteq T) \leq \prod_{e\in S} x_e\) from \autoref{thm:negative-correlation}.
+		\item For all \(e\in \mathcal{E} \), \(\Pr(e\in T) = x_e\)
+		\item For all \(S \subseteq \mathcal{E} \), \(\Pr(S \subseteq T) \leq \prod_{e\in S} x_e\) from \autoref{thm:negative-correlation}.
 	\end{enumerate}
 \end{prev}
 
 From these, we can deduce the following.
 \begin{theorem}\label{thm:lec11}
-	For all \(S \subseteq \mathcal{\MakeUppercase{e}} \) and \(\gamma \geq 1\),
+	For all \(S \subseteq \mathcal{E} \) and \(\gamma \geq 1\),
 	\[
 		\Pr(\left\vert S \cap T \right\vert \geq \gamma \sum_{e\in S} x_e) \leq \left( \frac{e}{\gamma } \right) ^{\gamma \sum_{e\in S} x_e}.
 	\]
@@ -27,11 +27,11 @@ From these, we can deduce the following.
 Now we can talk about the \hyperref[prb:ATSP]{asymmetric traveling salesman problem}. Before we state the problem, we first look at one important definition.
 
 \begin{definition}[Tour]\label{def:tour}
-	Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), a \emph{tour} \((a_0, \ldots , a_k)\) where \(a_i\in \mathcal{\MakeUppercase{v}} \) satisfies \(a_0 = a_k\), \((a_i, a_{i+1})\in \mathcal{\MakeUppercase{e}} \) and visited all the vertices, i.e., \(\left\{ a_i \right\} _{i=0}^k = \mathcal{\MakeUppercase{v}} \).
+	Given a graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\), a \emph{tour} \((a_0, \ldots , a_k)\) where \(a_i\in \mathcal{V} \) satisfies \(a_0 = a_k\), \((a_i, a_{i+1})\in \mathcal{E} \) and visited all the vertices, i.e., \(\left\{ a_i \right\} _{i=0}^k = \mathcal{V} \).
 \end{definition}
 
 \begin{problem}[Asymmetric TSP]\label{prb:ATSP}
-Given a complete bidirected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\) satisfying the \emph{directed} triangle inequality.\footnote{Compare to the regular triangle inequality, now the order matters, i.e., for all \(a, b, c\in \mathcal{\MakeUppercase{v}} \), \(d(a, c) \leq d(a, b) + d(b, c)\).} \emph{Asymmetric TSP} asks to find a \hyperref[def:tour]{tour} \((a_0, \ldots , a_k)\) which minimizes \(\sum_{i=0} ^{k-1}d(a_{i-1}, a_i)\).
+Given a complete bidirected graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) and a distance function \(d\colon \mathcal{E} \to \mathbb{R} ^+\) satisfying the \emph{directed} triangle inequality.\footnote{Compare to the regular triangle inequality, now the order matters, i.e., for all \(a, b, c\in \mathcal{V} \), \(d(a, c) \leq d(a, b) + d(b, c)\).} \emph{Asymmetric TSP} asks to find a \hyperref[def:tour]{tour} \((a_0, \ldots , a_k)\) which minimizes \(\sum_{i=0} ^{k-1}d(a_{i-1}, a_i)\).
 \end{problem}
 
 \begin{remark}
@@ -57,25 +57,25 @@ Given a complete bidirected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\Make
 \end{note}
 
 \subsection{Asymmetric TSP Polytope}
-We now try to solve \autoref{prb:ATSP}. The idea is simple, given \(T\subseteq \mathcal{\MakeUppercase{e}} \) for \(T\) being a multiset, we want \(T\) to satisfy
+We now try to solve \autoref{prb:ATSP}. The idea is simple, given \(T\subseteq \mathcal{E} \) for \(T\) being a multiset, we want \(T\) to satisfy
 \begin{enumerate}[(a)]
 	\item \(T\) is connected (in undirected sense)
-	\item \(T\) is \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerian}: \(\deg_T^+(v) = \deg_T^-(v)\) for all \(v\in \mathcal{\MakeUppercase{v}} \)\footnote{We use \(\deg^+\) to denote the out degree, while \(\deg^-\) to denote the in degree.}
+	\item \(T\) is \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerian}: \(\deg_T^+(v) = \deg_T^-(v)\) for all \(v\in \mathcal{V} \)\footnote{We use \(\deg^+\) to denote the out degree, while \(\deg^-\) to denote the in degree.}
 \end{enumerate}
-which allow us to potentially construct a valid \hyperref[def:tour]{tour} by shortcut some repetitions if there's any. We then have the following LP formulation, which is the so-called \hyperref[eq:ATSP-polytope]{asymmetric TSP polytope}. Denote our variables as \(\left\{ x_e \right\} _{e\in \mathcal{\MakeUppercase{e}} }\), then
+which allow us to potentially construct a valid \hyperref[def:tour]{tour} by shortcut some repetitions if there's any. We then have the following LP formulation, which is the so-called \hyperref[eq:ATSP-polytope]{asymmetric TSP polytope}. Denote our variables as \(\left\{ x_e \right\} _{e\in \mathcal{E} }\), then
 
 \begin{equation}\label{eq:ATSP-polytope}
 	\begin{aligned}
-		\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e d(e)                                                                                             \\
-		      & \sum_{e\in \partial ^+ S} x_e \geq 1                                      & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
-		      & \sum_{e\in \partial ^+ \{v\}} x_e = \sum_{e\in \partial ^- \{v\}} x_e = 1 & \forall v\in \mathcal{\MakeUppercase{v}}                          \\
+		\min~ & \sum_{e\in \mathcal{E} } x_e d(e)                                                                                             \\
+		      & \sum_{e\in \partial ^+ S} x_e \geq 1                                      & \forall \varnothing \neq S \subsetneq \mathcal{V} \\
+		      & \sum_{e\in \partial ^+ \{v\}} x_e = \sum_{e\in \partial ^- \{v\}} x_e = 1 & \forall v\in \mathcal{V}                          \\
 		      & x \geq 0
 	\end{aligned}
 \end{equation}
-where \(\partial ^+ S\coloneqq \left\{ (u, v)\in \mathcal{\MakeUppercase{e}} \mid u\in S, v \notin S \right\} \) and vice versa, and \(\partial S\coloneqq \partial ^+S \cup \partial ^-S\). Now, to solve this LP, the idea is to maintain \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerianity} while gradually being more connected. This can be done via \hyperref[subsec:cycle-covering-LP]{cycle cover LP}.
+where \(\partial ^+ S\coloneqq \left\{ (u, v)\in \mathcal{E} \mid u\in S, v \notin S \right\} \) and vice versa, and \(\partial S\coloneqq \partial ^+S \cup \partial ^-S\). Now, to solve this LP, the idea is to maintain \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerianity} while gradually being more connected. This can be done via \hyperref[subsec:cycle-covering-LP]{cycle cover LP}.
 
 \begin{prev}
-	Recall that \(C \subseteq \mathcal{\MakeUppercase{e}} \) is a cycle cover if \(c\) is disjoint union of directed cycles and \(v\) is in exactly one cycle.
+	Recall that \(C \subseteq \mathcal{E} \) is a cycle cover if \(c\) is disjoint union of directed cycles and \(v\) is in exactly one cycle.
 \end{prev}
 
 Now, we have the following.
@@ -87,23 +87,23 @@ Now, we have the following.
 To prove \autoref{lma:lec11-1}, we need to have some understanding about the \hyperref[rmk:perfect-matching-polytope]{perfect matching polytope}. This is not that well-known since matching problem can be solved in many ways.
 
 \begin{remark}[Perfect matching polytope]\label{rmk:perfect-matching-polytope}
-	Suppose we have an unweighted bipartite graph \(\mathcal{\MakeUppercase{g}} =(A \sqcup B, \mathcal{\MakeUppercase{e}} )\) and a weight function \(w\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\). We want to find a perfecting matching with minimum cost. This can be modeled by the following LP.
+	Suppose we have an unweighted bipartite graph \(\mathcal{G} =(A \sqcup B, \mathcal{E} )\) and a weight function \(w\colon \mathcal{E} \to \mathbb{R} ^+\). We want to find a perfecting matching with minimum cost. This can be modeled by the following LP.
 	\[
 		\begin{aligned}
-			\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)                  \\
-			      & \sum_{e\in E(u, v-u)} x_e = 1                     & u\in A\sqcup B \\
+			\min~ & \sum_{e\in \mathcal{E} } x_e w(e)                  \\
+			      & \sum_{e\in E(u, v-u)} x_e = 1     & u\in A\sqcup B \\
 			      & x\geq 0.
 		\end{aligned}
 	\]
-	This LP is exact in the sense that for any feasible \(x\), there exists a perfect matching (integral solution) \(M\) such that \(\sum_{e\in M} w(e) \leq \sum_{e\in \mathcal{\MakeUppercase{e}}} x_e w(e)\).
+	This LP is exact in the sense that for any feasible \(x\), there exists a perfect matching (integral solution) \(M\) such that \(\sum_{e\in M} w(e) \leq \sum_{e\in \mathcal{E}} x_e w(e)\).
 \end{remark}
 
 \vspace*{1em}
 Now we can prove \autoref{lma:lec11-1}.
 \begin{proof}[Proof of \autoref{lma:lec11-1}]
-	We simply construct a complete bipartite graph with vertex set \(\mathcal{\MakeUppercase{v}}_{\text{out}} \sqcup \mathcal{\MakeUppercase{v}}_{\text{in} }\) such that the \(\mathcal{\MakeUppercase{v}} _{\text{out} }= \mathcal{\MakeUppercase{v}} _{\text{in} }= \mathcal{\MakeUppercase{v}} \) with the edge weight being \(x_{(a, b)}\) for \(a\) in the left-hand side while \(b\) in the right-hand side.
+	We simply construct a complete bipartite graph with vertex set \(\mathcal{V}_{\text{out}} \sqcup \mathcal{V}_{\text{in} }\) such that the \(\mathcal{V} _{\text{out} }= \mathcal{V} _{\text{in} }= \mathcal{V} \) with the edge weight being \(x_{(a, b)}\) for \(a\) in the left-hand side while \(b\) in the right-hand side.
 
-	Observe that in \(B\), every vertex has \(x\) value exactly \(1\), hence from \hyperref[rmk:perfect-matching-polytope]{perfect matching polytope}, we know that there exists a perfect matching \(M\) in \(B\) with cost (\(\sum_{e\in M} w(e)\)) less the LP cost (\(\sum_{e\in \mathcal{\MakeUppercase{e}} } x_e w(e)\)), with the fact that \(M\) corresponds to a cycle cover in the original graph by considering picking \((a, b)\in M\) the directed edge \((a, b)\in \mathcal{\MakeUppercase{e}} \),  so we're done.
+	Observe that in \(B\), every vertex has \(x\) value exactly \(1\), hence from \hyperref[rmk:perfect-matching-polytope]{perfect matching polytope}, we know that there exists a perfect matching \(M\) in \(B\) with cost (\(\sum_{e\in M} w(e)\)) less the LP cost (\(\sum_{e\in \mathcal{E} } x_e w(e)\)), with the fact that \(M\) corresponds to a cycle cover in the original graph by considering picking \((a, b)\in M\) the directed edge \((a, b)\in \mathcal{E} \),  so we're done.
 \end{proof}
 
 Then, we have the following algorithm.
@@ -111,25 +111,25 @@ Then, we have the following algorithm.
 \begin{algorithm}[H]\label{algo:ATSP}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:ATSP]{Asymmetric TSP} -- Cycle Covered}
-	\KwData{A connected graph \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), distance function \(d\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\)}
+	\KwData{A connected graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), distance function \(d\colon \mathcal{E} \to \mathbb{R} ^+\)}
 	\KwResult{A \hyperref[def:tour]{tour} \(T\)}
 	\SetKw{Break}{break}
 	\SetKwFunction{Rand}{rand}
 	\SetKwFunction{Stitch}{Stitch}
 	\SetKwFunction{TSP}{\hyperref[algo:ATSP]{ATSP}}
 	\BlankLine
-	\(\mathcal{\MakeUppercase{C}}\gets\) minimum \hyperref[subsec:cycle-covering-LP]{cycle cover} of \(\mathcal{\MakeUppercase{g}}\)\;
-	\(\mathcal{\MakeUppercase{v}} ^\prime \gets \varnothing \)\;
-	\For(){\(C\in \mathcal{\MakeUppercase{C}} \)}{
+	\(\mathcal{C}\gets\) minimum \hyperref[subsec:cycle-covering-LP]{cycle cover} of \(\mathcal{G}\)\;
+	\(\mathcal{V} ^\prime \gets \varnothing \)\;
+	\For(){\(C\in \mathcal{C} \)}{
 		\(x\gets\)\Rand{\(C\)}\Comment*[r]{Choose one representative}
-		\(\mathcal{\MakeUppercase{v}} ^\prime \gets \mathcal{\MakeUppercase{v}} ^\prime \cup \left\{ x \right\}\)\;
+		\(\mathcal{V} ^\prime \gets \mathcal{V} ^\prime \cup \left\{ x \right\}\)\;
 	}
-	\(T\gets\)\TSP{\(\mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{v}} ^\prime ]\), \(d\)}\Comment*[r]{\hyperref[def:tour]{tour} among representatives}
-	\Return{\(T\gets\)\Stitch{\(\mathcal{\MakeUppercase{C}} \),\(T\)}}\;
+	\(T\gets\)\TSP{\(\mathcal{G} [\mathcal{V} ^\prime ]\), \(d\)}\Comment*[r]{\hyperref[def:tour]{tour} among representatives}
+	\Return{\(T\gets\)\Stitch{\(\mathcal{C} \),\(T\)}}\;
 	\;
 	\SetKwProg{Fn}{}{:}{}
-	\Fn{\Stitch{\(\mathcal{\MakeUppercase{C}}\), \(T\)}}{
-		\For(){\(C\in \mathcal{\MakeUppercase{C}} \)}{
+	\Fn{\Stitch{\(\mathcal{C}\), \(T\)}}{
+		\For(){\(C\in \mathcal{C} \)}{
 			\(T\gets T \cup C\)\Comment*[r]{Connects \(T\) with \(C\)}
 		}
 		\Return{\(T\)}\;
@@ -140,7 +140,7 @@ Then, we have the following algorithm.
 	\autoref{algo:ATSP} is a \(\lg n\)-approximation algorithm.
 \end{theorem}
 \begin{proof}
-	We simply observe that for every recursive call of solving \hyperref[subsec:cycle-covering-LP]{cycle cover LP}, since we don't have self-loops, so the number of vertices, \(\mathcal{\MakeUppercase{v}} ^\prime \), constructed in \autoref{algo:ATSP} will decrease by a factor of \(2\) since every cycle need at least two vertices, so the total number of recursive calls will be at most \(\lg n\). From the fact that in each recursive call, the cost will be at most the cost of the original LP solution for the entire graph from \autoref{lma:lec11-1},\footnote{Recall that we're recursively solving for subgraph of \(\mathcal{\MakeUppercase{g}} \).} so by adding the cost up (i.e., stitching the tour together), the total cost will be at most \(\lg n\cdot \OPT\), proving the result.
+	We simply observe that for every recursive call of solving \hyperref[subsec:cycle-covering-LP]{cycle cover LP}, since we don't have self-loops, so the number of vertices, \(\mathcal{V} ^\prime \), constructed in \autoref{algo:ATSP} will decrease by a factor of \(2\) since every cycle need at least two vertices, so the total number of recursive calls will be at most \(\lg n\). From the fact that in each recursive call, the cost will be at most the cost of the original LP solution for the entire graph from \autoref{lma:lec11-1},\footnote{Recall that we're recursively solving for subgraph of \(\mathcal{G} \).} so by adding the cost up (i.e., stitching the tour together), the total cost will be at most \(\lg n\cdot \OPT\), proving the result.
 \end{proof}
 
 \begin{remark}[Repetition]
@@ -148,10 +148,10 @@ Then, we have the following algorithm.
 \end{remark}
 
 \subsection{Reducing to Thin Tree}
-Now let's see more sophisticated approach to \autoref{prb:ATSP} where we first make sure \(T\) is connected, and try to make it  \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerian} afterwards. One problematic case is that when there's one \(S \subseteq \mathcal{\MakeUppercase{v}} \) such that \(T\) has lots of edges in \(\partial S\), then since we want to ensure \(\deg^+_T(v) = \deg^-_T(v)\) for all \(v\in \mathcal{\MakeUppercase{v}} \), by summing up for all \(v\), we'll need to balance this out by (potentially) adding lots of edges on top of \(T\) to make it  \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerian}.
+Now let's see more sophisticated approach to \autoref{prb:ATSP} where we first make sure \(T\) is connected, and try to make it  \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerian} afterwards. One problematic case is that when there's one \(S \subseteq \mathcal{V} \) such that \(T\) has lots of edges in \(\partial S\), then since we want to ensure \(\deg^+_T(v) = \deg^-_T(v)\) for all \(v\in \mathcal{V} \), by summing up for all \(v\), we'll need to balance this out by (potentially) adding lots of edges on top of \(T\) to make it  \href{https://en.wikipedia.org/wiki/Eulerian_path}{Eulerian}.
 
 \begin{definition}[\((\alpha , \beta )\)-thin]\label{def:thin}
-	A tree \(T\subseteq \mathcal{\MakeUppercase{e}} \) is \emph{\((\alpha , \beta )\)-thin} if \(\sum_{e\in T} d(e) \leq \alpha \OPT\) and \(\left\vert T \cap \partial S \right\vert \leq \beta \sum_{e\in \partial S} x_e\) for all \(\varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \).
+	A tree \(T\subseteq \mathcal{E} \) is \emph{\((\alpha , \beta )\)-thin} if \(\sum_{e\in T} d(e) \leq \alpha \OPT\) and \(\left\vert T \cap \partial S \right\vert \leq \beta \sum_{e\in \partial S} x_e\) for all \(\varnothing \neq S \subsetneq \mathcal{V} \).
 \end{definition}
 
 Let's first see a lemma.
@@ -160,22 +160,22 @@ Let's first see a lemma.
 	We can construct an \((\alpha + 2\beta )\)-approximation \hyperref[def:tour]{tour} from an \hyperref[def:thin]{\((\alpha , \beta )\)-thin} tree.
 \end{lemma}
 \begin{proof}
-	Suppose we have an \hyperref[def:thin]{\((\alpha , \beta )\)-thin} tree \(T\), we want to find a \emph{multi-subgraph} \(f\colon \mathcal{\MakeUppercase{e}} \to \left\{ 0 \right\} \cup \mathbb{\MakeUppercase{n}} \) such that
+	Suppose we have an \hyperref[def:thin]{\((\alpha , \beta )\)-thin} tree \(T\), we want to find a \emph{multi-subgraph} \(f\colon \mathcal{E} \to \left\{ 0 \right\} \cup \mathbb{N} \) such that
 	\begin{enumerate}[(a)]
 		\item \(f(e) \geq 1\) for all \(e\in T\)
-		\item \(\sum_{e\in \partial ^+\left\{ v \right\} }f(e)  = \sum_{e\in \partial ^-\left\{ v \right\} } f(e)\) for all \(v\in \mathcal{\MakeUppercase{v}} \).
+		\item \(\sum_{e\in \partial ^+\left\{ v \right\} }f(e)  = \sum_{e\in \partial ^-\left\{ v \right\} } f(e)\) for all \(v\in \mathcal{V} \).
 	\end{enumerate}
 	We can still define an LP as follows.
 	\[
 		\begin{aligned}
-			\min~ & \sum_{e\in \mathcal{\MakeUppercase{e}} }f(e) d(e)                                                                                                  \\
-			      & f(e) \geq 1                                                                    & \forall e\in T                                                    \\
-			      & \sum_{e\in \partial ^+S} f(e) \geq \left\vert T \cap \partial ^- S \right\vert & \forall \varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} \\
+			\min~ & \sum_{e\in \mathcal{E} }f(e) d(e)                                                                                                  \\
+			      & f(e) \geq 1                                                                    & \forall e\in T                                    \\
+			      & \sum_{e\in \partial ^+S} f(e) \geq \left\vert T \cap \partial ^- S \right\vert & \forall \varnothing \neq S \subsetneq \mathcal{V} \\
 			      & f\geq 0.
 		\end{aligned}
 	\]
 	\begin{claim}
-		The above LP is exact in the sense that if we have an LP solution \(f\), we can get a \hyperref[def:tour]{tour} of cost \(\sum_{e\in \mathcal{\MakeUppercase{e}} }f(e)d(e) \).
+		The above LP is exact in the sense that if we have an LP solution \(f\), we can get a \hyperref[def:tour]{tour} of cost \(\sum_{e\in \mathcal{E} }f(e)d(e) \).
 	\end{claim}
 	\begin{explanation}
 		This is just like \href{https://en.wikipedia.org/wiki/Max-flow_min-cut_theorem}{max-flow min-cut theorem}.
@@ -192,9 +192,9 @@ Let's first see a lemma.
 	\[
 		\sum_{e\in \partial ^+ S} y_e \geq 2\beta \sum_{e\in \partial ^+ S}x_e = \beta \sum_{e\in \partial S} x_e \geq \left\vert T \cap \partial S \right\vert \geq \left\vert T \cap \partial ^- S \right\vert.
 	\]
-	Hence, \(y\) is a feasible solution of the LP, so we get a \hyperref[def:tour]{tour} with cost \(\sum_{e\in \mathcal{\MakeUppercase{e}} }y_e d(e) \), which is just
+	Hence, \(y\) is a feasible solution of the LP, so we get a \hyperref[def:tour]{tour} with cost \(\sum_{e\in \mathcal{E} }y_e d(e) \), which is just
 	\[
-		\sum_{e\in \mathcal{\MakeUppercase{e}} } y_e d(e) = \sum_{e\in T} d(e) + 2\beta \cdot \OPT_{\mathrm{LP} } \leq (\alpha + 2\beta )\OPT_{\mathrm{LP} }
+		\sum_{e\in \mathcal{E} } y_e d(e) = \sum_{e\in T} d(e) + 2\beta \cdot \OPT_{\mathrm{LP} } \leq (\alpha + 2\beta )\OPT_{\mathrm{LP} }
 	\]
 	since \(T\) is itself \hyperref[def:thin]{\((\alpha , \beta )\)-thin}, which proves the result.
 \end{proof}
@@ -202,12 +202,12 @@ Let's first see a lemma.
 We see that \autoref{prb:ATSP} boils down to finding an \hyperref[def:thin]{\((\alpha , \beta )\)-thin} tree. To do this, we'll show that by randomly sampling a \hyperref[def:spanning-tree]{spanning tree}, it'll be a \hyperref[def:thin]{thin} tree with high probability. But the argument is non-trivial, and turns out that the number of small cuts (approximate min-cuts) is important, so we now look into this.
 
 \subsection{Number of Small Cuts}
-Given an undirected graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and a weight function \(x\colon \mathcal{\MakeUppercase{e}} \to \mathbb{\MakeUppercase{r}} ^+\), denote \(\lambda \) to be the minimum edge-connectivity, i.e.,
+Given an undirected graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) and a weight function \(x\colon \mathcal{E} \to \mathbb{R} ^+\), denote \(\lambda \) to be the minimum edge-connectivity, i.e.,
 \[
-	\lambda \coloneqq \min _{\varnothing \neq S \subsetneq \mathcal{\MakeUppercase{v}} } \sum_{e\in \partial S} x(e),
+	\lambda \coloneqq \min _{\varnothing \neq S \subsetneq \mathcal{V} } \sum_{e\in \partial S} x(e),
 \]
-we want to ask how many \(S\) achieves the value \(\lambda \), i.e., how many edge min-cuts are there? It's a well-known fact that the number of the min-cuts are \(n^2\) (or \(\binom{n}{2}\) to be exact), which is tight. Now, we're interested in approximate min-cuts, or \(\alpha\)-cuts: given \(\alpha \in \mathbb{\MakeUppercase{n}} \), we ask that how many \(\alpha \)-cuts \(S\) are there where an \(\alpha \)-mincuts is defined as cuts which achieves \(\sum_{e\in \partial S} x(e) \leq \alpha \cdot \lambda \)? The following theorem answers this.
+we want to ask how many \(S\) achieves the value \(\lambda \), i.e., how many edge min-cuts are there? It's a well-known fact that the number of the min-cuts are \(n^2\) (or \(\binom{n}{2}\) to be exact), which is tight. Now, we're interested in approximate min-cuts, or \(\alpha\)-cuts: given \(\alpha \in \mathbb{N} \), we ask that how many \(\alpha \)-cuts \(S\) are there where an \(\alpha \)-mincuts is defined as cuts which achieves \(\sum_{e\in \partial S} x(e) \leq \alpha \cdot \lambda \)? The following theorem answers this.
 
 \begin{theorem}\label{thm:num-small-mincuts}
-	For all \(\alpha \in \mathbb{\MakeUppercase{n}} \), there are at most \(2n^{2\alpha }\) \(\alpha\)-mincuts.
+	For all \(\alpha \in \mathbb{N} \), there are at most \(2n^{2\alpha }\) \(\alpha\)-mincuts.
 \end{theorem}

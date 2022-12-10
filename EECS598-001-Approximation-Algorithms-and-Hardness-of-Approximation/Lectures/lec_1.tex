@@ -15,9 +15,9 @@ We see that by replacing \(f\) with \(-f\), we can unify the notion and only con
 \begin{eg}[\(s\)-\(t\) shortest path]\label{eg:s-t-path}
 	The \emph{\(s\)-\(t\) shortest path} problem \(P\) can be formalized as follows. Given input \(I\), it defines
 	\begin{itemize}
-		\item Input: Graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) and two vertices \(s, t\in \mathcal{\MakeUppercase{v}} \).
+		\item Input: Graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) and two vertices \(s, t\in \mathcal{V} \).
 		\item Feasible set: \(X=\left\{ \text{set of all (simple) paths \(s\) to \(t\)} \right\}\).
-		\item Objective function: \(f\colon X\to \mathbb{\MakeUppercase{r}} \) where \(f(x) = \mathop{\mathrm{length}}(x)\) (\# of edges of \(x\)).
+		\item Objective function: \(f\colon X\to \mathbb{R} \) where \(f(x) = \mathop{\mathrm{length}}(x)\) (\# of edges of \(x\)).
 	\end{itemize}
 	The output of \(P\) should be some \(x\in X\) (i.e., some valid \(s\)-\(t\) paths) such that it minimizes \(f(x)\).
 \end{eg}
@@ -29,11 +29,11 @@ We see that the \hyperref[def:computational-problem]{computational problem} we f
 \end{definition}
 
 \begin{eg}[\(s\)-\(t\) shortest path]
-	The \hyperref[eg:s-t-path]{\(s\)-\(t\) shortest path} problem is a \hyperref[def:combinatorial-optimization]{combinatorial optimization} problem since given a graph \(\mathcal{\MakeUppercase{g}} \) with \(n = \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \), \(m = \left\vert \mathcal{\MakeUppercase{e}}  \right\vert \), there are at most \(n!\) different paths, i.e., \(\left\vert X \right\vert \leq n! < \infty\).
+	The \hyperref[eg:s-t-path]{\(s\)-\(t\) shortest path} problem is a \hyperref[def:combinatorial-optimization]{combinatorial optimization} problem since given a graph \(\mathcal{G} \) with \(n = \left\vert \mathcal{V}  \right\vert \), \(m = \left\vert \mathcal{E}  \right\vert \), there are at most \(n!\) different paths, i.e., \(\left\vert X \right\vert \leq n! < \infty\).
 \end{eg}
 
 \begin{note}
-	We'll also look into some continuous optimization problem, where \(X\) is now infinite (or even uncountable). For example, find \(x\in \mathbb{\MakeUppercase{r}} \) that minimizes \(f(x)=x^{2} +2x + 1\). In this case, \(X = \mathbb{\MakeUppercase{r}} \) which is uncountable (hence infinite).
+	We'll also look into some continuous optimization problem, where \(X\) is now infinite (or even uncountable). For example, find \(x\in \mathbb{R} \) that minimizes \(f(x)=x^{2} +2x + 1\). In this case, \(X = \mathbb{R} \) which is uncountable (hence infinite).
 \end{note}
 
 \section{Efficient Algorithms}
@@ -78,7 +78,7 @@ Hence, our goal is to get \(\mathop{\mathrm{poly}}((n, m))\)-time \hyperref[def:
 
 We first note that many interesting \hyperref[def:combinatorial-optimization]{combinatorial optimization problems} are \(\NP\)-hard, hence it's impossible to find optimum in polynomial time unless \(\P\) is \(\NP\). This suggests one problem: \emph{How well can we do in polynomial time?}
 
-In normal cases, we may assume that objective function value is always positive, i.e., \(f\colon X \to \mathbb{\MakeUppercase{r}} ^* \cup \left\{ 0 \right\} \). Then, we have the following definition which characterize the \emph{slackness}.
+In normal cases, we may assume that objective function value is always positive, i.e., \(f\colon X \to \mathbb{R} ^* \cup \left\{ 0 \right\} \). Then, we have the following definition which characterize the \emph{slackness}.
 
 \begin{definition}[Approximation algorithm]\label{def:approximation-algorithm}
 	Given an \hyperref[def:algorithm]{algorithm} \(A\), we say \(A\) is an \emph{\(\alpha\)-approximation algorithm} for a \hyperref[def:computational-problem]{problem} \(P\) if for every input \(I\) of \(P\),
@@ -109,17 +109,17 @@ For most problems we saw, we can even say that getting an \(\alpha\)-approximati
 Before we jump into any problem formulations, we define a fundamental object in combinatorial optimization, the \hyperref[def:set-system]{set system}.
 
 \begin{definition}[Set system]\label{def:set-system}
-	Given a ground set \(\Omega\) (often called \emph{universe}), the \emph{set system} is an order pair \((\Omega , \mathcal{\MakeUppercase{S}} )\) where \(\mathcal{\MakeUppercase{S}} \) is a collection of subsets of \(\Omega\).
+	Given a ground set \(\Omega\) (often called \emph{universe}), the \emph{set system} is an order pair \((\Omega , \mathcal{S} )\) where \(\mathcal{S} \) is a collection of subsets of \(\Omega\).
 \end{definition}
 
 \begin{note}
-	For a \hyperref[def:set-system]{set system} \((\Omega , \mathcal{\MakeUppercase{S}} )\), we often let \(m\coloneqq \left\vert \mathcal{\MakeUppercase{S}}  \right\vert \) and \(n\coloneqq \left\vert \Omega  \right\vert \).
+	For a \hyperref[def:set-system]{set system} \((\Omega , \mathcal{S} )\), we often let \(m\coloneqq \left\vert \mathcal{S}  \right\vert \) and \(n\coloneqq \left\vert \Omega  \right\vert \).
 \end{note}
 
 \begin{definition}[Degree]\label{def:degree}
-	Given a \hyperref[def:set-system]{set system} \((\Omega , \mathcal{\MakeUppercase{S}} )\), the \emph{degree of \(x\in \Omega\)}, \(\deg(x)\), is defined as
+	Given a \hyperref[def:set-system]{set system} \((\Omega , \mathcal{S} )\), the \emph{degree of \(x\in \Omega\)}, \(\deg(x)\), is defined as
 	\[
-		\deg(x) \coloneqq \left\vert \left\{ S\in \mathcal{\MakeUppercase{S}} \mid x\in S \right\}  \right\vert.
+		\deg(x) \coloneqq \left\vert \left\{ S\in \mathcal{S} \mid x\in S \right\}  \right\vert.
 	\]
 \end{definition}
 
@@ -138,51 +138,51 @@ Before we jump into any problem formulations, we define a fundamental object in 
 Finally, we have the following.
 
 \begin{definition}[Covering]\label{def:covering}
-	A \emph{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \subseteq \mathcal{\MakeUppercase{S}} \) of \((\Omega , \mathcal{\MakeUppercase{S}} )\) is a (sub)collection of subsets such that \(\bigcup_{S\in \mathcal{\MakeUppercase{S}} ^\prime }S = \Omega\).
+	A \emph{covering} \(\mathcal{S} ^\prime \subseteq \mathcal{S} \) of \((\Omega , \mathcal{S} )\) is a (sub)collection of subsets such that \(\bigcup_{S\in \mathcal{S} ^\prime }S = \Omega\).
 \end{definition}
 
 Let's first consider the classical problem called \hyperref[prb:set-cover]{set cover}.
 
 \begin{problem}[Set cover]\label{prb:set-cover}
-Given a finite \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}} )\) where \(\mathcal{\MakeUppercase{S}} \coloneqq \left\{ S_i\subseteq U\right\}_{i=1}^m \) along with a weight function \(w\colon \mathcal{\MakeUppercase{S}} \to \mathbb{\MakeUppercase{r}} ^+\), find a \hyperref[def:covering]{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \) while minimizing \(\sum_{S\in \mathcal{\MakeUppercase{S}} ^\prime }w(S)\).
+Given a finite \hyperref[def:set-system]{set system} \((U, \mathcal{S} )\) where \(\mathcal{S} \coloneqq \left\{ S_i\subseteq U\right\}_{i=1}^m \) along with a weight function \(w\colon \mathcal{S} \to \mathbb{R} ^+\), find a \hyperref[def:covering]{covering} \(\mathcal{S} ^\prime \) while minimizing \(\sum_{S\in \mathcal{S} ^\prime }w(S)\).
 \end{problem}
 
 Assuming there always exists at least one \hyperref[def:covering]{covering}, we can in fact get two types of non-comparable approximation ratio in terms of \(k\) and \(d\). Specifically, we get \(\log k\) and \(d\)-approximation ratio via either greedy, LP rounding or dual-methods.
 
 \section{Greedy Method}
-We first see the algorithm when \(w(S) = 1\) for all \(S\in \mathcal{\MakeUppercase{S}} \).
+We first see the algorithm when \(w(S) = 1\) for all \(S\in \mathcal{S} \).
 
 \begin{algorithm}[H]\label{algo:set-cover-greedy}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:set-cover]{Set cover} -- Greedy}
-	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}})\)}
-	\KwResult{A \hyperref[def:covering]{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \)}
+	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{S})\)}
+	\KwResult{A \hyperref[def:covering]{covering} \(\mathcal{S} ^\prime \)}
 	\BlankLine
 
-	\(\mathcal{\MakeUppercase{S}} ^\prime \gets \varnothing \), \(i\gets 0\)\;
+	\(\mathcal{S} ^\prime \gets \varnothing \), \(i\gets 0\)\;
 	\While(\Comment*[f]{\(O(n)\)}){\(U \neq \varnothing \)}{
 		Choose \(S_i\) with maximum \(\left\vert U \cap S_i \right\vert\)\Comment*[r]{\(O(mn)\)}
 		\For(){\(e\in U \cap S_i\) }{
 			\(y_e \gets w(S_{i}) / \left\vert U \cap S_i \right\vert \)\Comment*[r]{Average costs}
 		}
-		\(\mathcal{\MakeUppercase{S}} ^\prime \gets \mathcal{\MakeUppercase{S}} ^\prime \cup \left\{ S_i \right\} \)\;
+		\(\mathcal{S} ^\prime \gets \mathcal{S} ^\prime \cup \left\{ S_i \right\} \)\;
 		\(U\gets U\setminus S_i\)\;\label{line5:algo:set-cover-greedy}
 		\(i\gets i+1\)\;
 	}
-	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
+	\Return{\(\mathcal{S} ^\prime \)}\;
 \end{algorithm}
 
 We focus on the case that \(w(S) = 1\) for all \(S\).
 
 \begin{remark}
-	It's clear that \autoref{algo:set-cover-greedy} is a polynomial time algorithm, also, the output \(\mathcal{\MakeUppercase{S}} ^\prime \) is always a valid \hyperref[def:covering]{covering}.
+	It's clear that \autoref{algo:set-cover-greedy} is a polynomial time algorithm, also, the output \(\mathcal{S} ^\prime \) is always a valid \hyperref[def:covering]{covering}.
 \end{remark}
 
 \begin{theorem}\label{thm:set-cover-k-approx}
 	\autoref{algo:set-cover-greedy} is an \(H_k\)-approximation\footnote{\(H_k\) is the so-called \emph{harmonic number}, which is defined as \(\sum_{i=1}^{k} 1 / i \leq \ln k + 1\).} algorithm.
 \end{theorem}
 \begin{proof}
-	Denote the \(\OPT\) as \(\mathcal{\MakeUppercase{S}} ^{\ast} \coloneqq \left\{ S_1^{\ast} , \ldots , S_{\ell}^{\ast} \right\}\), and first note that the average cost \(y_e\) essentially maintains \(\sum_{e\in U} y_e = \left\vert \mathcal{\MakeUppercase{S}} ^\prime  \right\vert\), hence we just need to bound \(y_e\) w.r.t.\ \(S^{\ast}\). To do this, for any \(S^{\ast} \in \mathcal{\MakeUppercase{S}} ^{\ast} \), say \(S_1^{\ast} \eqqcolon \left\{ e_1, \ldots , e_k  \right\} \) where we number \(e_i\) in terms of the order of which being deleted, i.e., \(e_1\) is deleted first from \(U\) (\autoref{line5:algo:set-cover-greedy}), etc.
+	Denote the \(\OPT\) as \(\mathcal{S} ^{\ast} \coloneqq \left\{ S_1^{\ast} , \ldots , S_{\ell}^{\ast} \right\}\), and first note that the average cost \(y_e\) essentially maintains \(\sum_{e\in U} y_e = \left\vert \mathcal{S} ^\prime  \right\vert\), hence we just need to bound \(y_e\) w.r.t.\ \(S^{\ast}\). To do this, for any \(S^{\ast} \in \mathcal{S} ^{\ast} \), say \(S_1^{\ast} \eqqcolon \left\{ e_1, \ldots , e_k  \right\} \) where we number \(e_i\) in terms of the order of which being deleted, i.e., \(e_1\) is deleted first from \(U\) (\autoref{line5:algo:set-cover-greedy}), etc.
 
 	\begin{note}
 		\(S_1^{\ast} \) can have less than \(k\) element, but in that case similar argument will follow. Also, if some elements are deleted at the same time, we just order them arbitrarily.
@@ -199,7 +199,7 @@ We focus on the case that \(w(S) = 1\) for all \(S\).
 
 	We immediately see that whenever the optimal solution pays \(1\) (for choosing \(S_1^{\ast}\) for instance), \autoref{algo:set-cover-greedy} pays at most \(H_k\) since \(\sum_{e_i\in S_1^{\ast} }y_{e_i} \leq \sum_{i=1}^{k} \frac{1}{k-i+1} = H_k\), or more formally,
 	\[
-		\left\vert \mathcal{\MakeUppercase{S}} ^\prime  \right\vert = \sum_{e\in U}y_e \leq \sum_{S_i^{\ast} \in \mathcal{\MakeUppercase{S}} ^{\ast} }\underbrace{\sum_{e\in S_i^{\ast} }y_e}_{\leq H_k} \leq \ell \cdot H_k = H_k\cdot \left\vert \OPT \right\vert,
+		\left\vert \mathcal{S} ^\prime  \right\vert = \sum_{e\in U}y_e \leq \sum_{S_i^{\ast} \in \mathcal{S} ^{\ast} }\underbrace{\sum_{e\in S_i^{\ast} }y_e}_{\leq H_k} \leq \ell \cdot H_k = H_k\cdot \left\vert \OPT \right\vert,
 	\]
 	which finishes the proof.
 \end{proof}

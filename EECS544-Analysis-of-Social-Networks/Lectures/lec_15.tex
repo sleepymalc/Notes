@@ -12,7 +12,7 @@ Formally, to further utilize the data thrown away by \hyperref[algo:Monte-Carlo-
 	\DontPrintSemicolon
 	\caption{Estimate Page Rank ver.4}
 	\SetKwData{t}{t}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(M\), \(s\)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), iteration \(M\), \(s\)}
 	\KwResult{A list \(N_t\)}
 	\SetKwFunction{RW}{\hyperref[algo:random-walk-algorithm]{RandomWalk}}
 	\SetKwFunction{geo}{\hyperref[int:geometric-random-variable]{GeoRandom}}
@@ -20,18 +20,18 @@ Formally, to further utilize the data thrown away by \hyperref[algo:Monte-Carlo-
 
 	\BlankLine
 
-	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
-		\For(){\(t\in 1, \ldots M \times \left\vert \mathcal{\MakeUppercase{v}}  \right\vert  \)}{
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{V} \)}{
+		\For(){\(t\in 1, \ldots M \times \left\vert \mathcal{V}  \right\vert  \)}{
 			\(N_t(v)\gets 0\)\;
 		}
 	}
 	\(\t\gets 0\)\;
 	\;
-	\For(){\(i\in \mathcal{\MakeUppercase{v}}\)}{
+	\For(){\(i\in \mathcal{V}\)}{
 		\For(){\(j\in 1, \ldots, M\)}{
 			\(\tau^i \gets \) \geo{\(s\)}\Comment*[r]{Toss a \hyperref[int:geometric-random-variable]{geometric random variable}}
 			\(\arrival, v \gets\)\RW{\(i\), \(\tau ^i\) }\Comment*[r]{\hyperref[algo:random-walk-algorithm]{random walk} starting at \(i\) with steps \(\tau ^i\)}
-			\For(\Comment*[f]{Record every node the \hyperref[def:random-walker]{random walker} has been to}){\(k\in \mathcal{\MakeUppercase{v}} \)}{
+			\For(\Comment*[f]{Record every node the \hyperref[def:random-walker]{random walker} has been to}){\(k\in \mathcal{V} \)}{
 				\(N_t(k)\gets N_t(k) + \arrival(k)\)\;
 			}
 			\(\t\gets \t + 1\)\;
@@ -56,7 +56,7 @@ In this case, we don't need to analyze this estimator, since there is an off-the
 	where \(N_t(v)\) is the number of time we visited \(v\) in reset duration.
 \end{theorem}
 \begin{note}
-	Note that \(T\) is \(M\times \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \) since there are these many reset duration in the \hyperref[algo:Monte-Carlo-algorithm-4]{algorithm}. Also, we see that each reset duration is independent of the other \(T\) rest duration starting at uniformly chosen node.
+	Note that \(T\) is \(M\times \left\vert \mathcal{V}  \right\vert \) since there are these many reset duration in the \hyperref[algo:Monte-Carlo-algorithm-4]{algorithm}. Also, we see that each reset duration is independent of the other \(T\) rest duration starting at uniformly chosen node.
 \end{note}
 
 We see that this is also a non-biased estimator, and also, the \hyperref[def:random-variable]{random variables} sequence \(\{N_t(v)\}_t\) is \hyperref[def:i.i.d.]{i.i.d}.

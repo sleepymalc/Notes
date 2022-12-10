@@ -139,20 +139,20 @@ Scaled page rank is a modification of page rank that gives a matrix \(\widetilde
 	\SetKwData{pg}{SPageRank}
 	\SetKwData{pgnew}{SPageRankNew}
 	\SetKwData{n}{neighborNum}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), scale factor \(s\in (0, 1)\), iteration \(L\)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), scale factor \(s\in (0, 1)\), iteration \(L\)}
 	\KwResult{\pg}
 
 	\BlankLine
 
-	\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:initialize]{Initialize}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
-		\(\pg(v) \gets 1 / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \)\;
+	\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:initialize]{Initialize}}){\(v\in \mathcal{V}\)}{
+		\(\pg(v) \gets 1 / \left\vert \mathcal{V} \right\vert \)\;
 	}
 	\;
 	\For{\(i = 1, \ldots , L\)}{
-		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:send]{Send}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
-			\(\n \gets \left\vert \{v\to u \in \mathcal{\MakeUppercase{e}} \} \right\vert\)\;
+		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:send]{Send}}){\(v\in \mathcal{V}\)}{
+			\(\n \gets \left\vert \{v\to u \in \mathcal{E} \} \right\vert\)\;
 			\uIf(\Comment*[f]{divides \(\pg(v)\) to its (out)neighbor}){\(\n \neq 0\)}{
-				\For(){\(v \to u \in \mathcal{\MakeUppercase{e}}\)}{
+				\For(){\(v \to u \in \mathcal{E}\)}{
 					\(\pgnew(u) \gets \pgnew(u) + \pg(v) / \n\)\;
 				}
 			}\Else(\Comment*[f]{no outgoing links}){
@@ -160,13 +160,13 @@ Scaled page rank is a modification of page rank that gives a matrix \(\widetilde
 			}
 		}
 		\;
-		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:receive]{Receive}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:receive]{Receive}}){\(v\in \mathcal{V}\)}{
 			\(\pg(v)\gets \pgnew(v)\)\Comment*[r]{Update the page rank}
 			\(\pgnew(v) \gets 0\)\Comment*[r]{Clean up for the next iteration's updating}
 		}
-		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:scale]{Scale}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+		\For(\Comment*[f]{\hyperref[algo:scaled-page-rank-algorithm:scale]{Scale}}){\(v\in \mathcal{V}\)}{
 			\(\pg(v)\gets s\times \pgnew(v)\)\Comment*[r]{Scaled down by \(s\)}
-			\(\pg(v)\gets \frac{1-s}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\)\Comment*[r]{Re-distribute page rank}
+			\(\pg(v)\gets \frac{1-s}{\left\vert \mathcal{V}  \right\vert }\)\Comment*[r]{Re-distribute page rank}
 		}
 	}
 	\;
@@ -180,7 +180,7 @@ Scaled page rank is a modification of page rank that gives a matrix \(\widetilde
 		\item \label{algo:scaled-page-rank-algorithm:send} Send: same as \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}.
 		\item \label{algo:scaled-page-rank-algorithm:receive} Receive: same as \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}.
 		\item \label{algo:scaled-page-rank-algorithm:scale} Scale: Scale down all page ranks by \(s\) (multiply by \(s\)) and
-		      add \((1-s) / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \) to the page ranks of all nodes.
+		      add \((1-s) / \left\vert \mathcal{V} \right\vert \) to the page ranks of all nodes.
 	\end{enumerate}
 \end{remark}
 
@@ -210,7 +210,7 @@ Finally, we have the rule of updating scaled page rank being \(r^{\text{new}} = 
 	\begin{itemize}
 		\item non-negative
 		\item row stochastic
-		\item strictly positive with all entries at least \((1-s) / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \)
+		\item strictly positive with all entries at least \((1-s) / \left\vert \mathcal{V} \right\vert \)
 	\end{itemize}
 \end{note}
 Firstly, since \(\widetilde{N} (s)\) is non-negative and is row-stochastic, we see that \(\widetilde{N} (s)\vec{1} = \vec{1} \), hence \(\rho(\widetilde{N}(s)) = 1\).

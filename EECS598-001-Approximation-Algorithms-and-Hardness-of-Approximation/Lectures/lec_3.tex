@@ -2,7 +2,7 @@
 \section{Covering-Packing Duality}
 We first define some useful notions.
 \begin{definition}[Strongly independent]\label{def:strongly-independent}
-	Given a set system \((U, \mathcal{\MakeUppercase{S}} )\), we say \(C\subseteq U\) is \emph{strongly independent} if there does not exist \(S\in \mathcal{\MakeUppercase{S}} \) such that \(\left\vert C \cap S \right\vert \geq 2\).
+	Given a set system \((U, \mathcal{S} )\), we say \(C\subseteq U\) is \emph{strongly independent} if there does not exist \(S\in \mathcal{S} \) such that \(\left\vert C \cap S \right\vert \geq 2\).
 \end{definition}
 
 \begin{remark}
@@ -12,7 +12,7 @@ We first define some useful notions.
 Now, we're trying to find the \textbf{strongest witness} of \hyperref[def:strongly-independent]{strongly independent set}, which suggests we define the following problem.
 
 \begin{problem}[Maximum strongly independent set]\label{prb:max-strongly-independent-set}
-Given a set system \((U, \mathcal{\MakeUppercase{S}} )\), we want to find the largest \hyperref[def:strongly-independent]{strongly independent set}.
+Given a set system \((U, \mathcal{S} )\), we want to find the largest \hyperref[def:strongly-independent]{strongly independent set}.
 \end{problem}
 
 \begin{remark}
@@ -39,7 +39,7 @@ Given a set system \((U, \mathcal{\MakeUppercase{S}} )\), we want to find the la
 	A dual LP with \(A, b, c \geq 0\) is called a \emph{packing LP}.
 \end{definition}
 
-We now give another LP formulation for the unweighted \hyperref[prb:set-cover]{set cover}. Given \(\mathcal{\MakeUppercase{S}} = \left\{ S_1, \ldots , S_m  \right\} \), \(U = \left\{ e_1, \ldots , e_n  \right\} \) and define \(A\in \mathbb{\MakeUppercase{r}} ^{n\times m}\) such that
+We now give another LP formulation for the unweighted \hyperref[prb:set-cover]{set cover}. Given \(\mathcal{S} = \left\{ S_1, \ldots , S_m  \right\} \), \(U = \left\{ e_1, \ldots , e_n  \right\} \) and define \(A\in \mathbb{R} ^{n\times m}\) such that
 \[
 	A_{ij} = \begin{dcases}
 		1, & \text{ if } e_i\in S_j ; \\
@@ -63,7 +63,7 @@ We see that if we restrict \(y_i\in \left\{ 0, 1 \right\} \), we see that the du
 \]
 And indeed, if we look at the weighted version, we have \(\sum_{i\colon e_i\in s_j} y_{i} \leq w(S_j)\).
 
-Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{e_i} \leq \frac{w(S_{j})}{k - i + 1}\). We see that the \(y_{e_i} \) are just the dual variables in our setup. Additionally, with the observation that we can do this for any set \(S = \left\{ e_1, \ldots , e_k\right\} \in \mathcal{\MakeUppercase{S}}\), we have the following lemma.
+Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{e_i} \leq \frac{w(S_{j})}{k - i + 1}\). We see that the \(y_{e_i} \) are just the dual variables in our setup. Additionally, with the observation that we can do this for any set \(S = \left\{ e_1, \ldots , e_k\right\} \in \mathcal{S}\), we have the following lemma.
 \begin{lemma}\label{lma:lec3-1}
 	The variable \(y^\prime \coloneqq y/H_k\) is dual-feasible, i.e., it's feasible for \((D)\).
 \end{lemma}
@@ -116,18 +116,18 @@ In terms of \hyperref[prb:set-cover]{set cover}, we have the following.
 \begin{algorithm}[H]\label{algo:set-cover-PD}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:set-cover]{Set cover} -- Primal-Dual}
-	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{\MakeUppercase{S}})\)}
-	\KwResult{A \hyperref[def:covering]{covering} \(\mathcal{\MakeUppercase{S}} ^\prime \)}
+	\KwData{A \hyperref[def:set-system]{set system} \((U, \mathcal{S})\)}
+	\KwResult{A \hyperref[def:covering]{covering} \(\mathcal{S} ^\prime \)}
 	\BlankLine
 
-	\(\mathcal{\MakeUppercase{S}} ^\prime \gets \varnothing\), \(y \gets 0\)\;
+	\(\mathcal{S} ^\prime \gets \varnothing\), \(y \gets 0\)\;
 	\While(){\(U \neq \varnothing \)}{
 		Choose any \(e\in U\)\;
 		Raise \(y_e\) until some constraints get tight\;
-		\(\mathcal{\MakeUppercase{S}} ^\prime \gets \mathcal{\MakeUppercase{S}} ^\prime \cup \left\{ \text{sets corresponding to tight dual constraints} \right\} \)\;
+		\(\mathcal{S} ^\prime \gets \mathcal{S} ^\prime \cup \left\{ \text{sets corresponding to tight dual constraints} \right\} \)\;
 		Update \(U\)\Comment*[r]{Remove newly covered element in \(U\)}
 	}
-	\Return{\(\mathcal{\MakeUppercase{S}} ^\prime \)}\;
+	\Return{\(\mathcal{S} ^\prime \)}\;
 \end{algorithm}
 
 \begin{remark}
@@ -140,6 +140,6 @@ In terms of \hyperref[prb:set-cover]{set cover}, we have the following.
 \begin{proof}
 	Firstly, \(y\) is feasible. And we see that
 	\[
-		w(\mathcal{\MakeUppercase{S}} ^\prime ) = \sum_{S\in \mathcal{\MakeUppercase{S}} ^\prime } w(S) = \sum_{S\in \mathcal{\MakeUppercase{S}} ^\prime }\sum_{e\in S}y_e \leq d\cdot \sum_{e\in U} y_e \leq d\cdot \OPT_{\mathrm{LP}_{D}} = d\cdot \OPT_{\mathrm{LP}_P}\leq d\cdot \OPT_{\mathrm{SC} }.
+		w(\mathcal{S} ^\prime ) = \sum_{S\in \mathcal{S} ^\prime } w(S) = \sum_{S\in \mathcal{S} ^\prime }\sum_{e\in S}y_e \leq d\cdot \sum_{e\in U} y_e \leq d\cdot \OPT_{\mathrm{LP}_{D}} = d\cdot \OPT_{\mathrm{LP}_P}\leq d\cdot \OPT_{\mathrm{SC} }.
 	\]
 \end{proof}

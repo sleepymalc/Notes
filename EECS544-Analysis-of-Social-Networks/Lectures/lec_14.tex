@@ -47,7 +47,7 @@ In this case, our \hyperref[def:random-walker]{random walker} will follow the \h
 
 Now, just like in the basic page rank cases, we have
 \[
-	\widetilde{N} (s) = s N + \frac{1-s}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\vec{1} \vec{1} ^{\top}
+	\widetilde{N} (s) = s N + \frac{1-s}{\left\vert \mathcal{V}  \right\vert }\vec{1} \vec{1} ^{\top}
 \]
 for scaled page rank update equation.
 
@@ -80,7 +80,7 @@ Algorithmically, we have the following.
 \begin{algorithm}[H]\label{algo:personalized-page-rank-scheme}
 	\DontPrintSemicolon
 	\caption{Personalized Page Rank Scheme}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(T\), \(v^{\ast} \in \mathcal{\MakeUppercase{v}} \)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), iteration \(T\), \(v^{\ast} \in \mathcal{V} \)}
 	\SetKwFunction{RW}{RandomWalk}
 	\BlankLine
 
@@ -98,7 +98,7 @@ Algorithmically, we have the following.
 
 We denote the personalized page rank at \(v^{\ast} \) as \(\pi_{v^{\ast}}(s)\). Collect \(\pi_{v^{\ast}}(s)\) for all \(v^{\ast}\in\mathcal{V}\), then if we reset uniformly,
 \[
-	\pi_{\mathcal{\MakeUppercase{v}}} (s) = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}} \right\vert }\sum\limits_{v^{\ast}\in\mathcal{V}} \pi_{v^{\ast}}(s).
+	\pi_{\mathcal{V}} (s) = \frac{1}{\left\vert \mathcal{V} \right\vert }\sum\limits_{v^{\ast}\in\mathcal{V}} \pi_{v^{\ast}}(s).
 \]
 
 \begin{remark}
@@ -120,18 +120,18 @@ We now introduce the first simulation-based algorithm to estimate page rank. The
 	\caption{Random Walk}
 	\SetKwData{result}{result}
 	\SetKwData{arrival}{arrival}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), steps \(T\), \(s\)}
-	\KwResult{A list \arrival, ending node \(v\in \mathcal{\MakeUppercase{v}}\)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), steps \(T\), \(s\)}
+	\KwResult{A list \arrival, ending node \(v\in \mathcal{V}\)}
 	\SetKwFunction{random}{random}
 	\SetKwFunction{toss}{TossCoin}
 	\SetKw{Continue}{continue}
 
 	\BlankLine
 
-	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{V} \)}{
 		\(\arrival(v)\gets 0\)\;
 	}
-	\(v\gets \)\random{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{select a uniformly random node to start}
+	\(v\gets \)\random{\(\mathcal{V}\)}\Comment*[r]{select a uniformly random node to start}
 	\(\arrival(v)\gets 1\)\;
 	\;
 	\For(){\(i = 1, \ldots, T\)}{
@@ -139,28 +139,28 @@ We now introduce the first simulation-based algorithm to estimate page rank. The
 	\uIf(\Comment*[f]{If heads}){\(\result = \mathrm{H}\)}{
 	\lIf(\Comment*[f]{Go to \(v\)'s neighbor randomly}){\(d_i^{\text{out}}\neq 0\)}{\(v\gets\) \random{\(N_i^{\text{out}}\)}}
 	}\Else(\Comment*[f]{If tails}){
-		\(v\gets \)\random{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{reset to a uniformly random node}
+		\(v\gets \)\random{\(\mathcal{V}\)}\Comment*[r]{reset to a uniformly random node}
 	}
 	\(\arrival(v)\gets \arrival(v) + 1\)\Comment*[r]{Record arrival at \(v\)}
 	}
 	\Return{\(\arrival\), \(v\)}\;
 \end{algorithm}
 \begin{note}
-	The result of \hyperref[algo:random-walk-algorithm]{random walk} records the time the \hyperref[def:random-walker]{random walker} arrives \(v\) for all \(v\in \mathcal{\MakeUppercase{v}} \) throughout the simulation.
+	The result of \hyperref[algo:random-walk-algorithm]{random walk} records the time the \hyperref[def:random-walker]{random walker} arrives \(v\) for all \(v\in \mathcal{V} \) throughout the simulation.
 \end{note}
 
 We can describe \hyperref[algo:random-walk-algorithm]{random walk} as a \hyperref[def:Markov-chain]{Markov chain}. Consider \(\left\{ X_n \right\}_{n\geq 0}\) where \(X_n\) is the location of the \hyperref[def:random-walker]{random walker} at time \(n\). We see that
 \[
 	\begin{split}
-		X_0 &\sim \mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{V}} \right\vert\})\\
+		X_0 &\sim \mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{V} \right\vert\})\\
 		X_1 &=\begin{dcases}
-			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{V}} \right\vert \}), & \text{ with probability }1 - s; \\
-			\mathrm{NextHop}(x_0),                                                                    & \text{ with probability }s,     \\
+			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{V} \right\vert \}), & \text{ with probability }1 - s; \\
+			\mathrm{NextHop}(x_0),                                                    & \text{ with probability }s,     \\
 		\end{dcases}\\
 		&\vdots\\
 		X_t &=\begin{dcases}
-			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{V}} \right\vert\}), & \text{ with probability }1 - s; \\
-			\mathrm{NextHop}(x_{t-1}),                                                               & \text{ with probability }s      \\
+			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{V} \right\vert\}), & \text{ with probability }1 - s; \\
+			\mathrm{NextHop}(x_{t-1}),                                               & \text{ with probability }s      \\
 		\end{dcases}
 	\end{split}
 \]
@@ -222,7 +222,7 @@ where \(P\) is the \underline{one-step transformation matrix}. This only converg
 \subsection{Second Page Rank Estimator}\label{subsec:second-page-rank-estimator}
 We now try to improve \hyperref[algo:random-walk-algorithm]{random walk} we just proposed. Recall that
 \[
-	\widetilde{N}(s) = sN+(1-s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\vec{1}\vec{1}^{\top}.
+	\widetilde{N}(s) = sN+(1-s)\frac{1}{\left\vert \mathcal{V}  \right\vert }\vec{1}\vec{1}^{\top}.
 \]
 Notice that \(\pi(s)\) is the left \hyperref[def:eigenvector]{eigenvector} of \(\widetilde{N}(s)\) with \hyperref[def:eigenvalue]{eigenvalue} \(1\), i.e.,
 \[
@@ -231,18 +231,18 @@ Notice that \(\pi(s)\) is the left \hyperref[def:eigenvector]{eigenvector} of \(
 Therefore,
 \[
 	\pi ^{\top} (s)
-	= \pi^{\top}(s)sN+(1 - s)\underbrace{\pi^{\top}(s)\vec{1}}_{ = 1}\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}\right\vert}\vec{1}^{\top}
-	= \pi^{\top}(s)sN+(1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top},
+	= \pi^{\top}(s)sN+(1 - s)\underbrace{\pi^{\top}(s)\vec{1}}_{ = 1}\frac{1}{\left\vert \mathcal{V}\right\vert}\vec{1}^{\top}
+	= \pi^{\top}(s)sN+(1 - s)\frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top},
 \]
 where we group \(\pi^{\top}(s)\vec{1} = 1\) because \(\pi(s)\) is a probability vector, which sums to \(1\). Then
 \[
-	\pi^{\top}(s)(I - sN) = (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}.
+	\pi^{\top}(s)(I - sN) = (1 - s)\frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top}.
 \]
 Hence,
 \[
-	\pi^{\top}(s) = (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}(I - sN)^{-1}
-	= (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}\left(\sum\limits_{i=0}^{\infty} s^i N^i\right)
-	= \sum\limits_{i=0}^{\infty} s^i (1 - s)\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}N^i
+	\pi^{\top}(s) = (1 - s)\frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top}(I - sN)^{-1}
+	= (1 - s)\frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top}\left(\sum\limits_{i=0}^{\infty} s^i N^i\right)
+	= \sum\limits_{i=0}^{\infty} s^i (1 - s)\frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top}N^i
 \]
 where \(N^0\coloneqq I\).
 \begin{prev}
@@ -251,7 +251,7 @@ where \(N^0\coloneqq I\).
 
 We now analysis the expression
 \[
-	\pi^{\top}(s) = \sum\limits_{i=0}^{\infty} \underbrace{s^i (1 - s)}_{\tau}\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}N^i.
+	\pi^{\top}(s) = \sum\limits_{i=0}^{\infty} \underbrace{s^i (1 - s)}_{\tau}\frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top}N^i.
 \]
 Firstly, the term \(s^i(1-s) \coloneqq \tau\) is the so-called geometric \hyperref[def:random-variable]{random variable}.
 \begin{intuition}[Geometric random variable]\label{int:geometric-random-variable}
@@ -266,9 +266,9 @@ Firstly, the term \(s^i(1-s) \coloneqq \tau\) is the so-called geometric \hyperr
 	We see that reset happens at time \(N\), hence we look at time \(N-1\).
 \end{remark}
 
-Next, we analyze the term \(\frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}N^i\), where
+Next, we analyze the term \(\frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top}N^i\), where
 \begin{itemize}
-	\item \(u = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top}\) is the uniform distribution on the nodes of the graph.
+	\item \(u = \frac{1}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top}\) is the uniform distribution on the nodes of the graph.
 	\item \(N^i\) represents random walk repeated \(i\) times.
 \end{itemize}
 
@@ -282,7 +282,7 @@ Now, the suggested algorithm becomes follows.
 	\DontPrintSemicolon
 	\caption{Estimate Page Rank ver.2}
 	\SetKwData{arrival}{arrival}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(K\), \(s\)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), iteration \(K\), \(s\)}
 	\KwResult{A list \arrival}
 	\SetKwFunction{RW}{\hyperref[algo:random-walk-algorithm]{RandomWalk}}
 	\SetKwFunction{random}{random}
@@ -290,20 +290,20 @@ Now, the suggested algorithm becomes follows.
 
 	\BlankLine
 
-	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{V} \)}{
 		\(\arrival(v)\gets 0\)\;
 	}
 	\;
 	\For(){\(i = 1, \ldots, K\)}{
 		\(\tau \gets \) \geo{\(s\)}\Comment*[r]{Toss a \hyperref[int:geometric-random-variable]{geometric random variable}}
-		\(v\gets \)\random{\(\mathcal{\MakeUppercase{v}}\)}\Comment*[r]{select a uniformly random node}
+		\(v\gets \)\random{\(\mathcal{V}\)}\Comment*[r]{select a uniformly random node}
 		\(\_, v\gets\)\RW{\(v\), \(\tau \), \(s\)}\Comment*[r]{\hyperref[algo:random-walk-algorithm]{Random walk} starting at \(v\) with \(\tau \) steps}
 		\(\arrival(v)\gets \arrival(v) + 1\)\Comment*[r]{Record where the \hyperref[def:random-walker]{random walker} ends up at}
 	}
 	\Return{\arrival}\;
 \end{algorithm}
 \begin{note}
-	The result of \hyperref[algo:Monte-Carlo-algorithm-2]{the above algorithm} records the time the \hyperref[def:random-walker]{random walker} \textbf{ends up} at \(v\) for all \(v\in \mathcal{\MakeUppercase{v}} \) in every \hyperref[algo:random-walk-algorithm]{random walk}.
+	The result of \hyperref[algo:Monte-Carlo-algorithm-2]{the above algorithm} records the time the \hyperref[def:random-walker]{random walker} \textbf{ends up} at \(v\) for all \(v\in \mathcal{V} \) in every \hyperref[algo:random-walk-algorithm]{random walk}.
 \end{note}
 
 Denote those \(K\) \hyperref[def:random-variable]{random variables} \(\tau\) as \(\tau_1, \tau_2, \ldots , \tau_K\) and the associated \(X_{\tau}\) as \(X_{\tau_1}, X_{\tau_2}, \ldots , X_{\tau_K}\). We see that
@@ -361,7 +361,7 @@ Also, the variance can be derived as
 \subsection{Third Page Rank Estimator}\label{subsec:third-page-rank-estimator}
 Recall that
 \[
-	\pi(s) = \frac{1 - s}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\vec{1}^{\top} (I - sN)^{-1}.
+	\pi(s) = \frac{1 - s}{\left\vert \mathcal{V}  \right\vert}\vec{1}^{\top} (I - sN)^{-1}.
 \]
 Now, we define
 \[
@@ -379,18 +379,18 @@ Then, we proposed the following algorithm.
 	\DontPrintSemicolon
 	\caption{Estimate Page Rank ver.3}
 	\SetKwData{arrival}{arrival}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(M\), \(s\)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), iteration \(M\), \(s\)}
 	\KwResult{A list \arrival}
 	\SetKwFunction{RW}{\hyperref[algo:random-walk-algorithm]{RandomWalk}}
 	\SetKwFunction{geo}{\hyperref[int:geometric-random-variable]{GeoRandom}}
 
 	\BlankLine
 
-	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+	\For(\Comment*[f]{Initialize}){\(v\in \mathcal{V} \)}{
 		\(\arrival(v)\gets 0\)\;
 	}
 	\;
-	\For(){\(i\in \mathcal{\MakeUppercase{v}}\)}{
+	\For(){\(i\in \mathcal{V}\)}{
 		\For(){\(j\in 1, \ldots, M\)}{
 			\(\tau^i \gets \) \geo{\(s\)}\Comment*[r]{Toss a \hyperref[int:geometric-random-variable]{geometric random variable}}
 			\(\_, v \gets\)\RW{\(i\), \(\tau ^i\) }\Comment*[r]{\hyperref[algo:random-walk-algorithm]{random walk} starting at \(i\) with steps \(\tau ^i\)}
@@ -401,26 +401,26 @@ Then, we proposed the following algorithm.
 \end{algorithm}
 \begin{note}
 	The result of \hyperref[algo:Monte-Carlo-algorithm-3]{the above algorithm} records the time the \hyperref[def:random-walker]{random walker}
-	\textbf{ends up} at \(v\) for all \(v\in \mathcal{\MakeUppercase{v}} \) in every \hyperref[algo:random-walk-algorithm]{random walk}.
+	\textbf{ends up} at \(v\) for all \(v\in \mathcal{V} \) in every \hyperref[algo:random-walk-algorithm]{random walk}.
 \end{note}
 
 If we only take one walk, namely \(M = 1\), then
 \[
-	\pi_v(s) = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert }\sum\limits_{i\in\mathcal{V}}\sigma_{iv}(s).
+	\pi_v(s) = \frac{1}{\left\vert \mathcal{V}  \right\vert }\sum\limits_{i\in\mathcal{V}}\sigma_{iv}(s).
 \]
 
 Now, for every node \(i\) in the network, we run \(M\) times with \(\tau^i_1, \tau^i_2, \ldots , \tau^i_M\) and \(X_{\tau_1}^i, X_{\tau_2}^i, \ldots , X_{\tau_M}^i\) and count the number of arrivals in node \(v\) and find the average. Explicitly, we have
 \[
 	\hat{\pi}_v(s)
-	= \frac{1}{\left\vert \mathcal{\MakeUppercase{v}} \right\vert}\sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}}\right\vert} \frac{1}{M}\sum\limits_{m=1}^{M} \mathbbm{1}_{\left\{X^i_{\tau^i_m} = v\right\}}
-	= \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert M}\sum\limits_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}} \right\vert} \sum\limits_{m=1}^{M} \mathbbm{1}_{\left\{X^i_{\tau^i_m} = v\right\}}.
+	= \frac{1}{\left\vert \mathcal{V} \right\vert}\sum\limits_{i=1}^{\left\vert \mathcal{V}\right\vert} \frac{1}{M}\sum\limits_{m=1}^{M} \mathbbm{1}_{\left\{X^i_{\tau^i_m} = v\right\}}
+	= \frac{1}{\left\vert \mathcal{V}  \right\vert M}\sum\limits_{i=1}^{\left\vert \mathcal{V} \right\vert} \sum\limits_{m=1}^{M} \mathbbm{1}_{\left\{X^i_{\tau^i_m} = v\right\}}.
 \]
 
 This is another unbiased estimator for the same reason given in the \hyperref[subsec:second-page-rank-estimator]{second estimator}, but we see that this converges faster and with smaller variance. Specifically, we have
 \[
-	\mathop{\mathrm{Var}}\left[\hat{\pi}_v(s) \right]  = \frac{1}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert M}\left(\pi_{j} - \frac{\sum_{i=1}^{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert} \sigma_{ij}^2}{\left\vert \mathcal{\MakeUppercase{v}}  \right\vert}\right)
+	\mathop{\mathrm{Var}}\left[\hat{\pi}_v(s) \right]  = \frac{1}{\left\vert \mathcal{V}  \right\vert M}\left(\pi_{j} - \frac{\sum_{i=1}^{\left\vert \mathcal{V}  \right\vert} \sigma_{ij}^2}{\left\vert \mathcal{V}  \right\vert}\right)
 \]
-for all \(v\in \mathcal{\MakeUppercase{v}} \). Hence, this is a better estimator.
+for all \(v\in \mathcal{V} \). Hence, this is a better estimator.
 
 \begin{figure}[H]
 	\centering

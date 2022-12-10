@@ -26,25 +26,25 @@ Assume \(q = 2\), \(\psi = \left\{ 01, 10 \right\} \), and \(r = O(\log n)\). Th
 \end{itemize}
 Notice that the above event \(\psi (y_{Q_1^R}, y_{Q_2^R})\) is exactly \(y_{Q_1^R} \neq y_{Q_2^R}\). We see that there are at most \(2^r \leq n^{O(1)}\) possible \(R\)'s, and for each \(R\), we access exactly \(2\) positions, so \(V\) will access at most \(N\coloneqq 2\cdot 2^r\) positions. Now, without loss of generality, we may assume that \(\max _R (Q_1^R, Q_2^R) \leq N\).\footnote{Since \(V\) is going to access at most \(N\) positions anyway, we can just rearrange it.}
 
-Consider the optimization problem that finds \(y\in \left\{ 0, 1 \right\} ^N\) to maximize the probability of accepting. In this viewpoint, this is just like \hyperref[prb:max-cut]{max cut} on \(\mathcal{\MakeUppercase{g}} =([N], \left\{ (Q_1^R, Q_2^R)\colon R\in \left\{ 0, 1 \right\} ^r \right\} )\). Namely, we find a \hyperref[def:reduction]{reduction} from \hyperref[prb:max-3SAT]{3SAT} to \hyperref[def:c-s-Gap]{\((c, s)\)-Gap} \hyperref[prb:max-cut]{max cut}.
+Consider the optimization problem that finds \(y\in \left\{ 0, 1 \right\} ^N\) to maximize the probability of accepting. In this viewpoint, this is just like \hyperref[prb:max-cut]{max cut} on \(\mathcal{G} =([N], \left\{ (Q_1^R, Q_2^R)\colon R\in \left\{ 0, 1 \right\} ^r \right\} )\). Namely, we find a \hyperref[def:reduction]{reduction} from \hyperref[prb:max-3SAT]{3SAT} to \hyperref[def:c-s-Gap]{\((c, s)\)-Gap} \hyperref[prb:max-cut]{max cut}.
 
 \section{FGLSS Graph}
 To see how we utilize \hyperref[thm:PCP]{PCP theorem}, we first see one example.
 \begin{problem}[Vertex cover]\label{prb:vertex-cover}
-Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), find the smallest \(C \subseteq \mathcal{\MakeUppercase{v}} \) that covers all \(\mathcal{\MakeUppercase{e}} \).
+Given a graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\), find the smallest \(C \subseteq \mathcal{V} \) that covers all \(\mathcal{E} \).
 \end{problem}
 
 \begin{problem}[Independent set]\label{prb:independent-set}
-Given a graph \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), find the largest \(I \subseteq \mathcal{\MakeUppercase{v}} \) that contains no edge.
+Given a graph \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\), find the largest \(I \subseteq \mathcal{V} \) that contains no edge.
 \end{problem}
 
 \autoref{prb:vertex-cover} and \autoref{prb:independent-set} are often considered together due to the following relation.
 
 \begin{claim}
-	For all \(\mathcal{\MakeUppercase{g}} \), \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}}}(\mathcal{\MakeUppercase{g}} ) = \vert \mathcal{\MakeUppercase{v}} \vert - \OPT_{\hyperref[prb:independent-set]{\text{IS}}}(\mathcal{\MakeUppercase{g}} )\).
+	For all \(\mathcal{G} \), \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}}}(\mathcal{G} ) = \vert \mathcal{V} \vert - \OPT_{\hyperref[prb:independent-set]{\text{IS}}}(\mathcal{G} )\).
 \end{claim}
 \begin{explanation}
-	Observe that for all \(C \subseteq \mathcal{\MakeUppercase{v}} \), \(C\) is a \hyperref[prb:vertex-cover]{vertex cover} if and only if \(\mathcal{\MakeUppercase{v}} \setminus C\) is an \hyperref[prb:independent-set]{independent set}.
+	Observe that for all \(C \subseteq \mathcal{V} \), \(C\) is a \hyperref[prb:vertex-cover]{vertex cover} if and only if \(\mathcal{V} \setminus C\) is an \hyperref[prb:independent-set]{independent set}.
 \end{explanation}
 
 \subsection{Hardness of Vertex Cover and Independent Set}
@@ -52,10 +52,10 @@ The hardness of \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[prb:inde
 
 Consider the input of the \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:max-3SAT]{3SAT} being a \hyperref[def:k-CNF]{\(3\)CNF formula} \(\phi \), \(n\) variables \(X=\left\{ x_1, \ldots , x_n\right\}\) and \(2n\) literals \(L = \left\{ x_1, \overline{x}_1, x_2, \overline{x}_2, \ldots \right\}\) with \(m\) clauses \(\left\{ C_1, \ldots , C_m \right\} \) with three literals in each, i.e., \(C_i = (\ell _{i_1} \lor \ell _{i_2} \lor \ell _{i_3}) \) with \(\ell _{i_j}\in L\).
 
-Then, the goal is to find a \hyperref[def:reduction]{reduction} from this input to an input (in both cases, it's a graph) of \hyperref[def:Gap]{\(\alpha\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(\beta \)-Gap} \hyperref[prb:independent-set]{independent set} for some \(\alpha , \beta \). Toward this goal, we consider the so-called FGLSS graph~\cite{10.1145/226643.226652} \(\mathcal{\MakeUppercase{g}} =(\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\) such that
+Then, the goal is to find a \hyperref[def:reduction]{reduction} from this input to an input (in both cases, it's a graph) of \hyperref[def:Gap]{\(\alpha\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(\beta \)-Gap} \hyperref[prb:independent-set]{independent set} for some \(\alpha , \beta \). Toward this goal, we consider the so-called FGLSS graph~\cite{10.1145/226643.226652} \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) such that
 \begin{itemize}
-	\item \(\mathcal{\MakeUppercase{v}} = [m]\times \left( \left\{ \textsf{T}, \textsf{F} \right\} ^3 \setminus (\textsf{F}, \textsf{F}, \textsf{F}) \right)\) with \(\vert \mathcal{\MakeUppercase{v}}  \vert = 7m\);
-	\item \(\big((i, \ell _{i_1}, \ell _{i_2}, \ell _{i_3}), (j, \ell _{j_1}, \ell _{j_2}, \ell _{j_3})\big)\in \mathcal{\MakeUppercase{e}} \) if they \emph{contradict}.
+	\item \(\mathcal{V} = [m]\times \left( \left\{ \textsf{T}, \textsf{F} \right\} ^3 \setminus (\textsf{F}, \textsf{F}, \textsf{F}) \right)\) with \(\vert \mathcal{V}  \vert = 7m\);
+	\item \(\big((i, \ell _{i_1}, \ell _{i_2}, \ell _{i_3}), (j, \ell _{j_1}, \ell _{j_2}, \ell _{j_3})\big)\in \mathcal{E} \) if they \emph{contradict}.
 \end{itemize}
 The interpretation is that each vertex \((i, t_1, t_2, t_3)\) indicates value of \((\ell _{i_1}, \ell _{i_2}, \ell _{i_3})\), i.e., it's a partial assignment for only \(3\) variables in \(C_i\).
 
@@ -74,26 +74,26 @@ This actually finishes the \hyperref[def:reduction]{reduction}, and the only thi
 	Denote \(V_i \coloneqq \left\{ i \right\} \times \left( \left\{ \textsf{T}, \textsf{F} \right\} ^3 \setminus (\textsf{F}, \textsf{F}, \textsf{F}) \right)\), we see that \(V_i\) is a clique with size \(7\) since they all contradict to each other.
 \end{remark}
 
-This means that for \hyperref[prb:independent-set]{independent set}, \(c = m\); and for \hyperref[prb:vertex-cover]{vertex cover}, \(c = \vert \mathcal{\MakeUppercase{v}}  \vert - m = 7m - m = 6m\). We first show the \hyperref[def:completeness]{completeness}.
+This means that for \hyperref[prb:independent-set]{independent set}, \(c = m\); and for \hyperref[prb:vertex-cover]{vertex cover}, \(c = \vert \mathcal{V}  \vert - m = 7m - m = 6m\). We first show the \hyperref[def:completeness]{completeness}.
 
 \begin{claim}
-	If \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}} (\phi) = 1\), then \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq m\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq 6m\).
+	If \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}} (\phi) = 1\), then \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{G} ) \geq m\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{G} ) \leq 6m\).
 \end{claim}
 \begin{explanation}
 	Since \(\phi \) is satisfiable, then there exists \(\sigma \colon X \to \left\{ \textsf{T}, \textsf{F} \right\} \) that satisfies every \(C_i\). Then from each \(V_i\), choose a vertex \emph{consistent} with \(\sigma \).\footnote{There are exactly one for each \(i\).}
 
-	And since they come from the same assignment \(\sigma \), there are no contradiction hence no edges between these vertices, i.e., they form a \hyperref[prb:independent-set]{independent set}. Hence, \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq m\), and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq 6m\).
+	And since they come from the same assignment \(\sigma \), there are no contradiction hence no edges between these vertices, i.e., they form a \hyperref[prb:independent-set]{independent set}. Hence, \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{G} ) \geq m\), and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{G} ) \leq 6m\).
 \end{explanation}
 
 We now show the \hyperref[def:soundness]{soundness}. In particular, we will always deal with contrapositive in this course, i.e., instead of find a bad input from a bad input, we find a good input from a good input, but backwards.
 
 \begin{claim}
-	If	\(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}} (\phi) < s\), then \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) < sm\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) > (7-s)m\).
+	If	\(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}} (\phi) < s\), then \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{G} ) < sm\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{G} ) > (7-s)m\).
 \end{claim}
 \begin{explanation}
-	Consider the contrapositive, i.e., we show that \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{\MakeUppercase{g}} ) \geq sm\) (hence \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{\MakeUppercase{g}} ) \leq (7-s)m\)), then \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}} }(\phi) \geq s\).
+	Consider the contrapositive, i.e., we show that \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{G} ) \geq sm\) (hence \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{G} ) \leq (7-s)m\)), then \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}} }(\phi) \geq s\).
 
-	Let \(I \subseteq \mathcal{\MakeUppercase{v}} \) be an \hyperref[def:independent-set]{independent set} such that \(\vert I \vert \geq sm\), and let \(\sigma \colon X \to \left\{ \textsf{T}, \textsf{F} \right\} \) such that for all \(C_i\) with \(\vert I \cap V_i \vert = 1\),\footnote{It can only be the case that \(I\) doesn't include vertices from some \(V_i\), but if it does, no more than \(1\) can be included since \(V_i\) is a clique.} assign variables in \(C_i\) according to \(I \cap V_i\).\footnote{This is well-defined since there are no contradictions with \(I\) being an \hyperref[def:independent-set]{independent set}.} Finally, we extend it arbitrarily for unassigned variables if needed. We see that for all \(C_i\) such that \(\vert I \cap  V_i \vert = 1\), this assignment \(\sigma \) satisfies \(C_i\), hence \(\sigma \) satisfies exactly \(\vert I \vert \geq sm\) clauses, i.e., the normalized optimal solution for \hyperref[prb:max-3SAT]{3SAT} is \(\geq sm/m = s\) as required.
+	Let \(I \subseteq \mathcal{V} \) be an \hyperref[def:independent-set]{independent set} such that \(\vert I \vert \geq sm\), and let \(\sigma \colon X \to \left\{ \textsf{T}, \textsf{F} \right\} \) such that for all \(C_i\) with \(\vert I \cap V_i \vert = 1\),\footnote{It can only be the case that \(I\) doesn't include vertices from some \(V_i\), but if it does, no more than \(1\) can be included since \(V_i\) is a clique.} assign variables in \(C_i\) according to \(I \cap V_i\).\footnote{This is well-defined since there are no contradictions with \(I\) being an \hyperref[def:independent-set]{independent set}.} Finally, we extend it arbitrarily for unassigned variables if needed. We see that for all \(C_i\) such that \(\vert I \cap  V_i \vert = 1\), this assignment \(\sigma \) satisfies \(C_i\), hence \(\sigma \) satisfies exactly \(\vert I \vert \geq sm\) clauses, i.e., the normalized optimal solution for \hyperref[prb:max-3SAT]{3SAT} is \(\geq sm/m = s\) as required.
 \end{explanation}
 
 With the above discussion, we see that the \hyperref[def:Gap]{Gap} is \(\beta = s < 1\), \(\alpha = (7-s) / 6 > 1\). Hence, there exists a \hyperref[def:reduction]{reduction} from \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:max-3SAT]{SAT} to \hyperref[def:Gap]{\((7 - s) / 6\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(s\)-Gap} \hyperref[prb:independent-set]{independent set}.
@@ -121,7 +121,7 @@ The state-of-the-art in-approximation result for \hyperref[prb:independent-set]{
 Although \hyperref[thm:PCP]{PCP theorem} is powerful as we just saw, but there is also another useful problem to study when doing \hyperref[def:reduction]{reduction}, the \hyperref[prb:label-cover]{label cover}.
 
 \begin{problem}[Label cover]\label{prb:label-cover}
-Given a \(d\)-regular bipartite graph \(\mathcal{\MakeUppercase{g}} =(U\sqcup V , \mathcal{\MakeUppercase{e}} )\)\footnote{Hence, \(\vert U \vert = \vert V \vert\).} with \(\vert U \vert = \vert V \vert = n\), with label sets \(L\) (for \(U\)) and \(R\) (for \(V \)) with \(\vert R \vert \geq \vert L \vert \) such that for all \(e=(u, v)\in \mathcal{\MakeUppercase{e}} \), we have a projection \(\Pi _e \colon [R]\to [L]\). The \emph{label cover} problem asks for an assignment \(\sigma\colon U \sqcup V \to L \cup R\) such that
+Given a \(d\)-regular bipartite graph \(\mathcal{G} =(U\sqcup V , \mathcal{E} )\)\footnote{Hence, \(\vert U \vert = \vert V \vert\).} with \(\vert U \vert = \vert V \vert = n\), with label sets \(L\) (for \(U\)) and \(R\) (for \(V \)) with \(\vert R \vert \geq \vert L \vert \) such that for all \(e=(u, v)\in \mathcal{E} \), we have a projection \(\Pi _e \colon [R]\to [L]\). The \emph{label cover} problem asks for an assignment \(\sigma\colon U \sqcup V \to L \cup R\) such that
 \[
 	\at{\sigma }{U}{} \colon U \to L,\quad \at{\sigma }{V}{} \colon V \to R,
 \]
@@ -132,7 +132,7 @@ maximizes the number of satisfied edge.\footnote{The edge \(e=(u, v)\) is satisf
 	\incfig{label-cover}
 \end{center}
 
-For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert U \vert, \vert V \vert , \vert \mathcal{\MakeUppercase{e}}  \vert , L, R\), and we sometimes for simplicity, use \(L\) and \(R\) to also denote the size of \(L\) and \(R\).
+For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert U \vert, \vert V \vert , \vert \mathcal{E}  \vert , L, R\), and we sometimes for simplicity, use \(L\) and \(R\) to also denote the size of \(L\) and \(R\).
 
 \begin{remark}[Baseline]
 	There is a trivial \(1/L\)-approximation algorithm.
@@ -157,7 +157,7 @@ For \hyperref[prb:label-cover]{label cover}, the parameters are \(\vert U \vert,
 Recall the \hyperref[prb:max-k-coverage]{max \(k\)-coverage} problem.
 
 \begin{problem}[Max \(k\)-coverage]\label{prb:max-k-coverage}
-Given a \hyperref[def:set-system]{set system} \((\Omega , \mathcal{\MakeUppercase{s}}) \) and \(k\), finds \(\mathcal{\MakeUppercase{s}} ^\prime \subseteq \mathcal{\MakeUppercase{s}} \) such that \(\vert \mathcal{\MakeUppercase{s}}\vert ^\prime = k\) which maximizes \(\vert \bigcup_{S\in \mathcal{\MakeUppercase{S}} ^\prime } S \vert / \vert \Omega \vert \).
+Given a \hyperref[def:set-system]{set system} \((\Omega , \mathcal{S}) \) and \(k\), finds \(\mathcal{S} ^\prime \subseteq \mathcal{S} \) such that \(\vert \mathcal{S}\vert ^\prime = k\) which maximizes \(\vert \bigcup_{S\in \mathcal{S} ^\prime } S \vert / \vert \Omega \vert \).
 \end{problem}
 
 We're going to see the hardness of the \hyperref[prb:max-k-coverage]{max \(k\)-coverage} problem, and our goal is to prove the following.

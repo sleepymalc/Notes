@@ -12,20 +12,20 @@ But this is not always the case. Rankings that can be collaborated as the follow
 	\SetKwData{pg}{pageRank}
 	\SetKwData{pgnew}{pageRankNew}
 	\SetKwData{n}{neighborNum}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} )\), iteration \(L\)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\), iteration \(L\)}
 	\KwResult{\pg}
 
 	\BlankLine
 
-	\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:initialize]{Initialize}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
-		\(\pg(v) \gets 1 / \left\vert \mathcal{\MakeUppercase{v}} \right\vert \)\;
+	\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:initialize]{Initialize}}){\(v\in \mathcal{V}\)}{
+		\(\pg(v) \gets 1 / \left\vert \mathcal{V} \right\vert \)\;
 	}
 	\;
 	\For{\(i = 1, \ldots , L\)}{
-		\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:send]{Send}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
-			\(\n \gets \left\vert \{v\to u \in \mathcal{\MakeUppercase{e}} \} \right\vert\)\;
+		\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:send]{Send}}){\(v\in \mathcal{V}\)}{
+			\(\n \gets \left\vert \{v\to u \in \mathcal{E} \} \right\vert\)\;
 			\uIf(\Comment*[f]{divides \(\pg(v)\) to its (out)neighbor}){\(\n \neq 0\)}{
-				\For(){\(v \to u \in \mathcal{\MakeUppercase{e}}\)}{
+				\For(){\(v \to u \in \mathcal{E}\)}{
 					\(\pgnew(u) \gets \pgnew(u) + \pg(v) / \n\)\;
 				}
 			}\Else(\Comment*[f]{no outgoing links}){
@@ -33,7 +33,7 @@ But this is not always the case. Rankings that can be collaborated as the follow
 			}
 		}
 		\;
-		\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:receive]{Receive}}){\(v\in \mathcal{\MakeUppercase{v}}\)}{
+		\For(\Comment*[f]{\hyperref[algo:basic-page-rank-algorithm:receive]{Receive}}){\(v\in \mathcal{V}\)}{
 			\(\pg(v)\gets \pgnew(v)\)\Comment*[r]{Update the page rank}
 			\(\pgnew(v) \gets 0\)\Comment*[r]{Clean up for the next iteration's updating}
 		}
@@ -45,7 +45,7 @@ But this is not always the case. Rankings that can be collaborated as the follow
 \begin{remark}[Algorithm explanation]
 	The following is the detailed explanation of the \hyperref[algo:basic-page-rank-algorithm]{basic page rank algorithm}.
 	\begin{enumerate}[(a)]
-		\item\label{algo:basic-page-rank-algorithm:initialize} Initialize: For all nodes in \(\mathcal{V}\), set page rank to be \(1 / \left\vert \mathcal{\MakeUppercase{v}}  \right\vert\).
+		\item\label{algo:basic-page-rank-algorithm:initialize} Initialize: For all nodes in \(\mathcal{V}\), set page rank to be \(1 / \left\vert \mathcal{V}  \right\vert\).
 		\item\label{algo:basic-page-rank-algorithm:send} Send: Basic page rank updates: each node divides of its current page rank equally across its outgoing links and sends the value to the node at the end. If there are no outgoing links, then the node retains its page rank.
 		\item \label{algo:basic-page-rank-algorithm:receive} Receive: Each node updates its page rank to be the sum of the values it receives on its incoming links. If a node has retained its page rank, then it adds it to this value.
 	\end{enumerate}
@@ -179,7 +179,7 @@ What do we know about the entries?
 \end{answer}
 
 \begin{remark}
-	Each row vector is a probability mass function (PMF) on \(\{1, 2, \ldots , \left\vert \mathcal{\MakeUppercase{v}}  \right\vert \}\).
+	Each row vector is a probability mass function (PMF) on \(\{1, 2, \ldots , \left\vert \mathcal{V}  \right\vert \}\).
 \end{remark}
 
 \section{Perron-Frobenius Theorem}
@@ -187,7 +187,7 @@ What do we know about the entries?
 In the following lectures, we will study so-called \hyperref[thm:Perron-Frobenius-theorem]{Perron-Frobenius theorem}, which is a theorem about non-negative matrices. Before this, we need to study \hyperref[def:irreducible]{irreducible} matrix.
 
 \begin{definition}[Irreducible]\label{def:irreducible}
-	A non-negative matrix \(A_{n\times n}\) is \emph{irreducible} if for all \(i, j = 1, \ldots , n\), there exists \(k(i, j)\in \mathbb{\MakeUppercase{z}} \)
+	A non-negative matrix \(A_{n\times n}\) is \emph{irreducible} if for all \(i, j = 1, \ldots , n\), there exists \(k(i, j)\in \mathbb{Z} \)
 	depends on \(i, j\) such that \(k(i, j) > 0\) and
 	\[
 		(A^k)_{ij}>0.
@@ -238,4 +238,4 @@ This implies the \hyperref[def:irreducible]{irreducibility} of \(A \iff\) \hyper
 	This \hyperref[def:graph]{graph} \(\mathcal{G}\) can be non-\hyperref[def:simple-graph]{simple graph}.
 \end{remark}
 
-We see that to check for a non-negative matrix \(A\), whether \((A^{n+1})_{ij} > 0\) or not, we first find the \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}} \) corresponding to \(\widetilde{A}\). If \((A^{n+1})_{ij}\) is positive \(\iff\) there is a \hyperref[def:path]{path} in \(\mathcal{\MakeUppercase{g}}\) from \(i\) to \(j\).
+We see that to check for a non-negative matrix \(A\), whether \((A^{n+1})_{ij} > 0\) or not, we first find the \hyperref[def:graph]{graph} \(\mathcal{G} \) corresponding to \(\widetilde{A}\). If \((A^{n+1})_{ij}\) is positive \(\iff\) there is a \hyperref[def:path]{path} in \(\mathcal{G}\) from \(i\) to \(j\).

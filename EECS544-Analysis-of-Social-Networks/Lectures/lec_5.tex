@@ -3,10 +3,10 @@
 In this chapter, we want to partition a network in order to study its structure. As we have seen before, the notion of \hyperref[def:bridge]{bridges} and \hyperref[def:local-bridge]{local bridge} is useful in this content. And from this chapter, we'll focus on algorithmic approach to reach our goal, as we'll see soon.
 
 \section{Shortest Path}
-Firstly, before we do anything serious, we should see fundamental algorithms on \hyperref[def:graph]{graph}. These algorithms will essentially traverse a given \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}} \) and can give us some interesting property while doing so. We first make the notion of distance between nodes rigorous, which help us proceed.
+Firstly, before we do anything serious, we should see fundamental algorithms on \hyperref[def:graph]{graph}. These algorithms will essentially traverse a given \hyperref[def:graph]{graph} \(\mathcal{G} \) and can give us some interesting property while doing so. We first make the notion of distance between nodes rigorous, which help us proceed.
 
 \begin{definition}[Distance between nodes]\label{def:distance-between-nodes}
-	We usually let the length of the \hyperref[def:shortest-path]{shortest path} between two nodes in a \hyperref[def:graph]{graph} \(\mathcal{\MakeUppercase{g}}\) be the \emph{distance between these two nodes}, denotes as
+	We usually let the length of the \hyperref[def:shortest-path]{shortest path} between two nodes in a \hyperref[def:graph]{graph} \(\mathcal{G}\) be the \emph{distance between these two nodes}, denotes as
 	\[
 		d_{\mathcal{G}}(\cdot, \cdot),
 	\]
@@ -25,25 +25,25 @@ Firstly, before we do anything serious, we should see fundamental algorithms on 
 	We only discuss unweighted \hyperref[def:graph]{graph} so far, where we treat the weight as \(1\) for all edges.
 \end{note}
 
-Now, observe that the distance function \(d_{\mathcal{\MakeUppercase{g}} } \) need to follow some kind of recursion relation like
+Now, observe that the distance function \(d_{\mathcal{G} } \) need to follow some kind of recursion relation like
 \[
-	d_{\mathcal{\MakeUppercase{g}} } (i, j) = 1 + \min_{k\in N_{\mathcal{\MakeUppercase{g}} } (j)} d_{\mathcal{\MakeUppercase{g}} } (i, k)
+	d_{\mathcal{G} } (i, j) = 1 + \min_{k\in N_{\mathcal{G} } (j)} d_{\mathcal{G} } (i, k)
 \]
 if we're talking about an unweighted \hyperref[def:graph]{graph}. Now, we see how we can utilize this idea and find the \hyperref[def:shortest-path]{shortest paths} algorithmically.
 
 \subsection{Breadth-First Search}
-Firstly, we see a way to traverse a given graph \(\mathcal{\MakeUppercase{g}} \) called \hyperref[algo:BFS]{breadth-first search}, which owns its name since its natural behavior.
+Firstly, we see a way to traverse a given graph \(\mathcal{G} \) called \hyperref[algo:BFS]{breadth-first search}, which owns its name since its natural behavior.
 
 \begin{algorithm}[H]\label{algo:BFS}
 	\DontPrintSemicolon
 	\caption{Breadth-First Search}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \), a root \(v^{\ast}\)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} ) \), a root \(v^{\ast}\)}
 	\SetKwArray{e}{explored}
 	\SetKwFunction{pop}{.pop}
 	\SetKwFunction{push}{.push}
 	\BlankLine
 	\(Q\gets \) empty queue\Comment*[r]{Initialize}
-	\For(){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+	\For(){\(v\in \mathcal{V} \)}{
 		\e{\(v\)}\(\gets \mathrm{False}\)\Comment*[r]{Mark every node as unexplored}
 	}
 	\;
@@ -52,7 +52,7 @@ Firstly, we see a way to traverse a given graph \(\mathcal{\MakeUppercase{g}} \)
 	\;
 	\While(){\(Q\neq \varnothing \)}{
 		\(v\gets Q\)\pop{}\;
-		\For(\Comment*[f]{For all edges adjacent to \(v\)}\label{algo:BFS:line10}){\((v, w)\in\mathcal{\MakeUppercase{E}}\)}{
+		\For(\Comment*[f]{For all edges adjacent to \(v\)}\label{algo:BFS:line10}){\((v, w)\in\mathcal{E}\)}{
 			\If(If \(w\) is unexplored){\e{\(w\)}\(= \mathrm{False}\)}{
 				\e{\(w\)}\(=\mathrm{True}\)\Comment*[r]{Mark as explored}
 				\(Q\)\push{\(w\)}\;
@@ -62,7 +62,7 @@ Firstly, we see a way to traverse a given graph \(\mathcal{\MakeUppercase{g}} \)
 	\Return{}\;
 \end{algorithm}
 
-This is a simple algorithm which has the nice properties. Firstly, we see that we can interpret the edges \((v, w)\in \mathcal{\MakeUppercase{e}} \) in \autoref{algo:BFS:line10} as either \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected} edges, hence the algorithm works on both \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected graphs}.
+This is a simple algorithm which has the nice properties. Firstly, we see that we can interpret the edges \((v, w)\in \mathcal{E} \) in \autoref{algo:BFS:line10} as either \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected} edges, hence the algorithm works on both \hyperref[def:directed-graph]{directed} or \hyperref[def:undirected-graph]{undirected graphs}.
 
 \begin{intuition}[Level graph]
 	And if we look closely, we're essentially constructing a level graph, which means that we're exploring the graph from the root \(v^{\ast} \) layer by layer (level by level) w.r.t.\ the \hyperref[def:distance-between-nodes]{distance} between \(v^{\ast}\). In other words, it'll first explore all nodes which has \hyperref[def:distance-between-nodes]{distance} \(1\) from \(v^{\ast} \), then \(2\), and so on and so forth until all nodes in this \hyperref[def:connected]{connected} component are explored.
@@ -72,14 +72,14 @@ This is a simple algorithm which has the nice properties. Firstly, we see that w
 	Just like \hyperref[algo:BFS]{breadth-first search}, we can change the iterator container of \(Q\) by a stack, which will essentially make this algorithm turns into the so-called \emph{depth-first search}. In contrast, \hyperref[algo:BFS]{BFS}, DFS are not building level graph, i.e., it does not explore the graph layer-by-layer from the root \(v^{\ast} \), it just randomly pick a direction and go as far as it can. Such property can have certain benefit in some cases, but since we're interested in finding \hyperref[def:shortest-path]{shortest paths}, hence we simply omit a detail explanation.
 \end{remark}
 
-If we use the \hyperref[def:adjacency-matrix]{adjacency matrix} to represent \(\mathcal{\MakeUppercase{g}} \), then since we call for each vertex at most once, with the fact that the \hyperref[def:adjacency-matrix]{adjacency matrix} for each vertex is visited at most once when searching for \((v, w)\in \mathcal{\MakeUppercase{e}} \) in \autoref{algo:BFS:line10}, which costs \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert )\), hence in total this algorithm has a runtime as \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert^{2} )\).
+If we use the \hyperref[def:adjacency-matrix]{adjacency matrix} to represent \(\mathcal{G} \), then since we call for each vertex at most once, with the fact that the \hyperref[def:adjacency-matrix]{adjacency matrix} for each vertex is visited at most once when searching for \((v, w)\in \mathcal{E} \) in \autoref{algo:BFS:line10}, which costs \(O(\left\vert \mathcal{V}  \right\vert )\), hence in total this algorithm has a runtime as \(O(\left\vert \mathcal{V}  \right\vert^{2} )\).
 
 \begin{remark}[Adjacency list]
-	If we instead used something called \href{https://en.wikipedia.org/wiki/Adjacency_list#:~:text=In%20graph%20theory%20and%20computer,particular%20vertex%20in%20the%20graph.}{adjacency list}, then for each vertex, the list is visited at most once and if we assume that the set of edges is distributed over set of vertices uniformly, this step costs \(O(1 + \left\vert \mathcal{\MakeUppercase{e}}  \right\vert / \left\vert \mathcal{\MakeUppercase{v}}  \right\vert )\), hence in total the algorithm costs
+	If we instead used something called \href{https://en.wikipedia.org/wiki/Adjacency_list#:~:text=In%20graph%20theory%20and%20computer,particular%20vertex%20in%20the%20graph.}{adjacency list}, then for each vertex, the list is visited at most once and if we assume that the set of edges is distributed over set of vertices uniformly, this step costs \(O(1 + \left\vert \mathcal{E}  \right\vert / \left\vert \mathcal{V}  \right\vert )\), hence in total the algorithm costs
 	\[
-		O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert (1 + \left\vert \mathcal{\MakeUppercase{e}}  \right\vert / \left\vert \mathcal{\MakeUppercase{v}}  \right\vert ))= O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert + \left\vert \mathcal{\MakeUppercase{e}}  \right\vert ),
+		O(\left\vert \mathcal{V}  \right\vert (1 + \left\vert \mathcal{E}  \right\vert / \left\vert \mathcal{V}  \right\vert ))= O(\left\vert \mathcal{V}  \right\vert + \left\vert \mathcal{E}  \right\vert ),
 	\]
-	rather than \(O(\left\vert \mathcal{\MakeUppercase{v}}  \right\vert ^{2} )\). This is sometimes faster if the \hyperref[def:graph]{graph} is dense, but we'll not go into this since this is not that relevant.
+	rather than \(O(\left\vert \mathcal{V}  \right\vert ^{2} )\). This is sometimes faster if the \hyperref[def:graph]{graph} is dense, but we'll not go into this since this is not that relevant.
 \end{remark}
 
 Now, since we have the intuition that the \hyperref[algo:BFS]{breadth-first search} is exploring the \hyperref[def:graph]{graph} in the fashion of constructing a level graph, then we can just check whether we get to our destination or not by the following modification.
@@ -87,14 +87,14 @@ Now, since we have the intuition that the \hyperref[algo:BFS]{breadth-first sear
 \begin{algorithm}[H]\label{algo:BFS-2}
 	\DontPrintSemicolon
 	\caption{Breadth-First Search ver.2}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \), a root \(v^{\ast}\), a destination \(u^{\ast} \)}
-	\KwResult{\hyperref[def:distance-between-nodes]{Distance} \(d_{\mathcal{\MakeUppercase{g}} }(v^{\ast} , u^{\ast} )\) }
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} ) \), a root \(v^{\ast}\), a destination \(u^{\ast} \)}
+	\KwResult{\hyperref[def:distance-between-nodes]{Distance} \(d_{\mathcal{G} }(v^{\ast} , u^{\ast} )\) }
 	\SetKwArray{e}{explored}
 	\SetKwFunction{pop}{.pop}
 	\SetKwFunction{push}{.push}
 	\BlankLine
 	\(Q\gets \) empty queue\Comment*[r]{Initialize}
-	\For(){\(v\in \mathcal{\MakeUppercase{v}} \)}{
+	\For(){\(v\in \mathcal{V} \)}{
 		\e{\(v\)}\(\gets \mathrm{False}\)\Comment*[r]{Mark every node as unexplored}
 	}
 	\(c\gets 0\) \Comment*[r]{Set a counter}
@@ -108,7 +108,7 @@ Now, since we have the intuition that the \hyperref[algo:BFS]{breadth-first sear
 		\If(\Comment*[f]{If we reach the destination}){\(v = u^{\ast} \)}{
 			\Return{\(c\)}
 		}
-		\For(\Comment*[f]{For all edges adjacent to \(v\)}){\((v, w)\in\mathcal{\MakeUppercase{E}}\)}{
+		\For(\Comment*[f]{For all edges adjacent to \(v\)}){\((v, w)\in\mathcal{E}\)}{
 			\If(If \(w\) is unexplored){\e{\(w\)}\(= \mathrm{False}\)}{
 				\e{\(w\)}\(=\mathrm{True}\)\Comment*[r]{Mark as explored}
 				\(Q\)\push{\(w\)}\;
@@ -175,21 +175,21 @@ With the definition of \hyperref[def:betweenness]{betweenness}, we give the pseu
 \begin{algorithm}[H]\label{algo:Girvan-Newman-algorithm}
 	\DontPrintSemicolon
 	\caption{Girvan-Newman Algorithm}
-	\KwData{A network \(\mathcal{\MakeUppercase{g}} = (\mathcal{\MakeUppercase{v}} , \mathcal{\MakeUppercase{e}} ) \)}
+	\KwData{A network \(\mathcal{G} = (\mathcal{V} , \mathcal{E} ) \)}
 	\BlankLine
 	\SetKwFunction{calb}{Betweenness}
 	\SetKwData{b}{between}
 
-	\For{\(e\in \mathcal{\MakeUppercase{e}} \)}{
+	\For{\(e\in \mathcal{E} \)}{
 		\(\b_e\gets 0\)\Comment*[r]{Initialize \hyperref[def:betweenness]{betweenness} variable for every edge}
 	}
 	\;
-	\While{\(\mathcal{\MakeUppercase{e}} \neq \varnothing \)}{
-	\calb{\(\mathcal{\MakeUppercase{g}}\), \(\{\b_e\}_{e\in \mathcal{\MakeUppercase{e}}}\) }\Comment*[r]{Calculate \hyperref[def:betweenness]{betweenness} of all remaining edges}
-	\(\b_{\text{highest}}\gets \max_{e\in \mathcal{\MakeUppercase{e}} } \b_e\)\;
-	\(\mathcal{\MakeUppercase{e}}_{\text{highest} } \gets \{e\in \mathcal{\MakeUppercase{e}} \colon \b_e = \b_{\text{highest} }\}\)\;
-	\(\mathcal{\MakeUppercase{e}} \gets \mathcal{\MakeUppercase{e}} \setminus \mathcal{\MakeUppercase{e}} _{\text{highest} }\)\;
-	\(\mathcal{\MakeUppercase{g}} \gets \mathcal{\MakeUppercase{g}} [\mathcal{\MakeUppercase{e}}]\)\;
+	\While{\(\mathcal{E} \neq \varnothing \)}{
+	\calb{\(\mathcal{G}\), \(\{\b_e\}_{e\in \mathcal{E}}\) }\Comment*[r]{Calculate \hyperref[def:betweenness]{betweenness} of all remaining edges}
+	\(\b_{\text{highest}}\gets \max_{e\in \mathcal{E} } \b_e\)\;
+	\(\mathcal{E}_{\text{highest} } \gets \{e\in \mathcal{E} \colon \b_e = \b_{\text{highest} }\}\)\;
+	\(\mathcal{E} \gets \mathcal{E} \setminus \mathcal{E} _{\text{highest} }\)\;
+	\(\mathcal{G} \gets \mathcal{G} [\mathcal{E}]\)\;
 	}
 	\Return{}\;
 \end{algorithm}

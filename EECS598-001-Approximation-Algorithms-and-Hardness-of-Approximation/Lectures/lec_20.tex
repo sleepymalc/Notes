@@ -54,7 +54,7 @@ Consider the input of the \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:m
 
 Then, the goal is to find a \hyperref[def:reduction]{reduction} from this input to an input (in both cases, it's a graph) of \hyperref[def:Gap]{\(\alpha\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(\beta \)-Gap} \hyperref[prb:independent-set]{independent set} for some \(\alpha , \beta \). Toward this goal, we consider the so-called FGLSS graph~\cite{10.1145/226643.226652} \(\mathcal{G} =(\mathcal{V} , \mathcal{E} )\) such that
 \begin{itemize}
-	\item \(\mathcal{V} = [m]\times \left( \left\{ \textsf{T}, \textsf{F} \right\} ^3 \setminus (\textsf{F}, \textsf{F}, \textsf{F}) \right)\) with \(\vert \mathcal{V}  \vert = 7m\);
+	\item \(\mathcal{V} = [m]\times \left( \left\{ \T, \F \right\} ^3 \setminus (\F, \F, \F) \right)\) with \(\vert \mathcal{V}  \vert = 7m\);
 	\item \(\big((i, \ell _{i_1}, \ell _{i_2}, \ell _{i_3}), (j, \ell _{j_1}, \ell _{j_2}, \ell _{j_3})\big)\in \mathcal{E} \) if they \emph{contradict}.
 \end{itemize}
 The interpretation is that each vertex \((i, t_1, t_2, t_3)\) indicates value of \((\ell _{i_1}, \ell _{i_2}, \ell _{i_3})\), i.e., it's a partial assignment for only \(3\) variables in \(C_i\).
@@ -63,15 +63,15 @@ The interpretation is that each vertex \((i, t_1, t_2, t_3)\) indicates value of
 	If the partial assignment given by two vertices in a FGLSS graph is not consistent, we say they are \emph{contradicting}.
 \end{notation}
 \begin{eg}
-	Given \(C_1=(\overline{x}_1 \lor x_2 \lor \overline{x}_3)\) and \(C_2 = (x_3\lor x_4\lor x_5)\) with two vertices \(v=(1, \textsf{T}, \textsf{T}, \textsf{T})\) and \(u=(2, \textsf{T}, \textsf{F}, \textsf{F})\), they are contradicting to each other.
+	Given \(C_1=(\overline{x}_1 \lor x_2 \lor \overline{x}_3)\) and \(C_2 = (x_3\lor x_4\lor x_5)\) with two vertices \(v=(1, \T, \T, \T)\) and \(u=(2, \T, \F, \F)\), they are contradicting to each other.
 \end{eg}
 \begin{explanation}
-	Since \(v\) states that \(\overline{x}_3\) is \(\textsf{T}\) (\(x_3\) is \(\textsf{F}\)); while \(u\) states that \(x_3\) is \(\textsf{T}\), they contradict.
+	Since \(v\) states that \(\overline{x}_3\) is \(\T\) (\(x_3\) is \(\F\)); while \(u\) states that \(x_3\) is \(\T\), they contradict.
 \end{explanation}
 
 This actually finishes the \hyperref[def:reduction]{reduction}, and the only thing left to do is to determine what \(\alpha \) and \(\beta \) is. To do this, observe that following.
 \begin{remark}
-	Denote \(V_i \coloneqq \left\{ i \right\} \times \left( \left\{ \textsf{T}, \textsf{F} \right\} ^3 \setminus (\textsf{F}, \textsf{F}, \textsf{F}) \right)\), we see that \(V_i\) is a clique with size \(7\) since they all contradict to each other.
+	Denote \(V_i \coloneqq \left\{ i \right\} \times \left( \left\{ \T, \F \right\} ^3 \setminus (\F, \F, \F) \right)\), we see that \(V_i\) is a clique with size \(7\) since they all contradict to each other.
 \end{remark}
 
 This means that for \hyperref[prb:independent-set]{independent set}, \(c = m\); and for \hyperref[prb:vertex-cover]{vertex cover}, \(c = \vert \mathcal{V}  \vert - m = 7m - m = 6m\). We first show the \hyperref[def:completeness]{completeness}.
@@ -80,7 +80,7 @@ This means that for \hyperref[prb:independent-set]{independent set}, \(c = m\); 
 	If \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}}} (\phi) = 1\), then \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{G} ) \geq m\) and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{G} ) \leq 6m\).
 \end{claim}
 \begin{explanation}
-	Since \(\phi \) is satisfiable, then there exists \(\sigma \colon X \to \left\{ \textsf{T}, \textsf{F} \right\} \) that satisfies every \(C_i\). Then from each \(V_i\), choose a vertex \emph{consistent} with \(\sigma \).\footnote{There are exactly one for each \(i\).}
+	Since \(\phi \) is satisfiable, then there exists \(\sigma \colon X \to \left\{ \T, \F \right\} \) that satisfies every \(C_i\). Then from each \(V_i\), choose a vertex \emph{consistent} with \(\sigma \).\footnote{There are exactly one for each \(i\).}
 
 	And since they come from the same assignment \(\sigma \), there are no contradiction hence no edges between these vertices, i.e., they form a \hyperref[prb:independent-set]{independent set}. Hence, \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{G} ) \geq m\), and \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{G} ) \leq 6m\).
 \end{explanation}
@@ -93,7 +93,7 @@ We now show the \hyperref[def:soundness]{soundness}. In particular, we will alwa
 \begin{explanation}
 	Consider the contrapositive, i.e., we show that \(\OPT_{\hyperref[prb:independent-set]{\text{IS}} }(\mathcal{G} ) \geq sm\) (hence \(\OPT_{\hyperref[prb:vertex-cover]{\text{VC}} }(\mathcal{G} ) \leq (7-s)m\)), then \(\OPT_{\hyperref[prb:max-3SAT]{\text{3SAT}} }(\phi) \geq s\).
 
-	Let \(I \subseteq \mathcal{V} \) be an \hyperref[def:independent-set]{independent set} such that \(\vert I \vert \geq sm\), and let \(\sigma \colon X \to \left\{ \textsf{T}, \textsf{F} \right\} \) such that for all \(C_i\) with \(\vert I \cap V_i \vert = 1\),\footnote{It can only be the case that \(I\) doesn't include vertices from some \(V_i\), but if it does, no more than \(1\) can be included since \(V_i\) is a clique.} assign variables in \(C_i\) according to \(I \cap V_i\).\footnote{This is well-defined since there are no contradictions with \(I\) being an \hyperref[def:independent-set]{independent set}.} Finally, we extend it arbitrarily for unassigned variables if needed. We see that for all \(C_i\) such that \(\vert I \cap  V_i \vert = 1\), this assignment \(\sigma \) satisfies \(C_i\), hence \(\sigma \) satisfies exactly \(\vert I \vert \geq sm\) clauses, i.e., the normalized optimal solution for \hyperref[prb:max-3SAT]{3SAT} is \(\geq sm/m = s\) as required.
+	Let \(I \subseteq \mathcal{V} \) be an \hyperref[def:independent-set]{independent set} such that \(\vert I \vert \geq sm\), and let \(\sigma \colon X \to \left\{ \T, \F \right\} \) such that for all \(C_i\) with \(\vert I \cap V_i \vert = 1\),\footnote{It can only be the case that \(I\) doesn't include vertices from some \(V_i\), but if it does, no more than \(1\) can be included since \(V_i\) is a clique.} assign variables in \(C_i\) according to \(I \cap V_i\).\footnote{This is well-defined since there are no contradictions with \(I\) being an \hyperref[def:independent-set]{independent set}.} Finally, we extend it arbitrarily for unassigned variables if needed. We see that for all \(C_i\) such that \(\vert I \cap  V_i \vert = 1\), this assignment \(\sigma \) satisfies \(C_i\), hence \(\sigma \) satisfies exactly \(\vert I \vert \geq sm\) clauses, i.e., the normalized optimal solution for \hyperref[prb:max-3SAT]{3SAT} is \(\geq sm/m = s\) as required.
 \end{explanation}
 
 With the above discussion, we see that the \hyperref[def:Gap]{Gap} is \(\beta = s < 1\), \(\alpha = (7-s) / 6 > 1\). Hence, there exists a \hyperref[def:reduction]{reduction} from \hyperref[def:c-s-Gap]{\((1, s)\)-Gap} \hyperref[prb:max-3SAT]{SAT} to \hyperref[def:Gap]{\((7 - s) / 6\)-Gap} \hyperref[prb:vertex-cover]{vertex cover} and \hyperref[def:Gap]{\(s\)-Gap} \hyperref[prb:independent-set]{independent set}.

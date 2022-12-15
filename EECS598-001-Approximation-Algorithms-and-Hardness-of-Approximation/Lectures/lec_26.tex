@@ -1,6 +1,6 @@
 \lecture{26}{7 Dec. 10:30}{A Final Reduction from Unique Games}
 \begin{proof}[Proof sketch]
-	From \(\mathop{\mathrm{Stab}}_\rho [f] = \mathbb{E}_{x \underset{\rho }{\sim } y}\left[f(x) f(y) \right] \), we want to say that this is equal to \(\mathbb{E}_{g \underset{\rho }{\sim } h}\left[ f(h) f(h) \right] \) where \(g \underset{\rho }{\sim } h\) means for all \(i\in [R]\), \(g_i \sim \mathcal{N} (0, 1)\), \(h_i = \rho \cdot g + \sqrt{1 - \rho ^{2} }\mathcal{N} (0, 1) \). In this case, though \(f\colon \left\{ 0, 1 \right\} ^[R] \to \left\{ 0, 1 \right\} \) doesn't make sense, but if we look at the Fourier decomposition, we have
+	From \(\mathop{\mathrm{Stab}}_\rho [f] = \mathbb{E}_{x \underset{\rho }{\sim } y}\left[f(x) f(y) \right] \), we want to say that this is equal to \(\mathbb{E}_{g \underset{\rho }{\sim } h}\left[ f(h) f(h) \right] \) where \(g \underset{\rho }{\sim } h\) means for all \(i\in [R]\), \(g_i \sim \mathcal{N} (0, 1)\), \(h_i = \rho \cdot g + \sqrt{1 - \rho ^{2} }\mathcal{N} (0, 1) \). In this case, though \(f\colon \left\{ 0, 1 \right\} ^{[R]} \to \left\{ 0, 1 \right\} \) doesn't make sense, but if we look at the Fourier decomposition, we have
 	\[
 		f(x) = \sum_{S \subseteq [R]} \hat{f} (S) x^S \implies f(g) = \sum_{S \subseteq [R]} \hat{f} (S) g^S.
 	\]
@@ -19,59 +19,76 @@
 \end{corollary}
 
 \subsection{Reduction from Unique Game}
-Let \(\rho \approx -0.7\), such that
+Finally, we can now prove \autoref{thm:max-cut-hardness}. Let \(\rho \approx -0.7\), such that
 \[
 	c = \frac{1}{2} - \frac{1}{2}\rho \approx 0.85, \quad s = \frac{1}{2} - \frac{1}{\pi }\arcsin \rho \approx 0.75,
 \]
-and \(0.85 / 0.75 = \alpha _{\mathrm{GW} }\). Fix \(\epsilon _1 > 0\), choose \(\epsilon _0\) and give reduction from \hyperref[def:c-s-Gap]{\((1-\epsilon _0, \epsilon _0)\)-Gap} \hyperref[prb:unique-game]{unique game} to \hyperref[def:c-s-Gap]{\((c-\epsilon _1, s+\epsilon _1)\)-Gap} \hyperref[prb:max-cut]{max cut}.
-
-Given a \hyperref[prb:unique-game]{unique game} instance \(\mathcal{G} = (U \sqcup V , \mathcal{E} )\) which is regular, \(\left\{ \Pi _e \right\}_{e\in \mathcal{E} } \), \([R]\), our \hyperref[prb:max-cut]{max cut} instance is designed as
+and \(c / s = \alpha _{\mathrm{GW} }\). Fix \(\epsilon _1 > 0\), choose \(\epsilon _0\) and give \hyperref[def:reduction]{reduction} from \hyperref[def:c-s-Gap]{\((1-\epsilon _0, \epsilon _0)\)-Gap} \hyperref[prb:unique-game]{unique game} to \hyperref[def:c-s-Gap]{\((c-\epsilon _1, s+\epsilon _1)\)-Gap} \hyperref[prb:max-cut]{max cut}. Given a \hyperref[prb:unique-game]{unique game} instance \(\mathcal{G} = (U \sqcup V , \mathcal{E} )\) which is regular, \(\left\{ \Pi _e \right\}_{e\in \mathcal{E} } \), \([R]\), our \hyperref[prb:max-cut]{max cut} instance is designed as
 \begin{itemize}
 	\item Vertex: \(U \times \left\{ \pm 1 \right\} ^R\).
 	\item Edges:
-	      \begin{enumerate}
+	      \begin{itemize}
 		      \item sample \(v\in V\)
-		      \item sample \(u_1, u_2 \sim N(v)\) (\(e_1 = (u_1, v), e_2 = (u_2, v)\))
-		      \item sample \(x \underset{\rho }{\sim } y\)
-		      \item output \(\big( (u_1, \Pi _1(u)), (u_2, \Pi _2(u))\big)\) where \(\big(\Pi _1(x)\big)_{\Pi (i)} = x_i\).
-	      \end{enumerate}
+		      \item sample \(u_1, u_2 \sim N(v)\)\footnote{\(N(v)\) is the neighborhood of \(v\), so \(e_1 = (u_1, v), e_2 = (u_2, v)\in \mathcal{E} \).}
+		      \item sample \(x\in \left\{ \pm 1 \right\} ^R\), and \(x \underset{\rho }{\sim } y\)\footnote{\(x\) is a vertex from the hypercube of \(u_1\), and \(y\) is a vertex from the hypercube of \(u_2\). This is the \hyperref[def:dictation]{dictator-ship} test in \autoref{subsec:noisy-hypercube}.}
+		      \item output \(\big( (u_1, \Pi _1(x)), (u_2, \Pi _2(y))\big)\) where \(\big(\Pi _1(x)\big)_{\Pi _1(i)} = x_i\).
+	      \end{itemize}
 \end{itemize}
 
-To show \hyperref[def:completeness]{completeness}, if \(\sigma \colon U \sqcup V \to [R]\) satisfies \(1 - \epsilon _0\) fraction of \(\mathcal{E} \), the cut is indicated by \(f_u(x) = x_{\sigma (u)}\) for all \(u\in U\) with probability \(\geq 1 - 2 \epsilon \). Then,
+\subsubsection{Completeness}
+To show \hyperref[def:completeness]{completeness}, consider a \hyperref[prb:unique-game]{unique game} instance \(\mathcal{G} = (U \sqcup V, \mathcal{E} )\) with a labeling \(\sigma \colon U \sqcup V \to [R]\) which satisfies \(1 - \epsilon _0\) fraction of \(\mathcal{E} \). Let the cut indicated by \(f_u(x) = x_{\sigma (u)}\) for all \(u\in U\) be
+\[
+	S_u \coloneqq \left\{ (u, x) \colon x_{\sigma (u)} = 1 \right\}.
+\]
+By union bound, with probability \(\geq 1 - 2 \epsilon_0 \), we have
 \[
 	\Pr_{}(f_{u_1}(\Pi _1(x)) \neq f_{u_2}(\Pi _2(y)))
 	= \Pr_{}(\big(\Pi _1(x)\big)_{\sigma (u_1)} \neq \big(\Pi _2(y)\big)_{\sigma (u_2)})
 	= \Pr_{}(X_{\sigma (v) \neq y_{\sigma (v)}})
 	= \frac{1-\rho }{2},
 \]
-where \(\Pi _1(\sigma (u)) = \sigma (u_1)\) and \(\Pi _2(\sigma (u)) = \sigma (u_2)\).
+where \(\Pi _1(\sigma (u)) = \sigma (u_1)\) and \(\Pi _2(\sigma (u)) = \sigma (u_2)\). This means that \(S\) cuts at least \((1 - 2\epsilon _0)\times (1-\rho )/2\) fraction of edges.
 
-To prove \hyperref[def:soundness]{soundness}, suppose \(\left\{ f_u \right\} _{u\in U}\) such that \(f_u\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) with value \(\geq 1 / 2 - \arcsin \rho / \pi + \epsilon _1\), we then have
-\[
-	\mathbb{E}_{v, u_1, u_2, x, y}\left[f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \right]
-	\leq \left( \frac{2}{\pi } \right) \arcsin \rho - 2\epsilon _1.
-\]
+\subsubsection{Soundness}
+To prove \hyperref[def:soundness]{soundness}, suppose \(\left\{ f_u \right\} _{u\in U}\) such that \(f_u\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) is the assignments to the \hyperref[prb:max-cut]{max cut} vertices with cut value \(\geq 1 / 2 - \arcsin \rho / \pi + \epsilon _1\). Our goal is to get a labeling \(\sigma \) for the \hyperref[prb:unique-game]{unique game} with value at least \(\epsilon _0\). Firstly, we have the following.
 
-For all \(v\in V\), \(f_v \colon \left\{ \pm 1 \right\} ^R \to [-1, 1]\) such that
-\[
-	f_v(x) \coloneqq \mathbb{E}_{u \sim N(v)}\left[f_u (\Pi _{uv} (x) ) \right].
-\]
-We see that
-\[
-	\begin{split}
+\begin{claim}
+	Given the sampling procedure,
+	\[
+		\mathbb{E}_{v, x, y}\left[ f_v(x) f_v(y) \right]
+		\leq \left( \frac{2}{\pi } \right) \arcsin \rho - 2\epsilon _1.
+	\]
+\end{claim}
+\begin{explanation}
+	For all \(v\in V\), \(f_v \colon \left\{ \pm 1 \right\} ^R \to [-1, 1]\) such that \(f_v(x) \coloneqq \mathbb{E}_{u \sim N(v)}\left[f_u (\Pi _{uv} (x) ) \right]\). Then, if we sample \(v\in V\) and \(x \underset{\rho }{\sim } y\), we have
+	\[
+		\begin{split}
+			\mathbb{E}_{v, u_1, u_2, x, y}\left[f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \right]
+			&= \mathbb{E}_{v, x, y}\left[ \mathbb{E}_{u_1, u_2}\left[ f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \mid v, x, y\right] \right] \\
+			&= \mathbb{E}_{v, x, y}\left[ \mathbb{E}_{u_1}\left[ f_{u_1}(\Pi _1(x)) \mid v, x\right] \cdot \mathbb{E}_{u_2}\left[f_{u_2}(\Pi _2(y)) \mid v, y \right] \right] \\
+			&= \mathbb{E}_{v, x, y}\left[ f_v(x) f_v(y) \right],
+		\end{split}
+	\]
+	so with the fact that\footnote{This follows from the sampling procedure.}
+	\[
 		\mathbb{E}_{v, u_1, u_2, x, y}\left[f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \right]
-		&= \mathbb{E}_{v, x, y}\left[ \mathbb{E}_{u_1, u_2}\left[ f_{u_1}(\Pi _1(x)) f_{u_2}(\Pi _2(y)) \mid v, x, y\right] \right] \\
-		&= \mathbb{E}_{v, x, y}\left[ \mathbb{E}_{u_1}\left[ f_{u_1}(\Pi _1(x)) \mid v, x\right] \cdot \mathbb{E}_{u_2}\left[f_{u_2}(\Pi _2(y)) \mid v, y \right] \right] \\
-		&= \mathbb{E}_{v, x, y}\left[ f_v(x) f_v(y) \right] \\
-	\end{split}
-\]
-By Markov inequality, for \(\geq \epsilon _1\) fraction of \(v\),
-\[
-	\mathbb{E}_{x, y}\left[f_v(x) f_v(y) \right] \leq \left( \frac{2}{\pi } \right) \arcsin \rho - \epsilon _1
-\]
-From \autoref{thm:MIST}, there exists \(i\) such that \(\mathop{\mathrm{Inf}}_i^\delta (f_v)\geq \epsilon\).
+		\leq \left( \frac{2}{\pi } \right) \arcsin \rho - 2\epsilon _1,
+	\]
+	we're done.
+\end{explanation}
 
+By Markov inequality, at least \(\epsilon _1\) fraction of \(v\) satisfies
+\[
+	\mathbb{E}_{x, y}\left[f_v(x) f_v(y) \right] \leq \left( \frac{2}{\pi } \right) \arcsin \rho - \epsilon _1,
+\]
+and we say that such \(v\) is \emph{good}. From \autoref{thm:MIST}, for any good \(v\), there exists some \(\epsilon > 0\) and \(i\in [R]\) such that \(\mathop{\mathrm{Inf}}_i^\delta (f_v)\geq \epsilon\) with some large enough \(\delta = \delta (\epsilon , \rho ) > 0\). Naturally, we label \(u\) as \(\sigma (u) \coloneqq i\).
+
+Note the following.
 \begin{remark}[Fact]
+	Given the \(\epsilon > 0\) found above, \(\epsilon \leq \mathbb{E}_{u}\left[\mathop{\mathrm{Inf}}\nolimits_{\Pi _{uv}(i)}^i (f_u) \right]\).
+\end{remark}
+\begin{explanation}
+	We have
 	\[
 		\begin{aligned}
 			\epsilon
@@ -79,7 +96,21 @@ From \autoref{thm:MIST}, there exists \(i\) such that \(\mathop{\mathrm{Inf}}_i^
 			 & = \sum_{S \ni i} \hat{f} _v(S)^2(1-\delta )^{\vert S \vert - 1}                                            & \text{ from } \hat{f} (S) = \mathbb{E}_{u}\left[\hat{f} _u(\Pi _{uv}(S)) \right] \\
 			 & = \sum_{S \ni i} (1-\delta )^{\vert S \vert - 1}\mathbb{E}_{u}\left[\hat{f} _u(\Pi _{uv}(S)) \right] ^2                                                                                       \\
 			 & \leq \mathbb{E}_{u}\left[\sum_{S \ni i} (1-\delta )^{\vert S \vert - 1} \hat{f} _u(\Pi _{uv}(S))^2 \right]                                                                                    \\
-			 & = \mathbb{E}_{u}\left[\mathop{\mathrm{Inf}}\nolimits_{\Pi _{uv}(i)}^i[f_u] \right].
+			 & = \mathbb{E}_{u}\left[\mathop{\mathrm{Inf}}\nolimits_{\Pi _{uv}(i)}^\delta (f_u) \right].
 		\end{aligned}
 	\]
+\end{explanation}
+
+This fact implies that at least \(\epsilon / 2\) fraction of the neighbors \(u\) of \(v\) we have \(\mathop{\mathrm{Inf}}_{\Pi _{uv}(i)}^\delta  (f_u) \geq \epsilon / 2\), and similarly, we call such \(u\) \emph{good}. To label any \(u\in U\), we consider the set of candidates \(\{ j\in [R]\colon \mathop{\mathrm{Inf}}_{j}^\delta (f_u) \geq \epsilon /2 \} \), hence for all good \(u\), \(\Pi _{uv}(i)\) is one of the candidate. Observe that since
+\[
+	\sum_{i\in [R]} \mathop{\mathrm{Inf}}\nolimits_{i}^\delta (f_u) = \mathop{\mathrm{I}}\nolimits^{\delta }(f_u) \leq \delta,
+\]
+so the number of candidate of \(u\) is at most \(2\delta / \epsilon \). We now simply label \(u\) uniformly at random from the set of candidates. In this case, for any good \(v\in V\) and \(u\in U\), if \(u\) we choose is exactly \(\Pi_{uv}^{-1} (\sigma (v)) \), then this edge \(uv\) is satisfied. From a simple calculation, we know that at least
+\[
+	\epsilon _0 \coloneqq \frac{\epsilon _1}{2}\times \frac{\epsilon }{2} \times \frac{2\delta }{\epsilon } = \frac{\epsilon _1 \delta }{2}
+\]
+fraction of the edges are satisfied, completing the proof.
+
+\begin{remark}
+	Without assuming \hyperref[conj:unique-game]{unique game conjecture}, it's only known to be \(\NP\)-hard to approximate \hyperref[prb:max-cut]{max cut} with ratio better than \(0.92\). And with \autoref{thm:max-cut-hardness}, if \hyperref[conj:unique-game]{unique game conjecture}, \(\alpha _{\mathrm{GW} }\) is optimal.
 \end{remark}

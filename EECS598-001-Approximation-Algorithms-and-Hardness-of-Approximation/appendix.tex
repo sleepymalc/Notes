@@ -39,3 +39,44 @@ Given a \hyperref[def:k-CNF]{\(3\)-CNF formula} \(\varphi\) and \(\ell\), the \e
 \begin{remark}
 	We often call \hyperref[prb:max-3SAT]{MAX-3SAT} as 3SAT for brevity.
 \end{remark}
+
+\subsection{Random MAX-3SAT}
+A surprising result is that by randomly assigning \(x_i\), we achieve the best we can do in expectation. Algorithmically, we have the following.
+
+\begin{algorithm}[H]\label{algo:random-max-3SAT}
+	\DontPrintSemicolon
+	\caption{Deterministic \hyperref[prb:max-3SAT]{MAX-3SAT}}
+	\KwData{A \hyperref[def:k-CNF]{3-CNF} \(\varphi (x_1, \ldots , x_n)\)}
+	\KwResult{A \(7 / 8\)-approximation assignment \(\left\{ x_i \right\}_{i=1}^n\) (in expectation)}
+	\SetKwFunction{unif}{uniform}
+	\BlankLine
+
+	\For(){\(i = 1, \ldots  , n\)}{
+		\(x_i\gets\)\unif{\(\left\{ 0, 1 \right\}\)}\Comment*[r]{random assignments}
+	}
+	\Return{\(\left\{ x_i \right\}_{i=1}^n\)}\;
+\end{algorithm}
+
+\begin{lemma}\label{lma:random-max-3SAT}
+	For all \hyperref[def:k-CNF]{3-CNF} \(\varphi\), there exists an assignment that satisfies at least \(7 / 8\) of clauses.
+\end{lemma}
+\begin{proof}
+	Each clause is satisfied by all but exactly \(1\) assignment, the one where all the literals in the clause evaluate to false. Imagine we have a uniformly random assignment of variables, and let \(X_i\) be a random variable such that
+	\[
+		X_i = \begin{dcases}
+			1, & \text{ if \(i^{st} \) clause is satisfied}  ; \\
+			0, & \text{ otherwise}.
+		\end{dcases}
+	\]
+
+	Since each clause has \(8\) different possibilities (\(2^3\)), and there is only one situation where the clause is not satisfied, each clause has a probability of \(7 / 8\) of being satisfied. Therefore:
+	\[
+		\Pr(X_i = 1) = \frac{7}{8} = \mathbb{E}[X_i].
+	\]
+	Let \(X\) be a random variable that corresponds to the number of satisfied clauses, i.e., \(X = \sum_{i=1}^n X_i\).  By the linearity of expectation, we have
+	\[
+		\mathbb{E}[X] = \sum_{i=1}^n \mathbb{E}(X_i) = \frac{7}{8} \cdot m \geq \frac{7}{8}\OPT
+	\]
+
+	This shows that if we had an algorithm that randomly picks assignments of variables and checks to see how many clauses are satisfied, this would be a randomized algorithm that achieves \(\alpha = \frac{7}{8}\). If we were then to repeat the algorithm a polynomial number of times, we could show that there is a good chance to find such an assignment using Markov's inequality.
+\end{proof}

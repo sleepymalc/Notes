@@ -1,5 +1,5 @@
 \lecture{15}{20 Oct. 14:30}{Compactness in Banach Spaces}
-\subsection{Schauder Basis}
+\subsection{Schauder Bases}
 Finally, we introduce a useful basis called \hyperref[def:Schauder-basis]{Schauder basis}. Recall that some bases we have seen is uncountable, making them hard to work with in practice, on the other hand, \hyperref[def:Schauder-basis]{Schauder basis} is countable and with nice properties.
 
 \begin{definition}[\href{https://en.wikipedia.org/wiki/Schauder_basis}{Schauder basis}]\label{def:Schauder-basis}
@@ -14,11 +14,17 @@ Finally, we introduce a useful basis called \hyperref[def:Schauder-basis]{Schaud
 	We can show that only \hyperref[def:separable]{separable} spaces can have \hyperref[def:Schauder-basis]{Schauder basis}, which is why we require it directly in \autoref{def:Schauder-basis}.
 \end{remark}
 
-It's clearly that if \(\left\{ x_k \right\} _{k\geq 1}\) is a \hyperref[def:Schauder-basis]{Schauder basis}, it's linear independent and complete. However, \autoref{def:Schauder-basis} is stronger than these: for completeness, given any \(\epsilon > 0\), we can find \(\left\{ a_k \right\} _{k=1}^n\) such that
-\[
-	\lVert x - \sum_{k=1}^n a_{k} x_{k} \rVert \leq \epsilon.
-\]
-But it might be the case that \(a_k\) actually depends on \(\epsilon \), and hence \(\lim_{\epsilon \to 0}a_k(\epsilon )\) generally does not exist. In contrast, \autoref{def:Schauder-basis} guarantees that one can achieve higher accuracy by using more and more terms without changing the previous \(a_k\).
+It's clearly that if \(\left\{ x_k \right\} _{k\geq 1}\) is a \hyperref[def:Schauder-basis]{Schauder basis}, it's linear independent and complete. Surprisingly, \autoref{def:Schauder-basis} is stronger than these.
+
+\begin{remark}
+	For \hyperref[def:complete-system]{completeness}, given any \(\epsilon > 0\), we can find \(\left\{ a_k \right\} _{k=1}^n\) such that
+	\[
+		\left\lVert x - \sum_{k=1}^n a_{k} x_{k} \right\rVert \leq \epsilon.
+	\]
+	However, it might be the case that \(a_k\) actually depends on \(\epsilon \), hence \(\lim_{\epsilon \to 0}a_k(\epsilon )\) generally does not exist. But in fact, from the basis property, \autoref{def:Schauder-basis} guarantees that one can achieve higher accuracy by using more and more terms without changing the previous \(a_k\).
+\end{remark}
+
+A major property of \hyperref[def:Schauder-basis]{Schauder bases} is the uniform bound on the partial sums.
 
 \begin{theorem}[Partial sums of a Schauder basis]\label{thm:partial-sum-of-a-Schauder-basis}
 	Let \(\left\{ x_k \right\} _{k\geq 1}\) be a \hyperref[def:Schauder-basis]{Schauder basis} for a \hyperref[def:Banach-space]{Banach space} \(X\). Then there exists an \(M \geq 0\) such that for all \(n \geq 1\),
@@ -36,17 +42,13 @@ But it might be the case that \(a_k\) actually depends on \(\epsilon \), and hen
 	\[
 		\left\lVert a\right\rVert = \sup _{n \geq 1} \left\lVert \sum\limits_{k=1}^{n} a_k x_k\right\rVert < \infty.
 	\]
-	We see that \(\left\lVert \cdot \right\rVert \) is a \hyperref[def:norm]{norm} on \(E\) since \(\left\lVert a\right\rVert = 0 \implies a=0\) follows from the uniqueness property for \hyperref[def:Schauder-basis]{Schauder basis} and the fact that \(E\) is a \hyperref[def:Banach-space]{Banach space}, so \(E\) is complete.
+	We see that \(\left\lVert \cdot \right\rVert \) is a \hyperref[def:norm]{norm} on \(E\) since \(\left\lVert a\right\rVert = 0 \implies a=0\) follows from the uniqueness property for \hyperref[def:Schauder-basis]{Schauder basis} and the fact that \(E\) is a \hyperref[def:Banach-space]{Banach space}, so \(E\) is \hyperref[def:complete-system]{complete}.
 
-	Now, define an \hyperref[def:linear-op]{linear operator} \(T\colon E\to X\) by
+	Now, define a \hyperref[def:linear-op]{linear operator} \(T\colon E\to X\) by
 	\[
 		Ta = \sum\limits_{k=1}^{\infty} a_k x_k,
 	\]
-	we have \(\left\lVert Ta\right\rVert \leq \left\lVert a\right\rVert \), so \(T\) is also \hyperref[def:bounded-linear-op]{bounded}, injective and surjective. From \hyperref[thm:open-mapping]{open mapping theorem},
-	\[
-		T ^{-1} \colon X\to E
-	\]
-	is \hyperref[def:bounded-linear-op]{bounded} such that \(\left\lVert T^{-1} \right\rVert \leq M < \infty\), i.e.,
+	we have \(\left\lVert Ta\right\rVert \leq \left\lVert a\right\rVert \), so \(T\) is also \hyperref[def:bounded-linear-op]{bounded}, injective and surjective. From \hyperref[thm:open-mapping]{open mapping theorem}, \(T ^{-1} \colon X\to E\) is \hyperref[def:bounded-linear-op]{bounded} such that \(\left\lVert T^{-1} \right\rVert \leq M < \infty\), i.e.,
 	\[
 		\left\lVert Ta\right\rVert \geq \frac{1}{M} \left\lVert a\right\rVert
 	\]
@@ -61,17 +63,21 @@ But it might be the case that \(a_k\) actually depends on \(\epsilon \), and hen
 \end{notation}
 
 \begin{definition}[Biorthogonal functional]\label{def:biorthogonal-functional}
-	Given a \hyperref[def:Schauder-basis]{Schauder basis} \(\left\{ x_k \right\} _{k\geq 1}\) and \(x\in X\), the set \(\left\{ a_k(x) \right\} _{k\geq 1} \eqqcolon \left\{ x^{\ast} _k (x)\right\}_{k\geq 1} \) is called \emph{biorthogonal functional} such that \(x = \sum_{k=1}^n a_k x_k \).
+	Given a \hyperref[def:Schauder-basis]{Schauder basis} \(\left\{ x_k \right\} _{k\geq 1}\) and \(x\in X\), we have the set of \emph{biorthogonal functionals} \(\left\{ a_k(x) \right\} _{k\geq 1} \eqqcolon \left\{ x^{\ast} _k (x)\right\}_{k\geq 1} \) such that \(x = \sum_{k=1}^n a_k x_k \).
 \end{definition}
 
-The reason we call \(\left\{ a_k \right\} _{k\geq 1}\) for a specific \(x\) the \hyperref[def:biorthogonal-functional]{biorthogonal functional} is as follows. We can define a partial sum operators for \(n = 1, 2, \ldots  \) such that
+The reason we call \(\left\{ a_k \right\} _{k\geq 1}\) for a specific \(x\) the set of \hyperref[def:biorthogonal-functional]{biorthogonal functionals} is as follows. We can define a partial sum operators \(S_n\) for \(n = 1, 2, \ldots  \) such that
 \[
 	S_n\colon X\to X,\quad S_n (x) = \sum\limits_{k=1}^{n} a_k x_k
 \]
-for \(x = \sum_{i=1}^{\infty }a_k x_k\), and we have shown that \(S_n\) is a \hyperref[def:bounded-linear-op]{bounded linear operator} and \(\sup _{n\geq 1} \left\lVert S_n\right\rVert < \infty \). Observe that \(a_k = a_k(x)\) is a \hyperref[def:linear-functional]{linear functional} on \(X\). This resembles the \hyperref[def:Fourier-series]{Fourier series} with respect to \hyperref[def:orthogonal-system]{orthogonal} bases in a \hyperref[def:Hilbert-space]{Hilbert space}, except now we discuss this in general \hyperref[def:Banach-space]{Banach spaces}.
+for \(x = \sum_{i=1}^{\infty }a_k x_k\), and we have shown that \(S_n\) is a \hyperref[def:bounded-linear-op]{bounded linear operator} since \(\sup _{n\geq 1} \left\lVert S_n\right\rVert = M < \infty \). Observe that \(a_k = a_k(x)\) is a \hyperref[def:linear-functional]{linear functional} on \(X\), so the basis expansion of \(x\in X\) looks like
+\[
+	x = \sum_{k=1}^{\infty} x^{\ast} _k(x) x_k.
+\]
+This resembles the \hyperref[def:Fourier-series]{Fourier series} with respect to \hyperref[def:orthogonal-system]{orthogonal} bases in a \hyperref[def:Hilbert-space]{Hilbert space}, except now we discuss this in general \hyperref[def:Banach-space]{Banach spaces}.
 
 \begin{proposition}
-	The \hyperref[def:biorthogonal-functional]{biorthogonal functional} \(\left\{ x_k^{\ast} \right\} _{k\geq 1}\) of a \hyperref[def:Schauder-basis]{Schauder basis} \(\left\{ x_k \right\} _{k\geq 1}\) are \hyperref[def:uniformly-bounded]{uniformly bounded}, i.e.,
+	The \hyperref[def:biorthogonal-functional]{biorthogonal functionals} \(\left\{ x_k^{\ast} \right\} _{k\geq 1}\) of a \hyperref[def:Schauder-basis]{Schauder basis} \(\left\{ x_k \right\} _{k\geq 1}\) are \hyperref[def:uniformly-bounded]{uniformly bounded}, i.e.,
 	\[
 		\sup _{k\in \mathbb{N} }\lVert x_k ^{\ast}  \rVert \lVert x_{k}  \rVert < \infty .
 	\]
@@ -91,10 +97,10 @@ for \(x = \sum_{i=1}^{\infty }a_k x_k\), and we have shown that \(S_n\) is a \hy
 \section{Compact Sets in Banach Spaces}
 \hyperref[def:compact]{Compactness} is a useful substitute of finite dimensionality as we'll see. Let's give a brief review.
 \subsection{Compactness}
-We first review some properties of compactness.
+We first review some properties of \hyperref[def:compact]{compactness}.
 
 \begin{definition}[Compact]\label{def:compact}
-	A subset \(A\) of a topological space is \emph{compact} if every open cover of \(A\) has a finite subcover.
+	A subset \(A\) of a \hyperref[def:topological-space]{topological space} is \emph{compact} if every open cover of \(A\) has a finite subcover.
 \end{definition}
 
 This means, given a cover \(A \subseteq \bigcup_{\alpha} U_\alpha \) for some collection of open sets \(U_\alpha \), then \(A \subseteq \bigcup_{k=1}^{n} U_{\alpha _k}\) for some finite subcollection.
@@ -102,9 +108,9 @@ This means, given a cover \(A \subseteq \bigcup_{\alpha} U_\alpha \) for some co
 \begin{remark}
 	Properties of compact sets:
 	\begin{enumerate}[(a)]
-		\item \hyperref[def:compact]{Compact sets} of a \hyperref[def:Hausdorff]{Hausdorff space} are closed.
-		\item Closed subsets of \hyperref[def:compact]{compact sets} are \hyperref[def:compact]{compact}.
-		\item The image of a \hyperref[def:compact]{compact set} under a continuous function is \hyperref[def:compact]{compact}.
+		\item \hyperref[def:compact]{Compact sets} of a \hyperref[def:Hausdorff]{Hausdorff space} are closed (\autoref{col:compact-set-of-Hausdorff-closed}).
+		\item Closed subsets of \hyperref[def:compact]{compact sets} are \hyperref[def:compact]{compact} (\autoref{col:closed-subset-of-compact-set-is-compact}).
+		\item The image of a \hyperref[def:compact]{compact set} under a continuous function is \hyperref[def:compact]{compact} (\autoref{thm:continuous-image-of-compact-is-compact}).
 		\item Continuous functions on \hyperref[def:compact]{compact sets} are uniformly continuous and attain their maximum and minimum.
 	\end{enumerate}
 \end{remark}
@@ -149,7 +155,7 @@ We can extend \hyperref[thm:Heine-Borel]{Heine-Borel theorem} to infinite dimens
 	i.e., \((r+\epsilon )B_{Y_{\epsilon } }\) is also an \hyperref[def:eps-net]{\(\epsilon \)-net} of \(A\). Since \(Y\) is finite-dimensional, from \hyperref[thm:Heine-Borel]{Heine-Borel theorem}, \((r+\epsilon )B_{Y_{\epsilon } }\) is \hyperref[def:precompact]{precompact}, i.e., we find a \hyperref[def:precompact]{precompact}  \hyperref[def:eps-net]{\(\epsilon \)-net} of \(A\), therefore \(A\) itself is \hyperref[def:precompact]{precompact} from \autoref{thm:precompact}.
 \end{proof}
 
-On the other hand, from \hyperref[thm:Heine-Borel]{Heine-Borel theorem} states that the unit \hyperref[def:ball]{ball} \(B_X\) of a finite-dimensional \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:compact]{compact}, but this never holds in infinite-dimensional case.
+On the other hand, \hyperref[thm:Heine-Borel]{Heine-Borel theorem} states that the unit \hyperref[def:ball]{ball} \(B_X\) of a finite-dimensional \hyperref[def:normed-vector-space]{normed space} \(X\) is \hyperref[def:compact]{compact}, but this never holds in the infinite-dimensional case.
 
 \begin{theorem}[Riesz's theorem]\label{thm:Riesz}
 	The unit \hyperref[def:ball]{ball} \(B_X\) of an infinite dimensional \hyperref[def:normed-vector-space]{normed space} \(X\) is never \hyperref[def:compact]{compact}.

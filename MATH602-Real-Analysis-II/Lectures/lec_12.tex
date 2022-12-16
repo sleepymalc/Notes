@@ -30,7 +30,7 @@ We can now prove the central theorem in functional analysis, the \hyperref[thm:o
 	Let \(X, Y\) be \hyperref[def:Banach-space]{Banach spaces} and \(T\in \mathcal{L} (X, Y)\). Assume \(T\) is surjective, i.e., \(T(X)= Y\), then \(T\) maps open sets in \(X\) to open sets in \(Y\).
 \end{theorem}
 \begin{proof}
-	Let \(B_X \coloneqq \left\{ x\in X \mid \left\lVert x\right\rVert \leq 1 \right\} \) be a unit \hyperref[def:ball]{ball} in \(X\), similarly \(B_Y\) be a unit \hyperref[def:ball]{ball} in \(Y\).
+	Let \(B_X \coloneqq \left\{ x\in X \mid \lVert x\rVert \leq 1 \right\} \) be a unit \hyperref[def:ball]{ball} in \(X\), similarly \(B_Y\) be a unit \hyperref[def:ball]{ball} in \(Y\).
 
 	\begin{claim}
 		It's sufficient to show \(T(B_X) \supseteq \epsilon B_Y\) for some \(\epsilon > 0\).
@@ -38,9 +38,9 @@ We can now prove the central theorem in functional analysis, the \hyperref[thm:o
 	\begin{explanation}
 		To see this, let \(U \subseteq X\) be an open set and \(y\in TU\). We need to show \(TU\) contains a neighborhood of \(y\). Let \(x\in U\) such that \(Tx = y\). Since \(U\) is open, so there exists \(\delta > 0\) such that \(U \supseteq x + \delta B_X\), so
 		\[
-			TU \supseteq T(x + \delta B_X) = y + \delta T(B_X) \supseteq y + \delta \epsilon B_Y,
+			TU \supseteq T(x + \delta B_X) = y + \delta T(B_X) \supseteq y + \delta ^\prime B_Y
 		\]
-		i.e., \(TU\) contains a neighborhood of \(y\).
+		for some \(\delta ^\prime = \delta \epsilon > 0\), i.e., \(TU\) contains a neighborhood of \(y\).
 	\end{explanation}
 
 	We now show \(TB_X \supseteq \epsilon B_Y\) for some \(\epsilon > 0\). Observe that \(X = \bigcup_{n=1}^{\infty} n B_X\), hence
@@ -94,26 +94,28 @@ for \(T\in \mathcal{L} (X, Y)\) and \(b\in Y\). Assume that a solution \(x\) exi
 \end{proof}
 
 \subsection{Isomorphic Embeddings}
-Finally, as we know, the \hyperref[def:kernel]{kernel} of every \hyperref[def:bounded-linear-op]{bounded linear operators} \(T\in \mathcal{L} (X, Y)\) is always a closed subspace, while the \hyperref[def:image]{image} of \(T\) may or may not be closed. We can also characterize this.
+Finally, as we know, the \hyperref[def:kernel]{kernel} of every \hyperref[def:bounded-linear-op]{bounded linear operators} \(T\in \mathcal{L} (X, Y)\) is always a closed subspace from \autoref{prop:linear-functionals-and-hyperplanes}, while the \hyperref[def:image]{image} of \(T\) may or may not be closed. We can also characterize this.
 
 \begin{proposition}[Isomorphic embedding]\label{prop:isomorphic-embedding}
 	Given two \hyperref[def:Banach-space]{Banach spaces} \(X, Y\) and \(T\in \mathcal{L} (X, Y)\), the following are equivalent.
 	\begin{enumerate}[(a)]
 		\item \(T\) is injective and \(\im (T)\) is closed.
-		\item \(T\) is \hyperref[rmk:bounded-op]{bounded} below, i.e., \(\exists c > 0\), \(\left\lVert Tx\right\rVert \geq c \left\lVert x\right\rVert \) for all \(x\in X\).
+		\item \(T\) is \hyperref[rmk:bounded-op]{bounded} below, i.e., \(\exists c > 0\), \(\lVert Tx\rVert \geq c \lVert x\rVert \) for all \(x\in X\).
 	\end{enumerate}
 \end{proposition}
 \begin{proof}
 	To show that (a) implies (b), we see that \(T^{-1} \colon \im(T) \to X\) is \hyperref[rmk:bounded-op]{bounded}  since \(\im(T)\) is \hyperref[def:Banach-space]{Banach space}, from \hyperref[thm:open-mapping]{open mapping theorem},
 	\[
-		\left\lVert T^{-1} y\right\rVert \leq c^{-1} \left\lVert y\right\rVert
+		\lVert T^{-1} y\rVert \leq c^{-1} \lVert y\rVert
 	\]
-	for \(y\in \im(T)\), \(c > 0\) being some constant. Set \(y\coloneqq Tx\), then
-	\[
-		\left\lVert Tx\right\rVert \geq c\left\lVert x\right\rVert
-	\]
-	for \(x\in X\), we're done. To show another direction, suppose \(T\) is \hyperref[rmk:bounded-op]{bounded} below, then \(T\) is injective since \(Tx= 0\) implies \(x = 0\). To see \(\im(T)\) is closed, let \(x_{n} \in X\) for \(n\geq 1\) be a sequence such that \(\left\{ Tx_n \right\} _{n \geq 1}\) is Cauchy such that \(\left\lVert Tx_n - Tx_m\right\rVert \geq c \left\lVert x_n - x_m\right\rVert \) for all \(n, m\), implying \(\left\{ x_n \right\} _{n\geq 1}\)  is Cauchy, hence \(x_n \to x_\infty \in X\), i.e., \(Tx_n \to Tx_\infty \in \im(T)\), proving the result.
+	for \(y\in \im(T)\), \(c > 0\) being some constant. Set \(y\coloneqq Tx\), then \(\lVert Tx\rVert \geq c\lVert x\rVert\) for \(x\in X\), we're done.
+
+	To show another direction, suppose \(T\) is \hyperref[rmk:bounded-op]{bounded} below, then \(T\) is injective since \(Tx= 0\) implies \(x = 0\). To see \(\im(T)\) is closed, let \(x_{n} \in X\) for \(n\geq 1\) be a sequence such that \(\left\{ Tx_n \right\} _{n \geq 1}\) is Cauchy such that \(\lVert Tx_n - Tx_m\rVert \geq c \lVert x_n - x_m\rVert \) for all \(n, m\), implying \(\left\{ x_n \right\} _{n\geq 1}\)  is Cauchy, hence \(x_n \to x_\infty \in X\), i.e., \(Tx_n \to Tx_\infty \in \im(T)\), proving the result.
 \end{proof}
+
+\begin{remark}
+	With a bit more work, one can show that \(T\) is an isomorphic embedding is equivalent to two conditions given in \autoref{prop:isomorphic-embedding}.
+\end{remark}
 
 \section{Closed Graph Theorem}
 We now study the second main theorem in functional analysis, which characterizes the property of the \hyperref[def:graph]{graph} of a \hyperref[def:bounded-linear-op]{bounded linear operator}.
@@ -130,21 +132,27 @@ Clearly, \(\Gamma (T)\) is a \hyperref[def:linear-vector-space]{linear subspace}
 	The \hyperref[def:graph]{graph} \(\Gamma (T)\) of \(T\) is \emph{closed} if it is a closed subspace of \(X \times Y\).
 \end{definition}
 
-Comparing the continuity of \(T\) and \hyperref[def:closed-graph]{closedness} of \(\Gamma (T)\), we see that \(T\) is continuous if and only if \(x_n \to x\in X\) implies \(Tx_n \to Tx\); while \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed} if and only if \(x_n \to x\in X\) and \(Tx_n \to y\in Y\) implies \(y = Tx\). We see that continuity always implies the graph is \hyperref[def:closed-graph]{closed}, and indeed, the converse is also true.
+Comparing the continuity of \(T\) and \hyperref[def:closed-graph]{closedness} of \(\Gamma (T)\), we see that \(T\) is continuous if and only if
+\[
+	x_n \to x\in X \text{ implies } Tx_n \to Tx;
+\]
+while \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed} if and only if
+\[
+	x_n \to x\in X \text{ and } Tx_n \to y\in Y \text{ imply } y = Tx.
+\]
+Hence, the continuity of \(T\) always implies the \hyperref[def:graph]{graph} is \hyperref[def:closed-graph]{closed}, and indeed, the converse is also true.
 
 \begin{theorem}[Closed graph theorem]\label{thm:closed-graph}
 	Let \(T\colon X\to Y\) be a \hyperref[def:linear-op]{linear operator} between \hyperref[def:Banach-space]{Banach spaces} \(X\) and \(Y\). Then \(T\) is \hyperref[def:bounded-linear-op]{bounded} (continuous) if and only if \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}.
 \end{theorem}
 \begin{proof}
-	We have already shown that if \(T\) is \hyperref[def:bounded-linear-op]{bounded}, then \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}.
-
-	Now assume \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}, then we see that \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space}, so we can now use \hyperref[thm:open-mapping]{open mapping theorem}. Define a \hyperref[def:norm]{norm} on \(X \times Y\) by
+	We have already shown that if \(T\) is \hyperref[def:bounded-linear-op]{bounded}, then \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}. Now assume \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}, then we see that \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space}, so we can now use \hyperref[thm:open-mapping]{open mapping theorem}. Define a \hyperref[def:norm]{norm} on \(X \times Y\) by
 	\[
-		\left\lVert (x, y)\right\rVert = \left\lVert x\right\rVert + \left\lVert y\right\rVert,
+		\lVert (x, y)\rVert = \lVert x\rVert + \lVert y\rVert,
 	\]
-	then \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space} with this \hyperref[def:norm]{norm}. Define \(u\colon \Gamma (T)\to X\) by \(u(x, Tx)=x\) for \(x\in X\), then \(u\) is \hyperref[rmk:bounded-op]{bounded} since \(\left\lVert u\right\rVert \leq 1\). From \hyperref[thm:open-mapping]{open mapping theorem}, we know that \(u\) is surjective and injective, implying \(u^{-1} \colon X\to \Gamma (T)\) is \hyperref[rmk:bounded-op]{bounded} from \hyperref[thm:inverse-mapping]{inverse mapping theorem}. Hence, we have \(\left\lVert u(x, Tx)\right\rVert \geq c \left\lVert (x, Tx)\right\rVert\) for all \(x\in X\) and some \(c> 0\), i.e.,
+	then \(\Gamma (T)\) is a \hyperref[def:Banach-space]{Banach space} with this \hyperref[def:norm]{norm}. Define \(u\colon \Gamma (T)\to X\) by \(u(x, Tx)=x\) for \(x\in X\), then \(u\) is \hyperref[rmk:bounded-op]{bounded} since \(\lVert u\rVert \leq 1\). From \hyperref[thm:open-mapping]{open mapping theorem}, we know that \(u\) is surjective and injective, implying \(u^{-1} \colon X\to \Gamma (T)\) is \hyperref[rmk:bounded-op]{bounded} from \hyperref[thm:inverse-mapping]{inverse mapping theorem}. Hence, we have \(\lVert u(x, Tx)\rVert \geq c \lVert (x, Tx)\rVert\) for all \(x\in X\) and some \(c> 0\), i.e.,
 	\[
-		\left\lVert x\right\rVert \geq c \left( \left\lVert x\right\rVert + \left\lVert Tx\right\rVert  \right) \implies \left\lVert Tx\right\rVert \leq \left( \frac{1}{c}- 1 \right) \left\lVert x\right\rVert
+		\lVert x\rVert \geq c \left( \lVert x\rVert + \lVert Tx\rVert  \right) \implies \lVert Tx\rVert \leq \left( \frac{1}{c}- 1 \right) \lVert x\rVert
 	\]
 	for all \(x\in X\), so \(T\) is \hyperref[rmk:bounded-op]{bounded}.
 \end{proof}
@@ -153,14 +161,14 @@ Comparing the continuity of \(T\) and \hyperref[def:closed-graph]{closedness} of
 	When trying to prove \(T\) is continuous by showing \(x_n \to x\in X\) implying \(Tx_n \to Tx\), we can always assume \(Tx_n\) converges in \(Y\).
 \end{remark}
 \begin{explanation}
-	From \hyperref[thm:closed-graph]{closed graph theorem}, checking \(x_n \to x\in X\) implies \(Tx_n \to Tx\) is equivalent to check \(x_n \to x\in X\) and \(Tx_n \to y\in Y\) implies \(y = Tx\), so we may just assume the limit exists at the first place.
+	From \hyperref[thm:closed-graph]{closed graph theorem}, checking \(x_n \to x\in X\) implies \(Tx_n \to Tx\) is equivalent to check \(x_n \to x\in X\) and \(Tx_n \to y\in Y\) implies \(y = Tx\), so we may just assume the limit exists.
 \end{explanation}
 
 \subsection{Symmetric Operators on Hilbert Spaces}
 One application of \hyperref[thm:closed-graph]{closed graph theorem} to \hyperref[def:self-adjoint-op]{self-adjoint (symmetric) operator}, i.e., \(T^{\ast} = T\), on \hyperref[def:Hilbert-space]{Hilbert space} is the following.
 
 \begin{theorem}[Hellinger-Toeplitz theorem]\label{thm:Hellinger-Toeplitz}
-	Let \(T\colon \mathcal{H} \to \mathcal{H} \) be a \hyperref[def:linear-op]{linear operator}. If \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint}, i.e., \(\left\langle Tx, y \right\rangle  = \left\langle x, Ty \right\rangle\) for \(x, y\in \mathcal{H} \), then \(T\) is \hyperref[rmk:bounded-op]{bounded}.
+	Let \(T\colon \mathcal{H} \to \mathcal{H} \) be a \hyperref[def:linear-op]{linear operator} on a \hyperref[def:Hilbert-space]{Hilbert space} \(\mathcal{H} \). If \(T\) is \hyperref[def:self-adjoint-op]{self-adjoint}, i.e., \(\left\langle Tx, y \right\rangle  = \left\langle x, Ty \right\rangle\) for \(x, y\in \mathcal{H} \), then \(T\) is \hyperref[rmk:bounded-op]{bounded}.
 \end{theorem}
 \begin{proof}
 	From \hyperref[thm:closed-graph]{closed graph theorem}, it suffices to show that for a \hyperref[def:self-adjoint-op]{self-adjoint operator} \(T\), \(\Gamma (T)\) is \hyperref[def:closed-graph]{closed}. Let \(\left\{ x_n \right\} _{n\geq 1}\) in \(\mathcal{H} \) such that \(x_n \to x_\infty \in \mathcal{H} \) and \(Tx_n \to y_\infty \in\mathcal{H} \), then we need to show \(Tx_\infty \to y_\infty \). From the \hyperref[def:self-adjoint-op]{self-adjointness} of \(T\) and the continuity of an \hyperref[def:inner-product]{inner product}, for all \(z\in \mathcal{H} \),

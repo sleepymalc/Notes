@@ -1,5 +1,4 @@
 \lecture{19}{10 Nov. 08:00}{Lagrangian Relaxation}
-We are building to prove \autoref{thm:converse-Lagrangian-dual-theorem}.
 \begin{prev}
 	We have
 	\[
@@ -21,6 +20,7 @@ We are building to prove \autoref{thm:converse-Lagrangian-dual-theorem}.
 \end{prev}
 
 Now, we introduce another problem.
+
 \begin{definition}[Lagrangian dual]\label{def:Lagrangian-dual}
 	The \emph{Lagrangian dual} problem is defined as
 	\[
@@ -29,17 +29,17 @@ Now, we introduce another problem.
 \end{definition}
 
 \begin{note}
-	We see that for \(\hat{y}\geq \vec{0}\), \(v(\hat{y})\leq z\). Now, the goal is to solve the
-	\hyperref[def:Lagrangian-dual]{Lagrangian dual} to get a lower bound for the original problem. (Notice that this is the maximum of the \hyperref[def:dual]{dual}!)
+	We see that for \(\hat{y}\geq \vec{0}\), \(v(\hat{y})\leq z\). Now, the goal is to solve the \hyperref[def:Lagrangian-dual]{Lagrangian dual} to get a lower bound for the original problem. (Notice that this is the maximum of the \hyperref[def:dual]{dual}!)
 \end{note}
 
-Now, we try to proof \autoref{thm:converse-Lagrangian-dual-theorem}, which is the \emph{partial} converse of \autoref{thm:Lagrangian-dual-theorem}.
-\begin{proof}[Proof of \autoref{thm:converse-Lagrangian-dual-theorem}]
+Now, we try to proof \autoref{thm:converse-Lagrangian-dual}, which is the \emph{partial} converse of \autoref{thm:Lagrangian-dual}.
+
+\begin{proof}[Proof of \autoref{thm:converse-Lagrangian-dual}]
 	Recall that
 	\[
 		\begin{split}
 			v(\hat{y})&\coloneqq \max_{y\geq \vec{0}}\ v(y) \\
-			&= \max_{y\geq \vec{0}}\ \left\{y^{\top}h + \underbrace{\min_{x}\ \left\{(c^{\top} - y^{\top}E)x\colon Ax = b, x\geq \vec{0}\right\}}_{\text{just a linear program}}\right\}\\
+			&= \max_{y\geq \vec{0}} \Bigg\{y^{\top}h + \underbrace{\min_{x}\ \left\{(c^{\top} - y^{\top}E)x\colon Ax = b, x\geq \vec{0}\right\}}_{\text{just a linear program}}\Bigg\}\\
 			&= \max_{y\geq \vec{0}}\ \left\{y^{\top}h + \max_{\Pi}\ \left\{\Pi^{\top}b\colon \Pi^{\top}A\leq c^{\top} - y^{\top}E\right\}\right\}\\
 			&= \max_{y\geq \vec{0}, \Pi}\ \left\{y^{\top}h + \Pi^{\top}b\colon \Pi^{\top}A + y^{\top}E\leq c^{\top}\right\}\\
 			&= z.
@@ -50,17 +50,13 @@ Now, we try to proof \autoref{thm:converse-Lagrangian-dual-theorem}, which is th
 
 \subsection{Solving the Lagrangian Dual}
 \begin{intuition}
-	\autoref{thm:converse-Lagrangian-dual-theorem} provides a simple way to calculate a lower bound on \(z\) by solving a potentially easier linear optimization problem.
-	But we see that the bound depends on the choice of \(\hat{y}\geq 0\). This push us to find the best such \(\hat{y}\), and we indeed can solve
-	this by solving the so-called \hyperref[def:Lagrangian-dual]{Lagrangian dual} problem of \emph{maximizing} \(v(y)\) over all \(y\geq 0\) in the domain of \(v\).
+	\autoref{thm:converse-Lagrangian-dual} provides a simple way to calculate a lower bound on \(z\) by solving a potentially easier linear optimization problem. But we see that the bound depends on the choice of \(\hat{y}\geq 0\). This push us to find the best such \(\hat{y}\), and we indeed can solve this by solving the so-called \hyperref[def:Lagrangian-dual]{Lagrangian dual} problem of \emph{maximizing} \(v(y)\) over all \(y\geq 0\) in the domain of \(v\).
 \end{intuition}
 
-One may want to use some calculus technique to solve for such maximizing problem, but since \(v\) is not a smooth function, rather a piece-wise linear
-function, hence we need to introduce the concept of \hyperref[def:subgradient]{subgradient}. Before we formally introduce it, we first see a theorem.
+One may want to use some calculus technique to solve for such maximizing problem, but since \(v\) is not a smooth function, rather a piece-wise linear function, hence we need to introduce the concept of \hyperref[def:subgradient]{subgradient}. Before we formally introduce it, we first see a theorem.
 
 \begin{theorem}\label{thm:lec19-1}
-	Suppose we fix \(\hat{y}\geq \vec{0}\) and solve for \(v(\hat{y})\). Let \(\hat{x}\) be the \hyperref[def:optimal-solution]{optimal solution} of \(L_{\hat{y}}\).
-	Denote \(\hat{\gamma}\coloneqq h - E \hat{x}\), then
+	Suppose we fix \(\hat{y}\geq \vec{0}\) and solve for \(v(\hat{y})\). Let \(\hat{x}\) be the \hyperref[def:optimal-solution]{optimal solution} of \(L_{\hat{y}}\). Denote \(\hat{\gamma}\coloneqq h - E \hat{x}\), then
 	\[
 		v(\widetilde{y})\leq v(\hat{y})+(\widetilde{y} - \hat{y})\hat{\gamma}
 	\]
@@ -80,22 +76,15 @@ function, hence we need to introduce the concept of \hyperref[def:subgradient]{s
 			&\geq v(\widetilde{y}).
 		\end{split}
 	\]
-	The last inequality follows from the fact that \(\hat{x}\) is only \hyperref[def:optimal-solution]{optimal} for \(L_{\hat{y}}\), not \(L_{\widetilde{y}}\).
-	\(\hat{x}\) may just be \hyperref[def:feasible-solution]{feasible} for \(L_{\hat{y}}\).
+	The last inequality follows from the fact that \(\hat{x}\) is only \hyperref[def:optimal-solution]{optimal} for \(L_{\hat{y}}\), not \(L_{\widetilde{y}}\). \(\hat{x}\) may just be \hyperref[def:feasible-solution]{feasible} for \(L_{\hat{y}}\).
 \end{proof}
 
-In the theorem, \(\hat{\gamma}\) is the so-called \hyperref[def:subgradient]{subgradient}. Given \(\widetilde{y}\) and \(\hat{y}\), we choose \(\hat{\gamma}\) such that
-the linear estimation \(v(\hat{y})+(\widetilde{y} - \hat{y})^{\top}\hat{\gamma}\) is always an upper bound on the value \(v(\widetilde{y})\) of the function
-for all \(\widetilde{y}\) in the domain of \(f\). This \(\hat{\gamma}\) is then a \hyperref[def:subgradient]{subgradient} of (the concave
-function\footnote{Contrast to \autoref{def:convex-function}.}) \(v\) at \(\hat{y}\).
+In the theorem, \(\hat{\gamma}\) is the so-called \hyperref[def:subgradient]{subgradient}. Given \(\widetilde{y}\) and \(\hat{y}\), we choose \(\hat{\gamma}\) such that the linear estimation \(v(\hat{y})+(\widetilde{y} - \hat{y})^{\top}\hat{\gamma}\) is always an upper bound on the value \(v(\widetilde{y})\) of the function for all \(\widetilde{y}\) in the domain of \(f\). This \(\hat{\gamma}\) is then a \hyperref[def:subgradient]{subgradient} of (the \hyperref[def:convex-function]{concave function}\footnote{Contrast to \autoref{def:convex-function}.}) \(v\) at \(\hat{y}\).
 
-Mathematically, we have the following
+Mathematically, we have the following.
+
 \begin{definition}[Subgradient]\label{def:subgradient}
-	For a concave function \(f\) such that
-	\[
-		f\colon I\to \mathbb{R},
-	\]
-	the \emph{subgradient} (also known as \emph{subderivative}) at point \(x_0\) is a \(c\in \mathbb{R}\) such that
+	For a \hyperref[def:convex-function]{concave function} \(f\colon I\to \mathbb{R}\), the \emph{subgradient} (also known as \emph{subderivative}) at point \(x_0\) is a \(c\in \mathbb{R}\) such that
 	\[
 		f(x) - f(x_{0})\geq c(x - x_0)
 	\]
@@ -109,7 +98,6 @@ With this \autoref{thm:lec19-1} about \hyperref[def:subgradient]{subgradient}, w
 	We iteratively move in the direction of a \hyperref[def:subgradient]{subgradient} to maximize \(v\).
 \end{intuition}
 
-\par
 \begin{algorithm}[H]\label{algo:projected-subgradient-optimization-algorithm}
 	\DontPrintSemicolon
 	\caption{Projected subgradient optimization algorithm}

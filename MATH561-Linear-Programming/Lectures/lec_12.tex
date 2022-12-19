@@ -1,101 +1,59 @@
-\lecture{12}{11 Oct. 08:00}{Farkas' Lemma}
-Before we prove \hyperref[lma:Farkas-lemma]{Farkas' Lemma}, we first see something similar. There is a lemma called \hyperref[lma:Gauss-lemma]{Gauss' Lemma}, which is
-highly related to \hyperref[lma:Farkas-lemma]{Farkas' Lemma}.
-\begin{lemma}[Gauss' Lemma]\label{lma:Gauss-lemma}
-	\(\colon\) Exactly one of the following has a solution\(\colon\)
-	\[
-		\begin{alignedat}{3}
-			& (I) \qquad&& Ax = b       \\\\
-			& (II) \qquad&& y^{\top}A\geq 0 \\
-			&      && y^{\top}b\neq  0
-		\end{alignedat}
-	\]
-\end{lemma}
-\begin{proof}
-	This just follows from the Gauss elimination. By doing the elimination, there are two cases\(\colon\)
-	\begin{enumerate}
-		\item The system has no solution.
-		\item There is a(some) solution(s).
-	\end{enumerate}
-
-	For second case, it's just \(Ax = b\) is solvable.  For the fist case, we see that after the elimination, we will have something like
-	\[
-		\begin{pmatrix}
-			  &   &   &        &   &   &   \\
-			  &   &   &        &   &   &   \\
-			0 & 0 & 0 & \ldots & 0 & 0 & 0 \\
-			  &   &   &        &   &   &   \\
-			  &   &   &        &   &   &   \\
-		\end{pmatrix}
-		\begin{pmatrix}
-			\\
-			\\
-			a \\
-			\\
-			\\
-		\end{pmatrix}
-	\]
-	where \(a\neq 0\), which just indicates this system is unsolvable.
-\end{proof}
-
-Now we start to proof \hyperref[lma:Farkas-lemma]{Farkas' Lemma}.
-\begin{proof}[Proof of \autoref{lma:Farkas-lemma}]
+\lecture{12}{11 Oct. 08:00}{Farkas Lemma}
+\begin{proof}[Proof of \autoref{lma:Farkas}]
 	As what we have outlined, we divide the proof into two cases.
 	\begin{claim}
-		\((I)\) and \((II)\) can't both have solutions.
+		\((\mathrm{I})\) and \((\mathrm{II})\) can't both have solutions.
 	\end{claim}
 	\begin{explanation}
-		Suppose \(\hat{x}\) solves I and \(\hat{y}\) solves \((II)\). Then we have
+		Suppose \(\hat{x}\) solves I and \(\hat{y}\) solves \((\mathrm{II})\). Then we have
 		\[
 			\hat{y}^{\top}(\hat{Ax} = b) \implies \underbrace{(\hat{y}^{\top} A)}_{\geq  \vec{0}}\underbrace{\vphantom{\hat{y}^{\top}}\hat{x}}_{\geq  \vec{0}} = \hat{y} b > 0\conta
 		\]
 	\end{explanation}
 	\begin{claim}
-		At least one of \((I)\) or \((II)\) has a solution \(\cong\) If \((I)\) has no solution, then \((II)\) has a solution.
+		At least one of \((\mathrm{I})\) or \((\mathrm{II})\) has a solution \(\cong\) If \((\mathrm{I})\) has no solution, then \((\mathrm{II})\) has a solution.
 	\end{claim}
 	\begin{explanation}
-		Assume that \((I)\) has no solution, which means that \((P)\) is infeasible with \((P)\) being
+		Assume that \((\mathrm{I})\) has no solution, which means that \((\mathrm{P})\) is infeasible with \((\mathrm{P})\) being
 		\[
 			\begin{aligned}
-				\min~    & \vec{0}^{\top} x \\
-				         & Ax = b           \\
-				(P)\quad & x\geq 0.
+				\min~             & \vec{0}^{\top} x \\
+				                  & Ax = b           \\
+				(\mathrm{P})\quad & x\geq 0.
 			\end{aligned}
 		\]
 
-		The dual of this \((P)\) is
+		The dual of this \((\mathrm{P})\) is
 		\[
 			\begin{aligned}
-				\max~    & y^{\top}b                       \\
-				(D)\quad & y^{\top} A \leq \vec{0}^{\top}.
+				\max~             & y^{\top}b                       \\
+				(\mathrm{D})\quad & y^{\top} A \leq \vec{0}^{\top}.
 			\end{aligned}
 		\]
 
-		But this means that \((D)\) is infeasible or unbounded. But we see that \((D)\) can't be infeasible, because \(y = \vec{0}\) is a
-		\hyperref[def:feasible-solution]{feasible solution}, then we know
+		But this means that \((\mathrm{D})\) is infeasible or unbounded. But we see that \((\mathrm{D})\) can't be infeasible, because \(y = \vec{0}\) is a \hyperref[def:feasible-solution]{feasible solution}, then we know
 		\[
 			\begin{split}
 				&\implies D \text{ is unbounded} \\
-				&\implies \text{ there exist a feasible solution \(\widetilde{y}\) to \((D)\) with positive objective}
+				&\implies \text{ there exist a feasible solution \(\widetilde{y}\) to \((\mathrm{D})\) with positive objective}.
 			\end{split}
 		\]
 	\end{explanation}
 \end{proof}
 
 \begin{remark}
-	Now, consider \(\lambda \widetilde{y}\) (feasible for \((D)\)). Drive to \(+\infty \) by increasing \(\lambda\). We now see what \hyperref[lma:Farkas-lemma]{Farkas' Lemma}
-	really tells us.
+	Now, consider \(\lambda \widetilde{y}\) (feasible for \((\mathrm{D})\)). Drive to \(+\infty \) by increasing \(\lambda\). We now see what \hyperref[lma:Farkas]{Farkas Lemma} really tells us.
 	\[
 		\begin{aligned}
-			\min~    & c^{\top} x                                               \\
-			         & Ax = b                                                   \\
-			(P)\quad & x\geq 0                  &  & \text{feasibility}         \\
-			         &                          &  & \Updownarrow               \\
-			\max~    & y^{\top}b                &  & \text{unbounded direction} \\
-			(D)\quad & y^{\top} A \leq c^{\top}                                 \\
+			\min~             & c^{\top} x                                               \\
+			                  & Ax = b                                                   \\
+			(\mathrm{P})\quad & x\geq 0                  &  & \text{feasibility}         \\
+			                  &                          &  & \Updownarrow               \\
+			\max~             & y^{\top}b                &  & \text{unbounded direction} \\
+			(\mathrm{D})\quad & y^{\top} A \leq c^{\top}                                 \\
 		\end{aligned}
 	\]
-	Suppose \(\widetilde{y}\) is feasible to \((D)\) and suppose \(\hat{y}\) satisfies \((II)\), then
+	Suppose \(\widetilde{y}\) is feasible to \((\mathrm{D})\) and suppose \(\hat{y}\) satisfies \((\mathrm{II})\), then
 	\[
 		(\widetilde{y}+\lambda \hat{y})^{\top} A = \underbrace{\widetilde{y}^{\top}A}_{\leq c^{\top}} + \underbrace{\vphantom{y}\lambda}_{>0} \underbrace{\hat{y}^{\top} A}_{\leq \vec{0}} \leq c^{\top}.
 	\]
@@ -106,31 +64,32 @@ Now we start to proof \hyperref[lma:Farkas-lemma]{Farkas' Lemma}.
 \end{remark}
 
 \begin{eg}
+	Given
 	\[
 		\begin{aligned}
-			(I)\quad  & Ax\leq b \\
-			(II)\quad & ?
+			(\mathrm{I})\quad  & Ax\leq b \\
+			(\mathrm{II})\quad & ?,
 		\end{aligned}
 	\]
-	Find out what \((II)\) is.
+	find out what \((\mathrm{II})\) is.
 \end{eg}
 \begin{explanation}
-	We simply set up the \((P)\) and then find its dual.
+	We simply set up the \((\mathrm{P})\) and then find its dual.
 	\[
 		\begin{alignedat}{5}
 			\min~&\vec{0}^{\top} x\qquad\qquad	&&\max ~&&y^{\top}b\\
 			&Ax \leq b 			&&			&&y^{\top} A =\vec{0}\\
-			(P)\quad&			&&(D)\quad	&&y\leq \vec{0}
+			(\mathrm{P})\quad&			&&(\mathrm{D})\quad	&&y\leq \vec{0}
 		\end{alignedat}.
 	\]
 
 	Then we have
 	\[
 		\begin{aligned}
-			(I)\quad  & Ax\leq b            \\
-			(II)\quad & y^{\top}A = \vec{0} \\
-			          & y\leq \vec{0}       \\
-			          & y^{\top} b>0
+			(\mathrm{I})\quad  & Ax\leq b            \\
+			(\mathrm{II})\quad & y^{\top}A = \vec{0} \\
+			                   & y\leq \vec{0}       \\
+			                   & y^{\top} b>0
 		\end{aligned}
 	\]
 	Check\(\colon\)
@@ -154,27 +113,27 @@ Let's look at another example.
 			(\min~   & \vec{0}^{\top} &&x &&+ \vec{0}^{\top} &&w)            \\
 			& A&&x &&+ B&&w = b    \\
 			& && &&-F&&w \geq f \\
-			(I)\quad & &&x&&\geq  0, &&w\text{ unrestricted}          \\
+			(\mathrm{I})\quad & &&x&&\geq  0, &&w\text{ unrestricted}          \\
 		\end{alignedat}
 	\]
 	with the \hyperref[def:dual]{dual} variables \(y, w\), we have
 	\[
 		\begin{aligned}
-			               & (\text{Suppose \((I)\) has no solution.}) \\
-			\cancel{\max}~ & y^{\top} b + v^{\top} b (>0)              \\
-			               & y^{\top} A \leq \vec{0}                   \\
-			(II)\quad      & y^{\top} B - v^{\top} F = \vec{0}
+			                   & (\text{Suppose \((\mathrm{I})\) has no solution.}) \\
+			\cancel{\max}~     & y^{\top} b + v^{\top} b (>0)                       \\
+			                   & y^{\top} A \leq \vec{0}                            \\
+			(\mathrm{II})\quad & y^{\top} B - v^{\top} F = \vec{0}
 		\end{aligned}
 	\]
 	with \(y\) unrestricted, \(v\geq  \vec{0}\).
 \end{eg}
 
-Now, we should have a general picture about what \hyperref[lma:Farkas-lemma]{Farkas' Lemma} really means. For conditions \((I)\) and \((II)\), we have
+Now, we should have a general picture about what \hyperref[lma:Farkas]{Farkas Lemma} really means. For conditions \((\mathrm{I})\) and \((\mathrm{II})\), we have
 \[
 	\begin{alignedat}{3}
-		& (I) \qquad&& Ax = b       \\
+		& (\mathrm{I}) \qquad&& Ax = b       \\
 		&      && x\geq 0    && \iff b \text{ is in the cone }K \\
-		& (II) \qquad&& y^{\top}b> 0 &&\iff y \text{ makes an acute angle with }b.\\
+		& (\mathrm{II}) \qquad&& y^{\top}b> 0 &&\iff y \text{ makes an acute angle with }b.\\
 		&      && y^{\top}A\leq 0^{\top}&&\quad y\text{ makes a non-acute angle with all columns of }A
 	\end{alignedat}
 \]
@@ -188,7 +147,7 @@ Then we have
 	y^{\top} \hat{z} = \underbrace{y^{\top} A}_{\leq\vec{0}^{\top}} \underbrace{\vphantom{y}\vec{x}}_{\geq  \vec{0}}  \leq 0.
 \]
 
-We see that \(y\) makes a non-acute angle with everything in \(K\). Now, suppose \(\hat{y}\) solves \((II)\). Consider
+We see that \(y\) makes a non-acute angle with everything in \(K\). Now, suppose \(\hat{y}\) solves \((\mathrm{II})\). Consider
 \[
 	\underbrace{\hat{y}^{\top}}_{\text{numbers}} \underbrace{\vphantom{y}z}_{\text{variables}} = 0.
 \]
@@ -198,13 +157,12 @@ Now, we have the hyperplane\(\colon\)\(\{z\colon \hat{y} ^{\top} z = 0\}\) separ
 \begin{figure}[H]
 	\centering
 	\incfig{Farkas-lemma-extended}
-	\caption{Case \((II)\) of the \hyperref[lma:Farkas-lemma]{Farkas' Lemma} with \(m = 2\)}
+	\caption{Case \((\mathrm{II})\) of the \hyperref[lma:Farkas]{Farkas Lemma} with \(m = 2\)}
 	\label{fig:Farkas-lemma-extended}
 \end{figure}
 
-%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-\section{The Big Picture of Cones}
-Consider the linear programming problem
+\subsection{The Big Picture of Cones}
+Consider the \hyperref[def:general-linear-programming-problem]{linear programming problem}
 \[
 	\begin{aligned}
 		\max~ & y^{\top} b               \\
@@ -223,7 +181,7 @@ By solving only for \(\beta\), then we have \(\overline{y}^{\top} = c_{\beta}^{\
 \begin{figure}[H]
 	\centering
 	\incfig{opt-cones}
-	\caption[Caption for LOF]{Optimality of Cones\protect\footnotemark}
+	\caption[Caption for LOF]{Optimality of Cones.\protect\footnotemark}
 	\label{fig:opt-cones}
 \end{figure}
 \footnotetext{This corresponds to the case that we run into the overlapping issue in \autoref{fig:cones-join}.}
@@ -231,82 +189,87 @@ with
 \begin{figure}[H]
 	\centering
 	\incfig{cones-join}
-	\caption{Cones join together}
+	\caption{Cones join together.}
 	\label{fig:cones-join}
 \end{figure}
 
 \begin{note}
-	Consider \(b = \vec{0}\)(\(\hat{y}\)). It's in every cone \(\implies\) every point is \hyperref[def:optimal-solution]{optimal}.
+	Consider \(b = \vec{0}\) (\(\hat{y}\)). It's in every cone \(\implies\) every point is \hyperref[def:optimal-solution]{optimal}.
 \end{note}
 
 \begin{remark}
-	We see that each corner (extreme point) corresponds to a \hyperref[def:solution]{solution} for \(\beta\),
-	while the blue vector \(\vec{b}\) corresponds to the \hyperref[def:dual]{dual} constraints \(y^{\top} A_{\eta}<c_{\eta}^{\top}\).
-	Only when the blue vector are in the region of orange sectors span by two \emph{normal vectors} of \(y^{\top}A_{\cdot \beta_i}\leq c_{\beta_i}\),
-	the constraints are satisfied.
+	Each corner (\hyperref[def:extreme-point]{extreme point}) corresponds to a \hyperref[def:solution]{solution} for \(\beta\), while the blue vector \(\vec{b}\) corresponds to the \hyperref[def:dual]{dual} constraints \(y^{\top} A_{\eta}<c_{\eta}^{\top}\). Only when the blue vector are in the region of orange sectors span by two \emph{normal vectors} of \(y^{\top}A_{\cdot \beta_i}\leq c_{\beta_i}\), the constraints are satisfied.
 \end{remark}
 
-\begin{eg}[\cancel{Over} Strictly Complementarity (Exercise 5.5. in \cite{Linear-Opt})]
-	Consider
+\section{Strict Complementary Slackness}
+Consider
+\[
+	\begin{aligned}
+		\min~             & c^{\top}x \\
+		                  & Ax = b    \\
+		(\mathrm{P})\quad & x\geq  0,
+	\end{aligned}\quad \begin{aligned}
+		\max ~            & y^{\top}b               \\
+		                  & y^{\top}A\leq c^{\top}. \\
+		(\mathrm{D})\quad &
+	\end{aligned}
+\]
+
+\begin{prev}
+	\hyperref[def:complementary]{Complementarity} of \(\hat{x}\) and \(\hat{y}\)\(\colon\)
 	\[
-		\begin{alignedat}{5}
-			\min~&c^{\top}x\qquad\qquad&&\max ~&&y^{\top}b\\
-			&Ax = b 				&&		&&y^{\top}A\leq \vec{0}.\\
-			(P)\quad	&x\geq  0 	&&(D)\quad&&
-		\end{alignedat}
+		\begin{split}
+			(c_{j} - \hat{y}^{\top} A_{\cdot j}) \hat{x}_j = 0&, \text{ for }j = 1\ldots n\\
+			y^{\top}_i (A_{i\cdot}\hat{x} - b_{i}) = 0&, \text{ for } i = 1\ldots m
+		\end{split}
 	\]
-	\begin{prev}
-		\hyperref[def:complementary]{Complementarity} of \(\hat{x}\) and \(\hat{y}\)\(\colon\)
-		\[
-			\begin{split}
-				(c_{j} - \hat{y}^{\top} A_{\cdot j}) \hat{x}_j = 0&, \text{ for }j = 1\ldots n\\
-				y^{\top}_i (A_{i\cdot}\hat{x} - b_{i}) = 0&, \text{ for } i = 1\ldots m
-			\end{split}
-		\]
-	\end{prev}
+\end{prev}
 
-	\begin{definition}[Strictly complementary]
-		For \hyperref[def:feasible-solution]{feasible solutions} \(\hat{x}\) and \(\hat{y}\) are \emph{strictly \hyperref[def:complementary]{complementary}} if
-		they are \hyperref[def:complementary]{complementary} and exactly one of
-		\[
-			c_{j} - \hat{y}^{\top}A_{\cdot j}\text{ and }\hat{x}_j \text{ is } 0.
-		\]
-	\end{definition}
+Now, let's introduce the so-called \hyperref[def:strictly-complementary]{\cancel{over} strictly complementary}.
 
-	\begin{theorem}[Strictly complementarity]\label{thm:strictly-complementarity}
-		If \((P)\) and \((D)\) are both \hyperref[def:feasible-solution]{feasible}, then for \((P)\) and \((D)\) \underline{there exist strictly}
-		\hyperref[def:complementary]{complementary} (\hyperref[def:feasible-solution]{feasible}) \hyperref[def:optimal-solution]{optimal} solutions.
-	\end{theorem}
+\begin{definition}[Strictly complementary]\label{def:strictly-complementary}
+	For \hyperref[def:feasible-solution]{feasible solutions} \(\hat{x}\) and \(\hat{y}\) are \emph{strictly \hyperref[def:complementary]{complementary}} if
+	they are \hyperref[def:complementary]{complementary} and exactly one of
+	\[
+		c_{j} - \hat{y}^{\top}A_{\cdot j}\text{ and }\hat{x}_j \text{ is } 0.
+	\]
+\end{definition}
 
-	\begin{intuition}
-		Let \(v\) be the \hyperref[def:optimal-solution]{optimal} value of \((P)\)\(\colon\)
-		\[
-			\begin{aligned}
-				v = \min~ & c^{\top}x \\
-				          & Ax = b    \\
-				(P)\quad  & x\geq 0
-			\end{aligned}
-		\]
-		Now, we try to find an \hyperref[def:optimal-solution]{optimal solution} with
-		\[
-			x_{j}>0, \quad \text{fix }j
-		\]
-		by formulating the following linear programming
-		\[
-			\begin{aligned}
-				\max~      & x_{j}           \\
-				           & c^{\top}x\leq v \\
-				           & Ax = b          \\
-				(P_j)\quad & x\geq  0
-			\end{aligned}
-		\]
-		where \(P_{j}\) seeks an \hyperref[def:optimal-solution]{optimal solution} of \((P)\) that has \(x_{j}\) being positive.
-		If failed, then construct an \hyperref[def:optimal-solution]{optimal solution} \(\hat{y}\) to \((D)\) with
-		\[
-			c_{j} - \hat{y}^{\top} A_{\cdot j}>0.
-		\]
+Then, we have the following~\cite[Exercise 5.5]{Linear-Opt}.
 
-		We then see for any \textbf{fixed} \(j\), the desired property holds. The only thing we need to do is combine these \(n\) pairs of \(\hat{x}\) and \(\hat{y}\)
-		appropriately to construct \hyperref[def:optimal-solution]{optimal} \(\hat{x}\) and \(\hat{y}\) that are overly \hyperref[def:complementary]{complementary}.
-	\end{intuition}
-\end{eg}
+\begin{theorem}[Strictly complementarity]\label{thm:strictly-complementarity}
+	If \((\mathrm{P})\) and \((\mathrm{D})\) are both \hyperref[def:feasible-solution]{feasible}, then for \((\mathrm{P})\) and \((\mathrm{D})\) \underline{there exist strictly}
+	\hyperref[def:complementary]{complementary} (\hyperref[def:feasible-solution]{feasible}) \hyperref[def:optimal-solution]{optimal} solutions.
+\end{theorem}
+
+\begin{intuition}
+	Let \(v\) be the \hyperref[def:optimal-solution]{optimal} value of \((\mathrm{P})\)\(\colon\)
+	\[
+		\begin{aligned}
+			v = \min~         & c^{\top}x \\
+			                  & Ax = b    \\
+			(\mathrm{P})\quad & x\geq 0
+		\end{aligned}
+	\]
+	Now, we try to find an \hyperref[def:optimal-solution]{optimal solution} with
+	\[
+		x_{j}>0, \quad \text{fix }j
+	\]
+	by formulating the following linear programming
+	\[
+		\begin{aligned}
+			\max~      & x_{j}           \\
+			           & c^{\top}x\leq v \\
+			           & Ax = b          \\
+			(P_j)\quad & x\geq  0
+		\end{aligned}
+	\]
+	where \(P_{j}\) seeks an \hyperref[def:optimal-solution]{optimal solution} of \((\mathrm{P})\) that has \(x_{j}\) being positive.
+	If failed, then construct an \hyperref[def:optimal-solution]{optimal solution} \(\hat{y}\) to \((\mathrm{D})\) with
+	\[
+		c_{j} - \hat{y}^{\top} A_{\cdot j}>0.
+	\]
+
+	We then see for any \textbf{fixed} \(j\), the desired property holds. The only thing we need to do is combine these \(n\) pairs of \(\hat{x}\) and \(\hat{y}\)
+	appropriately to construct \hyperref[def:optimal-solution]{optimal} \(\hat{x}\) and \(\hat{y}\) that are overly \hyperref[def:complementary]{complementary}.
+\end{intuition}

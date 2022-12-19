@@ -2,11 +2,15 @@
 \lecture{14}{25 Oct. 08:00}{Sensitivity Analysis}
 As usual, we start with the \hyperref[def:primal]{primal} and the \hyperref[def:dual]{dual}
 \[
-	\begin{alignedat}{5}
-		\min~&c^{\top}x\qquad\qquad&&\max ~&&y^{\top}b\\
-		&Ax = b 				&&		&&y^{\top}A\leq c^{\top}\\
-		(P)\quad	&x\geq  0 	&&(D)\quad&&
-	\end{alignedat}
+	\begin{aligned}
+		\min~             & c^{\top}x \\
+		                  & Ax = b    \\
+		(\mathrm{P})\quad & x\geq  0,
+	\end{aligned}\quad \begin{aligned}
+		\max ~            & y^{\top}b               \\
+		                  & y^{\top}A\leq c^{\top}. \\
+		(\mathrm{D})\quad &
+	\end{aligned}
 \]
 with an \hyperref[def:optimal-solution]{optimal} \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\) such that
 \[
@@ -25,7 +29,7 @@ with an \hyperref[def:optimal-solution]{optimal} \hyperref[def:basic-partition]{
 \end{prev}
 
 \section{Local Analysis}
-\subsection{Change \(b\) on the right-hand side}
+\subsection{Right-Hand Side Changes}
 We let
 \[
 	b\to b+\Delta_i e_i = \begin{pmatrix}
@@ -50,7 +54,9 @@ where we need \(\beta, \eta\) to still be an \hyperref[def:optimal-solution]{opt
 \subsection{Objective Value}
 Now, the objective value is
 \[
-	c_{\beta}^{\top}(\overline{x}_{\beta}+\Delta_{i}A_{\beta}^{-1}e_{i})+ c_{\eta}^{\top}\vec{0} = \underbrace{c_{\beta}^{\top}\overline{x}_{\beta}}_{\substack{\text{old obj.}\\\text{value}}}+\Delta_{i}\underbrace{c_{\beta}^{\top}A_{\beta}^{-1}}_{\overline{y}^{\top}}e_{i} = c_{\beta}^{\top}\overline{x}_{\beta}+\Delta_{i}\overline{y}^{\top}_i.
+	c_{\beta}^{\top}(\overline{x}_{\beta}+\Delta_{i}A_{\beta}^{-1}e_{i})+ c_{\eta}^{\top}\vec{0}
+	= \underbrace{c_{\beta}^{\top}\overline{x}_{\beta}}_{\substack{\text{old obj.}\\\text{value}}}+\Delta_{i}\underbrace{c_{\beta}^{\top}A_{\beta}^{-1}}_{\overline{y}^{\top}}e_{i}
+	= c_{\beta}^{\top}\overline{x}_{\beta}+\Delta_{i}\overline{y}^{\top}_i.
 \]
 
 \subsection{Analysis}
@@ -62,23 +68,18 @@ Let \(f\) be
 		(P_b)\quad          & x\geq 0
 	\end{aligned}
 \]
-where
-\[
-	f: \mathbb{R}^{m}\to \mathbb{R}.
-\]
-
-We see that since the \hyperref[def:optimal-solution]{optimal} objective value is equal for the \hyperref[def:dual]{dual} of \(P_b\), then \(f(b) = y^{\top}b\). Then
+where \(f\colon \mathbb{R}^{m}\to \mathbb{R}\). We see that since the \hyperref[def:optimal-solution]{optimal} objective value is equal for the \hyperref[def:dual]{dual} of \(P_b\), then \(f(b) = y^{\top}b\). Then
 \[
 	\frac{\partial f}{\partial b_{i}} = \overline{y}_i
 \]
 if \(\overline{x}_{\beta}>\vec{0}\).
 
-\begin{problem}
-For what values of \(\Delta_{i}\) is
-\[
-	\overline{x}_{\beta} + \Delta_{i}h^i \geq \vec{0}?
-\]
-\end{problem}
+\begin{problem*}
+	For what values of \(\Delta_{i}\) is
+	\[
+		\overline{x}_{\beta} + \Delta_{i}h^i \geq \vec{0}?
+	\]
+\end{problem*}
 \begin{answer}
 	Firstly, we see that we need
 	\[
@@ -105,19 +106,14 @@ For what values of \(\Delta_{i}\) is
 	\[
 		L_{i} \coloneqq \max_{K\colon h^i_K > 0}\{-\overline{x}_{\beta_K}/h^i_K\},\qquad U_{i} \coloneqq \min_{K\colon h^i_K < 0}\{-\overline{x}_{\beta_K}/h^i_K\}.
 	\]
-
-	\textbf{Reality Check}. We see that
-	\[
-		L_{i}\leq 0\leq U_{i}.
-	\]
-
-	\begin{remark}
-		Noting that if \(h^i_K\leq 0\) for all \(K\), then we define \(L_{i} \coloneqq -\infty \). Similarly, if \(h^i_K\geq 0\) for all \(K\), we define \(U_i \coloneqq \infty \).
-	\end{remark}
 \end{answer}
+\begin{remark}
+	Noting that if \(h^i_K\leq 0\) for all \(K\), then we define \(L_{i} \coloneqq -\infty \). Similarly, if \(h^i_K\geq 0\) for all \(K\), we define \(U_i \coloneqq \infty \).
+\end{remark}
 
 \section{Global Analysis}
 We start with a theorem.
+
 \begin{theorem}\label{thm:lec14-1}
 	The domain of \(f\) is a \hyperref[def:convex-set]{convex set}.
 \end{theorem}
@@ -157,20 +153,21 @@ We start with a theorem.
 	\]
 \end{proof}
 
-We now introduce the convexity of a function.
+We now introduce the \hyperref[def:convex-function]{convexity of a function}.
+
 \begin{definition}[Convex function]\label{def:convex-function}
-	We say that \(f\) is a \emph{convex function} on a \hyperref[def:convex-set]{convex domain} \(S\) if
-	\[
-		x^1, x^2\in S\text{ and }0<\lambda<1,
-	\]
-	then
+	A function \(f\colon S \to \mathbb{R} \) is \emph{convex} if the domain \(S\) is \hyperref[def:convex-set]{convex} and for all \(x^1, x^2\in S\) and \(0 < \lambda < 1\),
 	\[
 		f(\lambda x^1+(1 - \lambda)x^2)\leq \lambda f(x^1)+(1-\lambda)f(x^2).
 	\]
-	\begin{center}
-		\incfig{convex-function}
-	\end{center}
 \end{definition}
+
+\begin{figure}[H]
+	\centering
+	\incfig{convex-function}
+	\caption{\hyperref[def:convex-function]{Convex function}.}
+	\label{fig:convex-functiona}
+\end{figure}
 
 \subsection{Affine Function}
 Before we go further, we need to have several definitions.
@@ -179,7 +176,7 @@ Before we go further, we need to have several definitions.
 	\[
 		f(u_1, u_2, \ldots , u_m) = a_0 + \sum\limits_{i=1}^{m} a_{i}u_{i}
 	\]
-	for \(a_i \in\mathbb{R},\ i = 0, \ldots , m\).
+	where \(a_i \in\mathbb{R}\) for \(i = 0, \ldots , m\).
 \end{definition}
 
 \begin{remark}
@@ -187,13 +184,15 @@ Before we go further, we need to have several definitions.
 \end{remark}
 
 \begin{definition}[Convex piece-wise linear function]\label{def:convex-piece-wise-linear-function}
-	A function \(f\colon \mathbb{R}^{m}\to \mathbb{R}\) is a \emph{convex piece-wise linear function} if
-	\(f\) is the point-wise maximum of \hyperref[def:affine-function]{affine functions}.
-	\begin{center}
-		\incfig{convex-piecewise-linear-function}
-	\end{center}
+	A function \(f\colon \mathbb{R}^{m}\to \mathbb{R}\) is \emph{convex piece-wise linear} if \(f\) is the point-wise maximum of \hyperref[def:affine-function]{affine functions}.
 \end{definition}
 
+\begin{figure}[H]
+	\centering
+	\incfig{convex-piecewise-linear-function}
+	\caption{\hyperref[def:convex-piece-wise-linear-function]{Convex piece-wise linear function}.}
+	\label{fig:convex-piecewise-linear-function}
+\end{figure}
 Now, suppose \(f_{i}\colon \mathbb{R}^m \to \mathbb{R}\) for \(i = 1, \ldots , K\) and assume that each is \hyperref[def:affine-function]{affine}.
 Then define
 \[
@@ -211,16 +210,12 @@ Then define
 			&=\max_{1\leq i\leq K}\left\{ \lambda f_{i}(x^1) + (1 - \lambda)f_{i}(x^2) \right\}\\
 			&\geq \max_{1\leq i\leq K}\left\{ \lambda f_{i}(x^1)\right\} + \max_{1\leq i\leq K}\left\{(1 - \lambda)f_{i}(x^2) \right\}\\
 			&=\lambda\max_{1\leq i\leq K}\left\{f_{i}(x^1)\right\} + (1 - \lambda)\max_{1\leq i\leq K}\left\{f_{i}(x^2) \right\}
-			= \lambda f(x^1)+(1 - \lambda)f(x^2).
+			= \lambda f(x^1)+(1 - \lambda)f(x^2),
 		\end{split}
 	\]
-	\begin{remark}
-		The second equality holds since
-		\[
-			\begin{split}
-				&\max_{1\leq i\leq K}\left\{ a_{i0}+\sum\limits_{l=1}^{m} a_{il}(\lambda u^1_l + (1 - \lambda)u^2_l) \right\}\\
-				= &\max_{1\leq i\leq K}\left\{ \lambda a_{i0}+(1 - \lambda)a_{i0} + \sum\limits_{l=1}^{m} a_{il}(\lambda u^1_l + (1 - \lambda)u^2_l) \right\}
-			\end{split}
-		\]
-	\end{remark}
+	where the second equality follows from
+	\[
+		\max_{1\leq i\leq K}\left\{ a_{i0}+\sum\limits_{l=1}^{m} a_{il}(\lambda u^1_l + (1 - \lambda)u^2_l) \right\}
+		= \max_{1\leq i\leq K}\left\{ \lambda a_{i0}+(1 - \lambda)a_{i0} + \sum\limits_{l=1}^{m} a_{il}(\lambda u^1_l + (1 - \lambda)u^2_l) \right\}.
+	\]
 \end{proof}

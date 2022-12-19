@@ -1,6 +1,7 @@
 \lecture{6}{20 Sep. 08:00}{Feasible Direction and Ray}
-\section{Feasible Directions}
-We'll talk about an important concept, but before this, we first play around with the \hyperref[def:standard-form]{standard form} problem a little. Consider
+\section{Basic Feasible Rays and Extreme Rays}
+\subsection{Basic Directions}
+Let's first play around with the \hyperref[def:standard-form]{standard form} problem a bit. Consider
 \[
 	\begin{aligned}
 		\min~ & c^{\top}x \\
@@ -13,7 +14,7 @@ It's obvious that it's equivalent to
 	\begin{aligned}
 		\min~ & c^{\top}_{\beta}x_{\beta} + c^{\top}_{\eta}x_{\eta} \\
 		      & A_{\beta}x_{\beta} + A_{\eta}x_{\eta} = b           \\
-		      & x_{\beta}\geq 0, x_{\eta}\geq 0
+		      & x_{\beta}\geq 0, x_{\eta}\geq 0.
 	\end{aligned}
 \]
 Further, we have
@@ -24,8 +25,7 @@ Further, we have
 		      & x_{\beta}\geq 0, x_{\eta}\geq 0
 	\end{aligned}
 \]
-since from the \hyperref[def:constraints]{constraints}, we have \(x_{\beta} = A^{-1}_{\beta}b - A^{-1}_{\beta}A_{\eta}x_{\eta}\). Finally, we see that
-the \hyperref[def:objective-function]{objective function} now only depends on \(x_{\eta}\), hence,
+since from the \hyperref[def:constraint]{constraints}, we have \(x_{\beta} = A^{-1}_{\beta}b - A^{-1}_{\beta}A_{\eta}x_{\eta}\). Observe that the \hyperref[def:objective-function]{objective function} now only depends on \(x_{\eta}\), hence
 \[
 	\begin{aligned}
 		c^{\top}_{\beta}A^{-1}_{\beta}b + \min~ & (c_{\eta}^{\top} - c_{\beta}^{\top}A^{-1}_{\beta}A_{\eta})x_{\eta} \\
@@ -36,54 +36,54 @@ the \hyperref[def:objective-function]{objective function} now only depends on \(
 
 \begin{note}[Reduced cost]\label{note:reduced-cost}
 	\(c_{\eta}^{\top} - c_{\beta}^{\top}A^{-1}_{\beta}A_{\eta}\) is what we called \emph{reduced costs}.
-	We'll see that we want \hyperref[def:reduced-cost]{reduced costs} to be zero.
 \end{note}
 
-Now, with this intuition, we have the following definition.
+Intuitively, we want \hyperref[def:reduced-cost]{reduced costs} to be zero. With this intuition, we have the following definition.
+
 \begin{definition}[Feasible direction]\label{def:feasible-direction}
-	Suppose \(\hat{x}\in \mathcal{S}\), where \(\mathcal{S}\) is a \hyperref[def:convex-set]{convex set}.
-	\(\hat{z}\) is a \emph{feasible direction} relative to \(\hat{x}\) if there exists some \(\epsilon>0\) such that
+	Let \(S\) be a \hyperref[def:convex-set]{convex set} and suppose \(\hat{x}\in S\). Then \(\hat{z}\) is a \emph{feasible direction} relative to \(\hat{x}\) if there exists some \(\epsilon>0\) such that
 	\[
-		\hat{x}+\epsilon \hat{z} \in \mathcal{S}.
+		\hat{x}+\epsilon \hat{z} \in S.
 	\]
-	\begin{center}
-		\incfig{feasible-direction}
-	\end{center}
 \end{definition}
 
+\begin{figure}[H]
+	\centering
+	\incfig{feasible-direction}
+	\caption{The \hyperref[def:feasible-direction]{feasible directions} of a set.}
+	\label{fig:feasible-direction}
+\end{figure}
+
 \begin{remark}
-	For a \hyperref[def:primal]{primal} \((P)\), we must have \(A \hat{z} = 0\) if \(\hat{z}\) is a \hyperref[def:feasible-direction]{feasible direction}.
+	For a \hyperref[def:primal]{primal} \((\mathrm{P})\), we must have \(A \hat{z} = 0\) if \(\hat{z}\) is a \hyperref[def:feasible-direction]{feasible direction}.
 \end{remark}
 \begin{explanation}
-	We see that in order to let \(\hat{z}\) to be a \hyperref[def:feasible-direction]{feasible direction}, we need to have
+	In order to let \(\hat{z}\) to be a \hyperref[def:feasible-direction]{feasible direction}, we must have
 	\[
 		A(\hat{x} + \epsilon \hat{z}) = \underbrace{A \hat{x}}_{=b} + \epsilon A \hat{z} = b \iff A \hat{z} = 0
 	\]
 \end{explanation}
 
-Let the \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\) being
+Let the \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\) be
 \[
 	\beta = (\beta_1, \ldots , \beta_m), \qquad \eta = (\eta_1, \underset{\substack{\uparrow \\ \eta_j}}{\ldots} , \eta_{n-m}),
 \]
-where we choose \(j\) from \(1\leq j \leq n-m\), which means we choose an \(\eta_j\) from \(\eta\). Then, we see that there is a \hyperref[def:basic-direction]{basic direction}
-\(\overline{z}\) associated with this particular \hyperref[def:basic]{basic} and this \(j\) defined as follows.
+where we choose \(j\) from \(1\leq j \leq n-m\), which means we choose an \(\eta_j\) from \(\eta\). Then, we see that there is a \hyperref[def:basic-direction]{basic direction} \(\overline{z}\) associated with this particular \hyperref[def:basis]{basis} \(\beta \) and this \(j\) defined as follows.
 
 \begin{definition}[Basic direction]\label{def:basic-direction}
-	Given a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\), we say that \(\overline{z}\) is a \emph{basic direction} associated with this \hyperref[def:basic]{basic} \(\beta\)
+	Given a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\), we say that \(\overline{z}\) is a \emph{basic direction} associated with this \hyperref[def:basis]{basis} \(\beta\)
 	and a \(j\) such that \(1 \leq j \leq n-m\) if
 	\[
 		\overline{z}_{\eta_j} = 1 \implies \begin{dcases}
-			\overline{z}_{\eta}  & \coloneqq e_j = \begin{pmatrix}
-				                                       0      \\
-				                                       \vdots \\
-				                                       1      \\
-				                                       \vdots \\
-				                                       0      \\
-			                                       \end{pmatrix}\leftarrow j \\
+			\overline{z}_{\eta}  & \coloneqq e_j                        \\
 			\overline{z}_{\beta} & \coloneqq -A^{-1}_{\beta}A_{\eta_j}.
 		\end{dcases}
 	\]
 \end{definition}
+
+\begin{notation}
+	\(e_j\) is defined to be \((0, 0, \ldots, 1, 0, \ldots , 0 )\), where \(1\) is at the \(j^{th} \) entry.
+\end{notation}
 
 \begin{lemma}\label{lma:lec6-1}
 	Given a \hyperref[def:basic-direction]{basic direction} \(\overline{z}\), \(\overline{z}\) is \hyperref[def:feasible-direction]{feasible} from \(\overline{x}\) if
@@ -93,9 +93,9 @@ where we choose \(j\) from \(1\leq j \leq n-m\), which means we choose an \(\eta
 \end{lemma}
 \begin{proof}
 	For a \hyperref[def:basic-direction]{basic direction} \(\overline{z}\) being \hyperref[def:feasible-direction]{feasible}, we need to check
-	\begin{enumerate}
-		\item \(A(\overline{x} + \epsilon \overline{z}) = b\):
-		      Since \[
+	\begin{enumerate}[(a)]
+		\item \(A(\overline{x} + \epsilon \overline{z}) = b\): Since
+		      \[
 			      A \overline{z} = 0 \iff A_{\beta}\overline{z}_{\beta} + A_{\eta}\overline{z}_{\eta} = 0 \iff A_{\beta}\overline{z}_{\beta}+A_{\eta}e_{j} = A_{\beta}\overline{z}_{\beta}+A_{\eta_j} = 0,
 		      \]
 		      hence \(A \overline{z} = 0\) from the fact that \(\overline{z} _\beta = - A_\beta ^{-1} A_{\eta _{j} }\), which implies
@@ -103,25 +103,24 @@ where we choose \(j\) from \(1\leq j \leq n-m\), which means we choose an \(\eta
 			      A_\beta \overline{z} _\beta + A_{\eta _{j} } = A_\beta (- A_\beta ^{-1} A_{\eta _{j} }) + A_{\eta _{j} } = -A_{\eta _{j} } + A_{\eta _{j} } = 0,
 		      \]
 		      hence \(A \overline{z} = 0\), which means \(A(\overline{x} +\epsilon \overline{z} ) = A \overline{x} = b\). \(\surd\)
-		\item \(\overline{x} + \epsilon \overline{z} \geq 0\):
-		      Since
+		\item \(\overline{x} + \epsilon \overline{z} \geq 0\): Since
 		      \[
 			      \begin{split}
 				      &\overline{x}_{\eta} + \epsilon \overline{z}_{\eta} = 0 + \epsilon e_j \geq  0\\
 				      &\overline{x}_{\beta}+ \epsilon \overline{z}_{\beta} = \underbrace{A^{-1}_{\beta}b}_{\geq 0} - \underbrace{\vphantom{A^{-1}_{\beta}}\epsilon}_{>0} A^{-1}_{\beta}A_{\eta_j}\overset{?}{\geq} 0,
 			      \end{split}
 		      \]
-		      hence we just need to make sure \(\overline{x} _\beta + \epsilon \overline{z} _\beta \geq 0\). Denote
-		      \(\overline{b} \coloneqq A^{-1}_{\beta} b,\ \overline{A}_{\eta_j} \coloneqq A^{-1}_{\beta}A_{\eta_j}\), then the requirement becomes
+		      hence we just need to make sure \(\overline{x} _\beta + \epsilon \overline{z} _\beta \geq 0\). Denote \(\overline{b} \coloneqq A^{-1}_{\beta} b,\ \overline{A}_{\eta_j} \coloneqq A^{-1}_{\beta}A_{\eta_j}\), then the requirement becomes
 		      \[
-			      \begin{split}
-				      \overline{b} - \epsilon \overline{A}_{\eta_{j}}\geq 0 &\iff \overline{b}_i - \epsilon \overline{a}_{i \eta_{j}}\geq 0, \text{ for }i = 1, \ldots , m\\
-				      &\iff \underbrace{\overline{b}_i}_{\geq 0} \geq \epsilon \overline{a}_{i \eta_{j}}, \text{ for }i - 1, \ldots , m.
-			      \end{split}
+			      \begin{aligned}
+				      \overline{b} - \epsilon \overline{A}_{\eta_{j}}\geq 0
+				       & \iff \overline{b}_i - \epsilon \overline{a}_{i \eta_{j}}\geq 0,                    &  & \text{ for }i = 1, \ldots , m  \\
+				       & \iff \underbrace{\overline{b}_i}_{\geq 0} \geq \epsilon \overline{a}_{i \eta_{j}}, &  & \text{ for }i - 1, \ldots , m.
+			      \end{aligned}
 		      \]
-		      We finally have
+		      We finally have that for all \(i=1, \ldots , m\) such that \(\overline{a}_{i \eta_{j}} >0\),
 		      \[
-			      \epsilon \leq \frac{\overline{b}_i}{\overline{a}_{i \eta_j}},\qquad \underset{1\leq i\leq m}{\forall}\  \overline{a}_{i \eta_{j}}>0.
+			      \epsilon \leq \frac{\overline{b}_i}{\overline{a}_{i \eta_j}}.
 		      \]
 		      Notice that if \(\overline{a}_{i \eta_{j}}\leq 0\), there is no restriction on \(\epsilon\) being \(\geq 0\), so the result follows.
 	\end{enumerate}
@@ -156,32 +155,32 @@ where we choose \(j\) from \(1\leq j \leq n-m\), which means we choose an \(\eta
 			\begin{bmatrix}
 				I                       \\
 				-A^{-1}_{\beta}A_{\eta} \\
-			\end{bmatrix}}_{\dim(CS) = n-m}\underbrace{\vphantom{\begin{bmatrix}
-					\\ \\
-				\end{bmatrix}}\begin{bmatrix}
+			\end{bmatrix}}_{\dim(\mathrm{CS}) = n-m}
+		\underbrace{\vphantom{\begin{bmatrix}\\ \\\end{bmatrix}} \begin{bmatrix}
 				A^{-1}_{\beta}A_{\eta} & I \\
-			\end{bmatrix}}_{\dim(RS)=m} = 0.
+			\end{bmatrix}}_{\dim(\mathrm{RS})=m} = 0.
 	\]
-	And since the dimension for the first matrix is \(n\times (m-n)\), we see that the columns of the first matrix form a \textbf{basis} for the null space of \(\begin{bmatrix}
-		A_{\eta} & A_{\beta} \\
-	\end{bmatrix}\), namely \(A\). Furthermore, one can see that \(\overline{z}\) is the \(j^{th}\) columns of \(\begin{bmatrix}
-		I                       \\
-		-A^{-1}_{\beta}A_{\eta} \\
-	\end{bmatrix}\) for a choice of \(j\).
+	And since the dimension for the first matrix is \(n\times (m-n)\), we see that the columns of the first matrix form a \textbf{basis} for the null space of \(\begin{bmatrix} A_{\eta} & A_{\beta}\end{bmatrix}\), namely \(A\). Furthermore, one can see that \(\overline{z}\) is the \(j^{th}\) columns of \(\begin{bmatrix} I \\ -A^{-1}_{\beta}A_{\eta}\end{bmatrix}\) for a choice of \(j\).
 \end{note}
 
-\section{Feasible Rays}
+\subsection{Feasible Rays}
+Another important geometric object we're going to study is the following.
+
 \begin{definition}[Ray]\label{def:ray}
-	\(\hat{z}\) is called a \emph{ray} of a \hyperref[def:convex-set]{convex set} \(\mathcal{C}\) of \(\hat{x}\in \mathcal{C}\) if
+	Let \(C\) be a \hyperref[def:convex-set]{convex set}. Then \(\hat{z}\) is a \emph{ray} of \(C\) of \(\hat{x}\in C\) if for all \(\lambda > 0\),
 	\[
-		\forall \lambda>0\quad \hat{x} + \lambda \hat{z} \in \mathcal{C}.
+		\hat{x} + \lambda \hat{z} \in C.
 	\]
-	\begin{center}
-		\incfig{ray}
-	\end{center}
 \end{definition}
 
-Suppose \(\hat{x}\in\mathcal{C}\), where \(\mathcal{C}\) is the \hyperref[def:feasible-region]{feasible region} of
+\begin{figure}[H]
+	\centering
+	\incfig{ray}
+	\caption{\hyperref[def:ray]{Ray} of a set \(C\).}
+	\label{fig:ray}
+\end{figure}
+
+Suppose \(\hat{x}\in C\), where \(C\) is the \hyperref[def:feasible-region]{feasible region} of
 \[
 	\begin{aligned}
 		Ax & \geq b  \\
@@ -190,34 +189,34 @@ Suppose \(\hat{x}\in\mathcal{C}\), where \(\mathcal{C}\) is the \hyperref[def:fe
 \]
 then we see that in order to let \(\lambda\) arbitrarily large, we need
 \[
-	A(\hat{x} + \lambda \hat{z}) = \underbrace{A \hat{x}}_{=b} + \lambda \underbrace{A \hat{z}}_{=0} = b\implies \hat{z} \in n.s.(A).
+	A(\hat{x} + \lambda \hat{z}) = \underbrace{A \hat{x}}_{=b} + \lambda \underbrace{A \hat{z}}_{=0} = b\implies \hat{z} \in \mathrm{NS}(A).
 \]
-
-\begin{problem}
+Now, observe that
 \[
-	\underbrace{\hat{x}}_{\geq 0} + \underbrace{\lambda}_{>0} \hat{z} \overset{?}{\geq} 0 \implies \hat{z} \geq 0.
+	\underbrace{\hat{x}}_{\geq 0} + \underbrace{\lambda}_{>0} \hat{z} \overset{?}{\geq} 0 \implies \hat{z} \geq 0,
 \]
-\end{problem}
-
-This means that starts from the idea of \hyperref[def:basic-direction]{basic direction}, \(\hat{z}\) is a \hyperref[def:ray]{ray} if
+which means that starts from the idea of \hyperref[def:basic-direction]{basic direction}, \(\hat{z}\) is a \hyperref[def:ray]{ray} if
 \[
 	\hat{z} \geq 0 \iff A^{-1}_{\beta}A_{\eta_j} \leq 0.
 \]
 
-We have another concept about \hyperref[def:ray]{ray}.
+\subsection{Extreme Rays}
+Similar to \hyperref[def:extreme-point]{extreme point}, combining this concept with \hyperref[def:ray]{ray}, we have the so-called \hyperref[def:extreme-ray]{extreme ray}.
+
 \begin{definition}[Extreme ray]\label{def:extreme-ray}
-	\(\hat{z}\) is an \emph{extreme ray} of a \hyperref[def:convex-set]{convex set} \(\mathcal{S}\) if we \textbf{cannot} write
+	Given a \hyperref[def:convex-set]{convex set} \(S\), \(\hat{z}\) is an \emph{extreme ray} of \(S\) if we \textbf{cannot} write
 	\[
 		\hat{z} = z^1 + z^2 \text{ with }z^1 \neq \mu z^2,
 	\]
-	where \(z^1, z^2\) being \hyperref[def:ray]{rays} of \(\mathcal{S}\) and \(\mu\neq 0\).
-	\begin{figure}[H]
-		\centering
-		\incfig{extreme-ray}
-		\caption{All three arrows are \hyperref[def:ray]{rays}, but only the red ones are \hyperref[def:extreme-ray]{extreme}.}
-		\label{fig:extreme-ray}
-	\end{figure}
+	where \(z^1, z^2\) being \hyperref[def:ray]{rays} of \(S\) and \(\mu\neq 0\).
 \end{definition}
+
+\begin{figure}[H]
+	\centering
+	\incfig{extreme-ray}
+	\caption{All three arrows are \hyperref[def:ray]{rays}, but only the red ones are \hyperref[def:extreme-ray]{extreme}.}
+	\label{fig:extreme-ray}
+\end{figure}
 
 \begin{remark}
 	We can compare the \emph{non-negative \hyperref[def:basic-direction]{basic direction}} with \emph{\hyperref[def:extreme-ray]{extreme ray}}.

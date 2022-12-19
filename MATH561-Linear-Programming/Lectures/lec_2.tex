@@ -1,27 +1,30 @@
 \lecture{2}{1 Sep. 08:00}{Duality}
 \section{First Glance of Duality}
-We can associate the \hyperref[def:standard-form]{standard form} problem with another linear programming problem, called the \hyperref[def:dual]{dual} of the original problem.
-\begin{definition}[Primal and Dual]\label{def:primal-and-dual}
-	Given a \hyperref[def:standard-form]{standard form} linear programming problem denoted as \((P)\), we have the induced problem denoted as \((D)\) as follows.
+By looking at the \hyperref[def:standard-form]{standard form}, another natural \hyperref[def:general-linear-programming-problem]{linear programming problem} called the \hyperref[def:dual]{dual} of the original problem arises.
+\begin{definition}
+	Given a \hyperref[def:standard-form]{standard form} \hyperref[def:general-linear-programming-problem]{linear programming problem} called \hyperref[def:primal]{primal} \((\mathrm{P})\), the \hyperref[def:dual]{dual} \((\mathrm{D})\) of \((\mathrm{P})\) is the following induced problem.
 	\[
-		\begin{alignedat}{5}
-			\min~&c^{\top}x\qquad\qquad &&\max ~ &&y^{\top}b\\
-			&Ax = b && &&y^{\top}A\leq c^{\top}\\
-			(P)\quad&x\geq  0 &&(D)\quad&&
-		\end{alignedat}.
+		\begin{aligned}
+			\min~             & c^{\top}x \\
+			                  & Ax = b    \\
+			(\mathrm{P})\quad & x\geq  0,
+		\end{aligned}\quad \begin{aligned}
+			\max ~            & y^{\top}b               \\
+			                  & y^{\top}A\leq c^{\top}. \\
+			(\mathrm{D})\quad &
+		\end{aligned}
 	\]
 	\begin{definition}[Primal]\label{def:primal}
-		We sometimes called \((P)\) the \emph{primal}.
+		The problem \((\mathrm{P})\) is the \emph{primal}.
 	\end{definition}
 
 	\begin{definition}[Dual]\label{def:dual}
-		The \emph{dual} of the \hyperref[def:primal]{primal} is the problem \((D)\).
+		The problem \(D\) is the \emph{dual} of the \hyperref[def:primal]{primal} \((\mathrm{P})\).
 	\end{definition}
 \end{definition}
 
-
 \begin{note}
-	We see that the \hyperref[def:dual]{dual} is equivalent to
+	The \hyperref[def:dual]{dual} is equivalent to
 	\[
 		\begin{aligned}
 			\max~ & b^{\top}y         \\
@@ -31,8 +34,8 @@ We can associate the \hyperref[def:standard-form]{standard form} problem with an
 \end{note}
 
 Then we have a direct, but important theorem.
-\begin{theorem}[Weak duality theorem]\label{thm:weak-duality-theorem}
-	If \(\hat{x}\) is \hyperref[def:feasible-solution]{feasible} for \((P)\), and \(\hat{y}\) is \hyperref[def:feasible-solution]{feasible} for \((D)\), then we have
+\begin{theorem}[Weak duality theorem]\label{thm:weak-duality}
+	If \(\hat{x}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{P})\) and \(\hat{y}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{D})\), then
 	\[
 		c^{\top}\hat{x} \geq  \hat{y}^{\top} b.
 	\]
@@ -45,7 +48,7 @@ Then we have a direct, but important theorem.
 	the result follows.
 \end{proof}
 
-\begin{eg}
+\begin{problem*}
 	Consider
 	\[
 		\begin{aligned}
@@ -54,14 +57,14 @@ Then we have a direct, but important theorem.
 		\end{aligned}
 	\]
 	turn this into the \hyperref[def:standard-form]{standard form} problem and find the \hyperref[def:dual]{dual}.
-\end{eg}
-\begin{explanation}
-	We see that \(x\) is unrestricted. We first minus a \hyperref[def:surplus-variable]{surplus variable} \(S\), we have
+\end{problem*}
+\begin{answer}
+	We see that \(x\) is unrestricted. We first minus a \hyperref[def:surplus-variable]{surplus variable} \(s\), we have
 	\[
 		\begin{aligned}
 			\min~ & c^{\top}x \\
 			      & Ax - S= b \\
-			      & S \geq 0.
+			      & s \geq 0.
 		\end{aligned}
 	\]
 	Now, we turn \(x\) into \(x^+ - x^-\), namely
@@ -80,18 +83,17 @@ Then we have a direct, but important theorem.
 			x^-_1  \\
 			\vdots \\
 			x^-_n  \\
-		\end{pmatrix}, x^\pm \geq \vec{0}.
+		\end{pmatrix},
 	\]
-	Then we see the original problem becomes
+	with \(x^\pm \geq \vec{0}\). Then the original problem becomes
 	\[
 		\begin{aligned}
 			\min~ & c^{\top}(x^+ - x^-)  \\
-			      & A(x^+ - x^-) - S = b \\
-			      & x^+, x^-, S \geq 0
+			      & A(x^+ - x^-) - s = b \\
+			      & x^+, x^-, s \geq 0,
 		\end{aligned}
 	\]
-
-	We can further have
+	equivalently,
 	\[
 		\begin{aligned}
 			\min~ & \begin{pmatrix}
@@ -99,38 +101,35 @@ Then we have a direct, but important theorem.
 			        \end{pmatrix}\begin{pmatrix}
 				                     x^+ \\
 				                     x^- \\
-				                     S   \\
+				                     s   \\
 			                     \end{pmatrix}    \\
 			      & \begin{pmatrix}
 				        A & -A & -I \\
 			        \end{pmatrix}\begin{pmatrix}
 				                     x^+ \\
 				                     x^- \\
-				                     S   \\
+				                     s   \\
 			                     \end{pmatrix} = b \\
 			      & \begin{pmatrix}
 				        x^+ \\
 				        x^- \\
-				        S   \\
+				        s   \\
 			        \end{pmatrix}\geq 0.
 		\end{aligned}
 	\]
 	Set the \hyperref[def:dual]{dual} variable being \(y\), we further have
 	\[
 		\begin{aligned}
-			\max~ & y^{\top}b                                                    \\
+			\max~ & y^{\top}b                                                   \\
 			      & y^{\top} \begin{pmatrix}
 				                 A & -A & -I \\
 			                 \end{pmatrix} \leq \begin{pmatrix}
-				                                    c^{\top} & -c^{\top} & 0^{\top}.
-			                                    \end{pmatrix}
+				                                    c^{\top} & -c^{\top} & 0^{\top}
+			                                    \end{pmatrix}.
 		\end{aligned}
 	\]
-\end{explanation}
+\end{answer}
 
-\begin{note}
-	The \hyperref[def:dual]{dual} of the \hyperref[def:dual]{dual} is the \hyperref[def:primal]{primal}.
-\end{note}
 \begin{exercise}
-	Show the above assertion.
+	Show that the \hyperref[def:dual]{dual} of the \hyperref[def:dual]{dual} is the \hyperref[def:primal]{primal}.
 \end{exercise}

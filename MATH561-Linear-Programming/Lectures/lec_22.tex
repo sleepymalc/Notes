@@ -3,8 +3,7 @@
 Let first see some common pitfalls of integer programming.
 
 \begin{itemize}
-	\item If \(A \) has big entries and small entries, then these two constraints is like parallel to each other,
-	      which will lead the intersection be very far away. Then, if we simply round down the variable, the \hyperref[def:optimal-solution]{optimal} value will drop significantly.
+	\item If \(A \) has big entries and small entries, then these two constraints is like parallel to each other, which will lead the intersection be very far away. Then, if we simply round down the variable, the \hyperref[def:optimal-solution]{optimal} value will drop significantly.
 	      \begin{figure}[H]
 		      \centering
 		      \incfig{integer-programming-pitfall}
@@ -29,14 +28,11 @@ Let first see some common pitfalls of integer programming.
 	      \[
 		      x_1 = 1, x_2 = \ldots = x_{n} = 0.
 	      \]
-	      It's then really hard to tell which is better. But again, if the right-hand side is \(2\) for the first constraint, then the problem
-	      is gone.
+	      It's then really hard to tell which is better. But again, if the right-hand side is \(2\) for the first constraint, then the problem is gone.
 \end{itemize}
 
 \begin{note}
-	We see that this is totally opposite to the linear programming. The modern integer programming solver can easily solve a programming with
-	like one hundred of variables, but the in practice, we're often facing more than thousands of variables. The one need to carefully design
-	his model in terms of number of variables.
+	We see that this is totally opposite to the linear programming. The modern integer programming solver can easily solve a programming with like one hundred of variables, but the in practice, we're often facing more than thousands of variables. The one need to carefully design his model in terms of number of variables.
 \end{note}
 
 \section{Modeling Techniques}
@@ -51,9 +47,8 @@ Then we need to find the smallest \hyperref[def:convex-set]{convex set} which co
 \[
 	-12\leq x\leq 20.
 \]
-But that empty space between \(2\) and \(5\) causes the problem. To solve this, we simply introduce a new \emph{indicator variable}, denotes
-it as \(y\). \(y\) will be \(0\) if we are in \([-12, 2]\), and \(1\) if we are in \([5, 20]\). Then the smallest \hyperref[def:convex-set]{convex}
-\hyperref[def:feasible-region]{feasible region} becomes the following quadrilateral.
+But that empty space between \(2\) and \(5\) causes the problem. To solve this, we simply introduce a new \emph{indicator variable}, denotes it as \(y\). \(y\) will be \(0\) if we are in \([-12, 2]\), and \(1\) if we are in \([5, 20]\). Then the smallest \hyperref[def:convex-set]{convex} \hyperref[def:feasible-region]{feasible region} becomes the following quadrilateral.
+
 \begin{center}
 	\incfig{integer-programming-eg1.2}
 \end{center}
@@ -66,16 +61,14 @@ Put it in the constraints, we have
 		x&+M_2(1 - y)\geq 5,
 	\end{split}
 \]
-where we let \(M_1\) be big enough to let the constraints always be satisfied when \(x\) is in \([5, 20]\). For example, we can let \(M_1\coloneqq 18\),
-then
+where we let \(M_1\) be big enough to let the constraints always be satisfied when \(x\) is in \([5, 20]\). For example, we can let \(M_1\coloneqq 18\), then
 \[
 	\begin{dcases}
 		y = 0,\ x\leq 2 \\
 		y = 1,\ x\leq 20.
 	\end{dcases}
 \]
-Analogously, we use \(M_2\) to help us to model the case that when \(y = 1\), \(x\geq 5\) and when \(y = 0\), \(x\geq -12\). For example, we can let
-\(M_2 \coloneqq 17\).
+Analogously, we use \(M_2\) to help us to model the case that when \(y = 1\), \(x\geq 5\) and when \(y = 0\), \(x\geq -12\). For example, we can let \(M_2 \coloneqq 17\).
 
 The last three constraints exactly corresponds to the line segment in the graph:
 \begin{center}
@@ -86,13 +79,10 @@ We further see that if we make the constant \(M_{i}\) too large, we will have
 \begin{center}
 	\incfig{integer-programming-eg1.4}
 \end{center}
-In terms of integer programming, this doesn't affect the integer feasible region. We call this \textbf{Big-M Method}. Although
-this is fine mathematically, but this is unfriendly to the solver.
+In terms of integer programming, this doesn't affect the integer feasible region. We call this \textbf{Big-M Method}. Although this is fine mathematically, but this is unfriendly to the solver.
 
 \subsection{Uncapacitated Facility-location Problem}
-Assume that there are \(m\) facilities with the fixed costs \(f_{i}\), \(i = 1, \ldots , m\). And assume there are \(n\) customers,
-denote by \(j = 1, \ldots , n\). Now, let \(c_{ij}\) be the cost of satisfying all demand of customer \(j\) from facility \(i\).
-The goal is to minimize the total cost of satisfying all customer's demand. We then define our variables as \(x_{ij}\) such that
+Assume that there are \(m\) facilities with the fixed costs \(f_{i}\), \(i = 1, \ldots , m\). And assume there are \(n\) customers, denote by \(j = 1, \ldots , n\). Now, let \(c_{ij}\) be the cost of satisfying all demand of customer \(j\) from facility \(i\). The goal is to minimize the total cost of satisfying all customer's demand. We then define our variables as \(x_{ij}\) such that
 \[
 	x_{ij} \coloneqq  \text{proportion of customer \(j\) demand satisfied facility \(i\)},
 \]
@@ -121,8 +111,7 @@ The optimization problem can now be modeled as
 	\[
 		-y_{i} + x_{ij}\leq 0,\qquad \text{ for }i = 1, \ldots , m,\ j = 1, \ldots , n
 	\]
-	is for the following reason. For any \(i\), if \(x_{ij}\) is positive for any \(j\), then we need \(y_{i} = 1\) to \emph{force} us to pay the fixed cost
-	to operate the facility if anything is shipped out of facility \(i\). To get this constraint, we first see that we want
+	is for the following reason. For any \(i\), if \(x_{ij}\) is positive for any \(j\), then we need \(y_{i} = 1\) to \emph{force} us to pay the fixed cost to operate the facility if anything is shipped out of facility \(i\). To get this constraint, we first see that we want
 	\[
 		x_{ij}>0 \implies y_{i} = 1
 	\]
@@ -134,8 +123,7 @@ The optimization problem can now be modeled as
 	\[
 		\sum\limits_{j=1}^{n} x_{ij}\leq y_{i}
 	\]
-	for every \(i = 1, \ldots , m\). But this causes some problem. If the facility is really cheap, then the sum may exceed \(1\).
-	To solve this problem, we simply make \(y\) become \(n\cdot y\), namely
+	for every \(i = 1, \ldots , m\). But this causes some problem. If the facility is really cheap, then the sum may exceed \(1\). To solve this problem, we simply make \(y\) become \(n\cdot y\), namely
 	\[
 		\sum\limits_{j=1}^{n} x_{ij}\leq n\cdot y_{i}
 	\]
@@ -146,12 +134,10 @@ We now have two equivalent constraints, namely
 \[
 	\underset{i, j}{\forall }\ -y_{i} + x_{ij}\leq 0\quad  \text{ and }\quad \underset{i}{\forall }\ \sum\limits_{j=1}^{n} x_{ij}\leq n\cdot y_{i}.
 \]
-Now the problem is which to use? The answer is the first one. We call the first model as the \emph{strong model}, while the second model as
-the \emph{weak model}.
+Now the problem is which to use? The answer is the first one. We call the first model as the \emph{strong model}, while the second model as the \emph{weak model}.
 
 \begin{intuition}
-	The second model has the big-M constant. As we just discuss, we prefer \(M\) to be as small as possible. But in the first model, we don't have that
-	big-M coefficient. And since
+	The second model has the big-M constant. As we just discuss, we prefer \(M\) to be as small as possible. But in the first model, we don't have that big-M coefficient. And since
 	\[
 		\sum\limits_{j=1}^{n} \left(x_{ij}\leq y_i\right) \iff \sum\limits_{j=1}^{n} x_{ij}\leq n y_{i},
 	\]
@@ -165,25 +151,25 @@ the \emph{weak model}.
 		\caption{Venn diagram of strong and weak \hyperref[def:feasible-region]{feasible region}}
 		\label{fig:strong-weak-constraint}
 	\end{figure}
-
-	\begin{eg}
-		For \(m = 2\), \(n = 3\), find \(x, y\) where \emph{weak} constraints are satisfied while \emph{strong} constraints are not.
-		\begin{center}
-			\incfig{integer-programming-eg2}
-		\end{center}
-		It's easy to check that \(x_{11}\nleq y_1\), but
-		\[
-			x_{11}+x_{12} \leq 3y_1
-		\]
-		and
-		\[
-			x_{22}+x_{23}\leq 3y_2.
-		\]
-	\end{eg}
 \end{intuition}
+
+\begin{eg}
+	For \(m = 2\), \(n = 3\), find \(x, y\) where \emph{weak} constraints are satisfied while \emph{strong} constraints are not.
+	\begin{center}
+		\incfig{integer-programming-eg2}
+	\end{center}
+	It's easy to check that \(x_{11}\nleq y_1\), but
+	\[
+		x_{11}+x_{12} \leq 3y_1
+	\]
+	and
+	\[
+		x_{22}+x_{23}\leq 3y_2.
+	\]
+\end{eg}
+
 \begin{remark}
-	It's important to see that although we said we should keep the number of variables down when setting up the integer programming, but in this case,
-	few is not always better!
+	It's important to see that although we said we should keep the number of variables down when setting up the integer programming, but in this case, few is not always better!
 \end{remark}
 
 \begin{note}[Disaggregation]
@@ -192,27 +178,21 @@ the \emph{weak model}.
 
 \section{Algorithmically Solving Integer-Programming Problem}
 We now see some potential algorithm to solve the integer-programming problem.
+
 \begin{itemize}
-	\item \label{eg:cutting-plane}\textbf{Cutting-Plane} algorithm. If we have the following feasible region, then the \emph{cutting-plane algorithm} suggests
-	      that we should use a plane at a corner (corresponds to an optimal solution to the linear version of this programming) and
-	      \emph{reduce} the feasible region by a little until we touch an integer point.
+	\item \label{eg:cutting-plane}\textbf{Cutting-Plane} algorithm. If we have the following feasible region, then the \emph{cutting-plane algorithm} suggests that we should use a plane at a corner (corresponds to an optimal solution to the linear version of this programming) and \emph{reduce} the feasible region by a little until we touch an integer point.
 	      \begin{center}
 		      \incfig{integer-programming-cutting-plane}
 	      \end{center}
-	\item \label{eg:branch-and-bound}\textbf{Branch-and-Bound} algorithm. We first consider the following \hyperref[def:feasible-region]{feasible region}
-	      and try to use \hyperref[eg:cutting-plane]{cutting-plane algorithm}.
+	\item \label{eg:branch-and-bound}\textbf{Branch-and-Bound} algorithm. We first consider the following \hyperref[def:feasible-region]{feasible region} and try to use \hyperref[eg:cutting-plane]{cutting-plane algorithm}.
 	      \begin{center}
 		      \incfig{integer-programming-branch-and-bound}
 	      \end{center}
-	      We see that if we simply start from \hyperref[eg:cutting-plane]{cutting-plane algorithm}, it takes forever to get to the answer. More generally, when the
-	      integer solution is far from the linear solution, the \hyperref[eg:cutting-plane]{cutting-plane algorithm} performs poorly.
+	      We see that if we simply start from \hyperref[eg:cutting-plane]{cutting-plane algorithm}, it takes forever to get to the answer. More generally, when the integer solution is far from the linear solution, the \hyperref[eg:cutting-plane]{cutting-plane algorithm} performs poorly.
 
-	      \par Instead, we consider so-called \emph{Branch-and-Bound algorithm}. It essentially just goes from \(n\) variables to two \(n-1\) variables
-	      programming problem, and until we get to the bottom (\(1\) variable). We see that we are doing exactly the opposite with what we have
-	      introduced, namely we are not modeling the \textbf{or}, but bring it into the algorithm. In this example, right after we branch,
-	      we solve the problem instantly since there in both branches, we only have one point to consider.
+	      Instead, we consider so-called \emph{Branch-and-Bound algorithm}. It essentially just goes from \(n\) variables to two \(n-1\) variables programming problem, and until we get to the bottom (\(1\) variable). We see that we are doing exactly the opposite with what we have introduced, namely we are not modeling the \textbf{or}, but bring it into the algorithm. In this example, right after we branch, we solve the problem instantly since there in both branches, we only have one point to consider.
 \end{itemize}
+
 \begin{note}
-	Every modern solver which solves the integer programming exactly, will first go for \hyperref[eg:branch-and-bound]{branch-and-bound algorithm}, and then on top
-	of that, solve the remaining problem by \hyperref[eg:cutting-plane]{cutting-plane algorithm}.
+	Every modern solver which solves the integer programming exactly, will first go for \hyperref[eg:branch-and-bound]{branch-and-bound algorithm}, and then on top of that, solve the remaining problem by \hyperref[eg:cutting-plane]{cutting-plane algorithm}.
 \end{note}

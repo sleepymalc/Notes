@@ -1,9 +1,12 @@
-\chapter{Algebra v.s. Geometry}
+\chapter{Algebra and Geometry}
 \lecture{4}{13 Sep. 08:00}{Basis Partition}
+In this section, we're going to study various of fundamental building blocks for designing a mathematical complete algorithm for solving a \hyperref[def:standard-form]{standard form} \hyperref[def:general-linear-programming-problem]{linear programming problem}. This requires both algebraic and geometric understanding of the problem. Let's start with algebraic tools we need.
+
 \section{Elementary Row Operations}
 There are some simple operations we can apply to a matrix called \hyperref[def:elementary-row-operations]{elementary row operations}.
+
 \begin{definition}[Elementary row operations]\label{def:elementary-row-operations}
-	The following operations are called \emph{elementary row operations}.
+	The following are called \emph{elementary row operations}.
 	\begin{enumerate}[(a)]
 		\item Permute rows.
 		\item Multiply a row by a non-zero factor.
@@ -17,11 +20,7 @@ There are some simple operations we can apply to a matrix called \hyperref[def:e
 	\[
 		A = \left[ A_1, \ldots , A_n \right]_{m\times n} .
 	\]
-	A permutation is a function like
-	\[
-		(1, \ldots , n) \to (\sigma(1), \ldots , \sigma(n)).
-	\]
-	Then the permuted matrix \(A_{\sigma}\) i
+	A permutation is a function \((1, \ldots , n) \mapsto (\sigma(1), \ldots , \sigma(n))\), inducing the permuted matrix \(A_{\sigma}\)
 	\[
 		A_{\sigma} = \left[ A_{\sigma(1)}, \ldots , A_{\sigma(n)} \right].
 	\]
@@ -43,23 +42,26 @@ There are some simple operations we can apply to a matrix called \hyperref[def:e
 	\]
 \end{note}
 
-\section{Basic Partition}
+\section{Basic Feasible Solutions and Extreme Points}
+
+\subsection{Basic Partition}
+Let's first define the so-called \hyperref[def:partition]{partition}, where the intention will become clear soon.
+
 \begin{definition}[Partition]\label{def:partition}
-	We denote a \emph{partition} by
+	A \emph{partition} \((\beta , \eta )\) of \(\{1, \ldots , n\}\) is defined as
 	\[
 		\beta \coloneqq (\beta_1, \ldots , \beta_m),\quad \eta \coloneqq (\eta_1, \ldots , \eta_{n-m}),
 	\]
-	which is a partition of \(\{1, \ldots , n\}\).
 
-	\begin{definition}[Basic]\label{def:basic}
-		\(\beta\) is called \emph{basic}
+	\begin{definition}[Basis]\label{def:basis}
+		\(\beta\) is called \emph{basis}.
 	\end{definition}
-	\begin{definition}[Non-basic]\label{def:non-basic}
-		\(\eta\) is called \emph{non-basic}.
+	\begin{definition}[Non-basis]\label{def:non-basis}
+		\(\eta\) is called \emph{non-basis}.
 	\end{definition}
 \end{definition}
 
-Given the above definitions, we have the following naturally induced notion.
+The main idea of introducing \hyperref[def:partition]{partition} is because we want to characterize what subset of the \hyperref[def:structured-constraint]{structured constraints} is solvable, i.e., some submatrix \(A^\prime \) of \(A\) is invertible. \autoref{def:partition} induces the following.
 
 \begin{definition}[Basic partition]\label{def:basic-partition}
 	A \hyperref[def:partition]{partition} is a \emph{basic partition} if
@@ -69,8 +71,11 @@ Given the above definitions, we have the following naturally induced notion.
 	is invertible.
 \end{definition}
 
+\subsection{Basic Feasible Solutions}
+With the notion of \hyperref[def:basic-partition]{basic partition}, we define the following.
+
 \begin{definition}[Basic solution]\label{def:basic-solution}
-	Associate a \hyperref[def:basic-partition]{basic partition} with a \emph{basic solution} \(\overline{x}\), which is defined as
+	The \emph{basic solution} \(\overline{x}\) for a \hyperref[def:basic-partition]{basic partition} is defined as
 	\[
 		\overline{x}_{\eta} = \begin{pmatrix}
 			\overline{x}_{\eta_1}     \\
@@ -90,7 +95,7 @@ Given the above definitions, we have the following naturally induced notion.
 
 \begin{intuition}
 	This of course makes sense, since we know that if this is a \hyperref[def:feasible-solution]{feasible solution} for a \hyperref[def:standard-form]{standard form} problem,
-	then \(\overline{Ax} = b\), which means
+	then \(A\overline{x} = b\), which means
 	\[
 		\left[ A_{\beta}, A_{\eta} \right] \begin{pmatrix}
 			\overline{x}_{\beta} \\

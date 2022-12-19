@@ -4,22 +4,16 @@
 	\[
 		A_{\beta}x_{\beta} = b,
 	\]
-	we do not use
-	\[
-		\overline{x}_{\beta} = A^{-1}_{\beta}b,
-	\]
-	instead, we use \emph{LU-Factorization}.\footnote{\url{https://en.wikipedia.org/wiki/LU_decomposition}} And since after applying pivot change,
-	there is only a column change in \(A^{-1}_{\beta}\), we can use the previous result
-	to calculate the new \(\overline{x}_{\beta}\) much faster.
+	we do not use \(\overline{x}_{\beta} = A^{-1}_{\beta}b\), instead, we use \href{https://en.wikipedia.org/wiki/LU_decomposition}{LU-Factorization}. And since after applying pivot change, there is only a column change in \(A^{-1}_{\beta}\), we can use the previous result to calculate the new \(\overline{x}_{\beta}\) much faster.
 \end{note}
 
 \section{The Word \emph{Simplex}}
 For a \hyperref[def:standard-form]{standard form} problem
 \[
 	\begin{aligned}
-		\min~    & c^{\top}x \\
-		         & Ax = b    \\
-		(P)\quad & x\geq 0,
+		\min~             & c^{\top}x \\
+		                  & Ax = b    \\
+		(\mathrm{P})\quad & x\geq 0,
 	\end{aligned}
 \]
 we can instead consider an equivalent problem formulated as
@@ -36,7 +30,6 @@ we can instead consider an equivalent problem formulated as
 	Our picture is in \(\mathbb{R}^{n-m}\), but we consider \emph{Dantzig picture}, which is in \(\mathbb{R}^{m+1}\)
 \end{prev}
 
-%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 \subsection{Column geometry}
 Plot columns:
 \[
@@ -71,7 +64,6 @@ The requirement line is
 	\label{fig:column-geometry}
 \end{figure}
 
-%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 \subsection{Simplices (Plural of Simplex)}
 \begin{eg}[Simplex]
 	An \(n-1\) dimensional simplex in \(\mathbb{R}^n\) with \(n\) standard unit vectors are the corner can be described as
@@ -98,101 +90,97 @@ A simplicial cone is rather simple, the graph below is informative enough.
 	\label{fig:simplicial-cones}
 \end{figure}
 
-%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-\section{Complete Simplex Algorithm}
-Now, given a \hyperref[def:standard-form]{standard form} problem \((P)\):
+\section{The Simplex Algorithm}
+Now, given a \hyperref[def:standard-form]{standard form} problem \((\mathrm{P})\):
 \[
 	\begin{aligned}
-		\min~    & c^{\top}x \\
-		         & Ax = b    \\
-		(P)\quad & x\geq 0,
+		\min~             & c^{\top}x \\
+		                  & Ax = b    \\
+		(\mathrm{P})\quad & x\geq 0,
 	\end{aligned}
 \]
-we can then solve \((P)\) in a mathematical rigorous and complete way.
+we can then solve \((\mathrm{P})\) in a mathematical rigorous and complete way.
 
-\par
 \begin{algorithm}[H]\label{algo:simplex-algorithm}
 	\DontPrintSemicolon
 	\caption{Simplex Algorithm}
-	\KwData{\hyperref[def:standard-form]{standard form} LP \((P)\)}
-	\KwResult{\hyperref[def:optimal-solution]{optimal solutions} \(\overline{x}, \overline{y}\), or report \((P)\) is unbounded/infeasible}
+	\KwData{\hyperref[def:standard-form]{standard form} LP \((\mathrm{P})\)}
+	\KwResult{\hyperref[def:optimal-solution]{optimal solutions} \(\overline{x}, \overline{y}\), or report \((\mathrm{P})\) is unbounded/infeasible}
 	\SetKwData{result}{result}
 	\BlankLine
 	\SetKwFunction{WFSimplex}{\hyperref[algo:worry-free-simplex-algorithm]{WorryFreeSimplexAlgorithm}}
 
 	\((\Phi_{\epsilon})\gets\)\hyperref[def:perturbed-problem]{algebraic perturbation} to the \hyperref[def:phase-one-problem]{phase one problem} \((\Phi)\)\;
 	\(\beta \gets \) \hyperref[prob:phase-one-problem]{basic feasible solution for \((\Phi_{\epsilon })\)}\;
-	\result \(\gets\) \WFSimplex{\((\Phi _\epsilon )\), \(\beta\)}\footnote{Adapted to \hyperref[def:perturbed-problem]{algebraically perturbed problems}, and always giving preference to \(x_{n+1}\) for leaving the \hyperref[def:basic]{basis} whenever it's eligible to leave for the unperturbed problem.}\;
+	\result \(\gets\) \WFSimplex{\((\Phi _\epsilon )\), \(\beta\)}\footnote{Adapted to \hyperref[def:perturbed-problem]{algebraically perturbed problems}, and always giving preference to \(x_{n+1}\) for leaving the \hyperref[def:basis]{basis} whenever it's eligible to leave for the unperturbed problem.}\;
 	\uIf{\result is unbounded}{
-		\Return{\((P)\) has no solution}
+		\Return{\((\mathrm{P})\) has no solution}
 	}
 	\Else{
-		\(\beta\gets\result\)\Comment*[f]{Retrieve the feasible basis for \((P)\)}
+		\(\beta\gets\result\)\Comment*[f]{Retrieve the feasible basis for \((\mathrm{P})\)}
 	}
 	\;
-	\((P_{\epsilon} )\gets\) \hyperref[def:perturbed-problem]{algebraic perturbation} to \((P)\)\;
+	\((P_{\epsilon} )\gets\) \hyperref[def:perturbed-problem]{algebraic perturbation} to \((\mathrm{P})\)\;
 	\Return{\WFSimplex{\((P_{\epsilon} )\), \(\beta\)}\footnote{Again, adapted to \hyperref[def:perturbed-problem]{algebraically perturbed problems}.}}
 \end{algorithm}
 
-%────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 \chapter{Duality}
 Consider the \hyperref[def:standard-form]{standard problem} and its \hyperref[def:dual]{dual}
 \[
-	\begin{alignedat}{5}
-		\min~&c^{\top}x\qquad\qquad &&\max ~ &&y^{\top}b\\
-		&Ax = b && &&y^{\top}A\leq c^{\top}\\
-		(P)\quad&x\geq  0 &&(D)\quad&&
-	\end{alignedat}.
+	\begin{aligned}
+		\min~             & c^{\top}x \\
+		                  & Ax = b    \\
+		(\mathrm{P})\quad & x\geq  0,
+	\end{aligned}\quad \begin{aligned}
+		\max ~            & y^{\top}b               \\
+		                  & y^{\top}A\leq c^{\top}. \\
+		(\mathrm{D})\quad &
+	\end{aligned}
 \]
-\section{Strong Duality Theorem}
+
+\section{The Strong Duality Theorem}
 \begin{prev}
-	The \hyperref[thm:weak-duality-theorem]{weak duality theorem} states that if \(\hat{x}\) is \hyperref[def:feasible-solution]{feasible} for \((P)\), and \(\hat{y}\)
-	is \hyperref[def:feasible-solution]{feasible} for \((D)\), then
+	The \hyperref[thm:weak-duality]{weak duality theorem} states that if \(\hat{x}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{P})\), and \(\hat{y}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{D})\), then
 	\[
 		c^{\top} \hat{x} \geq  \hat{y}^{\top} b.
 	\]
 	Moreover, the equality holds if and only if \(\hat{x}\) and \(\hat{y}\) are \hyperref[def:optimal-solution]{optimal}.
-
-	Also, the \hyperref[thm:weak-optimal-basis-theorem]{weak optimal basis theorem} states that if we have a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\),
-	and we also have \(\overline{x}_{\beta}\geq \vec{0}\)(\(\overline{x}\) is \hyperref[def:feasible-solution]{feasible} for \((P)\)) and
-	\(\overline{c}_{\eta} \geq \vec{0}\)(\(\overline{y}\) is \hyperref[def:feasible-solution]{feasible} for \((D)\)), then \(\overline{x}\) and \(\overline{y}\)
-	are both \hyperref[def:optimal-solution]{optimal}.
 \end{prev}
 
-Now, we have so-called \hyperref[thm:strong-optimal-basis-theorem]{strong optimal basis theorem}.
-\begin{theorem}[Strong optimal basis theorem]\label{thm:strong-optimal-basis-theorem}
-	If \((P)\) has a \hyperref[def:feasible-solution]{feasible solution}, and if \((P)\) is not unbounded, then there exist a \hyperref[def:basic-partition]{basic partition}
-	\(\beta, \eta\) such that \(\overline{x}\) and \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}, and
+\begin{prev}
+	The \hyperref[thm:weak-optimal-basis-theorem]{weak optimal basis theorem} states that if we have a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\), and we also have \(\overline{x}_{\beta}\geq \vec{0}\)(\(\overline{x}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{P})\)) and \(\overline{c}_{\eta} \geq \vec{0}\)(\(\overline{y}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{D})\)), then \(\overline{x}\) and \(\overline{y}\) are both \hyperref[def:optimal-solution]{optimal}.
+\end{prev}
+
+Now, we have so-called \hyperref[thm:strong-optimal-basis]{strong optimal basis theorem}.
+
+\begin{theorem}[Strong optimal basis theorem]\label{thm:strong-optimal-basis}
+	If \((\mathrm{P})\) has a \hyperref[def:feasible-solution]{feasible solution}, and if \((\mathrm{P})\) is not unbounded, then there exist a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\) such that \(\overline{x}\) and \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}, and
 	\[
 		c^{\top} \overline{x} = \overline{y}^{\top} b.
 	\]
 \end{theorem}
 \begin{proof}
-	Since if \((P)\) has a \hyperref[def:feasible-solution]{feasible solution} and is not unbounded, we can just run the \hyperref[algo:simplex-algorithm]{simplex algorithm},
-	which will terminate with a basis \(\beta\) such that the associated \hyperref[def:basic-solution]{basic solution} \(\overline{x}\) and the associated
-	\hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}.
+	Since if \((\mathrm{P})\) has a \hyperref[def:feasible-solution]{feasible solution} and is not unbounded, we can just run the \hyperref[algo:simplex-algorithm]{simplex algorithm}, which will terminate with a basis \(\beta\) such that the associated \hyperref[def:basic-solution]{basic solution} \(\overline{x}\) and the associated \hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}.
 \end{proof}
 
 We see that this leads to another similar result.
-\begin{theorem}[Strong duality theorem]\label{thm:strong-duality-theorem}
-	If \((P)\) has a \hyperref[def:feasible-solution]{feasible solution} and \((P)\) is not unbounded, then there exist \hyperref[def:optimal-solution]{optimal solutions}
-	\(\hat{x}\) and \(\hat{y}\) with
+
+\begin{theorem}[Strong duality theorem]\label{thm:strong-duality}
+	If \((\mathrm{P})\) has a \hyperref[def:feasible-solution]{feasible solution} and \((\mathrm{P})\) is not unbounded, then there exist \hyperref[def:optimal-solution]{optimal solutions} \(\hat{x}\) and \(\hat{y}\) with
 	\[
 		c^{\top} \hat{x} = \hat{y}^{\top} b.
 	\]
 \end{theorem}
 
 \begin{note}
-	The proof of these two theorems are by directly using the \emph{mathematical complete} version of \hyperref[algo:simplex-algorithm]{simplex algorithm}, hence the completeness of
-	\hyperref[algo:simplex-algorithm]{simplex algorithm} (namely the \hyperref[def:phase-one-problem]{phase one problem} and the \hyperref[def:perturbed-problem]{perturbation}) is
-	important.
+	The proof of these two theorems are by directly using the \emph{mathematical complete} version of \hyperref[algo:simplex-algorithm]{simplex algorithm}, hence the completeness of \hyperref[algo:simplex-algorithm]{simplex algorithm} (namely the \hyperref[def:phase-one-problem]{phase one problem} and the \hyperref[def:perturbed-problem]{perturbation}) is important.
 \end{note}
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{c|c|c|c|c}
 		\toprule
-		\hyperref[algo:simplex-algorithm]{\emph{Simplex Algorithm}}                                                         & \((P) \backslash (D)\)                                                                                                   & \begin{tabular}{@{}c@{}}\hyperref[def:optimal-solution]{optimal}\\\hyperref[def:optimal-solution]{solution}\end{tabular} & infeasible  & unbounded   \\
+		\hyperref[algo:simplex-algorithm]{\emph{Simplex Algorithm}}                                                         & \((\mathrm{P}) \backslash (\mathrm{D})\)                                                                                 & \begin{tabular}{@{}c@{}}\hyperref[def:optimal-solution]{optimal}\\\hyperref[def:optimal-solution]{solution}\end{tabular} & infeasible  & unbounded   \\
 		\midrule
 		\(\overline{c}_{\eta}\geq \vec{0}\implies\) Stop                                                                    & \begin{tabular}{@{}c@{}}\hyperref[def:optimal-solution]{optimal}\\\hyperref[def:optimal-solution]{solution}\end{tabular} & \(\surd \)                                                                                                               & \(\times \) & \(\times \) \\
 		\midrule
@@ -201,6 +189,6 @@ We see that this leads to another similar result.
 		\(\overline{A}_{\eta_{j}}\leq \vec{0}\implies\) Stop                                                                & unbounded                                                                                                                & \(\times \)                                                                                                              & \(\surd \)  & \(\times \) \\
 		\bottomrule
 	\end{tabular}
-	\caption{Comparison between \((P)\) and \((D)\)}
+	\caption{Comparison between \((\mathrm{P})\) and \((\mathrm{D})\)}
 	\label{tab:label}
 \end{table}

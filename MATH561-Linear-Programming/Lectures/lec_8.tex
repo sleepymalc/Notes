@@ -1,41 +1,42 @@
 \lecture{8}{27 Sep. 08:00}{Simplex Algorithm}
-\section{Remaining Problem}
-\begin{problem}
-How do we start with a \hyperref[def:basic-partition]{basic} feasible partition?
-\end{problem}
-\begin{answer}
-	We consider the so-called \hyperref[def:phase-one-problem]{phase one problem}.
-\end{answer}
+\section{Remaining Problems}
+Now, a big question is, how do we start with a \hyperref[def:basic-partition]{basic feasible partition}? The answer is to consider the so-called \hyperref[def:phase-one-problem]{phase one problem}.
 
 \subsection{Phase one problem}
+Consider the following problem.
+
 \begin{definition}[Phase one problem]\label{def:phase-one-problem}
-	Given the \hyperref[def:primal]{primal} \((P)\), the so-called \emph{phase one problem}, denoted as \((\Phi)\) is defined as follows.
+	Given the \hyperref[def:primal]{primal} \((\mathrm{P})\), the \emph{phase one problem} \((\Phi)\) is defined as follows.
 	\[
-		\begin{alignedat}{5}
-			\min~&c^{\top}x\qquad\qquad&&\min~ && x_{n+1}\\
-			&Ax = b 				&&		&&Ax + A_{n+1}x_{n+1} = b              \\
-			(P)\quad	&x\geq  0 	&&(\Phi)\quad&&x\geq 0, x_{n+1} \geq  0.
-		\end{alignedat}
+		\begin{aligned}
+			\min~             & c^{\top}x   \\
+			                  & Ax = b      \\
+			(\mathrm{P})\quad & x\geq  0 	.
+		\end{aligned}\quad \begin{aligned}
+			\min~       & x_{n+1}                   \\
+			            & Ax + A_{n+1}x_{n+1} = b   \\
+			(\Phi)\quad & x\geq 0, x_{n+1} \geq  0.
+		\end{aligned}
 	\]
 \end{definition}
 
 \begin{remark}
 	We see that
-	\begin{enumerate}
-		\item If min value of \(x_{n+1}\) in \((\Phi)\) is 0, then we get a \hyperref[def:feasible-solution]{feasible solution} of \((P)\).
-		\item If min value of \(x_{n+1}\) in \((\Phi)\) is \(>0\), then there is no \hyperref[def:feasible-solution]{feasible solution} of \((P)\).
-	\end{enumerate}
+	\begin{itemize}
+		\item If min value of \(x_{n+1}\) in \((\Phi)\) is 0, then we get a \hyperref[def:feasible-solution]{feasible solution} of \((\mathrm{P})\).
+		\item If min value of \(x_{n+1}\) in \((\Phi)\) is \(>0\), then there is no \hyperref[def:feasible-solution]{feasible solution} of \((\mathrm{P})\).
+	\end{itemize}
 \end{remark}
 
-We see that by solving \((\Phi)\), we will get a \hyperref[def:feasible-solution]{feasible solution} for \((P)\) or determine whether \((P)\) is solvable in the first place. But
-to solve the linear program \((\Phi)\), we're facing the same problem as \((P)\)...
+By solving \((\Phi)\), we will get a \hyperref[def:feasible-solution]{feasible solution} for \((\mathrm{P})\) or determine whether \((\mathrm{P})\) is solvable in the first place. But to solve the linear program \((\Phi)\), we're facing the same problem as \((\mathrm{P})\).
+
 \begin{problem}\label{prob:phase-one-problem}
 How do we get an initial \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Phi)\)?
 \end{problem}
 \begin{answer}
-	Thankfully, in this case, we know how to get a \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Phi)\).
-	\begin{enumerate}
-		\item Start with a \hyperref[def:basic-solution]{basic solution} of \((P)\), \(\tilde{\beta}, \tilde{\eta}\) is the \hyperref[def:basic-partition]{basic partition}.
+	In this case, we know how to get a \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Phi)\).
+	\begin{enumerate}[(a)]
+		\item Start with a \hyperref[def:basic-solution]{basic solution} of \((\mathrm{P})\), \(\tilde{\beta}, \tilde{\eta}\) is the \hyperref[def:basic-partition]{basic partition}.
 		\item If \(\overline{x}_{\tilde{\beta}}\) is \hyperref[def:feasible-solution]{feasible} then we just use \(\tilde{\beta}\) and \(\tilde{\eta}\) for \(\beta\) and \(\eta\).
 		\item Otherwise, set \(A_{n+1} = -A^{-1}_{\beta}\vec{1}\). If \(\eta_j = n+1\)
 		      \[
@@ -73,29 +74,26 @@ How do we get an initial \hyperref[def:basic-solution]{basic} \hyperref[def:feas
 		      \end{eg}
 	\end{enumerate}
 \end{answer}
-\begin{problem}
-What if \(x_{n+1} = 0\)?
-\end{problem}
-\begin{answer}
-	Just stop right before \(x_{n+1} = 0\), let other variable do that.
-\end{answer}
+
+\begin{remark}
+	If \(x_{n+1} = 0\), we can just stop right before \(x_{n+1} = 0\), let other variable do that.
+\end{remark}
 
 \subsection{Perturbed Problem}
-Though we now know how to get \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((P)\) to start our
-\hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, we have one more problem:
+Though we now know how to get \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\mathrm{P})\) to start our \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, we have one more problem.
 
 \begin{problem}[Degenerate problem]\label{prob:degenerate-problem}
 What if \(\lambda = 0\), i.e. \(x_{\beta _{i} } = 0\) for some \(i\)?
 \end{problem}
 
-We see that we'll need to introduce so-called \hyperref[def:non-degeneracy-hypothesis]{non-degeneracy hypothesis}.
-\begin{definition}[Non-degeneracy hypothesis]\label{def:non-degeneracy-hypothesis}
-	\(x_{\beta _{i} } > 0\) for all \(i\) at every iteration of \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}.
-\end{definition}
+In this case, we'll need the so-called \hyperref[conj:non-degeneracy-hypothesis]{non-degeneracy hypothesis}.
+
+\begin{conjecture}[Non-degeneracy hypothesis]\label{conj:non-degeneracy-hypothesis}
+	At every iteration of \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, \(x_{\beta _{i} } > 0\) for all \(i\).
+\end{conjecture}
 
 \begin{remark}[Termination analysis]
-	With \hyperref[def:non-degeneracy-hypothesis]{non-degeneracy hypothesis}, we see that \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}
-	will certainly terminate.
+	With \hyperref[conj:non-degeneracy-hypothesis]{non-degeneracy hypothesis}, we see that \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm} will certainly terminate.
 \end{remark}
 \begin{explanation}
 	We have
@@ -104,15 +102,13 @@ We see that we'll need to introduce so-called \hyperref[def:non-degeneracy-hypot
 			\vec{x}_{\beta_i} > 0 \text{ for all \(i\) at every iteration}
 			\implies &\overline{\lambda} \neq 0\\
 			\implies &\text{ objective value decrease at each iteration.}\\
-			\implies &\text{ \hyperref[algo:worry-free-simplex-algorithm]{algorithm} must terminate}
+			\implies &\text{ \autoref{algo:worry-free-simplex-algorithm} must terminate}
 		\end{split}
 	\]
-	because there are only finitely many bases.
+	because there are only finitely many \hyperref[def:basis]{bases}.
 \end{explanation}
 
-Though the \hyperref[def:non-degeneracy-hypothesis]{non-degeneracy hypothesis} helps avoid the mess, but since we want to be able to solve any
-\hyperref[def:general-linear-programming-problem]{general LP}, hence we now try to avoid using this hypothesis. We first consider the following problem
-called \hyperref[def:perturbed-problem]{perturbed problem}.
+Though the \hyperref[conj:non-degeneracy-hypothesis]{non-degeneracy hypothesis} helps avoid the mess, but since we want to be able to solve any \hyperref[def:general-linear-programming-problem]{general linear program}, hence we now try to avoid using this hypothesis. We first consider the following problem called \hyperref[def:perturbed-problem]{perturbed problem}.
 
 \begin{definition}[Perturbed problem]\label{def:perturbed-problem}
 	Given a \hyperref[def:standard-form]{standard form} problem, the following induced problem is called \emph{perturbed problem}.
@@ -185,10 +181,9 @@ Which suggest the following definitions.
 	\(p(\epsilon) \geq  q(\epsilon)\).
 \end{note}
 
-\begin{problem}
-Where does this \(\epsilon \) thing links with the \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm},
-and how can it solve the \hyperref[prob:degenerate-problem]{degenerate problem}?
-\end{problem}
+\begin{problem*}
+	Where does this \(\epsilon \) thing links with the \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, and how can it solve the \hyperref[prob:degenerate-problem]{degenerate problem}?
+\end{problem*}
 \begin{answer}
 	Suppose
 	\[
@@ -223,7 +218,7 @@ and how can it solve the \hyperref[prob:degenerate-problem]{degenerate problem}?
 	\]
 
 	\begin{claim}
-		\hyperref[def:perturbed-problem]{Perturbed problem} is \hyperref[def:non-degenerate-hypothesis]{non-degenerate}.
+		\hyperref[def:perturbed-problem]{Perturbed problem} is \hyperref[conj:non-degeneracy-hypothesis]{non-degenerate}.
 	\end{claim}
 	\begin{explanation}
 		This is equivalent to show that there are no \(i\) in the later basis \(\tilde{\beta}\) such that \(\vec{x}_{\tilde{\beta_i}} = 0\). Suppose there is an \(i\) such that

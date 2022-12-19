@@ -3,64 +3,66 @@
 \section{General Linear Programming Problem}
 Let's start with the definition of a \hyperref[def:general-linear-programming-problem]{linear programming problem}.
 \begin{definition}[General linear programming problem]\label{def:general-linear-programming-problem}
-	A \emph{general linear programming problem} is to either minimize or maximize an \hyperref[def:objective-function]{objective function} with the
-	\hyperref[def:constraints]{constraints} defined as follows.
+	A \emph{general linear programming problem} is to either minimize or maximize an \hyperref[def:objective-function]{objective function} with the \hyperref[def:constraint]{constraints} defined as follows.
 
 	\begin{definition}[Objective function]\label{def:objective-function}
 		An \emph{objective function} is in the form of
 		\[
 			c_1 x_1 + c_2 x_2 + \ldots +c_n x_n,
 		\]
-		where \(x_{i}\) are our variables, \(i = 1, \ldots, n\).
+		where \(c_i, x_i \in \mathbb{R}\), and \(x_{i}\) are variables for \(i = 1, \ldots, n\).
 	\end{definition}
 
-	\begin{definition}[Constraints]\label{def:constraints}
-		The \emph{constraints} are the combination of \hyperref[def:structured-constraints]{structured constraints} and also the \hyperref[def:signed-constraints]{signed constraints}.
-		\begin{definition}[Structured constraints]\label{def:structured-constraints}
+	\begin{definition}[Constraint]\label{def:constraint}
+		The \emph{constraints} are the combination of \hyperref[def:structured-constraint]{structured constraints} and also the \hyperref[def:signed-constraint]{signed constraints}.
+		\begin{definition}[Structured constraint]\label{def:structured-constraint}
 			The \emph{structured constraints} are in the form of
 			\[
-				\begin{alignedat}{4}
-					&a_{11} x_1 + &&\ldots + &&a_{1n}x_n &&\gtreqqless b_1\\
-					&a_{21} x_1 + &&\ldots + &&a_{2n}x_n &&\gtreqqless b_2\\
-					&\vdots &&\ddots &&\vdots && \vdots \\
-					&a_{n1} x_1 + &&\ldots + &&a_{nn}x_n &&\gtreqqless b_n.\\
-				\end{alignedat}
+				a_{j1} x_1 + \ldots + a_{jn}x_n \gtreqqless b_j
 			\]
+			where \(a_{ji}\in \mathbb{R} \) for all \(i=1, \ldots , n\) and \(j = 1, \ldots, m\).
 		\end{definition}
-		\begin{definition}[Signed constraints]\label{def:signed-constraints}
-			The \emph{signed constraints} are referring to \(x_i \gtreqqless 0\).
+		\begin{definition}[Signed constraint]\label{def:signed-constraint}
+			The \emph{signed constraints} are in the form of
+			\[
+				x_i \gtreqqless 0
+			\]
+			for some \(i=1, \ldots , n\).
 		\end{definition}
 	\end{definition}
 \end{definition}
+
+\begin{notation}
+	We often referred \(\gtreqqless \) to either \(\geq , \leq\) or \(=\).
+\end{notation}
+
+\begin{remark}
+	For a \hyperref[def:general-linear-programming-problem]{linear programming problem}, we often assume there are \(n\) variables indexed by \(i\), and \(m\) \hyperref[def:structured-constraint]{structured constraints} indexed by \(j\), and also \hyperref[def:signed-constraint]{signed constraints} for some \(x_i\).
+\end{remark}
 
 Given a \hyperref[def:general-linear-programming-problem]{general linear programming problem}, we have the following definitions.
 \begin{definition}[Solution]\label{def:solution}
 	We called an assignment of values to variable \(x\) as a \emph{solution}.
 
 	\begin{definition}[Feasible solution]\label{def:feasible-solution}
-		If this \hyperref[def:solution]{solution} satisfies the \hyperref[def:constraints]{linear constraints}, we say that
-		this \hyperref[def:solution]{solution} is a \emph{feasible solution}.
+		If this \hyperref[def:solution]{solution} satisfies the \hyperref[def:constraint]{linear constraints}, we say that this \hyperref[def:solution]{solution} is a \emph{feasible solution}.
 	\end{definition}
 
 	\begin{definition}[Feasible region]\label{def:feasible-region}
-		The set of \hyperref[def:feasible-solution]{feasible solutions} is called \emph{feasible region}.
+		The set of \hyperref[def:feasible-solution]{feasible solutions} is called the \emph{feasible region}.
 	\end{definition}
 
 	\begin{definition}[Optimal solution]\label{def:optimal-solution}
-		And a \hyperref[def:solution]{solution} is an \emph{optimal solution} if there is no \hyperref[def:feasible-solution]{feasible solution}
-		with better objective value.
+		A \hyperref[def:solution]{solution} is \emph{optimal} if there is no \hyperref[def:feasible-solution]{feasible solution} with better objective value.
 	\end{definition}
 \end{definition}
 
 \begin{remark}
-	A \hyperref[def:feasible-region]{feasible region} is a polyhedron.
+	A \hyperref[def:feasible-region]{feasible region} is a polyhedron for a \hyperref[def:general-linear-programming-problem]{general linear programming problem}.
 \end{remark}
 
-\begin{notation}
-	We often referred \(\gtreqqless \) to either \(\geq , \leq\) or \(=\).
-\end{notation}
-
-We will denote
+\subsection{Standard Form}
+It's convenient to group the coefficients together as
 \[
 	c= \begin{pmatrix}
 		c_1    \\
@@ -75,19 +77,18 @@ We will denote
 	A = \begin{pmatrix}
 		a_{11} & \ldots & a_{1n} \\
 		\vdots & \ddots & \vdots \\
-		a_{n1} & \ldots & a_{nn} \\
+		a_{m1} & \ldots & a_{mn} \\
 	\end{pmatrix},\quad
 	b = \begin{pmatrix}
 		b_1    \\
 		\vdots \\
-		b_n    \\
-	\end{pmatrix}.
+		b_m    \\
+	\end{pmatrix},
 \]
-
-It's convenient to only consider linear programming in the \hyperref[def:standard-form]{standard form} defined as follows.
+since in this way, we can define the \hyperref[def:standard-form]{standard form} of a \hyperref[def:general-linear-programming-problem]{linear programming}.
 
 \begin{definition}[Standard form]\label{def:standard-form}
-	The \emph{standard form} linear programming problem has the form of
+	The \emph{standard form} \hyperref[def:general-linear-programming-problem]{linear programming} has the form of
 	\[
 		\begin{aligned}
 			\min~ & c^{\top}x \\
@@ -99,33 +100,40 @@ It's convenient to only consider linear programming in the \hyperref[def:standar
 \end{definition}
 
 \begin{remark}[Compactness of the solution space]
-	Notice that we only consider finitely many of \hyperref[def:constraints]{constrains}, since the property that the \hyperref[def:objective-function]{objective function}
-	can attain its extremum only on a compact set, which requires finite dimensional vector space.
+	We only consider finitely many of \hyperref[def:constraint]{constrains} since with finite dimensional solution space will be compact, hence \hyperref[def:objective-function]{objective function} can attain its extremum.
 \end{remark}
 
 \begin{remark}[Convert to standard form]
-	Surprisingly, every \hyperref[def:general-linear-programming-problem]{general linear programming problem} can be converted to \hyperref[def:standard-form]{standard form},
-	we now see how is this done.
+	Every \hyperref[def:general-linear-programming-problem]{general linear programming problem} can be converted to \hyperref[def:standard-form]{standard form}.
 \end{remark}
 \begin{explanation}
 	Given a \hyperref[def:general-linear-programming-problem]{general linear programming problem} with our notation, we see that
 	\begin{itemize}
 		\item Sign:
 		      \begin{itemize}
-			      \item If \(x_{j}\leq 0 \implies x_j \to -x_j^-\), where \(x_{j}^- \geq 0\).
-			      \item If \(x_{j}\) is unrestricted \(\implies x_j \to x_j^+ - x_{j}^-\), where \(x_j^{\pm} \geq 0\).
+			      \item If \(x_i\leq 0 \implies x_i \to -x_i^-\), where \(x_i^- \geq 0\).
+			      \item If \(x_i\) is unrestricted \(\implies x_i \to x_i^+ - x_i^-\), where \(x_i^{\pm} \geq 0\).
 		      \end{itemize}
 		\item Constraints:
 		      \begin{itemize}
-			      \item \(\sum\limits_{j=1}^{n} a_{ij} x_{j} \leq b \implies \sum\limits_{j=1}^{n} a_{ij} x_{j} + s_i = b_{i}\), where \(s_i \geq 0\).
-			            \begin{definition}[Slack variable]\label{def:slack-variable}
-				            This \(s_i\) sometimes called \emph{slack variable}.
-			            \end{definition}
-			      \item \(\sum\limits_{j=1}^{n} a_{ij} x_{j} \geq b \implies \sum\limits_{j=1}^{n} a_{ij} x_{j} - s_i = b_{i}\), where \(s_i \geq 0\).
-			            \begin{definition}[Surplus variable]\label{def:surplus-variable}
-				            This \(s_i\) sometimes called \emph{surplus variable}.
-			            \end{definition}
+			      \item \(\sum\limits_{i=1}^{n} a_{ji} x_i \leq b_j \implies \sum\limits_{i=1}^{n} a_{ji} x_i + s_j = b_j\), where \(s_j \geq 0\).
+
+			      \item \(\sum\limits_{i=1}^{n} a_{ji} x_i \geq b_j \implies \sum\limits_{i=1}^{n} a_{ji} x_i - s_j = b_j\), where \(s_j \geq 0\).
+
 		      \end{itemize}
 		\item Maximize: \(\max \sum c_{j}x_{j} \implies -\min -\sum c_{j}x_{j}\).
 	\end{itemize}
 \end{explanation}
+
+We see that in order to convert to \hyperref[def:standard-form]{standard form}, we sometimes need to introduce variable \(s_j\) for \hyperref[def:structured-constraint]{constraint} \(j\). This leads to the following.
+
+\begin{definition*}
+	Consider the new variable \(s_j\) introduced for \(j^{th} \) non-equal \hyperref[def:structured-constraint]{constraint} when converting to the \hyperref[def:standard-form]{standard form}.
+
+	\begin{definition}[Slack variable]\label{def:slack-variable}
+		The \emph{slack variable} \(s_j\) is introduced for \(\leq \) \hyperref[def:structured-constraint]{constraint}.
+	\end{definition}
+	\begin{definition}[Surplus variable]\label{def:surplus-variable}
+		The \emph{surplus variable} \(s_j\) is introduced for \(\geq \) \hyperref[def:structured-constraint]{constraint}.
+	\end{definition}
+\end{definition*}

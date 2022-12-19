@@ -3,7 +3,7 @@
 	The \hyperref[algo:simplex-algorithm]{Simplex Algorithm}.
 	\begin{enumerate}
 		\item[1.] Initialization (Phase I). Find an initial \hyperref[def:basic-partition]{basic feasible partition} \(\beta, \eta\)
-		\item[2.] Is there a \hyperref[def:non-basic]{non-basic} variable with negative \hyperref[def:reduced-cost]{reduced cost}?
+		\item[2.] Is there a \hyperref[def:non-basis]{non-basis} variable with negative \hyperref[def:reduced-cost]{reduced cost}?
 			\[
 				\overline{c}_j \coloneqq c_{j} - \overline{y}^{\top}A_{\eta_{j}}<0.
 			\]
@@ -16,7 +16,8 @@
 		\item[4.] Swap \(\beta_{i}\) and \(\eta_{j}\) and \textbf{GOTO 2}.
 	\end{enumerate}
 \end{prev}
-Then the decomposition algorithm can be written as follows. We change the step 0. and 2. of the above \hyperref[algo:simplex-algorithm]{simplex algorithm} into the following.
+
+Then the decomposition algorithm can be written as follows. We change the step 0.\ and 2.\ of the above \hyperref[algo:simplex-algorithm]{simplex algorithm} into the following.
 \begin{enumerate}
 	\item[0.] Reformulate \(Q\) as \(M\) and apply \hyperref[algo:simplex-algorithm]{simplex algorithm} to \(M\), where
 		\[
@@ -30,10 +31,10 @@ Then the decomposition algorithm can be written as follows. We change the step 0
 		and
 		\[
 			\begin{aligned}
-				\min~    & \sum\limits_{j\in\mathcal{J}}\left(c^{\top}\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
-				         & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h         \\
-				         & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                                 \\
-				(M)\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
+				\min~             & \sum\limits_{j\in\mathcal{J}}\left(c^{\top}\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(c^{\top} \hat{z}^k  \right)\mu_k \\
+				                  & \sum\limits_{j\in\mathcal{J}}\left(E\hat{x}^j\right)\lambda_{j} + \sum\limits_{k\in\mathcal{K}}\left(E \hat{z}^k \right)\mu_k \geq h         \\
+				                  & \sum\limits_{j\in\mathcal{J}}\lambda_{j} = 1                                                                                                 \\
+				(\mathrm{M})\quad & \lambda_{j}\geq 0 \text{ for }j\in\mathcal{J},\ \mu_k\geq 0 \text{ for }k\in\mathcal{K}.
 			\end{aligned}
 		\]
 	\item[2.] Solve the sub-problem
@@ -45,14 +46,14 @@ Then the decomposition algorithm can be written as follows. We change the step 0
 			\end{aligned}
 		\]
 		\begin{itemize}
-			\item \hyperref[def:optimal-solution]{optimal} \& Objective value \(<0 \implies\) a \(\lambda\) variable can enter the \hyperref[def:basic]{basis}.
-			\item \hyperref[def:optimal-solution]{optimal} \& Objective value \(>0 \implies\) have an optimal for \((M)\).
-			\item Unbounded \(\implies\) a \(\mu_k\) variable can enter the \hyperref[def:basic]{basis}.
+			\item \hyperref[def:optimal-solution]{optimal} \& Objective value \(<0 \implies\) a \(\lambda\) variable can enter the \hyperref[def:basis]{basis}.
+			\item \hyperref[def:optimal-solution]{optimal} \& Objective value \(>0 \implies\) have an optimal for \((\mathrm{M})\).
+			\item Unbounded \(\implies\) a \(\mu_k\) variable can enter the \hyperref[def:basis]{basis}.
 		\end{itemize}
 \end{enumerate}
 
 \begin{note}
-	Compare 2. here and 2. in the \hyperref[algo:simplex-algorithm]{simplex algorithm}.
+	Compare 2.\ here and 2.\ in the \hyperref[algo:simplex-algorithm]{simplex algorithm}.
 \end{note}
 \begin{remark}
 	For the real implementation in step 2., we
@@ -62,10 +63,7 @@ Then the decomposition algorithm can be written as follows. We change the step 0
 	\end{enumerate}
 
 	\begin{note}
-		We see that we are solving \((M)\) over the known columns. So instead, we can pass \((M)\) to a solver (\texttt{Gurobi}). And since
-		it will give us the \hyperref[def:dual]{dual} variable \(\overline{y}\) and \(\overline{\sigma}\), we can continue to solve the sub-problem without problems.
-		Furthermore, we solve the sub-problem and append new column to known ones and go solve the sub-problem again. In short, let the solver
-		keep track of the \hyperref[def:basic]{basis}.
+		We see that we are solving \((\mathrm{M})\) over the known columns. So instead, we can pass \((\mathrm{M})\) to a solver (\texttt{Gurobi}). And since it will give us the \hyperref[def:dual]{dual} variable \(\overline{y}\) and \(\overline{\sigma}\), we can continue to solve the sub-problem without problems. Furthermore, we solve the sub-problem and append new column to known ones and go solve the sub-problem again. In short, let the solver keep track of the \hyperref[def:basis]{basis}.
 	\end{note}
 \end{remark}
 
@@ -80,8 +78,7 @@ The motivation is to get a good lower bound of optimal objective value for
 	\end{aligned}
 \]
 
-Since the problem is large, hence we want to exit the algorithm whenever we get a \emph{good enough} solution such that it's not far away from the objective
-value. But the problem is, when should we stop? Do we stop at plateaus? What if there is a second drop in terms of objective value?
+Since the problem is large, hence we want to exit the algorithm whenever we get a \emph{good enough} solution such that it's not far away from the objective value. But the problem is, when should we stop? Do we stop at plateaus? What if there is a second drop in terms of objective value?
 
 \begin{figure}[H]
 	\centering
@@ -101,7 +98,7 @@ We first start with a specific problem which is important in our analysis.
 			(L_{\hat{y}})\quad                          & x\geq 0
 		\end{aligned}
 	\]
-	where \(L\) stands for Lagrange\footnote{\url{https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange}}.
+	where \(L\) stands for \href{https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange}{Lagrange}.
 \end{definition}
 
 \begin{intuition}
@@ -116,7 +113,9 @@ To characterize how good will this approximation be, we first see a simple resul
 	Let \(x^{\ast}\) be an \hyperref[def:optimal-solution]{optimal solution} for \(Q\). Then \(x^{\ast}\) is \hyperref[def:feasible-solution]{feasible} for \(L_{\hat{y}}\).
 	Then we see
 	\[
-		v(\hat{y}) \leq \hat{y}^{\top}h + (c^{\top} - \hat{y}^{\top} E )x^{\ast} = \underbrace{\vphantom{\hat{y}^{\top}}c^{\top}x^{\ast}}_{z} + \underbrace{\hat{y}^{\top}}_{\geq \vec{0}}(\underbrace{\vphantom{\hat{y}^{\top}}h - Ex^{\ast}}_{\leq \vec{0}}) \leq z
+		v(\hat{y}) \leq \hat{y}^{\top}h + (c^{\top} - \hat{y}^{\top} E )x^{\ast}
+		= \underbrace{\vphantom{\hat{y}^{\top}}c^{\top}x^{\ast}}_{z} + \underbrace{\hat{y}^{\top}}_{\geq \vec{0}}(\underbrace{\vphantom{\hat{y}^{\top}}h - Ex^{\ast}}_{\leq \vec{0}})
+		\leq z
 	\]
 \end{proof}
 
@@ -139,7 +138,7 @@ and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
 	\(\hat{y}\) is not the variable.
 \end{note}
 
-\begin{theorem}[Laguargian dual theorem]\label{thm:Lagrangian-dual-theorem}
+\begin{theorem}[Laguargian dual theorem]\label{thm:Lagrangian-dual}
 	Suppose \(x^{\ast}\) is \hyperref[def:optimal-solution]{optimal} for \(Q\). Further, suppose \(\hat{y}\) and \(\hat{\pi}\) are \hyperref[def:optimal-solution]{optimal}
 	for the \hyperref[def:dual]{dual} of \(Q\). Then
 	\begin{itemize}
@@ -161,8 +160,7 @@ and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
 		\]
 	\end{note}
 
-	\(x^{\ast}\) is \hyperref[def:feasible-solution]{feasible} for \(L_{\hat{y}}\) and \(\hat{y}\) and \(\hat{\pi}\) is \hyperref[def:feasible-solution]{feasible} for the
-	\hyperref[def:dual]{dual} of \(Q\). Then
+	\(x^{\ast}\) is \hyperref[def:feasible-solution]{feasible} for \(L_{\hat{y}}\) and \(\hat{y}\) and \(\hat{\pi}\) is \hyperref[def:feasible-solution]{feasible} for the \hyperref[def:dual]{dual} of \(Q\). Then
 	\[
 		\hat{y}^{\top}E + \hat{\pi}^{\top}A \leq c^{\top}
 	\]
@@ -172,7 +170,7 @@ and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
 	\]
 	which implies \(\hat{\pi}\) is \hyperref[def:feasible-solution]{feasible} for the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\).
 
-	From \hyperref[thm:strong-duality-theorem]{strong duality theorem} for \(Q\),
+	From \hyperref[thm:strong-duality]{strong duality theorem} for \(Q\),
 	\[
 		c^{\top}x^{\ast} = \hat{y}^{\top}h + \hat{\pi}^{\top}b.
 	\]
@@ -189,13 +187,11 @@ and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
 		\hat{\pi}^{\top} b = (c^{\top} - \hat{y}^{\top}E)x^{\ast}.
 	\]
 
-	Now, we claim that \(x^{\ast}\) is \hyperref[def:optimal-solution]{optimal} for \(L_{\hat{y}}\) and \(\hat{\pi}\) is \hyperref[def:optimal-solution]{optimal}
-	for the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\). Indeed, recall that the \hyperref[def:objective-function]{objective function} of \(L_{\hat{y}}\) is
+	Now, we claim that \(x^{\ast}\) is \hyperref[def:optimal-solution]{optimal} for \(L_{\hat{y}}\) and \(\hat{\pi}\) is \hyperref[def:optimal-solution]{optimal} for the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\). Indeed, recall that the \hyperref[def:objective-function]{objective function} of \(L_{\hat{y}}\) is
 	\[
 		\hat{y}^{\top}h + \min~  (c^{\top} - \hat{y}^{\top}E)x,
 	\]
-	with \((c^{\top} - \hat{y}^{\top}E)x^{\ast} \geq \hat{\pi}^{\top}b\), we see that the objective value of \(x^{\ast}\) in \(L_{\hat{y}}\)
-	is equal to \(\hat{y}h+\hat{\pi}^{\top}b \), which implies that \(x^{\ast}\) is \hyperref[def:optimal-solution]{optimal} in \(L_{\hat{y}}\) from \hyperref[thm:weak-duality-theorem]{weak duality theorem}.
+	with \((c^{\top} - \hat{y}^{\top}E)x^{\ast} \geq \hat{\pi}^{\top}b\), we see that the objective value of \(x^{\ast}\) in \(L_{\hat{y}}\) is equal to \(\hat{y}h+\hat{\pi}^{\top}b \), which implies that \(x^{\ast}\) is \hyperref[def:optimal-solution]{optimal} in \(L_{\hat{y}}\) from \hyperref[thm:weak-duality]{weak duality theorem}.
 
 	Lastly, since \(x^{\ast}\) is \hyperref[def:optimal-solution]{optimal} for \(L_{\hat{y}}\),
 	\[
@@ -211,13 +207,13 @@ and the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\) is
 	and \(v(\hat{y}) = z\).
 \end{proof}
 
-\begin{theorem}[Converse Lagrangian dual theorem]\label{thm:converse-Lagrangian-dual-theorem}
-	Suppose that \(\hat{y}\) is a maximizer of \(v(y)\) over \(y\geq \vec{0}\). Suppose \(\hat{\pi}\) solves the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\).
-	Then \(\hat{\pi}\) and \(\hat{y}\) solve the \hyperref[def:dual]{dual} of \(Q\) and the \hyperref[def:optimal-solution]{optimal} value of \(Q\) is \(v(\hat{y})\).
+Conversely, we have the following.
+
+\begin{theorem}[Converse Lagrangian dual theorem]\label{thm:converse-Lagrangian-dual}
+	Suppose that \(\hat{y}\) is a maximizer of \(v(y)\) over \(y\geq \vec{0}\). Suppose \(\hat{\pi}\) solves the \hyperref[def:dual]{dual} of \(L_{\hat{y}}\). Then \(\hat{\pi}\) and \(\hat{y}\) solve the \hyperref[def:dual]{dual} of \(Q\) and the \hyperref[def:optimal-solution]{optimal} value of \(Q\) is \(v(\hat{y})\).
 \end{theorem}
 \begin{intuition}
-	We see that compare to \autoref{thm:Lagurgian-dual-theorem}, we now try to say something \emph{backwards}. But we immediately see that it suffers from
-	the situations depicts as follows.
+	Compared to \autoref{thm:Lagrangian-dual}, we now try to say something \emph{backwards}. But we immediately see that it suffers from the situations depicts as follows.
 	\begin{figure}[H]
 		\centering
 		\incfig{Lagrangian-maximizer}

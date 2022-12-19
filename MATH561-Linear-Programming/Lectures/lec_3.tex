@@ -1,52 +1,42 @@
-\chapter{Production Problem}
-\lecture{3}{8 Sep. 08:00}{Production Problem}
-\section{Production Problem}
+\lecture{3}{8 Sep. 08:00}{Production Problem and Norm Minimization}
+\section{Modeling}
+We now see two main examples illustrating why \hyperref[def:general-linear-programming-problem]{linear programming} is interesting to study.
+
+\subsection{Production Problem}\label{subsec:production-problem}
 The \emph{production problem} can be formulated as follows.
 \[
 	\begin{aligned}
-		\max~ & c^{\top}x     \\
-		      & Ax \leq b     \\
-		      & x\geq \vec{0}
+		\max~ & c^{\top}x      \\
+		      & Ax \leq b      \\
+		      & x\geq \vec{0},
 	\end{aligned}
 \]
+where
 \begin{itemize}
-	\item \(n\) products activities
-	\item \(c_{j}=\) per-unit revenue for activity \(j = 1\ldots n\)
-	\item \(b_{i}=\) resource endowment for resource \(i = 1\ldots m\)
-	\item \(a_{ij}=\) amount of resource \(i\) consumed by activity \(j\)
+	\item \(n\) products activities.
+	\item \(c_{j}=\) per-unit revenue for activity \(j = 1\ldots n\).
+	\item \(b_{i}=\) resource endowment for resource \(i = 1\ldots m\).
+	\item \(a_{ij}=\) amount of resource \(i\) consumed by activity \(j\).
 \end{itemize}
 
-\section{Norm}
-We start with some definitions.
-\begin{definition}
-	We define the following different norms.
-	\begin{definition}[Maximum norm]\label{def:maximum-norm}
-		The \emph{maximum norm} is defined as
-		\[
-			\left\lVert x\right\rVert_{\infty } \coloneqq \max_{1\leq i \leq n}\{\left\vert x_i \right\vert \}.
-		\]
-	\end{definition}
-	\begin{definition}[\(1\)-norm]\label{def:1-norm}
-		The \emph{\(1\)-norm} is defined as
-		\[
-			\left\lVert x\right\rVert_{1} \coloneqq \sum\limits_{i=1}^{n} \left\vert x_i \right\vert.
-		\]
-	\end{definition}
-	\begin{definition}[\(2\)-norm]\label{def:2-norm}
-		The \emph{\(2\)-norm} is defined as
-		\[
-			\left\lVert x\right\rVert_{2} \coloneqq \sqrt{\sum\limits_{i=1}^{n} x_i^2}.
-		\]
-	\end{definition}
+\begin{note}
+	This is a very important and practical problems considered all across the industry!
+\end{note}
+
+\subsection{Norm Minimization}
+It's also useful to minimizing the norm of the variable \(x\). And interestingly, this can be done by \hyperref[def:general-linear-programming-problem]{linear programming problems} as well. Let's first consider minimizing a \(\lVert \cdot \rVert _\infty \).
+
+\begin{definition}[Maximum norm]\label{def:maximum-norm}
+	The \emph{maximum norm} of \(x\in \mathbb{R} ^n\) is defined as
+	\[
+		\left\lVert x\right\rVert _{\infty } \coloneqq \max_{1\leq i \leq n} \vert x_i \vert .
+	\]
 \end{definition}
 
-We can easily find the respective norm for \(x\) by following linear optimization problems.
-
-\subsection{Maximum (Infinity) Norm}
 Consider
 \[
 	\begin{aligned}
-		\min~ & \left\lVert x\right\rVert_{\infty } \\
+		\min~ & \left\lVert x\right\rVert _{\infty } \\
 		      & Ax = b,
 	\end{aligned}
 \]
@@ -60,14 +50,27 @@ we set up
 	\end{aligned}
 \]
 
-We see that the linear optimization \textbf{pressure} will force the maximum of \(\left\vert x_i \right\vert \) being small, hence
-we'll get the minimum among \(\left\vert x_i \right\vert \).
+We see that this optimization \textbf{pressure} will force the maximum of \(\left\vert x_i \right\vert \) being small, hence we'll get the minimum among \(\left\vert x_i \right\vert \). Similarly, we can consider the following minimizing \(\lVert \cdot \rVert _1\).
 
-\subsection{1-Norm}
+\begin{definition}[\(1\)-norm]\label{def:1-norm}
+	The \emph{\(1\)-norm} of \(x\in \mathbb{R} ^n\) is defined as
+	\[
+		\left\lVert x\right\rVert _{1} \coloneqq \sum\limits_{i=1}^{n} \left\vert x_i \right\vert.
+	\]
+\end{definition}
+
+\begin{note}[\(p\)-norm]
+	More generally, the \emph{\(p\)-norm} of \(x\in \mathbb{R} ^n\) is defined as
+	\[
+		\left\lVert x\right\rVert _{p} \coloneqq \left( \sum\limits_{i=1}^{n} \left\vert x_i \right\vert^p \right)^{1 / p},
+	\]
+	and \(\lVert \cdot \rVert_1 \), and even \(\lVert \cdot \rVert _{\infty }\) are both special cases when \(p = 1\) and \(p = \infty \), respectively.
+\end{note}
+
 Consider
 \[
 	\begin{aligned}
-		\min~ & \left\lVert x\right\rVert_1 \\
+		\min~ & \left\lVert x\right\rVert _1 \\
 		      & Ax = b,
 	\end{aligned}
 \]
@@ -81,11 +84,10 @@ we set up
 	\end{alignedat}
 \]
 
-Again, we see that the linear optimization pressure will force \(t_i\) goes to \(\left\vert x_i \right\vert \), resulting
-\(\sum\limits_{i=1}^{n} t_i\) being \(\left\lVert x\right\rVert_1\).
+Again, we see that the optimization pressure will force \(t_i\) goes to \(\left\vert x_i \right\vert \), resulting \(\sum_{i=1}^{n} t_i\) being \(\left\lVert x\right\rVert _1\).
 
 \begin{remark}
-	Minimize \(\left\lVert x\right\rVert_1\) tends to make \(x\) \textbf{spars} (lots of zeros).
+	Minimize \(\left\lVert x\right\rVert _1\) tends to make \(x\) \textbf{sparse} (lots of zeros).
 	\begin{figure}[H]
 		\centering
 		\incfig{1-norm}

@@ -1,28 +1,27 @@
 \lecture{20}{17 Nov. 08:00}{Convergence of Projected Subgradient Optimization Algorithm}
 \begin{prev}
-	We have already shown the \hyperref[algo:projected-subgradient-optimization-algorithm]{algorithm of projected subgradient optimization}, and the key is to choose an adequate
-	step size \(\lambda_{k}\). So we now try to give some conditions about how we can choose \(\lambda_{k}\) such
-	that the algorithm converges.
+	We have already shown the \hyperref[algo:projected-subgradient-optimization-algorithm]{algorithm of projected subgradient optimization}, and the key is to choose an adequate step size \(\lambda_{k}\). So we now try to give some conditions about how we can choose \(\lambda_{k}\) such that the algorithm converges.
 \end{prev}
 
 \begin{lemma}\label{lma:lec20-1}
 	Let \(y^{\ast}\) be any maximizer of \(v\) over \(y\geq \vec{0}\). Suppose \(\lambda_{k}>0\) for all \(k\). Then
 	\[
-		\left\lVert y^{\ast} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^1\right\rVert^2 \leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 - 2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{\ast}) - v(\hat{y}^i)\right).
+		\left\lVert y^{\ast} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^1\right\rVert^2
+		\leq \sum\limits_{i=1}^{k} \lambda_{i}^{2}\left\lVert \hat{\gamma}^i\right\rVert^2 - 2 \sum\limits_{i=1}^{k} \lambda_{i}\left(v(y^{\ast}) - v(\hat{y}^i)\right).
 	\]
 \end{lemma}
 \begin{proof}
 	Let \(w^{k+1} \coloneqq \hat{y}^k + \lambda_{k}\hat{\gamma}^k\). Then for \(k\geq 1\),
 	\[
 		\begin{split}
-			\left\lVert y^{\ast} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^k\right\rVert^2 &\leq \left\lVert y^{\ast} - w^{k+1}\right\rVert^2 - \left\lVert \hat{y} - \hat{y}^k\right\rVert^2\\
+			\left\lVert y^{\ast} - \hat{y}^{k+1}\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^k\right\rVert^2
+			&\leq \left\lVert y^{\ast} - w^{k+1}\right\rVert^2 - \left\lVert \hat{y} - \hat{y}^k\right\rVert^2\\
 			&= \left\lVert (y^{\ast} - \hat{y}^k) - \lambda_{k}\hat{\gamma}^k\right\rVert^2 - \left\lVert y^{\ast} - \hat{y}^k\right\rVert^2\\
 			&= \lambda_{k}^{2}\left\lVert \hat{\gamma}^k\right\rVert^2 - 2\lambda_{k}(y^{\ast} - \hat{y}^k)^{\top}\hat{\gamma}^k
 			\leq \lambda_{k}^{2}\left\lVert \hat{\gamma}^k\right\rVert^2 - 2\lambda_{k}(v(y^{\ast}) - v(\hat{y}^k)),
 		\end{split}
 	\]
-	where the first inequality follows from the triangle inequality, and the last inequality follows from the definition of
-	\hyperref[def:subgradient]{subgradient}. We then do some \emph{telescoping} and see that the result follows.
+	where the first inequality follows from the triangle inequality, and the last inequality follows from the definition of \hyperref[def:subgradient]{subgradient}. We then do some \emph{telescoping} and see that the result follows.
 	\begin{figure}[H]
 		\centering
 		\incfig{maximizer-lemma-triangle-inequality}
@@ -31,8 +30,8 @@
 	\end{figure}
 \end{proof}
 
-Now, denotes \(v^{\ast}_{k}\coloneqq \max\limits_{i = 1, \ldots , k}\left\{v(\hat{y}^i)\right\}\), which is just the best function value
-up to iteration \(k\). Then we have the following result.
+Now, denotes \(v^{\ast}_{k}\coloneqq \max\limits_{i = 1, \ldots , k}\left\{v(\hat{y}^i)\right\}\), which is just the best function value up to iteration \(k\). Then we have the following result.
+
 \begin{theorem}\label{thm:lec20-1}
 	Let \(y^{\ast}\) be any maximizer of \(v\) over \(y\geq \vec{0}\). Assume that we take a \hyperref[def:basic-solution]{basic} \hyperref[def:optimal-solution]{optimal solution}
 	of \(L_{\hat{y}^k}\). We further suppose \(\lambda_{k}>0\), \(\sum\limits_{k=1}^{\infty} \lambda_{k} = +\infty \), \(\sum\limits_{k=1}^{\infty} \lambda_{k}^2< +\infty\). Then
@@ -67,6 +66,7 @@ up to iteration \(k\). Then we have the following result.
 	\]
 	since we assume \(\sum \lambda_{i} \to  +\infty \) and \(\sum\limits\lambda_{i}^{2}< +\infty  \). Then we see \(v^{\ast}_{k} = v(y^{\ast})\) as \(k \to \infty \) by squeeze theorem.
 \end{proof}
+
 \begin{remark}
 	Suppose we instead choose
 	\[
@@ -91,8 +91,7 @@ Consider
 		      & 0\leq x_{i}\leq 1.
 	\end{aligned}
 \]
-This linear programming solution is \(x_1 = x_2 = \ldots  = x_n = \frac{1}{2}\) with the objective value being \(\frac{n}{2}\).
-Denotes \(y\) as the \hyperref[def:dual]{dual} variables. The \hyperref[def:dual]{dual} is
+This linear programming solution is \(x_1 = x_2 = \ldots  = x_n = \frac{1}{2}\) with the objective value being \(\frac{n}{2}\). Denotes \(y\) as the \hyperref[def:dual]{dual} variables. The \hyperref[def:dual]{dual} is
 \[
 	\begin{alignedat}{3}
 		\min~ & \sum\limits_{i<j}            && y_{ij}                                             \\
@@ -104,6 +103,4 @@ By setting \(y_{ij} = \frac{1}{n-1}\), then the objective value is
 \[
 	\binom{n}{2}\frac{1}{n-1} = \frac{n}{2},
 \]
-hence we confirm that \(x_{i} = \frac{1}{2}\) is really the \hyperref[def:optimal-solution]{optimal solution}. One can see that if now we let \(x_{i}\in\mathbb{N}\), then
-the objective solution will be only one of \(x_{i} = 1\), and the other \(x_{j} = 0, j\neq i\). This leads to an \hyperref[def:optimal-solution]{optimal} value being
-\(1\). This just shows how bad if we just \textbf{round down} the \hyperref[def:optimal-solution]{optimal solution} when we consider so-called \emph{integer programming}.
+hence we confirm that \(x_{i} = \frac{1}{2}\) is really the \hyperref[def:optimal-solution]{optimal solution}. One can see that if now we let \(x_{i}\in\mathbb{N}\), then the objective solution will be only one of \(x_{i} = 1\), and the other \(x_{j} = 0, j\neq i\). This leads to an \hyperref[def:optimal-solution]{optimal} value being \(1\). This just shows how bad if we just \textbf{round down} the \hyperref[def:optimal-solution]{optimal solution} when we consider so-called \emph{integer programming}.

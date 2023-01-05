@@ -1,203 +1,128 @@
-\chapter{Banach and Hilbert Spaces}
-\lecture{1}{30 Aug. 14:30}{Introduction}
+\chapter{Manifolds}
+\lecture{1}{5 Jan. 14:30}{Introduction}
+\section{Introduction}
+Let's start with a common definition.
+\begin{definition}[Topological manifold]\label{def:topological-manifold}
+	A \emph{topological manifold} \(\mathcal{M} \) of dimension \(n\) is a (topological) Hausdorff space such that each point \(p\in \mathcal{M} \) has a neighborhood \(U\) homeomorphic to \(U^\prime \subseteq \mathbb{R} ^n\) open.
+	\begin{definition}[Coordinate chart]\label{def:coordinate-chart}
+		\(U^\prime \) is called the \emph{coordinate chart}.
+	\end{definition}
+	\begin{definition}[Local coordinate]\label{def:local-coordinate}
+		The pull-back of the coordinate functions from \(\mathbb{R} ^n\) is called the \emph{local coordinates}.
+	\end{definition}
+	\begin{definition}[Atlas]\label{def:atlas}
+		An \emph{atlas} \(\mathcal{A} \) is a collection such that \(\mathcal{A} =\left\{ U_\alpha , f_\alpha  \right\} \) of \hyperref[def:coordinate-chart]{charts} for which the \(U_\alpha \) are an open covering of \(\mathcal{M} \), i.e., \(\mathcal{M} = \bigcup_{\alpha } U_\alpha \), \(U_\alpha \subseteq \mathcal{M} \) open.
+	\end{definition}
+\end{definition}
 
-We first briefly review different kinds of vector spaces.
-\section{Linear Spaces}
-Let's first see the simplest (i.e., without structures) vector space called \hyperref[def:linear-vector-space]{linear vector space}.
-\begin{definition}[Linear vector space]\label{def:linear-vector-space}
-	A \emph{linear vector space} \(E\) over a field \(\mathbb{F} \) is a set with operations of addition and multiplication (by a scalar) such that it's closed under operations, and also the addition and scalar multiplication obey
-	\begin{enumerate}[(a)]
-		\item \(u + v = v + u\) for \(u, v\in E\)
-		\item \(u + (v + w) = (u + v) + w\) for \(u, v, w\in E\)
-		\item \(\exists 0\in E\) such that \(0 + u = u + 0 = u\) for \(u\in E\)
-		\item \(\forall u\in E\), \(\exists -u\in E\) such that \(u + (- u) = 0\)
-		\item \(\lambda (u + v) = \lambda u + \lambda v\) for \(u, v\in E\), \(\lambda \in \mathbb{F} \)
-		\item \((\lambda + \mu ) u = \lambda u + \mu u\) for \(u\in E\), \(\lambda , \mu \in \mathbb{F} \)
-		\item \(\lambda (\mu u) = (\lambda \mu )u\) for \(u\in E\), \(\lambda , \mu \in \mathbb{F} \)
-	\end{enumerate}
+In other words, for all \(p\in \mathcal{M} \), there exists a neighborhood \(U \subseteq \mathcal{M} \) and homeomorphism \(h\colon U \to U^\prime \subseteq \mathbb{R} ^n\) open.
+
+\begin{definition}[Locally finite]\label{def:locally-finite}
+	An \hyperref[def:atlas]{atlas} (coordinate atlas) is said to be \emph{locally finite} if each point \(p\in \mathcal{M} \) contained in only finite collection of its open sets.
+\end{definition}
+
+\begin{definition}[Smooth manifold]\label{def:smooth-manifold}
+	Let \(\mathcal{A} \) be a \hyperref[def:atlas]{coordinate atlas} for a \hyperref[def:topological-manifold]{manifold} \(\mathcal{M} \). Assume that \((U_1, \varphi _1), (U_2, \varphi _2)\) are \(2\) elements of \(\mathcal{A} \). The map \(\varphi _2 \circ \varphi _1 ^{-1} \colon \varphi _1(U_1 \cap U_2) \to \varphi _2(U_1 \cap U_2)\) is a homeomorphism between \(2\) open sets of Euclidean spaces.
+
+	\begin{definition}[Coodinate transition]\label{def:coordinate-transition}
+		The map \(\varphi _2 \circ \varphi _1 ^{-1} \) is called the \emph{coordinate transition} of \(\mathcal{A} \) for the pair of \hyperref[def:coordinate-chart]{charts} \((U_1, \varphi _1), (U_2, \varphi _2)\).
+	\end{definition}
+
+	The \hyperref[def:atlas]{atlas} \(\mathcal{A} = \left\{ U_\alpha , \varphi _\alpha  \right\} \) is called \emph{differentiable} if all \hyperref[def:coordinate-transition]{transitions} are differentiable.
+
+	We can also talk about the equivalence between two \hyperref[def:atlas]{atlases}.
+
+	\begin{definition}[Equivalence]\label{def:equivalence}
+		Two  \hyperref[def:atlas]{atlases} \(\mathcal{U} , \mathcal{V} \) are equivalent if the following holds: Assume \((U_1, \varphi _1)\in \mathcal{U} \), \((V_1, \varphi _2)\in \mathcal{V} \), then
+		\[
+			\varphi _1 \circ \varphi _2 ^{-1} \colon \varphi _2(U_1 \cap V_2) \to \varphi _1(U_1 \cap V_2)
+		\]
+		and
+		\[
+			\varphi _2 \circ \varphi _1 ^{-1} \colon \varphi _1(U_1 \cap V_2) \to \varphi _2(U_1 \cap V_2)
+		\]
+		are diffeomorphisms between subsets of Euclidean spaces.
+	\end{definition}
+
+	\begin{definition}[Smooth structure]\label{def:smooth-structure}
+		A \emph{smooth structure} on \(\mathcal{M} \)\footnote{Also called a \emph{differentiable structure}.} is defined by an equivalence class \(\mathcal{U} \) of coordinate atlas with property that all \hyperref[def:coordinate-transition]{transition functions} are diffeomorphisms. Then, the maximal differentiable atlas is our differentiable structure.
+	\end{definition}
+
+	A manifold \(\mathcal{M} \) with a \hyperref[def:smooth-structure]{smooth structure} is called a \emph{smooth manifold}.\footnote{Also called a \emph{differentiable manifold}.}
+\end{definition}
+
+In this way, we can do calculus on smooth manifolds! Furthermore, we can say that a function \(f\colon \mathcal{M} \to \mathbb{R} \) is differentiable (or \(C^{\infty} \)), and the collection of smooth functions of smooth manifold \(\mathcal{M} \) is \(C^{\infty} (\mathcal{M} , \mathbb{R} )\), or \(C^k(\mathcal{M} , \mathbb{R} )\) in general.
+
+\begin{remark}
+	The class \(C^{\infty} (\mathcal{M} , \mathbb{R} )\) consists of functions with property: Let \(\mathcal{A} \) be any given atlas from equivalence class that defines the smooth structure. If \((U_1, \varphi _1)\in \mathcal{A} \), then \(f \circ \varphi _1 ^{-1} \) is a smooth function on \(\mathbb{R} ^n\). This requirement defines the same set of smooth functions no matter the choice of representative atlas by the nature of \autoref{def:equivalence} requirement that defines the equivalence manifolds.
+\end{remark}
+
+\begin{definition}[Orientation]\label{def:orientation}
+	Consider an atlas for a differentiable manifold \(\mathcal{M} \).
+	\begin{definition}[Orientated]\label{def:orientated}
+		The atlas is called \emph{orientated} if all transitions have positive functional determinant.
+	\end{definition}
+
+	\begin{definition}[Orientable]\label{def:orientable}
+		\(\mathcal{M} \) is \emph{orientable} if it possesses an \hyperref[def:orientated]{orientated atlas}.
+	\end{definition}
+
+	\begin{definition}
+		Let \(\mathcal{M} \) be an \hyperref[def:orientable]{orientable} manifold. Then a choice of a differentiable structure satisfying \autoref{def:orientated} is called an \emph{orientation} of \(\mathcal{M} \), and then \(\mathcal{M} \) is said to be \emph{orientated}.
+	\end{definition}
 \end{definition}
 
 \begin{remark}
-	If \(v, w\in E\), \(\lambda , \mu \in \mathbb{R} \) (or \(\mathbb{C} \)), then \(\lambda v + \mu w\in E\).
+	Two differentiable structures obeying \autoref{def:orientated} determining the same orientation if the union again satisfying \autoref{def:orientated}.
 \end{remark}
 
-\begin{notation}[Real and complex vector space]
-	If \(E\) is over \(\mathbb{F} = \mathbb{C} \), we usually call \(E\) a \emph{complex vector space}; if \(\mathbb{F} = \mathbb{R} \), we say \(E\) is a \emph{real vector space}.
-\end{notation}
+\begin{remark}
+	If \(\mathcal{M} \) is orientable and connected, then there exists exactly two distinct orientations on \(\mathcal{M} \).
+\end{remark}
 
-\begin{eg}
-	Given \(n\in \mathbb{N} \), \(\mathbb{R} ^n\) is an \(n\) dimensional real \hyperref[def:linear-vector-space]{linear vector space}.
-\end{eg}
-
-\begin{eg}
-	Given \(n\in \mathbb{N} \), \(\mathbb{C} ^n\) is an \(n\) dimensional complex \hyperref[def:linear-vector-space]{linear vector space}.
-\end{eg}
-
-We concentrate on \(\infty \) dimensional \hyperref[def:linear-vector-space]{linear vector space}.
-
-\begin{eg}
-	Let \(K\) is a \hyperref[def:compact]{compact} \hyperref[def:Hausdorff]{Hausdorff space}, then
+\begin{eg}[Sphere]
+	The sphere \(S^n \subseteq \mathbb{R} ^{n+1}\) given by
 	\[
-		E = \left\{ f\colon K\to \mathbb{R} \mid f(\cdot) \text{ is continuous}  \right\}
+		S^n = \left\{ (x_1, \ldots , x_{n+1} )\in \mathbb{R} ^{n+1} \mid x_1^2 + \ldots + x_{n+1}^2 g 1 \right\}.
 	\]
-	is a \(\infty\) dimensional real \hyperref[def:linear-vector-space]{linear vector space}.
+	Consider \(U_i^+ = \left\{ x\in S^n \mid x_i > 0 \right\} \), \(U_i^-=\left\{ x\in S^n \mid x_i < 0 \right\} \) for \(i = 1, \ldots , n+1\), and \(h_i^{\pm} \colon U_i^{\pm} \to \mathbb{R} ^n\) such that
+	\[
+		h_i^{\pm}(x_1, \ldots , x_{n+1}) = (x_1, \ldots , \hat{x} _i, .., x_{n+1}).
+	\]
+	Note that the minimum charts needed to cover \(S^n\) is \(2\).
 \end{eg}
 
-\begin{notation}[Subspace]
-	If \(E\) is a \hyperref[def:linear-vector-space]{linear vector space}, then we say \(E_1 \subseteq E\) is a \emph{subspace} if \(E_1 \subseteq E\) and \(E_1\) is itself a \hyperref[def:linear-vector-space]{linear vector space}. Moreover, if \(E_1 \subsetneq E\), we say \(E_1\) is a \emph{proper subspace}.
-\end{notation}
-
-Observe that a \hyperref[def:linear-vector-space]{linear vector space} can have many subspaces.
-
-\section{Quotient Spaces}
-Sometimes we don't care about vectors in some directions, suggesting the notion of \hyperref[def:quotient-space]{quotient space}.
-
-\begin{definition}[Quotient Space]\label{def:quotient-space}
-	The \emph{quotient space} \(\quotient{E}{E_1} \) of two \hyperref[def:linear-vector-space]{linear vector spaces} \(E, E_1\) such that \(E_1 \subseteq E\) is the set of equivalence classes of vectors in \(E\) where equivalence is given by \(x\sim y\) if \(x - y\in E_1\). Additionally, denote \([x]\) as the equivalence class of \(x\in E\), i.e., \([x] = x + E_1\).
-\end{definition}
-
-One can see that \hyperref[def:quotient-space]{quotient space} \(\quotient{E}{E_1} \) is a \hyperref[def:linear-vector-space]{linear vector space} since if \(x_1 + x_2\in E\), \([x_1] + [x_2] = [x_1 + x_2]\), and also, \(\lambda [x] = [\lambda x]\) for \(\lambda \in \mathbb{R} \) or \(\mathbb{C} \), i.e., \(v, w\in \quotient{E}{E_1} \), \(\lambda , \mu \in\mathbb{R} \) or \(\mathbb{C} \) implies \(\lambda v + \mu w\in E\).
-
-The dimension of a \hyperref[def:quotient-space]{quotient space} is defined as follows.
-
-\begin{definition}[Codimension]\label{def:codimension}
-	If \(\quotient{E}{E_1} \) has finite dimension, then the dimension of \(\quotient{E}{E_1} \) is called the \emph{codimension} of \(E_1\) in \(E\), denoted as \(\mathop{\mathrm{codim}}(E_1)\).
-\end{definition}
-
-\autoref{def:codimension} is introduced since the way of defining dimensions for finite dimensional \hyperref[def:linear-vector-space]{vector spaces} doesn't work here. Recall \autoref{thm:lec1} in the finite dimension case.
-
-\begin{theorem}\label{thm:lec1}
-	If \(E\) is finite dimensional, then \(\mathop{\mathrm{codim}}(E_1) + \dim (E_1) = \dim(E)\)
-\end{theorem}
-
-We see that we may encounter something like \(\infty - \infty \) if we define \(\mathop{\mathrm{codim}}(E_1) \coloneqq \dim(E) - \dim(E_1)\), and indeed, \autoref{def:codimension} is well-defined in this sense.
+\begin{eg}
+	\(\mathcal{M} =\mathbb{R} ^n\).
+\end{eg}
 
 \begin{eg}
-	There exists the case that \(\dim(E) = \infty \), \(\dim(E_1) < \infty\) where \(\dim(\quotient{E}{E_1} )<\infty \).
+	\(U \subseteq \mathbb{R} ^n\) with \(\varphi = \mathbbm{1}\).
+\end{eg}
+
+\begin{eg}
+	Open sets of \(C^{\infty} \)-manifolds are \(C^{\infty}\)-manifolds.
+\end{eg}
+
+\begin{eg}
+	\(\mathrm{GL} (n) = \left\{ A\in M_n(\mathbb{R} ) \mid \det A \neq 0 \right\} \subseteq M_n(\mathbb{R} ) = \mathbb{R} ^{n^2}\), open.
+\end{eg}
+
+\begin{eg}
+	\(\mathbb{R} P^n = \quotient{S^n}{\sim } \) where \(x \sim -x\) with \(\pi \colon S^n \to \mathbb{R} P^n\), \(x \mapsto [x]\).
 \end{eg}
 \begin{explanation}
-	Let \(E = \left\{ f\colon K\to \mathbb{R} \mid f(\cdot) \text{ continuous}  \right\} \) and \(E_1 = \left\{ f\in E\colon f(k_1) = 0 \right\} \) for a fixed \(k_1\in K\). We see that the dimension of \(\quotient{E}{E_1} \) is exactly \(1\) since \(\quotient{E}{E_1} \) is the set of constant functions.
+	\(\pi \) is a homeomorphism on each \(U_i^+\) for \(i=1, \ldots , n+1\), with
+	\[
+		\left\{ \big( \pi (U_i^+), \varphi _i^+ \circ \pi ^{-1}  \big), i=1, \ldots , n+1 \right\}
+	\]
+	is a \(C^{\infty} \)-atlas for \(\mathbb{R} P^n\).
 \end{explanation}
 
-\begin{definition}[Linear operator]\label{def:linear-op}
-	A map \(T\colon E\to F\) between \hyperref[def:linear-vector-space]{linear spaces} \(E\) and \(F\) is a \emph{linear operator} if it preserves the properties of addition and multiplication by a scalar, i.e., for \(v, w\in E\) and \(\lambda , \mu \in \mathbb{R}\) or \(\mathbb{C}\),
-	\[
-		T(\lambda v + \mu w) = \lambda T(v) + \mu T(w).
-	\]
-\end{definition}
-
-\begin{definition*}
-	Given a \hyperref[def:linear-op]{linear operator} \(T\colon E \to F\) we have the following.
-	\begin{definition}[Kernel]\label{def:kernel}
-		The \emph{kernel} of \(T\) is the subspace \(\ker(T) = \left\{ x\in E\mid Tx=0 \right\} \).
-	\end{definition}
-
-	\begin{definition}[Image]\label{def:image}
-		The \emph{image} of \(T\) is the subspace \(\im(T) = \left\{ Tx\in F\mid x\in E \right\} \).
-	\end{definition}
-\end{definition*}
-
-\section{Normed Spaces}
-Given a vector, we want to measure the length of which. This suggests the following definitions.
-
-\begin{definition}[Norm]\label{def:norm}
-	Let \(E\) be a \hyperref[def:linear-vector-space]{linear vector space}. A \emph{norm} \(\left\lVert \cdot \right\rVert \colon E \to \mathbb{R} \) on \(E\) is a function from \(E\) to \(\mathbb{R} \) with the properties:
-	\begin{enumerate}[(a)]
-		\item \(\left\lVert x\right\rVert \geq 0\) and \(\left\lVert x\right\rVert =0 \iff x=0\).
-		\item \(\left\lVert \lambda x\right\rVert = \left\vert \lambda  \right\vert \left\lVert x\right\rVert\), \(\lambda \in\mathbb{R} \) or \(\mathbb{C} \).
-		\item \(\left\lVert x+y\right\rVert \leq \left\lVert x\right\rVert + \left\lVert y\right\rVert \).
-	\end{enumerate}
-\end{definition}
-
-\begin{notation}[Dilation]
-	We say that the second condition is the \emph{dilation} property.
-\end{notation}
-
-\begin{definition}[Normed vector space]\label{def:normed-vector-space}
-	A \hyperref[def:linear-vector-space]{linear vector space} \(E\) equipped with a \hyperref[def:norm]{norm} \(\left\lVert \cdot\right\rVert \) is called a \emph{normed vector space}, denoted by \((E, \left\lVert \cdot\right\rVert )\).
-\end{definition}
-
-A similar notion called \hyperref[prev:metric]{metric} is also widely used, though the structure is slightly coarser.
-
-\begin{prev}[Metric]\label{prev:metric}
-	Given a \hyperref[def:linear-vector-space]{vector space} \(E\), the \emph{metric} \(d(\cdot, \cdot)\colon E\times E\to \mathbb{R} \) on \(E\) is a function form \(E\times E\) to \(\mathbb{R} \) with the properties:
-	\begin{enumerate}[(a)]
-		\item \(d(x, y) \geq 0\). Also, \(d(x, x) = 0\) and \(d(x, y)\) implies \(x =y\).
-		\item \(d(x, y) = d(y, x)\).
-		\item \(d(x, z) \leq d(x, y) + d(y, z)\).
-	\end{enumerate}
-\end{prev}
-
-As one can imagine, if we can measure the length of a vector (by a \hyperref[def:norm]{norm}), we can also measure the distance between vectors (by a \hyperref[prev:metric]{metric}).
-
-\begin{remark}[Induced metric space]
-	A \hyperref[def:normed-vector-space]{normed vector space} \((E, \left\lVert \cdot\right\rVert )\) induces a \emph{metric space} \((E, d)\) with the induced \hyperref[prev:metric]{metric} \(d(x, y) = \left\lVert x- y\right\rVert \).
-\end{remark}
-
-Now we give some well-known examples of \hyperref[def:normed-vector-space]{normed spaces}.
-
-\begin{eg}[Bounded sequences \(\ell^\infty\)]
-	Let \(\ell _\infty \) be the space of bounded sequences \(x = (x_1, x_2, \ldots )\) with \(x_i\in \mathbb{R} \) for \(i = 1, 2, \ldots \). Then we define \(\left\lVert x\right\rVert = \left\lVert x\right\rVert _\infty = \sup _{i \geq 1}\left\vert x_i \right\vert \).
-\end{eg}
-
-\begin{eg}[Absolutely summable sequences \(\ell _1\)]
-	Let \(\ell _1\) be the space of absolutely summable sequences \(x = (x_1, x_2, \ldots)\) and \(\sum_{i=1}^{\infty} \left\vert x_i \right\vert < \infty\). Then we define \(\left\lVert x\right\rVert = \left\lVert x\right\rVert _1 = \sum_{i=1}^{\infty} \left\vert x_i \right\vert < \infty\).
-\end{eg}
-
-\begin{eg}[Continuous functions \(C(k)\)]
-	The space \(C(k)\) of continuous functions \(f\colon K\to \mathbb{R} \) where \(K\) is \hyperref[def:compact]{compact} \hyperref[def:Hausdorff]{Hausdorff}. Then we define \(\left\lVert f\right\rVert = \left\lVert f\right\rVert _\infty = \sup _{x\in K}\left\vert f(x) \right\vert \).
-\end{eg}
-
-\subsection{Geometry of Normed Spaces}
-Now we can look into the structure of a \hyperref[def:normed-vector-space]{normed space} we're referring to without actually explaining what this really means previously. Intuitively, it's about the geometric properties of the spaces like how do \hyperref[def:ball]{balls}, \hyperref[def:sphere]{spheres} and other shapes look like in that space when defining these shapes with \hyperref[def:norm]{norms}.
-
-\begin{definition}[Ball]\label{def:ball}
-	A (closed) \emph{ball} centered at a point \(x_0\in E\) with radius \(r>0\) is the set
-	\[
-		B(x_0, r) = \left\{ x\in E\mid \left\lVert x - x_0\right\rVert \leq r \right\} .
-	\]
-\end{definition}
-
-\begin{definition}[Sphere]\label{def:sphere}
-	The \emph{sphere} centered at \(x_0\) with radius \(r>0\) is the set
-	\[
-		S(x_0, r) = \left\{ x\in E\mid \left\lVert x - x_0\right\rVert = r\right\}.
-	\]
-\end{definition}
-
 \begin{note}
-	We see that \(S(x_0, r)\) is the \textbf{boundary} of \(B(x_0, r)\), i.e., \(S(x_0, r) = \partial B(x_0, r)\).
+	\(\mathbb{R} P^n = \quotient{\mathbb{R} ^{n+1} \setminus \left\{ 0 \right\} }{\sim } \).
 \end{note}
 
-Let's first look at \hyperref[def:ball]{balls}. In finite dimensional, all \hyperref[def:norm]{norms} are equivalent, which is not true for infinite dimensional \hyperref[def:normed-vector-space]{vector spaces}. This has something to do with the geometry of \hyperref[def:ball]{balls}.
-
-Explicitly, \hyperref[def:ball]{balls} can have different geometries depending on the properties of the \hyperref[def:norm]{norms}. We see that a \(\left\lVert \cdot\right\rVert _{\infty}\) can have multiple supporting \hyperref[def:hyperplane]{hyperplane} at the corner, while for a \(\left\lVert \cdot\right\rVert _2\) can have only one at each point.
-\begin{remark}
-	The unit \hyperref[def:ball]{balls} for \(\left\lVert \cdot\right\rVert _1\) looks like \textbf{squares}, where we have
-	\[
-		B(0, 1) = \left\{ x = (x_1, x_2, \ldots)\mid -1 < y_{\epsilon } < 1 \text{ for all } \epsilon\right\}
-	\]
-	such that \(y_{\epsilon } = \sum_{i=1}^{\infty} \epsilon _i x_i \), \(\epsilon _i = \pm 1\) and \(\epsilon = (\epsilon _1, \epsilon _2, \ldots  )\).
-\end{remark}
-
-We see that different \hyperref[def:norm]{norms} give different geometry, but they have important common features, most notably, \hyperref[def:convex-function]{convexity} properties.
-
-\begin{definition}[Convex set]\label{def:convex-set}
-	Given \(E\) a \hyperref[def:linear-vector-space]{linear vector space}, a set \(K\subset E\) is \emph{convex} if for \(x, y\in K\) and \(0 \leq \lambda \leq 1\),
-	\[
-		\lambda x + (1 - \lambda )y\in K.
-	\]
-\end{definition}
-
-\begin{definition}[Convex function]\label{def:convex-function}
-	Given \(E\) a \hyperref[def:linear-vector-space]{linear vector space}, a function \(f\colon E\to \mathbb{R} \) is called \emph{convex} if for \(x, y\in E\) and \(0 \leq \lambda \leq 1\),
-	\[
-		f(\lambda x + (1 - \lambda )y) \leq \lambda f(x) + (1 - \lambda )f(y).
-	\]
-\end{definition}
-
-\begin{remark}[Sublevel set]
-	If \(f\colon E \to \mathbb{R} \) is a \hyperref[def:convex-function]{convex function}, then for any \(M\in \mathbb{R} \) the \emph{sublevel set} \(\left\{ x\in E\mid f(x) \leq M \right\} \) is \hyperref[def:convex-set]{convex}.
-\end{remark}
-
-The upshot is that \hyperref[def:norm]{norms} are \hyperref[def:convex-function]{convex}, and the unit \hyperref[def:ball]{balls} are \hyperref[def:convex-set]{convex} as well.
+\begin{eg}[Grassmannian manifolds]
+	Given \(m, n\), \(G(n, m)\) is the set of all \(n\)-dimensional subspaces of \(\mathbb{R} ^{n+m}\).
+\end{eg}

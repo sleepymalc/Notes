@@ -1,2 +1,206 @@
-\chapter{Banach and Hilbert Spaces}
-\lecture{1}{30 Aug. 14:30}{Introduction}
+\chapter{Language, Logic, and Structures}
+\lecture{1}{5 Jan. 14:30}{Introduction to Mathematical Logic}
+The goal of mathematical logic is to obtain insights into other areas of mathematics -- algebra, analysis, combinatorics, and so on, by formalizing the \textbf{process} of mathematics. More concretely, there are different branches:
+\begin{enumerate}[(a)]
+	\item Model Theory: Study subsets of an object defined by a formula (i.e., first-order logic).
+	\item Computability Theory / Recursion Theory: Formalizing what it means to have an algorithm and studying relative computability.
+	\item Set Theory: Study the structure of the mathematical universe.
+	\item Proof Theory: Study the syntactic nature of proofs.
+\end{enumerate}
+
+In this class, we study model-theory in nature; specifically, we will cover
+\begin{itemize}
+	\item basic definitions of logic:
+	      \begin{itemize}
+		      \item What is a formula?
+		      \item What does it mean for a formula to be true?
+		      \item What is a proof?
+	      \end{itemize}
+	\item Soundness \& completeness theorems:
+	      \begin{itemize}
+		      \item Anything provable is true.
+		      \item Anything true is provable.
+	      \end{itemize}
+	\item Compactness theorem:
+	      \begin{itemize}
+		      \item Non-standard objects exist.
+	      \end{itemize}
+	\item Using compactness theorem for applications:
+	      \begin{itemize}
+		      \item Chevalley's theorem
+	      \end{itemize}
+\end{itemize}
+
+The main theme of this course will be \emph{syntax} v.s.\ \emph{semantics}:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{lcl}
+		\toprule
+		Syntax                         & v.s.\  & Semantics                \\
+		\midrule
+		proofs                         &        & truth                    \\
+		form of a formula              &        & mathematical structures  \\
+		number and type of quantifiers &        & isomorphisms, embeddings \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\section{Syntax and Semantics}
+\subsection{Languages and Structures}
+Let's start by the very basic object, \hyperref[def:language]{language}.
+\begin{definition}[Language]\label{def:language}
+	A \emph{language} \(\mathcal{L} \) consists of:
+	\begin{itemize}
+		\item a set \(\mathcal{F} \) of function symbols \(f\) with arities \(n_f\);
+		\item a set \(\mathcal{R} \) of relation symbols \(R\) with arities \(n_R\);
+		\item a set \(\mathcal{C} \) of constant symbols \(c\).
+	\end{itemize}
+\end{definition}
+
+A \hyperref[def:language]{language} is also sometimes called a \emph{signature}, in which case we use \(\sigma \) rather than \(\mathcal{L} \).
+
+\begin{note}
+	A constant is the same as a \(0\)-ary function.
+\end{note}
+
+\begin{remark}
+	Any or all sets in \autoref{def:language} might be empty.
+\end{remark}
+
+\begin{eg}[Graph]\label{eg:language-graph}
+	The \hyperref[def:language]{language} of graphs, \(\mathcal{L} _{\text{graph} } = \left\{ \mathcal{E} \right\}\) where \(\mathcal{E} \) is a binary (\(2\)-ary) relation symbol.
+\end{eg}
+
+\begin{eg}[Ring]\label{eg:language-ring}
+	The \hyperref[def:language]{language} of rings, \(\mathcal{L} _{\text{ring} } = \left\{ 0, 1, +, \cdot, - \right\} \), where \(0, 1\) are constants, \(+, \cdot\) are binary functions, and \(-\) is a unary function.
+\end{eg}
+
+\begin{eg}[Ordered ring]\label{eg:language-ring}
+	The \hyperref[def:language]{language} of ordered rings, \(\mathcal{L} _{\text{ord} } = \mathcal{L} _{\text{ring} } \cup \left\{ \leq \right\} \) where \(\leq \) is the binary relation for an ordered ring.
+\end{eg}
+
+Then, given a \hyperref[def:language]{language}, we can now interpret it in the following way.
+
+\begin{definition}[Structure]\label{def:structure}
+	Given a \hyperref[def:language]{language} \(\mathcal{L} \), an \emph{\(\mathcal{L} \)-structure} \(\mathcal{M} \) consists of:
+	\begin{itemize}
+		\item a non-empty set \(M\) called the \emph{universe}, \emph{domain}, or \emph{underlying set} of \(\mathcal{M} \);
+		\item for each function symbol \(f\in \mathcal{F} \), a function \(f^{\mathcal{M} } \colon M^{n_f} \to M\);
+		\item for each relation symbol \(R\in \mathcal{R} \), a relation \(R^{\mathcal{M} } \subseteq M^{n_R}\);
+		\item for each constant symbol \(c\in \mathcal{C} \), an element \(c^{\mathcal{M} }\in M\).
+	\end{itemize}
+\end{definition}
+
+\begin{note}[Interpretation]
+	We call \(f^{\mathcal{M} }, R^{\mathcal{M} }, c^{\mathcal{M} }\) the \emph{interpretation in \(\mathcal{M} \)} of symbols \(f, R, c\), respectively.
+\end{note}
+
+Basically, a \hyperref[def:structure]{structure} gives meaning to the symbols from the \hyperref[def:language]{language}, and we often write
+\[
+	\mathcal{M}
+	= (M, f^{\mathcal{M} }, \ldots , R^{\mathcal{M} }, \ldots , c^{\mathcal{M} }, \ldots)
+	= (M, f^{\mathcal{M} }, R^{\mathcal{M} }, c^{\mathcal{M} } \colon f\in \mathcal{F} , R\in \mathcal{R} , c\in \mathcal{C} ).
+\]
+
+\begin{notation}
+	We usually use \(\mathcal{M} , \mathcal{N} , \ldots , \mathcal{A} , \mathcal{B} , \ldots \) to refer to \hyperref[def:structure]{structures}, and \(M, N, \ldots , A, B, \ldots \) for the domains.\footnote{Some people use \(\vert \mathcal{M}  \vert \) for the domain of \(\mathcal{M} \).}
+\end{notation}
+
+It's time to look at some examples.
+
+\begin{eg}
+	The rationals \(\mathbb{Q} \) and integers \(\mathbb{Z} \) are both \hyperref[def:structure]{\(\mathcal{L} _{\text{ring} }\)-structures}.
+\end{eg}
+\begin{explanation}
+	Clearly, the domain is the set of rationals, and naively, we let \(+^{\mathbb{Q} } = +\) in \(\mathbb{Q} \), \(0^{\mathbb{Q} } = 0\) in \(\mathbb{Q} \), \(1^{\mathbb{Q} } = 1\) in \(\mathbb{Q} \), etc. In this way, \(\mathbb{Q} = (\mathbb{Q} , 0, 1, +, \cdot, -)\) is an \hyperref[def:structure]{\(\mathcal{L} _{ring}\)-structure}. Similarly, \(\mathbb{Z} = (\mathbb{Z} , 0, 1, +, \cdot, -)\) is as well.
+\end{explanation}
+
+While the \hyperref[def:language]{language} we have seen are all intuitively correct with their name, i.e., \(\mathcal{L} _{\text{ring} }\), \(\mathcal{L} _{\text{ord} }\), and \(\mathcal{L} _{\text{graph} }\), they are really just the high-level abstraction of the objects in the subscript.
+
+\begin{eg}
+	Nothing forces an \hyperref[def:structure]{\(\mathcal{L} _{\text{ring} }\)-structure} to be a ring.
+\end{eg}
+\begin{explanation}
+	Since an \hyperref[def:structure]{\(\mathcal{L} _{\text{ring} }\)-structure} is just any \hyperref[def:structure]{structure} with two binary functions, a unary function, and two constants interpreting the symbols of the \hyperref[def:language]{language}; hence we can define an \hyperref[def:structure]{\(\mathcal{L} _{\text{ring} }\)-structure} \(\mathcal{M} \) as
+	\begin{itemize}
+		\item \(\mathcal{M} = \left\{ 0, 5, 11 \right\} \);
+		\item \(0^{\mathcal{M} } = 5\);
+		\item \(1^{\mathcal{M} } = 11\);
+		\item \(+^{\mathcal{M} } \) is the constant function \(0\);
+		\item \(\cdot^{\mathcal{M} }\) is the function \(5\);
+		\item \(-^{\mathcal{M} }\) is the identity.
+	\end{itemize}
+	This is clearly not a ring since it fails nearly every axiom of a ring.
+\end{explanation}
+
+\begin{note}
+	Later, we will talk about theories that let us restrict to structures we want.
+\end{note}
+
+\subsection{Embeddings and Isomorphisms}
+We can now consider the relation between \hyperref[def:structure]{structures}.
+
+\begin{definition}[Embedding]\label{def:embedding}
+	Given a \hyperref[def:language]{language} \(\mathcal{L} \) and let \(\mathcal{M} \) and \(\mathcal{N} \) be \hyperref[def:structure]{\(\mathcal{L} \)-structures}. A map \(\eta \colon \mathcal{M} \to \mathcal{N}\) is an \emph{\(\mathcal{L} \)-embedding} if it is one-to-one and preserves the interpretation of all symbols of \(\mathcal{L} \):
+	\begin{enumerate}[(a)]
+		\item for each \(f\in \mathcal{F} \) of arity \(n_f\), and \(a_1, \ldots , a_{n_f}\in \mathcal{M} \),
+		      \[
+			      \eta \big(f^{\mathcal{M} }(a_1, \ldots , a_{n_f})\big) = f^{\mathcal{N}} \big( \eta (a_1), \ldots , \eta _{a_{n_f}}\big);
+		      \]
+		\item for each relation \(R\in \mathcal{R} \) of arity \(n_R\), and \(a_1, \ldots , a_{n_R}\in \mathcal{M} \),
+		      \[
+			      (a_1, \ldots , a_{n_R})\in R^{\mathcal{M} } \iff (\eta (a_1), \ldots , \eta (a_{n_R})) \in R^{\mathcal{N} };
+		      \]
+		\item for each constant \(c\in \mathcal{C} \), \(\eta (c^{\mathcal{M} } ) = c^{\mathcal{N} }\).
+	\end{enumerate}
+\end{definition}
+
+From the definition, an \hyperref[def:embedding]{\(\mathcal{L} \)-embedding} is an injection, and naturally, we have the following.
+
+\begin{definition}[Isomorphism]\label{def:isomorphism}
+	An \emph{\(\mathcal{L} \)-isomorphism} is a bijective \hyperref[def:embedding]{\(\mathcal{L} \)-embedding}.
+\end{definition}
+
+\begin{definition*}
+	Given a \hyperref[def:language]{language} \(\mathcal{L} \) and let \(\mathcal{M} \) and \(\mathcal{N} \) be \hyperref[def:structure]{\(\mathcal{L} \)-structures}. Suppose \(M \subseteq N\) and the inclusion map \(\iota \colon M \hookrightarrow N\) is an \hyperref[def:embedding]{\(\mathcal{L} \)-embedding}.
+	\begin{definition}[Substructure]\label{def:substructure}
+		\(\mathcal{M}\) is a \emph{substructure} of \(\mathcal{N} \).
+	\end{definition}
+
+	\begin{definition}[Extension]\label{def:extension}
+		\(\mathcal{N} \) is an \emph{extension} of \(\mathcal{M} \).
+	\end{definition}
+\end{definition*}
+
+\begin{eg}
+	Ring \hyperref[def:embedding]{embeddings} are \hyperref[def:embedding]{\(\mathcal{L} _{\text{ring} }\)-embeddings}.
+\end{eg}
+
+This generalizes the notions of embedding and isomorphism for many kinds of mathematical structures.
+
+\begin{remark}
+	Asking that \(\eta \) be injective is the same as (b) in \autoref{def:embedding} for the relation \(=\) of equality since
+	\[
+		a=b \in \mathcal{M} \iff \eta (a) = \eta (b) \in \mathcal{N} .
+	\]
+\end{remark}
+
+However, the notion of \hyperref[def:substructure]{substructure} is \hyperref[def:language]{language} sensitive. For groups, there are two possible \hyperref[def:language]{languages}:
+\begin{enumerate}[(a)]
+	\item \(\mathcal{L} _1 = \left\{ e, \cdot \right\} \);
+	\item \(\mathcal{L} _2 = \left\{ e, \cdot, ^{-1} \right\} \), i.e., with the unary inverse operation.
+\end{enumerate}
+While both of them seem fine at the first glance, but actually we should use the second one.
+
+\begin{remark}
+	Using \(\mathcal{L} _2\), the \hyperref[def:substructure]{substructure} of a group is the same things as a subgroup. But if we use \(\mathcal{L} _1\), then \((\mathbb{N}, +, 0)\) is a \hyperref[def:substructure]{substructure} of \((\mathbb{Z} , +, 0)\), while \(\mathbb{N} \) is not a group for sure.
+\end{remark}
+\begin{explanation}
+	Simply observe that both \((\mathbb{N} , 0, +), (\mathbb{Z} , 0, +)\) are \hyperref[def:structure]{\(\mathcal{L} _1\)-structures}.
+\end{explanation}
+
+Similarly, we include \(-\) in \(\mathcal{L} _{\text{ring}}\) for a similar reason as in the previous \hyperref[eg:language-ring]{example}.
+
+\begin{eg}
+	An \hyperref[def:substructure]{\(\mathcal{L} _{\text{ring} }\)-substructure} of a field will be a subring, not a subfield. If we want subfields, use \(\mathcal{L} _{\text{ring} } \cup \left\{ ^{-1} \right\} \).\footnote{Set \(0^{-1} = 0\), but never use this.}
+\end{eg}

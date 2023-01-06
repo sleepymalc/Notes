@@ -1,84 +1,138 @@
 \chapter{Manifolds}
-\lecture{1}{5 Jan. 14:30}{Introduction}
-\section{Introduction}
+\lecture{1}{5 Jan. 14:30}{A Foray to Smooth Manifolds}
+\section{Differentiable Manifolds}
+\subsection{Topological Manifolds}
 Let's start with a common definition.
+
 \begin{definition}[Topological manifold]\label{def:topological-manifold}
-	A \emph{topological manifold} \(\mathcal{M} \) of dimension \(n\) is a (topological) Hausdorff space such that each point \(p\in \mathcal{M} \) has a neighborhood \(U\) homeomorphic to \(U^\prime \subseteq \mathbb{R} ^n\) open.
-	\begin{definition}[Coordinate chart]\label{def:coordinate-chart}
-		\(U^\prime \) is called the \emph{coordinate chart}.
+	A \emph{topological manifold} \(\mathcal{M} \) of dimension \(n\) is a (topological) Hausdorff space such that each point \(p\in \mathcal{M} \) has a neighborhood \(U\) homeomorphic via \(\varphi\colon U \to U^\prime \) to an open subset \(U^\prime \subseteq \mathbb{R} ^n\).
+	\begin{definition}[Local coordinate map]\label{def:local-coordinate-map}
+		For every \(p\in \mathcal{M} \), the corresponding homeomorphism \(\varphi \) is called the \emph{local coordinate map}.
 	\end{definition}
 	\begin{definition}[Local coordinate]\label{def:local-coordinate}
-		The pull-back of the coordinate functions from \(\mathbb{R} ^n\) is called the \emph{local coordinates}.
+		The pull-back \((x^1, \ldots , x^n)\) of the \hyperref[def:local-coordinate-map]{local coordinate map} \(\varphi \) from \(\mathbb{R} ^n\) is called the \emph{local coordinates} on \(U\), given by
+		\[
+			\varphi (p) = (x^1(p), \ldots , x^n(p)).
+		\]
 	\end{definition}
-	\begin{definition}[Atlas]\label{def:atlas}
-		An \emph{atlas} \(\mathcal{A} \) is a collection such that \(\mathcal{A} =\left\{ U_\alpha , f_\alpha  \right\} \) of \hyperref[def:coordinate-chart]{charts} for which the \(U_\alpha \) are an open covering of \(\mathcal{M} \), i.e., \(\mathcal{M} = \bigcup_{\alpha } U_\alpha \), \(U_\alpha \subseteq \mathcal{M} \) open.
+	\begin{definition}[Coordinate chart]\label{def:coordinate-chart}
+		The pair \((U, \varphi )\) is called a \emph{coordinate chart} (or just a \emph{chart}) on \(M\).
 	\end{definition}
+\end{definition}
+
+In other words, a \hyperref[def:topological-manifold]{topological manifold} can be thought of a space such that it looks like \(\mathbb{R} ^n\) locally.
+
+\begin{center}
+	\incfig{coordinate-chart}
+\end{center}
+
+\begin{definition}[Atlas]\label{def:atlas}
+	An \emph{atlas} \(\mathcal{A} = \left\{ (U_\alpha , \varphi _\alpha) \right\}_\alpha \) for a \hyperref[def:topological-manifold]{manifold} \(\mathcal{M}\) is a collection of \hyperref[def:coordinate-chart]{charts} such that \(\left\{ U_\alpha\subseteq \mathcal{M} \mid U_\alpha \text{ open} \right\} _\alpha \) are an open covering of \(\mathcal{M} \), i.e., \(\mathcal{M} = \bigcup_{\alpha } U_\alpha \).
 \end{definition}
 
 In other words, for all \(p\in \mathcal{M} \), there exists a neighborhood \(U \subseteq \mathcal{M} \) and homeomorphism \(h\colon U \to U^\prime \subseteq \mathbb{R} ^n\) open.
 
 \begin{definition}[Locally finite]\label{def:locally-finite}
-	An \hyperref[def:atlas]{atlas} (coordinate atlas) is said to be \emph{locally finite} if each point \(p\in \mathcal{M} \) contained in only finite collection of its open sets.
+	An \hyperref[def:atlas]{atlas} is said to be \emph{locally finite} if each point \(p\in \mathcal{M} \) contained in only finite collection of its open sets.
 \end{definition}
 
-\begin{definition}[Smooth manifold]\label{def:smooth-manifold}
-	Let \(\mathcal{A} \) be a \hyperref[def:atlas]{coordinate atlas} for a \hyperref[def:topological-manifold]{manifold} \(\mathcal{M} \). Assume that \((U_1, \varphi _1), (U_2, \varphi _2)\) are \(2\) elements of \(\mathcal{A} \). The map \(\varphi _2 \circ \varphi _1 ^{-1} \colon \varphi _1(U_1 \cap U_2) \to \varphi _2(U_1 \cap U_2)\) is a homeomorphism between \(2\) open sets of Euclidean spaces.
+Clearly, without any help of ambient space such as \(\mathbb{R} ^n\), there's no clear way to make sense of differentiability of a \hyperref[def:topological-manifold]{manifold}. But thankfully, we now have an explicit relation to the ambient space \(\mathbb{R} ^n\) via \(\varphi _\alpha \). To formalize, let \(\mathcal{A} \) be an \hyperref[def:atlas]{atlas} for a \hyperref[def:topological-manifold]{manifold} \(\mathcal{M} \), and assume that \((U_1, \varphi _1), (U_2, \varphi _2)\) are \(2\) elements of \(\mathcal{A} \). Then clearly, the map \(\varphi _2 \circ \varphi _1 ^{-1} \colon \varphi _1(U_1 \cap U_2) \to \varphi _2(U_1 \cap U_2)\) is a homeomorphism between \(2\) open sets of Euclidean spaces since both \(\varphi _1\) and \(\varphi _2\) are homeomorphism. Due to this map's importance, it has its own name.
 
-	\begin{definition}[Coodinate transition]\label{def:coordinate-transition}
-		The map \(\varphi _2 \circ \varphi _1 ^{-1} \) is called the \emph{coordinate transition} of \(\mathcal{A} \) for the pair of \hyperref[def:coordinate-chart]{charts} \((U_1, \varphi _1), (U_2, \varphi _2)\).
-	\end{definition}
-
-	The \hyperref[def:atlas]{atlas} \(\mathcal{A} = \left\{ U_\alpha , \varphi _\alpha  \right\} \) is called \emph{differentiable} if all \hyperref[def:coordinate-transition]{transitions} are differentiable.
-
-	We can also talk about the equivalence between two \hyperref[def:atlas]{atlases}.
-
-	\begin{definition}[Equivalence]\label{def:equivalence}
-		Two  \hyperref[def:atlas]{atlases} \(\mathcal{U} , \mathcal{V} \) are equivalent if the following holds: Assume \((U_1, \varphi _1)\in \mathcal{U} \), \((V_1, \varphi _2)\in \mathcal{V} \), then
-		\[
-			\varphi _1 \circ \varphi _2 ^{-1} \colon \varphi _2(U_1 \cap V_2) \to \varphi _1(U_1 \cap V_2)
-		\]
-		and
-		\[
-			\varphi _2 \circ \varphi _1 ^{-1} \colon \varphi _1(U_1 \cap V_2) \to \varphi _2(U_1 \cap V_2)
-		\]
-		are diffeomorphisms between subsets of Euclidean spaces.
-	\end{definition}
-
-	\begin{definition}[Smooth structure]\label{def:smooth-structure}
-		A \emph{smooth structure} on \(\mathcal{M} \)\footnote{Also called a \emph{differentiable structure}.} is defined by an equivalence class \(\mathcal{U} \) of coordinate atlas with property that all \hyperref[def:coordinate-transition]{transition functions} are diffeomorphisms. Then, the maximal differentiable atlas is our differentiable structure.
-	\end{definition}
-
-	A manifold \(\mathcal{M} \) with a \hyperref[def:smooth-structure]{smooth structure} is called a \emph{smooth manifold}.\footnote{Also called a \emph{differentiable manifold}.}
+\begin{definition}[Coordinate transition]\label{def:coordinate-transition}
+	The map \(\varphi _2 \circ \varphi _1 ^{-1} \) is called the \emph{coordinate transition} of \(\mathcal{A} \) for the pair of \hyperref[def:coordinate-chart]{charts} \((U_1, \varphi _1), (U_2, \varphi _2)\).
 \end{definition}
 
-In this way, we can do calculus on smooth manifolds! Furthermore, we can say that a function \(f\colon \mathcal{M} \to \mathbb{R} \) is differentiable (or \(C^{\infty} \)), and the collection of smooth functions of smooth manifold \(\mathcal{M} \) is \(C^{\infty} (\mathcal{M} , \mathbb{R} )\), or \(C^k(\mathcal{M} , \mathbb{R} )\) in general.
+\begin{center}
+	\incfig{coordinate-transition}
+\end{center}
+
+\subsection{Differentiable Structures}
+Notice that the \hyperref[def:coordinate-transition]{coordinate transitions} are from \(\mathbb{R} ^n\) to \(\mathbb{R} ^n\), hence differentiability makes sense now, which induces the following.
+
+\begin{definition}[Differentiable atlas]\label{def:differentiable-atlas}
+	The \hyperref[def:atlas]{atlas} \(\mathcal{A} = \left\{ (U_\alpha , \varphi _\alpha) \right\} \) is \emph{differentiable} if all \hyperref[def:coordinate-transition]{transitions} are differentiable.
+\end{definition}
 
 \begin{remark}
-	The class \(C^{\infty} (\mathcal{M} , \mathbb{R} )\) consists of functions with property: Let \(\mathcal{A} \) be any given atlas from equivalence class that defines the smooth structure. If \((U_1, \varphi _1)\in \mathcal{A} \), then \(f \circ \varphi _1 ^{-1} \) is a smooth function on \(\mathbb{R} ^n\). This requirement defines the same set of smooth functions no matter the choice of representative atlas by the nature of \autoref{def:equivalence} requirement that defines the equivalence manifolds.
+	Here, the differentiability depends on the content. Sometimes, we may want it to be \(C^{\infty} \), and sometimes may be \(C^k\) for some finite \(k\). On the other hand, smooth always refer to \(C^{\infty} \). We'll use them interchangeably if it's clear which case we're referring to.
 \end{remark}
 
-\begin{definition}[Orientation]\label{def:orientation}
-	Consider an atlas for a differentiable manifold \(\mathcal{M} \).
-	\begin{definition}[Orientated]\label{def:orientated}
-		The atlas is called \emph{orientated} if all transitions have positive functional determinant.
+\begin{definition}[Equivalence atlas]\label{def:equivalence-atlas}
+	Two \hyperref[def:atlas]{atlases} \(\mathcal{U} , \mathcal{V} \) of a \hyperref[def:topological-manifold]{manifold} are equivalent if for every \((U, \varphi)\in \mathcal{U} \), \((V, \psi)\in \mathcal{V} \),
+	\[
+		\varphi \circ \psi ^{-1} \colon \psi(U \cap V) \to \varphi (U \cap V)
+	\]
+	and
+	\[
+		\psi \circ \varphi ^{-1} \colon \varphi (U \cap V) \to \psi(U \cap V)
+	\]
+	are diffeomorphisms between subsets of Euclidean spaces.
+\end{definition}
+
+Notably, we have the following notation.
+
+\begin{notation}[Smoothly compatible]\label{not:smoothly-compatible}
+	Two \hyperref[def:coordinate-chart]{charts} \((U, \varphi )\) and \((V, \psi)\) are \emph{smoothly compatible} if either \(U \cap V = \varnothing \) or \(\psi \circ \varphi ^{-1} \) is a diffeomorphism.
+\end{notation}
+
+This suggests the following.
+
+\begin{definition}[Smooth structure]\label{def:smooth-structure}
+	A \emph{smooth structure} on \(\mathcal{M} \) is an equivalence class \(\mathcal{U} \) of \hyperref[def:atlas]{coordinate atlas} with property that all \hyperref[def:coordinate-transition]{transition functions} are diffeomorphisms.
+\end{definition}
+
+\begin{remark}
+	In the literature, we can also use the \emph{maximal} \hyperref[def:differentiable-atlas]{differentiable atlas} to be our differentiable structure. Either way is fine.
+\end{remark}
+
+\begin{definition}[Smooth manifold]\label{def:smooth-manifold}
+	A \emph{smooth manifold} is a \hyperref[def:topological-manifold]{manifold} \(\mathcal{M} \) with a \hyperref[def:smooth-structure]{smooth structure}.
+\end{definition}
+
+In this way, we can do calculus on smooth manifolds! Furthermore, it now makes sense to say that a function \(f\colon \mathcal{M} \to \mathbb{R} \) is differentiable (or \(C^{\infty} \)) by considering differentiability of \(f \circ \varphi ^{-1} \) around \(p\).
+
+\begin{notation}
+	The collection of smooth functions on \hyperref[def:smooth-manifold]{smooth manifold} \(\mathcal{M} \) is denoted by \(C^{\infty} (\mathcal{M} , \mathbb{R} )\), or \(C^k(\mathcal{M} , \mathbb{R} )\).
+\end{notation}
+
+\begin{remark}
+	The class \(C^{\infty} (\mathcal{M} , \mathbb{R} )\) consists of functions with property is well-defined.
+\end{remark}
+\begin{explanation}
+	Let \(\mathcal{A} \) be any given \hyperref[def:atlas]{atlas} from \hyperref[def:equivalence-atlas]{equivalence class} that defines the \hyperref[def:smooth-structure]{smooth structure}, and as we have shown, if \((U, \varphi)\in \mathcal{A} \), then \(f \circ \varphi ^{-1} \) is a smooth function on \(\mathbb{R} ^n\). This requirement defines the same set of smooth functions no matter the choice of representative \hyperref[def:atlas]{atlas} by the nature of \autoref{def:equivalence-atlas} requirement that defines the equivalent \hyperref[def:smooth-manifold]{manifolds}.
+\end{explanation}
+
+\subsection{Orientation}
+Another important property of a \hyperref[def:topological-manifold]{manifold} is its orientability.
+
+\begin{definition*}
+	Consider an \hyperref[def:atlas]{atlas} \(\mathcal{A} \) for a \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \).
+	\begin{definition}[Oriented]\label{def:oriented}
+		\(\mathcal{A} \) is called \emph{oriented} if all \hyperref[def:coordinate-transition]{transitions} have positive functional determinant.
 	\end{definition}
 
 	\begin{definition}[Orientable]\label{def:orientable}
-		\(\mathcal{M} \) is \emph{orientable} if it possesses an \hyperref[def:orientated]{orientated atlas}.
+		\(\mathcal{M} \) is \emph{orientable} if \(\mathcal{A} \) is an \hyperref[def:oriented]{oriented atlas}.
 	\end{definition}
+\end{definition*}
 
-	\begin{definition}
-		Let \(\mathcal{M} \) be an \hyperref[def:orientable]{orientable} manifold. Then a choice of a differentiable structure satisfying \autoref{def:orientated} is called an \emph{orientation} of \(\mathcal{M} \), and then \(\mathcal{M} \) is said to be \emph{orientated}.
-	\end{definition}
+Motivate by the above definitions, we see that we can actually use an \hyperref[def:atlas]{atlas} to define an \hyperref[def:orientation]{orientation}.
+
+\begin{definition}[Orientation]\label{def:orientation}
+	Let \(\mathcal{M} \) be an \hyperref[def:orientable]{orientable manifold}. Then a \hyperref[def:oriented]{oriented} \hyperref[def:smooth-structure]{differentiable structure} is called an \emph{orientation} of \(\mathcal{M} \).
 \end{definition}
 
+If \(\mathcal{M} \) possesses an \hyperref[def:orientation]{orientation}, we can also say that it's \emph{oriented}. But we don't bother to make a new definition to confuse ourselves with \autoref{def:oriented}.
+
 \begin{remark}
-	Two differentiable structures obeying \autoref{def:orientated} determining the same orientation if the union again satisfying \autoref{def:orientated}.
+	Two \hyperref[def:smooth-structure]{differentiable structures} obeying \autoref{def:oriented} determine the same \hyperref[def:orientation]{orientation} if the union again satisfying \autoref{def:oriented}.
 \end{remark}
 
 \begin{remark}
-	If \(\mathcal{M} \) is orientable and connected, then there exists exactly two distinct orientations on \(\mathcal{M} \).
+	If \(\mathcal{M} \) is \hyperref[def:orientable]{orientable} and connected, then there exists exactly two distinct \hyperref[def:orientation]{orientations} on \(\mathcal{M} \).
 \end{remark}
+
+Now, we can see some examples of \hyperref[def:smooth-manifold]{smooth manifolds}.
 
 \begin{eg}[Sphere]
 	The sphere \(S^n \subseteq \mathbb{R} ^{n+1}\) given by
@@ -93,11 +147,7 @@ In this way, we can do calculus on smooth manifolds! Furthermore, we can say tha
 \end{eg}
 
 \begin{eg}
-	\(\mathcal{M} =\mathbb{R} ^n\).
-\end{eg}
-
-\begin{eg}
-	\(U \subseteq \mathbb{R} ^n\) with \(\varphi = \mathbbm{1}\).
+	Let \(\mathcal{M} = U \subseteq \mathbb{R} ^n\), then \(\left\{ (U, \varphi ) \right\} \) is a \hyperref[def:smooth-structure]{smooth structure} with \(\varphi = \mathbbm{1}\).
 \end{eg}
 
 \begin{eg}

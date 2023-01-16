@@ -1,5 +1,5 @@
 \lecture{2}{10 Jan. 14:30}{Formulas and First-Order Logic}
-We start by asking that given a function symbol \(f\) of arity \(n\), could we replace \(f\) with an \((n+1)\)-ary \(R\) relation for its graph?
+We start by asking that given a function symbol \(f\) of arity \(n\), could we replace \(f\) with an \((n+1)\)-ary \(R\) relation to represent its graph?
 
 \begin{eg}
 	Let \(\mathcal{L} \) be a \hyperref[def:language]{language} with only relation symbols. Let \(\mathcal{A} \) be an \hyperref[def:structure]{\(\mathcal{L} \)-structure}. For any \(B \subseteq A\), there is a \hyperref[def:substructure]{substructure} \(\mathcal{B} \) of \(\mathcal{A} \) with domain \(B\).
@@ -21,28 +21,17 @@ Intuitive, an \hyperref[def:formula]{\(\mathcal{L} \)-formula} is an expression 
 \begin{definition}[Term]\label{def:term}
 	Given a \hyperref[def:language]{language} \(\mathcal{L} \), the set of \emph{\(\mathcal{L} \)-terms} are defined inductively by:
 	\begin{enumerate}[(a)]
-		\item Each constant symbol is a \emph{term}.
-		\item Each variable symbol \(v_1, \ldots \) is a \emph{term}.
-		\item If \(f\) is a function symbol, and \(t_1, \ldots , t_{n_f}\) are \hyperref[def:term]{terms}, then \(f(t_1, \ldots , t_{n_f})\) is a \emph{term}.
+		\item each constant symbol is a \emph{term};
+		\item each variable symbol \(v_1, \ldots \) is a \emph{term};
+		\item if \(f\) is a function symbol, and \(t_1, \ldots , t_{n_f}\) are \hyperref[def:term]{terms}, then \(f(t_1, \ldots , t_{n_f})\) is a \emph{term}.
 	\end{enumerate}
 \end{definition}
 
-If \(\mathcal{M}\) is an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, and \(t\) is a \hyperref[def:term]{term} involving only variables among \(v_1, \ldots , v_n\), then \(t\) has an interpretation \(t^{\mathcal{M}} \colon M^n \to M\).
-
-Then, we define \(t^m\) inductively as follows: On input \(a_1, \ldots , a_n \in M\)
+If \(\mathcal{M}\) is an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, and \(t\) is a \hyperref[def:term]{term} involving only variables among \(v_1, \ldots , v_n\), then \(t\) has an interpretation \(t^{\mathcal{M}} \colon M^n \to M\) as a function as follows. On input \(a_1, \ldots , a_n \in M\),
 \begin{enumerate}[(a)]
-	\item If \(t\) is a constant \(c\),
-	      \[
-		      t^{\mathcal{M} } (a_1, \ldots , a_n) = c^{\mathcal{M} }.
-	      \]
-	\item If \(t\) is a variable \(v_i\),
-	      \[
-		      t^{\mathcal{M} } (a_1, \ldots , a_n) = a_i.
-	      \]
-	\item If \(t\) is \(f(s_1, \ldots , s_k)\), then
-	      \[
-		      t^{\mathcal{M} } (a_1, \ldots , a_n) = f^{\mathcal{M} } \big(s_1^{\mathcal{M} }(a_1, \ldots , a_n), \ldots , s_k^{\mathcal{M}}(a_1, \ldots , a_n) \big).
-	      \]
+	\item if \(t\) is a constant \(c\), \(t^{\mathcal{M} } (a_1, \ldots , a_n) = c^{\mathcal{M} }\).
+	\item if \(t\) is a variable \(v_i\), \(t^{\mathcal{M} } (a_1, \ldots , a_n) = a_i\);
+	\item if \(t\) is \(f(s_1, \ldots , s_k)\), then \(t^{\mathcal{M} } (a_1, \ldots , a_n) = f^{\mathcal{M} } \big(s_1^{\mathcal{M} }(a_1, \ldots , a_n), \ldots , s_k^{\mathcal{M}}(a_1, \ldots , a_n) \big)\).
 \end{enumerate}
 
 \begin{intuition}
@@ -50,7 +39,7 @@ Then, we define \(t^m\) inductively as follows: On input \(a_1, \ldots , a_n \in
 \end{intuition}
 
 \begin{eg}
-	In \((\mathbb{R} , 0, 1, +, \cdot, -)\), technically, a \hyperref[def:term]{term} looks like
+	In \((\mathbb{R} , 0, 1, +, \cdot, -)\), a \hyperref[def:term]{term} is essentially just a polynomial with integer coefficients, assuming we interpret them in a ring. Technically, a \hyperref[def:term]{term} looks like
 	\[
 		\cdot(+(1, 1), +(x, y)),
 	\]
@@ -58,49 +47,36 @@ Then, we define \(t^m\) inductively as follows: On input \(a_1, \ldots , a_n \in
 	\[
 		(1+1) (x+y).
 	\]
-	Also, we will use \(\underline{n}\) or \(n\) to represent the \hyperref[def:term]{term}
-	\[
-		\underline{n} = \underbrace{1+1+\ldots +1}_{n\text{ times}}.
-	\]
-	So we could write the above \hyperref[def:term]{term} as
-	\[
-		2\cdot(x+y)
-	\]
+	Also, we will use \(\underline{n}\) or \(n\) to represent the \hyperref[def:term]{term} \(\underline{n} = \underbrace{1+1+\ldots +1}_{n\text{ times}}\). So we could write the above \hyperref[def:term]{term} as \(2\cdot(x+y)\).
 \end{eg}
 
-Then, what do the \hyperref[def:term]{terms} in the \hyperref[eg:language-ring]{ring language} look like? They are the polynomials with integer coefficients, assuming we interpret  them in a ring.
-
 \begin{definition}[Formula]\label{def:formula}
-	Given a \hyperref[def:language]{language} \(\mathcal{L} \), the \emph{\(\mathcal{L} \)-formulas} are defined inductively:
+	The set of \emph{\(\mathcal{L} \)-formulas} are defined inductively:
 	\begin{enumerate}[(a)]
-		\item If \(s, t\) are \hyperref[def:term]{terms}, \(s=t\) is a \emph{formula}.
-		\item If \(R\) is a relation symbol of arity \(n_R\), and \(s_1, \ldots , s_{n_R}\) are \hyperref[def:term]{term}, then \(R(s_1, \ldots , s_{n_R})\) is a \emph{formula}.
-		\item If \(f\) is a \hyperref[def:formula]{formula}, then \(\lnot f\) is a \emph{formula}.
-		\item If \(\varphi\) and \(\psi\) are \hyperref[def:formula]{formulas}, then \(\varphi \land \psi \) and \(\varphi \lor \psi \) are \emph{formulas}.
-		\item If \(\varphi \) is a \hyperref[def:formula]{formula}, and \(v_1\) is a variable, \(\exists v_i \ \varphi \) and \(\forall v_i \ \varphi \) are \emph{formulas}.
+		\item\label{def:formula(a)} If \(s, t\) are \hyperref[def:term]{terms}, \(s=t\) is a \emph{formula}.
+		\item\label{def:formula(b)} If \(R\) is a relation symbol of arity \(n_R\), and \(s_1, \ldots , s_{n_R}\) are \hyperref[def:term]{term}, then \(R(s_1, \ldots , s_{n_R})\) is a \emph{formula}.
+		\item\label{def:formula(c)} If \(f\) is a \hyperref[def:formula]{formula}, then \(\lnot f\) is a \emph{formula}.
+		\item\label{def:formula(d)} If \(\varphi\) and \(\psi\) are \hyperref[def:formula]{formulas}, then \(\varphi \land \psi \) and \(\varphi \lor \psi \) are \emph{formulas}.
+		\item\label{def:formula(e)} If \(\varphi \) is a \hyperref[def:formula]{formula}, and \(v_i\) are variables, then \(\exists v_i \ \varphi \) and \(\forall v_i \ \varphi \) are \emph{formulas}.
 	\end{enumerate}
 \end{definition}
 
 \begin{notation}[Atomic formula]\label{not:atomic-formula}
-	\hyperref[def:formula]{Formulas} of the form (a) and (b) in \autoref{def:formula} are called \emph{atomic formulas}.
+	\autoref{def:formula} \autoref{def:formula(a)} and \autoref{def:formula(b)} are called \emph{atomic formulas}.
 \end{notation}
 
-\begin{notation}[Quantifier-free formula]\label{not:quantifiers-free-formula}
-	\hyperref[def:formula]{Formulas} of the form (a), (b), (c), and (d) in \autoref{def:formula} are called \emph{quantifier-free formulas}.
+\begin{notation}[Quantifier-free formula]\label{not:quantifier-free-formula}
+	\autoref{def:formula} \autoref{def:formula(a)}, \autoref{def:formula(b)}, \autoref{def:formula(c)}, and \autoref{def:formula(d)} are called \emph{quantifier-free formulas}.
 \end{notation}
+
+This logic is called \emph{first-order logic} (FO logic), since the quantifiers range over elements of the \hyperref[def:structure]{structures}, but not over, e.g., subsets.
 
 \begin{eg}
-	We can say that an element \(x\) of a ring has a square root by
-	\[
-		\exists y\ y^2 = x
-	\]
+	We can say that an element \(x\) of a ring has a square root by \(\exists y\ y^2 = x\).
 \end{eg}
 
 \begin{eg}
-	A group is torsion of order \(2\) can be said by
-	\[
-		\forall x\ x\cdot x = e.
-	\]
+	A group is torsion of order \(2\) can be said by \(\forall x\ x\cdot x = e\).
 \end{eg}
 
 \begin{eg}
@@ -114,10 +90,10 @@ Notice that for the first example, the \hyperref[def:formula]{formula} \(\exists
 	\[
 		y=1 \land \exists y\ y^2 = x,
 	\]
-	while the first appearance of \(y\) is free, the second appearance of \(y\) is bound by \(\exists y\), or we say that \(y\) is in the scope of \(\exists y\).
+	while the first appearance of \(y\) is free, the second appearance of \(y\) is bound by (in the scope of) \(\exists y\).
 \end{eg}
 
-While our definitions work perfectly fine with the above example, but sometimes we don't want this to happen. In such a case, we simply replace the bound instances of \(y\) with a new variable \(z\).
+While our definitions work perfectly fine with the above example, but sometimes we don't want this to happen. In such a case, we simply replace the bound instances of \(y\) with a new variable \(z\). This idea of variables being free or bound is defined formally as follows.
 
 \begin{definition}[Free variable]\label{def:free-variable}
 	The \emph{free variables} \(\mathrm{FV}(\varphi )\) of a \hyperref[def:formula]{formula} \(\varphi \) are defined inductively:
@@ -147,7 +123,7 @@ While our definitions work perfectly fine with the above example, but sometimes 
 \end{notation}
 
 \begin{remark}
-	So given \(\varphi (x_1, \ldots , x_n)\), we know that \(\varphi \) has no other \hyperref[def:free-variable]{free variables}.
+	So given \(\varphi (x_1, \ldots , x_n)\), we know that \(\varphi \) has no other \hyperref[def:free-variable]{free variables} than \(x_1, \ldots , x_n\).
 \end{remark}
 
 \begin{eg}
@@ -155,14 +131,18 @@ While our definitions work perfectly fine with the above example, but sometimes 
 \end{eg}
 
 \begin{definition}[Truth]\label{def:truth}
-	Given a \hyperref[def:language]{language} \(\mathcal{L} \) and an \hyperref[def:structure]{\(\mathcal{L} \)-structure} \(\mathcal{M} \), let \(\varphi (x_1, \ldots , x_n)\) be an \hyperref[def:formula]{\(\mathcal{L} \)-formula}. Let \(a_1, \ldots , a_n\in \mathcal{M} \). Define \(\mathcal{M} \models \varphi (\overline{a} )\)\footnote{We read this as \emph{\(\varphi \) is true of \(\overline{a} \) in \(\mathcal{M} \)}.} as follows:
+	Given an \hyperref[def:structure]{\(\mathcal{L} \)-structure} \(\mathcal{M} \), let \(\varphi (x_1, \ldots , x_n)\) be an \hyperref[def:formula]{\(\mathcal{L} \)-formula} and let \(a_1, \ldots , a_n\in M\). Then we say \(\varphi \) is \emph{true} of \(\overline{a} \) in \(\mathcal{M} \),\footnote{Or \(\mathcal{M} \) satisfies \(\varphi (\overline{a} )\).} denoted as \(\mathcal{M} \models \varphi (\overline{a} )\), as follows:
 	\begin{enumerate}[(a)]
 		\item If \(\varphi \) is \(s=t\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(s^{\mathcal{M}} (\overline{a} ) = t^{\mathcal{M} } (\overline{a} )\).
 		\item If \(\varphi \) is \(R(t_1, \ldots , t_{n_R})\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(\big( t^{\mathcal{M} }_1(\overline{a} ), \ldots , t^{\mathcal{M} }_{n_R}(\overline{a} )  \big)\in R^{\mathcal{M} }\).
 		\item If \(\varphi \) is \(\lnot \psi \), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(\mathcal{M} \not\models \psi (\overline{a} )\).
 		\item If \(\varphi \) is \(\psi _1\land \psi _2\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(\mathcal{M} \models \psi _1(\overline{a} )\) and \(\mathcal{M} \models \psi _2(\overline{a} )\).
 		\item If \(\varphi \) is \(\psi _1\lor \psi _2\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(\mathcal{M} \models \psi _1(\overline{a} )\) or \(\mathcal{M} \models \psi _2(\overline{a} )\).
-		\item If \(\varphi \) is \(\exists y\ \psi (\overline{x} , y)\),\footnote{Recall that \(\overline{x} = (x_1, \ldots , x_n)\).} then \(\mathcal{M} \models \varphi (\overline{a} )\) if there's \(b\in \mathcal{M} \) such that \(\mathcal{M} \models \psi (\overline{a} , b)\).
+		\item If \(\varphi \) is \(\exists y\ \psi (\overline{x} , y)\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if there's \(b\in \mathcal{M} \) such that \(\mathcal{M} \models \psi (\overline{a} , b)\).
 		\item If \(\varphi \) is \(\forall y\ \psi (\overline{x} , y)\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if for all \(b\in \mathcal{M} \) such that \(\mathcal{M} \models \psi (\overline{a} , b)\).
 	\end{enumerate}
 \end{definition}
+
+\begin{remark}
+	Every \hyperref[def:formula]{formula} is \hyperref[def:truth]{true}, or its negation is.
+\end{remark}

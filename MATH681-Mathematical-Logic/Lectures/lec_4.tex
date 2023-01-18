@@ -1,52 +1,59 @@
-\lecture{4}{17 Jan. 14:30}{Theory and Axioms}
+\lecture{4}{17 Jan. 14:30}{Theories and Axioms}
 \begin{eg}
-	Let \(\mathcal{L} _1 = \left\{ E \right\} \), where \(E\) is a binary relation; and \(\mathcal{L} _2 = \left\{ V, E, I \right\} \), where \(V, E\) are unary relations and \(I\) is a binary relation such that \(I(v, e)\) for \(v\in V\), \(e\in E\) means that \(v\) is a vertex on edge \(e\).
+	Let \(\mathcal{L} _1 = \left\{ E \right\} \), where \(E\) is a binary relation representing edge relation; and \(\mathcal{L} _2 = \left\{ V, E, I \right\} \), where \(V, E\) are unary relations and \(I\) is a binary relation representing incidence such that \(I(v, e)\) for \(v\in V\), \(e\in E\) means that \(v\) is a vertex on edge \(e\). Then,
+	\begin{itemize}
+		\item Let \(G\) be a graph, viewed as a \(\mathcal{L} _1\)-structure. A substructure of \(G\) is an induced subgraph \(H \subseteq G\) such that any edge in \(G\) between two vertices of \(H\) is in \(H\).
+		\item If we view \(G\) as an \(\mathcal{L} _2\)-substructure, a substructure is a subgraph \(H\) such that \(H\) has some vertices and edges from \(G\).\footnote{But there might be edges in \(H\) with no vertices, which can be fixed by having two functions \(I_1(e)=v\), \(I_2(e)=w\) when \(e\colon v \to w\).}
+	\end{itemize}
 \end{eg}
 
-Let \(G\) be a graph, viewed as a \(\mathcal{L} _1\)-structure. A substructure of \(G\) is an induced subgraph \(H \subseteq G\) such that any edge in \(G\) between two vertices of \(H\) is in \(H\). If we view \(G\) as an \(\mathcal{L} _2\)-substructure, a substructure is a subgraph \(H\) such that \(H\) has some vertices and edges from \(G\).\footnote{But there might be edges in \(H\) with no vertices, which can be fixed by having two functions \(I_1(e)=v\), \(I_2(e)=w\) when \(e\colon v \to w\).}
+\begin{remark}
+	The difference is that for \(\mathcal{L} _1\), having an edge is \hyperref[not:quantifier-free-formula]{quantifier-free}, while in \(\mathcal{L} _2\) is existential.
+\end{remark}
+\begin{explanation}
+	For \(\mathcal{L} _2\), \(vEw\) is \hyperref[not:quantifier-free-formula]{quantifier-free}, while in \(\mathcal{L} _2\),
+	\[
+		\exists \ (v\in V \land w\in V \land e\in E \land I(v, e) \land I(w, e))
+	\]
+	is not \hyperref[not:quantifier-free-formula]{quantifier-free}.
+\end{explanation}
 
-For example, \(vEw\) is \hyperref[not:quantifier-free-formula]{quantifier-free} in \(\mathcal{L} _1\), while
-\[
-	\exists \ (v\in V \land w\in V \land e\in E \land I(v, e) \land I(w, e))
-\]
-is not \hyperref[not:quantifier-free-formula]{quantifier-free} in \(\mathcal{L} _2\).
+\section{Theories}
+Let's start by the notion of \hyperref[def:theory]{theory}.
 
 \begin{definition}[Theory]\label{def:theory}
-	An \emph{\(\mathcal{L}\)-theory} is a set of \(\mathcal{L} \)-sentences.
+	An \emph{\(\mathcal{L}\)-theory} is a set of \hyperref[def:sentence]{\(\mathcal{L} \)-sentences}.
 \end{definition}
 
 \begin{definition}[Model]\label{def:model}
-	We say that \(\mathcal{M} \) is a \emph{model} of a \hyperref[def:theory]{theory} \(T\), written as \(\mathcal{M} \models T\), if \(\mathcal{M} \models \varphi \) for all \(\varphi \in T\).
+	\(\mathcal{M} \) is a \emph{model} of a \hyperref[def:theory]{theory} \(T\), written as \(\mathcal{M} \models T\), if \(\mathcal{M} \models \varphi \) for all \(\varphi \in T\).
 \end{definition}
 
 \begin{note}
-	Not every \hyperref[def:theory]{theory} has a \hyperref[def:model]{model}, e.g., \(\left\{ \forall x\ x \neq x \right\} \).
+	Not every \hyperref[def:theory]{theory} has a \hyperref[def:model]{model}, e.g., \(\left\{ \exists x\ x \neq x \right\} \).
 \end{note}
 
 \begin{definition}[Satisfiable]\label{def:satisfiable}
-	If a \hyperref[def:theory]{theory} has a \hyperref[def:model]{model}, we say that it is \emph{satisfiable}.
+	A \hyperref[def:theory]{theory} is \emph{satisfiable} if it has a \hyperref[def:model]{model}.
 \end{definition}
 
 \begin{definition}[Elementary class]\label{def:elementary-class}
-	A class \(\mathcal{K} \) of \(\mathcal{L} \) -structures is called an \emph{elementary class} if there is an \(\mathcal{L} \)-theory \(T\) such that
+	A class \(\mathcal{K} \) of \hyperref[def:structure]{\(\mathcal{L} \)-structures} \(\mathcal{M} \) is called an \emph{elementary class} if there is an \hyperref[def:theory]{\(\mathcal{L} \)-theory} \(T\) such that
 	\[
 		\mathcal{K} = \left\{ \mathcal{M} \mid \mathcal{M} \models T \right\}.
 	\]
 \end{definition}
 
-Start with an \(\mathcal{L} \)-structure \(\mathcal{M} \), then the theory of \(\mathcal{M} \) is
-\[
-	\mathop{\mathrm{Th}}(\mathcal{M} ) = \left\{ \varphi \mid \mathcal{M} \models \varphi  \right\}.
-\]
-It's easy to see that \(\mathcal{M} \models \mathop{\mathrm{Th}}(\mathcal{M} ) \).
+One way to get an \hyperref[def:elementary-class]{elementary class} is to take an \hyperref[def:structure]{\(\mathcal{L} \)-structure} \(\mathcal{M} \) and take the \hyperref[def:full-theory]{full theory}.
 
-\begin{remark}
-	\(\mathop{\mathrm{Th}}(\mathcal{M} ) \) characterizes the structures satisfying the same sentences as \(\mathcal{M} \).
-\end{remark}
+\begin{definition}[Full theory]\label{def:full-theory}
+	The \emph{full theory} \(\mathop{\mathrm{Th}}(\mathcal{M} ) \) of an \hyperref[def:structure]{\(\mathcal{L} \)-structure} \(\mathcal{M} \) is defined as \(\mathop{\mathrm{Th}}(\mathcal{M} ) = \left\{ \varphi \mid \mathcal{M} \models \varphi  \right\}\).
+\end{definition}
 
+From the definition, \(\mathcal{M} \models \mathop{\mathrm{Th}}(\mathcal{M} ) \), and \(\mathop{\mathrm{Th}}(\mathcal{M} ) \) characterizes the \hyperref[def:structure]{structures} satisfying the same \hyperref[def:sentence]{sentences} as \(\mathcal{M} \).
 
 \begin{definition}[Complete]\label{def:complete}
-	A \hyperref[def:theory]{theory} \(T\) is \emph{complete} if for any sentence \(\varphi \), either \(\varphi \in T\) or \(\lnot \varphi \in T\).
+	A \hyperref[def:theory]{theory} \(T\) is \emph{complete} if for any \hyperref[def:sentence]{sentence} \(\varphi \), either \(\varphi \in T\) or \(\lnot \varphi \in T\).
 \end{definition}
 
 \begin{remark}
@@ -54,22 +61,19 @@ It's easy to see that \(\mathcal{M} \models \mathop{\mathrm{Th}}(\mathcal{M} ) \
 \end{remark}
 
 \begin{definition}[Elementarily equivalent]\label{def:elementarily-equivalent}
-	\(\mathcal{M} \) and \(\mathcal{N} \) are \emph{elementarily equivalent}\(\mathcal{M} \equiv \mathcal{N} \) if for all sentences \(\varphi \),
+	\(\mathcal{M} \) and \(\mathcal{N} \) are \emph{elementarily equivalent}\(\mathcal{M} \equiv \mathcal{N} \) if for all \hyperref[def:sentence]{sentences} \(\varphi \),
 	\[
 		\mathcal{M} \models \varphi \iff \mathcal{N} \models \varphi .
 	\]
 \end{definition}
 
-\begin{remark}[Non-standard model of arithmetic]
-	There are \(\mathcal{N} \models \mathop{\mathrm{Th}}(\mathbb{N})\), but \(\mathcal{N} \) is not isomorphic to \(\mathbb{N} \). \(\mathcal{N} \) is called a \emph{non-standard model of arithmetic}. \(\mathcal{N} \) has \emph{infinite element} larger than all of \(\mathbb{M} \). Here, \(\mathbb{N} =(\mathbb{N} , 0, 1, +, \cdot, - )\)
+\begin{remark}
+	There are \(\mathcal{N} \models \mathop{\mathrm{Th}}(\mathbb{N})\), but \(\mathcal{N} \) is not isomorphic to \(\mathbb{N} \). \(\mathcal{N} \) is called a \emph{non-standard model of arithmetic}, and \(\mathcal{N} \) might have \emph{infinite element} larger than all of \(\mathcal{M} \). Here, \(\mathbb{N} =(\mathbb{N} , 0, 1, +, \cdot, - )\)
 \end{remark}
 
 \begin{eg}
 	\(\mathbb{Z} \oplus \mathbb{Z} \not\equiv \mathbb{Z} \) as groups.
 \end{eg}
-\begin{explanation}
-	We will show this on the homework.
-\end{explanation}
 
 The other way to define a \hyperref[def:theory]{theory} is to write down axioms.
 
@@ -109,11 +113,18 @@ Other theories of groups include Abelson group, divisible, etc.
 
 Given a \hyperref[def:theory]{theory}, consider \(T^{\models } = \left\{ \varphi \colon T \models \varphi \right\}\),\footnote{Recall \autoref{def:logical-consequence}.} so \(\mathcal{M} \models T\) if and only if \(\mathcal{M} \models T^{\models }\). Often we think of \(T\) and \(T^{\models }\) as the same. A \hyperref[def:theory]{theory} \(T\) is \hyperref[def:finitely-axiomatizable]{finitely axiomatizable} if there is a finite \(\Phi \) such that \(T^{\models } = \Phi ^{\models }\).
 
+\section{Elementary Embeddings}
+Let's now consider the following notion.
+
 \begin{definition}[Elementary embedding]\label{def:elementary-embedding}
-	Let \(\mathcal{M} \) and \(\mathcal{N} \) be \(\mathcal{L} \)-structures, and \(f\colon \mathcal{M} \to \mathcal{N} \) an \(\mathcal{L} \)-embedding. Then \(f\) is an \emph{elementary embedding} if for any formula \(\varphi (\overline{x} )\) and \(\overline{a} \in M\),
+	Let \(\mathcal{M} \) and \(\mathcal{N} \) be \hyperref[def:structure]{\(\mathcal{L} \)-structures}, and \(f\colon \mathcal{M} \to \mathcal{N} \) an \hyperref[def:embedding]{\(\mathcal{L} \)-embedding}. Then \(f\) is an \emph{elementary embedding} if for any \hyperref[def:formula]{formula} \(\varphi (\overline{x} )\) and \(\overline{a} \in M\),
 	\[
 		\mathcal{M} \models \varphi (\overline{a} )\iff \mathcal{N} \models \varphi (f(\overline{a} )).
 	\]
+\end{definition}
+
+\begin{definition}[Elementary substructure]\label{def:elementary-substructure}
+	If \(f\colon \mathcal{M} \hookrightarrow \mathcal{N} \) is a \hyperref[def:elementary-embedding]{elementary embedding} where \(\mathcal{M}\) is a \hyperref[def:substructure]{substructure} of \(\mathcal{N} \), then \(\mathcal{M} \) is an \emph{elementary substructure} of \(\mathcal{N} \).
 \end{definition}
 
 \begin{eg}
@@ -137,8 +148,11 @@ Given a \hyperref[def:theory]{theory}, consider \(T^{\models } = \left\{ \varphi
 	If \(\mathcal{M} \cong \mathcal{N} \), then \(\mathcal{M} \equiv \mathcal{N} \).
 \end{corollary}
 
+\section{Definable Sets}
+Consider the following.
+
 \begin{definition}[Definable set]\label{def:definable-set}
-	Let \(\mathcal{M} \) be an \(\mathcal{L} \)-structure, and let \(X \subseteq M ^n\). \(X\) is \emph{definable} if there is a \hyperref[def:formula]{formula} \(\varphi (x_1, \ldots , x_n, \overline{y} )\) and \(\overline{b} \in M\) such that
+	Let \(\mathcal{M} \) be an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, then \(X \subseteq M^n\) is \emph{definable} if there is a \hyperref[def:formula]{formula} \(\varphi (x_1, \ldots , x_n, \overline{y} )\) and \(\overline{b} \in M\) such that
 	\[
 		X = \left\{ \overline{a} \in M^n \mid \mathcal{M} \models \varphi (\overline{a} , \overline{b} ) \right\}.
 	\]
@@ -164,16 +178,15 @@ Given a \hyperref[def:theory]{theory}, consider \(T^{\models } = \left\{ \varphi
 	is \hyperref[def:definable-set]{definable}.
 \end{eg}
 
-\begin{eg}[Langrange's four-square theorem]
-	Let \(\mathbb{Z} =(\mathbb{Z} , +, -, \cdot, 0, 1)\). Then \(\mathbb{N} \) is \hyperref[def:definable-set]{\(\varnothing \)-definable} in \(\mathbb{Z} \) by
+\begin{eg}
+	Let \(\mathbb{Z} =(\mathbb{Z} , +, -, \cdot, 0, 1)\), then \(\mathbb{N} \) is \hyperref[def:definable-set]{\(\varnothing \)-definable} in \(\mathbb{Z} \) by\footnote{From the \href{https://en.wikipedia.org/wiki/Lagrange's_four-square_theorem}{Langrange's four-square theorem}, which says that every natural number is the sum of four squares.}
 	\[
 		\mathbb{N} = \left\{ z\in \mathbb{Z} \colon \exists u, v, x, y\ u^2 + v^2 + x^2 + y^2 = z \right\}.
 	\]
-	This follows from the \href{https://en.wikipedia.org/wiki/Lagrange%27s_four-square_theorem}{Langrange's four-square theorem}, which says that every natural number is the sum of four squares.
 \end{eg}
 
 \begin{eg}
-	\(\mathbb{Z} \) is \hyperref[def:definable-set]{\(\varnothing \)-definable} in \(\mathbb{Q} = (\mathbb{Q} , +, -, \cdot, 0, 1)\). This is a result of Julia Robinson, and the formula is very complicated.
+	\(\mathbb{Z} \) is \hyperref[def:definable-set]{\(\varnothing \)-definable} in \(\mathbb{Q} = (\mathbb{Q} , +, -, \cdot, 0, 1)\). This is a result of Julia Robinson~\cite{robinson_1949}, and the formulation is very complicated.
 \end{eg}
 
 \begin{problem*}

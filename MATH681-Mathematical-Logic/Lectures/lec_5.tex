@@ -1,0 +1,175 @@
+\lecture{5}{19 Jan. 14:30}{Hilbert-style Deductive System}
+We start by asking whether \(\mathbb{R} \) is \hyperref[def:definable]{definable} in \(\mathbb{C} = (\mathbb{C} , 0, 1, +, \cdot, -)\)?
+
+\begin{proposition}
+	Let \(\mathcal{M} \) be an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, and let \(X \subseteq M^n\) be a set which is \hyperref[def:definable]{definable} over \(\overline{a} \). Then any \hyperref[def:automorphism]{automorphism} of \(\mathcal{M} \) that fixes \(\overline{a} \) pointwise\footnote{If \(\overline{a} =(a_1, \ldots , a_m)\), then \(f(a_i) = a_i\).} fixes \(X\) setwise.\footnote{If \(b\in X\), then \(f(b)\in X\).}
+\end{proposition}
+\begin{proof}
+	Let \(f\) be an \hyperref[def:automorphism]{automorphism} of \(\mathcal{M} \) fixing \(\overline{a} \) pointwise, and \(X = \left\{ \overline{b} \in M^n\colon \mathcal{M} \models \varphi (\overline{b}, \overline{a} ) \right\} \). Fix \(\overline{b} \), and suppose \(\overline{b} \in X\), so \(\mathcal{M} \models \varphi (\overline{b} , \overline{a} )\). Because \(f\) is an \hyperref[def:elementary-embedding]{elementary embedding} from \autoref{prop:isomorphism-is-elementary-embedding},
+	\[
+		\mathcal{M} \models \varphi (f(\overline{b} ), f(\overline{a} ))
+		\implies \mathcal{M} \models \varphi (f(\overline{b} ), \overline{a} ),
+	\]
+	hence \(f(\overline{b} )\in X\). Similarly, if \(\overline{b} \notin X\), \(\mathcal{M} \models \lnot \varphi (\overline{b} , \overline{a} ) \implies \mathcal{M} \models \lnot \varphi (f(\overline{b} , \overline{a} ))\), so \(f(\overline{b} ) \notin X\).
+\end{proof}
+
+\begin{remark}
+	If \(X\) is \hyperref[def:definable]{\(\varnothing \)-definable}, it is fixed setwise by any \hyperref[def:automorphism]{automorphism}.
+\end{remark}
+
+\begin{eg}
+	\(\mathbb{N} \) is fixed setwise by any \hyperref[def:automorphism]{automorphism} of the ring \(\mathbb{Z} \). In fact, the only \hyperref[def:automorphism]{automorphism} of \(\mathbb{Z} \) is the identity.
+\end{eg}
+
+\begin{eg}
+	\(\mathbb{N} \) is not \hyperref[def:definable]{\(\varnothing \)-definable} in \(\mathbb{Z} =(\mathbb{Z} , 0, +)\).
+\end{eg}
+\begin{explanation}
+	Consider an \hyperref[def:automorphism]{automorphism} \(f(x) = -x\) of the group \(\mathbb{Z} \), which does not fix \(\mathbb{N} \) setwise.
+\end{explanation}
+
+\begin{problem*}
+	Is \(\mathbb{N} \) \hyperref[def:definable]{definable} in \(\mathbb{Z} =(\mathbb{Z} , 0, +)\) over some parameters \(\overline{a} \)?
+\end{problem*}
+\begin{answer}
+	For example, if \(\overline{a} =(1)\), then \(f\) does not fix \(1\). In fact, any \hyperref[def:automorphism]{automorphism} fixing \(1\) also fixes all of \(\mathbb{Z} \), but \(\mathbb{N} \) is not \hyperref[def:definable]{definable} in \((\mathbb{Z} , 0, +)\). To prove this we need \hyperref[def:compactness]{compactness}.
+\end{answer}
+
+\begin{prev}
+	Given a field \(F\), then \(F(a) \cong F(b)\) if \(a\) and \(b\) have the same minimal polynomial over \(F\) or if both do not satisfy any polynomial over \(F\).
+\end{prev}
+
+\begin{eg}
+	\(\mathbb{Q} (\pi ) \cong \mathbb{Q} (e)\) because \(\pi \) and \(e\) are both transcendental.
+\end{eg}
+
+We now return to the big question: is \(\mathbb{R} \) \hyperref[def:definable]{definable} in \(\mathbb{C} = (\mathbb{C} , 0, 1, +, \cdot, -)\)? If \(f\colon \mathbb{Q} (a) \to  \mathbb{Q} (b)\) such that \(a\mapsto b\), then there is an \hyperref[def:automorphism]{automorphism} \(\hat{f} \colon \mathbb{C} \to  \mathbb{C} \) such that \(a\mapsto b\), i.e., \(\hat{f} \) extends \(f\). In other words, we need to find such an \(f\) with \(a\in \mathbb{R} \) and \(b\notin \mathbb{R} \).
+
+\begin{eg}
+	\(a = \pi \), \(b = i \pi \) are both transcendental.
+\end{eg}
+
+\begin{eg}
+	\(a\) is a real \(\sqrt[4]{2}\), \(b\) is a complex \(\sqrt[4]{2} \).
+\end{eg}
+
+The above two examples show that \(\mathbb{R} \) is not \hyperref[def:definable]{\(\varnothing \)-definable} in \(\mathbb{C} \). In fact, \(\mathbb{R} \) is not \hyperref[def:definable]{definable} over any \(\overline{a} \) because there are elements of \(\mathbb{R} \) and \(\mathbb{C} \setminus \mathbb{R} \) transcendental over any \(\overline{a} \).
+
+\begin{intuition}
+	There are so many \(a, b\) such that given any \(\overline{a} \), we can still find a pair that works.
+\end{intuition}
+
+\section{Soundness, Completeness, and Compactness}
+In this section, we're going to formalize proofs.
+
+\subsection{Hilbert-style Deductive System}
+There are all sorts of different proof systems, and the one we use is the so-called \hyperref[def:Hilbert-style-deductive-system]{Hilbert-style deductive system}.
+
+\begin{definition}[Hilbert-style deductive system]\label{def:Hilbert-style-deductive-system}
+	\begin{definition}[Proof]\label{def:proof}
+		A \emph{proof} is a sequence of \hyperref[def:formula]{formulas} \(\left\{ \varphi _i \right\} _{i=1}^n\) such that \(\varphi _n\) is the conclusion.
+	\end{definition}
+	Each \hyperref[def:formula]{formula} is either a \hyperref[def:logical-axiom]{logical axiom} or it follows from previous lines by a deductive rule.
+
+	\begin{definition}[Schema]\label{def:schema}
+		The axioms will be written using symbols for \hyperref[def:formula]{formulas}, variables, etc.
+	\end{definition}
+
+	\begin{definition}[Logical axioms]\label{def:logical-axioms}
+		We have the following \emph{logical axioms}:
+		\begin{definition}[Propositional axioms]\label{def:propositional-axioms}
+			The \emph{propositional axioms} are:
+			\begin{enumerate}
+				\item[(A1)] \(\varphi \to  (\psi (\varphi ))\).
+				\item[(A2)] \((\varphi \to (\psi \to \Theta )) \to ((\varphi \to  \psi ) \to (\varphi \to \Theta ))\).
+				\item[(A3)] \((\lnot \varphi \to \lnot \psi ) \to  ((\lnot \varphi \to \psi ) \to \varphi )\).
+			\end{enumerate}
+		\end{definition}
+
+		Besides, we also have
+		\begin{enumerate}
+			\item[(A4)] \(\forall x\ \varphi (x, \ldots ) \to \varphi (t, \ldots )\) where \(t\) is any \hyperref[def:term]{term}.
+			\item[(A5)] \(\left[ \forall x\ (\varphi \to \psi ) \right] \to \left[ (\forall x\ \varphi ) \to (\forall x \psi ) \right] \).
+			\item[(A6)] \(\varphi \to  \forall x\ \varphi \), where \(x\) is not free in \(\varphi \).\todo{Double check?}
+		\end{enumerate}
+		\begin{definition}[Axioms for equality]\label{def:axioms-for-equality}
+			The \emph{Axioms for equality} are:
+			\begin{enumerate}
+				\item[(A7)] for any \hyperref[def:term]{term} \(t, u, v\), function symbols \(f\), and relation symbols \(R\),
+					\begin{enumerate}[(a)]
+						\item \(t = t\).
+						\item \(t = u \to  u = t\).
+						\item \((t=u \land u = v) \to  (t = v)\).
+						\item \((u_1 = t_1 \land \ldots \land u_{n_f} = t_{n_f}) \to f(u_1, \ldots , u_{n_f}) = f(t_1, \ldots , t_{n_f})\).
+						\item \((u_1 = t_1 \land \ldots \land u_{n_R} = t_{n_R}) \to R(u_1, \ldots , u_{n_R}) \iff R(t_1, \ldots , t_{n_R})\).
+					\end{enumerate}
+			\end{enumerate}
+		\end{definition}
+		We also have one rule of inference:
+		\begin{definition}[Modus Ponens]\label{def:Modus-Ponens}
+			From \(\varphi \) and \(\varphi \to \psi\), deduces \(\psi \).
+		\end{definition}
+	\end{definition}
+
+	We can also have proofs using a set of hypotheses \(\Gamma \). In such a proof, in addition to a \hyperref[def:logical-axiom]{logical axiom}, we can assert a \hyperref[def:formula]{formula} \(\varphi \in \Gamma \). If we prove \(\psi \) using \(\Gamma \) as hypotheses, we write \(\Gamma \vdash \psi \).
+
+	\begin{definition}[Valid]\label{def:valid}
+		If we prove \(\psi \) without hypotheses, we write \(\vdash \psi \), in which case we say \(\psi \) is \emph{valid}.
+	\end{definition}
+\end{definition}
+
+These \hyperref[def:formula]{formulas} might have \hyperref[def:free-variable]{free variables}.
+
+\begin{eg}
+	A proof from calculus of a limit, e.g., \(\forall \epsilon \exists \delta \ldots \). And we start by stating
+	\begin{itemize}
+		\item let \(\epsilon > 0\),
+		\item choose \(\delta =\epsilon \),
+		\item \(\vdots\)
+		\item \(\vert f(x) - f(y) \vert < \epsilon \).
+	\end{itemize}
+	We should interpret \hyperref[def:free-variable]{free variables} as representing an arbitrary
+\end{eg}
+
+\begin{eg}
+	\(\varphi \to (\psi \to  \varphi )\) is a \hyperref[def:schema]{schema}, i.e., an infinite set of axioms with all possible choices of \(\varphi \) and \(\psi \).
+\end{eg}
+
+\begin{prev}[Propositional logic]
+	\((p \land q) \lor (r \land \lnot q)\).
+\end{prev}
+
+\begin{remark}
+	We can check whether the \hyperref[def:propositional-axioms]{propositional axioms} are \hyperref[def:truth]{true} with a truth table.
+\end{remark}
+
+\begin{definition}[Propositional tautology]\label{def:propositional-tautology}
+	A \emph{propositional tautology} is a boolean combination of formulas \(\varphi _1, \ldots , \varphi _n\) which is \hyperref[def:truth]{true} via a truth table assigning true or false to each of \(\varphi _1, \ldots , \varphi _n\).
+\end{definition}
+
+So instead of using \hyperref[def:propositional-axioms]{propositional axioms}, we could instead allow as logical axioms any propositional tautology.
+
+To prove completeness, we will need \(~5\) propositional tautologies. We will prove some of these, but take others on faith.
+
+\begin{remark}
+	\hyperref[def:propositional-axioms]{Propositional axioms} are enough to prove all propositional tautologies.
+\end{remark}
+
+\begin{notation}
+	We write \(\Gamma \underset{\mathcal{L} }{\vdash } \varphi \) if there is a proof of \(\varphi \) from \(\Gamma \) in the \hyperref[def:language]{language} \(\mathcal{L} \).
+\end{notation}
+
+\begin{note}
+	Passing to a larger \hyperref[def:language]{language} will not let you prove more, so we can just write \(\vdash \).
+\end{note}
+
+\subsection{Soundness}
+The idea is that if an \hyperref[def:sentence]{\(\mathcal{L} \)-sentence} \(\varphi \) is provable, then it is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(\mathcal{L} \)-structures}.
+
+
+
+\subsection{Completeness}
+If \(\varphi \) is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(\mathcal{L} \)-structures}, then it is provable.
+
+
+

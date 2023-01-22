@@ -1,4 +1,4 @@
-\lecture{5}{19 Jan. 14:30}{Hilbert-style Deductive System}
+\lecture{5}{19 Jan. 14:30}{Hilbert-Style Deductive System}
 We start by asking whether \(\mathbb{R} \) is \hyperref[def:definable]{definable} in \(\mathbb{C} = (\mathbb{C} , 0, 1, +, \cdot, -)\)?
 
 \begin{proposition}
@@ -62,77 +62,86 @@ The above two examples show that \(\mathbb{R} \) is not \hyperref[def:definable]
 \section{Soundness, Completeness, and Compactness}
 In this section, we're going to formalize proofs.
 
-\subsection{Hilbert-style Deductive System}
-There are all sorts of different proof systems, and the one we use is the so-called \hyperref[def:Hilbert-style-deductive-system]{Hilbert-style deductive system}.
+\subsection{Proofs}
+There are all sorts of different proof systems, and the one we use is the so-called Hilbert-style deductive system. Before that, we first see some common notions.
 
-\begin{definition}[Hilbert-style deductive system]\label{def:Hilbert-style-deductive-system}
-	\begin{definition}[Proof]\label{def:proof}
-		A \emph{proof} is a sequence of \hyperref[def:formula]{formulas} \(\left\{ \varphi _i \right\} _{i=1}^n\) such that \(\varphi _n\) is the conclusion.
-	\end{definition}
-	Each \hyperref[def:formula]{formula} is either a \hyperref[def:logical-axiom]{logical axiom} or it follows from previous lines by a deductive rule.
+\begin{notation}[Schema]\label{not:schema}
+	A \emph{schema} is written in symbols for \hyperref[def:formula]{formulas}, variables, etc.
+\end{notation}
 
-	\begin{definition}[Schema]\label{def:schema}
-		The axioms will be written using symbols for \hyperref[def:formula]{formulas}, variables, etc.
+\begin{eg}
+	\(\varphi \to (\psi \to  \varphi )\) is a \hyperref[not:schema]{schema}, i.e., an infinite set with all possible choices of \(\varphi \) and \(\psi \).
+\end{eg}
+
+Specifically, every \hyperref[def:logical-axioms]{logical axiom} is written in \hyperref[not:schema]{schema}, meaning that any instance of a symbol for a \hyperref[def:formula]{formula}, e.g., \(\varphi \), can be replaced by any \hyperref[def:formula]{formula}.
+
+\begin{definition}[Generalization]\label{def:generalization}
+	A \hyperref[def:formula]{formula} \(\varphi \) is a \emph{generalization} of a \hyperref[def:formula]{formula} \(\psi \) if \(\varphi \) is \(\forall x_1 \ldots \forall x_n\ \psi \) where \(x_1, \ldots , x_n\) are variables.
+\end{definition}
+
+\begin{notation}[Hypothesis]\label{not:hypothesis}
+	\emph{Hypotheses} are \hyperref[def:formula]{formulas} that we may assume in a \hyperref[def:proof]{proof}.
+\end{notation}
+
+\begin{definition}[Proof]\label{def:proof}
+	A \emph{proof} is a sequence of \hyperref[def:formula]{formulas} \(\left\{ \varphi _i \right\} _{i=1}^n\) such that \(\varphi _n\) is the conclusion, and each \hyperref[def:formula]{formula} is either an \hyperref[def:logical-axioms]{axiom} or is obtained from the previous \hyperref[def:formula]{formulas} by a \hyperref[def:rule-of-inference]{rule of inference}.
+
+	Moreover, for a \hyperref[def:proof]{proof} based on a set of \hyperref[not:hypothesis]{hypotheses} \(\Gamma \), then in addition to a \hyperref[def:logical-axioms]{logical axiom}, we can assert a \hyperref[def:formula]{formula} \(\varphi \in \Gamma \). If we prove \(\psi \) using \(\Gamma \) as \hyperref[not:hypothesis]{hypotheses}, we write \(\Gamma \vdash \psi \).
+
+	\begin{definition}[Valid]\label{def:valid}
+		If we \hyperref[def:proof]{prove} \(\psi \) without \hyperref[not:hypothesis]{hypotheses}, we write \(\vdash \psi \) and say \(\psi \) is \emph{valid}.
 	\end{definition}
 
 	\begin{definition}[Logical axioms]\label{def:logical-axioms}
-		We have the following \emph{logical axioms}:
+		The \emph{logical axioms} are the following \hyperref[def:formula]{formulas} written in \hyperref[not:schema]{schema}, as well as all of their \hyperref[def:generalization]{generalizations}:
 		\begin{definition}[Propositional axioms]\label{def:propositional-axioms}
-			The \emph{propositional axioms} are:
+			The \emph{propositional axioms} are
 			\begin{enumerate}
-				\item[(A1)] \(\varphi \to  (\psi (\varphi ))\).
-				\item[(A2)] \((\varphi \to (\psi \to \Theta )) \to ((\varphi \to  \psi ) \to (\varphi \to \Theta ))\).
+				\item[(A1)] \(\varphi \to  (\psi \to \varphi )\).
+				\item[(A2)] \((\varphi \to (\psi \to \theta )) \to ((\varphi \to  \psi ) \to (\varphi \to \theta ))\).
 				\item[(A3)] \((\lnot \varphi \to \lnot \psi ) \to  ((\lnot \varphi \to \psi ) \to \varphi )\).
 			\end{enumerate}
 		\end{definition}
 
-		Besides, we also have
 		\begin{enumerate}
 			\item[(A4)] \(\forall x\ \varphi (x, \ldots ) \to \varphi (t, \ldots )\) where \(t\) is any \hyperref[def:term]{term}.
 			\item[(A5)] \(\left[ \forall x\ (\varphi \to \psi ) \right] \to \left[ (\forall x\ \varphi ) \to (\forall x \psi ) \right] \).
 			\item[(A6)] \(\varphi \to  \forall x\ \varphi \), where \(x\) is not free in \(\varphi \).\todo{Double check?}
 		\end{enumerate}
+
 		\begin{definition}[Axioms for equality]\label{def:axioms-for-equality}
-			The \emph{Axioms for equality} are:
+			The \emph{Axioms for equality} is
 			\begin{enumerate}
-				\item[(A7)] for any \hyperref[def:term]{term} \(t, u, v\), function symbols \(f\), and relation symbols \(R\),
+				\item[(A7)] for any \hyperref[def:term]{terms} \(t, u, v, \ldots \), function symbols \(f\), and relation symbols \(R\),
 					\begin{enumerate}[(a)]
 						\item \(t = t\).
 						\item \(t = u \to  u = t\).
 						\item \((t=u \land u = v) \to  (t = v)\).
 						\item \((u_1 = t_1 \land \ldots \land u_{n_f} = t_{n_f}) \to f(u_1, \ldots , u_{n_f}) = f(t_1, \ldots , t_{n_f})\).
-						\item \((u_1 = t_1 \land \ldots \land u_{n_R} = t_{n_R}) \to R(u_1, \ldots , u_{n_R}) \iff R(t_1, \ldots , t_{n_R})\).
+						\item \((u_1 = t_1 \land \ldots \land u_{n_R} = t_{n_R}) \to (R(u_1, \ldots , u_{n_R}) \leftrightarrow R(t_1, \ldots , t_{n_R}))\).
 					\end{enumerate}
 			\end{enumerate}
 		\end{definition}
-		We also have one rule of inference:
-		\begin{definition}[Modus Ponens]\label{def:Modus-Ponens}
-			From \(\varphi \) and \(\varphi \to \psi\), deduces \(\psi \).
-		\end{definition}
 	\end{definition}
 
-	We can also have proofs using a set of hypotheses \(\Gamma \). In such a proof, in addition to a \hyperref[def:logical-axiom]{logical axiom}, we can assert a \hyperref[def:formula]{formula} \(\varphi \in \Gamma \). If we prove \(\psi \) using \(\Gamma \) as hypotheses, we write \(\Gamma \vdash \psi \).
-
-	\begin{definition}[Valid]\label{def:valid}
-		If we prove \(\psi \) without hypotheses, we write \(\vdash \psi \), in which case we say \(\psi \) is \emph{valid}.
+	\begin{definition}[Rule of inference]\label{def:rule-of-inference}
+		From \(\varphi \) and \(\varphi \to \psi\), deduces \(\psi \).\footnote{This is called \href{https://en.wikipedia.org/wiki/Modus_ponens}{modus ponens}.}
 	\end{definition}
 \end{definition}
+
+
 
 These \hyperref[def:formula]{formulas} might have \hyperref[def:free-variable]{free variables}.
 
 \begin{eg}
-	A proof from calculus of a limit, e.g., \(\forall \epsilon \exists \delta \ldots \). And we start by stating
+	A \hyperref[def:proof]{proof} from calculus of a limit, e.g., \(\forall \epsilon \exists \delta \ldots \). And we start by stating
 	\begin{itemize}
 		\item let \(\epsilon > 0\),
 		\item choose \(\delta =\epsilon \),
 		\item \(\vdots\)
 		\item \(\vert f(x) - f(y) \vert < \epsilon \).
 	\end{itemize}
-	We should interpret \hyperref[def:free-variable]{free variables} as representing an arbitrary
-\end{eg}
-
-\begin{eg}
-	\(\varphi \to (\psi \to  \varphi )\) is a \hyperref[def:schema]{schema}, i.e., an infinite set of axioms with all possible choices of \(\varphi \) and \(\psi \).
+	We should interpret \hyperref[def:free-variable]{free variables} as anything.
 \end{eg}
 
 \begin{prev}[Propositional logic]
@@ -144,32 +153,27 @@ These \hyperref[def:formula]{formulas} might have \hyperref[def:free-variable]{f
 \end{remark}
 
 \begin{definition}[Propositional tautology]\label{def:propositional-tautology}
-	A \emph{propositional tautology} is a boolean combination of formulas \(\varphi _1, \ldots , \varphi _n\) which is \hyperref[def:truth]{true} via a truth table assigning true or false to each of \(\varphi _1, \ldots , \varphi _n\).
+	A \emph{propositional tautology} is a boolean combination \(\lor , \land , \lnot \) of \hyperref[def:formula]{formulas} \(\varphi _1, \ldots , \varphi _n\) which is \hyperref[def:truth]{true} via a truth table assigning true or false to each of \(\varphi _1, \ldots , \varphi _n\).
 \end{definition}
 
-So instead of using \hyperref[def:propositional-axioms]{propositional axioms}, we could instead allow as logical axioms any propositional tautology.
+So instead of using \hyperref[def:propositional-axioms]{propositional axioms}, we could instead allow as \hyperref[def:logical-axioms]{logical axioms} any \hyperref[def:propositional-tautology]{propositional tautology}.
 
-To prove completeness, we will need \(~5\) propositional tautologies. We will prove some of these, but take others on faith.
+To prove completeness, we will need \(~5\) \hyperref[def:propositional-tautology]{propositional tautologies}. We will \hyperref[def:proof]{prove} some of these, but take others on faith.
 
 \begin{remark}
-	\hyperref[def:propositional-axioms]{Propositional axioms} are enough to prove all propositional tautologies.
+	\hyperref[def:propositional-axioms]{Propositional axioms} are enough to \hyperref[def:proof]{prove} all \hyperref[def:propositional-tautology]{propositional tautologies}.
 \end{remark}
 
 \begin{notation}
-	We write \(\Gamma \underset{\mathcal{L} }{\vdash } \varphi \) if there is a proof of \(\varphi \) from \(\Gamma \) in the \hyperref[def:language]{language} \(\mathcal{L} \).
+	We write \(\Gamma \vdash_\mathcal{L} \varphi \) if there is a \hyperref[def:proof]{proof} of \(\varphi \) from \(\Gamma \) in the \hyperref[def:language]{language} \(\mathcal{L} \).
 \end{notation}
 
 \begin{note}
-	Passing to a larger \hyperref[def:language]{language} will not let you prove more, so we can just write \(\vdash \).
+	Passing to a larger \hyperref[def:language]{language} will not let you \hyperref[def:proof]{prove} more, so we can just write \(\vdash \).
 \end{note}
 
 \subsection{Soundness}
 The idea is that if an \hyperref[def:sentence]{\(\mathcal{L} \)-sentence} \(\varphi \) is provable, then it is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(\mathcal{L} \)-structures}.
 
-
-
 \subsection{Completeness}
 If \(\varphi \) is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(\mathcal{L} \)-structures}, then it is provable.
-
-
-

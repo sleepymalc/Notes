@@ -1,0 +1,82 @@
+\lecture{7}{26 Jan. 14:30}{Hopf-Rinow Theorem}
+We have shown the following in the homework.
+
+\begin{theorem}
+	Let \((\mathcal{M} , g)\) be a compact \hyperref[def:Riemannian-manifold]{Riemannian manifold}.
+	\begin{enumerate}[(a)]
+		\item Any \(2\) points \(p, q\in \mathcal{M} \) can be connected by a minimizing \hyperref[def:geodesic]{geodesic}.
+		\item For all \(p\in \mathcal{M} \), the \hyperref[def:exponential-map]{exponential map} \(\exp _p\) is defined on all of \(T_p \mathcal{M} \) and any \hyperref[def:geodesic]{geodesic} may be extended indefinitely in each direction.
+	\end{enumerate}
+\end{theorem}
+
+We now want to generalize it. However, this is not true in the most general setting, and we need one more requirement.
+
+\begin{definition}[Geodesically complete]\label{def:geodesically-complete}
+	A \hyperref[def:Riemannian-manifold]{Riemannian manifold} \((\mathcal{M} , g)\) is \emph{geodesically complete} if for all \(p\in \mathcal{M} \), \(\exp _p\) is defined on all of \(T_p \mathcal{M} \), if any \hyperref[def:geodesic]{geodesic} \(c(t)\) with \(c(0) = p\) can be extended for all \(t\in \mathbb{R} \).
+\end{definition}
+
+\begin{theorem}[Hopf-Rinow theorem]\label{thm:Hopf-Rinow}
+	Let \((\mathcal{M} , g)\) be a compact \hyperref[def:Riemannian-manifold]{Riemannian manifold}, then the following statements are equivalent.
+	\begin{enumerate}[(a)]
+		\item\label{thm:Hopf-Rinow-1} \(\mathcal{M} \) is complete as a metric space.\footnote{Hence, equivalently, complete as a topological space w.r.t.\ the underlying topology.}
+		\item\label{thm:Hopf-Rinow-2} The closed and bounded subsets of \(\mathcal{M} \) are compact.
+		\item\label{thm:Hopf-Rinow-3} There exists \(p\in \mathcal{M} \) such that \(\exp _p\) is defined on all \(T_p \mathcal{M} \).
+		\item\label{thm:Hopf-Rinow-4} \(\mathcal{M} \) is \hyperref[def:geodesically-complete]{geodesically complete}.
+	\end{enumerate}
+	Furthermore, \autoref{thm:Hopf-Rinow-4} (and hence \autoref{thm:Hopf-Rinow-1}, \autoref{thm:Hopf-Rinow-2}, and \autoref{thm:Hopf-Rinow-3}) implies
+	\begin{enumerate}[(e)]
+		\item\label{thm:Hopf-Rinow-5} for two points \(p, q\in \mathcal{M} \) can be joined by a minimizing \hyperref[def:geodesic]{geodesic}, i.e., \hyperref[def:geodesic]{geodesic} of the shortest \hyperref[def:distance]{distance} \(d(p, q)\).
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	We start by proving \autoref{thm:Hopf-Rinow-4} implies \autoref{thm:Hopf-Rinow-5}. Let \(\mathcal{M} \) be \hyperref[def:geodesically-complete]{geodesically complete}, and let \(r \coloneqq d(p, q)\), and let \(\rho \) be as in the corollary from handout for HW1. Let \(p_0 \in \partial B(p, \rho )\) be a point where the continuous functional \(d(q, \cdot)\) attains its minimum on the compact set \(\partial B(p, \rho )\). Then, for some \(V \in T_p \mathcal{M} \),
+	\[
+		p_0 = \exp _p \rho V.
+	\]
+	Consider the \hyperref[def:geodesic]{geodesic} \(c(t) = \exp _p tV\), by showing
+	\[
+		c(r) = q,
+	\]
+	\(\at{c}{[0, r]}{} \) will be the shortest \hyperref[def:geodesic]{geodesic} from \(p\) to \(q\). We start by defining
+	\[
+		I\coloneqq \left\{ t\in[0, r] \mid d(c(t), q) = r-t \right\},
+	\]
+	and referring to the following diagram to guide us.
+	\begin{center}
+		\incfig{Hopf-Rinow-theorem}
+	\end{center}
+
+	Now, we want to show that \(I = [0, r]\), which will follow from showing that \(I\) is open.
+	\begin{note}
+		\(I\) is not empty since by definition it contains \(0\) and \(r\). Further, \(I\) is closed by continuity.
+	\end{note}
+	Let \(t_0 \in I\), and let \(\rho _1 > 0\) be the radius as in the corollary, without loss of generality, \(\rho _1 < r-t_0\). Let \(p_1\in \partial B(c(t_0), \rho _1)\) be the point where the continuous functional \(d(q, \cdot)\) attains its minimum on the compact set \(\partial B(c(t_0), \rho _1)\). By the triangle inequality,
+	\[
+		d(p, q) \leq d(p, p_1) + d(p_1, q).
+	\]
+	For every curve \(\gamma \) from \(c(t_0)\) to \(q\), there exists \(\gamma (t)\in \partial B(c(t_0), \rho _1)\), hence
+	\[
+		L(\gamma )
+		\geq \underbrace{d(c(t_0), \gamma (t))}_{\rho _1} + d(\gamma (t), q)
+		= \rho _1 + d(p_1, q),
+	\]
+	implying \(d(q, c(t_0)) \geq \rho _1 + d(p_1, q)\). But from the triangle inequality, we actually have
+	\[
+		d(q, c(t_0)) = \rho _1 + d(p_1, q)
+		\iff d(p_1, q) = \underbrace{d(q, c(t_0))}_{r-t_0} - \rho _1,
+	\]
+	hence \(d(p_1, p) \geq r-(r-t_0 - \rho _1) = t_0 + \rho _1\).
+
+	On the other hand, there exists a curve from \(p\) to \(p_1\) of length \(t_1 + \rho _1\) since it's composed by the portion from \(p\) to \(c(t_0)\) along \(c(t)\) and the portion being the \hyperref[def:geodesic]{geodesic} from \(c(t_0)\) to \(p_1\) of length \(\rho _1\). Then, by the theorem we have proved in the HW1\#5, this curve is a \hyperref[def:geodesic]{geodesic} curve. Finally, from the uniqueness of \hyperref[def:geodesic]{geodesic} with the given extra data, this \hyperref[def:geodesic]{geodesic} coincides with \(c\). Hence,
+	\[
+		p_1 = c ( t_0 + \rho _1),
+	\]
+	with \(d(p_1, q) = r-t_0 - \rho _1\),
+	\[
+		d(c(t_0 + \rho _1), q)
+		= d(p_1, q)
+		= r - t_0 - \rho
+		= r-(t_0 + \rho _1),
+	\]
+	thus \(t_0 + \rho _1\in I\), hence \(I\) is open, i.e., \(I = [0, r]\), so \(c(r) = q\) follows.
+\end{proof}

@@ -14,8 +14,7 @@ The above is not true for function symbols though.
 	If \(G=(\mathbb{Z} , 0, +)\), then \(\mathbb{N} \) is not the domain of a subgroup. So if we took \(\mathcal{L} =\left\{ 0, +, ^{-1}  \right\} \), where \(0\) is the unary relation, \(+\) is the ternary relation, and \(^{-1} \) is the binary relation, an \hyperref[def:substructure]{\(\mathcal{L} \)-substructure} of a group might not be a subgroup.
 \end{eg}
 
-\section{First-Order Logic}
-\subsection{Terms, Formulas, and Truths}
+\subsection{Terms}
 Intuitive, an \hyperref[def:formula]{\(\mathcal{L} \)-formula} is an expression built using the symbols in a \hyperref[def:language]{language} \(\mathcal{L} \), \(=\), the logical connectives \(\land, \lor, \lnot\), and variable symbols \(v_1, v_2, \ldots , x, y, z\), and also quantifiers \(\exists \) and \(\forall \).
 
 \begin{definition}[Term]\label{def:term}
@@ -30,7 +29,7 @@ Intuitive, an \hyperref[def:formula]{\(\mathcal{L} \)-formula} is an expression 
 If \(\mathcal{M}\) is an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, and \(t\) is a \hyperref[def:term]{term} involving only variables among \(v_1, \ldots , v_n\), then \(t\) has an interpretation \(t^{\mathcal{M}} \colon M^n \to M\) as a function as follows. On input \(a_1, \ldots , a_n \in M\),
 \begin{enumerate}[(a)]
 	\item if \(t\) is a constant \(c\), \(t^{\mathcal{M} } (a_1, \ldots , a_n) = c^{\mathcal{M} }\).
-	\item if \(t\) is a variable \(v_i\), \(t^{\mathcal{M} } (a_1, \ldots , a_n) = a_i\);
+	\item if \(t\) is a variable \(v_i\), \(t^{\mathcal{M} } (a_1, \ldots , a_n) = v_i\);
 	\item if \(t\) is \(f(s_1, \ldots , s_k)\), then \(t^{\mathcal{M} } (a_1, \ldots , a_n) = f^{\mathcal{M} } \big(s_1^{\mathcal{M} }(a_1, \ldots , a_n), \ldots , s_k^{\mathcal{M}}(a_1, \ldots , a_n) \big)\).
 \end{enumerate}
 
@@ -50,14 +49,15 @@ If \(\mathcal{M}\) is an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, a
 	Also, we will use \(\underline{n}\) or \(n\) to represent the \hyperref[def:term]{term} \(\underline{n} = \underbrace{1+1+\ldots +1}_{n\text{ times}}\). So we could write the above \hyperref[def:term]{term} as \(2\cdot(x+y)\).
 \end{eg}
 
+\subsection{Formulas}
 \begin{definition}[Formula]\label{def:formula}
-	The set of \emph{\(\mathcal{L} \)-formulas} are defined inductively:
+	The set of \emph{\(\mathcal{L} \)-formulas} is defined inductively:
 	\begin{enumerate}[(a)]
-		\item\label{def:formula(a)} If \(s, t\) are \hyperref[def:term]{terms}, \(s=t\) is a \emph{formula}.
-		\item\label{def:formula(b)} If \(R\) is a relation symbol of arity \(n_R\), and \(s_1, \ldots , s_{n_R}\) are \hyperref[def:term]{term}, then \(R(s_1, \ldots , s_{n_R})\) is a \emph{formula}.
+		\item\label{def:formula(a)} If \(s, t\) are \hyperref[def:term]{terms}, then \(s=t\) is a \emph{formula}.
+		\item\label{def:formula(b)} If \(R\) is a relation symbol of arity \(n_R\) and \(s_1, \ldots , s_{n_R}\) are \hyperref[def:term]{terms}, then \(R(s_1, \ldots , s_{n_R})\) is a \emph{formula}.
 		\item\label{def:formula(c)} If \(f\) is a \hyperref[def:formula]{formula}, then \(\lnot f\) is a \emph{formula}.
 		\item\label{def:formula(d)} If \(\varphi\) and \(\psi\) are \hyperref[def:formula]{formulas}, then \(\varphi \land \psi \) and \(\varphi \lor \psi \) are \emph{formulas}.
-		\item\label{def:formula(e)} If \(\varphi \) is a \hyperref[def:formula]{formula}, and \(v_i\) are variables, then \(\exists v_i \ \varphi \) and \(\forall v_i \ \varphi \) are \emph{formulas}.
+		\item\label{def:formula(e)} If \(\varphi \) is a \hyperref[def:formula]{formula} and \(v_i\) are variables, then \(\exists v_i \ \varphi \) and \(\forall v_i \ \varphi \) are \emph{formulas}.
 	\end{enumerate}
 \end{definition}
 
@@ -130,6 +130,9 @@ While our definitions work perfectly fine with the above example, but sometimes 
 	It's valid to write \(\varphi (x, y, z) \coloneqq x=y\).
 \end{eg}
 
+\subsection{Truths}
+Finally, we define the notion of \hyperref[def:truth]{truth}.
+
 \begin{definition}[Truth]\label{def:truth}
 	Given an \hyperref[def:structure]{\(\mathcal{L} \)-structure} \(\mathcal{M} \), let \(\varphi (x_1, \ldots , x_n)\) be an \hyperref[def:formula]{\(\mathcal{L} \)-formula} and let \(a_1, \ldots , a_n\in M\). Then we say \(\varphi \) is \emph{true} of \(\overline{a} \) in \(\mathcal{M} \),\footnote{Or \(\mathcal{M} \) satisfies \(\varphi (\overline{a} )\).} denoted as \(\mathcal{M} \models \varphi (\overline{a} )\), as follows:
 	\begin{enumerate}[(a)]
@@ -138,8 +141,8 @@ While our definitions work perfectly fine with the above example, but sometimes 
 		\item If \(\varphi \) is \(\lnot \psi \), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(\mathcal{M} \not\models \psi (\overline{a} )\).
 		\item If \(\varphi \) is \(\psi _1\land \psi _2\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(\mathcal{M} \models \psi _1(\overline{a} )\) and \(\mathcal{M} \models \psi _2(\overline{a} )\).
 		\item If \(\varphi \) is \(\psi _1\lor \psi _2\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if \(\mathcal{M} \models \psi _1(\overline{a} )\) or \(\mathcal{M} \models \psi _2(\overline{a} )\).
-		\item If \(\varphi \) is \(\exists y\ \psi (\overline{x} , y)\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if there's \(b\in \mathcal{M} \) such that \(\mathcal{M} \models \psi (\overline{a} , b)\).
-		\item If \(\varphi \) is \(\forall y\ \psi (\overline{x} , y)\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if for all \(b\in \mathcal{M} \) such that \(\mathcal{M} \models \psi (\overline{a} , b)\).
+		\item If \(\varphi \) is \(\exists y\ \psi (\overline{x} , y)\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if there's \(b\in M\) such that \(\mathcal{M} \models \psi (\overline{a} , b)\).
+		\item If \(\varphi \) is \(\forall y\ \psi (\overline{x} , y)\), then \(\mathcal{M} \models \varphi (\overline{a} )\) if for all \(b\in M\) such that \(\mathcal{M} \models \psi (\overline{a} , b)\).
 	\end{enumerate}
 \end{definition}
 

@@ -1,0 +1,103 @@
+\lecture{8}{31 Jan. 14:30}{}
+We first prove\autoref{thm:completeness} \autoref{thm:completeness-2}, but before that we need an additional definition and a technical lemma.
+
+\begin{definition}[Henkin constant]\label{def:Henkin-constant}
+	An \hyperref[def:theory]{\(\mathcal{L} ^{\ast} \)-theory} \(T^{\ast} \) has \emph{He kin constants} if for each \hyperref[def:formula]{formula} \(\varphi (x)\) with one \hyperref[def:free-variable]{free variable}, there is a constant symbol \(c\in \mathcal{L} ^{\ast} \) such that
+	\[
+		\big( \exists x\ \varphi (x)\big) \to \varphi (c) \text{ is in \(T^{\ast} \)}.
+	\]
+\end{definition}
+We see that the above is equivalent to
+\[
+	\big( \lnot \forall x\ \varphi (x)\big) \to  \lnot \varphi (x) \text{ is in \(T^{\ast} \)},
+\]
+and we will use this version (\(\forall \)) and view \(\exists \) being a shorthand for \(\lnot \forall \lnot \); also, we will use \(\to \) and \(\lnot \) as primitive, and \(\land , \lor \) are shorthand.
+
+\begin{lemma}\label{lma:lec8}
+	If \(\Gamma \vdash \varphi (x)\), and \(c\) does not occur in \(\Gamma \) or in \(\varphi (x)\), then there is a variable \(y\), not appearing in \(\varphi (x)\), such that \(\Gamma \vdash \forall y\ \varphi (y)\). Moreover, there is a \hyperref[def:proof]{proof} of \(\forall y\ \varphi (y)\) in which \(c\) does not appear.
+\end{lemma}
+\begin{proof}
+	Let \(\alpha _1(x), \ldots , \alpha _n(x) = \varphi (c)\) be a \hyperref[def:proof]{proof} of \(\varphi (c)\) from \(\Gamma \). Let \(y\) be a variable not appearing in this \hyperref[def:proof]{proof}. We claim that \(\alpha _1(y), \ldots , \alpha _n(y) = \varphi (y)\) is still a valid \hyperref[def:proof]{proof} of \(\varphi (y)\). There are three cases to consider (for each \(i = 1, \ldots , n\)):
+	\begin{enumerate}[(a)]
+		\item If \(\alpha _i(c)\) is in \(\Gamma \), then \(c\) does not actually occur in \(\alpha _i(c)\) because it does not appear in \(\Gamma \). So \(\alpha _i(y)\) is the same as \(\alpha _i(c)\).
+		\item If \(\alpha _i(c)\) is a \hyperref[def:logical-axioms]{logical axiom}, then \(\alpha _i(y)\) is a \hyperref[def:logical-axioms]{logical axiom} as well. For most of these it is easy to check, but for (A6), i.e., \(\varphi \to \forall x\ \varphi \) if \(x\) is not \hyperref[def:free-variable]{free} in \(\varphi \), there is a little more. But \(y\) did not appear in \(\alpha _i(c)\), so \(y \neq x\), and substituting \(y\) for \(c\) will not stop \(x\) from being \hyperref[def:free-variable]{free}.
+		\item If \(\alpha _i(c)\) follows by \hyperref[def:rule-of-inference]{(MP)} from \(\alpha _j(c)\) and \(\alpha _k(c) = \alpha _j(c) \to  \alpha _i(c)\) for \(j, k < i\), then \(\alpha _i(y)\) follows by \hyperref[def:rule-of-inference]{(MP)} from \(\alpha _j(y)\) and \(\alpha _k(y) = \alpha _j(y) \to  \alpha _i(y)\).
+
+		      So \(\Gamma \vdash \varphi (y)\) and the \hyperref[def:proof]{proof} does not involve \(c\). If \(y\) does not appear in \(\Gamma \), then \(\Gamma \vdash \forall y\ \varphi (y)\).\footnote{And the \hyperref[def:proof]{proof} does not involve \(c\).} In general, let \(\Phi \subseteq \Gamma \) be the subset of \(\Gamma \) that was used in the \hyperref[def:proof]{proof}, so \(y\) does not appear in \(\Phi \). \(\Phi \vdash \varphi (y)\), so \(\Phi \vdash Aay\ \varphi (y)\), and \(\Gamma \vdash \forall y\ \varphi (y)\).
+	\end{enumerate}
+\end{proof}
+
+So \autoref{lma:lec8} implies that we have \(\Gamma \vdash \varphi (y)\) and the \hyperref[def:proof]{proof} does not involve \(c\).
+
+\begin{corollary}\label{col:lec8}
+	If \(\Gamma \vdash \varphi (c)\), and \(c\) does not occur in \(\Gamma \) or in \(\varphi (x)\). Then \(\Gamma \vdash \forall x\ \varphi (x)\), and there is a \hyperref[def:proof]{proof} not involving \(c\).\footnote{Here, \(x\) is any variable that does not appear in \(\varphi  (c)\).}
+\end{corollary}
+\begin{proof}
+	We know that for some \(y\), \(\Gamma \vdash \forall y\ \varphi (y)\), (A4) says \(\forall y\ \varphi (y) \to  \varphi (x)\). So \(\forall y\ \varphi (y) \vdash \varphi (x)\) since \(x\) does not appear in \(\forall y \varphi (y)\), \(\forall y\ \varphi (y) \vdash \forall x\ \varphi (x)\).
+\end{proof}
+
+\begin{note}
+	\(x\) might appear in \(\Gamma \).
+\end{note}
+
+\begin{theorem}\label{thm:lec8}
+	Let \(T\) be a \hyperref[def:consistent]{consistent} \hyperref[def:theory]{\(\mathcal{L} \)-theory}. There is a \hyperref[def:language]{language} \(\mathcal{L} ^{\ast} \supseteq \mathcal{L}\) and \(T^{\ast} \supseteq T\) a \hyperref[def:consistent]{consistent} \hyperref[def:theory]{\(\mathcal{L} ^{\ast} \)-theory} such that \(T^{\ast} \) has \hyperref[def:Henkin-constant]{Henkin constants}. We ca choose \(\mathcal{L} ^{\ast} \) such that \(\vert \mathcal{L} ^{\ast} \vert = \vert \mathcal{L} \vert + \aleph _0\).
+\end{theorem}
+\begin{proof}
+	Let \(\mathcal{L} _0 = \mathcal{L} \) and \(T_0 = T\). Let \(\mathcal{L} _1\) be the expansion of \(\mathcal{L} _0\) by adding a new constant symbol \(c_{\ell } \) for each \hyperref[def:formula]{\(\mathcal{L} _0\)-formula} \(\ell \). First, we show that \(T_0\) is still a \hyperref[def:consistent]{consistent} \hyperref[def:theory]{\(\mathcal{L} _1\)-theory}.
+
+	\begin{remark}
+		Technically, \(\vdash \) is really \(\vdash _{\mathcal{L} }\). This is a key step for seeing that it does not matter.
+	\end{remark}
+
+	If not, there is a \hyperref[def:proof]{proof} from \(T_0\) of a \hyperref[prop:proof-by-contradiction]{contradiction}. This \hyperref[def:proof]{proof} uses only finitely many of the new constants \(c_{\ell } \). By \autoref{col:lec8}, we can replace these constants one-by-one by new variables, e.g., if the original \hyperref[prop:proof-by-contradiction]{contradiction} was \(\varphi (c_1, \ldots , c_n)\) and \(\lnot \varphi (c_1, \ldots , c_n)\), then \(T_0\) proves \(\forall x_1, \ldots , \forall x_n\ \varphi (x_1, \ldots , x_n)\) and \(\forall x_1, \ldots , \forall x_n\ \lnot \varphi (x_1, \ldots , x_n)\). Moreover, these \hyperref[def:proof]{proofs} take place in \(\mathcal{L} _0\) By (A4), \(T_0 \vdash _{\mathcal{L} _0} \varphi (x_1, \ldots , x_n)\), and \(T_0 \vdash _{\mathcal{L} _0} \lnot \varphi (x_1, \ldots , x_n)\), which is a contradiction. So \(T_0\) is a \hyperref[def:consistent]{consistent} \hyperref[def:theory]{\(\mathcal{L} _1\)-theory}.
+\end{proof}
+
+Now, we can prove \autoref{thm:completeness} \autoref{thm:completeness-2} to complete the proof of \autoref{thm:completeness}.
+
+\begin{proof}[Proof of \autoref{thm:completeness} \autoref{thm:completeness-2}]\label{pf:thm:completeness-2}
+	Let \(T\) be a \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theory} in a \hyperref[def:language]{language} \(\mathcal{L} \). We now proceed in steps.
+
+	\begin{enumerate}
+		\item Expand \(\mathcal{L} \) to \(\mathcal{L} \supseteq \mathcal{L} \)  with new constant symbols, and then expand \(T\) to an \hyperref[def:theory]{\(\mathcal{L} ^{\ast} \)-theory} \(T^{\ast} \) with the following property.
+
+		      If \(\varphi \) is of the form \(\lnot \forall x\ \psi (x)\), then let
+		      \[
+			      \theta _\varphi \coloneqq (\lnot \forall x\ \psi (x)) \to \lnot \psi (c_{\ell } )
+		      \]
+		      (\((\exists \lnot \psi (x)) \to \lnot \psi (c_{\ell } )\)).\footnote{If \(\varphi \) is not in this form, let \(\theta _\varphi = \forall x\ (x=x)\).} Let \(\theta =\left\{ \theta _\ell \mid \ell \text{ on \hyperref[def:formula]{\(\mathcal{L} _0\)-formula}}  \right\} \).
+
+		      \begin{claim}
+			      \(T_1 = T_0 \cup \theta \) is \hyperref[def:consistent]{consistent}.
+		      \end{claim}
+		      \begin{explanation}
+			      Note that \(T_1\) \emph{has \hyperref[def:Henkin-constant]{Hekin constants}} for \(\mathcal{L} _0\). If \(T_1\) is \hyperref[def:consistent]{inconsistent}, there are \(\varphi _n, \ldots , \varphi _{m+1}\) such that \(T_0 \cup \left\{ \theta _\ell , \ldots , \theta _{\ell _{m^\prime} }, \theta _{\ell _m} \right\} \) is \hyperref[def:consistent]{inconsistent}. Taking \(m\) to be as small as possible, \(T_0 \cup \left\{ \theta _{\varphi _1}, \ldots , \theta _{\varphi _m} \right\} \).
+
+			      \begin{note}
+				      This makes sense as \(T_0\) is \hyperref[def:consistent]{consistent}.
+			      \end{note}
+
+			      So
+			      \[
+				      T_0 \cup \left\{ \theta _{\ell _1}, \ldots , \theta _{\ell _m} \right\} \vdash \lnot \theta _{\varphi _{m+1}},
+			      \]
+			      and \(\varphi _{m+1}\) is of the form \(\lnot \forall x\ \psi (x)\), and \(\theta _{\ell _{m+1}}\) is \(\big(\lnot \forall x\ \psi (x)\big) \to \lnot \psi (c_{\ell } ) \). By (A1), (A2), (A3),
+			      \[
+				      T_0 \cup \left\{ \theta _{\ell _1}, \ldots , \theta _{\ell _m} \right\} \vdash \lnot \forall x\ \psi (x)
+			      \]
+			      and
+			      \[
+				      T_0 \cup \left\{ \theta _{\ell _1}, \ldots , \theta _{\ell _m} \right\} \vdash \psi (c_{\ell }).
+			      \]
+			      Since \(c_{\ell } \) does not appear in \(T_0 \cup \left\{ \theta _{\ell _1}, \ldots , \theta _{\ell _m} \right\} \), so
+			      \[
+				      T_0 \cup \left\{ \theta _{\ell _1}, \ldots , \theta _{\ell _m} \right\} \vdash \forall x\ \psi (x).
+			      \]
+			      So \(T_0 \cup \left\{ \theta _{\ell _1}, \ldots , \theta _{\ell _m} \right\} \) is \hyperref[def:consistent]{inconsistent}, a contradiction, so \(T_1\) is \hyperref[def:consistent]{consistent}.
+		      \end{explanation}
+
+		      Given \(T_{i} \) and \(\mathcal{L} _i\), define a \(T_{i+1}\) and \(\mathcal{L} _{i+1}\) in this way. Each \(T_i\) is \hyperref[def:consistent]{consistent}, then, \(T^{\ast} = \bigcup T_i\) is an \hyperref[def:theory]{\(\mathcal{L} ^{\ast} = \bigcup \mathcal{L} _i\)-theory}. \(T^{\ast} \) is \hyperref[def:consistent]{consistent} as a nested union of \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theories}, and \(T^{\ast} \) has \hyperref[def:Henkin-constant]{Henkin constants} because every \hyperref[def:formula]{\(\mathcal{L} ^{\ast} \)-formula} \(\varphi \) is an \hyperref[def:formula]{\(\mathcal{L} _i\)-formula} for some \(i\), and \(\theta _\ell \in T_{i+1} \subseteq T^{\ast} \).
+		\item Extend \(T^{\ast} \) to a maximal \hyperref[def:theory]{theory} \(T^{\ast\ast} \)\footnote{Which still has \hyperref[def:Henkin-constant]{Henkin constants}.}
+		\item Turn \(T^{\ast\ast} \) into a \hyperref[def:model]{model}. The elements of the \hyperref[def:model]{model} are constant symbols from \(\mathcal{L} ^{\ast} \), modulo the equivalence relation \(c \sim d\) if \(c=d\) is in \(T^{\ast\ast} \), i.e., \(T^{\ast\ast} \vdash c = d\).
+	\end{enumerate}
+\end{proof}

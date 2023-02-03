@@ -3,12 +3,10 @@
 	If \(\Gamma \cup \left\{ \varphi  \right\} \vdash \lnot \psi \), then \(\Gamma \cup \left\{ \psi  \right\} \vdash \lnot \varphi \).
 \end{proposition}
 \begin{proof}
-	Suppose \(\Gamma \cup \left\{ \varphi  \right\} \vdash \lnot \psi \), by the \hyperref[thm:deduction]{deduction theorem} says that
-	\[
-		\Gamma \vdash \varphi \to \lnot \psi .
-	\]
-	From (A1), (A2), and (A3), we can \hyperref[def:proof]{prove} \((\varphi \to \lnot \psi ) \to (\psi \to \lnot \varphi )\). By \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash \psi \to \lnot \varphi \). By the \hyperref[thm:deduction]{deduction theorem}, \(\Gamma \cup \left\{ \psi  \right\} \vdash \lnot \varphi \).
+	Suppose \(\Gamma \cup \left\{ \varphi  \right\} \vdash \lnot \psi \), by the \hyperref[thm:deduction]{deduction theorem} says that \(\Gamma \vdash \varphi \to \lnot \psi\). From \autoref{A1}, \autoref{A2}, and \autoref{A3}, we can \hyperref[def:proof]{prove} \((\varphi \to \lnot \psi ) \to (\psi \to \lnot \varphi )\). By \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash \psi \to \lnot \varphi \), then from the \hyperref[thm:deduction]{deduction theorem}, \(\Gamma \cup \left\{ \psi  \right\} \vdash \lnot \varphi \).
 \end{proof}
+
+Now we introduce an important notion.
 
 \begin{definition}[Consistent]\label{def:consistent}
 	A \hyperref[def:theory]{theory} \(T\) is \emph{consistent} if for all \(\varphi \), it is not the case that \(T \vdash \varphi \) and \(T \vdash \lnot \varphi \).
@@ -18,47 +16,71 @@
 	If a \hyperref[def:theory]{theory} \(T\) is not \hyperref[def:consistent]{consistent}, then it's \emph{inconsistent}.
 \end{definition}
 
-\begin{remark}
-	We could make the same definition for a set of \hyperref[def:formula]{formulas}.
-\end{remark}
+We could make the same definition for a set of \hyperref[def:formula]{formulas}.
 
 \begin{proposition}[Proof by contradiction]\label{prop:proof-by-contradiction}
 	If \(\Gamma \cup \left\{ \varphi \right\}\) is \hyperref[def:inconsistent]{inconsistent}, then \(\Gamma \vdash \lnot \varphi \).
 \end{proposition}
 \begin{proof}
-	There is \(\psi \) 	such that \(\Gamma \cup \left\{ \varphi  \right\} \vdash \psi \) and \(\Gamma \cup \left\{ \varphi  \right\} \vdash \psi \), so \(\Gamma \vdash \varphi \to \psi \) and \(\Gamma \vdash \varphi \to \lnot \psi \). Using (A1), (A2), and (A3), we can prove that
+	There is \(\psi \) 	such that \(\Gamma \cup \left\{ \varphi  \right\} \vdash \psi \) and \(\Gamma \cup \left\{ \varphi  \right\} \vdash \psi \), so \(\Gamma \vdash \varphi \to \psi \) and \(\Gamma \vdash \varphi \to \lnot \psi \) by the \hyperref[thm:deduction]{deduction theorem}. Using \autoref{A1}, \autoref{A2}, and \autoref{A3}, we can prove that
 	\[
 		(\varphi \to \psi ) \to \big( (\varphi \to \lnot \psi ) \to \lnot \varphi \big).
 	\]
 	By \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash (\varphi \to \lnot \psi ) \to \lnot \varphi \), and by \hyperref[def:rule-of-inference]{(MP)} again, we have \(\Gamma \vdash \lnot \varphi \).
 \end{proof}
 
-\begin{proposition}
+\begin{proposition}\label{prop:either-consistent}
 	If a \hyperref[def:theory]{theory} \(T\) is \hyperref[def:consistent]{consistent}, and \(\varphi \) is a \hyperref[def:sentence]{sentence}, then either \(T\cup \left\{ \varphi  \right\} \) or \(T\cup \left\{ \lnot \varphi \right\} \) is \hyperref[def:consistent]{consistent}.
 \end{proposition}
 \begin{proof}
-	If they were both \hyperref[def:inconsistent]{inconsistent}, \(T\vdash \lnot \varphi \) and \(T\vdash \lnot \lnot \varphi \), so \(T\) would be \hyperref[def:inconsistent]{inconsistent}, but \(T\) is \hyperref[def:consistent]{consistent}\(\conta\)
+	If they were both \hyperref[def:inconsistent]{inconsistent}, \(T\vdash \lnot \varphi \) and \(T\vdash \lnot \lnot \varphi \), so \(T\) would be \hyperref[def:inconsistent]{inconsistent} \(\conta\)
 \end{proof}
 
 \begin{note}
-	The above is also true for \hyperref[def:formula]{formula}.
+	The above is also true for \hyperref[def:formula]{formulas}.
 \end{note}
 
-\begin{proposition}
-	If a \hyperref[def:theory]{theory} \(T\) is \hyperref[def:inconsistent]{inconsistent}, then \(T\cup \left\{ \varphi  \right\} \) is \hyperref[def:inconsistent]{inconsistent} for all \(\varphi \). Hence, \(T\vdash \varphi \) for all \(\varphi \).
-\end{proposition}
+\begin{remark}
+	If \(T\) is \hyperref[def:inconsistent]{inconsistent}, then \(T \vdash \varphi \) for any \(\varphi \).
+\end{remark}
+\begin{explanation}
+	If \(T\) is \hyperref[def:inconsistent]{inconsistent}, then \(T\cup \left\{ \lnot \varphi  \right\} \) is \hyperref[def:inconsistent]{inconsistent} for all \(\varphi \). Hence, from \hyperref[prop:proof-by-contradiction]{proof by contradiction}, \(T\vdash \lnot \lnot \varphi \) for all \(\varphi \), which is just \(T \vdash \varphi \).
+\end{explanation}
 
 \begin{definition}[Maximal]\label{def:maximal}
-	A \hyperref[def:theory]{theory} \(T\) is called \emph{maximal} if it is \hyperref[def:consistent]{consistent} and for all \hyperref[def:sentence]{sentences} \(\varphi \), either \(\varphi \in T\) or \(\lnot \varphi \in T\).
+	A \hyperref[def:theory]{theory} \(T\) is \emph{maximal} if it is \hyperref[def:consistent]{consistent} and for all \hyperref[def:sentence]{sentences} \(\varphi \), either \(\varphi \in T\) or \(\lnot \varphi \in T\).
 \end{definition}
 
 In particular, if \(T\vdash \varphi \), then \(\varphi \in T\).
 
-\begin{theorem}[Zorn's lemma]\label{thm:zorn}
-	Let \((P, \leq )\) be a \href{https://en.wikipedia.org/wiki/Partially_ordered_set}{partially ordered set}. If every non-empty chain in \(P\) has an upper bound, then \(P\) has a maximal element.
+\begin{intuition}
+	Basically, a \hyperref[def:maximal]{maximal} \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theory} has opinion on everything.
+\end{intuition}
+
+Now, we want to see that given a \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theory}, whether we can extend it to a \hyperref[def:maximal]{maximal} one. To do this, we need the following.
+
+\begin{definition*}
+	Let \((P, \leq )\) be a \href{https://en.wikipedia.org/wiki/Partially_ordered_set}{partially ordered set}.
+	\begin{definition}[Chain]\label{def:chain}
+		A \emph{chain} is a set \(C \subseteq P\) such that for every \(p, q\in C\), either \(p \leq q\) or \(q \leq p\).
+	\end{definition}
+	\begin{definition}[Upper bound]\label{def:upper-bound}
+		If \(X \subseteq P\) is a set, an \emph{upper bound} for \(X\) is an element \(p\in P\) such that \(p \geq q\) for all \(q\in X\).
+	\end{definition}
+	\begin{definition}[Maximal]\label{def:POS-maximal}
+		An element \(p\in P\) is \emph{maximal} if there is no \(q\in P\) with \(q > p\).
+	\end{definition}
+\end{definition*}
+
+\begin{note}
+	Note that a \hyperref[def:POS-maximal]{maximal} element might not be greater than everything, there is just nothing greater than it.
+\end{note}
+
+\begin{theorem}[Zorn's lemma]\label{thm:Zorn}
+	Let \((P, \leq )\) be a \href{https://en.wikipedia.org/wiki/Partially_ordered_set}{partially ordered set}. If every non-empty \hyperref[def:chain]{chain} in \(P\) has an \hyperref[def:upper-bound]{upper bound}, then \(P\) has a \hyperref[def:POS-maximal]{maximal} element.
 \end{theorem}
 
-\begin{theorem}
+\begin{theorem}\label{thm:extend-to-maximal}
 	Any \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theory} \(T\) can be extended to a \hyperref[def:maximal]{maximal} \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theory} \(T^\prime \supseteq T\).
 \end{theorem}
 \begin{proof}
@@ -68,18 +90,20 @@ In particular, if \(T\vdash \varphi \), then \(\varphi \in T\).
 		The result holds for \(\mathcal{L} \) being countable.
 	\end{claim}
 	\begin{explanation}
-		Firstly, list out all \hyperref[def:sentence]{sentences} \(\varphi _1, \varphi _2, \ldots \), start with \(T_0 = T\). Given \(T_i\) \hyperref[def:consistent]{consistent}, one of \(T_i \cup \left\{ \varphi _i \right\} \) or \(T_i \cup \left\{ \lnot \varphi _i \right\} \) is \hyperref[def:consistent]{consistent}. Let \(T_{i+1} \) be one of these that is \hyperref[def:consistent]{consistent}. Let \(T^{\ast} = \bigcup_{i} T_i \), we now see that  \(T^{\ast} \) is \hyperref[def:consistent]{consistent}.
+		Firstly, list out all \hyperref[def:sentence]{sentences} \(\varphi _1, \varphi _2, \ldots \), start with \(T_0 = T\). Given \(T_i\) \hyperref[def:consistent]{consistent}, one of \(T_i \cup \left\{ \varphi _i \right\} \) or \(T_i \cup \left\{ \lnot \varphi _i \right\} \) is \hyperref[def:consistent]{consistent} from \autoref{prop:either-consistent}. Let \(T_{i+1} \) be one of these that is \hyperref[def:consistent]{consistent}. Let \(T^{\ast} = \bigcup_{i} T_i \), which is \hyperref[def:maximal]{maximal}, and we now show that \(T^{\ast} \) is \hyperref[def:consistent]{consistent}.
 
-		Suppose not, then \(T^{\ast} \vdash \theta \) and \(T^{\ast} \vdash \lnot \theta \). In this case, there is some \(T_i\) such that \(T_i \vdash \theta \) and \(T_i \vdash \lnot \theta \) because \hyperref[def:proof]{proofs} are finite. But \(T_i\) is \hyperref[def:consistent]{consistent}, so this cannot happen, hence \(T^{\ast} \) is \hyperref[def:maximal]{maximal}.
+		Suppose not, then \(T^{\ast} \vdash \theta \) and \(T^{\ast} \vdash \lnot \theta \) for some \(\theta \). In this case, there is some \(T_i\) such that \(T_i \vdash \theta \) and \(T_i \vdash \lnot \theta \) because \hyperref[def:proof]{proofs} are finite, with \(T_i\) being \hyperref[def:consistent]{consistent}, a contradiction \(\conta\)
 	\end{explanation}
 
 	\begin{claim}
 		The result holds for arbitrary \(\mathcal{L} \).
 	\end{claim}
 	\begin{explanation}
-		For arbitrary \(\mathcal{L} \), let \((P, \leq )\) be the set of \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theories} extending \(T_i\) ordered by inclusion. Let \(C\) be a non-empty chain, and let \(T^{\ast} = \bigcup_{T^\prime \in C} T^\prime \supseteq T \). We see that \(T^{\ast} \) is \hyperref[def:consistent]{consistent} because if \(t^{\ast} \vdash \theta \) and \(T^{\ast} \vdash \lnot \theta \), there are finitely many \hyperref[def:formula]{formulas} used in those \hyperref[def:proof]{proofs}, from, say, \(T_1, \ldots , T_n \in C\).
+		For arbitrary \(\mathcal{L} \), let \((P, \leq )\) be the set of \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theories} extending \(T_i\) ordered by inclusion. Let \(C\) be a non-empty \hyperref[def:chain]{chain}, and let \(T^{\ast} = \bigcup_{T^\prime \in C} T^\prime \supseteq T \).
 
-		Because \(C\) is a chain, by reordering, we may assume that \(T_1 \subseteq \ldots \subseteq T_n\). So \(T_n \vdash \theta \) and \(T_n \vdash \lnot \theta \), contradicting the \hyperref[def:consistent]{consistency} of \(T_n\), so \(T^{\ast} \) is \hyperref[def:consistent]{consistent}, i.e., \(T^{\ast} \in P\), and \(T^{\ast} \) is an upper bound on \(C\). By \hyperref[thm:zorn]{Zorn's lemma}, \((P, \leq )\)  has a maximal lemma \(T^{\ast} \supseteq T \), \hyperref[def:consistent]{consistent}. If \(T^{\ast} \) is not \hyperref[def:maximal]{maximal}, then there is \(\varphi \) such that \(\varphi \notin T^{\ast} \), \(\lnot \varphi \notin T^{\ast} \). But one of \(T^{\ast} \cup \left\{ \varphi  \right\} \) or \(T^{\ast} \cup \left\{ \lnot \varphi  \right\} \) is \hyperref[def:consistent]{consistent}, hence in \(P\), contradicting the fact that \(T^{\ast} \) is maximal.
+		We see that \(T^{\ast} \) is \hyperref[def:consistent]{consistent} because if \(T^{\ast} \vdash \theta \) and \(T^{\ast} \vdash \lnot \theta \), there are finitely many \hyperref[def:formula]{formulas} used in those \hyperref[def:proof]{proofs}, from, say, \(T_1, \ldots , T_n \in C\). Because \(C\) is a \hyperref[def:chain]{chain}, by reordering, we may assume that \(T_1 \subseteq \ldots \subseteq T_n\). So \(T_n \vdash \theta \) and \(T_n \vdash \lnot \theta \), contradicting the \hyperref[def:consistent]{consistency} of \(T_n\), so \(T^{\ast} \) is \hyperref[def:consistent]{consistent}, i.e., \(T^{\ast} \in P\). Furthermore, \(T^{\ast} \) is an \hyperref[def:upper-bound]{upper bound} on \(C\),\footnote{Note that \(C\) is arbitrary.} so \((P, \leq )\) has a \hyperref[def:POS-maximal]{maximal} \hyperref[def:consistent]{consistent} \hyperref[def:theory]{theory} \(T^{\ast} \supseteq T \) from \hyperref[thm:Zorn]{Zorn's lemma}.
+
+		If \(T^{\ast} \) is not \hyperref[def:maximal]{maximal}, then there is \(\varphi \) where \(\varphi \notin T^{\ast} \), \(\lnot \varphi \notin T^{\ast} \). From \autoref{prop:either-consistent}, one of \(T^{\ast} \cup \left\{ \varphi  \right\} \) or \(T^{\ast} \cup \left\{ \lnot \varphi  \right\} \) is \hyperref[def:consistent]{consistent}, hence in \(P\), contradicting to \(T^{\ast} \) being \hyperref[def:POS-maximal]{maximal} \(\conta\)
 	\end{explanation}
 \end{proof}
 
@@ -87,7 +111,7 @@ In particular, if \(T\vdash \varphi \), then \(\varphi \in T\).
 	We can do that same proof for any \(\mathcal{L} \) using \href{https://en.wikipedia.org/wiki/Transfinite_induction}{transfinite recursion} for the uncountable case.
 \end{remark}
 
-Motivated by \autoref{lma:soundness}, we have the following.
+Motivated by \autoref{lma:soundness} and \autoref{thm:extend-to-maximal}, we close this section with the following.
 
 \begin{theorem}[Soundness]\label{thm:soundness}
 	Let \(T\) be a \hyperref[def:theory]{theory} and \(\varphi \) be a \hyperref[def:sentence]{sentence}.
@@ -97,11 +121,17 @@ Motivated by \autoref{lma:soundness}, we have the following.
 	\end{enumerate}
 \end{theorem}
 \begin{proof}
-	\autoref{thm:soundness-1} is exactly \autoref{lma:soundness}. For \autoref{thm:soundness-2}, let \(\mathcal{M} \models T\), suppose that \(T\) was \hyperref[def:inconsistent]{inconsistent}, then \(T\vdash \varphi \) and \(T\vdash \lnot \varphi \) for some \(\varphi \). By \autoref{thm:soundness-1}, \(T \models \varphi \) and \(T \models \lnot \varphi \), so \(\mathcal{M} \models \varphi \) and \(\mathcal{M} \models \lnot \varphi \). But \(\mathcal{M} \models \lnot \varphi \) means \(\mathcal{M} \not \models \varphi \), so this is a contradiction, hence \(T\) is \hyperref[def:consistent]{consistent}.
+	\autoref{thm:soundness-1} is exactly \autoref{thm:soundness}. For \autoref{thm:soundness-2}, let \(\mathcal{M} \models T\), suppose that \(T\) was \hyperref[def:inconsistent]{inconsistent}, then \(T\vdash \varphi \) and \(T\vdash \lnot \varphi \) for some \(\varphi \). By \autoref{thm:soundness-1}, \(T \models \varphi \) and \(T \models \lnot \varphi \), so \(\mathcal{M} \models \varphi \) and \(\mathcal{M} \models \lnot \varphi \). But \(\mathcal{M} \models \lnot \varphi \) means \(\mathcal{M} \not \models \varphi \), so this is a contradiction, hence \(T\) is \hyperref[def:consistent]{consistent}.
 \end{proof}
 
-\subsection{Completeness}
-If \(\varphi \) is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(\mathcal{L} \)-structures}, then it is \hyperref[def:proof]{provable}.
+\subsection{Completeness and Compactness Theorems}
+After knowing our \hyperref[def:proof]{proof} system is \hyperref[def:sound]{sound}, we now ask the converse: is our \hyperref[def:proof]{proof} system \hyperref[def:complete]{complete}?
+
+\begin{definition}[Complete]\label{def:complete}
+	A \hyperref[def:proof]{proof} system is \emph{complete} if any \hyperref[def:truth]{true} \hyperref[def:sentence]{sentence} \(\varphi \) is \hyperref[def:proof]{provable}.
+\end{definition}
+
+And indeed, this is the case.
 
 \begin{theorem}[Completeness]\label{thm:completeness}
 	Let \(T\) be a \hyperref[def:theory]{theory} and \(\varphi \) be a \hyperref[def:sentence]{sentence}.
@@ -110,11 +140,8 @@ If \(\varphi \) is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(
 		\item\label{thm:completeness-2} If \(T\) is \hyperref[def:consistent]{consistent}, then it is \hyperref[def:satisfiable]{satisfiable}.
 	\end{enumerate}
 \end{theorem}
-\begin{proof}
-	We leave \autoref{thm:completeness-2} for \hyperref[pf:thm:completeness-2]{later}, and prove that \autoref{thm:completeness-2} implies \autoref{thm:completeness-1}. Suppose that \(T \models \varphi \), so \(T \cup \left\{ \lnot \varphi  \right\} \) is \hyperref[def:satisfiable]{unsatisfiable}. By \autoref{thm:completeness-2}, \(T \cup \left\{ \lnot \varphi  \right\} \) is \hyperref[def:inconsistent]{inconsistent}. By \hyperref[prop:proof-by-contradiction]{proof by contradiction}, \(T \vdash \varphi \).
-\end{proof}
 
-\subsection{Compactness}
+\autoref{thm:completeness-2} implies \autoref{thm:completeness-1} is easy to see. Suppose that \(T \models \varphi \), so \(T \cup \left\{ \lnot \varphi  \right\} \) is not \hyperref[def:satisfiable]{satisfiable}. By \autoref{thm:completeness-2}, \(T \cup \left\{ \lnot \varphi  \right\} \) is \hyperref[def:inconsistent]{inconsistent}. By \hyperref[prop:proof-by-contradiction]{proof by contradiction}, \(T \vdash \varphi \). One important consequence of the \hyperref[thm:completeness]{completeness theorem} is the \hyperref[thm:compactness]{compactness theorem}.
 
 \begin{theorem}[Compactness]\label{thm:compactness}
 	Let \(T\) be a \hyperref[def:theory]{theory} and \(\varphi \) be a \hyperref[def:sentence]{sentence}.
@@ -124,7 +151,7 @@ If \(\varphi \) is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(
 	\end{enumerate}
 \end{theorem}
 \begin{proof}
-	Consider:
+	Consider the following.
 	\begin{enumerate}[(a*)]
 		\item\label{thm:compactness-1*} If \(T\vdash \varphi \), then there is a finite \(T_0 \subseteq T\) such that \(T_0 \vdash \varphi \).
 		\item\label{thm:compactness-2*} If \(T\) is \hyperref[def:consistent]{consistent} if and only if every finite subset of \(T\) is \hyperref[def:consistent]{consistent}.
@@ -132,7 +159,15 @@ If \(\varphi \) is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(
 	We see that \autoref{thm:compactness-1*} and \autoref{thm:compactness-2*} are true because \hyperref[def:proof]{proofs} are finite, and \hyperref[thm:soundness]{soundness} and \hyperref[thm:completeness]{completeness} translate directly between \autoref{thm:compactness-1} and \autoref{thm:compactness-1*} (and \autoref{thm:compactness-2} and \autoref{thm:compactness-2*}).
 \end{proof}
 
-Let's see some examples using \hyperref[thm:compactness]{compactness}.
+\begin{remark}
+	The \hyperref[thm:compactness]{compactness theorem} does have something to do with topological compactness; consider the topological space of \hyperref[def:complete]{complete} \hyperref[def:satisfiable]{satisfiable} \hyperref[def:theory]{theories}, with the basic open sets being the sets
+	\[
+		U_\varphi \coloneqq \left\{ T\colon T\models \varphi  \right\},
+	\]
+	then this topological space is compact.
+\end{remark}
+
+Let's see one cool example using \hyperref[thm:compactness]{compactness}.
 
 \begin{eg}
 	Let \(\mathcal{L} = \left\{ 0, 1, +, \cdot, -, < \right\} \), and \(\mathcal{L} ^{\ast} = \mathcal{L} \cup \left\{ c \right\} \), where \(c\) is a new constant symbol. Let
@@ -148,3 +183,5 @@ Let's see some examples using \hyperref[thm:compactness]{compactness}.
 	\]
 	then \(\mathcal{N} \models T_0\), and \(T_0\) is \hyperref[def:satisfiable]{satisfiable}. By \hyperref[thm:compactness]{compactness}, \(T\) is \hyperref[def:satisfiable]{satisfiable}, say \(\mathcal{A} \models T\). Then \(\mathcal{A} \equiv \mathbb{N} \) and \(\mathcal{A} \) contains an element \(c^{\mathcal{A} } \) bigger than \(1\), \(1+1\), \(1+1+1\), ..., but \(\mathcal{A} \not \cong \mathbb{N} \), so \(\mathcal{A} \) is a non-standard model of arithmetic.
 \end{explanation}
+
+We now start a long journey toward proving \hyperref[thm:completeness]{completeness theorem}, specifically \autoref{thm:completeness-2}.

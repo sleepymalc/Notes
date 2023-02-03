@@ -7,66 +7,72 @@ To see why \hyperref[def:propositional-axioms]{propositional axioms} are enough 
 \begin{answer}
 	We see that
 	\begin{enumerate}
-		\item \(\varphi \to  \big((\psi \to \varphi ) \to \varphi \big)\) from (A1), where \(\psi \) is any \hyperref[def:formula]{formula} (possibly \(\psi =\varphi \)).
-		\item \(\left[ \varphi \to \big((\psi \to \varphi) \to \varphi \big) \right] \to  \left[ \big(\varphi \to (\psi \to \varphi )\big) \to (\varphi \to \varphi ) \right] \) from (A2).
+		\item \(\varphi \to  \big((\psi \to \varphi ) \to \varphi \big)\) from \autoref{A1}, where \(\psi \) is any \hyperref[def:formula]{formula} (possibly \(\psi =\varphi \)).
+		\item \(\left[ \varphi \to \big((\psi \to \varphi) \to \varphi \big) \right] \to  \left[ \big(\varphi \to (\psi \to \varphi )\big) \to (\varphi \to \varphi ) \right] \) from \autoref{A2}.
 		\item \(\big(\varphi \to (\psi \to \varphi )\big) \to (\varphi \to \varphi )\) from \hyperref[def:rule-of-inference]{(MP)} and the two above.
-		\item \(\varphi \to (\psi \to \varphi )\) from (A1).
+		\item \(\varphi \to (\psi \to \varphi )\) from \autoref{A1}.
 		\item \(\varphi \to \varphi \) from \hyperref[def:rule-of-inference]{(MP)} and the two above.
 	\end{enumerate}
 \end{answer}
 
 In general, we can \hyperref[def:proof]{prove}
-\begin{enumerate}[(a)]
-	\item \(\varphi \to \varphi \);
-	\item \(\varphi \to \lnot \lnot \varphi \);
-	\item \(\lnot \lnot \varphi \to \varphi \);
-	\item \((\varphi \to \psi ) \to  \big((\lnot \varphi \to \psi ) \to \psi \big)\);
-	\item \(\varphi \to \big(\psi \to (\varphi \to \psi )\big)\),
-\end{enumerate}
+\begin{multicols}{2}
+	\begin{enumerate}[(a)]
+		\item \(\varphi \to \varphi \);
+		\item \(\varphi \to \lnot \lnot \varphi \);
+		\item \(\lnot \lnot \varphi \to \varphi \);
+		\item \((\varphi \to \psi ) \to  \big((\lnot \varphi \to \psi ) \to \psi \big)\);
+		\item \(\varphi \to \big(\psi \to (\varphi \to \psi )\big)\),
+	\end{enumerate}
+\end{multicols}
 and so on.
 
 \begin{note}
 	As we said, we may replace \hyperref[def:propositional-axioms]{propositional axioms} by every \hyperref[def:propositional-tautology]{propositional tautologies}.
 \end{note}
 
-Now, to see how (A6) is useful, consider the following.
+Some \hyperref[def:proof]{proof} system also have a second rule about universal quantifiers, but in our system, we have built this into the axioms. We can prove, as a theorem, what the other proof systems take as a rule.
 
 \begin{theorem}
 	If \(\Gamma \vdash \varphi \), and \(x\) does not occur \hyperref[def:free-variable]{freely} in \(\Gamma \), then \(\Gamma \vdash \forall x\ \varphi \).
 \end{theorem}
 \begin{proof}
-	Fix \(\Gamma \) and \(x\), we use \emph{induction on proofs}. Consider the set \(\left\{ \varphi \mid \Gamma \vdash \forall x\ \varphi \right\} \), we will show that this set contains all the \hyperref[def:logical-axioms]{logical axioms}, \hyperref[def:formula]{formulas} from \(\Gamma \), and is closed under \hyperref[def:rule-of-inference]{MP}. Thus, if \(\Gamma \vdash \theta \), then \(\theta \in \left\{ \varphi \mid \Gamma \vdash \forall x\ \varphi \right\} \).
-
+	Fix \(\Gamma \) and \(x\), we use \emph{induction on proofs}. Consider the set \(\left\{ \varphi \mid \Gamma \vdash \forall x\ \varphi \right\} \), we will show that this set contains all the \hyperref[def:logical-axioms]{logical axioms}, \hyperref[def:formula]{formulas} from \(\Gamma \), and is closed under \hyperref[def:rule-of-inference]{modus ponens}.\footnote{Thus, if \(\Gamma \vdash \theta \), then \(\theta \in \left\{ \varphi \mid \Gamma \vdash \forall x\ \varphi \right\} \).}
 	\begin{enumerate}[(a)]
 		\item If \(\varphi \) is a \hyperref[def:logical-axioms]{logical axiom}, so is its \hyperref[def:generalization]{generalization} \(\forall x\ \varphi \), so \(\Gamma \vdash \forall x\ \varphi \).
-		\item If \(\varphi \in \Gamma \), then \(x\) is not \hyperref[def:free-variable]{free} in \(\varphi \), then from (A6), \(\varphi \to \forall x\ \varphi \). Since \(\Gamma \vdash \varphi \), \(\Gamma \vdash \varphi \to \forall x\ \varphi \), by \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash \forall x\ \varphi \).
+		\item If \(\varphi \in \Gamma \), then \(x\) is not \hyperref[def:free-variable]{free} in \(\varphi \), so from \autoref{A6}, \(\varphi \to \forall x\ \varphi \), and from  \hyperref[def:rule-of-inference]{(MP)}, \(\forall x\ \varphi \). The above are based on \(\Gamma \), hence \(\Gamma \vdash \forall x\ \varphi \).
 		\item Suppose \(\Gamma \vdash \forall x\ \varphi \) and \(\Gamma \vdash \forall x\ (\varphi \to \psi )\), we want to show that \(\Gamma \vdash \forall x\ \psi \).
-		      \begin{itemize}
-			      \item By (A5), \(\forall x\ (\varphi \to \psi ) \to  (\forall x\ \varphi \to \forall x\ \psi )\), \(\Gamma \) \hyperref[def:proof]{proves} this.
-			      \item By \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash \forall x\ \varphi \to \forall x \psi \).
+		      \begin{enumerate}[1.]
+			      \item By \autoref{A5}, \(\forall x\ (\varphi \to \psi ) \to  (\forall x\ \varphi \to \forall x\ \psi )\), \(\Gamma \) \hyperref[def:proof]{proves} this.
+			      \item By \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash \forall x\ \varphi \to \forall x\ \psi \).
 			      \item By \hyperref[def:rule-of-inference]{(MP)} again, \(\Gamma \vdash \forall x\ \psi \).
-		      \end{itemize}
+		      \end{enumerate}
 	\end{enumerate}
 \end{proof}
 
 \begin{corollary}
 	If \(\vdash \varphi \), then \(\vdash \forall x\ \varphi \). So the \hyperref[def:generalization]{generalization} of anything \hyperref[def:valid]{valid} is also \hyperref[def:valid]{valid}.
 \end{corollary}
+
 We now ask a critical question: is our \hyperref[def:proof]{proof} system a good one?
 
-\subsection{Soundness}
-The idea is that if an \hyperref[def:sentence]{\(\mathcal{L} \)-sentence} \(\varphi \) is \hyperref[def:proof]{provable}, then it is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(\mathcal{L} \)-structures}, i.e., every thing we \hyperref[def:proof]{prove} should be \hyperref[def:truth]{true}, in other words, we can't \hyperref[def:proof]{prove} wrong things. Let's start with our first glance on \hyperref[lma:soundness]{soundness}.
+\subsection{Soundness Theorem}
+The first thing we should check is whether our \hyperref[def:proof]{proofs} are \hyperref[def:sound]{sound}.
+
+\begin{definition}[Sound]\label{def:sound}
+	A \hyperref[def:proof]{proof} system is \emph{sound} if any \hyperref[def:proof]{provable} \hyperref[def:sentence]{sentence} \(\varphi \) is \hyperref[def:truth]{true}.
+\end{definition}
+
+The idea is that if an \hyperref[def:sentence]{\(\mathcal{L} \)-sentence} \(\varphi \) is \hyperref[def:proof]{provable}, then it is \hyperref[def:truth]{true} in all \hyperref[def:structure]{\(\mathcal{L} \)-structures}, i.e., every thing we \hyperref[def:proof]{prove} should be \hyperref[def:truth]{true}, in other words, we can't \hyperref[def:proof]{prove} wrong things.
 
 \begin{lemma}[Soundness]\label{lma:soundness}
 	If \(\Gamma \) is a set of \hyperref[def:sentence]{\(\mathcal{L} \)-sentences} and \(\varphi \) is a \hyperref[def:sentence]{sentence}, and \(\Gamma \vdash _{\mathcal{L} } \varphi \), then \(\Gamma \models \varphi \).
 \end{lemma}
 \begin{proof}
-	Suppose that \(\Gamma \vdash \varphi \), let \(\psi _1, \psi _2, \ldots , \psi _n = \varphi \) be such a \hyperref[def:proof]{proof}.\footnote{Some \(\psi _i\) might be \hyperref[def:formula]{formulas}, but \(\varphi \) should be a \hyperref[def:sentence]{sentence}.} Let \(\overline{x} = (x_1, \ldots , x_m)\) be the \hyperref[def:free-variable]{free variable} that appears in the \(\psi _i\). Let \(\mathcal{M} \) be an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, \(\mathcal{M} \models \Gamma \), we want to show that \(\mathcal{M} \models \varphi \). We will show by induction on \(i\) that for all \(\overline{a} \in M^m\), \(\mathcal{M} \models \psi _i(\overline{a} )\).
-
-	For \(\psi _i\), we have three cases:
+	Suppose that \(\Gamma \vdash \varphi \), let \(\psi _1, \psi _2, \ldots , \psi _n = \varphi \) be such a \hyperref[def:proof]{proof}.\footnote{Some \(\psi _i\) might be \hyperref[def:formula]{formulas}, but \(\varphi \) should be a \hyperref[def:sentence]{sentence}.} Let \(\overline{x} = (x_1, \ldots , x_m)\) be the \hyperref[def:free-variable]{free variable} that appears in the \(\psi _i\). Let \(\mathcal{M} \) be an \hyperref[def:structure]{\(\mathcal{L} \)-structure}, \(\mathcal{M} \models \Gamma \). To show \(\mathcal{M} \models \varphi \), we show that by induction on \(i\), for all \(\overline{a} \in M^m\), \(\mathcal{M} \models \psi _i(\overline{a} )\). For \(\psi _i\), we have three cases.
 	\begin{enumerate}[(a)]
 		\item If \(\psi _i\in \Gamma \), then \(\mathcal{M} \models \Gamma \) so \(\mathcal{M} \models \psi _i\).
-		\item If \(\psi _i\) is a (\hyperref[def:generalization]{generalization} of) a \hyperref[def:logical-axioms]{logical axiom}, then we can check that \(\mathcal{M} \models \psi _i(\overline{a} )\). For example, if \(\psi _i\) is (A1), \(\theta \to (\gamma \to \theta )\), it's easy to check that
+		\item If \(\psi _i\) is a (\hyperref[def:generalization]{generalization} of) a \hyperref[def:logical-axioms]{logical axiom}, then we can check that \(\mathcal{M} \models \psi _i(\overline{a} )\). For example, if \(\psi _i\) is \autoref{A1}, \(\theta \to (\gamma \to \theta )\), it's easy to check that
 		      \[
 			      \mathcal{M} \models \theta (\overline{a} ) \to  (\gamma (\overline{a} ) \to \theta (\overline{a} )).
 		      \]
@@ -74,7 +80,7 @@ The idea is that if an \hyperref[def:sentence]{\(\mathcal{L} \)-sentence} \(\var
 	\end{enumerate}
 \end{proof}
 
-There are some remarks to make.
+There are remarks to make about some obvious properties of \(\vdash _{\mathcal{L} }\).
 
 \begin{remark}
 	If \(\varphi \in \Gamma \), then \(\Gamma \vdash \varphi \).
@@ -110,16 +116,16 @@ We can prove the following.
 		\item[\(n+1\).] \(\psi \).
 	\end{enumerate}
 
-	Now, suppose that \(\Gamma \cup \left\{ \theta \right\} \vdash \psi \), then there is a \hyperref[def:proof]{proof} \(\psi _1, \ldots , \psi _n = \psi \) of \(\psi \) from \(\Gamma \cup \left\{ \theta \right\} \). We argue inductively that \(\Gamma \vdash \theta \to \psi _i\). Suppose we know that for \(j < i\), prove it for \(i\). Divide into cases:
+	Now, suppose that \(\Gamma \cup \left\{ \theta \right\} \vdash \psi \), then there is a \hyperref[def:proof]{proof} \(\psi _1, \ldots , \psi _n = \psi \) from \(\Gamma \cup \left\{ \theta \right\} \). We argue inductively that \(\Gamma \vdash \theta \to \psi _i\). For \(i\), we have three cases.
 	\begin{enumerate}[(a)]
-		\item \(\psi _i \in \Gamma \) or it is a \hyperref[def:logical-axioms]{logical axiom}. By (A1), \(\psi _i \to (\theta \to \psi _j)\), so \(\Gamma \vdash \psi _j\).
-		\item \(\psi _i = \theta \). Then \(\Gamma \vdash \theta \to \theta \) by (A1) and (A2) from \hyperref[prob:lec6]{here}.
-		\item \(\psi _i\) follows from \(\psi _j\), \(\psi _k = \psi _j \to \psi _i\), using \hyperref[def:rule-of-inference]{(MP)} with \(j, k < i\).
-		      \begin{itemize}
+		\item If \(\psi _i \in \Gamma \) or it is a \hyperref[def:logical-axioms]{logical axiom}. By \autoref{A1}, \(\psi _i \to (\theta \to \psi _i)\), so \(\Gamma \vdash \theta \to \psi _i\).
+		\item If \(\psi _i = \theta \). Then \(\Gamma \vdash \theta \to \theta \) by \autoref{A1} and \autoref{A2} from \hyperref[prob:lec6]{here}, hence \(\Gamma \vdash \theta \to \psi _i\).
+		\item If \(\psi _i\) follows from \(\psi _j\), \(\psi _k = \psi _j \to \psi _i\), using \hyperref[def:rule-of-inference]{(MP)} with \(j, k < i\).
+		      \begin{enumerate}[1.]
 			      \item From the induction hypothesis, \(\Gamma \vdash \theta \to \psi _j\) and \(\Gamma \vdash \theta \to (\psi _j \to \psi _i)\).
-			      \item By (A2), \(\Gamma \vdash \left[ \theta \to (\psi _j \to \psi _i) \right] \to \left[ (\theta \to \psi _j) \to (\theta \to \psi _i) \right] \).
+			      \item By \autoref{A2}, \(\Gamma \vdash \left[ \theta \to (\psi _j \to \psi _i) \right] \to \left[ (\theta \to \psi _j) \to (\theta \to \psi _i) \right] \).
 			      \item By \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash (\theta \to \psi _j) \to (\theta \to \psi _i)\).
 			      \item By \hyperref[def:rule-of-inference]{(MP)}, \(\Gamma \vdash \theta \to \psi _i\).
-		      \end{itemize}
+		      \end{enumerate}
 	\end{enumerate}
 \end{proof}

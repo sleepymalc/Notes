@@ -39,7 +39,9 @@ Consider the product of
 	\(T\mathcal{M} \) is called the \emph{total space} of the \hyperref[def:tangent-bundle]{tangent bundle}.
 \end{definition}
 
-Finally, we introduce the notion of \hyperref[def:vector-field]{vector field}.
+\section{Vector Fields and Brackets}
+\subsection{Vector Fields}
+We now introduce the notion of \hyperref[def:vector-field]{vector field}.
 
 \begin{definition}[Vector field]\label{def:vector-field}
 	A \emph{vector field} \(X\) on a \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \) is a correspondence associating to each point \(p\in \mathcal{M} \) a vector \(X(p)\in T_p \mathcal{M} \), i.e., \(X\colon \mathcal{M} \to T\mathcal{M} \).
@@ -48,6 +50,87 @@ Finally, we introduce the notion of \hyperref[def:vector-field]{vector field}.
 \begin{remark}
 	Naturally, we say that the \hyperref[def:vector-field]{field} \(X\) is differentiable if the map \(X\) is differentiable.
 \end{remark}
+
+Considering a \hyperref[def:coordinate-chart]{local chart} \(x\colon U \subseteq \mathbb{R} ^n \to \mathcal{M} \), we can write
+\[
+	X(p) = \sum_{i=1}^{n} a_i(p) \frac{\partial }{\partial x_i},
+\]
+where \(a_i\colon U \to \mathbb{R} \) are functions on \(U\) for \(i = 1, \ldots , n\), and \(\left\{ \partial / \partial x_i \right\}_{i} \) is the basis associated to \(x\).
+
+\begin{remark}
+	\(X\) is differentiable if and only if \(a_i\) are differentiable for some (and, therefore, for any) \(x\).
+\end{remark}
+
+It's convenient to think of a \hyperref[def:vector-field]{vector field} as a mapping \(X\colon \mathcal{D} \to \mathcal{F} \) from the set \(\mathcal{D} \) of differentiable functions on \(\mathcal{M} \) to the set \(\mathcal{F} \) of the functions on \(\mathcal{M} \), defined by
+\[
+	(Xf)(p) = \sum_{i=1}^{n} a_i(p)\frac{\partial f}{\partial x_i} (p),
+\]
+where \(f\) is implicitly denoting the expression of \(f\) in the \hyperref[def:coordinate-chart]{chart} \(x\).
+
+\begin{intuition}
+	This idea of a vector as a directional derivative is precisely what was used to define the notion of \hyperref[def:tangent-vector]{tangent vector}.
+\end{intuition}
+
+\begin{remark}
+	\(Xf\) does not depend on the choice of \(x\).
+\end{remark}
+
+\begin{remark}
+	\(X\) is differentiable if and only if \(X\colon \mathcal{D} \to \mathcal{D} \), i.e., \(Xf\in \mathcal{D} \) for all \(f\in \mathcal{D} \).
+\end{remark}
+
+Observe that if \(\varphi \colon \mathcal{M} \to \mathcal{M} \) is a \hyperref[def:diffeomorphism]{diffeomorphism}, \(v\in T_p \mathcal{M} \)  and \(f\) differentiable function in a neighborhood of \(\varphi (p)\), we have
+\[
+	(\mathrm{d} \varphi (v)f)\varphi (p) = v(f\circ \varphi )(p)
+\]
+since by letting \(\alpha \colon (-\epsilon , \epsilon ) \to \mathcal{M} \) be a differentiable \hyperref[def:curve]{curve} with \(\alpha ^\prime (0) = v\), \(\alpha (0)= p\),\footnote{This is the way do Carmo~\cite{flaherty2013riemannian} used to define \hyperref[def:tangent-vector]{tangent vectors}.} then
+\[
+	(\mathrm{d} \varphi (v) f) \varphi (p) = \at{\frac{\mathrm{d}}{\mathrm{d}t} (f \circ \varphi \circ \alpha )}{t=0}{} = v(f \circ \varphi )(p).
+\]
+
+\subsection{Brackets}
+By viewing \(X\) as an operator on \(\mathcal{D} \), we can consider the iterates of \(X\), i.e, given differentiable \hyperref[def:vector-field]{fields} \(X\) and \(Y\) and \(f\colon M \to \mathbb{R} \) being a differentiable function, consider \(X(Y f)\) and \(Y(X f)\).
+
+\begin{note}
+	In general, \(X(Y f)\) (and hence \(Y(X f)\)) is not a \hyperref[def:vector-field]{field}.
+\end{note}
+\begin{explanation}
+	It involves derivatives of order higher than one.
+\end{explanation}
+
+But we have the following.
+
+\begin{lemma}
+	Let \(X, Y\) be differentiable \hyperref[def:vector-field]{vector fields} on a \hyperref[def:smooth-manifold]{smooth manifold} \(\mathcal{M} \). Then there exists a unique \hyperref[def:vector-field]{vector field} \(Z\) such that for all \(f\in \mathcal{D} \), \(Zf = (XY - YX)f\).
+\end{lemma}
+\begin{proof}
+	See do Carmo~\cite[Chapter 0, Lemma 5.2]{flaherty2013riemannian}.
+\end{proof}
+
+This \(Z\) is called the \hyperref[def:bracket]{bracket}.
+
+\begin{definition}[Bracket]\label{def:bracket}
+	Given two differentiable \hyperref[def:vector-field]{vector fields} \(X, Y\) on a \hyperref[def:smooth-manifold]{smooth manifold} \(\mathcal{M} \), the \emph{bracket} of \(X\) and \(Y\) is defined by
+	\[
+		[X, Y] \coloneqq XY - YX.
+	\]
+\end{definition}
+
+Clearly, \([X, Y]\) is differentiable.
+
+\begin{proposition}
+	If \(X, Y\) and \(Z\) are differentiable \hyperref[def:vector-field]{vector fields} on \(\mathcal{M} \), \(a, b\in \mathbb{R} \), \(f, g\) are differentiable functions, then we have the following.
+	\begin{enumerate}[(a)]
+		\item \([X, Y] = -[Y, X]\) (\emph{anti-commutativity}),
+		\item \([aX + bY, Z] = a[X, Z] + b[Y, Z]\) (\emph{linearity}),
+		\item \([[X, Y], Z] + [[Y, Z], X] + [[Z, X], Y] = 0\) (\emph{Jacobi identity}),
+		\item \([fX, gY] = fg[X, Y] + fX(g)Y - gY(f)X\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	See do Carmo~\cite[Chapter 0, Proposition 5.3]{flaherty2013riemannian}.
+\end{proof}
+
 
 \section{Submanifolds, Immersions, Embeddings}
 We now study the relation between \hyperref[def:smooth-manifold]{manifolds}.

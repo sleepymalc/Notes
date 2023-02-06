@@ -1,6 +1,8 @@
 \lecture{6}{24 Jan. 14:30}{Geodesic and the Exponential Map}
+Now, we draw some relations between \hyperref[def:length]{length} and \hyperref[def:energy]{energy} and see why starting from \hyperref[def:energy]{energy} makes sense.
+
 \begin{proposition}
-	For all smooth curve \(\gamma \colon [a, b] \to \mathcal{M} \),
+	For all \hyperref[def:curve]{curves} \(\gamma \colon [a, b] \to \mathcal{M} \),
 	\[
 		\mathcal{L} (\gamma )^2 \leq 2(b-a) E(\gamma )
 	\]
@@ -28,11 +30,11 @@
 \end{eg}
 
 \begin{prev}
-	Regular curves can be parametrized by arc \hyperref[def:length]{length} with unit speed \(\lVert \mathrm{d} \gamma / \mathrm{d} t \rVert = \lVert \dot{\gamma } \rVert \equiv 1\).
+	Regular curves can be parametrized by \hyperref[def:length]{arc length} with unit speed \(\lVert \mathrm{d} \gamma / \mathrm{d} t \rVert = \lVert \dot{\gamma } \rVert \equiv 1\).
 \end{prev}
 
 \begin{lemma}
-	Each \hyperref[def:geodesic]{geodesic} is parametrized proportionally to the arc \hyperref[def:length]{length}.\footnote{This means that we have constant speed, i.e., \(\lVert \dot{\gamma } \rVert \) is a constant.}
+	Each \hyperref[def:geodesic]{geodesic} is parametrized proportionally to the \hyperref[def:length]{arc length}.\footnote{This means that we have constant speed, i.e., \(\lVert \dot{\gamma } \rVert \) is a constant.}
 \end{lemma}
 \begin{proof}
 	For a solution of \(\ddot{x}^i(t) + \Gamma ^{i}_{jk}(x(t)) \dot{x}^j(t)\dot{x}^k(t) = 0\),\todo{Do the computation!}
@@ -43,13 +45,13 @@
 	\]
 \end{proof}
 
-Our goal now is to minimize the \hyperref[def:length]{length} within class of regular smooth curves.
+Our goal now is to minimize the \hyperref[def:length]{length} within class of regular \hyperref[def:curve]{smooth curves}.
 
 \begin{prev}
 	The \hyperref[def:length]{length} and the \hyperref[def:energy]{energy} functionals are invariants under parameter changes.
 \end{prev}
 
-This means that it's enough to look at curves parametrized by arc \hyperref[def:length]{length}.
+This means that it's enough to look at \hyperref[def:curve]{curves} parametrized by arc \hyperref[def:length]{length}.
 
 \begin{theorem}\label{thm:lec6}
 	Let \(\mathcal{M} \) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold}, \(p\in \mathcal{M} \) and \(v\in T_p \mathcal{M} \). Then there exists an \(\epsilon > 0\) and a unique \hyperref[def:geodesic]{geodesic} such that \(c\colon [0, \epsilon ] \to  \mathcal{M} \) with \(c(0) = p\) and \(\dot{c}(0) = v\). In addition, \(c\) smoothly depend on \(p, v\).
@@ -58,25 +60,49 @@ This means that it's enough to look at curves parametrized by arc \hyperref[def:
 	Since \autoref{eq:geodesic} is a system of second order ODE, by \href{https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem}{Picard-Lindelöf theorem}, we have local existence and uniqueness of the solution with prescribed initial values and derivative such that the solution depends smoothly on \(p, v\).
 \end{proof}
 
+If \(x(t)\) is the solution of \autoref{eq:geodesic}, then \(x(\lambda t)\) is also a solution for any constant \(\lambda \in \mathbb{R} \). Denote \hyperref[def:geodesic]{geodesic} from \autoref{thm:lec6} by \(c_v\), then
+\[
+	c_v(t) = c_{\lambda v}(t / \lambda )
+\]
+for \(\lambda > 0\), \(t\in [0, \epsilon ]\), and hence \(c_{\lambda v}\) defined on \([0, \epsilon / \lambda ]\).
+
 \begin{remark}
-	If \(x(t)\) is the solution of \autoref{eq:geodesic}, then \(x(\lambda t)\) is also a solution for any constant \(\lambda \in \mathbb{R} \). Denote \hyperref[def:geodesic]{geodesic} from \autoref{thm:lec6} by \(c_v\), then
-	\[
-		c_v(t) = c_{\lambda v}(t / \lambda )
-	\]
-	for \(\lambda > 0\), \(t\in [0, \epsilon ]\), and hence \(c_{\lambda v}\) defined on \([0, \epsilon / \lambda ]\). Since \(c_v\) depends smoothly on \(v\), the set \(\left\{ v\in T_p \mathcal{M} \mid \lVert v \rVert = 1 \right\} \) is compact, hence there exists \(\epsilon _0 > 0\) such that for \(\lVert v \rVert = 1\), \(c_v\) defined at least on \([0, \epsilon _0]\), implying that for all \(w\in T_p \mathcal{M} \) with \(\lVert w \rVert \leq \epsilon _0\), \(c_w\) is defined at least on \([0, 1]\).
+	Since \(c_v\) depends smoothly on \(v\), the set \(\left\{ v\in T_p \mathcal{M} \mid \lVert v \rVert = 1 \right\} \) is compact, hence there exists \(\epsilon _0 > 0\) such that for \(\lVert v \rVert = 1\), \(c_v\) defined at least on \([0, \epsilon _0]\), implying that for all \(w\in T_p \mathcal{M} \) with \(\lVert w \rVert \leq \epsilon _0\), \(c_w\) is defined at least on \([0, 1]\).
 \end{remark}
 
-\subsection{Exponential Maps}
+\section{Exponential Maps}
+The above discussion permits us to introduce the concept of the \hyperref[def:exponential-map]{exponential map} in the following manner.
 
 \begin{definition}[Exponential map]\label{def:exponential-map}
-	Let \((\mathcal{M} , g)\) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold}, \(p\in \mathcal{M} \), and \(V_p \coloneqq \left\{ v\in T_p \mathcal{M} \mid c_v \text{ defined on } [0, 1] \right\}\). Then \emph{exponential map of \(\mathcal{M} \) at \(p\)}, \(\exp_p \colon V_p \to \mathcal{M} \), is defined as \(v \mapsto c_v(1)\).
+	Let \((\mathcal{M} , g)\) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold}, \(p\in \mathcal{M} \), and \(V_p \coloneqq \left\{ v\in T_p \mathcal{M} \mid c_v \text{ defined on } [0, 1] \right\}\). The \emph{exponential map of \(\mathcal{M} \) at \(p\)}, \(\exp_p \colon V_p \to \mathcal{M} \), is defined as \(v \mapsto c_v(1)\).
 \end{definition}
 
-\begin{theorem}
-	The \hyperref[def:exponential-map]{exponential map} \(\exp _p\) maps a neighborhood of \(0\in T_p \mathcal{M} \) \hyperref[def:diffeomorphic]{diffeomorphically} onto a neighborhood of \(p\in \mathcal{M} \).
-\end{theorem}
+Clearly, \(\exp \) is differentiable, and we shall utilize the restriction of \(\exp \) to an open subset of the \hyperref[def:tangent-space]{tangent space} \(T_q \mathcal{M} \), i.e., we define
+\[
+	\exp _p\colon B(0, \epsilon ) \subseteq T_p \mathcal{M} \to \mathcal{M} ,
+\]
+where \(B(0, \epsilon ) \) is an open ball with center at the origin \(0\) of \(T_p \mathcal{M} \) of radius \(\epsilon \). It's easy to see that \(\exp _p\) is differentiable and that \(\exp _p(0) = q\).
 
-Consider \(\exp _p\colon B(0, \epsilon ) \subseteq T_p \mathcal{M} \to  \mathcal{M} \) \hyperref[def:diffeomorphic]{diffeomorphically} onto its image, we now introduce the coordinates around \(m\). Let \((e_1, \ldots , e_n)\) be the orthonormal basis of \(T_m \mathcal{M} \), and \((x_1, \ldots , x_n)\) be the associated local coordinates. Given \(p\in \mathcal{M} ^n\), \(0\in \mathbb{R} ^n\), we have
+\begin{intuition}
+	Geometrically, \(\exp _p(v)\) is a point of \(\mathcal{M} \) obtained by going out the \hyperref[def:length]{length} equal to \(\vert v \vert \), starting from \(p\), along a \hyperref[def:geodesic]{geodesic} which passes through \(p\) with velocity equal to \(v / \vert v \vert \).
+\end{intuition}
+
+\begin{proposition}
+	The \hyperref[def:exponential-map]{exponential map} \(\exp _p\) maps a neighborhood of \(0\in T_p \mathcal{M} \) \hyperref[def:diffeomorphic]{diffeomorphically} onto a neighborhood of \(p\in \mathcal{M} \).
+\end{proposition}
+\begin{proof}
+	We see that
+	\[
+		\mathrm{d} (\exp _p)_0(v)
+		= \at{\frac{\mathrm{d}}{\mathrm{d}t} \exp _p(tv)}{t=0}{}
+		= \at{\frac{\mathrm{d}}{\mathrm{d}t} c_{tv}(1)}{t=0}{}
+		= \at{\frac{\mathrm{d}}{\mathrm{d}t} c_{v}(t)}{t=0}{}
+		= v,
+	\]
+	i.e., \(\mathrm{d} (\exp _p)_0\) is the identity of \(T_q \mathcal{M} \). By the inverse function theorem, \(\exp _p\) is a local \hyperref[def:diffeomorphism]{diffeomorphism} on a neighborhood of \(0\).
+\end{proof}
+
+Consider \(\exp _p\colon B(0, \epsilon ) \subseteq T_p \mathcal{M} \to  \mathcal{M} \), maps \hyperref[def:diffeomorphic]{diffeomorphically} onto its image, we can then introduce the coordinates around \(m\). Let \((e_1, \ldots , e_n)\) be the orthonormal basis of \(T_m \mathcal{M} \), and \((x_1, \ldots , x_n)\) be the associated \hyperref[def:coordinate-chart]{local coordinates}. Given \(p\in \mathcal{M} ^n\), \(0\in \mathbb{R} ^n\), we have
 \[
 	g_{ij}(p) = \delta_{ij},\quad \Gamma _{ij}^k(p) = 0,\quad g_{ij, k} = 0
 \]
@@ -87,7 +113,7 @@ for all \(i, j, k\).
 \end{definition}
 
 \begin{note}
-	The first derivative vanishes, so locally, the manifold looks Euclidean.
+	The first derivative vanishes, so locally, the \hyperref[def:Riemannian-manifold]{manifold} looks Euclidean.
 \end{note}
 
 \begin{theorem}\label{thm:shortest-geodesic}

@@ -68,15 +68,89 @@ which is the transformation behavior under \hyperref[def:coordinate-transition]{
 \end{eg}
 
 \begin{theorem}
-	Every \hyperref[def:smooth-manifold]{differentiable manifold} can be equipped with a \hyperref[def:Riemannian-metric]{Riemannian metric}.\todo{Shown in HW}
+	Every \hyperref[def:smooth-manifold]{differentiable manifold} can be equipped with a \hyperref[def:Riemannian-metric]{Riemannian metric}.
 \end{theorem}
+\begin{proof}
+	From \autoref{lma:partition-of-unity}, there exists a differentiable \hyperref[def:partition-of-unity]{partition of unity} \(\left\{ f_\alpha  \right\} \) of \(\mathcal{M} \) subordinate to a covering \(\left\{ V_\alpha \right\} \) of \(\mathcal{M} \). Consider the induced \hyperref[def:Riemannian-metric]{metric} \( \left\langle \cdot, \cdot \right\rangle ^{\alpha }\) of the system of \hyperref[def:coordinate-chart]{local coordinates} on each \(V_\alpha \). Then, for every \(p\in M\), a \hyperref[def:Riemannian-metric]{Riemannian metric} \(\left\langle \cdot, \cdot \right\rangle _p\) can be defined naturally as
+	\[
+		\left\langle u, v \right\rangle _p = \sum_{\alpha } f_\alpha (p)\left\langle u, v \right\rangle _p^\alpha
+	\]
+	for all \(u, v\in T_p M \). Given the fact that \(\left\{ f_\alpha  \right\} \) is the \hyperref[def:partition-of-unity]{partition of unity}, we know that
+	\begin{enumerate}[(a)]
+		\item \(f_\alpha \geq 0\), and \(f_\alpha = 0\) on \(\overline{V} _\alpha ^{c} \),
+		\item \(\sum_{\alpha } f_\alpha (p) = 1\) for all \(p\) on \(M\),
+	\end{enumerate}
+	it's then immediate that the defined is indeed a \hyperref[def:Riemannian-metric]{Riemannian metric}.
+\end{proof}
 
-\section{Geodesics}
-\subsection{Length and Energy}
+\subsection{Isometry}
+After introducing any type of mathematical structure, we must introduce a notion of when two objects are the same.
+
+\begin{definition}[Isometry]\label{def:isometry}
+	A \hyperref[def:diffeomorphism]{diffeomorphism} \(h\colon \mathcal{M} \to \mathcal{N} \) is an \emph{isometry} between two \hyperref[def:Riemannian-manifold]{Riemannian manifolds} if it preserves the \hyperref[def:Riemannian-metric]{Riemannian metric}, i.e., for \(p\in \mathcal{M} \), \(v, w\in T_p \mathcal{M} \),
+	\[
+		\left\langle v, w \right\rangle _{\mathcal{M} } = \left\langle \mathrm{d} h(v), \mathrm{d} h(w) \right\rangle _{\mathcal{N} }.
+	\]
+\end{definition}
+
+\begin{definition}[Local isometry]\label{def:local-isometry}
+	A \hyperref[def:diffeomorphism]{diffeomorphism} \(h\colon \mathcal{M} \to \mathcal{N} \) is a \emph{local isometry} between two \hyperref[def:Riemannian-manifold]{Riemannian manifolds} if for every \(p\in \mathcal{M} \), there exists a neighborhood \(U\) such that \(\at{h}{U}{} \colon U \to  h(U)\colon \mathcal{M} \to \mathcal{N} \) is an \hyperref[def:isometry]{isometry} and \(h(U) \subseteq \mathcal{N} \) is open.
+\end{definition}
+
+If's common to say that a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \(\mathcal{M} \) is \hyperref[def:local-isometry]{locally isometric} to a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \(\mathcal{N} \) if for every \(p\in \mathcal{M} \), there exists a neighborhood \(U\) of \(p\) in \(\mathcal{M} \) and a \hyperref[def:local-isometry]{local isometry} \(f\colon U \to f(U) \subseteq \mathcal{N} \).
+
+Let's first look at an almost trivial example.
+
+\begin{eg}[Euclidean space]
+	Let \(\mathcal{M} = \mathbb{R} ^n\) with \(\partial /\partial x_i\) identified with \(e_i =(0, \ldots , 1, \ldots , 0)\). The metric is given by
+	\[
+		\left\langle e_i, e_j \right\rangle = \delta _{ij}.
+	\]
+	\(\mathbb{R} ^n\) is called \emph{Euclidean space of dimension \(n\)} and the Riemannian geometry of this space is metric Euclidean geometry.
+\end{eg}
+
+\begin{eg}[Lie group]
+	See \autoref{ch:Lie-group-and-Lie-algebra} for reference.
+\end{eg}
+
+\section{Curves, Lengths, and Energies}
+\subsection{Curves}
+We are now going to show how a \hyperref[def:Riemannian-metric]{Riemannian metric} can be used to calculate the \hyperref[def:length]{length} of a \hyperref[def:curve]{curve}.
+
+\begin{definition}[Curve]\label{def:curve}
+	A differentiable mapping \(c\colon I \to \mathcal{M} \) of an open interval \(I \subseteq \mathbb{R} \) into a \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \) is called a (parametrized) \emph{curve}.
+\end{definition}
+
+\begin{note}
+	A parametrized curve can admit self-intersections as well as corners.
+	\begin{center}
+		\incfig{curve-self-intersect-and-corner}
+	\end{center}
+\end{note}
+
+\begin{definition}[Vector field along a curve]\label{def:vector-field-curve}
+	We say that a \emph{vector field along a curve} \(c\colon I \to \mathcal{M} \) is a differentiable mapping that associates to every \(t\in I\) a \hyperref[def:tangent-vector]{tangent vector} \(V(t)\in T_{c(t)}\mathcal{M} \).
+\end{definition}
+
+To say \(V\) is differentiable means that for any differentiable function \(f\) on \(\mathcal{M} \), the function \(t \mapsto V(t) f\) is a differentiable function on \(I\).
+
+\begin{eg}[Velocity field]
+	The \hyperref[def:vector-field-curve]{vector field} \(\mathrm{d} c (\mathrm{d} / \mathrm{d} t)\), denoted by \(\mathrm{d} c / \mathrm{d} t\), is called the \emph{velocity field} or \emph{tangent vector field}, of course.
+\end{eg}
+
+\begin{remark}
+	A \hyperref[def:vector-field-curve]{vector field along \(c\)} cannot necessarily be extended to a \hyperref[def:vector-field]{vector field} on an open set of \(\mathcal{M} \).
+\end{remark}
+
+\begin{notation}[Segment]
+	The restriction of a \hyperref[def:curve]{curve} \(c\) to a closed interval \([a, b] \subseteq I\) is called a \emph{segment}.
+\end{notation}
+
+\subsection{Lengths and Energies}
 We're interested in the following two quantities.
 
 \begin{definition*}
-	Let \(\gamma \colon [a, b] \to  \mathcal{M} \) be a smooth curve on a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \((\mathcal{M} , g)\).
+	Let \(\gamma \colon [a, b] \to  \mathcal{M} \) be a \hyperref[def:curve]{curve} on a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \((\mathcal{M} , g)\).
 
 	\begin{definition}[Length]\label{def:length}
 		The \emph{length} of \(\gamma \) is defined as
@@ -110,12 +184,12 @@ Then, we have
 \begin{definition}[Distance]\label{def:distance}
 	Given a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \((\mathcal{M} , g)\), the \emph{distance} between \(2\) points \(p, q\in \mathcal{M} \) is defined as
 	\[
-		d(p, q)\coloneqq \inf \left\{ L(\gamma ) \mid \gamma \colon [a, b]\to  \mathcal{M} \text{ piecewise smooth curve with }\gamma (a)=p, \gamma (b)=q \right\} .
+		d(p, q)\coloneqq \inf \left\{ L(\gamma ) \mid \gamma \colon [a, b]\to  \mathcal{M} \text{ piecewise \hyperref[def:curve]{curve} with }\gamma (a)=p, \gamma (b)=q \right\} .
 	\]
 \end{definition}
 
 \begin{note}
-	Any \(2\) points \(p, q\in \mathcal{M} \) can be connected by a piecewise smooth curve, hence \(d(p, q)\) always exists.
+	Any \(2\) points \(p, q\in \mathcal{M} \) can be connected by a piecewise \hyperref[def:curve]{curve}, hence \(d(p, q)\) always exists.
 \end{note}
 
 \begin{corollary}
@@ -123,33 +197,47 @@ Then, we have
 \end{corollary}
 
 \begin{lemma}
-	If \(\gamma\colon [a, b] \to  \mathcal{M} \) is a smooth curve, and \(\psi \colon [\alpha , \beta ] \to  [a, b]\) is a change of parameter, then \(L(\gamma \circ \psi ) = L(\gamma )\).
+	If \(\gamma\colon [a, b] \to  \mathcal{M} \) is a \hyperref[def:curve]{curve}, and \(\psi \colon [\alpha , \beta ] \to  [a, b]\) is a change of parameter, then \(L(\gamma \circ \psi ) = L(\gamma )\).
 \end{lemma}
 \begin{proof}
 	This can be proved by computation, and the take-away is that the \hyperref[def:length]{length functional} is invariant under parameter changes.
 \end{proof}
 
+\chapter{Geodesics}
+This is the first focus on the study of Riemannian geometry, i.e., the \hyperref[def:geodesic]{geodesics}. The up-shot is that a \hyperref[def:geodesic]{geodesic} minimizes the \hyperref[def:length]{arc length} for points \emph{sufficiently close} (in a sense to be made precise); in addition, if a \hyperref[def:curve]{curve} minimizes \hyperref[def:length]{arc length} between any two of its points, it is a \hyperref[def:geodesic]{geodesic}.
+
+\section{Euler-Lagrange Equations}
+Let's first fix some common notations.
+
 \begin{notation}
-	\(\left( g^{ij} \right) _{i, j=1, \ldots , d} = \left( g_{ij} \right)_{i, j = 1, \ldots , d} ^{-1} \), i.e., \(g^{i \ell} g_{\ell j}=\delta ^i_j \).
+	\(\left( g^{ij} \right) _{i, j=1, \ldots , d} = \left( g_{ij} \right)_{i, j = 1, \ldots , d} ^{-1} \).
 \end{notation}
+
+\begin{note}
+	\(g^{i \ell} g_{\ell j}=\delta ^i_j \).
+\end{note}
 
 \begin{notation}
 	\(g_{j \ell , k} \coloneqq \frac{\partial }{\partial x^k} g_{j \ell }\).
 \end{notation}
 
-\begin{definition}[Christoffel symbol]\label{def:Christoffel-symbol}
+And the following is particularly important.
+
+\begin{notation}[Christoffel symbol]
 	The \emph{Christoffel symbol} is defined as
 	\[
-		\Gamma ^i_{jk} \coloneqq \frac{1}{2}g^{i \ell }\left( g_{j \ell , k} + g_{k \ell , j} - g_{jk, \ell }\right) .
+		\Gamma ^i_{jk} \coloneqq \frac{1}{2}g^{i \ell }\left( g_{j \ell , k} + g_{k \ell , j} - g_{jk, \ell }\right)
 	\]
-	for all \(i\).x
-\end{definition}
+	for all \(i\).
+\end{notation}
 
-\begin{proposition}
+Recall the definition of \hyperref[def:energy]{energy}, and recall that we want to find a \hyperref[def:curve]{curve} which minimizes the \hyperref[def:length]{length} between sufficiently close two points. It turns out that instead of working with \hyperref[def:length]{length} directly, we should work with \hyperref[def:energy]{energy} instead.
+
+\begin{proposition}\label{prop:Euler-Lagrange-eq-geodesic}
 	The \href{https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation}{Euler-Lagrange equations} for the \hyperref[def:energy]{energy} \(E\) are 
-	\[
+	\begin{equation}\label{eq:geodesic}
 		\ddot{x}^i(t) + \Gamma ^{i}_{jk}(x(t)) \dot{x}^j(t)\dot{x}^k(t) = 0
-	\]
+	\end{equation}
 	for \(i = 1, \ldots , d\).
 \end{proposition}
 \begin{proof}
@@ -185,15 +273,16 @@ Then, we have
 	hence the claim follows.
 \end{proof}
 
+Finally, we define the \hyperref[def:geodesic]{geodesics} as the solution of \autoref{eq:geodesic}.
+
 \begin{definition}[Geodesic]\label{def:geodesic}
-	A smooth curve \(\gamma \colon [a, b] \to  \mathcal{M} \) that obeys
-	\begin{equation}\label{eq:geodesic}
-		\ddot{x}^i(t) + \Gamma ^{i}_{jk}(x(t)) \dot{x}^j(t)\dot{x}^k(t) = 0
-	\end{equation}
-	for \(i = 1, \ldots , d\) is called a \emph{geodesic}.
+	A \hyperref[def:curve]{curve} \(\gamma \colon [a, b] \to  \mathcal{M} \) that obeys \autoref{eq:geodesic} is called a \emph{geodesic}.
 \end{definition}
 
-\subsection{The Action Functional}
+In other words, from \autoref{prop:Euler-Lagrange-eq-geodesic}, we naturally define \hyperref[def:geodesic]{geodesic} by the solution of \autoref{eq:geodesic} since it finds the critical points of \hyperref[def:energy]{energy}.
+
+\subsection{Action Functional}
+Consider the following.
 
 \begin{definition}[Action]
 	Let \(\mathcal{L} \) be the Lagrangian, then let
@@ -206,12 +295,12 @@ Then, we have
 	\]
 \end{definition}
 
-From the calculus of variation, we can find a curve \(x(\cdot)\in \mathcal{A} \) such that
+From the calculus of variation, we can find a \hyperref[def:curve]{curve} \(x(\cdot)\in \mathcal{A} \) such that
 \[
 	I[x(\cdot)] = \min _{w(\cdot)\in \mathcal{A} }I[w(\cdot)].
 \]
 
-\begin{theorem}[Euler-Lagrangian equations]
+\begin{theorem}[Euler-Lagrangian equations]\label{thm:Euler-Lagrangian-eq}
 	\(x(\cdot)\) from \(I[x(\cdot)] = \min _{w(\cdot)\in \mathcal{A} }I[w(\cdot)]\) solves the system of Euler-Lagrangian equations
 	\[
 		\frac{\mathrm{d}}{\mathrm{d}s} \left( D_{\dot{x}} \mathcal{L} (\dot{x}(s), x(s)) + D_x \mathcal{L} (\dot{x}(s), x(s)) \right) = 0

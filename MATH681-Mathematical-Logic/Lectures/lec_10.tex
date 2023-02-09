@@ -1,11 +1,146 @@
-\lecture{10}{7 Feb. 14:30}{}
-Let's start by fniishing the proof of \autoref{thm:lec9}.
+\lecture{10}{7 Feb. 14:30}{Introduction to Model Theory}
+Let's start by finishing the proof of \autoref{thm:lec9}.
 
 \begin{proof}[Proof of \autoref{thm:lec9} (Continued)]
 	There's one final case left:
 	\begin{enumerate}
 		\item[] \begin{enumerate}\setcounter{enumii}{\thestoppedhere}
-				\item If \(\varphi \) is \(\forall x\ \varphi (x)\):
+				\item If \(\varphi \) is \(\forall x\ \psi (x, \overline{y} )\): Because \(T\) has \hyperref[def:Henkin-constant]{Henkin constants}, there is \(d\) such that \(\lnot \forall x\ \psi (x, \overline{c} ) \to \lnot \psi (d, \overline{c} )\) is in \(T\).
+				      \begin{itemize}
+					      \item If \(\varphi (c_1, \ldots , c_n)\) is not in \(T\), i.e., \(\forall x\ \psi (x, \overline{c} )\) is in \(T\), then since \(T\) is \hyperref[def:maximal]{maximal}, \(\lnot \forall x\ \psi (x, \overline{c} )\) is in \(T\). So by \hyperref[def:rule-of-inference]{(MP)}, \(\lnot \psi (d, \overline{c} )\) is in \(T\). So, \(\mathcal{M} \models \lnot \psi ([d], [\overline{c} ])\) by induction hypotheses, hence \(\mathcal{M} \models \lnot \forall x\ \psi (x, [\overline{c} ])\), i.e., \(\mathcal{M} \not \models \varphi ([\overline{c} ])\).
+					      \item If \(\mathcal{M} \not \models \varphi ([\overline{c} ])\), then \(\mathcal{M} \lnot \models \forall x\ \varphi (x, [\overline{c} ])\), so there is \([e]\) such that \(\mathcal{M} \models \lnot \psi ([e], [\overline{c} ])\). Hence, \(\lnot \psi (e, \overline{c} )\) is in \(T\). Suppose for a contradiction that \(\varphi (\overline{c} )\), i.e., \(\forall x\ \psi (x, \overline{c} )\) is in \(T\), by \autoref{A4}, \(\forall x\ \psi (x, \overline{c} ) \to \psi (e, \overline{c} )\), so \(\psi (e, \overline{c} )\) is in \(T\) by \hyperref[def:maximal]{maximality} and by \hyperref[def:consistent]{consistency}. But then \(T\) is \hyperref[def:inconsistent]{inconsistent}, a contradiction \(\conta\) Hence \(\varphi (\overline{c} )\) is not in \(T\).
+				      \end{itemize}
 			\end{enumerate}
 	\end{enumerate}
+	Thus, \(\mathcal{M} \models T\), so \(T\) is \hyperref[def:satisfiable]{satisfiable}, proving the theorem.
+\end{proof}
+
+\begin{remark}
+	We see that when proving the above, when we talk about \(\mathcal{M} \), the witness comes for free, while for \(T\), we need \hyperref[def:Henkin-constant]{Henkin constants} for getting a witness.
+\end{remark}
+
+Now, we can complete the proof of \hyperref[thm:completeness]{completeness theorem} by putting everything together.
+
+\begin{claim}
+	The \hyperref[thm:completeness]{completeness theorem} \autoref{thm:completeness-2} holds.
+\end{claim}
+\begin{explanation}
+	We see that
+	\begin{enumerate}
+		\item \autoref{thm:lec8}: There is a \hyperref[def:consistent]{consistent} \(T^{\ast} \supseteq T\) and \hyperref[def:theory]{\(\mathcal{L} ^{\ast} \)-theory} (with \(\mathcal{L} ^{\ast} \supseteq \mathcal{L} \)) and \(T^{\ast} \) has \hyperref[def:Henkin-constant]{Henkin constants}.
+		\item \autoref{thm:extend-to-maximal}: There is a \hyperref[def:maximal]{maximal} \hyperref[def:consistent]{consistent} \hyperref[def:theory]{\(\mathcal{L} ^{\ast} \)-theory} \(T^{\ast\ast } \supseteq T^{\ast} \), where \(T^{\ast\ast} \) still has \hyperref[def:Henkin-constant]{Henkin constants}.
+		\item \autoref{thm:lec9}: \(T^{\ast\ast }\) has a \hyperref[def:model]{model} \(\mathcal{M} ^{\ast} \) an \hyperref[def:structure]{\(\mathcal{L} ^{\ast} \)-structure}. Let \(\mathcal{M} \) be the \hyperref[not:reduct]{reduct} of \(\mathcal{M} ^{\ast} \) to an \hyperref[def:structure]{\(\mathcal{L}\)-structure}.
+	\end{enumerate}
+	Hence, \(\mathcal{M} \models T\).
+\end{explanation}
+
+\begin{prev}[Problem set 1]
+	Let \(\mathcal{L} ^{\ast} \supseteq \mathcal{L} \). If \(\mathcal{M} ^{\ast} \) is an \hyperref[def:structure]{\(\mathcal{L} ^{\ast} \)-structure}, then by ignoring the \hyperref[not:interpretation]{interpretation} of the symbols in \(\mathcal{L} ^{\ast} - \mathcal{L} \), we get an \hyperref[def:structure]{\(\mathcal{L} \)-structure} \(\mathcal{M} \).
+
+	\begin{notation}[Reduct]\label{not:reduct}
+		\(\mathcal{M} \) is a \emph{reduct} of \(\mathcal{M} ^{\ast} \).
+	\end{notation}
+
+	\begin{notation}[Expansion]\label{not:expansion}
+		\(\mathcal{M} ^{\ast} \) is an \emph{expansion} of \(\mathcal{M} \).
+	\end{notation}
+\end{prev}
+
+\begin{remark}
+	We see that \(\vdash \) and \(\models \) are the same.
+\end{remark}
+
+\subsection{Consequences of Completeness Theorem}
+Now, let's step back and look at the proof of the \hyperref[thm:completeness]{completeness theorem}, and ask the following.
+
+\begin{problem*}
+	When we did the \hyperref[def:Henkin-constant]{Henkin} construction of \(\mathcal{M} ^{\ast} \models T^{\ast\ast }\), how big was \(M\)?
+\end{problem*}
+
+This can be answered by the following.
+
+\begin{theorem}
+	If \(T\) is a \hyperref[def:satisfiable]{satisfiable} \hyperref[def:theory]{\(\mathcal{L}\)-theory}, then it has a \hyperref[def:model]{model} of size at most \(\vert \mathcal{L} \vert + \aleph_0\).
+\end{theorem}
+\begin{proof}
+	Since \(\vert M \vert \leq \vert \mathcal{L} ^{\ast} \vert \) since \(\mathcal{M} = \quotient{\mathcal{C} }{\sim } \), and in step one, \(\vert \mathcal{L} ^{\ast} \vert \leq \vert \mathcal{L}  \vert + \aleph_0\), so \(\vert M \vert \leq \vert \mathcal{L}  \vert + \aleph_0\).
+\end{proof}
+
+\begin{eg}
+	Let \(\mathcal{L} =\left\{ f \right\} \), \(T\) says that \(f\) is injective but not surjective.
+\end{eg}
+
+\begin{eg}
+	Let \(\mathcal{L} = \left\{ \leq \right\} \), \(T\) says that \(\leq \) is a linear order with no greatest element.
+\end{eg}
+
+\begin{eg}
+	Let \(\mathcal{L} = \varnothing \), \(T\) says that there are at least \(n\) elements for each \(n\).
+\end{eg}
+
+\begin{prev}
+	\(\vdash \) and \(\models \) are actually \(\vdash _{\mathcal{L} }\)\footnote{\hyperref[def:proof]{Proofs} can only use \hyperref[def:formula]{\(\mathcal{L}\)-formulas}.} and \(\models _\mathcal{L} \)\footnote{Only looking at \(\mathcal{L} \).}
+\end{prev}
+
+\begin{remark}
+	Suppose \(\mathcal{L} \supseteq \mathcal{L} _0\), and \(\Gamma \) a set of \hyperref[def:sentence]{\(\mathcal{L} _0\)-sentences}, \(\varphi \) on \hyperref[def:sentence]{\(\mathcal{L} _0\)-sentence}.
+	\begin{enumerate}[(a)]
+		\item\label{rmk:lec10-1} \(\Gamma \models _{\mathcal{L} _0} \varphi \iff \Gamma \models _{\mathcal{L} _1} \varphi \).
+		\item\label{rmk:lec10-2} \(\Gamma \vdash _{\mathcal{L} _0} \varphi \iff \Gamma \vdash _{\mathcal{L} _1} \varphi \).
+	\end{enumerate}
+\end{remark}
+\begin{explanation}
+	\autoref{rmk:lec10-1} and \autoref{rmk:lec10-2} are equivalent by the \hyperref[thm:completeness]{completeness theorem}, and we prove \autoref{rmk:lec10-1}.
+
+	Suppose \(\Gamma \models _{\mathcal{L} _0} \varphi \). Suppose \(\mathcal{M} _1\) is an \hyperref[def:structure]{\(\mathcal{L} _1\)-structure} such that \(\mathcal{M} _1 \models \Gamma \). Let \(\mathcal{M} _0\) be the \hyperref[not:reduct]{reduct} of \(\mathcal{M} _1\) to \(\mathcal{L} _0\)  and \(\mathcal{M} _0 \models \Gamma \), so \(\mathcal{M} _0 \models \varphi \), then \(\mathcal{M} _1 \models \varphi \), thus \(\Gamma \models _{\mathcal{L} _1} \varphi \).
+
+	Now, suppose \(\Gamma \models _{\mathcal{L} _1} \varphi \). Suppose \(\mathcal{M} _0\) is an \hyperref[def:structure]{\(\mathcal{L} _0\)-structure} with \(\mathcal{M} _0 \models \Gamma \). Expand \(\mathcal{M} _0\) to an \hyperref[def:structure]{\(\mathcal{L} _1\)-structure} \(\mathcal{M} _1\) in any way. \(\mathcal{M} _1 \models \Gamma \), so \(\mathcal{M} _1 \models \varphi \). Thus, \(\mathcal{M} _0 \models \varphi \), so \(\Gamma \models _{\mathcal{L} _0} \varphi \).
+\end{explanation}
+
+What is important about the \hyperref[def:proof]{proof system}?
+
+\begin{definition}[Computably enumerable]\label{def:computably-enumerable}
+	A set is \emph{computably enumerable (ce)} or \emph{computable listable} if there is a program that lists out its elements.
+\end{definition}
+
+\begin{enumerate}[(1)]
+	\item \hyperref[thm:soundness]{Soundness} and \hyperref[thm:completeness]{completeness}, \(\vdash \iff \models \).
+	\item \hyperref[def:proof]{Proofs} are finite, and use only finitely many hypotheses \(\implies \) \hyperref[thm:compactness]{compactness}.
+	\item Computational properties. If \(\mathcal{L} \) is finite, or computable (complete list of symbols and their arities).
+	      \begin{enumerate}[(a)]
+		      \item We can compute with \hyperref[def:formula]{formulas}.
+		      \item Given a \hyperref[def:formula]{formula}, it's computable to check whether it's a \hyperref[def:logical-axioms]{logical axiom}.
+		      \item It's computable to check whether a \hyperref[def:proof]{proof} is valid.
+		      \item If \(\Gamma \) is a \hyperref[def:computably-enumerable]{ce} set of \hyperref[def:sentence]{sentences}, \(\left\{ \varphi \colon \Gamma \vdash \varphi \right\} \) is also \hyperref[def:computably-enumerable]{ce}.\footnote{We can list out all the valid \hyperref[def:proof]{proofs} from \(\Gamma \) of any \(\varphi \).}
+		      \item There is no program that given \(\varphi \) can decide whether \(\vdash \varphi \) at least for \(\mathcal{L} =\left\{ E \right\} \), \(E\) binary.
+	      \end{enumerate}
+\end{enumerate}
+
+\section{Model Theory}
+\subsection{Complete Theories}
+
+\begin{proposition}
+	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L}\)-theory} with an infinite \hyperref[def:model]{model}, and let \(\kappa \) be an infinite cardinal with \(\kappa \geq \vert \mathcal{L}  \vert \). Then \(T\) has a \hyperref[def:model]{model} of cardinality \(\kappa \).
+\end{proposition}
+\begin{proof}
+	Let \(\mathcal{C} \) be a set of \(\kappa \)-many new constants, and let \(\mathcal{L} ^{\ast} = \mathcal{L} \cup \mathcal{C} \). Let
+	\[
+		T^{\ast} = T \cup \left\{ c \neq d \mid c, d\in \mathcal{C} \text{ distinct}  \right\} .
+	\]
+	If \(\mathcal{M} = T^{\ast} \), then \(\vert M \vert \geq \kappa \). Also, if \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it has a \hyperref[def:model]{model} of size at most \(\vert \mathcal{L} ^{\ast} \vert = \kappa \) since
+	\[
+		\kappa = \vert \mathcal{C} \vert \leq \vert \mathcal{L} ^{\ast} \vert \leq \vert \mathcal{C} \vert + \vert \mathcal{L} \vert \leq \kappa + \kappa = \kappa ,
+	\]
+	so if \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it has a \hyperref[def:model]{model} \(\mathcal{M} \) with \(\vert M \vert = \kappa \).
+
+	\begin{claim}
+		\(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}.
+	\end{claim}
+	\begin{explanation}
+		By the \hyperref[thm:compactness]{compactness theorem}, to show that \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it's equivalent to show that every finite \(\Gamma \subseteq T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}. Let \(\mathcal{M} \) be infinite, and \(\Gamma \subseteq T^{\ast} \) finite, then
+		\[
+			\Gamma \subseteq T \cup \left\{ c_i \neq c_j \mid i, j = 1, \ldots , n, i \neq j \right\}
+		\]
+		for \(c_1, \ldots , c_n\in \mathcal{C} \) since only finitely many \(c_i\) are involved, and without loss of generality, \(\Gamma = T \cup \left\{ c_i \neq c_j \mid i, j=1, \ldots , n, i \neq j \right\} \). Pick \(a_1, \ldots , a_n\in M\), distinct, we then turn \(\mathcal{M} \) into an \hyperref[def:structure]{\(\mathcal{L} ^{\ast} \)-structure} \(\mathcal{M} ^{\ast} \) with \(c_i ^{\mathcal{M} ^{\ast} } = a_i\).\footnote{And each other \(d\in \mathcal{C} \) with \(d^{\mathcal{M} ^{\ast} } = a_1\).} So \(\mathcal{M} ^{\ast} \models \Gamma \), thus \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}.
+	\end{explanation}
 \end{proof}

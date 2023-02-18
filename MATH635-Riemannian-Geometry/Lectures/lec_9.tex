@@ -1,25 +1,50 @@
 \lecture{9}{2 Feb. 14:30}{Tensors and Connections}
-\subsection{Contravariant and Covariant Tensors}
-Let's introduce more tools in order to develop our theory.
+\subsection{Vector Fields}
+We can now introduce the notion of \hyperref[def:vector-field]{vector fields} in terms of \hyperref[def:section]{section}.
 
-\begin{definition}[Tensor field]\label{def:tensor-field}
-	Let \(V\) be a vector space of dimension \(m < \infty \), and the dual space \(V^{\ast}\).\footnote{I.e., \(V^{\ast} \coloneqq \left\{ \lambda \colon V \to \mathbb{R} \mid \lambda \text{ linear} \right\} \).} Then the \emph{\(r\)-times contravariant and \(s\)-times covariant tensors over \(V\) tensor field}, denoted as \(T_s^r(V) \), is the vector field defined as
+\begin{definition}[Vector field]\label{def:vector-field*}
+	A (smooth) \emph{vector field} \(X\) is a smooth \hyperref[def:section]{section} of a \hyperref[def:bundle]{bundle}.
+\end{definition}
+
+\begin{note}
+	We see that a smooth \hyperref[def:vector-field]{tangent vector field} is indeed a smooth \hyperref[def:vector-field*]{vector field} with the \hyperref[def:bundle]{bundle} being the \hyperref[def:tangent-bundle]{tangent bundle}.
+\end{note}
+
+\begin{notation}
+	Since we will nearly always be talking about \hyperref[def:vector-field]{tangent vector fields}, we will abuse the notation a bit and just simply call it \hyperref[def:vector-field]{vector fields}. But always keep in mind that more broadly, a \hyperref[def:vector-field*]{vector field} should be a \hyperref[def:section]{section} of a \hyperref[def:bundle]{bundle}, not always \(T \mathcal{M} \).
+\end{notation}
+
+\subsection{Tensor Fields}
+We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in a brute-fore way. To do this, given a vector space \(V\), we first introduce \hyperref[def:tensor]{tensors}.
+
+\begin{definition}[Tensor]\label{def:tensor}
+	Let \(V\) be a vector space of dimension \(m < \infty \), and the dual space \(V^{\ast}\).\footnote{I.e., \(V^{\ast} \coloneqq \left\{ \lambda \colon V \to \mathbb{R} \mid \lambda \text{ linear} \right\} \).} Then the vector space of the \emph{\(r\)-times contravariant and \(s\)-times covariant tensors over \(V\)}, denoted as \(T_s^r(V) \), is the \hyperref[def:vector-field]{vector field} defined as
 	\[
-		T_s^r(V) = \{ A\colon \underbrace{V^{\ast} \times \ldots \times V^{\ast} }_{r} \times \underbrace{V\times \ldots \times V}_{s} \to \mathbb{R} \}
+		T_s^r(V) = \{ T\colon \underbrace{V^{\ast} \times \ldots \times V^{\ast} }_{r} \times \underbrace{V\times \ldots \times V}_{s} \to \mathbb{R} \}
 		= \underbrace{V \otimes \ldots \otimes V}_{r} \otimes \underbrace{V^{\ast} \otimes \ldots \otimes V^{\ast} }_{s}.
 	\]
 \end{definition}
 
-\begin{definition*}
-	Let \(\Lambda ^s(V^{\ast} ) \coloneqq \left\{ A\in T_s^0(V) \mid A \text{ skew-symmetric} \right\} \), where \(s\in \mathbb{N} \). Let \(\mathcal{M} ^n \) be a \hyperref[def:smooth-manifold]{manifold}, and \(\pi \colon E \to \mathcal{M} \) a \hyperref[def:vector-bundle]{\(C^{\infty} \)-vector bundle}.
+\begin{notation}
+	Let \(\mathcal{M} ^n \) be a \hyperref[def:smooth-manifold]{smooth manifold}, and \(\pi \colon E \to \mathcal{M} \) a \hyperref[def:vector-bundle]{smooth vector bundle}, then
+	\[
+		\Gamma (E) \coloneqq \left\{ s\in C^{\infty} (\mathcal{M} , E) \mid \pi \circ s = \identity_{\mathcal{M} } \right\}.
+	\]
+\end{notation}
 
-	\begin{enumerate}[(a)]
-		\item \(\Gamma (E) \coloneqq \left\{ s\in C^{\infty} (\mathcal{M} , E) \mid \pi \circ s = \identity_{\mathcal{M} } \right\}\).
-		\item \(\Gamma (T\mathcal{M} ) \coloneqq \left\{ \text{\hyperref[def:vector-field]{vector fields} on } \mathcal{M} \right\} \).
-		\item \(\Gamma (\Lambda _s \mathcal{M} ) \coloneqq \left\{ \text{\(s\)-forms on } \mathcal{M} \right\} \) with \(\Lambda _s \mathcal{M} = \Lambda ^s\left( \bigcup_{p\in \mathcal{M} } T^{\ast} _p \mathcal{M}  \right) \).
-		\item \( \Gamma (T_s^r \mathcal{M} ) \coloneqq \left\{ \text{\hyperref[def:tensor-field]{\((r,s)\)-tensor fields} on } \mathcal{M} \right\} \) with \(T_s^r \mathcal{M} \) is the \hyperref[def:section]{section} of \(T \mathcal{M} \otimes \ldots \otimes T \mathcal{M} \otimes T^{\ast} \mathcal{M} \otimes \ldots \otimes T^{\ast} \mathcal{M} \).
-	\end{enumerate}
-\end{definition*}
+\begin{eg}
+	Consider the \hyperref[def:vector-bundle]{vector bundle} \((T\mathcal{M} , \pi , \mathcal{M} )\), then \(\Gamma (T\mathcal{M} ) \coloneqq \left\{ \text{\hyperref[def:vector-field]{vector fields} on } \mathcal{M} \right\} \).
+\end{eg}
+
+\begin{eg}
+	\(\Gamma (\Lambda _s \mathcal{M} ) \coloneqq \left\{ \text{\(s\)-forms on } \mathcal{M} \right\} \) with \(\Lambda _s \mathcal{M} = \Lambda ^s\left( \bigcup_{p\in \mathcal{M} } T^{\ast} _p \mathcal{M}  \right) \).\footnote{Here, \(\Lambda ^s(V^{\ast} ) \coloneqq \left\{ A\in T_s^0(V) \mid A \text{ skew-symmetric} \right\} \), where \(s\in \mathbb{N} \).}
+\end{eg}
+
+Then, we have the following.
+
+\begin{definition}[Tensor field]\label{def:tensor-field}
+	The \emph{\((r, s)\)-tensor fields} on \(\mathcal{M} \) is defined as elements in \(\Gamma (T_s^r \mathcal{M} )\) with \(T_s^r \mathcal{M} = \bigcup_{p\in \mathcal{M} }T^r_s(T_p \mathcal{M} )\).
+\end{definition}
 
 \begin{eg}
 	A \hyperref[def:Riemannian-metric]{Riemannian metric} \(g\) on \(\mathcal{M} \) is a \hyperref[def:tensor-field]{\((0, 2)\)-tensor field}, i.e., \(g\in \Gamma (T_2^0 (\mathcal{M} ))\) for all \(p \in \mathcal{M} \).
@@ -27,6 +52,10 @@ Let's introduce more tools in order to develop our theory.
 \begin{explanation}
 	Since \(g_p \colon T_p \mathcal{M} \times T_p \mathcal{M} \to \mathbb{R} \).
 \end{explanation}
+
+\begin{remark}
+	One might ask why \autoref{def:tensor} is not done in the same way as \hyperref[def:vector-field*]{vector fields}? Indeed, we can! See \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields}.
+\end{remark}
 
 \section{Metrics, Connections and Curvatures}
 \subsection{Metrics}

@@ -85,24 +85,92 @@ Now, given a \hyperref[def:geodesically-complete]{complete} but not compact \(\m
 \end{note}
 
 \chapter{Affine and Riemannian Connections}
-\section{Vector Bundles and Tensor Fields}
-\subsection{Vector Bundles}
-We first see one definition.
+\section{Bundles and Fields}
+Let's first introduce the theory of \hyperref[def:bundle]{bundles}, which allows us to introduce the notion of \hyperref[def:vector-field]{vector fields}. The motivation is clear: we have already seen what a \hyperref[def:vector-field]{tangent vector field} \(X\) of a \hyperref[def:smooth-manifold]{smooth manifold} \(\mathcal{M} \) is: we simply associate \(X(p)\) to a \hyperref[def:tangent-vector]{tangent vector}:
 
-\begin{definition}[Vector bundle]\label{def:vector-bundle}
-	A (differentiable) \emph{vector bundle} of rank \(n\) is the tuple \((E, \pi , \mathcal{M} )\) consists of \hyperref[def:base-space]{base space} \(\mathcal{M} \), \hyperref[def:vector-bundle-total-space]{total space} \(E\), and \hyperref[def:bundle-projection]{bundle projection} \(\pi \colon E \to \mathcal{M} \) such that each \hyperref[not:fiber]{fiber} \(E_x\coloneqq \pi ^{-1} (x)\) of \(x\in \mathcal{M} \) carries a structure of an \(n\)-dimensional (real) vector space, and \hyperref[def:local-trivialization]{local triviality} condition holds.
+\begin{figure}[H]
+	\centering
+	\incfig{motivation-bundle-field}
+	\caption{Given \(\mathcal{M} = S^2\), a \hyperref[def:vector-field*]{vector field} assigns every point a ``point'' in the associated ``space.'' In this case, a \hyperref[def:vector-field]{tangent vector field} associates every \(p\) a vector in the corresponding \hyperref[def:tangent-space]{tangent space}.}
+	\label{fig:motivation-bundle-field}
+\end{figure}
+
+Recall the \hyperref[def:tangent-bundle]{tangent bundle} \((T\mathcal{M} , \pi , \mathcal{M} )\), where we only take the name ``\hyperref[def:bundle]{bundle}'' for granted and don't know why it is: however, we should see that it helps us construct the \hyperref[def:vector-field]{vector field}, since it captures the idea of ``for every point \(p\), we have an associated space \(T_p \mathcal{M} \),'' which is exactly what we need here. This idea generalizes quite easily, as we now see.
+
+\subsection{Bundles}
+We start by introducing the notion of \hyperref[def:bundle]{bundles}.
+
+\begin{definition}[Bundle]\label{def:bundle}
+	A \emph{bundle} is a tuple \((E, \pi , \mathcal{M} )\) consists of the \hyperref[def:vector-bundle-total-space]{total space} \(E\), the \hyperref[def:base-space]{base space} \(\mathcal{M} \), and the \hyperref[def:bundle-projection]{bundle projection} \(\pi \colon E \to \mathcal{M} \).
+	\begin{definition}[Total space]\label{def:vector-bundle-total-space}
+		The \hyperref[def:smooth-manifold]{differentiable manifold} \(E\) is called the \emph{total space}.
+	\end{definition}
 
 	\begin{definition}[Base space]\label{def:base-space}
 		The \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \) is called the \emph{base space}.
 	\end{definition}
 
-	\begin{definition}[Total space]\label{def:vector-bundle-total-space}
-		The \hyperref[def:smooth-manifold]{differentiable manifold} \(E\) is called the \emph{total space}.
-	\end{definition}
-
 	\begin{definition}[Bundle projection]\label{def:bundle-projection}
 		The (differentiable) continuous surjection \(\pi \colon E\to \mathcal{M} \) is called the \emph{bundle projection}.
 	\end{definition}
+\end{definition}
+
+\begin{note}
+	We see that a \hyperref[def:tangent-bundle]{tangent bundle} \((T\mathcal{M} , \pi , \mathcal{M} )\) is actually a \hyperref[def:bundle]{bundle}.
+\end{note}
+
+\begin{eg}
+	Let \(E\) be a cylinder, \(\mathcal{M} \) be a circle.
+
+	\begin{center}
+		\incfig{cylinder-circle-bundle}
+	\end{center}
+	As we can see, the number of possible \(\pi \) is enormous, as long as it's surjective and smooth.
+\end{eg}
+
+\begin{notation}
+	Sometimes, we will just denote a \hyperref[def:bundle]{bundle} as \(E \overset{\pi }{\to } \mathcal{M} \), or even more compactly, just \(\pi \) since it captures all the data.
+\end{notation}
+
+\begin{definition}[Fiber]\label{def:fiber}
+	Given a \hyperref[def:bundle]{bundle} \((E, \pi , \mathcal{M} )\), the \emph{fiber} over \(p\in \mathcal{M} \) under \(\pi\) is the preimage of a \(\left\{ p \right\} \), i.e., \(\pi ^{-1} (\{p\})\).
+\end{definition}
+
+\begin{definition}[Section]\label{def:section}
+	A \emph{section} of a \hyperref[def:bundle]{bundle} \((E, \pi , \mathcal{M} )\) is a differentiable map \(s\colon \mathcal{M} \to E\) such that \(\pi \circ s =\identity_{\mathcal{M} } \).
+\end{definition}
+
+In other words, we require
+% https://q.uiver.app/?q=WzAsMixbMCwwLCJFIl0sWzAsMSwiXFxtYXRoY2Fse019Il0sWzAsMSwiXFxwaSIsMl0sWzEsMCwicCIsMix7ImN1cnZlIjoxfV1d
+\[
+	\begin{tikzcd}
+		E \\
+		{\mathcal{M}}
+		\arrow["\pi"', from=1-1, to=2-1]
+		\arrow["p"', curve={height=6pt}, from=2-1, to=1-1]
+	\end{tikzcd}
+\]
+
+\begin{remark}
+	We see that a \hyperref[def:section]{section} \(s\) encodes lots of information of a \hyperref[def:bundle]{bundle}, since \(s\) includes \(E, \mathcal{M}\), and the condition deal with \(\pi \).
+\end{remark}
+
+
+\begin{eg}
+	Again let \(E\) be a cylinder, \(\mathcal{M} \) be a circle. This time, we choose \(\pi \) to be the trivial one.
+
+	\begin{center}
+		\incfig{cylinder-circle-section}
+	\end{center}
+
+	We see that in this way, this \hyperref[def:bundle]{bundle} really captures all the \hyperref[def:tangent-space]{tangent spaces} structure of a circle!
+\end{eg}
+
+\subsection{Vector Bundles}
+Then, we're interested in the so-called \hyperref[def:vector-bundle]{vector bundle}.
+
+\begin{definition}[Vector bundle]\label{def:vector-bundle}
+	A (differentiable) \emph{vector bundle} of rank \(n\) is a \hyperref[def:bundle]{bundle} \((E, \pi , \mathcal{M} )\) such that each \hyperref[def:fiber]{fiber} \(E_x\coloneqq \pi ^{-1} (x)\) of \(x\in \mathcal{M} \) carries a structure of an \(n\)-dimensional (real) vector space, and \hyperref[def:local-trivialization]{local triviality} condition holds.
 
 	\begin{definition}[Local trivialization]\label{def:local-trivialization}
 		For all \(x\in \mathcal{M} \), the \emph{local trivialization} \((U, \varphi )\) consists a neighborhood \(U\) and \hyperref[def:diffeomorphism]{diffeomorphism} \(\varphi \colon \pi ^{-1} (U) \to U\times \mathbb{R} ^n\) such that for all \(y\in U\),
@@ -120,10 +188,6 @@ We first see one definition.
 	\label{fig:vector-bundle}
 \end{figure}
 
-\begin{notation}[Fiber]\label{not:fiber}
-	Given \(f\colon X \to Y\), the \emph{fiber} of \(y\in Y\) under \(f\) is the preimage of a \(\left\{ y \right\} \), i.e., \(f^{-1} (\{y\})\).
-\end{notation}
-
 \begin{definition}[Trivial]\label{def:trivial}
 	A \hyperref[def:vector-bundle]{vector bundle} is \emph{trivial} if it's isomorphic to \(\mathcal{M} \times \mathbb{R} ^n\).\footnote{\(n\) is the rank of the \hyperref[def:vector-bundle]{vector bundle}.}
 \end{definition}
@@ -137,11 +201,24 @@ We first see one definition.
 \end{definition}
 
 \begin{remark}
-	From \autoref{def:vector-bundle}, \hyperref[def:vector-bundle]{vector bundle} is locally, but not necessarily globally a product of \hyperref[def:base-space]{base space} and the \hyperref[not:fiber]{fiber}.
+	From \autoref{def:vector-bundle}, \hyperref[def:vector-bundle]{vector bundle} is locally, but not necessarily globally a product of \hyperref[def:base-space]{base space} and the \hyperref[def:fiber]{fiber}.
 \end{remark}
 
 \begin{intuition}
 	We may look at a \hyperref[def:vector-bundle]{vector bundle} as a family of vector spaces, all isomorphic to a fixed \(\mathbb{R} ^n\), ``parametrized'' (\hyperref[def:local-trivialization]{locally trivially}) by a \hyperref[def:smooth-manifold]{manifold}.
 \end{intuition}
 
-Finally, we note that given \(\pi \colon E \to \mathcal{M} \), we have all information for defining a \hyperref[def:vector-bundle]{vector bundle}, hence we sometimes just say something like \emph{let \(\pi \) be the \hyperref[def:vector-bundle]{vector bundle}}.
+\subsection{Vector Fields}
+Finally, introduce the notion of \hyperref[def:vector-field]{vector fields} in terms of \hyperref[def:section]{section}.
+
+\begin{definition}[Vector field]\label{def:vector-field*}
+	A (smooth) \emph{vector field} \(X\) is a smooth \hyperref[def:section]{section} of a \hyperref[def:bundle]{bundle}.
+\end{definition}
+
+\begin{note}
+	We see that a smooth \hyperref[def:vector-field]{tangent vector field} is indeed a smooth \hyperref[def:vector-field*]{vector field} with the \hyperref[def:bundle]{bundle} being the \hyperref[def:tangent-bundle]{tangent bundle}.
+\end{note}
+
+\begin{notation}
+	For the following discussion, since we will nearly always be talking about \hyperref[def:vector-field]{tangent vector fields}, we will abuse the notation a bit and just simply call it \hyperref[def:vector-field]{vector fields} in our context. But always keep in mind that more broadly, a \hyperref[def:vector-field*]{vector field} should be a \hyperref[def:section]{section} of a \hyperref[def:bundle]{bundle}, not always \(T \mathcal{M} \).
+\end{notation}

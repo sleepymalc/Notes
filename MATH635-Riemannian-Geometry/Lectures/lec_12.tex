@@ -1,54 +1,119 @@
 \lecture{12}{14 Feb. 14:30}{Tangent and Cotangent Bundles}
 \section{More on Tangent and Cotangent Bundles}
-\subsection{Preliminaries}
-Let \(f\colon \mathcal{M} \to \mathcal{N} \) be a differentiable map between two \hyperref[def:smooth-manifold]{differentiable manifolds}, and let \((E, \pi , \mathcal{N} )\)  be a \hyperref[def:vector-bundle]{vector bundle} over \(\mathcal{N} \). We want to pull back the \hyperref[def:vector-bundle]{bundle} via \(f\), i.e., construct a \hyperref[def:vector-bundle]{bundle} \(f^{\ast} \in E\)for which the \hyperref[def:fiber]{fiber} over \(x\in \mathcal{M} \) is \(E_{f(x)}\):
+Let \(f\colon \mathcal{M} \to \mathcal{N} \) be a differentiable map between two \hyperref[def:smooth-manifold]{differentiable manifolds}, until now, we have only talked about how to transform \hyperref[def:tangent-vector]{tangent vectors} or \(1\)-form via \(f\). Implicitly, these are just \hyperref[def:pullback-one-form]{pullback} (\(f^{\ast} \)) and \hyperref[def:pushforward-tangent-vector]{pushforward} (\(f_{\ast}\)), as we now define formally.
 
-\begin{definition}[Pullback]\label{def:pullback}
-	The \emph{pullback} \hyperref[def:vector-bundle]{bundle} \(f^{\ast} E\) is the \hyperref[def:vector-bundle]{bundle} over \(\mathcal{M} \) with the \hyperref[def:bundle-chart]{bundle charts} \(\varphi \circ f, f^{-1} (U)\) with \((\varphi , U)\) being the \hyperref[def:bundle-chart]{bundle charts} of \(E\).
+\begin{definition*}
+	Let \(f\colon \mathcal{M} \to \mathcal{N} \) be a smooth map between two \hyperref[def:smooth-manifold]{smooth manifolds} and \(p\in \mathcal{M} \).
+	\begin{definition}[Pushforward]\label{def:pushforward-tangent-vector}
+		The \emph{pushforward} is the linear map \(f_{\ast} \coloneqq \mathrm{d} f_p \colon T_p \mathcal{M} \to  T_{f(p)} \mathcal{N}\).
+	\end{definition}
+
+	\begin{definition}[Pullback]\label{def:pullback-one-form}
+		The \emph{pullback} is the linear map \(f^{\ast} \colon T^{\ast} _{f(p)} \to  T^{\ast} _p \mathcal{M} \) where
+		\[
+			(f^{\ast} \omega )(X) = \omega (f_\ast X)
+		\]
+		for \(\omega \in T_{f(p)}^{\ast} \mathcal{N} \) and \(X\in T_p \mathcal{M} \).
+	\end{definition}
+\end{definition*}
+
+In all, the following diagram commutes:
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJUXFxtYXRoY2Fse019Il0sWzEsMCwiVFxcbWF0aGNhbHtOfSJdLFsxLDEsIlxcbWF0aGNhbHtOfSJdLFswLDEsIlxcbWF0aGNhbHtNfSJdLFswLDMsIlxccGlfe1xcbWF0aGNhbHtNfX0iLDJdLFsxLDIsIlxccGlfe1xcbWF0aGNhbHtOfX0iXSxbMCwxLCJcXG1hdGhybXtkfWYiXSxbMywyLCJmIiwyXV0=
+\[
+	\begin{tikzcd}
+		{T\mathcal{M}} & {T\mathcal{N}} \\
+		{\mathcal{M}} & {\mathcal{N}}
+		\arrow["{\pi_{\mathcal{M}}}"', from=1-1, to=2-1]
+		\arrow["{\pi_{\mathcal{N}}}", from=1-2, to=2-2]
+		\arrow["{\mathrm{d}f}", from=1-1, to=1-2]
+		\arrow["f"', from=2-1, to=2-2]
+	\end{tikzcd}
+\]
+
+\subsection{Pullbacks and Pushforwards on Bundles}
+Now, consider a \hyperref[def:vector-bundle]{vector bundle} \((E, \pi , \mathcal{N} )\) over \(\mathcal{N} \), we want to use \(f\) to ``pull back'' the \hyperref[def:vector-bundle]{vector bundle}, i.e., construct a \hyperref[def:vector-bundle]{vector bundle}, denote as \(f^{\ast} E\), for which the \hyperref[def:fiber]{fiber} over \(x\in \mathcal{M} \) is \(E_{f(x)}\).
+
+\begin{definition}[Pullback bnudle]\label{def:pullback-bundle}
+	The \emph{pullback bundle} \(f^{\ast} E\) is the \hyperref[def:vector-bundle]{vector bundle} over \(\mathcal{M} \) with the \hyperref[def:bundle-chart]{bundle charts} \((\varphi \circ f, f^{-1} (U))\) if \((\varphi , U)\) is the \hyperref[def:bundle-chart]{bundle charts} of \(E\).
 \end{definition}
 
+Similarly, we can ``push forward'' a \hyperref[def:vector-bundle]{vector bundle} \((E, \pi , \mathcal{M} )\) over \(\mathcal{M} \) via \(f\) in the same fashion.
+
+\begin{definition}[Pushforward bnudle]\label{def:pushforward-bundle}
+	The \emph{pushforward bundle} \(f_{\ast} E\) is the \hyperref[def:vector-bundle]{vector bundle} over \(\mathcal{N} \) with the \hyperref[def:bundle-chart]{bundle charts} \((\varphi \circ f^{-1} , f (U))\) if \((\varphi , U)\) is the \hyperref[def:bundle-chart]{bundle charts} of \(E\).
+\end{definition}
+
+Generally, the following (same!) diagram commutes:\footnote{Where \(\pi _\mathcal{M} \) and \(\pi _{\mathcal{N} }\) are the corresponding \hyperref[def:bundle-projection]{bundle projections}, obviously.}
+% https://q.uiver.app/?q=WzAsNCxbMCwwLCJUXFxtYXRoY2Fse019Il0sWzEsMCwiVFxcbWF0aGNhbHtOfSJdLFsxLDEsIlxcbWF0aGNhbHtOfSJdLFswLDEsIlxcbWF0aGNhbHtNfSJdLFswLDMsIlxccGlfe1xcbWF0aGNhbHtNfX0iLDJdLFsxLDIsIlxccGlfe1xcbWF0aGNhbHtOfX0iXSxbMCwxLCJcXG1hdGhybXtkfWYiXSxbMywyLCJmIiwyXV0=
+\[
+	\begin{tikzcd}
+		{T\mathcal{M}} & {T\mathcal{N}} \\
+		{\mathcal{M}} & {\mathcal{N}}
+		\arrow["{\pi_{\mathcal{M}}}"', from=1-1, to=2-1]
+		\arrow["{\pi_{\mathcal{N}}}", from=1-2, to=2-2]
+		\arrow["{\mathrm{d}f}", from=1-1, to=1-2]
+		\arrow["f"', from=2-1, to=2-2]
+	\end{tikzcd}
+\]
+
+\begin{note}
+	In \autoref{def:pushforward-bundle}, it only makes sense if \(f\) is a \hyperref[def:diffeomorphism]{diffeomorphism} (or at least locally).
+\end{note}
+
 \begin{definition}[Bundle homomorphism]\label{def:bundle-homomorphism}
-	Consider \(2\) \hyperref[def:vector-bundle]{vector bundles} \((E_1, \pi _1, \mathcal{M} ), (E_2, \pi _2, \mathcal{M} )\) over \(\mathcal{M} \), and let the differentiable map \(f\colon E_1 \to E_2\) be \hyperref[def:fiber]{fiber} preserving, i.e., \(\pi _2 \circ f = \pi _1\). Let the \hyperref[def:fiber]{fiber} maps \(f_x \colon E_{1,x} \to E_{2,x}\) be linear.\footnote{I.e., vector homomorphisms.} Then \(f\) is called a \emph{bundle homomorphism}.
+	Consider \(2\) \hyperref[def:vector-bundle]{vector bundles} \((E_1, \pi _1, \mathcal{M} ), (E_2, \pi _2, \mathcal{M} )\) over \(\mathcal{M} \), and let the differentiable map \(f\colon E_1 \to E_2\) be \hyperref[def:fiber]{fiber} preserving, i.e., \(\pi _2 \circ f = \pi _1\). If the \hyperref[def:fiber]{fiber} maps \(f_x \colon E_{1,x} \to E_{2,x}\) is linear,\footnote{I.e., vector homomorphisms.} then \(f\) is called a \emph{bundle homomorphism}.
 \end{definition}
 
 \begin{definition}[Subbundle]\label{def:subbundle}
-	Let \((E, \pi , \mathcal{M} )\) of rank \(n\) be a \hyperref[def:vector-bundle]{vector bundle}. Let \(E^1 \subseteq E\), and assume that for all \(x\in \mathcal{M} \), there exists a \hyperref[def:bundle-chart]{bundle chart} \((\varphi , U)\) for \(x\in U\) and \(\varphi (\pi ^{-1} (U) \cap E^1) = U \times \mathbb{R} ^m \subseteq U \times \mathbb{R} ^n\) for \(m \leq n\). The so constructed \hyperref[def:vector-bundle]{vector bundle} \((E^1, \at{\pi }{E^1}{}, \mathcal{M} )\) is called the \emph{subbundle} of \(E\) of rank \(m\).
+	Let \((E, \pi , \mathcal{M} )\) of rank \(n\) be a \hyperref[def:vector-bundle]{vector bundle}. Let \(E^1 \subseteq E\), and assume that for all \(x\in \mathcal{M} \), there exists a \hyperref[def:bundle-chart]{bundle chart} \((\varphi , U)\) for \(x\in U\) and
+	\[
+		\varphi (\pi ^{-1} (U) \cap E^1) = U \times \mathbb{R} ^m \subseteq U \times \mathbb{R} ^n
+	\]
+	for \(m \leq n\). Then the \emph{subbundle} of \(E\) of rank \(m\) is the \hyperref[def:vector-bundle]{vector bundle} \((E^1, \at{\pi }{E^1}{}, \mathcal{M} )\).
 \end{definition}
 
-\subsection{Identifications}
-Let \(\mathcal{M} \) be a \hyperref[def:smooth-manifold]{differentiable manifold}.
-
+\subsection{Induced Bundle Metrics}
 \begin{prev}
-	The elements of \(T \mathcal{M} \) is \((x, V)\) with \(x\in \mathcal{M} \), \(V\) the \hyperref[def:tangent-vector]{tangent vector} to \(\mathcal{M} \) at \(x\). Also, the \hyperref[def:tangent-bundle]{tangent bundle} is the \hyperref[def:section]{section} of \(T \mathcal{M} \).
-
-	Also, the elements of \(T*8\mathcal{M} \) are called \hyperref[def:cotangent-vector]{cotangent vector}, i.e., linear functionals \(\alpha \in T_x ^{\ast} \mathcal{M} \) such that \(\alpha \colon T_x \mathcal{M} \to \mathbb{R} \). Then, the \hyperref[def:section]{section} of \(T^{\ast} \mathcal{M} \) are \(1\)-forms, i.e., \(\alpha \colon T \mathcal{M} \to \mathbb{R} \), \(\alpha _x \colon \at{\alpha }{T_x \mathcal{M} }{} \to \mathbb{R} \).
+	Let \(\mathcal{M} \) be a \hyperref[def:smooth-manifold]{differentiable manifold}.
+	\begin{itemize}
+		\item \((p, V)\in T \mathcal{M} \) with \(p\in \mathcal{M} \), \(V\in T_x \mathcal{M} \), and the \hyperref[def:section]{section} of \(T \mathcal{M} \) is the \hyperref[def:vector-field]{vector field}.
+		\item \((p, \omega )\in T^{\ast} \mathcal{M} \) with \(p\in \mathcal{M} \), \(\omega \in T_x ^{\ast} \mathcal{M} \),\footnote{I.e., the linear functionals such that \(\omega \colon T_x \mathcal{M} \to \mathbb{R} \).} and the \hyperref[def:section]{section} of \(T^{\ast} \mathcal{M} \) is the covector \hyperref[def:vector-field*]{field}.
+	\end{itemize}
 \end{prev}
 
-A \hyperref[def:Riemannian-metric]{Riemannian metric} induces bundle metrics on all tensor bundles over \(\mathcal{M} \). Metric of \(T^{\ast} \mathcal{M} \) given by
+Now, let \((\mathcal{M} , g)\) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold}.
+
+\begin{remark}
+	\(g\) induces bundle metrics on all \hyperref[def:vector-bundle]{vector bundles} over \(\mathcal{M} \).
+\end{remark}
+\begin{explanation}
+	For \(T^{\ast} \mathcal{M} \), it is given by \(\left\langle \omega , \eta \right\rangle = g(\omega , \eta ) \coloneqq g^{ij} \omega _i \eta _i\) for \(\omega = \omega _i \mathrm{d} x^i, \eta = \eta _i \mathrm{d} x^i\).
+\end{explanation}
+
+Hence, we can talk about the identification between \(T\mathcal{M} \) and \(T^{\ast} \mathcal{M} \) through \(g\):
+% https://q.uiver.app/?q=WzAsMixbMCwwLCJWID0gVl5pIFxcZnJhY3tcXHBhcnRpYWwgfXtcXHBhcnRpYWwgeF5pfSBcXGluIFQgXFxtYXRoY2Fse019Il0sWzAsMSwiXFxvbWVnYSA9IFxcb21lZ2EgX2ogXFxtYXRocm17ZH0geF5qIFxcaW4gVF57XFxhc3R9IFxcbWF0aGNhbHtNfSJdLFswLDEsIiIsMCx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6ImFycm93aGVhZCJ9fX1dXQ==
 \[
-	\left\langle \omega , \eta \right\rangle = g(\omega , \eta ) = g^{ij} \omega _i \eta _i
+	\begin{tikzcd}
+		{V = V^i \frac{\partial }{\partial x^i} \in T \mathcal{M}} \\
+		{\omega = \omega _j \mathrm{d} x^j \in T^{\ast} \mathcal{M}}
+		\arrow[tail reversed, Leftrightarrow, from=1-1, to=2-1]
+	\end{tikzcd}
 \]
-where \(\omega = \omega _i \mathrm{d} x^i\), \(\eta = \eta _i \mathrm{d} x^i\). The identification between \(T\mathcal{M} \) such that \(T^{\ast} \mathcal{M} \) through \hyperref[def:Riemannian-metric]{Riemannian metric} is given by
-\[
-	V = V^i \frac{\partial }{\partial x^i} \in T \mathcal{M} \text{ corresponds to } \omega = \omega _j \mathrm{d} x^j \in T^{\ast} \mathcal{M}
-\]
-with \(\omega _j = g_{ij} V^i\) or \(V^i = g^{ij} \omega _j\) with
+with \(\omega _j = g_{ij} V^i\) (or \(V^i = g^{ij} \omega _j\)) such that
 \begin{enumerate}[(a)]
-	\item \(g(X, Y) = g_{ij}X^i Y^j \) for \(X, Y\in T \mathcal{M} \).
+	\item \(g(X, Y) = g_{ij}X^i Y^j \) for \(X, Y\in T \mathcal{M} \);
 	\item \(g(\omega , \eta ) = g^{ij} \omega _i \eta _j\) for \(\omega , \eta \in T^{\ast} \mathcal{M} \).
 \end{enumerate}
 
-Then, for \(V\in T_x \mathcal{M} \), there corresponds a \(1\)-form \(\omega \in T_x ^{\ast} \mathcal{M} \) via the metric \(\omega (Y) \coloneqq g(V, Y)\) for all \(Y\), and \(\lVert \omega \rVert = \lVert V \rVert \). Let \((e_i)_{i=1, \ldots , d}\) be a basis of \(T_x \mathcal{M} \) and \((\omega ^j)_{j=1, \ldots , d}\) the dual basis of \(T_x ^{\ast} \mathcal{M} \), i.e., \(w^j(e_i)=\delta _i^j\). Let \(V = V^i e_i \in T_x \mathcal{M} \), \(\eta =\eta _j \omega ^j \in T_x^{\ast} \mathcal{M} \), then \(\eta (V) = \eta _i V^i\).
+Thus, for \(V\in T_x \mathcal{M} \), there corresponds a \(1\)-form \(\omega \in T_x ^{\ast} \mathcal{M} \) via the metric \(\omega (Y) \coloneqq g(V, Y)\) for all \(Y\), and we further have \(\lVert \omega \rVert = \lVert V \rVert \).
 
-Consider basis \((e_i), (\omega ^j)\) in the \hyperref[def:coordinate-chart]{local coordinates}: \(e_i = \partial / \partial x^i\) and \(\omega ^j = \mathrm{d} x^j\). Let \(f\) be a \hyperref[def:coordinate-chart]{local coordinates} change. Then \(V\) transform as
+\subsection{Transformation Behaviors}
+We can also consider the \hyperref[def:local-coordinate]{coordinate} transformation behavior. Let \((e_i)_{i=1, \ldots , d}\) be a basis of \(T_x \mathcal{M} \) and \((\omega ^j)_{j=1, \ldots , d}\) the dual basis of \(T_x ^{\ast} \mathcal{M} \), i.e., \(w^j(e_i)=\delta _i^j\). Given \(V = V^i e_i \in T_x \mathcal{M} \), \(\eta =\eta _j \omega ^j \in T_x^{\ast} \mathcal{M} \), we then have \(\eta (V) = \eta _i V^i\). Now, consider bases \((e_i), (\omega ^j)\) in the \hyperref[def:coordinate-chart]{local coordinates}, i.e., \(e_i = \partial / \partial x^i\) and \(\omega ^j = \mathrm{d} x^j\). Let \(f\) be a \hyperref[def:coordinate-chart]{local coordinates} change, then \(V\) and \(\eta \) transformed as
 \[
-	f_{\ast }(V) \coloneqq V^i \frac{\partial f^\alpha }{\partial x^i} \frac{\partial }{\partial f^\alpha } ;
+	f_{\ast }(V) \coloneqq V^i \frac{\partial f^\alpha }{\partial x^i} \frac{\partial }{\partial f^\alpha },\qquad
+	f^{\ast} (\eta ) \coloneqq \eta _j \frac{\partial x^j}{\partial f^\beta } \mathrm{d} f^\beta
 \]
-and \(\eta \) transforms as
-\[
-	f^{\ast} (\eta ) \coloneqq \eta _j \frac{\partial x^j}{\partial f^\beta } \mathrm{d} f^\beta .
-\]
-Hence,
+correspondingly, and we see that
 \[
 	f^{\ast} (\eta )(f_{\ast } (V))
 	= \eta _j \frac{\partial x^j}{\partial f^\alpha } V^i \frac{\partial f^\alpha }{\partial x^i}
@@ -67,37 +132,65 @@ To compute the \hyperref[def:coordinate-chart]{coordinates} change \(y \mapsto x
 \[
 	\omega _i \mathrm{d} x^i
 	= \omega _i \frac{\partial x^i}{\partial y^\alpha } \mathrm{d} y^\alpha
-	\eqqcolon \widetilde{w} _\alpha \mathrm{d} y^\alpha,
-\]
-and \(g^{ij} \) is transformed as
-\[
-	h^{\alpha \beta } = g^{ij} \frac{\partial y^\alpha }{\partial x^i} \frac{\partial y^\beta }{\partial x^j}
-\]
-and \(h^{\alpha \beta } \widetilde{w} _\alpha \widetilde{\eta} _\beta = g^{ij} \omega _i \eta _j \) and
-\[
-	\lVert \omega (x) \rVert = \sup \left\{ \omega (x) (V) \mid V\in T_x \mathcal{M} , \lVert v \rVert = 1\right\}.
+	\eqqcolon \widetilde{w} _\alpha \mathrm{d} y^\alpha.
 \]
 
-Consider \(T \mathcal{M} \otimes T\mathcal{M} \), the metric is
-\[
-	\left\langle V \otimes Y, \xi \otimes \eta \right\rangle = g_{ij} V^i Y^i g_{k \ell }\omega ^k \eta ^\ell .
-\]
-
-\begin{definition}[Lie derivative]\label{def:Lie-derivative}
-	Consider a \hyperref[def:vector-field]{vector field} \(X\) with a \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} \((\psi _t)_{t\in I}\) of local \hyperref[def:diffeomorphism]{diffeomorphism}, and a tensor field \(S\) on \(\mathcal{M} \). The \emph{Lie derivative} of \(S\) in the direction of \(X\) is defined as
+\begin{prev}
+	\(g^{ij} \) is transformed as
 	\[
-		L_x S \coloneqq \at{\frac{\mathrm{d}}{\mathrm{d}t} (\psi _t^{\ast} S)}{t=0}{} .
+		h^{\alpha \beta } = g^{ij} \frac{\partial y^\alpha }{\partial x^i} \frac{\partial y^\beta }{\partial x^j}.
+	\]
+\end{prev}
+
+Then, we see that \(h^{\alpha \beta } \widetilde{w} _\alpha \widetilde{\eta} _\beta = g^{ij} \omega _i \eta _j \) and \(\lVert \omega (x) \rVert = \sup \left\{ \omega (x) (V) \mid V\in T_x \mathcal{M} , \lVert v \rVert = 1\right\}\).
+
+\begin{remark}
+	If we consider \(T \mathcal{M} \otimes T\mathcal{M} \), then metric is
+	\[
+		\left\langle V \otimes Y, \xi \otimes \eta \right\rangle = g_{ij} V^i Y^i g_{k \ell }\omega ^k \eta ^\ell .
+	\]
+\end{remark}
+
+\subsection{Pullbacks and Pushforwards of Vector Fields}
+Now, we consider to ``pull back'' or ``push forward'' a \hyperref[def:vector-field]{vector field}, i.e., a \hyperref[def:section]{section} of a \hyperref[def:bundle]{bundle}.
+
+\begin{definition}[Pushforward]\label{def:pushforward}
+	Let \(\psi \colon \mathcal{M} \to \mathcal{N} \) be a \hyperref[def:diffeomorphism]{diffeomorphism} between \hyperref[def:smooth-manifold]{smooth manifolds}, and let \(X\) be a \hyperref[def:vector-field]{vector field} on \(\mathcal{M} \). Then the \emph{pushforward} \hyperref[def:vector-field]{vector field} \(Y = \psi _\ast X = \mathrm{d} \psi X\) on \(\mathcal{N} \) is
+	\[
+		Y(p) = \mathrm{d} \psi (X(\psi ^{-1} (p))).
 	\]
 \end{definition}
 
-\begin{definition}[Pushforward]\label{def:push-forward}
-	Let \(\psi \colon \mathcal{M} \to \mathcal{N} \) be a \hyperref[def:diffeomorphism]{diffeomorphism} between two \hyperref[def:smooth-manifold]{differentiable manifolds}. Let \(X\) be a \hyperref[def:vector-field]{vector field} on \(\mathcal{M} \). Then define a \hyperref[def:vector-field]{vector field} \(Y = \psi _\ast X\) on \(\mathcal{N} \) be by \(Y(p) = \mathrm{d} \psi (X(\psi ^{-1} (p)))\).
+\begin{definition}[Pullback]\label{def:pullback}
+	Let \(\psi \colon \mathcal{M} \to \mathcal{N} \) be a \hyperref[def:diffeomorphism]{diffeomorphism} between \hyperref[def:smooth-manifold]{smooth manifolds}, and let \(Y\) be a \hyperref[def:vector-field]{vector field} on \(\mathcal{N} \). Then the \emph{pullback} \hyperref[def:vector-field]{vector field} \(X = \psi ^\ast Y\) on \(\mathcal{M} \) is just \(X(p) = Y_{\psi (p)}\).
 \end{definition}
 
+\begin{note}
+	We let \(\psi \) be a \hyperref[def:diffeomorphism]{diffeomorphism} just for convenient: we can also consider a \hyperref[def:vector-field-along-curve]{vector fields along curve} when \(\psi \) injects/surjects.
+\end{note}
+
 \begin{lemma}
-	The following holds.
-	\begin{enumerate}
-		\item For every differentiable function \(f\colon \mathcal{N} \to \mathbb{R} \), then \((\psi _\ast X) (f)(p) = X(f\circ \psi ) (\psi ^{-1} p)\).
-		\item Let \(X\) be a \hyperref[def:vector-field]{vector field} on \(\mathcal{M} \), \(\psi \colon \mathcal{M} \to \mathcal{N} \) be a \hyperref[def:diffeomorphism]{diffeomorphism}. If the \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} generated by \(X\) given by \(\varphi _t\), then the local group generated by \(\psi _\ast X\) is \(\psi \circ \varphi _t \circ \psi ^{-1} \).
-	\end{enumerate}
+	For every differentiable function \(f\colon \mathcal{N} \to \mathbb{R} \), \((\psi _\ast X) (f)(p) = X(f\circ \psi ) (\psi ^{-1} p)\).
 \end{lemma}
+
+\begin{lemma}
+	Let \(X\) be a \hyperref[def:vector-field]{vector field} on \(\mathcal{M} \) and \(\psi \colon \mathcal{M} \to \mathcal{N} \) be a \hyperref[def:diffeomorphism]{diffeomorphism}. If the \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} \((\varphi _t)_{t\in I}\) generated by \(X\), then the \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} generated by \(\psi _\ast X\) is \(\psi \circ \varphi _t \circ \psi ^{-1} \).
+\end{lemma}
+
+\subsection{Lie Derivatives}
+Recall the following.
+
+\begin{prev}[Lie bracket]
+	Given \hyperref[def:vector-field]{vector fields} \(X, Y\), the \hyperref[def:bracket]{Lie bracket} is \([X, Y] = XY - YX\).
+\end{prev}
+
+\begin{definition}[Lie derivative]\label{def:Lie-derivative}
+	Consider a \hyperref[def:vector-field]{vector field} \(X\) with a \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} \((\psi _t)_{t\in I}\) and a \hyperref[def:tensor-field]{tensor field} \(S\) on \(\mathcal{M} \). The \emph{Lie derivative} of \(S\) in the direction of \(X\) is defined as
+	\[
+		\mathcal{L} _X S \coloneqq \at{\frac{\mathrm{d}}{\mathrm{d}t} (\psi _t^{\ast} S)}{t=0}{} .
+	\]
+\end{definition}
+
+\begin{intuition}
+	Study neighboring \hyperref[def:fiber]{fibers} using a \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} of \hyperref[def:diffeomorphism]{diffeomorphisms} \((\psi _t)_{t\in I}\).
+\end{intuition}

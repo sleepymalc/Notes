@@ -1,19 +1,4 @@
 \lecture{9}{2 Feb. 14:30}{Tensors and Connections}
-\subsection{Vector Fields}
-We can now introduce the notion of \hyperref[def:vector-field]{vector fields} in terms of \hyperref[def:section]{section}.
-
-\begin{definition}[Vector field]\label{def:vector-field*}
-	A (smooth) \emph{vector field} \(X\) is a smooth \hyperref[def:section]{section} of a \hyperref[def:bundle]{bundle}.
-\end{definition}
-
-\begin{note}
-	We see that a smooth \hyperref[def:vector-field]{tangent vector field} is indeed a smooth \hyperref[def:vector-field*]{vector field} with the \hyperref[def:bundle]{bundle} being the \hyperref[def:tangent-bundle]{tangent bundle}.
-\end{note}
-
-\begin{notation}
-	Since we will nearly always be talking about \hyperref[def:vector-field]{tangent vector fields}, we will abuse the notation a bit and just simply call it \hyperref[def:vector-field]{vector fields}. But always keep in mind that more broadly, a \hyperref[def:vector-field*]{vector field} should be a \hyperref[def:section]{section} of a \hyperref[def:bundle]{bundle}, not always \(T \mathcal{M} \).
-\end{notation}
-
 \subsection{Tensor Fields}
 We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in a brute-fore way.\footnote{See \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields} for another view point.} To do this, given a vector space \(V\), we first introduce \hyperref[def:tensor]{tensors}.
 
@@ -200,18 +185,52 @@ In summary, we have
 \]
 
 \section{Levi-Civita Connections}
-The basic insight is that, after choosing a particular \hyperref[def:linear-connection]{connection} (remember that we have freedom to choose \(\Gamma \)'s), the space is basically fixed: i.e., the shape (curvature) of the space is determined by the choice of \(\nabla \)! We now formalize this idea. A particularly natural notion related to ``curvature'' is the \hyperref[def:torsion-tensor]{torsion}, defined as follows.
+The basic insight is that, after choosing a particular \hyperref[def:linear-connection]{connection} (remember that we have freedom to choose \(\Gamma \)'s), the space is basically fixed: i.e., the shape (curvature) of the space is determined by the choice of \(\nabla \)! We now formalize this idea. A particularly natural notion related to ``curvature'' is the \hyperref[def:torsion]{torsion}, defined as follows.
 
-\begin{definition}[Torsion tensor]\label{def:torsion-tensor}
-	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection}. The \emph{torsion tensor} of \(\nabla \) is the map \(T\colon \Gamma (T \mathcal{M} )\times \Gamma (T \mathcal{M} )\to \Gamma (T \mathcal{M} )\) defined as
+\begin{definition}[Torsion]\label{def:torsion}
+	The \emph{torsion} \(T\) of a \hyperref[def:linear-connection]{linear connection} \(\nabla \) is the \hyperref[def:tensor]{\((1, 2)\)-tensor field}
 	\[
-		T(X, Y) \coloneqq \nabla _X Y - \nabla _Y X - [X, Y].
+		T(\omega , X, Y) \coloneqq \omega \left( \nabla _X Y - \nabla _Y X - [X, Y] \right) .
 	\]
 \end{definition}
+
+\begin{notation}
+	We usually write this as \(T(X, Y)\) by neglecting \(\omega \).
+\end{notation}
+
+\begin{remark}
+	\(T\) is actually \(C^{\infty} \)-linear in each entry,\footnote{See \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields}.} hence a \hyperref[def:tensor-field]{tensor field}.
+\end{remark}
+\begin{explanation}
+	Since \(T(f\cdot \omega , X, Y) = f\cdot \omega \left( \ldots \right) = f T(\omega , X, Y)\) and \(T(\omega + \psi , X, Y) = \ldots = T(\omega , X, Y) + T(\psi , X, Y)\), and also
+	\[
+		\begin{split}
+			T(\omega , fX, Y) &= \omega \left( \nabla _{fX} Y - \nabla _Y(fX) - [fX, Y] \right) \\
+			&= \omega (f \nabla _X Y - (Yf) X - f \nabla _Y X - f[X, Y] + (Yf)X)
+			= f\cdot T(\omega , X, Y)
+		\end{split}
+	\]
+	since
+	\[
+		([fX, Y])g = f\cdot X(Y g) - Y(f\cdot Xg)
+		= f\cdot X(Yg) - (Yf) (Xg) - f\cdot Y(Xg)
+		= \left( f\cdot [X, Y] - (Yf)X \right) g.
+	\]
+	Finally, we claim that the additivity at \(X\) holds, with \(T(\omega , X, Y) = -T(\omega , Y, X)\), we're done.
+\end{explanation}
+
+\begin{intuition}
+	\autoref{def:torsion} makes sense (in such a form) since this will make \(T\) actually a \hyperref[def:tensor-field]{tensor field}. For example, without the \hyperref[def:bracket]{Lie bracket} term, we don't have the linearity at \(X\) (hence \(Y\)).
+\end{intuition}
 
 \begin{definition}[Torsion-free]\label{def:torsion-free}
 	A \hyperref[def:linear-connection]{linear connection} \(\nabla \) is \emph{torsion-free} if \(T = 0\).
 \end{definition}
+
+In a \hyperref[def:coordinate-chart]{chart},
+\[
+	T^i_{jk} \coloneqq T\left( \mathrm{d} x^i, \frac{\partial }{\partial x^j} , \frac{\partial }{\partial x^k} \right) = \Gamma ^i_{jk} - \Gamma ^i_{kj} = 2\Gamma ^i_{[jk]}.
+\]
 
 \begin{definition}[Riemannian]\label{def:Riemannian}
 	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection} and \(g\) be a \hyperref[def:Riemannian-metric]{Riemannian metric} on \(\mathcal{M} \). Then \(\nabla \) is \emph{Riemannian} (or \emph{metric}) if
@@ -235,14 +254,4 @@ Finally, we define the following.
 
 \begin{definition}[Levi-Civita connection]\label{def:Levi-Civita-connection}
 	The \emph{Levi-Civita connection} is the unique \hyperref[def:linear-connection]{linear connection} \(\nabla \) defined by the \hyperref[eq:Koszul-formula]{Koszul formula}.
-\end{definition}
-
-\section{Curvatures}
-Given all these definitions, we can now introduce the notion of ``curvatures.''
-
-\begin{definition}[Riemannian curvature tensor]\label{def:Riemannian-curvature-tensor}
-	Let \(\nabla \) be the \hyperref[def:Levi-Civita-connection]{Levi-Civita connection} on \(T \mathcal{M} \). Then the \emph{Riemannian curvature tensor} \(R\colon \Gamma (T \mathcal{M} ) \times \Gamma (T \mathcal{M} )\times \Gamma (T \mathcal{M} ) \to \Gamma (T \mathcal{M} )\) of \(\nabla \) is defined by
-	\[
-		R(X, Y)Z \coloneqq \nabla _X \nabla _Y Z - \nabla _Y \nabla _X Z - \nabla _{[X, Y]}Z.
-	\]
 \end{definition}

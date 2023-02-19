@@ -1,4 +1,4 @@
-\lecture{10}{7 Feb. 14:30}{Flow of Vector Fields}
+\lecture{10}{7 Feb. 14:30}{Curvatures and Flow of Vector Fields}
 Consider plugging in basis vectors \(\partial / \partial x^i\) into \autoref{def:Riemannian-curvature-tensor}, with \([\partial /\partial x^i, \partial / \partial x^k] = 0\), we have
 \[
 	R\left( \frac{\partial }{\partial x^i}, \frac{\partial }{\partial x^j} \right) \frac{\partial }{\partial x^{\ell } } = R^k_{\ell i j } \frac{\partial }{\partial x^k}
@@ -19,61 +19,59 @@ where
 \end{remark}
 
 \begin{definition}[Ricci curvature tensor]\label{def:Ricci-curvature-tensor}
-	The \emph{Ricci curvature tensor} is defined by \(R_{ab} = g^{cd}R_{cadb}\).
+	The \emph{Ricci curvature tensor} is defined by \(R_{ab} = g^{cd}R_{cadb} = R^d_{adb}\).
 \end{definition}
 
 \begin{definition}[Scalar curvature tensor]\label{def:scalar-curvature-tensor}
-	The \emph{Ricci curvature tensor} is defined by \(R = g^{ab}R_{ab}\).
+	The \emph{scalar curvature tensor} is defined by \(R = g^{ab}R_{ab}\).
 \end{definition}
 
 \begin{proposition}[Bianchi identity]
+	Given the \hyperref[def:Riemannian-curvature-tensor]{Riemannian curvature tensor} \(R\),
 	\[
-		\nabla _\alpha R_{\beta \gamma \delta \epsilon }
+		\nabla _{[\alpha} R_{\beta \gamma ]\delta \epsilon }
 		\coloneqq \nabla _\alpha R_{\beta \gamma \delta \epsilon }
-		+ \nabla _\alpha R_{\beta \gamma \delta \epsilon }
-		+ \nabla _\alpha R_{\beta \gamma \delta \epsilon }
+		+ \nabla _\beta R_{\gamma \alpha \delta \epsilon }
+		+ \nabla _\gamma R_{\alpha \beta \delta \epsilon }
 		= 0
 	\]
 \end{proposition}
 
-The following is an equivalent definition of \hyperref[def:geodesic]{geodesic}:
-\[
-	\nabla _{\dot{c}}\dot{c} = \theta .
-\]
+We see that the notion of ``curvatures'' can vary.
 
-\begin{notation}
-	\(\nabla _{\frac{\partial }{\partial x^i} } \frac{\partial }{\partial x^j} = \Gamma _{ij}rk \frac{\partial }{\partial x^k} \).
-\end{notation}
+\section{Covariant Derivatives}
+An important concept related to curvatures is ``parallelism,'' which needs a formal introduction of \hyperref[def:covariant-derivative]{covariant derivatives} (although we say we're going to treat them the same). As a motivating example, the following is an equivalent definition of \hyperref[def:geodesic]{geodesic}.
 
-\begin{definition}[Autoparallel]\label{def:autoparallel}
-	Let \(\nabla \) be a \hyperref[def:linear-connection]{connection} on \(T \mathcal{M} \) of a \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \). A \hyperref[def:curve]{curve} \(c\colon I \to \mathcal{M} \) is called \emph{autoparallel} or \emph{geodesic} w.r.t.\ \(\nabla \) if
+\begin{eg}[Autoparallel]
+	The \hyperref[def:geodesic]{geodesic} \(c\) satisfies \(\nabla _{\dot{c} } \dot{c} = 0\). This is called \hyperref[def:autoparallel]{autoparallel}.
+\end{eg}
+\begin{explanation}
+	In the \hyperref[def:coordinate-chart]{local coordinates}, we have \(\dot{c} = \dot{c}^i \partial / \partial x^i\), and note that
 	\[
-		\nabla _{\dot{c}}\dot{c} = 0.
+		\nabla _{\dot{c}}\dot{c}
+		= \dot{c}^i \nabla _{\frac{\partial }{\partial x^i} } \dot{c}^j \frac{\partial }{\partial x^j}
+		= \dot{c}^i \dot{c}^j \Gamma _{ij}^k \frac{\partial }{\partial x^k} + \ddot{c}^k \frac{\partial }{\partial x^k}
+		= \left( \ddot{c}^k + \Gamma _{ij}^k \dot{c}^i \dot{c}^j \right) \frac{\partial }{\partial x^k}
+		= 0
 	\]
-	In the \hyperref[def:coordinate-chart]{local coordinates}, we have \(\dot{c} = \dot{c}^i \partial / \partial x^i\).
-\end{definition}
+	since a \hyperref[def:geodesic]{geodesic} is the solution of \autoref{eq:geodesic}.
+\end{explanation}
 
-Note that
-\[
-	\nabla _{\dot{c}}\dot{c}
-	= \dot{c}^i \nabla _{\frac{\partial }{\partial x^i} } \dot{c}^j \frac{\partial }{\partial x^j}
-	= \dot{c}^i \dot{c}^j \Gamma _{ij}rk \frac{\partial }{\partial x^k} + \ddot{c}^k \frac{\partial }{\partial x^k}
-	= \left( \ddot{c}^k + \Gamma _{ij}^k \dot{c}^i \dot{c}^j \right) \frac{\partial }{\partial x^k}
-	= 0.
-\]
+As the word suggests, it has something to do with ``parallelism.'' Indeed, to understand what \(\nabla _{\dot{c} } \dot{c} \) is doing beyond just calculation, we need to make sense of ``\hyperref[def:vector-field]{vector-fields} along \hyperref[def:curve]{curves}.'' This is done by introducing the \hyperref[def:local-flow]{local flows} first.
 
-\section{Flow of Vector Fields}
-Let \(\mathcal{M} \) be a \hyperref[def:smooth-manifold]{differentiable manifold}. Let \(x\) be a \hyperref[def:vector-field]{vector field} on \(\mathcal{M} \) (i.e., a smooth \hyperref[def:section]{section} of the \hyperref[def:tangent-bundle]{tangent bundle} \(T\mathcal{M} \)). Then \(X\) defined a \(1^{st}\) order differential equations, i.e., if \(\dim \mathcal{M} > 1\), it is a system of \(1^{st} \) differential equations
+\subsection{Flows of Vector Fields}
+Let \(\mathcal{M} \) be a \hyperref[def:smooth-manifold]{smooth manifold}, and \(X\) a \hyperref[def:vector-field]{vector field} on \(\mathcal{M} \). Then \(X\) defines \(1^{st}\) order differential equations\footnote{If \(\dim \mathcal{M} > 1\), it is a system of \(1^{st} \)-order differential equations.}
 \[
 	\dot{c} = X(c).
 \]
+And this ODE has a solution, as guaranteed by \autoref{prop:vector-ODE-has-solution}.
 
-\begin{proposition}
-	For all \(p\in \mathcal{M} \), there exists an open interval \(I = I_p \subseteq \mathbb{R} \) with \(0\in I_p\) such that a \hyperref[def:curve]{smooth curve} \(c\colon I_p \to \mathcal{M} \) with
+\begin{proposition}\label{prop:vector-ODE-has-solution}
+	For all \(p\in \mathcal{M} ^d\), there exists an open interval \(I = I_p \subseteq \mathbb{R} \) with \(0\in I_p\) such that a \hyperref[def:curve]{smooth curve} \(c\colon I_p \to \mathcal{M} \) solves
 	\[
 		\begin{dcases}
 			\frac{\mathrm{d}c(t)}{\mathrm{d}t} = X(c(t)), & t\in I; \\
-			c(0) = 0.
+			c(0) = p.
 		\end{dcases}
 	\]
 	Further, the solution depends smoothly on the initial data (i.e., \(p\)).\footnote{This directly follows from ODE theory.}
@@ -83,68 +81,64 @@ Let \(\mathcal{M} \) be a \hyperref[def:smooth-manifold]{differentiable manifold
 	\[
 		\begin{dcases}
 			\frac{\mathrm{d}c(t)}{\mathrm{d}t} = X(c(t)), & t\in I; \\
-			c(0) = 0.
+			c(0) = p.
 		\end{dcases}
 	\]
-	We can check in \hyperref[def:coordinate-chart]{local coordinates} that this is a system of ODE. In such \hyperref[def:coordinate-chart]{coordinates}, let \(c(t)\) be given by
-	\[
-		c(t) = \big(c^1(t), c^2(t), \ldots , c^d(t)\big)
-	\]
-	for \(d = \dim \mathcal{M} \). Let \(X\) be \(X^i \partial / \partial x^i\), then the above system becomes
+	We can check in \hyperref[def:coordinate-chart]{local coordinates} that this is a system of ODE. In such \hyperref[def:coordinate-chart]{coordinates}, let \(c(t)\) be given by \(c(t) = \big(c^1(t), c^2(t), \ldots , c^d(t)\big)\). Let \(X \eqqcolon X^i \partial / \partial x^i\), then the above system becomes
 	\[
 		\frac{\mathrm{d}c^i(t)}{\mathrm{d}t} = X^i\big(c(t)\big) ,\quad i = 1, \ldots , d.
 	\]
-	From the ODE theory, specifically \href{https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem}{Picard-Lindelöf theorem}, with the initial data \(c(0)=p\), there is a unique solution.	
+	From the \href{https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem}{Picard-Lindelöf theorem}, with the initial data \(c(0)=p\), there is a unique solution.	
 \end{proof}
 
-\begin{proposition}\label{prop:lec10}
+\begin{proposition}\label{prop:vector-ODE-has-solution-in-nbh}
 	For all \(p\in \mathcal{M} \), there exists an open neighborhood \(U\) of \(p\) and an open interval \(I_p\) with \(0\in I_p\) such that for all \(q\in U\), the \hyperref[def:curve]{curve} \(c_q\) with
 	\[
 		\dot{c}_q(t) = X(c_q(t)),\quad c_q(0) = q
 	\]
-	is defined on \(I\). The map\footnote{\(I \times U \to \mathcal{M} \).} \((t, q) \mapsto c_q(t)\) is smooth.
+	is defined on \(I\) and the map \(c\colon I \times U \to \mathcal{M} \), \((t, q) \mapsto c_q(t)\) is smooth.
 \end{proposition}
 
-\begin{center}
-	\incfig{lec10}
-\end{center}
+\autoref{prop:vector-ODE-has-solution-in-nbh} suggests the following definition.
 
 \begin{definition}[Local flow]\label{def:local-flow}
-	The map \(c_q(t) \colon I\times U \to \mathcal{M} \), \((t, q)\mapsto c_q(t)\) from \autoref{prop:lec10} is called the \emph{local flow} of the \hyperref[def:vector-field]{vector field} \(X\).
+	The map \(c_q(t) \colon I\times U \to \mathcal{M} \), \((t, q)\mapsto c_q(t)\) from \autoref{prop:vector-ODE-has-solution-in-nbh} is called the \emph{local flow} of the \hyperref[def:vector-field]{vector field} \(X\).
 \end{definition}
+
+\begin{center}
+	\incfig{local-flow}
+\end{center}
 
 \begin{definition}[Integral curve]\label{def:integral-curve}
-	The \hyperref[def:curve]{curve} \(c_q\) is called the \emph{integral curve} of \(X\) through \(q\).
+	The \hyperref[def:local-flow]{local flow} \(c_q(t)\) is called the \emph{integral curve} of \(X\) through \(q\).
 \end{definition}
 
+\subsection{Local \(1\)-Parameter Groups}
 Now, fixing \(t\), we can vary \(q\) and see the following.
 
-\begin{theorem}\label{thm:lec10}
-	Let \(\varphi _t(q) \coloneqq c_q(t)\), \(\varphi _t \circ \varphi _s(q) = \varphi _{t+s}(q)\) for \(s, t, (t+s)\in I_q\) and if \(\varphi _t\) define don \(U \subseteq \mathcal{M} \), it maps \(U\) \hyperref[def:diffeomorphic]{diffeomorphically} onto its image.
+\begin{theorem}\label{thm:local-1-parameter-group}
+	Let \(\varphi _t(q) \coloneqq c_q(t)\) such that \(\varphi _t \circ \varphi _s(q) = \varphi _{t+s}(q)\) for \(s, t, (t+s)\in I_q\). If \(\varphi _t\) is defined on \(U \subseteq \mathcal{M} \), it maps \(U\) \hyperref[def:diffeomorphic]{diffeomorphically} onto its image.
 \end{theorem}
-\begin{proof}
-	\todo{Exercise}
-\end{proof}
+
+We see that \(\varphi _t\) defines a family of \hyperref[def:diffeomorphism]{diffeomorphism} around \(p\), which gives the following.
 
 \begin{definition}[Local \(1\)-parameter group]\label{def:local-1-parameter-group}
-	A family \((\varphi _t)_{t\in I}\) of \hyperref[def:diffeomorphism]{diffeomorphism} from \(\mathcal{M} \) to \(\mathcal{M} \) satisfying \autoref{thm:lec10} is called a \emph{local \(1\)-parameter group} of \hyperref[def:diffeomorphism]{diffeomorphisms}.
+	A family \((\varphi _t)_{t\in I}\) of \hyperref[def:diffeomorphism]{diffeomorphism} from \(\mathcal{M} \) to \(\mathcal{M} \) satisfying \autoref{thm:local-1-parameter-group} is called a \emph{local \(1\)-parameter group} of \hyperref[def:diffeomorphism]{diffeomorphisms}.
 \end{definition}
 
-\begin{remark}
-	In general, a \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} needs not be extendible to a group because the maximum interval of definition \(I = I_q\) in \autoref{def:local-1-parameter-group} need not be all of \(\mathbb{R} \).
-\end{remark}
+In general, a \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} needs not be extendible to a group because the maximum interval \(I = I_q\) in \autoref{def:local-1-parameter-group} need not be all of \(\mathbb{R} \).
 
 \begin{eg}
-	Let \(\mathcal{M} = \mathbb{R} \), \(X(t) = \tau ^2 \mathrm{d} / \mathrm{d} \tau \). Then the solution of \(\dot{c}(t) = c^2(t)\) as an ODE is not defined over all \(\mathbb{R} \).
+	Let \(\mathcal{M} = \mathbb{R} \), \(X(t) = \tau ^2 \mathrm{d} / \mathrm{d} \tau \). Then the solution of \(\dot{c}(t) = c^2(t)\) is not defined over all \(\mathbb{R} \).
 \end{eg}
 
-Now, we want the whole group structure.
+To get the whole group structure, consider the following.
 
 \begin{theorem}
-	Let \(X\) be a \hyperref[def:vector-field]{vector field} on \(\mathcal{M} \) with a compact support. Then the corresponding \hyperref[def:local-flow]{local flow} is defined for every \(q\in \mathcal{M} \) and \(t\in \mathbb{R} \), and the \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} becomes a group of \hyperref[def:diffeomorphism]{diffeomorphisms}.
+	Let \(X\) be a \hyperref[def:vector-field]{vector field} on a \hyperref[def:smooth-manifold]{smooth manifold} \(\mathcal{M} \) with a compact support. Then the corresponding \hyperref[def:local-flow]{local flow} is defined for every \(q\in \mathcal{M} \) and \(t\in \mathbb{R} \), and the \hyperref[def:local-1-parameter-group]{local \(1\)-parameter group} becomes a group of \hyperref[def:diffeomorphism]{diffeomorphisms}.
 \end{theorem}
 \begin{proof}
-	By using \(\mathop{\mathrm{supp}}(X) \subseteq K\), \(K\) compact, we can cover \(K\) by a finite covering, then using \autoref{prop:lec10}, we're done.
+	By using \(\mathop{\mathrm{supp}}(X) \subseteq K\), \(K\) compact, we can cover \(K\) by a finite covering, then using \autoref{prop:vector-ODE-has-solution-in-nbh}, we're done.
 \end{proof}
 
 \begin{corollary}

@@ -26,11 +26,10 @@ We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in
 \end{definition}
 
 \begin{notation}
-	Let \(\mathcal{M} ^n \) be a \hyperref[def:smooth-manifold]{smooth manifold}, and \(\pi \colon E \to \mathcal{M} \) a \hyperref[def:vector-bundle]{smooth vector bundle}, then
+	Let \(\mathcal{M} ^n \) be a \hyperref[def:smooth-manifold]{smooth manifold} and \(\pi \colon E \to \mathcal{M} \) a \hyperref[def:vector-bundle]{smooth vector bundle}, then the set of \hyperref[def:section]{sections} is denoted as
 	\[
-		\Gamma (E) \coloneqq \left\{ s\in C^{\infty} (\mathcal{M} , E) \mid \pi \circ s = \identity_{\mathcal{M} } \right\},
+		\Gamma (E) \coloneqq \left\{ s\in C^{\infty} (\mathcal{M} , E) \mid \pi \circ s = \identity_{\mathcal{M} } \right\}.
 	\]
-	i.e., the set of \hyperref[def:section]{sections}.
 \end{notation}
 
 \begin{eg}
@@ -92,7 +91,7 @@ An equivalent definition is the following.
 	with the coordinates being \((t, x, y, z)\).
 \end{eg}
 
-\chapter{Affine and Riemannian Connections}
+\chapter{Connections and Curvatures}
 So far, we saw that a \hyperref[def:vector-field]{vector field} \(X\) can be used to provide a directional derivative since it gives us a \hyperref[def:tangent-vector]{tangent vector} at each point smoothly. Now, we will introduce a new symbol \(\nabla \) where we let
 \[
 	\nabla _X f\coloneqq Xf
@@ -106,6 +105,8 @@ for \(f\in C^{\infty} (\mathcal{M} )\).
 	No! While \(\nabla , X\colon C^{\infty} (\mathcal{M} ) \to C^{\infty} (\mathcal{M} )\), while \(\mathrm{d} f\colon \Gamma (T \mathcal{M} ) \to C^{\infty} (\mathcal{M} )\), we can generalize \(\nabla _X\) to act from \hyperref[def:vector-field]{vector fields} to \hyperref[def:vector-field]{vector fields}! The insight is that if \(X\) can be extended naturally (without providing any extra structures), then we certainly won't bother introducing a new symbol. However, as you might guess, to let \(\nabla \) doing this, we do need to provide extra structures, and \(\nabla \) stands exactly for these extra structures!
 \end{answer}
 
+In some sense, this new notions \(\nabla \) allows us to ``connect'' \hyperref[def:tangent-space]{tangent spaces}, which allows us to make sense of ``curvatures'' and other geometric property of a \hyperref[def:Riemannian-manifold]{Riemannian manifold}.
+
 \section{Affine Connections}
 We first formulate a \emph{wish list} of properties which the \(\nabla _X\) should have. Any remaining freedom in choosing \(\nabla \) will need to be provided as additional structures beyond the structures on \(\mathcal{M}\) we already have.
 
@@ -118,18 +119,88 @@ We first formulate a \emph{wish list} of properties which the \(\nabla _X\) shou
 	\begin{enumerate}[(a)]
 		\item \(\nabla _{fX+gY}Z = f \nabla _X Z + g \nabla _Y Z\);
 		\item \(\nabla _X (Y+Z) = \nabla _X Y + \nabla _X Z\);
-		\item \(\nabla _X fY = f \nabla _X Y + X(f)Y\);
+		      \item\label{def:linear-connection-c} \(\nabla _X fY = f \nabla _X Y + X(f)Y\);
 	\end{enumerate}
 	for all \hyperref[def:vector-field]{vector fields} \(X, Y, Z\in \Gamma (T \mathcal{M} )\) and \(f, g\in C^{\infty} (\mathcal{M} )\).
 \end{definition}
 
-\begin{note}[Covariant derivative]
-	There's a similar notation called \emph{covariant derivative}, denoted by \(\mathrm{D} \), satisfies similar properties as a \hyperref[def:linear-connection]{linear connection}. Hence, we often write \(\mathrm{D} \) and \(\nabla \) interchangeably.\footnote{\hyperref[def:linear-connection]{Linear connection} is more general than a covariant derivative; however, we treat them as the same.}
+\begin{note}
+	There's a similar notation called \hyperref[def:covariant-derivative]{covariant derivative}, denoted by \(\mathrm{D} \), satisfies similar properties as a \hyperref[def:linear-connection]{linear connection}. Hence, we often write \(\mathrm{D} \) and \(\nabla \) interchangeably.\footnote{\(\nabla \) is more general than \(\mathrm{D}\); however, we treat them as the same as suggested by \autoref{prop:covariant-derivative}.}
 \end{note}
 
-\begin{remark}[\(\Gamma \) and \(\nabla \)]
-
+\begin{remark}
+	\autoref{def:linear-connection} \autoref{def:linear-connection-c} shows that this is actually a local notion as we will see.
 \end{remark}
+
+Now, one might be wondering that, after fixing these rules we want, how much freedom is left? To see this, let's first do some calculations...
+
+\subsection{Connection Coefficients}
+Choose a \hyperref[def:coordinate-chart]{system of coordinates} \((x_1, \ldots , x_n)\) at \(p\in \mathcal{M} \), we can write \(X = X^i \frac{\partial }{\partial x_i}, Y = Y^j \frac{\partial }{\partial x_j}\), then
+\[
+	\nabla _X Y
+	= \nabla _{X^i \frac{\partial }{\partial x_i} } \left( Y^j \frac{\partial }{\partial x_j}  \right)
+	= X^i Y^j \nabla _{\frac{\partial }{\partial x_i}} \frac{\partial }{\partial x_j} + X^i \frac{\partial }{\partial x_i}(Y^j)  \frac{\partial }{\partial x_j}.
+\]
+Now, we see that \(\nabla _{\partial / \partial x_i} \frac{\partial }{\partial x_j}\) is another \hyperref[def:vector-field]{vector field}, hence can again write
+\[
+	\nabla _{\frac{\partial }{\partial x_i}} \frac{\partial }{\partial x_j} \eqqcolon \sum_{k} \Gamma ^k_{ij} \frac{\partial }{\partial x_k}
+\]
+in terms of the basis with a new set of coefficients \(\Gamma \).
+
+\begin{notation}[Connection coefficient]\label{not:connection-coefficient}
+	The coefficients \(\Gamma ^k_{ij}\) is called the \emph{connection coefficients}.\footnote{It's tempting to say that the \hyperref[not:connection-coefficient]{connection coefficients} are the same as \hyperref[not:Christoffel-symbol]{Christoffel symbols} since we're using the same symbols. Indeed, they are! For a deeper understanding, see \autoref{section:Christoffel-symbols}.}
+\end{notation}
+
+\begin{note}
+	It's clear that \(\Gamma ^k_{ij}\) are differentiable and \hyperref[def:coordinate-chart]{charts}-dependent and hence \(\nabla \) is local.
+\end{note}
+
+Finally, we have
+\[
+	\nabla _X Y = \left( X^i Y^j \Gamma ^k_{ij} + X(Y^k) \right) \frac{\partial }{\partial x_k}
+	\implies (\nabla _X Y)^k = X(Y^k) + \Gamma ^k_{ij} X^i Y^j,
+\]
+meaning that we have \((\dim \mathcal{M} )^3\) many \(\Gamma\)'s (freedom) when choosing \(\Gamma ^k_{ij}\) with \autoref{def:linear-connection}.\footnote{This is for a particular domain \(U\).}
+
+\begin{remark}
+	One might ask what about other \hyperref[def:tensor-field]{tensor fields}? Fortunately, the same set of \(\Gamma \)'s fix the action of \(\nabla \) on any \hyperref[def:tensor-field]{tensor fields}.
+\end{remark}
+\begin{explanation}
+	The key observation is that if we define \(\nabla _{\frac{\partial }{\partial x^j} } (\mathrm{d} x^i) \eqqcolon \Sigma ^i _{j k} \mathrm{d} x^k\), then
+	\[
+		\nabla _{\frac{\partial }{\partial x^j} } \left( \mathrm{d} x^i \left( \frac{\partial }{\partial x^k}  \right)  \right) =
+		\begin{dcases}
+			\frac{\partial }{\partial x^j} (\delta ^i_k) = 0; \\
+			\vphantom{\left( \nabla _{\frac{\partial }{\partial x^j} } \mathrm{d} x^i\right) \frac{\partial }{\partial x^k} + \mathrm{d} x^i\left( \nabla _{\frac{\partial }{\partial x^j}} \frac{\partial }{\partial x^k} \right)}
+			\smash{\left( \nabla _{\frac{\partial }{\partial x^j} } \mathrm{d} x^i\right) \frac{\partial }{\partial x^k}
+			+ \mathrm{d} x^i \underbrace{\left( \nabla _{\frac{\partial }{\partial x^j}} \frac{\partial }{\partial x^k} \right)}_{\Gamma ^\ell _{jk} \frac{\partial }{\partial x^{\ell } }},}
+		\end{dcases}
+		\vphantom{\begin{dcases}
+				\frac{\partial }{\partial x^j} (\delta ^i_k) = 0; \\
+				\left( \nabla _{\frac{\partial }{\partial x^j} } \mathrm{d} x^i\right) \frac{\partial }{\partial x^k}
+				+ \mathrm{d} x^i \underbrace{\left( \nabla _{\frac{\partial }{\partial x^j}} \frac{\partial }{\partial x^k} \right)}_{\Gamma ^\ell _{jk} \frac{\partial }{\partial x^{\ell } }}
+			\end{dcases}}
+	\]
+	leading to
+	\[
+		\left( \nabla _{\frac{\partial }{\partial x^j} } \mathrm{d} x^i\right) \frac{\partial }{\partial x^k}
+		= - \mathrm{d} x^i \left( \Gamma ^\ell _{jk} \frac{\partial }{\partial x^{\ell } }  \right)
+		\implies \left( \nabla _{\frac{\partial }{\partial x^j} } \mathrm{d} x^i\right)_k
+		= - \Gamma ^i _{jk}
+	\]
+	since \(\mathrm{d} x^i \frac{\partial }{\partial x^{\ell } } = \delta ^i_{\ell }\).
+\end{explanation}
+
+In summary, we have
+\[
+	\begin{dcases}
+		(\nabla _X Y)^k = X(Y^k) + \Gamma ^k_{ij} X^i Y^j,                  & \text{ if \(Y\) is a \hyperref[def:vector-field]{vector field}} ;          \\
+		(\nabla _X \omega)_k = X(\omega _k) - \Gamma ^j_{ik} X^i \omega _j, & \text{ if \(\omega\) is a \hyperref[def:vector-field]{co-vector field}}  .
+	\end{dcases}
+\]
+
+\section{Levi-Civita Connections}
+The basic insight is that, after choosing a particular \hyperref[def:linear-connection]{connection} (remember that we have freedom to choose \(\Gamma \)'s), the space is basically fixed: i.e., the shape (curvature) of the space is determined by the choice of \(\nabla \)! We now formalize this idea. A particularly natural notion related to ``curvature'' is the \hyperref[def:torsion-tensor]{torsion}, defined as follows.
 
 \begin{definition}[Torsion tensor]\label{def:torsion-tensor}
 	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection}. The \emph{torsion tensor} of \(\nabla \) is the map \(T\colon \Gamma (T \mathcal{M} )\times \Gamma (T \mathcal{M} )\to \Gamma (T \mathcal{M} )\) defined as
@@ -138,39 +209,36 @@ We first formulate a \emph{wish list} of properties which the \(\nabla _X\) shou
 	\]
 \end{definition}
 
-\begin{definition*}
-	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection}.
+\begin{definition}[Torsion-free]\label{def:torsion-free}
+	A \hyperref[def:linear-connection]{linear connection} \(\nabla \) is \emph{torsion-free} if \(T = 0\).
+\end{definition}
 
-	\begin{definition}[Torsion-free]\label{def:torsion-free}
-		\(\nabla \) is \emph{torsion-free} if \(T = 0\).
-	\end{definition}
-
-	\begin{definition}[Riemannian]\label{def:Riemannian}
-		If \(g\) is a \hyperref[def:Riemannian-metric]{Riemannian metric} on \(\mathcal{M} \), then \(\nabla \) is \emph{Riemannian} (metric) if
-		\[
-			Z(g(X, Y)) = g(\nabla _{Z} X, Y) + g(X, \nabla _{Z} Y)
-		\]
-		for all \(X, Y, Z\in \Gamma (T\mathcal{M} )\).
-	\end{definition}
-\end{definition*}
+\begin{definition}[Riemannian]\label{def:Riemannian}
+	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection} and \(g\) be a \hyperref[def:Riemannian-metric]{Riemannian metric} on \(\mathcal{M} \). Then \(\nabla \) is \emph{Riemannian} (or \emph{metric}) if
+	\[
+		Z(g(X, Y)) = g(\nabla _{Z} X, Y) + g(X, \nabla _{Z} Y)
+	\]
+	for all \(X, Y, Z\in \Gamma (T\mathcal{M} )\).\footnote{We view \(g(X, Y)\in C^{\infty} (\mathcal{M} )\) as suggested by \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields}.}
+\end{definition}
 
 \begin{proposition}[Koszul formula]\label{prop:Koszul-formula}
-	On each Riemannian manifold \((\mathcal{M} , g)\), there exists a unique \hyperref[def:Riemannian]{Riemannian}, \hyperref[def:torsion-free]{torsion-free} \hyperref[def:linear-connection]{connection} \(\nabla \) on \(T\mathcal{M} \) determined by the \emph{Koszul formula}
+	On each \hyperref[def:Riemannian-manifold]{Riemannian manifold} \((\mathcal{M} , g)\), there exists a unique \hyperref[def:Riemannian]{Riemannian}, \hyperref[def:torsion-free]{torsion-free} \hyperref[def:linear-connection]{connection} \(\nabla \) on \(T\mathcal{M} \) determined by the \emph{Koszul formula}
 	\begin{equation}\label{eq:Koszul-formula}
 		\left\langle \nabla _X Y, Z \right\rangle = \frac{1}{2} \left( X \left\langle Y, Z \right\rangle - Z\left\langle X, Y \right\rangle + Y\left\langle Z, X \right\rangle - \left\langle X, [Y, Z] \right\rangle + \left\langle Z, [X, Y] \right\rangle + \left\langle Y, [Z, X] \right\rangle \right).
 	\end{equation}
 \end{proposition}
-\begin{proof}
-	Firstly, we prove that for each \hyperref[def:Riemannian]{Riemannian} and \hyperref[def:torsion-free]{torsion-free} \hyperref[def:linear-connection]{connection} satisfies \autoref{eq:Koszul-formula}, then it will imply uniqueness. As for existence, we verify that the unique \(\mathbb{R} \)-bilinear map
-	\[
-		\nabla \colon \Gamma (T \mathcal{M} ) \times \Gamma (T \mathcal{M} )\to \Gamma (T\mathcal{M} )
-	\]
-	given by \autoref{eq:Koszul-formula} has the desired properties, i.e., \(2\) product rules from \hyperref[def:linear-connection]{connection}, \hyperref[def:torsion-free]{torsion-free}, and being \hyperref[def:Riemannian-metric]{metric}.
+\begin{proof}[Proof sketch]
+	Firstly, we can show that every \hyperref[def:Riemannian]{Riemannian} and \hyperref[def:torsion-free]{torsion-free} \hyperref[def:linear-connection]{connection} satisfies \autoref{eq:Koszul-formula}, which implies uniqueness. For existence, we verify that the unique map \(\nabla \colon \Gamma (T \mathcal{M} ) \times \Gamma (T \mathcal{M} )\to \Gamma (T\mathcal{M} )\) given by \autoref{eq:Koszul-formula} has the desired properties, i.e., satisfying \autoref{def:linear-connection}, \autoref{def:torsion-free}, and \autoref{def:Riemannian-metric}.
 \end{proof}
+
+Finally, we define the following.
 
 \begin{definition}[Levi-Civita connection]\label{def:Levi-Civita-connection}
 	The \emph{Levi-Civita connection} is the unique \hyperref[def:linear-connection]{linear connection} \(\nabla \) defined by the \hyperref[eq:Koszul-formula]{Koszul formula}.
 \end{definition}
+
+\section{Curvatures}
+Given all these definitions, we can now introduce the notion of ``curvatures.''
 
 \begin{definition}[Riemannian curvature tensor]\label{def:Riemannian-curvature-tensor}
 	Let \(\nabla \) be the \hyperref[def:Levi-Civita-connection]{Levi-Civita connection} on \(T \mathcal{M} \). Then the \emph{Riemannian curvature tensor} \(R\colon \Gamma (T \mathcal{M} ) \times \Gamma (T \mathcal{M} )\times \Gamma (T \mathcal{M} ) \to \Gamma (T \mathcal{M} )\) of \(\nabla \) is defined by

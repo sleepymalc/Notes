@@ -1,9 +1,10 @@
-\lecture{11}{9 Feb. 14:30}{Parallel Transport}
-Let's first transform \autoref{eq:geodesic} into \(1^{st} \) order system on the \hyperref[def:cotangent-space]{cotangent} \hyperref[def:vector-bundle]{bundle} \(T^{\ast} \mathcal{M} \), and locally trivialize \(T^{\ast} \mathcal{M} \) by \hyperref[def:coordinate-chart]{chart} \(\at{T^{\ast} \mathcal{M} }{U}{} \cong U \times \mathbb{R} ^d\) with coordinates \((x^1, \ldots , x^d, p_1, \ldots , p_d)\). Set
+\lecture{11}{9 Feb. 14:30}{Geodesic \& Cogeodesic Flows and Parallel Transport}
+\subsection{Geodesic and Cogeodesic Flows}
+A particular interesting \hyperref[def:local-flow]{flow} is the \hyperref[def:cogeodesic-flow]{cogeodesic-flow}, which can be constructed as follows. Let's first transform \autoref{eq:geodesic} (which is a \(2^{nd}\)-ODE) into a \(1^{st} \) order system on the \hyperref[def:cotangent-space]{cotangent} \hyperref[def:vector-bundle]{bundle} \(T^{\ast} \mathcal{M} \), and locally trivialize \(T^{\ast} \mathcal{M} \) by \hyperref[def:coordinate-chart]{chart} \(\at{T^{\ast} \mathcal{M} }{U}{} \cong U \times \mathbb{R} ^d\) with coordinates \((x^1, \ldots , x^d, p_1, \ldots , p_d)\). Set
 \begin{equation}\label{eq:Hamilton}
 	H(x, p) = \frac{1}{2} g^{ij} (x) p_i p_j,
 \end{equation}
-recall \(g^{ik} g_{kj} = \delta ^i_j \).
+and recall \(g^{ik} g_{kj} = \delta ^i_j \).
 
 \begin{theorem}
 	\autoref{eq:geodesic} is equivalent to the system on \(T^{\ast} \mathcal{M} \):
@@ -14,17 +15,22 @@ recall \(g^{ik} g_{kj} = \delta ^i_j \).
 		\end{dcases}
 	\end{equation}
 \end{theorem}
+\begin{proof}
+	This is just computation.
+\end{proof}
 
-\begin{remark}[Cogeodesic flow]\label{rmk:cogeodesic-flow}
-	The \hyperref[def:local-flow]{flow} determined by \autoref{eq:cogeodesic} is called the \emph{cogeodesic flow}.
-\end{remark}
+\begin{definition}[Cogeodesic flow]\label{def:cogeodesic-flow}
+	The \emph{cogeodesic flow} is the \hyperref[def:local-flow]{local flow} determined by \autoref{eq:cogeodesic}.
+\end{definition}
 
-\begin{note}
-	The \hyperref[def:geodesic]{geodesic} \hyperref[def:local-flow]{flow} on \(T\mathcal{M} \) is obtained from the \hyperref[rmk:cogeodesic-flow]{cogeodesic flow} by the first equation in \autoref{eq:cogeodesic}.
-\end{note}
+\begin{definition}[Geodesic flow]\label{def:geodesic-flow}
+	The \hyperref[def:geodesic-flow]{geodesic flow} on \(T\mathcal{M} \) is obtained from the \hyperref[def:cogeodesic-flow]{cogeodesic flow} by the first equation in \autoref{eq:cogeodesic}.
+\end{definition}
+
+Thus, the \hyperref[def:geodesic]{geodesic} is the projection of the \hyperref[def:integral-curve]{integral curve} of the \hyperref[def:geodesic-flow]{geodesic flow} onto \(\mathcal{M} \).
 
 \begin{remark}[Hamiltonian flow]
-	The \hyperref[rmk:cogeodesic-flow]{cogeodesic flow} is a \emph{Hamiltonian flow} for the Hamiltonian \(H\).
+	The \hyperref[def:cogeodesic-flow]{cogeodesic flow} is a \emph{Hamiltonian flow} for the Hamiltonian \(H\).
 \end{remark}
 \begin{explanation}
 	By \autoref{eq:cogeodesic}, along the \hyperref[def:integral-curve]{integral curves},
@@ -33,7 +39,7 @@ recall \(g^{ik} g_{kj} = \delta ^i_j \).
 		= H_{x^i} \dot{x}^i + H_{p_i}\dot{p}^i
 		= -\dot{p}_i x\dot{x}^i + \dot{x}^i \dot{p}_i = 0.
 	\]
-	Observe that the \hyperref[rmk:cogeodesic-flow]{cogeodesic flow} maps the set
+	Observe that the \hyperref[def:cogeodesic-flow]{cogeodesic flow} maps the set
 	\[
 		E_\lambda \coloneqq \left\{ (x, p)\in T^{\ast} \mathcal{M} \mid H(x, p) = \lambda  \right\}
 	\]
@@ -41,84 +47,133 @@ recall \(g^{ik} g_{kj} = \delta ^i_j \).
 \end{explanation}
 
 \begin{remark}
-	If \(\mathcal{M} \) is compact, then all \(E_\lambda \) are compact, then all \hyperref[def:geodesic]{geodesic} \hyperref[def:local-flow]{flow} define don all of \(E_\lambda \) for all \(\lambda \). Also, \(\mathcal{M} = \bigcup_{\lambda \geq 0} P E_\lambda \) for \(P\) being the projection.
+	If \(\mathcal{M} \) is compact, then all \(E_\lambda \) are compact, then all \hyperref[def:geodesic-flow]{geodesic flow} is defined on all of \(E_\lambda \) for all \(\lambda \).
 \end{remark}
 
-\begin{definition}[Vector field along a curve]\label{def:vector-field-along-a-curve}
-	A \hyperref[def:vector-field]{vector field} along a \hyperref[def:curve]{curve} \(c\colon I \subseteq \mathbb{R} \to \mathcal{M} \) is \(X\colon I \to T \mathcal{M} \) such that \(X(t)\in T_{c(t)} \mathcal{M} \) for all \(t\in I\).
+\begin{remark}
+	\(\mathcal{M} = \bigcup_{\lambda \geq 0} P E_\lambda \) for \(P\) being the projection.
+\end{remark}
+
+\subsection{Vector Fields along Curves}
+With these tools, we now introduce the \hyperref[def:vector-field-along-curve]{vector field along a curve}.
+
+\begin{definition}[Vector field along a curve]\label{def:vector-field-along-curve}
+	A \emph{(smooth) vector field \(X\) along a curve} \(c\colon I \subseteq \mathbb{R} \to \mathcal{M} \) on a \hyperref[def:smooth-manifold]{smooth manifold} \(\mathcal{M} \) is defined as \(X\colon I \to T \mathcal{M} \) such that \(X(t)\in T_{c(t)} \mathcal{M} \) for all \(t\in I\).
 \end{definition}
 
 \begin{notation}
-	Denote the set of smooth \hyperref[def:vector-field-along-a-curve]{vector field along \(c\)}  by \(\chi _c(\mathcal{M} )\).
+	The set of smooth \hyperref[def:vector-field-along-curve]{vector fields along \(c\)} is denoted as \(\chi _c(\mathcal{M} )\).
 \end{notation}
 
-\begin{theorem}\label{thm:lec11}
-	Let \((\mathcal{M} , g)\) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold}, \(\mathrm{D}\) is the canonical \hyperref[def:Levi-Civita-connection]{(Levi-Civita) connection} and \(c\) a \hyperref[def:curve]{curve} in \(\mathcal{M} \). Then there exists a unique operator \(\mathrm{D} / \mathrm{d} t\) defined as the vector space of \hyperref[def:vector-field-along-a-curve]{vector field along \(c\)} satisfying
-	\begin{enumerate}[(i)]
-		\item \label{thm:lec11-i}\begin{enumerate}[(a)]
-			      \item \label{thm:lec11-i-a} \(\frac{\mathrm{D}}{\mathrm{d}t} (fY)(t) = f^\prime (t) Y(t) + f(t) \frac{\mathrm{D} }{\mathrm{d} t} Y(t)\) for all real function \(f\) on \(I\).
-			      \item \label{thm:lec11-i-b} \(\frac{\mathrm{D} }{\mathrm{d} t} (V+W) = \frac{\mathrm{D} V}{\mathrm{d} t} + \frac{\mathrm{D} W}{\mathrm{d} t}\).
-		      \end{enumerate}
-		\item \label{thm:lec11-ii} If there exists a neighborhood of in \(I\) such that \(Y\) is the restriction to \(c\) of a \hyperref[def:vector-field]{vector field} \(X\) defined on a neighborhood of \(c(t_0)\) in \(\mathcal{M} \), then \(\frac{\mathrm{D} }{\mathrm{d} t} Y(t_0) = (\mathrm{D}_{c(t_0)} X) _{c(t_0)}\).
-	\end{enumerate}
-\end{theorem}
+\subsection{Covariant Derivatives}
+We can now finally define \hyperref[def:covariant-derivative]{covariant derivative} formally, and see why we can use them interchangeably with \hyperref[def:linear-connection]{linear connection}.
 
-\begin{problem}
-Why not just define \(\mathrm{D} Y / \mathrm{d} t\) by \autoref{thm:lec11-ii}?
-\end{problem}
-\begin{answer}
-	A \hyperref[def:vector-field-along-a-curve]{vector field \(Y\) along a curve} may not always be extended to a neighborhood of \(c\) in \(\mathcal{M} \). But, in \hyperref[def:coordinate-chart]{local coordinates},
-	\[
-		Y(t) = \sum_{i=1}^{n} Y^i (t) \left( \frac{\partial }{\partial x^i}  \right) _{c(t)},
-	\]
-	which shows that a \hyperref[def:vector-field-along-a-curve]{vector field along \(c\)} always a linear combination of \hyperref[def:vector-field-along-a-curve]{vector fields along \(c\)} that can be extended.
-\end{answer}
+\begin{definition}[Covariant derivative]\label{def:covariant-derivative}
+	The \emph{covariant derivative} of \(v\) along \(c\) is the \hyperref[def:vector-field-along-curve]{vector field} \(\mathrm{D} V / \mathrm{d} t\) in \autoref{prop:covariant-derivative}.
+\end{definition}
 
 \begin{prev}
-	Let \(X = X^i \partial _i\), \(V = V^k \partial _k\), and let \(\mathrm{D} \) be the \hyperref[def:Levi-Civita-connection]{Levi-Civita connection}. Then
+	Let \(X = X^i \frac{\partial }{\partial x_i}\), \(V = V^k \frac{\partial}{\partial x_k}\), and let \(\mathrm{D} \) be the \hyperref[def:Levi-Civita-connection]{Levi-Civita connection}. Then
 	\[
 		\mathrm{D}_V X
-		= \mathrm{D} _V(X^i \partial _i)
-		= V(X^i) \partial _i + X^i \underbrace{\mathrm{D} _V \partial _i}_{V^k D_{\partial _k} \partial _i}
-		= V(X^i)\partial _i + V^k X^i \Gamma ^j_{ki}\partial _j.
+		= \mathrm{D} _V(X^i \frac{\partial}{\partial x_i})
+		= V(X^i) \frac{\partial}{\partial x_i} + X^i \underbrace{\mathrm{D} _V \frac{\partial}{\partial x_i}}_{\mathclap{V^k \mathrm{D}_{\frac{\partial}{\partial x_k}} \frac{\partial}{\partial x_i}}}
+		= V(X^i)\frac{\partial}{\partial x_i} + V^k X^i \Gamma ^j_{ki} \frac{\partial }{\partial x_j} .
 	\]
 \end{prev}
+
+\begin{proposition}[Covariant derivative]\label{prop:covariant-derivative}
+	Let \((\mathcal{M} , g)\) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold}, \(\mathrm{D}\) the canonical \hyperref[def:Levi-Civita-connection]{(Levi-Civita) connection}, and \(c\) a \hyperref[def:curve]{smooth curve} in \(\mathcal{M} \). Then there exists a unique operator \(\mathrm{D} / \mathrm{d} t\) defined as the vector space of \hyperref[def:vector-field-along-curve]{vector fields along \(c\)} satisfying
+	\begin{enumerate}[(i)]
+		\item \label{prop:covariant-derivative-i}\begin{enumerate}[(a)]
+			      \item \label{prop:covariant-derivative-i-a} \(\frac{\mathrm{D}}{\mathrm{d}t} (fY)(t) = f^\prime (t) Y(t) + f(t) \frac{\mathrm{D} }{\mathrm{d} t} Y(t)\) for all \(f\in C^{\infty} (I)\) and \(Y \in \mathcal{X} _c(\mathcal{M} )\);
+			      \item \label{prop:covariant-derivative-i-b} \(\frac{\mathrm{D} }{\mathrm{d} t} (V+W) = \frac{\mathrm{D} V}{\mathrm{d} t} + \frac{\mathrm{D} W}{\mathrm{d} t}\) for all \(V, W\in \mathcal{X} _c(\mathcal{M} )\);
+		      \end{enumerate}
+		\item \label{prop:covariant-derivative-ii} if there exists a neighborhood of in \(I\) such that \(Y\) is the restriction to \(c\) of a \hyperref[def:vector-field]{vector field} \(X\) defined on a neighborhood of \(c(t_0)\) in \(\mathcal{M} \), then \(\frac{\mathrm{D} }{\mathrm{d} t} Y(t_0) = (\mathrm{D}_{c(t_0)} X) _{c(t_0)}\).
+	\end{enumerate}
+\end{proposition}
 \begin{proof}
-	The covariant derivative along \(c\) is defined by
+	The \hyperref[def:covariant-derivative]{covariant derivative} along \(c\) is defined by
 	\[
-		\frac{\mathrm{D}}{\mathrm{d}t} (Y^i (t)\partial _i)
-		= \frac{\mathrm{d}V^i}{\mathrm{d}t} \partial _i + \dot{c}Y^i \Gamma _{ji}^k(c(t)) \partial _k,
+		\frac{\mathrm{D}}{\mathrm{d}t} \left( Y^i (t)\frac{\partial}{\partial x_i} \right)
+		= \frac{\mathrm{d}V^i}{\mathrm{d}t} \frac{\partial}{\partial x_i} + \dot{c}Y^i \Gamma _{ji}^k(c(t)) \frac{\partial}{\partial x_k},
 	\]
-	where \(\dot{c} = \dot{c}^k \partial _k\). This shows \autoref{thm:lec11-i} \autoref{thm:lec11-i-a} and \autoref{thm:lec11-i-b} hold. Next, to show \autoref{thm:lec11-ii}, let \(x\) be a smooth \hyperref[def:vector-field]{vector field} in \(\mathcal{M} \). Then the induced \hyperref[def:vector-field-along-a-curve]{vector field along \(c\)} is given by \(Y(t)=X_{c(t)}\), i.e., in terms of the coordinate basis, we have
+	where \(\dot{c} = \dot{c}^k \frac{\partial}{\partial x_k}\). This shows \autoref{prop:covariant-derivative-i} \autoref{prop:covariant-derivative-i-a} and \autoref{prop:covariant-derivative-i-b} hold. Next, to show \autoref{prop:covariant-derivative-ii}, let \(x\) be a smooth \hyperref[def:vector-field]{vector field} in \(\mathcal{M} \). Then the induced \hyperref[def:vector-field-along-curve]{vector field along \(c\)} is given by \(Y(t)=X_{c(t)}\), i.e., in terms of the coordinate basis, we have
 	\[
-		Y(t) = Y^i(t)\partial _i,\quad X_x= X^i(x)\partial _i,\quad Y^i(t) = X^i (c(t)).
+		Y(t) = Y^i(t)\frac{\partial}{\partial x_i},\quad X_x= X^i(x)\frac{\partial}{\partial x_i},\quad Y^i(t) = X^i (c(t)).
 	\]
 	Then,
 	\[
 		\begin{split}
 			\mathrm{D} _i X
-			&= \mathrm{D} _i (X^i \partial _i)
-			= \dot{c}(Xri)\partial _i + X^i \mathrm{D} _i \partial _i
-			= X^i \dot{c}^k \underbrace{\mathrm{D} _{\partial _k} \partial _i}_{\Gamma _{ki}^{\ell } \partial _\ell }\\
-			&= \partial _t(X^i \circ c)\partial _i + \dot{c}^k X^i \Gamma ^\ell _{ki}\partial _\ell
-			= \partial _t(X^i \circ c)\partial _i + \dot{c}^k Y^i \Gamma ^\ell _{ki}\partial _\ell
+			&= \mathrm{D} _i \left( X^i \frac{\partial}{\partial x_i} \right)
+			= \dot{c}(X^i)\frac{\partial}{\partial x_i} + X^i \mathrm{D} _i\frac{\partial}{\partial x_i}
+			= X^i \dot{c}^k \underbrace{\mathrm{D} _{\frac{\partial}{\partial x_k}} \frac{\partial}{\partial x_i}}_{\Gamma _{ki}^{\ell } \frac{\partial}{\partial x_{\ell}}}\\
+			&= \partial _t(X^i \circ c)\frac{\partial}{\partial x_i} + \dot{c}^k X^i \Gamma ^\ell _{ki} \frac{\partial}{\partial x_{\ell}}
+			= \partial _t(X^i \circ c)\frac{\partial}{\partial x_i} + \dot{c}^k Y^i \Gamma ^\ell _{ki} \frac{\partial}{\partial x_{\ell }}
 			= \frac{\mathrm{D}}{\mathrm{d} t} Y.
 		\end{split}
 	\]
 \end{proof}
 
+\begin{problem}
+Why not just define \(\mathrm{D} Y / \mathrm{d} t\) by \autoref{prop:covariant-derivative-ii}?
+\end{problem}
+\begin{answer}
+	A \hyperref[def:vector-field-along-curve]{vector field \(Y\) along a curve} may not always be extended to a neighborhood of \(c\) in \(\mathcal{M} \). But, in \hyperref[def:coordinate-chart]{local coordinates},
+	\[
+		Y(t) = \sum_{i=1}^{n} Y^i (t) \left( \frac{\partial }{\partial x^i}  \right) _{c(t)},
+	\]
+	which shows that a \hyperref[def:vector-field-along-curve]{vector field along \(c\)} is always a linear combination of \hyperref[def:vector-field-along-curve]{vector fields along \(c\)} that can be extended.
+\end{answer}
+
+\begin{remark}
+	\autoref{prop:covariant-derivative} shows that the choice of an \hyperref[def:linear-connection]{linear connection} on \(\mathcal{M} \) leads to a bona fide (satisfying \autoref{prop:covariant-derivative-i-a} and \autoref{prop:covariant-derivative-i-b}) derivative of \hyperref[def:vector-field-along-curve]{vector fields along curves}. The notion of ``connection'' furnishes, therefore, a manner of differentiating vectors along \hyperref[def:curve]{curves}.
+\end{remark}
+
+\section{Parallel Transports}
+Finally, we introduce \hyperref[def:parallel-transport]{parallel transport}.
+
 \begin{definition}[Parallel]\label{def:parallel}
-	A \hyperref[def:vector-field-along-a-curve]{vector field along \(c\)} is called \emph{parallel} if \(\mathrm{D} X/ \mathrm{d} t = 0\).
+	A \hyperref[def:vector-field-along-curve]{vector field \(X\) on \(\mathcal{M} \) along a curve \(c\)} is \emph{parallel} (or \emph{parallelly transported}) along \(c\) if \(\mathrm{D} X/ \mathrm{d} t = 0\) for all \(t\in I\).
 \end{definition}
+
+\begin{intuition}
+	In the ordinary Euclidean space, i.e., when the space is flat, we know what is ``parallel,'' and hence we can define the directional derivative.
+	\begin{center}
+		\incfig{directional-derivative}
+	\end{center}
+	But now, the logic is reversed: we first define what is \hyperref[def:parallel]{parallel} in a curved space, and then we can make sense of directional derivative in a curved space!
+\end{intuition}
 
 \begin{definition}[Parallel transport]\label{def:parallel-transport}
-	The \emph{parallel transport} from \(c(0)\) to \(c(t)\) along the \hyperref[def:curve]{curve} \(c\) in \((\mathcal{M} , g)\) is the linear map \(P_i \colon T_{c(0)} \mathcal{M} \to T_{c(t) }\mathcal{M} \) associating to \(v\in T_{c(0)} \mathcal{M} \) the vector \(X_v\) with \(X_v\) being the \hyperref[def:parallel]{parallel} \hyperref[def:vector-field-along-a-curve]{vector field along \(c\)} such that \(X_v (0) =v\).
+	The \emph{parallel transport} from \(c(0)\) to \(c(t)\) along the \hyperref[def:curve]{curve} \(c\) in a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \((\mathcal{M} , g)\) is the linear map \(P_i \colon T_{c(0)} \mathcal{M} \to T_{c(t) }\mathcal{M} \) associating \(v\in T_{c(0)} \mathcal{M} \) with \(X_v(i)\in T_{c(i)}\mathcal{M} \) with \(X_v\) being the \hyperref[def:parallel]{parallel} \hyperref[def:vector-field-along-curve]{vector field along \(c\)} such that \(X_v (0) = v\).
 \end{definition}
 
+\begin{figure}[H]
+	\centering
+	\incfig{parallel-transport}
+	\caption{When the space is flat, keeping the ``arrow'' (which defines a \hyperref[def:vector-field]{vector field}) in one direction and moving around won't produce any changes, while when the space is curved, it will.}
+	\label{fig:parallel-transport}
+\end{figure}
+
 \begin{proposition}
-	The \hyperref[def:parallel-transport]{parallel transport} defines for all \(t\) an isometry from \(T_{c(0)} \mathcal{M} \) onto \(T_{c(t)} \mathcal{M} \). More generally, if \(X, Y\) \hyperref[def:vector-field-along-a-curve]{vector fields along \(c\)}, then
+	The \hyperref[def:parallel-transport]{parallel transport} defines for all \(t\) an \hyperref[def:isometry]{isometry} from \(T_{c(0)} \mathcal{M} \) onto \(T_{c(t)} \mathcal{M} \). More generally, if \(X, Y\) \hyperref[def:vector-field-along-curve]{vector fields along \(c\)}, then
 	\[
 		\frac{\mathrm{d}}{\mathrm{d}t} g(x(t), y(t))
 		= g\left( \frac{\mathrm{D} X(t)}{\mathrm{d} t}, Y(t)\right) + g\left(X(t), \frac{\mathrm{D} Y(t)}{\mathrm{d} t} \right) .
 	\]
 \end{proposition}
+
+Now we can formally introduce the notion of \hyperref[def:autoparallel]{autoparallel}.
+
+\begin{definition}[Autoparallel]\label{def:autoparallel}
+	Let \(\nabla \) be a \hyperref[def:linear-connection]{connection} on \(T \mathcal{M} \) of a \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \). A \hyperref[def:curve]{curve} \(c\colon I \to \mathcal{M} \) is called \emph{autoparallel} or \emph{geodesic} w.r.t.\ \(\nabla \) if
+	\[
+		\nabla _{\dot{c}}\dot{c} = 0.
+	\]
+\end{definition}
+
+\begin{intuition}
+	An \hyperref[def:autoparallel]{autoparallel} \hyperref[def:curve]{curve} is the \emph{straightest line} in the space w.r.t.\ \(\nabla \)!
+\end{intuition}

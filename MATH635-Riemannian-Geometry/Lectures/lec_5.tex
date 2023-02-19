@@ -113,7 +113,9 @@ Let's first look at an almost trivial example.
 	See \autoref{ch:Lie-group-and-Lie-algebra} for reference.
 \end{eg}
 
-\section{Curves, Lengths, and Energies}
+\section{Geodesics}
+This is the first focus on the study of Riemannian geometry, i.e., the \hyperref[def:geodesic]{geodesics}. The up-shot is that a \hyperref[def:geodesic]{geodesic} minimizes the \hyperref[def:length]{arc length} for points \emph{sufficiently close} (in a sense to be made precise); in addition, if a \hyperref[def:curve]{curve} minimizes \hyperref[def:length]{arc length} between any two of its points, it is a \hyperref[def:geodesic]{geodesic}.
+
 \subsection{Curves}
 We are now going to show how a \hyperref[def:Riemannian-metric]{Riemannian metric} can be used to calculate the \hyperref[def:length]{length} of a \hyperref[def:curve]{curve}.
 
@@ -203,42 +205,38 @@ Then, we have
 	This can be proved by computation, and the take-away is that the \hyperref[def:length]{length functional} is invariant under parameter changes.
 \end{proof}
 
-\chapter{Geodesics}
-This is the first focus on the study of Riemannian geometry, i.e., the \hyperref[def:geodesic]{geodesics}. The up-shot is that a \hyperref[def:geodesic]{geodesic} minimizes the \hyperref[def:length]{arc length} for points \emph{sufficiently close} (in a sense to be made precise); in addition, if a \hyperref[def:curve]{curve} minimizes \hyperref[def:length]{arc length} between any two of its points, it is a \hyperref[def:geodesic]{geodesic}.
-
-\section{Euler-Lagrange Equations}
-Let's first fix some common notations.
+\subsection{Euler-Lagrange Equations}
+We want to find a \hyperref[def:curve]{curve} which minimizes the \hyperref[def:length]{length} between sufficiently close two points. It turns out that instead of working with \hyperref[def:length]{length} directly, we should work with \hyperref[def:energy]{energy} instead.
 
 \begin{notation}
-	\(\left( g^{ij} \right) _{i, j=1, \ldots , d} = \left( g_{ij} \right)_{i, j = 1, \ldots , d} ^{-1} \).
+	Let's first fix some common notations.
+
+	\begin{enumerate}[(a)]
+		\item \(\left( g^{ij} \right) _{i, j=1, \ldots , d} = \left( g_{ij} \right)_{i, j = 1, \ldots , d} ^{-1} \).
+		\item \(g_{j \ell , k} \coloneqq \frac{\partial }{\partial x^k} g_{j \ell }\).
+	\end{enumerate}
 \end{notation}
 
 \begin{note}
-	\(g^{i \ell} g_{\ell j}=\delta ^i_j \).
+	In the above notations, we have \(g^{i \ell} g_{\ell j}=\delta ^i_j \).
 \end{note}
-
-\begin{notation}
-	\(g_{j \ell , k} \coloneqq \frac{\partial }{\partial x^k} g_{j \ell }\).
-\end{notation}
 
 And the following is particularly important.
 
 \begin{notation}[Christoffel symbol]
-	The \emph{Christoffel symbol} is defined as
+	The \emph{Christoffel symbol} is defined for all \(i\) as
 	\[
-		\Gamma ^i_{jk} \coloneqq \frac{1}{2}g^{i \ell }\left( g_{j \ell , k} + g_{k \ell , j} - g_{jk, \ell }\right)
+		\Gamma ^i_{jk} \coloneqq \frac{1}{2}g^{i \ell }\left( g_{j \ell , k} + g_{k \ell , j} - g_{jk, \ell }\right).
 	\]
-	for all \(i\).
 \end{notation}
 
-Recall the definition of \hyperref[def:energy]{energy}, and recall that we want to find a \hyperref[def:curve]{curve} which minimizes the \hyperref[def:length]{length} between sufficiently close two points. It turns out that instead of working with \hyperref[def:length]{length} directly, we should work with \hyperref[def:energy]{energy} instead.
+The up-shot is that the \href{https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation}{Euler-Lagrange equations} for the \hyperref[def:energy]{energy} \(E\) has a nice form, and the solution of which has exactly the properties we want, hence we define it as \hyperref[def:geodesic]{geodesics}. 
 
 \begin{proposition}\label{prop:Euler-Lagrange-eq-geodesic}
 	The \href{https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation}{Euler-Lagrange equations} for the \hyperref[def:energy]{energy} \(E\) are 
 	\begin{equation}\label{eq:geodesic}
-		\ddot{x}^i(t) + \Gamma ^{i}_{jk}(x(t)) \dot{x}^j(t)\dot{x}^k(t) = 0
+		\ddot{x}^i(t) + \Gamma ^{i}_{jk}(x(t)) \dot{x}^j(t)\dot{x}^k(t) = 0 \text{ for } i = 1, \ldots , d.
 	\end{equation}
-	for \(i = 1, \ldots , d\).
 \end{proposition}
 \begin{proof}
 	The \href{https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation}{Euler-Lagrange equations} of a functional 
@@ -265,12 +263,7 @@ Recall the definition of \hyperref[def:energy]{energy}, and recall that we want 
 	\[
 		g^{i \ell }g_{\ell m}\ddot{x}^m + \frac{1}{2} g^{i \ell } \left( g_{\ell k, j} + g_{j \ell , k} - g_{jk, \ell } \right) \dot{x}^j \dot{x}^k = 0
 	\]
-	for \(i = 1, \ldots , d\). Finally, observe that
-	\[
-		g^{i \ell } g_{\ell m} = \delta _{im}
-		\implies g^{i \ell } g_{\ell m} \ddot{x}^m = \ddot{x}^i,
-	\]
-	hence the claim follows.
+	for \(i = 1, \ldots , d\). Finally, observe that \(g^{i \ell } g_{\ell m} = \delta _{im}\), i.e., \(g^{i \ell } g_{\ell m} \ddot{x}^m = \ddot{x}^i\), hence the claim follows.
 \end{proof}
 
 Finally, we define the \hyperref[def:geodesic]{geodesics} as the solution of \autoref{eq:geodesic}.
@@ -279,7 +272,7 @@ Finally, we define the \hyperref[def:geodesic]{geodesics} as the solution of \au
 	A \hyperref[def:curve]{curve} \(\gamma \colon [a, b] \to  \mathcal{M} \) that obeys \autoref{eq:geodesic} is called a \emph{geodesic}.
 \end{definition}
 
-In other words, from \autoref{prop:Euler-Lagrange-eq-geodesic}, we naturally define \hyperref[def:geodesic]{geodesic} by the solution of \autoref{eq:geodesic} since it finds the critical points of \hyperref[def:energy]{energy}.
+In other words, from \autoref{prop:Euler-Lagrange-eq-geodesic}, we naturally define \hyperref[def:geodesic]{geodesic} by the solution of \autoref{eq:geodesic}, which is the critical points of \hyperref[def:energy]{energy}.
 
 \subsection{Action Functional}
 Consider the following.

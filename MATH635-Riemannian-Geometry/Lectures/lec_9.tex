@@ -15,7 +15,7 @@ We can now introduce the notion of \hyperref[def:vector-field]{vector fields} in
 \end{notation}
 
 \subsection{Tensor Fields}
-We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in a brute-fore way. To do this, given a vector space \(V\), we first introduce \hyperref[def:tensor]{tensors}.
+We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in a brute-fore way.\footnote{See \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields} for another view point.} To do this, given a vector space \(V\), we first introduce \hyperref[def:tensor]{tensors}.
 
 \begin{definition}[Tensor]\label{def:tensor}
 	Let \(V\) be a vector space of dimension \(m < \infty \), and the dual space \(V^{\ast}\).\footnote{I.e., \(V^{\ast} \coloneqq \left\{ \lambda \colon V \to \mathbb{R} \mid \lambda \text{ linear} \right\} \).} Then the vector space of the \emph{\(r\)-times contravariant and \(s\)-times covariant tensors over \(V\)}, denoted as \(T_s^r(V) \), is the \hyperref[def:vector-field]{vector field} defined as
@@ -28,8 +28,9 @@ We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in
 \begin{notation}
 	Let \(\mathcal{M} ^n \) be a \hyperref[def:smooth-manifold]{smooth manifold}, and \(\pi \colon E \to \mathcal{M} \) a \hyperref[def:vector-bundle]{smooth vector bundle}, then
 	\[
-		\Gamma (E) \coloneqq \left\{ s\in C^{\infty} (\mathcal{M} , E) \mid \pi \circ s = \identity_{\mathcal{M} } \right\}.
+		\Gamma (E) \coloneqq \left\{ s\in C^{\infty} (\mathcal{M} , E) \mid \pi \circ s = \identity_{\mathcal{M} } \right\},
 	\]
+	i.e., the set of \hyperref[def:section]{sections}.
 \end{notation}
 
 \begin{eg}
@@ -53,21 +54,20 @@ Then, we have the following.
 	Since \(g_p \colon T_p \mathcal{M} \times T_p \mathcal{M} \to \mathbb{R} \).
 \end{explanation}
 
-\begin{remark}
-	One might ask why \autoref{def:tensor} is not done in the same way as \hyperref[def:vector-field*]{vector fields}? Indeed, we can! See \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields}.
-\end{remark}
-
-\section{Metrics, Connections and Curvatures}
-\subsection{Metrics}
-We now discuss some other metrics on a \hyperref[def:smooth-manifold]{manifold}.
+\section{Other Metrics}
+Finally, we discuss some other metrics we may let a \hyperref[def:smooth-manifold]{manifold} equipped with.
 
 \begin{definition}[Pseudo-Riemannian metric]\label{def:pseudo-Riemannian-metric}
-	A \emph{pseudo-Riemannian metric} on a \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \) is a \hyperref[def:tensor-field]{tensor field} \(g\in T_2^0 (\mathcal{M}) \) with
+	A \emph{pseudo-Riemannian metric} on a \hyperref[def:smooth-manifold]{differentiable manifold} \(\mathcal{M} \) is a \hyperref[def:tensor-field]{\((0, 2)\)-tensor field} \(g\in \Gamma (T_2^0 (\mathcal{M}) )\) for all \(p\in \mathcal{M} \) with
 	\begin{enumerate}[(a)]
-		\item \(g(X, Y) = g(Y, X)\) for all \(X, Y\in T \mathcal{M} \).
-		\item For all \(p\in \mathcal{M} \), \(g_p\) is non-degenerate bilinear form on \(T_p \mathcal{M} \), i.e., \(g_p(X, Y) = 0\) for all \(X, Y\in T_p \mathcal{M} \) if and only if \(Y = 0\).
+		\item \(g(X, Y) = g(Y, X)\) for all \(X, Y\in T \mathcal{M} \);
+		\item for all \(p\in \mathcal{M} \), \(g_p\) is non-degenerate bilinear form on \(T_p \mathcal{M} \), i.e., \(g_p(X, Y) = 0\) for all \(X, Y\in T_p \mathcal{M} \) if and only if \(Y = 0\).
 	\end{enumerate}
 \end{definition}
+
+\begin{note}
+	A \hyperref[def:pseudo-Riemannian-metric]{pseudo Riemannian metric} is actually a \hyperref[def:Riemannian-metric]{Riemannian metric} if it's positive definite at every \(p\in \mathcal{M} \).
+\end{note}
 
 \begin{definition}[Lorentzian metric]\label{def:Lorentzian-metric}
 	A \emph{Lorentzian metric} \(g\) is a continuous assignment of a non-degenerate\footnote{\(g_p(X, Y) = 0\) for all \(Y\in T_p \mathcal{M} \) implies \(X = 0\).} quadratic form \(g_p\) of index \(1\)\footnote{It means that the maximal dimension of a subspace of \(T_p \mathcal{M} \) on which \(g_p\) is negative definite is \(1\).} in \(T_p \mathcal{M} \) for all \(p\in \mathcal{M} \).
@@ -92,27 +92,50 @@ An equivalent definition is the following.
 	with the coordinates being \((t, x, y, z)\).
 \end{eg}
 
-\subsection{Connections}
-We now can talk about the notion of \emph{connections}.
+\chapter{Affine and Riemannian Connections}
+So far, we saw that a \hyperref[def:vector-field]{vector field} \(X\) can be used to provide a directional derivative since it gives us a \hyperref[def:tangent-vector]{tangent vector} at each point smoothly. Now, we will introduce a new symbol \(\nabla \) where we let
+\[
+	\nabla _X f\coloneqq Xf
+\]
+for \(f\in C^{\infty} (\mathcal{M} )\).
+
+\begin{problem*}
+	Does this notation overkill? We already know that \(Xf = (\mathrm{d} f)(X)\)!
+\end{problem*}
+\begin{answer}
+	No! While \(\nabla , X\colon C^{\infty} (\mathcal{M} ) \to C^{\infty} (\mathcal{M} )\), while \(\mathrm{d} f\colon \Gamma (T \mathcal{M} ) \to C^{\infty} (\mathcal{M} )\), we can generalize \(\nabla _X\) to act from \hyperref[def:vector-field]{vector fields} to \hyperref[def:vector-field]{vector fields}! The insight is that if \(X\) can be extended naturally (without providing any extra structures), then we certainly won't bother introducing a new symbol. However, as you might guess, to let \(\nabla \) doing this, we do need to provide extra structures, and \(\nabla \) stands exactly for these extra structures!
+\end{answer}
+
+\section{Affine Connections}
+We first formulate a \emph{wish list} of properties which the \(\nabla _X\) should have. Any remaining freedom in choosing \(\nabla \) will need to be provided as additional structures beyond the structures on \(\mathcal{M}\) we already have.
 
 \begin{definition}[Linear connection]\label{def:linear-connection}
-	A \emph{linear connection} (\emph{covariant derivative}) \(\nabla \) (or \(D\)) on \(T\mathcal{M} \) is a bilinear map
+	A \emph{linear connection} (\emph{affine connection}) on a \hyperref[def:smooth-manifold]{smooth manifold} \(\mathcal{M}\) is a bilinear map
 	\[
 		\nabla \colon \Gamma (T \mathcal{M} ) \times \Gamma (T \mathcal{M} ) \to \Gamma (T \mathcal{M} ),
 	\]
-	and for all \hyperref[def:vector-field]{vector fields} \(X, Y\in \Gamma (T \mathcal{M} )\) and \(f\in C^{\infty} (\mathcal{M} )\), we write \(\nabla (X, Y) = \nabla _X Y\) with
+	which is denoted by \(\nabla (X, Y) = \nabla _X Y\) and which satisfies
 	\begin{enumerate}[(a)]
-		\item \(\nabla _{fX}Y = f \nabla _X Y\);
-		\item \(\nabla _X fY = X(f)Y + f \nabla _X Y\).
+		\item \(\nabla _{fX+gY}Z = f \nabla _X Z + g \nabla _Y Z\);
+		\item \(\nabla _X (Y+Z) = \nabla _X Y + \nabla _X Z\);
+		\item \(\nabla _X fY = f \nabla _X Y + X(f)Y\);
 	\end{enumerate}
+	for all \hyperref[def:vector-field]{vector fields} \(X, Y, Z\in \Gamma (T \mathcal{M} )\) and \(f, g\in C^{\infty} (\mathcal{M} )\).
 \end{definition}
 
+\begin{note}[Covariant derivative]
+	There's a similar notation called \emph{covariant derivative}, denoted by \(\mathrm{D} \), satisfies similar properties as a \hyperref[def:linear-connection]{linear connection}. Hence, we often write \(\mathrm{D} \) and \(\nabla \) interchangeably.\footnote{\hyperref[def:linear-connection]{Linear connection} is more general than a covariant derivative; however, we treat them as the same.}
+\end{note}
+
+\begin{remark}[\(\Gamma \) and \(\nabla \)]
+
+\end{remark}
+
 \begin{definition}[Torsion tensor]\label{def:torsion-tensor}
-	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection}. The map \(T\colon \Gamma (T \mathcal{M} )\times \Gamma (T \mathcal{M} )\to \Gamma (T \mathcal{M} )\) defined as
+	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection}. The \emph{torsion tensor} of \(\nabla \) is the map \(T\colon \Gamma (T \mathcal{M} )\times \Gamma (T \mathcal{M} )\to \Gamma (T \mathcal{M} )\) defined as
 	\[
-		T(X, Y) \coloneqq \nabla _X Y - \nabla _Y X - [X, Y]
+		T(X, Y) \coloneqq \nabla _X Y - \nabla _Y X - [X, Y].
 	\]
-	is the \emph{torsion tensor} of \(\nabla \).
 \end{definition}
 
 \begin{definition*}
@@ -148,10 +171,6 @@ We now can talk about the notion of \emph{connections}.
 \begin{definition}[Levi-Civita connection]\label{def:Levi-Civita-connection}
 	The \emph{Levi-Civita connection} is the unique \hyperref[def:linear-connection]{linear connection} \(\nabla \) defined by the \hyperref[eq:Koszul-formula]{Koszul formula}.
 \end{definition}
-
-\begin{notation}
-	We often write \(\mathrm{D} \) and \(\nabla \) interchangeably.
-\end{notation}
 
 \begin{definition}[Riemannian curvature tensor]\label{def:Riemannian-curvature-tensor}
 	Let \(\nabla \) be the \hyperref[def:Levi-Civita-connection]{Levi-Civita connection} on \(T \mathcal{M} \). Then the \emph{Riemannian curvature tensor} \(R\colon \Gamma (T \mathcal{M} ) \times \Gamma (T \mathcal{M} )\times \Gamma (T \mathcal{M} ) \to \Gamma (T \mathcal{M} )\) of \(\nabla \) is defined by

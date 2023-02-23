@@ -59,7 +59,7 @@ Now, let's step back and look at the proof of the \hyperref[thm:completeness]{co
 
 This can be answered by the following.
 
-\begin{theorem}
+\begin{theorem}\label{thm:model-size}
 	If \(T\) is a \hyperref[def:satisfiable]{satisfiable} \hyperref[def:theory]{\(\mathcal{L}\)-theory}, then it has a \hyperref[def:model]{model} of size at most \(\vert \mathcal{L} \vert + \aleph_0\).
 \end{theorem}
 \begin{proof}
@@ -97,12 +97,11 @@ This can be answered by the following.
 	Now, suppose \(\Gamma \models _{\mathcal{L} _1} \varphi \). Suppose \(\mathcal{M} _0\) is an \hyperref[def:structure]{\(\mathcal{L} _0\)-structure} with \(\mathcal{M} _0 \models \Gamma \). Expand \(\mathcal{M} _0\) to an \hyperref[def:structure]{\(\mathcal{L} _1\)-structure} \(\mathcal{M} _1\) in any way. \(\mathcal{M} _1 \models \Gamma \), so \(\mathcal{M} _1 \models \varphi \). Thus, \(\mathcal{M} _0 \models \varphi \), so \(\Gamma \models _{\mathcal{L} _0} \varphi \).
 \end{explanation}
 
-What is important about the \hyperref[def:proof]{proof system}?
-
 \begin{definition}[Computably enumerable]\label{def:computably-enumerable}
-	A set is \emph{computably enumerable (ce)} or \emph{computable listable} if there is a program that lists out its elements.
+	A set is \emph{computably enumerable} or \emph{computable listable} if there is a program that lists out its elements.
 \end{definition}
 
+What is important about the \hyperref[def:proof]{proof system}?
 \begin{enumerate}[(1)]
 	\item \hyperref[thm:soundness]{Soundness} and \hyperref[thm:completeness]{completeness}, \(\vdash \iff \models \).
 	\item \hyperref[def:proof]{Proofs} are finite, and use only finitely many hypotheses \(\implies \) \hyperref[thm:compactness]{compactness}.
@@ -111,13 +110,14 @@ What is important about the \hyperref[def:proof]{proof system}?
 		      \item We can compute with \hyperref[def:formula]{formulas}.
 		      \item Given a \hyperref[def:formula]{formula}, it's computable to check whether it's a \hyperref[def:logical-axioms]{logical axiom}.
 		      \item It's computable to check whether a \hyperref[def:proof]{proof} is valid.
-		      \item If \(\Gamma \) is a \hyperref[def:computably-enumerable]{ce} set of \hyperref[def:sentence]{sentences}, \(\left\{ \varphi \colon \Gamma \vdash \varphi \right\} \) is also \hyperref[def:computably-enumerable]{ce}.\footnote{We can list out all the valid \hyperref[def:proof]{proofs} from \(\Gamma \) of any \(\varphi \).}
+		      \item If \(\Gamma \) is a \hyperref[def:computably-enumerable]{computably enumerable} set of \hyperref[def:sentence]{sentences}, \(\left\{ \varphi \colon \Gamma \vdash \varphi \right\} \) is also \hyperref[def:computably-enumerable]{computably enumerable}.\footnote{We can list out all the valid \hyperref[def:proof]{proofs} from \(\Gamma \) of any \(\varphi \).}
 		      \item There is no program that given \(\varphi \) can decide whether \(\vdash \varphi \) at least for \(\mathcal{L} =\left\{ E \right\} \), \(E\) binary.
 	      \end{enumerate}
 \end{enumerate}
 
 \chapter{The Beginning of Model Theory}
 \section{Complete Theories}
+Let's start with a proposition.
 
 \begin{proposition}\label{prop:lec10}
 	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L}\)-theory} with an infinite \hyperref[def:model]{model}, and let \(\kappa \) be an infinite cardinal with \(\kappa \geq \vert \mathcal{L}  \vert \). Then \(T\) has a \hyperref[def:model]{model} of cardinality \(\kappa \).
@@ -127,20 +127,20 @@ What is important about the \hyperref[def:proof]{proof system}?
 	\[
 		T^{\ast} = T \cup \left\{ c \neq d \mid c, d\in \mathcal{C} \text{ distinct}  \right\} .
 	\]
-	If \(\mathcal{M} = T^{\ast} \), then \(\vert M \vert \geq \kappa \). Also, if \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it has a \hyperref[def:model]{model} of size at most \(\vert \mathcal{L} ^{\ast} \vert = \kappa \) since
+	If \(\mathcal{M} \models T^{\ast} \), then \(\vert M \vert \geq \kappa \); also, if \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it has a \hyperref[def:model]{model} of size at most \(\vert \mathcal{L} ^{\ast} \vert = \kappa \) since
 	\[
-		\kappa = \vert \mathcal{C} \vert \leq \vert \mathcal{L} ^{\ast} \vert \leq \vert \mathcal{C} \vert + \vert \mathcal{L} \vert \leq \kappa + \kappa = \kappa ,
+		\kappa = \vert \mathcal{C} \vert \leq \vert \mathcal{L} ^{\ast} \vert \leq \vert \mathcal{C} \vert + \vert \mathcal{L} \vert \leq \kappa + \kappa = \kappa
 	\]
-	so if \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it has a \hyperref[def:model]{model} \(\mathcal{M} \) with \(\vert M \vert = \kappa \).
+	from \autoref{thm:model-size}. Hence, if \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it has a \hyperref[def:model]{model} \(\mathcal{M} \) with \(\vert M \vert = \kappa \).
 
 	\begin{claim}
 		\(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}.
 	\end{claim}
 	\begin{explanation}
-		By the \hyperref[thm:compactness]{compactness theorem}, to show that \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}, it's equivalent to show that every finite \(\Gamma \subseteq T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}. Let \(\mathcal{M} \) be infinite, and \(\Gamma \subseteq T^{\ast} \) finite, then
+		It's enough to show that every finite \(\Gamma \subseteq T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable} from the \hyperref[thm:compactness]{compactness theorem}. Let \(\mathcal{M} \) be infinite, and \(\Gamma \subseteq T^{\ast} \) finite, then we can write
 		\[
 			\Gamma \subseteq T \cup \left\{ c_i \neq c_j \mid i, j = 1, \ldots , n, i \neq j \right\}
 		\]
-		for \(c_1, \ldots , c_n\in \mathcal{C} \) since only finitely many \(c_i\) are involved, and without loss of generality, \(\Gamma = T \cup \left\{ c_i \neq c_j \mid i, j=1, \ldots , n, i \neq j \right\} \). Pick \(a_1, \ldots , a_n\in M\), distinct, we then turn \(\mathcal{M} \) into an \hyperref[def:structure]{\(\mathcal{L} ^{\ast} \)-structure} \(\mathcal{M} ^{\ast} \) with \(c_i ^{\mathcal{M} ^{\ast} } = a_i\).\footnote{And each other \(d\in \mathcal{C} \) with \(d^{\mathcal{M} ^{\ast} } = a_1\).} So \(\mathcal{M} ^{\ast} \models \Gamma \), thus \(T^{\ast} \) is \hyperref[def:satisfiable]{satisfiable}.
+		for \(c_1, \ldots , c_n\in \mathcal{C} \) since only finitely many \(c_i\) are involved. Without loss of generality, \(\Gamma = T \cup \left\{ c_i \neq c_j \mid i, j=1, \ldots , n, i \neq j \right\} \). Pick \(a_1, \ldots , a_n\in M\), distinct, we then turn \(\mathcal{M} \) into an \hyperref[def:structure]{\(\mathcal{L} ^{\ast} \)-structure} \(\mathcal{M} ^{\ast} \) with \(c_i ^{\mathcal{M} ^{\ast} } = a_i\),\footnote{And each other \(d\in \mathcal{C} \) with \(d^{\mathcal{M} ^{\ast} } = a_1\).} resulting in \(\mathcal{M} ^{\ast} \models \Gamma \).
 	\end{explanation}
 \end{proof}

@@ -1,0 +1,103 @@
+\lecture{15}{23 Feb. 14:30}{}
+\begin{proposition}
+	Suppose \(\mathcal{M} _1 \preceq \mathcal{M} _2 \preceq \ldots \), and let \(\mathcal{M} = \bigcup_{i} \mathcal{M} _i\). Then \(\mathcal{M} _i \preceq \mathcal{M} \) for all \(i\).\footnote{Countability is not necessary.}
+\end{proposition}
+\begin{proof}
+	By induction on \hyperref[def:formula]{formulas}, we prove that for all \(i\) and \(\overline{a} \in M_i\), \(\mathcal{M} _i \models \varphi (\overline{a} )\) if and only if \(\mathcal{M} \models \varphi (\overline{a} )\):
+	\begin{enumerate}[(a)]
+		\item For \(\varphi \) \hyperref[not:atomic-formula]{atomic}, this is true since \(\varphi \) is \hyperref[not:quantifier-free]{quantifier-free}.
+		\item For \(\lnot, \lor, \land \), exactly the same as the \hyperref[prop:Tarski-Vaught-test]{Tarski-Vaught test}.
+		\item If \(\varphi \) is \(\exists y\ \psi (\overline{x} , y)\):
+		      \begin{itemize}
+			      \item If \(\mathcal{M} _i \models \exists y\ \psi (\overline{a} , y)\), there is \(b\in M_i\) such that \(\mathcal{M} _i \models \psi (\overline{a} , b)\). Then by the induction hypothesis, \(\mathcal{M} \models \psi (\overline{a} , b)\), so \(\mathcal{M} \models \exists y\ \psi (\overline{a} , y)\).
+			      \item If \(\mathcal{M} \models \exists y\ \psi (\overline{a} , y)\), then there is \(b\in M\) such that \(\mathcal{M} \models \psi (\overline{a} , b)\). There is \(j \geq i\) such that \(b\in M_j\). By the induction hypothesis, \(\mathcal{M} _j \models \psi (\overline{a} , b)\), so \(\mathcal{M} _j \models \exists y\ \psi (\overline{a} , y)\). But \(\mathcal{M} _i \preceq \mathcal{M} \), so \(\mathcal{M} _i \models \exists y\ \psi (\overline{a} , y)\).
+		      \end{itemize}
+	\end{enumerate}
+\end{proof}
+
+\section{Back and Forth}
+\subsection{Dense Linear Order Theory}
+\begin{definition}[\(\DLO\)]\label{def:DLO}
+	Let \(\mathcal{L} = \left\{ \leq \right\} \). The \hyperref[def:theory]{theory} \(\DLO\) of dense linear orders (without endpoints) has the axioms:
+	\begin{enumerate}[(a)]
+		\item \(\leq \) is a linear order;
+		\item \(\forall x \forall y\ (x < y \to \exists z\ x < z < y)\);
+		\item \(\forall x \exists y \exists z\ (y < x < z)\).
+	\end{enumerate}
+\end{definition}
+
+\begin{eg}
+	\((\mathbb{Q} , \leq )\) and \((\mathbb{R} , \leq )\) are \(\DLO\).
+\end{eg}
+
+\begin{eg}
+	Given \(\mathcal{M} _1, \mathcal{M} _2\) two \(\DLO\)'s, \(\mathcal{M} _1 + \mathcal{M} _2\) is also a \(\DLO\).
+\end{eg}
+
+\begin{eg}
+	\(\mathbb{Q} + \mathbb{R} \not \cong \mathbb{R} \), so \(\DLO\) is not \hyperref[def:categorical]{\(\vert \mathbb{R} \vert = 2^{\aleph_0}\)-categorical}. In fact, not \hyperref[def:categorical]{\(\kappa \)-categorical} for any \(\kappa \geq 2^{\aleph_0}\). Also, \(\mathbb{Q} + \mathcal{M} \not \simeq \mathbb{R} + \mathcal{M} \) for any \(\mathcal{M} \). On the other hand, \(\mathbb{Q} + \mathbb{Q} \cong \mathbb{Q} \) by considering picking an irrational number in \(\mathbb{Q} \) and split \(\mathbb{Q} \) into two.
+\end{eg}
+
+\begin{theorem}
+	\(\DLO\) is \hyperref[def:countably-categorical]{countably categorical} and hence \hyperref[def:theory-complete]{complete}.
+\end{theorem}
+\begin{proof}
+	Let \((A, \leq )\) and \((B, \leq )\) be two countable \(\DLO\)'s. Let \(a_1, a_2, \ldots \) list \(A\) and \(b_1, b_2, \ldots \) list \(B\). We will build \(f\colon A \to B\) an \hyperref[def:isomorphism]{isomorphism} stage-by-stage. At state \(i\), \(A_i \subseteq A\) finite, \(B_i \subseteq B\) finite, and \(f_i \colon A_i \to B_i\) a bijection. We will have \(f_i \subseteq f_{i+1} , A_i \subseteq A_{i+1} \), and \(B_i \subseteq B_{i+1} \), and each \(f_i\) will be a ``partial \hyperref[def:isomorphism]{isomorphism},'' i.e., if \(a < a^\prime \), then \(f(a) < f(a^\prime )\). Finally, we need to make sure that \(\bigcup_{i} A_i = A\), and \(\bigcup_{i} B_i = B\), so \(f = \bigcup_{i} f_i\) is an \hyperref[def:isomorphism]{isomorphism} from \(A \to B\).
+	\begin{itemize}
+		\item Stage \(0\): \(A_0 = \varnothing \), \(B_0 = \varnothing \), \(f_0 = \varnothing \).
+		\item Stage \(i+1=2k+1\): put \(a_k\) into \(A_{i+1} \). If \(a_k \in A_i\), then do nothing, i.e., \(A_{i+1} = A_i, B_{i+1} = B_i, f_{i+1} = f_i\); otherwise, we have three possibilities:
+		      \begin{itemize}
+			      \item \(a_k\) is less than all of \(A_i\): choose \(b\in B\) less than all of \(B_i\), and \(f_{i+1}(a_k) = b\), and let \(A_{i+1} = A_i \cup \left\{ a_k \right\}, B_{i+1} = B_i \cup \left\{ b \right\} \).\footnote{Such \(b\) exists since \(B_i\) is finite, and \((B, \leq )\) has no left endpoint.}
+			      \item There are \(a\) and \(a^\prime \) in \(A_i\) such that \(a_k\) is between \(a\) and \(a^\prime \), say \(a < a_k < a^\prime \), and there is no other element of \(Avi\) between \(a\) and \(a^\prime \) since \(A_i\) is finite: pick \(b\) with \(f_i(a) < b < f_i(a^\prime )\), set \(f_{i+1}(a_k) = b\), etc.\footnote{Such \(b\) exists since \(B_i\) is finite and \((B, \leq )\) is dense.}
+			      \item \(a_k\) greater than all of \(A_i\): similar to the first case.
+		      \end{itemize}
+		\item Stage \(i+1 = 2k+2\): put \(b_k\) into \(B_{i+1} = \im(f_{i+1} )\). This is exactly the same, but in the other direction.
+	\end{itemize}
+
+	At the end, we get \(f\colon A \to B\) an \hyperref[def:isomorphism]{isomorphism}, and hence \(\DLO\) is \hyperref[def:theory-complete]{complete} because it is \hyperref[def:countably-categorical]{countably categorical}.
+\end{proof}
+
+\begin{corollary}
+	\(\mathbb{Q} + \mathbb{R} \equiv \mathbb{R} \).
+\end{corollary}
+\begin{proof}
+	Since \(\mathop{\mathrm{Th}}(\mathbb{Q} + \mathbb{R} ) = \mathop{\mathrm{Th}}(\mathbb{R} ) = \left\{ \varphi \mid \DLO \models \varphi \right\}\).
+\end{proof}
+
+\begin{definition}[Complete]\label{def:linear-order-complete}
+	A linear order is \emph{complete} if every subset bounded above has a least upper bound.
+\end{definition}
+
+\begin{corollary}
+	There is no first order \hyperref[def:sentence]{sentence} \(\varphi \) such that \(\mathcal{M} \models \varphi \) if and only if \(\mathcal{M} \) is a \hyperref[def:linear-order-complete]{complete} linear order.
+\end{corollary}
+
+\subsection{Random Graph Theory}
+
+\begin{definition}[Random graph]\label{def:random-graph}
+	Fix countably infinitely many vertices \(v_1, v_2, \ldots \). Fix \(p\) such that \(0 < p < 1\). For each pair of vertices, ``flip a coin'': with probability \(p\), put an edge; with \(1-p\), no edge.
+\end{definition}
+
+Now, the question is, what graph do we get?
+
+\begin{remark}
+	With probability \(1\), we get the same graph up to isomorphism, not matter what \(p\) is.
+\end{remark}
+
+Let \(\mathcal{L} = \left\{ E \right\} \), where \(E\) is a binary relation. The \hyperref[def:theory]{theory} \(T\) of \hyperref[def:random-graph]{random graphs} has axioms:
+\begin{enumerate}[(a)]
+	\item \(\forall x\ \lnot xEx\) and \(\forall x \forall y\ (xEy \to yEx)\);
+	\item \(\exists x \exists y\ x \neq y\);
+	\item for each \(n\), \(\psi _n\) define as
+	      \[
+		      \psi _n \coloneqq \forall x_1 \ldots \forall x_n \forall y_1 \ldots \forall y_n\ \left[ \bigwedge_{i=1}^{n} \bigwedge_{j=1}^{n} x_i \neq y_i \to \exists z\ \left( \bigwedge_{i=1}^{n} x_i E z \land \lnot y_i E z \land z \neq x_i \land z \neq y_i \right) \right]
+	      \]
+\end{enumerate}
+
+\begin{intuition}
+	Think of \(\psi _n\) as an ``extension axiom.'' And this axiom happens with probability \(p^{\vert X \vert } \cdot (1 - p) ^{\vert Y \vert }\) for a given \(z\) for some \(X, Y\).
+\end{intuition}
+
+\begin{note}
+	If \(m \leq n\), then \(\psi _n \models \psi _m\).
+\end{note}

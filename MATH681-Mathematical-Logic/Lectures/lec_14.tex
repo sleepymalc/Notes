@@ -1,86 +1,123 @@
 \lecture{14}{21 Feb. 14:30}{Downward Löwenheim-Skolem theorem}
-\begin{definition}[Built-in Skolem functions]\label{def:built-in-Skolem-function}
+We will also need to introduce the \hyperref[not:Skolemization]{Skolemizations} of \hyperref[def:theory]{theories}.
+
+\begin{definition}[Built-in Skolem function]\label{def:built-in-Skolem-function}
 	We say an \hyperref[def:theory]{\(\mathcal{L} \)-theory} \(T\) has \emph{built-in Skolem functions} if for all \hyperref[def:formula]{\(\mathcal{L} \)-formulas} \(\varphi (x, y_1, \ldots , y_n)\), there is a function symbol \(f\) such that
 	\[
 		T\models \forall \overline{y} \ (\exists x\ \varphi (x, \overline{y} ) \to \varphi (f(\overline{y} ), \overline{y} )).
 	\]
 \end{definition}
 
+\begin{intuition}
+	This is like a parametrized version of \hyperref[def:Henkin-constant]{Henkin constants}.
+\end{intuition}
+
 \begin{lemma}\label{lma:Skolemization}
-	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L} \)-theory}, then there are \(\mathcal{L} ^{\ast} \supseteq \mathcal{L} \) and \(T^{\ast} \supseteq T\) an \hyperref[def:theory]{\(\mathcal{L} ^{\ast} \)-theory} such that \(T^{\ast} \) has \hyperref[def:built-in-Skolem-function]{built-in Skolem functions}. Moreover, if \(\mathcal{M} \models T\), then we can expand \(\mathcal{M} \) to \(\mathcal{M} ^{\ast} \models T^{\ast} \).
+	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L} \)-theory}, then there are \(\mathcal{L} ^{\ast} \supseteq \mathcal{L} \) and \(T^{\ast} \supseteq T\) an \hyperref[def:theory]{\(\mathcal{L} ^{\ast} \)-theory} such that \(T^{\ast} \) has \hyperref[def:built-in-Skolem-function]{built-in Skolem functions}. Moreover, if \(\mathcal{M} \models T\), then we can \hyperref[not:expansion]{expand} \(\mathcal{M} \) to \(\mathcal{M} ^{\ast} \models T^{\ast} \). Finally, we can choose \(\mathcal{L} ^{\ast} \) such that \(\vert \mathcal{L} ^{\ast} \vert = \vert \mathcal{L} \vert + \aleph_0\).
 \end{lemma}
 \begin{proof}
-	Start with \(\mathcal{L} _0 = \mathcal{L} \) and \(T_0 = T\), we build \(\mathcal{L} ^{\ast} = \bigcup_{i} \mathcal{L} _i\) and \(T^{\ast} = \bigcup_{i} T_i\). Given \(\mathcal{L} _i\) and \(T_i\), define
+	Start with \(\mathcal{L} _0 = \mathcal{L} \) and \(T_0 = T\), we build \(\mathcal{L} _0 \subseteq \mathcal{L} _1 \subseteq \ldots \) and \(T_0 \subseteq T_1 \subseteq \ldots \) and let \(\mathcal{L} ^{\ast} = \bigcup_{i} \mathcal{L} _i\) and \(T^{\ast} = \bigcup_{i} T_i\). Given \(\mathcal{L} _i\) and \(T_i\), define
 	\[
 		\mathcal{L} _{i+1} = \mathcal{L} _i \cup \left\{ f_\varphi \mid \varphi (x, \overline{y} ) \text{ is an \hyperref[def:formula]{\(\mathcal{L} _i \)-formulas}} \right\}
 	\]
 	where the arity of \(f_\varphi \) is the same as \(\overline{y} \), and
 	\[
-		T_{i+1} = Tvi \cup \left\{ \forall \overline{y} \ (\exists x\ \varphi (x, \overline{y} ) \to \varphi (f_\varphi (\overline{y} ) , \overline{y} ) ) \right\}.
+		T_{i+1} = T_i \cup \left\{ \forall \overline{y} \ (\exists x\ \varphi (x, \overline{y} ) \to \varphi (f_\varphi (\overline{y} ) , \overline{y} ) ) \right\}.
 	\]
-	Now, we argue that if \(\mathcal{M} \models T_i\), we can expand it to a \hyperref[def:model]{model} \(\mathcal{M} ^{\ast} \) of \(T_{i+1} \). Pick \(c\in M\) a ``default value.'' Given \(\varphi \) and \(\overline{a} \), define \(f_\varphi ^{\mathcal{M} ^{\ast} }(\overline{a} )\) to be some \(b\) with \(\mathcal{M} \models \varphi (b, \overline{a} )\) if such a \(b\) exists, or \(c\) otherwise. Then, \(\mathcal{M} ^{\ast} \models T_{i+1} \).
+	We now argue that if \(\mathcal{M}_i \models T_i\), we can \hyperref[not:expansion]{expand} it to a \hyperref[def:model]{model} \(\mathcal{M} _{i+1} \) of \(T_{i+1} \). Pick \(c\in M_i\) a ``default value.'' Given \(\varphi \) and \(\overline{a} \), define \(f_\varphi ^{\mathcal{M} _{i+1} }(\overline{a} )\) to be some \(b\) with \(\mathcal{M}_i \models \varphi (b, \overline{a} )\) if such a \(b\) exists, or \(c\) otherwise.\footnote{If such \(b\) doesn't exist, then the left-hand side is false, so we don't really care about the right-hand side.} Then, \(\mathcal{M} _{i+1} \models T_{i+1} \). From this construction, we see that \(T^{\ast} \) has \hyperref[def:built-in-Skolem-function]{built-in Skolem functions} since any \hyperref[def:formula]{\(\mathcal{L}^{\ast}\)-formula} \(\varphi \) is in some \(\mathcal{L} _i\) and has a \hyperref[def:built-in-Skolem-function]{Skolem function} in \(\mathcal{L} _{i+1}\).
 
-	Now, \(T^{\ast} \) has \hyperref[def:built-in-Skolem-function]{built-in Skolem functions}. Suppose \(\mathcal{M} \models T\), i.e., \(\mathcal{M} = \mathcal{M} _0 \models T_0\). Then \(\mathcal{M} _0\) has an \hyperref[not:expansion]{expansion} \(\mathcal{M} _1 \models T_1\), which has an \hyperref[not:expansion]{expansion} \(\mathcal{M} _2 \models T_2\), etc. Then, \(\mathcal{M} ^{\ast} = \bigcup_{i} \mathcal{M} _i\) is a \hyperref[def:model]{model} of \(T^{\ast} \), and by counting, we have \(\vert \mathcal{L} ^{\ast} \vert = \vert \mathcal{L} \vert + \aleph_0\).
+	Now, suppose \(\mathcal{M} \models T\), i.e., \(\mathcal{M} = \mathcal{M} _0 \models T_0\). From above, \(\mathcal{M} _0\) has an \hyperref[not:expansion]{expansion} \(\mathcal{M} _1 \models T_1\), which has an \hyperref[not:expansion]{expansion} \(\mathcal{M} _2 \models T_2\), etc. By \hyperref[not:expansion]{expanding} \(\mathcal{M}\) iteratively, we get a \hyperref[def:model]{model} \(\mathcal{M} ^{\ast}\) of \(T^{\ast} \).
+
+	Finally, at each step, we add one symbol for each \hyperref[def:formula]{\(\mathcal{L} _i\)-formula} to \(\mathcal{L} _i\), hence by counting, \(\vert \mathcal{L} _{i+1} \vert = \vert \mathcal{L} _i \vert + \aleph_0\), hence \(\vert \mathcal{L} ^{\ast} \vert = \vert \mathcal{L} \vert + \aleph_0\).
 \end{proof}
+
+\begin{note}
+	We see that this is a similar argument to when we added \hyperref[def:Henkin-constant]{Henkin constants}, though it's simpler now because we can work semantically.
+\end{note}
 
 \begin{notation}[Skolemization]\label{not:Skolemization}
 	We call \(T^{\ast} \) in \autoref{lma:Skolemization} a \emph{Skolemization} of \(T\).
 \end{notation}
 
 \begin{theorem}[Downward Löwenheim-Skolem theorem]\label{thm:downward-Lowenheim-Skolem}
-	Let \(\mathcal{M} \) be an \hyperref[def:structure]{\(\mathcal{L} \)-structure} and \(X \subseteq M\). Then there is an \hyperref[def:elementary-substructure]{elementary substructure} \(X \subseteq \mathcal{N} \) of \(\mathcal{M} \) of cardinality \(\vert \mathcal{N} \vert \leq \vert \mathcal{L} \vert + \aleph_0 + \vert X \vert \).
+	Let \(\mathcal{M} \) be an \hyperref[def:structure]{\(\mathcal{L} \)-structure} and \(X \subseteq M\). Then there is an \hyperref[def:elementary-substructure]{elementary substructure} \(\mathcal{N} \) of \(\mathcal{M} \) with \(X \subseteq \mathcal{N} \) and \(\vert N \vert \leq \vert X \vert + \vert \mathcal{L} \vert + \aleph_0\).
 \end{theorem}
 \begin{proof}
-	By \hyperref[not:expansion]{expanding} the \hyperref[def:language]{language}, we get \(\mathcal{M} ^{\ast} \) and \hyperref[def:structure]{\(\mathcal{L} ^{\ast} \)-structure} with \(\mathop{\mathrm{Th}}(\mathcal{M} ^{\ast} )\) has \hyperref[def:built-in-Skolem-function]{built-in Skolem functions} (where \(T = \mathop{\mathrm{Th}}(\mathcal{M} ) \) in \autoref{lma:Skolemization}). Replacing \(\mathcal{M} \) by \(\mathcal{M} ^{\ast} \), etc., we may assume that we already had \hyperref[def:built-in-Skolem-function]{built-in Skolem functions}.
+	By \hyperref[not:expansion]{expanding} the \hyperref[def:language]{language}, we get \(\mathcal{M} ^{\ast} \) and \hyperref[def:structure]{\(\mathcal{L} ^{\ast} \)-structure} with \(\mathop{\mathrm{Th}}(\mathcal{M} ^{\ast} )\) has \hyperref[def:built-in-Skolem-function]{built-in Skolem functions} (where \(T = \mathop{\mathrm{Th}}(\mathcal{M} ) \) in \autoref{lma:Skolemization}). Hence, by replacing \(\mathcal{M} \) by \(\mathcal{M} ^{\ast} \), etc., we may assume that we already had \hyperref[def:built-in-Skolem-function]{built-in Skolem functions}.
 
 	Start with \(X_0 = X \cup \left\{ c^{\mathcal{M} } \mid \text{\(c\) a constant symbol}\right\} \). Given \(X_i\), define \(X_{i+1} \) as
 	\[
-		X_{i+1} = X_i \cup \left\{ f(\overline{a} ) \mid \text{\(f\) a function symbol, \(\overline{a} \in X_i \)} \right\}.
+		X_{i+1} = X_i \cup \left\{ f^{\mathcal{M} }(\overline{a} ) \mid \text{\(f\in \mathcal{L} \) a function symbol, \(\overline{a} \in X_i^{n_f} \)} \right\}.
 	\]
-	Let \(N = \bigcup_{i} X_i\), let \(\mathcal{N} \) be the \hyperref[def:substructure]{substructure} of \(\mathcal{M} \) with domain \(N\).\footnote{Here, \(\mathcal{N} \) is called the \emph{substructure generated by \(X\)}.} Now, to show that \(\mathcal{N} \) is an \hyperref[def:elementary-substructure]{elementary substructure} of \(\mathcal{M} \), we use the \hyperref[prop:Tarski-Vaught-test]{Tarski-Vaught test}. Suppose that we have an \hyperref[def:formula]{\(\mathcal{L} \)-formula} \(\varphi (x, \overline{y} )\), \(\overline{a} \in N\), \(b\in M\) such that \(\mathcal{M} \models \varphi (b, \overline{a} )\) (we must replace \(b\) by \(c\in N\)). Since \(\mathcal{M} \models \exists x\ \varphi (x, \overline{a} )\), so \(\mathcal{M} \models \varphi (f_\varphi (\overline{a} ), \overline{a} )\). But since \(\overline{a} \in N\), so \(f_\varphi (\overline{a} )\in N\), so the \hyperref[prop:Tarski-Vaught-test]{Tarski-Vaught test} says \(\mathcal{N} \) is an \hyperref[def:elementary-substructure]{elementary substructure} of \(\mathcal{M} \).
+	Let \(N = \bigcup_{i} X_i\), and let \(\mathcal{N} \) be the \hyperref[def:substructure]{substructure} of \(\mathcal{M} \) with domain \(N\). This can be done by:
+	\begin{itemize}
+		\item for each function symbol \(f\), let \(f^{\mathcal{N} } \) be the restriction of \(f^{\mathcal{M} } \) to \(N\);\footnote{From the definition of \(N\), it is closed under the applications of functions \(f\), so the restriction takes values in \(N\).}
+		\item for each relation symbol \(R\), let \(R^{\mathcal{N} } \) be the restriction of \(R^{\mathcal{M} } \) to \(N\);
+		\item for each constant symbol \(c\), there is a \hyperref[def:built-in-Skolem-function]{Skolem function} \(f\) such that \(f(x)=c^{\mathcal{M} } \in N\) for all \(x\in M\), so let \(c^{\mathcal{N} } = c^{\mathcal{M} } \).
+	\end{itemize}
 
-	Finally, we see that \(\vert X_0 \vert \leq \vert X \vert + \vert \mathcal{L} \vert + \aleph_0\), and since \(N\) is a countable union, so
-	\[
-		\vert N \vert \leq \vert X \vert + \vert \mathcal{L}  \vert + \aleph_0.
-	\]
+	Now, to show that \(\mathcal{N} \) is an \hyperref[def:elementary-substructure]{elementary substructure} of \(\mathcal{M} \), we use the \hyperref[prop:Tarski-Vaught-test]{Tarski-Vaught test}. Suppose that we have an \hyperref[def:formula]{\(\mathcal{L} \)-formula} \(\varphi (x, \overline{y} )\), \(\overline{a} \in N\), \(b\in M\) such that \(\mathcal{M} \models \varphi (b, \overline{a} )\), and we must replace \(b\) by \(c\in N\). Since \(\mathcal{M} \models \exists x\ \varphi (x, \overline{a} )\), so \(\mathcal{M} \models \varphi (f_\varphi (\overline{a} ), \overline{a} )\). But since \(\overline{a} \in N\), so \(f_\varphi (\overline{a} )\in N\), so the \hyperref[prop:Tarski-Vaught-test]{Tarski-Vaught test} says \(\mathcal{N} \) is an \hyperref[def:elementary-substructure]{elementary substructure} of \(\mathcal{M} \).
+
+	Finally, since \(\vert X_0 \vert \leq \vert X \vert + \vert \mathcal{L} \vert + \aleph_0\), with \(N\) being a countable union, \(\vert N \vert \leq \vert X \vert + \vert \mathcal{L}  \vert + \aleph_0\).
 \end{proof}
 
-\begin{eg}[Countable real closed filed]
-	Consider \(\mathbb{R} =(\mathbb{R} , 0, 1, +, -, \cdot, \leq )\). Let \(X \subseteq \mathbb{R} \) be countable, e.g., \(X = \varnothing \) or \(X = \left\{ \pi , e \right\} \). Then there is \(X \subseteq R \preceq \mathbb{R} \) such that \(R\) is countable. In particular, \(\mathop{\mathrm{Th}}(R) = \mathop{\mathrm{Th}}(\mathbb{R})\). In this way, \(R\) is a \emph{countable real closed filed}:
+\begin{notation}[Generated substructure]\label{not:generated-substructure}
+	\(\mathcal{N} \) in the \hyperref[thm:downward-Lowenheim-Skolem]{downward Löwenheim-Skolem theorem} is called the \emph{substructure generated} by \(X\).
+\end{notation}
+
+\begin{eg}[Countable real closed filed]\label{eg:countable-real-closed-filed}
+	Consider \(\mathbb{R} =(\mathbb{R} , 0, 1, +, -, \cdot, \leq )\). Let \(X \subseteq \mathbb{R} \) be countable, e.g., \(X = \varnothing \) or \(X = \left\{ \pi , e \right\} \). Then there is \(X \subseteq \mathcal{R} \preceq \mathbb{R} \) such that \(\mathcal{R}\) is countable. In particular, \(\mathop{\mathrm{Th}}(\mathcal{R} ) = \mathop{\mathrm{Th}}(\mathbb{R})\) and \(R\) is a \emph{countable real closed filed}, i.e.,
 	\begin{enumerate}[(a)]
 		\item \(-1\) is not a sum of squares;
 		\item for all \(a\), there is \(b\) such that \(a = b^2\) or \(a=-b^2\);
 		\item every odd degree polynomial has a root.
 	\end{enumerate}
+	There is a whole theory of real closed fields just like for \hyperref[def:algebraically-closed]{algebraically closed} fields.
 \end{eg}
+
+\begin{intuition}
+	\hyperref[eg:countable-real-closed-filed]{Countable real closed fields} are as \hyperref[def:algebraically-closed]{algebraically closed} as they can be while still being orderable.
+\end{intuition}
 
 \begin{eg}[Skolem's paradox]
-	Let \(\mathcal{L} = \left\{ \in\right\} \), where \(\in\) a binary relation symbol. Let \(T=\mathrm{ZFC} \). Suppose that \(\mathrm{ZFC} \) is a \hyperref[def:satisfiable]{satisfiable},\footnote{From \href{https://en.wikipedia.org/wiki/Gödel's_incompleteness_theorems}{Gödel's incompleteness theorem}, in \(\mathrm{ZFC} \), one can't prove that \(\mathrm{ZFC} \) is \hyperref[def:consistent]{consistent}.} and let \(\mathcal{M} \models T\). Then there is \(\mathcal{N} \preceq \mathcal{M} \) with \(\mathcal{N} \) countable. Then,
+	Let \(\mathcal{L} = \left\{ \in\right\} \) be the language of set theory, where \(\in\) a binary relation symbol. Let \(T=\mathrm{ZFC} \), and suppose \(\mathrm{ZFC} \) is \hyperref[def:satisfiable]{satisfiable},\footnote{From \href{https://en.wikipedia.org/wiki/Gödel's_incompleteness_theorems}{Gödel's incompleteness theorem}, in \(\mathrm{ZFC} \), one can't prove that \(\mathrm{ZFC} \) is \hyperref[def:consistent]{consistent}.} i.e., there is a \hyperref[def:model]{model} \(\mathcal{M} \) such that \(\mathcal{M} \models T\).
+
+	Then, there is a countable \(\mathcal{N} \preceq \mathcal{M} \), in particular, there is a countable \hyperref[def:model]{model} of \(\mathrm{ZFC} \). We can then write down the \hyperref[def:sentence]{sentence}
 	\[
-		\mathcal{N} \models \text{``there is no bijection between \(\mathbb{R} ^\mathcal{N} \) and \(\mathbb{N} ^\mathcal{N} \)''}.
+		\varphi \coloneqq \text{``there is no bijection between \(\mathbb{R} ^\mathcal{N} \) and \(\mathbb{N} ^\mathcal{N} \)''}
 	\]
-	\(\mathcal{N} \) thinks that it contains an uncountable set \(\mathbb{R} ^\mathcal{N} \), but \(\left\{ a\in N \mid \mathcal{N} \models a\in \mathbb{R} ^\mathcal{N} \right\} \subseteq N\) is countable. This is called \emph{Skolem's paradox}.
+	such that \(\mathcal{N} \models \varphi \), in \(\mathcal{L} \). Observe that \(\mathcal{N} \) thinks that it contains an uncountable set \(\mathbb{R} ^\mathcal{N} \), but \(\left\{ a\in N \mid \mathcal{N} \models a\in \mathbb{R} ^\mathcal{N} \right\} \subseteq N\) is countable! This is called \emph{Skolem's paradox}.
 \end{eg}
 
-\begin{definition}[Universallly axiomatizable]\label{def:universallly-axiomatizable}
-	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L} \)-theory}, then \(T\) is \emph{universallly axiomatizable} if there is a set \(\Gamma \) of \hyperref[not:universal]{universal} \hyperref[def:sentence]{sentences} such that \(T \models \Gamma \) and \(\Gamma \models T\).
+We finish this section with two useful facts.
+
+\begin{definition}[Universally axiomatizable]\label{def:universally-axiomatizable}
+	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L} \)-theory}, then \(T\) is \emph{universally axiomatizable} if there is a set \(\Gamma \) of \hyperref[not:universal]{universal} \hyperref[def:sentence]{sentences} such that \(T \models \Gamma \) and \(\Gamma \models T\).\footnote{I.e., \(\mathcal{M} \models T\) if and only if \(\mathcal{M} \models \Gamma \).}
 \end{definition}
 
 \begin{theorem}
-	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L} \)-theory}. \(T\) is \hyperref[def:universallly-axiomatizable]{universallly axiomatized} if and only if whenever \(\mathcal{N} \models T\) and \(\mathcal{M} \subseteq \mathcal{N} \), then \(\mathcal{M} \models T\).
+	Let \(T\) be an \hyperref[def:theory]{\(\mathcal{L} \)-theory}. \(T\) is \hyperref[def:universally-axiomatizable]{universally axiomatized} if and only if whenever \(\mathcal{N} \models T\) and \(\mathcal{M} \subseteq \mathcal{N} \), then \(\mathcal{M} \models T\).
 \end{theorem}
 \begin{proof}
-	We already know the forward direction. Now, to prove the backward direction, suppose that if \(\mathcal{N} \models T\), \(\mathcal{M} \subseteq \mathcal{N} \), then \(\mathcal{M} \models T\). Define
+	The forward direction is easy: suppose that \(T\) is \hyperref[def:universally-axiomatizable]{universally axiomatized} by \(\Gamma \). If \(\mathcal{M} \subseteq \mathcal{N} \) and \(\mathcal{N} \models T\), then \(\mathcal{N} \models \Gamma \), and since \(\Gamma \) consists only of \hyperref[not:universal]{universal} \hyperref[def:formula]{formulas}, \(\mathcal{M} \models \Gamma \), so \(\mathcal{M} \models T\).
+
+	Now, to prove the backward direction, suppose that if \(\mathcal{N} \models T\), \(\mathcal{M} \subseteq \mathcal{N} \), then \(\mathcal{M} \models T\). Define
 	\[
 		\Gamma = \left\{ \varphi \text{ \hyperref[not:universal]{universal}} \mid T \models \varphi \right\},
 	\]
-	then \(T \models \Gamma \). Now, we show that \(\Gamma \models T\). We may assume that \(T\) is \hyperref[def:satisfiable]{satisfiable}\footnote{Since otherwise \(\Gamma \ni \forall x\ x \neq x\).} and let \(\mathcal{M} \models \Gamma \).we must prove that \(\mathcal{M} \models T\).  We will do this by finding \(\mathcal{N} \supseteq \mathcal{M} \), \(\mathcal{N} \models T\), which implies \(\mathcal{M} \models T\). We build such an \(\mathcal{N} \) by showing that \(\Diag(\mathcal{M} ) \cup T\) is \hyperref[def:satisfiable]{satisfiable} with \hyperref[thm:compactness]{compactness theorem}. Let \(\Delta \subseteq \Diag(\mathcal{M} ) \cup T\)  be finite, then there is a finite set of \hyperref[not:atomic-formula]{atomic} or negated \hyperref[not:atomic-formula]{atomic formulas} \(\varphi _1, \ldots , \varphi _\ell \) and \(m_1, \ldots , m_k \in M\) such that
+	then \(T \models \Gamma \). Now, we need to show that \(\Gamma \models T\). We may assume that \(T\) is \hyperref[def:satisfiable]{satisfiable}\footnote{Since otherwise \(\Gamma \ni \forall x\ x \neq x\), and hence \(\Gamma \models T\) trivially.} and let \(\mathcal{M} \models \Gamma \), so we now want to prove that \(\mathcal{M} \models T\). This can be done by finding \(\mathcal{N} \supseteq \mathcal{M} \) and \(\mathcal{N} \models T\), then from our assumption we have \(\mathcal{M} \models T\). We build such an \(\mathcal{N} \) by showing that \(\Diag(\mathcal{M} ) \cup T\) is \hyperref[def:satisfiable]{satisfiable}, and take the corresponding \hyperref[def:model]{model} to be \(\mathcal{N} \). Then, trivially we have \(\mathcal{N} \models T\).
+
+	This can be done by \hyperref[thm:compactness]{compactness theorem}. Let \(\Delta \subseteq \Diag(\mathcal{M} ) \cup T\)  be finite, then there is a finite set of \hyperref[not:atomic]{atomic} or negated \hyperref[not:atomic]{atomic formulas} \(\varphi _1, \ldots , \varphi _\ell \) and \(m_1, \ldots , m_k \in M\) such that
 	\[
-		\Delta \subseteq \left\{ \varphi _1(\overline{m} ), \ldots , \varphi _\ell (\overline{m} ) \right\} \cup T.
+		\Delta \subseteq \left\{ \varphi _1(\overline{m} ), \ldots , \varphi _\ell (\overline{m} ) \right\} \cup T,
 	\]
-	We may assume that they are actually equal. To show that \(\Delta \) is \hyperref[def:satisfiable]{satisfiable}, it is enough to show that
+	assume that they are actually equal. To show that \(\Delta \) is \hyperref[def:satisfiable]{satisfiable}, it is enough to show\footnote{Since the constant symbols \(m_1, \ldots , m_k\) do not appear in \(T\), we can interpret them as the witness to the \(\exists \)'s.} that
 	\[
 		\left\{ \exists x_1 \ldots \exists x_k\ (\varphi _1(\overline{x} ) \land \ldots \land \varphi _\ell (\overline{x} )) \right\} \cup T
 	\]
-	is \hyperref[def:satisfiable]{satisfiable}. If not, then \(T\models \forall x_1 \ldots \forall x_k\ \lnot (\varphi _1(\overline{x} ) \land \ldots \land \varphi _\ell (\overline{x} ))\). But this is \hyperref[not:universal]{universal}, hence in \(\Gamma \), so it is \hyperref[def:truth]{true} in \(\mathcal{M} \), i.e., \(\mathcal{M} \models \varphi _1(\overline{m} ) \land \ldots \land \varphi _\ell (\overline{m} )\) and \(\mathcal{M} \models \forall x_1 \ldots \forall x_k\ \lnot (\varphi _1(\overline{x} ) \land \ldots \land \varphi _\ell (\overline{x} ))\), a contradiction \(\conta\) Hence, \(\Delta \) is \hyperref[def:satisfiable]{satisfiable}, so any finite subset is \hyperref[def:satisfiable]{satisfiable}, by \hyperref[thm:compactness]{compactness theorem}, we're done.
+	is \hyperref[def:satisfiable]{satisfiable}. If not, then since \(T\) is \hyperref[def:satisfiable]{satisfiable},
+	\[
+		T\models \forall x_1 \ldots \forall x_k\ \lnot (\varphi _1(\overline{x} ) \land \ldots \land \varphi _\ell (\overline{x} )).
+	\]
+	Since this is \hyperref[not:universal]{universal}, hence in \(\Gamma \), so it is \hyperref[def:truth]{true} in \(\mathcal{M} \). But it's also not \hyperref[def:truth]{true} in \(\mathcal{M} \) since \(\mathcal{M} \models \varphi _1(\overline{m} ) \land \ldots \land \varphi _\ell (\overline{m} )\), a contradiction \(\conta\) Hence, \(\Delta \) is \hyperref[def:satisfiable]{satisfiable}, so any finite subset is \hyperref[def:satisfiable]{satisfiable}, by \hyperref[thm:compactness]{compactness theorem}, we're done.
 \end{proof}

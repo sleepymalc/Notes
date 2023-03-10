@@ -1,4 +1,4 @@
-\lecture{16}{7 Mar. 14:30}{}
+\lecture{16}{7 Mar. 14:30}{Quantifier Elimination}
 \begin{remark}
 	\(T\) is actually \hyperref[def:countably-categorical]{countably categorical}.
 \end{remark}
@@ -15,24 +15,24 @@ Now we show that it is also \hyperref[def:satisfiable]{satisfiable}. Fix \(N\), 
 Observe the following.
 
 \begin{proposition}\label{prop:random-graph-almost-surely-satisfiable}
-	Fix \(n\), then \(\lim_{N \to \infty} p_N(\psi _n) = 1\).
+	For every \(n\), then \(\lim_{N \to \infty} p_N(\psi _n) = 1\).
 \end{proposition}
 \begin{proof}
 	Fix \(n\), and let \(G\) be a \hyperref[def:random-graph]{random graph} in \(\mathcal{G} _N\), \(N > 2n\). Fix \(x_1, \ldots , x_n\), and \(y_1, \ldots , y_n\), and \(z\) in \(G\), all distinct. Consider the probability \(q\) that
 	\[
-		\lnot \left( \bigwedge_{i=1}^{n} E(x_i, z) \land \lnot E(y_i, z)\right).
+		\lnot \left( \bigwedge_{i=1}^{n} E(x_i, z) \land \lnot E(y_i, z)\right),
 	\]
-	This is just \(1 - p^n (1-p)^n \coloneqq q\) as we already know. The probability that
+	which is just \(1 - p^n (1-p)^n \coloneqq q\) as we already know. The probability that
 	\[
-		G \models \underbrace{\lnot \exists z}_{\forall z\ \lnot }\ \left( \bigwedge_{i=1}^{n} E(x_i, z) \land \lnot E(y_i, z) \land x_i \neq z \land y_i \neq z \right)
+		G \models \underbrace{\lnot \exists z}_{\forall z\ \lnot }\ \left( \bigwedge_{i=1}^{n} E(x_i, z) \land \lnot E(y_i, z) \right)
 	\]
-	is \(q^{N-2n}\), where \(N-2n\) is the number of possible \(z\)'s. Let \(M\) be the number of different choices of \(x\)'s and \(y\)'s, then we have
+	is \(q^{N-2n}\), where \(N-2n\) is the number of possible \(z\)'s.\footnote{Notice that we already assume that \( x_i \neq z \land y_i \neq z\).} Let \(M\) be the number of different choices of \(x_i\)'s and \(y_i\)'s, then we have
 	\[
 		p_N(\lnot \psi _n)
 		\leq M\cdot q^{N - 2n}
 		\leq N^{2n} q^{N-2n}
 	\]
-	by the union bound.\footnote{This bound is not allowing the \(x\)'s and \(y\)'s to have repetitions. but this doesn't change anything.} Notice that \(0 < q < 1\), we see that \(p_N (\lnot \psi _n) \to \infty\) as \(N \to 1\), i.e., \(p_N(\psi _n) \to 1\) as \(N \to \infty \).
+	by the union bound.\footnote{This bound is not allowing the \(x\)'s and \(y\)'s to have repetitions. But this doesn't change anything.} Since \(0 < q < 1\), so \(p_N (\lnot \psi _n) \to 0\), i.e., \(p_N(\psi _n) \to 1\) as \(N \to \infty \).
 \end{proof}
 
 Then, we have the following.
@@ -41,22 +41,16 @@ Then, we have the following.
 	\(T\) is \hyperref[def:satisfiable]{satisfiable}.
 \end{theorem}
 \begin{proof}
-	From \autoref{prop:random-graph-almost-surely-satisfiable}, we see that \(\lim_{N \to \infty} p_N(\psi _n) = 1\). In particular, for each \(n\), there is \(N\) such that \(p_N(\psi _n) > 0\). This implies that there is at least one \(G\in \mathcal{G} _N\) such that \(G \models \psi _n\). Hence, we also have \(G\models \psi _m\) for \(m \leq n\),\footnote{Remember that for \(n > m\), \(\models \psi _n \to \psi _m\).} i.e., every finite \(T^{\ast} \subseteq T\) is \hyperref[def:satisfiable]{satisfiable}, so \(T\) is \hyperref[def:satisfiable]{satisfiable} by the \hyperref[thm:compactness]{compactness theorem}.
+	From \autoref{prop:random-graph-almost-surely-satisfiable}, \(\lim_{N \to \infty} p_N(\psi _n) = 1\). In particular, for each \(n\), there is \(N\) such that \(p_N(\psi _n) > 0\), i.e., there is at least one \(G\in \mathcal{G} _N\) such that \(G \models \psi _n\), hence \(G\models \psi _m\) for \(m \leq n\).\footnote{Remember that for \(n > m\), \(\models \psi _n \to \psi _m\).} This means that for every finite \(T^{\ast} \subseteq T\) is \hyperref[def:satisfiable]{satisfiable}, so \(T\) is \hyperref[def:satisfiable]{satisfiable} by the \hyperref[thm:compactness]{compactness theorem}.
 \end{proof}
 
 Moreover, we have the following.
 
-\begin{theorem}[Zero-one law for graphs]\label{thm:zero-1-law-for-graph}
-	For any \hyperref[def:sentence]{sentence} \(\varphi \), either
-	\[
-		\lim_{N \to \infty} p_N(\varphi ) = 0 \text{ or } \lim_{N \to \infty} p_N(\varphi )=1.
-	\]
-	Moreover, \(T\) axiomatizes \(\left\{ \varphi \colon \lim_{N \to \infty} p_N(\varphi ) = 1 \right\} \), the ``almost sure theory for graphs'', which is \hyperref[def:theory-complete]{complete}.
+\begin{theorem}[Zero-one law for graphs]\label{thm:0-1-law-for-graph}
+	For any \hyperref[def:sentence]{\(\mathcal{L} \)-sentence} \(\varphi \), we either have \(\lim\limits_{N \to \infty} p_N(\varphi ) = 0 \) or \(\lim\limits_{N \to \infty} p_N(\varphi )=1\). Moreover, \(T\) axiomatizes \(\left\{ \varphi \colon \lim_{N \to \infty} p_N(\varphi ) = 1 \right\} \), the ``almost sure theory for graphs'', which is \hyperref[def:decidable]{decidable} and \hyperref[def:theory-complete]{complete}.
 \end{theorem}
 \begin{proof}
-	Since \(T\) is \hyperref[def:countably-categorical]{countably categorical}, and has only infinite models, so it is \hyperref[def:theory-complete]{complete} by the \hyperref[thm:Vaught-test]{Vaught's test}. If \(T \models \varphi \), there is some \(n\) such that \(\left\{ \psi _n, \hyperref[def:random-graph-theory-a]{(a)}, \hyperref[def:random-graph-theory-a]{(b)} \right\} \models \varphi \), so \(p_N(\psi _n) \leq p_N(\varphi )\), so \(\lim_{N \to \infty} p_N(\varphi ) = 1\) since the left-hand side goes to \(1\).
-
-	If \(T \lnot \models \varphi \), \(T \models \lnot \varphi \), so \(\lim_{N \to \infty} p_N(\lnot \varphi ) = 1\), and \(\lim_{N \to \infty} p_N(\varphi ) = 0\).
+	Since \(T\) is \hyperref[def:countably-categorical]{countably categorical}, and has only infinite models, so it is \hyperref[def:theory-complete]{complete} by the \hyperref[thm:Vaught-test]{Vaught's test}. If \(T \models \varphi \), there is some \(n\) such that \(\left\{ \psi _n, \hyperref[def:random-graph-theory-a]{(a)}, \hyperref[def:random-graph-theory-a]{(b)} \right\} \models \varphi \). Since \(p_N(\psi _n) \leq p_N(\varphi )\), so \(\lim_{N \to \infty} p_N(\varphi ) = 1\) and the left-hand side goes to \(1\) as well. On the other hand, if \(T \not \models \varphi \), \(T \models \lnot \varphi \), so \(\lim_{N \to \infty} p_N(\lnot \varphi ) = 1\), i.e., \(\lim_{N \to \infty} p_N(\varphi ) = 0\) from the same argument.
 \end{proof}
 
 Before ending this section, we note that there are other things we may explore.
@@ -105,15 +99,15 @@ The easiest example will be that \(\DLO\) admits \hyperref[def:quantifier-elimin
 	\end{itemize}
 	Now suppose \(\varphi (\overline{x} )\) has at least one \hyperref[def:free-variable]{free variable}, \(\overline{x} = (x_1, \ldots , x_n)\). Since \(\DLO\) is \hyperref[def:theory-complete]{complete}, it's enough to find \(\psi (\overline{x} )\) with \(\mathbb{Q} \models \forall \overline{x} \ (\varphi (\overline{x} ) \leftrightarrow \psi (\overline{x} ))\). Let \(\sigma \) be a map from pairs \(i, j\) to \(\left\{ 1, 2, 3 \right\} \). Define
 	\[
-		\Theta _\sigma (x_1, \ldots , x_n) \coloneqq \bigwedge_{\sigma (i, j) = 1} x_i < x_j \land \bigwedge_{\sigma (i, j)=2} x_i = x_j \land \bigwedge_{\sigma (i, j)=3} x_j < x_i.
+		\theta _\sigma (x_1, \ldots , x_n) \coloneqq \bigwedge_{\sigma (i, j) = 1} x_i < x_j \land \bigwedge_{\sigma (i, j)=2} x_i = x_j \land \bigwedge_{\sigma (i, j)=3} x_j < x_i.
 	\]
-	Note that some \(\Theta _\sigma \) might be \hyperref[def:inconsistent]{inconsistent}. If \(\mathbb{Q} \models \Theta _\sigma (\overline{a} ) \land \Theta _\sigma (\overline{b} )\), then \(\overline{a} \) and \(\overline{b} \) satisfy the same \hyperref[def:formula]{formulas} by \autoref{lma:DLO-isomorphism}, so
+	Note that some \(\theta _\sigma \) might be \hyperref[def:inconsistent]{inconsistent}. If \(\mathbb{Q} \models \theta _\sigma (\overline{a} ) \land \theta _\sigma (\overline{b} )\), then \(\overline{a} \) and \(\overline{b} \) satisfy the same \hyperref[def:formula]{formulas} by \autoref{lma:DLO-isomorphism}, so
 	\[
 		\Sigma
-		\coloneqq \left\{ \sigma \mid \mathbb{Q} \models \exists \overline{x}\ (\Theta _\sigma (\overline{x} ) \land \varphi (\overline{x} )) \right\}
-		= \left\{ \sigma \mid \mathbb{Q} \models \forall \overline{x}\ (\Theta _\sigma (\overline{x} ) \to \varphi (\overline{x} )) \right\}.
+		\coloneqq \left\{ \sigma \mid \mathbb{Q} \models \exists \overline{x}\ (\theta _\sigma (\overline{x} ) \land \varphi (\overline{x} )) \right\}
+		= \left\{ \sigma \mid \mathbb{Q} \models \forall \overline{x}\ (\theta _\sigma (\overline{x} ) \to \varphi (\overline{x} )) \right\}.
 	\]
-	If \(\Sigma = \varnothing \), then \(\varphi (x) \leftrightarrow x \neq x\). Assume \(\Sigma \neq \varnothing \), and let \(\psi (\overline{x} ) = \bigvee_{\sigma \in \Sigma } \Theta _\sigma (\overline{x} ) \) Then
+	If \(\Sigma = \varnothing \), then \(\varphi (x) \leftrightarrow x \neq x\). Assume \(\Sigma \neq \varnothing \), and let \(\psi (\overline{x} ) = \bigvee_{\sigma \in \Sigma } \theta _\sigma (\overline{x} ) \) Then
 	\[
 		\mathbb{Q} \models \forall \overline{x} \ (\varphi (\overline{x} ) \leftrightarrow \psi (\overline{x} )).
 	\]

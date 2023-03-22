@@ -3,7 +3,7 @@
 	\(T\) is actually \hyperref[def:countably-categorical]{countably categorical}.
 \end{remark}
 \begin{explanation}
-	See homework.
+	We will show this on homework. But this is basically \autoref{thm:DLO-countably-categorical}.
 \end{explanation}
 
 Now we show that it is also \hyperref[def:satisfiable]{satisfiable}. Fix \(N\), \(p\in (0, 1)\), and vertices \(\left\{ 1, \ldots , N \right\} \). Generate a \hyperref[def:random-graph]{random graph} \(G_N\) on vertices \(\left\{ 1, \ldots , N \right\} \) by, for each \(i, j \leq N\), \(i \neq j\), putting an edge between \(i\) and \(j\) with probability \(p\) and no edge with probability \(1 - p\). Let \(\mathcal{G} _N\) be the class of all such graphs, and let \(p_N(\varphi )\) be the probability that a \hyperref[def:random-graph]{randomly generated graph} on \(N\) vertices satisfies \(\varphi \).
@@ -59,7 +59,9 @@ Before ending this section, we note that there are other things we may explore.
 	There are also Fraïssé constructions, and Ryll-Nardzewski theorem, etc.
 \end{remark}
 
+\chapter{Quantifier Elimination and Algebraic Applications}
 \section{Quantifier Elimination}
+Let's start with a definition.
 
 \begin{definition}[Quantifier elimination]\label{def:quantifier-elimination}
 	A \hyperref[def:theory]{theory} \(T\) has (admits) \emph{quantifier elimination} if for every \hyperref[def:formula]{formula} \(\varphi (\overline{x} )\) (with \(\overline{x} \) containing at least one variable), there is a \hyperref[not:quantifier-free]{quantifier-free} \(\psi (\overline{x} )\) such that
@@ -88,27 +90,24 @@ The easiest example will be that \(\DLO\) admits \hyperref[def:quantifier-elimin
 	This is the same as the \hyperref[not:back-and-forth]{back-and-forth} argument, but now we start with \(\overline{a} \mapsto \overline{b} \).
 \end{proof}
 
-\begin{theorem}[Quantifier elimination for \(\DLO\)s]\label{thm:DLO-QE}
+\begin{theorem}\label{thm:DLO-QE}
 	\(\DLO\) admits \hyperref[def:quantifier-elimination]{quantifier elimination}.
 \end{theorem}
 \begin{proof}
-	Fix \(\varphi (\overline{x} )\). If \(\varphi \) is actually a \hyperref[def:sentence]{sentence}, either
+	Fix \(\varphi (\overline{x} )\). If \(\varphi \) is actually a \hyperref[def:sentence]{sentence} then we're done since either
 	\begin{itemize}
-		\item \(\DLO \models \varphi \), so \(\DLO \models \forall x\ (\varphi \leftrightarrow x = x)\);
+		\item \(\DLO \models \varphi \), so \(\DLO \models \forall x\ (\varphi \leftrightarrow x = x)\), or
 		\item \(\DLO \models \lnot \varphi \), so \(\DLO \models \forall x\ (\varphi \leftrightarrow x \neq x)\).
 	\end{itemize}
-	Now suppose \(\varphi (\overline{x} )\) has at least one \hyperref[def:free-variable]{free variable}, \(\overline{x} = (x_1, \ldots , x_n)\). Since \(\DLO\) is \hyperref[def:theory-complete]{complete}, it's enough to find \(\psi (\overline{x} )\) with \(\mathbb{Q} \models \forall \overline{x} \ (\varphi (\overline{x} ) \leftrightarrow \psi (\overline{x} ))\). Let \(\sigma \) be a map from pairs \(i, j\) to \(\left\{ 1, 2, 3 \right\} \). Define
+	Now suppose \(\varphi (\overline{x} )\) has at least one \hyperref[def:free-variable]{free variable}, \(\overline{x} = (x_1, \ldots , x_n)\). Since \(\DLO\) is \hyperref[def:theory-complete]{complete}, it's enough to find \(\psi (\overline{x} )\) with \(\mathbb{Q} \models \forall \overline{x} \ (\varphi (\overline{x} ) \leftrightarrow \psi (\overline{x} ))\). Let \(\sigma \) be a map from pairs \(i, j\) to \(\left\{ 1, 2, 3 \right\} \). Define\footnote{It's clear that some \(\theta _\sigma \) might be \hyperref[def:inconsistent]{inconsistent}.}
 	\[
 		\theta _\sigma (x_1, \ldots , x_n) \coloneqq \bigwedge_{\sigma (i, j) = 1} x_i < x_j \land \bigwedge_{\sigma (i, j)=2} x_i = x_j \land \bigwedge_{\sigma (i, j)=3} x_j < x_i.
 	\]
-	Note that some \(\theta _\sigma \) might be \hyperref[def:inconsistent]{inconsistent}. If \(\mathbb{Q} \models \theta _\sigma (\overline{a} ) \land \theta _\sigma (\overline{b} )\), then \(\overline{a} \) and \(\overline{b} \) satisfy the same \hyperref[def:formula]{formulas} by \autoref{lma:DLO-isomorphism}, so
+	If \(\mathbb{Q} \models \theta _\sigma (\overline{a} ) \land \theta _\sigma (\overline{b} )\), then \(\overline{a} \) and \(\overline{b} \) satisfy the same \hyperref[def:formula]{formulas} by \autoref{lma:DLO-isomorphism}, so\footnote{The second equality follows from the fact that if one such \(\overline{x} \) exists, all such \(\overline{x} \) work.}
 	\[
 		\Sigma
 		\coloneqq \left\{ \sigma \mid \mathbb{Q} \models \exists \overline{x}\ (\theta _\sigma (\overline{x} ) \land \varphi (\overline{x} )) \right\}
 		= \left\{ \sigma \mid \mathbb{Q} \models \forall \overline{x}\ (\theta _\sigma (\overline{x} ) \to \varphi (\overline{x} )) \right\}.
 	\]
-	If \(\Sigma = \varnothing \), then \(\varphi (x) \leftrightarrow x \neq x\). Assume \(\Sigma \neq \varnothing \), and let \(\psi (\overline{x} ) = \bigvee_{\sigma \in \Sigma } \theta _\sigma (\overline{x} ) \) Then
-	\[
-		\mathbb{Q} \models \forall \overline{x} \ (\varphi (\overline{x} ) \leftrightarrow \psi (\overline{x} )).
-	\]
+	If \(\Sigma = \varnothing \), then \(\varphi (x) \leftrightarrow x \neq x\); if \(\Sigma \neq \varnothing \), let \(\psi (\overline{x} ) = \bigvee_{\sigma \in \Sigma } \theta _\sigma (\overline{x} ) \), then \(\mathbb{Q} \models \forall \overline{x} \ (\varphi (\overline{x} ) \leftrightarrow \psi (\overline{x} ))\).
 \end{proof}

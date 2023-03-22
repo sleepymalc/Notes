@@ -1,0 +1,138 @@
+\lecture{20}{21 Mar. 14:30}{}
+\begin{prev}
+	\(\nabla _c\) is the space of \hyperref[def:vector-field-along-curve]{vector fields along \(c\)}, and \(\mathring{\nu }_c\) is the space of \hyperref[def:vector-field-along-curve]{vector fields along \(c\)} with \(V(a) = V(b) = 0\).
+\end{prev}
+
+Let's resume our proof about \autoref{lma:lec19}.
+
+\begin{proof}[Proof of \autoref{lma:lec19} (Continue)]
+	For the backward direction, assume that for \(t_0, t_1\in [a, b]\) (without loss of generality, let \(t_0 < t_1\)). Suppose for a contradiction, let \(c(t_0), c(t_1)\) be two \hyperref[def:conjugate-point]{conjugate points} along \(c\), then there exists a non-trivial \hyperref[def:Jacobi-field]{Jacobi field} \(x\) along \(c\) such that \(X(t_0) = 0 = X(t_1)\). Set
+	\[
+		Y(t) = \begin{dcases}
+			0,    & \text{ if } a \leq t \leq t_0 ;   \\
+			X(t), & \text{ if } t_0 \leq t \leq t_1 ; \\
+			0,    & \text{ if } t_1 \leq t \leq b;
+		\end{dcases} \implies J(Y, Y) = 0,
+	\]
+	hence \(I\) is not positive definite.
+\end{proof}
+
+\subsection{Sobalev Spaces}
+Now, on \(\mathring{\nu }_c\), we introduce the norm
+\[
+	\lVert X \rVert \coloneqq \left( \int_{a}^{b} \left( \langle \dot{X} , \dot{X} \rangle + \left\langle X, X \right\rangle  \right)  \,\mathrm{d}t \right) ^{1 / 2},
+\]
+and denote \(\mathring{H}_c\) the completion of \(\mathring{\nu}_c\) w.r.t.\ \(\lVert \cdot \rVert \).
+
+\begin{definition}[Schwartz space]\label{def:Schwartz-space}
+	A \emph{Schwartz space} \(\mathcal{S} (\mathbb{R} ^d)\) is defined as
+	\[
+		\mathcal{S} (\mathbb{R} ^d) \coloneqq \left\{ u\in C^{\infty} (\mathbb{R} ^d) \mid \forall \alpha , \beta \in \mathbb{N} ^d\ \sup _{x\in \mathbb{R} ^d} \vert x^\alpha \partial ^\beta u(x) \vert < \infty  \right\} .
+	\]
+\end{definition}
+
+\begin{definition}[Tempered distribution]\label{def:tempered-distribution}
+	A \emph{tempered distribution} is a continuous linear functional \(f\) on \(\mathcal{S} (\mathbb{R} ^d)\), i.e., \(f\colon \mathcal{S} (\mathbb{R} ^d) \to \mathbb{C} \).
+\end{definition}
+
+\begin{notation}
+	The space of \hyperref[def:tempered-distribution]{tempered distributions} is denoted as \(\mathcal{S} ^1(\mathbb{R} ^d)\).
+\end{notation}
+
+\begin{definition}[Locally integrable]\label{def:locally-integrable}
+	Let \(\Omega \subseteq \mathbb{R} ^n\) be open, and let \(f\colon \Omega \to \mathbb{C} \) be Lebesgue measurable. Then
+	\[
+		L^1_{\text{loc} }(\Omega ) \coloneqq \left\{ f\colon \Omega \to \mathbb{C} \text{ measurable} \mid \at{f}{K}{} \in L^1(K)\ \forall \text{ compact } K \subseteq \Omega \right\}
+	\]
+	is the \emph{locally integrable} (or locally summable) space.
+\end{definition}
+
+\begin{definition}[Weak derivative]\label{def:weak-derivative}
+	Let \(U \subseteq \mathbb{R} ^n\) be open, and \(u, v\in L^1_{\text{loc} }(U)\). Let \(\alpha\) be a multi-index. Then \(v\) is the \emph{weak derivative} of \(u\), denoted as \(D^\alpha _u = v\) provided
+	\[
+		\int _U u\cdot D^\alpha \phi \,\mathrm{d} x = (-1)^{\vert \alpha \vert} \int _U v \phi \,\mathrm{d} x
+	\]
+	for all test functions \(\phi \in C^{\infty} _c(U)\).
+\end{definition}
+
+\begin{remark}
+	If the \hyperref[def:weak-derivative]{weak derivative} exists, then it's unique up to a set of measure zero.
+\end{remark}
+
+\begin{definition}[Sobalev space]\label{def:Sobalev-space}
+	Fix \(1 \leq p \leq \infty \), and let \(k\) be a non-negative integer. The \emph{Sobalev space} \(W^{k, p}(U)\) consists of all \hyperref[def:locally-integrable]{locally integrable} functions \(u\colon U \to \mathbb{R} \) for all \(\alpha \) with \(\vert \alpha \vert \leq k\) such that \(D^\alpha u\) exists in the \hyperref[def:weak-derivative]{weak} sense and belongs to \(L^p(U)\).
+\end{definition}
+
+\begin{remark}
+	If \(p = 2\), \(H^k(U) \coloneqq W^{k, 2}(U)\) for \(k = 0, 1, \ldots \) is a Hilbert space.
+\end{remark}
+
+\begin{eg}
+	\(H^0(U) = L^2(U)\).
+\end{eg}
+
+\begin{definition}
+	If \(u\in W^{k, p}(U)\), define its norm as
+	\[
+		\lVert u \rVert_{W^{k, p}(U)} = \begin{dcases}
+			\left( \sum_{\vert \alpha \vert \leq k} \int _U \vert D^\alpha u \vert ^p \,\mathrm{d} x \right)^{1 / p} , & \text{ if } 1 \leq p < \infty ; \\
+			\sum_{\vert \alpha \vert \leq k} \mathrm{ess} \sup _U \vert D^\alpha u \vert ,                             & \text{ if } p = \infty .
+		\end{dcases}
+	\]
+\end{definition}
+
+\begin{notation}
+	The closure of \(C_c^{\infty} (U)\) in \(W^{k, p}(U)\) be \(W_0^{k, p}(U)\).
+\end{notation}
+
+Thus, \(u\in W_0^{k, p}(U)\) if and only if there exists functions \(u_n \in C_c^{\infty} (U)\) such that \(u_n \to u\) in \(W^{k, p}(U)\).
+
+\begin{remark}
+	Lastly, the upshot is that \(u\in W^{k, p}_0(U)\) if \(u\in W^{k, p}(U)\) such that ``\(D^\alpha u=0\) on \(\partial U\)'' for all \(\vert \alpha \vert \leq k - 1\), more precisely, use traces.
+\end{remark}
+
+\section{Cut Locus}
+Let \(\left\{ V_i \right\} \) be an orthonormal basis of \hyperref[def:parallel]{parallel} \hyperref[def:vector-field]{vector fields}. Now, write \(X = \xi ^i Vvi\), so \(\dot{X} _i = \dot{\xi }^i V_i \), hence
+\[
+	\lVert X \rVert = \left( \int_{a}^{b} \left( \dot{\xi }^i \dot{\xi }^j + \xi ri \xi ^j \right)  \,\mathrm{d}t \right) ^{1 / 2}.
+\]
+Then, \(\mathring{H}_c^1\) can be identified with \hyperref[def:Sobalev-space]{Sobalev space} \(\mathring{H}^{1, 2}(I, \mathbb{R} ^d)\). Consider \(I\) of \(c\) as quadratic form on \(\mathring{H}^1_c \), i.e., \(I\colon \mathring{H}^1_c \times \mathring{H}^1_c \to \mathbb{R} \).
+
+\begin{definition}[Index]\label{def:index}
+	The \emph{index} of \(c\), \(\Ind(c)\), is the dimension of the largest subspace of \(\mathring{H}_c^1\), on which \(I\) is negative definite.
+\end{definition}
+
+\begin{definition}[Extended index]\label{def:exteded-index}
+	The \emph{extended index} of \(c\), \(\Ind_{\circ }(c)\), is the dimension of the largest subspace of \(\mathring{H}_c^1\), on which \(I\) is negative semi-definite.
+\end{definition}
+
+\begin{definition}[Nullity]\label{def:nullity}
+	The \emph{nullity} is defined as  \(N(c) \coloneqq \Ind_{\circ} - \Ind(c)\).
+\end{definition}
+
+For \(t\in (a, b]\), let \(\mathcal{J} ^t_c\) be the space of \hyperref[def:Jacobi-field]{Jacobi fields} \(x\) along \(c\) with \(X(a)= 0 = X(t)\).
+
+\begin{lemma}
+	\(\dim \mathcal{J} _c^b = N(c)\).
+\end{lemma}
+
+Let \((\mathcal{M}^n , g)\) be a \hyperref[def:geodesically-complete]{complete} \hyperref[def:Riemannian-manifold]{Riemannian manifold}. Let \(p\in \mathcal{M} \), and denote \(d\colon = d(p, \cdot)\). For all \(v\in S^{n-1}\), we can find a \hyperref[def:geodesic]{geodesic} \(c_v(t) = \exp _t(t v)\). Let \(R(v) \coloneqq \sup \left\{ T \mid \at{c_v}{[0, T]}{} \text{ minimizing}  \right\} \). If \(t < R(v)\), then \(d(p, c_v(t)) = t\).
+
+\begin{eg}
+	If \(R(v) = \infty \), \(c_v\) minimizing.
+\end{eg}
+
+\begin{definition}[Cut locus]\label{def:cut-locus}
+	The \emph{cut locus} of \(p\) as
+	\[
+		C(p) \coloneqq \left\{ c_v(R(v)) \mid v\in S^{n-1} \text{ such that } R(v) < \infty \right\}.
+	\]
+\end{definition}
+
+\begin{definition}[Cut point]\label{def:cut-point}
+	Consider \hyperref[def:geodesic]{geodesic} \(c\) with
+	\[
+		d(\underbrace{c(0)}_{p}, c(t)) = t
+	\]
+	on \([0, t_0]\) where \(t_0\) is the last point this holds. Then we say \(c(t_0)\) as a \emph{cut point}.
+\end{definition}

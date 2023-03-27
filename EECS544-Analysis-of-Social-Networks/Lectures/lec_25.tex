@@ -19,7 +19,7 @@ What's the connection between \hyperref[note:market-clearing-prices]{market clea
 \end{problem}
 
 \section{Hopcroft-Karp Algorithm}\label{sec:Hopcroft-Karp-algorithm}
-To answer the first question, since we already have the powerful \autoref{thm:Konig-Hall-maximize-theorem} which characterize the existence of a \hyperref[def:perfect-matching]{perfect matching}, a simple way to idea is to check whether a \hyperref[def:constricted-set]{constricted set} exists or not. But a brute-force approach will require we to check for all subsets of \(\{1, 2, \ldots , N \}\), which is exponential.
+To answer the first question, since we already have the powerful \autoref{thm:Konig-Hall-maximize-theorem} which characterize the existence of a \hyperref[def:perfect-matching]{perfect matching}, a simple way to idea is to check whether a \hyperref[def:constricted-set]{constricted set} exists or not. But a brute-force approach will require we to check for all subsets of \(\{1, 2, \dots , N \}\), which is exponential.
 
 Hence, another simple idea is to find a maximum matching and check whether it's \hyperref[def:perfect-matching]{perfect}, i.e., whether a maximum matching has size \(N\). Note that we'll have to use \autoref{thm:Konig-Hall-maximize-theorem}. We first see some definitions which is important to understand the algorithm.
 
@@ -81,10 +81,10 @@ We first see an important lemma which characterizes the behavior of \autoref{alg
 \begin{lemma}\label{lma:lec25-1}
 	If \(M\) is a matching and \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M\), then the symmetric difference
 	\(M\oplus P\) is a matching and \(\left\vert M\oplus P \right\vert = \left\vert M \right\vert + 1\). Furthermore, if
-	\(P_1, P_2, \ldots  , P_k\) are \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths}
+	\(P_1, P_2, \dots  , P_k\) are \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths}
 	w.r.t.\ \(M\), then the symmetric difference
 	\[
-		M\oplus(P_1 \cup P_2 \cup  \ldots  \cup  P_k  )
+		M\oplus(P_1 \cup P_2 \cup  \dots  \cup  P_k  )
 	\]
 	is a matching with cardinality \(\left\vert M \right\vert + k\).
 \end{lemma}
@@ -95,13 +95,13 @@ We first see an important lemma which characterizes the behavior of \autoref{alg
 	\[
 		\left\vert M\oplus P \right\vert = \left\vert M \right\vert + \left\vert P \right\vert - 2k = \left\vert M \right\vert + 2k + 1 - 2k = \left\vert M \right\vert + 1,
 	\]
-	since we must remove each edge of \(M\) within is in \(P\) from both \(M\) and \(P\). Now suppose \(P_1, P_2, \ldots  , P_k\) are \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\). Let \(k_i\) be the number of edges in \(P_{i} \) which are in \(M\), so that \(\left\vert P_{i}  \right\vert = 2k + i + 1\). Then we have
+	since we must remove each edge of \(M\) within is in \(P\) from both \(M\) and \(P\). Now suppose \(P_1, P_2, \dots  , P_k\) are \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\). Let \(k_i\) be the number of edges in \(P_{i} \) which are in \(M\), so that \(\left\vert P_{i}  \right\vert = 2k + i + 1\). Then we have
 	\[
-		M \oplus (P_1 \cup P_2 \cup  \ldots  \cup P_k)= \left\vert M \right\vert + \left\vert P_1 \right\vert + \ldots  + \left\vert P_k \right\vert
-		- 2k_1 - 2k_2 - \ldots  - 2k_k = \left\vert M \right\vert + k.
+		M \oplus (P_1 \cup P_2 \cup  \dots  \cup P_k)= \left\vert M \right\vert + \left\vert P_1 \right\vert + \dots  + \left\vert P_k \right\vert
+		- 2k_1 - 2k_2 - \dots  - 2k_k = \left\vert M \right\vert + k.
 	\]
 
-	To see that we in fact get a matching, suppose that there was some vertex \(v\) which had at least \(2\) incident edges \(e\) and \(e^\prime \). They cannot both come from \(M\) since \(M\) is a matching. They cannot both come from \(P\) since \(P\) is \hyperref[def:simple-path]{simple} and every other edge of \(P\) is removed. Thus, \(e\in M\) and \(e^\prime \in P\setminus M\). However, if \(e\in M\), then \(e\in P\), so \(e \notin M\oplus P\), a contradiction. A similar argument gives the case of \(M\oplus (P_1 \cup \ldots \cup P_k )\).
+	To see that we in fact get a matching, suppose that there was some vertex \(v\) which had at least \(2\) incident edges \(e\) and \(e^\prime \). They cannot both come from \(M\) since \(M\) is a matching. They cannot both come from \(P\) since \(P\) is \hyperref[def:simple-path]{simple} and every other edge of \(P\) is removed. Thus, \(e\in M\) and \(e^\prime \in P\setminus M\). However, if \(e\in M\), then \(e\in P\), so \(e \notin M\oplus P\), a contradiction. A similar argument gives the case of \(M\oplus (P_1 \cup \dots \cup P_k )\).
 \end{proof}
 
 We see that \autoref{lma:lec25-1} ensures that \(M\) is always a matching, also, \(M\) will increase \(k\) at each iteration. We now analyze why whenever there are no \hyperref[def:augmenting-path]{augmenting paths}, i.e., \(\mathcal{P} = \varnothing \), \(M\) is optimal.\footnote{Note that optimal doesn't mean \hyperref[def:perfect-matching]{perfect}, just maximum.}
@@ -133,28 +133,28 @@ In this section, we're going to prove that the time complexity of \hyperref[algo
 	If edge \((u, v)\) is followed by edge \((z, w)\) in a \hyperref[def:simple-path]{simple path} or cycle, then we must have \(v=z\). Since two edges with the same endpoint cannot appear in a matching, they must belong alternately to \(M\) and \(M^{\ast} \). Since edges alternate, every cycle has the same number of edges in each matching and every \hyperref[def:path]{path} has at most one more edge in one matching than in the other. Thus, if \(\left\vert M \right\vert \leq \left\vert M^{\ast}  \right\vert \), there must be at least \(\left\vert M^{\ast} \right\vert - \left\vert M \right\vert \) \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} w.r.t.\ \(M\).
 \end{proof}
 
-Now, let \(\ell \) be the length of a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ a matching \(M\), and let \(P_1, P_2, \ldots  , P_k\) be a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} of length \(\ell \) w.r.t.\ \(M\). Let \(M^\prime \coloneqq M\oplus (P_1 \cup \ldots P_k )\), and suppose that \(P\) is a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M^\prime \).
+Now, let \(\ell \) be the length of a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ a matching \(M\), and let \(P_1, P_2, \dots  , P_k\) be a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:augmenting-path]{augmenting paths} of length \(\ell \) w.r.t.\ \(M\). Let \(M^\prime \coloneqq M\oplus (P_1 \cup \dots P_k )\), and suppose that \(P\) is a shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M^\prime \).
 
 With the above notation, we see that following.
 
 \begin{lemma}\label{lma:lec25-3}
-	If \(P\) is a \hyperref[def:vertex-independent]{vertex-disjoint path} disjoint from \(P_1, P_2, \ldots , P_k \), then \(P\) has more than \(\ell \) edges.
+	If \(P\) is a \hyperref[def:vertex-independent]{vertex-disjoint path} disjoint from \(P_1, P_2, \dots , P_k \), then \(P\) has more than \(\ell \) edges.
 \end{lemma}
 \begin{proof}
-	Every vertex matched by \(M\) must be incident with some edge in \(M^\prime \). Since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t.\ \(M^\prime \), the left endpoint of the first edge of \(P\) isn't incident to a vertex touched by an edge in \(M^\prime \). In particular, \(P\) starts at a vertex in \(L\) which is unmatched by \(M\) since every vertex of \(M\) is incident with an edge in \(M^\prime \). Since \(P\) is \hyperref[def:vertex-independent]{vertex-disjoint} from \(P_1, \ldots  , P_k\), any edge of \(P\) which is in \(M^\prime \) must in fact be in \(M\) and any edge of \(P\) which is not in \(M^\prime \) cannot be in \(M\). Since \(P\) has edges alternately in \(M^\prime \) and \(E \setminus M^\prime \), \(P\) must in fact have edges alternately in \(M\) and \(E \setminus M\). Finally, the last edge of \(P\) must be incident to a vertex in \(R\) which is unmatched by \(M^\prime \). Any vertex unmatched by \(M^\prime \) is also unmatched by \(M\), so \(P\) is an \hyperref[def:augmenting-path]{augmenting path} for \(M\). \(P\) must have length at least \(\ell \) since \(\ell \) is the length of the shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M\). If \(P\) had length exactly \(\ell \), then this would contradict the fact that \(P_1 \cup P_2 \cup \ldots  \cup P_k\) is a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:path]{paths} of length \(\ell \) because we would add \(P\) to the set. Thus, \(P\) has more than \(\ell \) edges.
+	Every vertex matched by \(M\) must be incident with some edge in \(M^\prime \). Since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t.\ \(M^\prime \), the left endpoint of the first edge of \(P\) isn't incident to a vertex touched by an edge in \(M^\prime \). In particular, \(P\) starts at a vertex in \(L\) which is unmatched by \(M\) since every vertex of \(M\) is incident with an edge in \(M^\prime \). Since \(P\) is \hyperref[def:vertex-independent]{vertex-disjoint} from \(P_1, \dots  , P_k\), any edge of \(P\) which is in \(M^\prime \) must in fact be in \(M\) and any edge of \(P\) which is not in \(M^\prime \) cannot be in \(M\). Since \(P\) has edges alternately in \(M^\prime \) and \(E \setminus M^\prime \), \(P\) must in fact have edges alternately in \(M\) and \(E \setminus M\). Finally, the last edge of \(P\) must be incident to a vertex in \(R\) which is unmatched by \(M^\prime \). Any vertex unmatched by \(M^\prime \) is also unmatched by \(M\), so \(P\) is an \hyperref[def:augmenting-path]{augmenting path} for \(M\). \(P\) must have length at least \(\ell \) since \(\ell \) is the length of the shortest \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M\). If \(P\) had length exactly \(\ell \), then this would contradict the fact that \(P_1 \cup P_2 \cup \dots  \cup P_k\) is a maximal set of \hyperref[def:vertex-independent]{vertex-disjoint} \hyperref[def:path]{paths} of length \(\ell \) because we would add \(P\) to the set. Thus, \(P\) has more than \(\ell \) edges.
 \end{proof}
 
 \begin{lemma}\label{lma:lec25-4}
-	Suppose \(P\) is not \hyperref[def:vertex-independent]{vertex-disjoint} from \(P_1, P_2, \ldots , P_k \). Let \(A\) be the set of edges \((M\oplus M^\prime )\oplus P\). Then \(A = (P_1\cup P_2 \cup \ldots \cup P_k )\oplus P\) and
+	Suppose \(P\) is not \hyperref[def:vertex-independent]{vertex-disjoint} from \(P_1, P_2, \dots , P_k \). Let \(A\) be the set of edges \((M\oplus M^\prime )\oplus P\). Then \(A = (P_1\cup P_2 \cup \dots \cup P_k )\oplus P\) and
 	\[
 		\left\vert A \right\vert \geq (k+1)\ell,
 	\]
 	hence \(P\) has more than \(\ell \) edges.
 \end{lemma}
 \begin{proof}
-	Any edge in \(M\oplus M^\prime \) is in exactly one of \(M\) or \(M^\prime \). Thus, the only possible contributing edges from \(M^\prime \) are from \(P_1 \cup \ldots  \cup P_k\). An edge from \(M\) contribute if and only if it is not in exactly one of \(M\) and \(P_1 \cup \ldots  \cup P_k\), which means it must be in both. Thus, the edges from \(M\) are redundant so \(M\oplus M^\prime = (P_1 \cup \ldots \cup P_k )\) which implies
+	Any edge in \(M\oplus M^\prime \) is in exactly one of \(M\) or \(M^\prime \). Thus, the only possible contributing edges from \(M^\prime \) are from \(P_1 \cup \dots  \cup P_k\). An edge from \(M\) contribute if and only if it is not in exactly one of \(M\) and \(P_1 \cup \dots  \cup P_k\), which means it must be in both. Thus, the edges from \(M\) are redundant so \(M\oplus M^\prime = (P_1 \cup \dots \cup P_k )\) which implies
 	\[
-		A = (P_1 \cup \ldots  \cup P_k)\oplus P.
+		A = (P_1 \cup \dots  \cup P_k)\oplus P.
 	\]
 
 	Now we'll show that \(P\) is \hyperref[def:edge-independent]{edge disjoint} from each \(P_i\). Suppose that an edge \(e\) of \(P\) is also an edge of \(P_i\) for some \(i\). Since \(P\) is an \hyperref[def:augmenting-path]{augmenting path} w.r.t.\ \(M^\prime \), either \(e\in M^\prime \) or \(e\in \mathcal{E} \setminus M^\prime \).
@@ -163,7 +163,7 @@ With the above notation, we see that following.
 		\item \(e\in \mathcal{E} \setminus M^\prime \): Then \(e\in \mathcal{E} \setminus M\) since \(P\) is \hyperref[def:augmenting-path]{augmenting} w.r.t.\ \(M\). Since \(e\) is an edge of \(P_i\), \(e\in \mathcal{E} \setminus M^\prime \) implies \(e\in M\), a contradiction.
 	\end{itemize}
 
-	Since \(P\) has edges alternately in \(M^\prime \) and \(\mathcal{E} \setminus M^\prime \) and is \hyperref[def:edge-independent]{edge disjoint} from \(P_1 \cup \ldots  \cup P_k\), \(P\) is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\), which implies \(\left\vert P \right\vert \geq \ell \). Since every edge in \(A\) is disjoint, we conclude that
+	Since \(P\) has edges alternately in \(M^\prime \) and \(\mathcal{E} \setminus M^\prime \) and is \hyperref[def:edge-independent]{edge disjoint} from \(P_1 \cup \dots  \cup P_k\), \(P\) is also an \hyperref[def:augmenting-path]{augmenting path} for \(M\), which implies \(\left\vert P \right\vert \geq \ell \). Since every edge in \(A\) is disjoint, we conclude that
 	\[
 		\left\vert A \right\vert \geq (k + 1) \ell .
 	\]
@@ -221,13 +221,13 @@ Given \hyperref[def:valuation-matrix]{valuation matrix} \(V\) and price vector \
 	Yes, and we can find it in polynomial time. (\href{https://en.wikipedia.org/wiki/Hungarian_algorithm}{Hungarian algorithm} do it in \(O(n^{3})\), which is strongly polynomial time)
 \end{answer}
 
-Without loss of generality, as assume that \(V_{1}>V_{2}>V_{3}\geq \ldots \geq V_{N}\). Then we easily see that if
+Without loss of generality, as assume that \(V_{1}>V_{2}>V_{3}\geq \dots \geq V_{N}\). Then we easily see that if
 \begin{itemize}
-	\item \(p = (V_{1}, 0, \ldots , 0 )\), then a \hyperref[def:perfect-matching]{perfect matching} exists.
+	\item \(p = (V_{1}, 0, \dots , 0 )\), then a \hyperref[def:perfect-matching]{perfect matching} exists.
 	      \begin{note}
 		      This is essentially a \hyperref[eg:first-price-auction]{first price auction}.
 	      \end{note}
-	\item \(p = (V_{2}, 0, \ldots , 0 )\), then a \hyperref[def:perfect-matching]{perfect matching} exists as well.
+	\item \(p = (V_{2}, 0, \dots , 0 )\), then a \hyperref[def:perfect-matching]{perfect matching} exists as well.
 	      \begin{note}
 		      This is essentially a \hyperref[eg:second-price-auction]{second price auction}.
 	      \end{note}
@@ -309,7 +309,7 @@ Given an \hyperref[eg:English-auction]{English auction} for multiple goods, with
 	\KwResult{A \hyperref[def:perfect-matching]{perfect matching} \(M\), Final price \(p\)}
 	\BlankLine
 
-	\For(\Comment*[f]{Initialize}){\(j = 1, \ldots  , N\)}{
+	\For(\Comment*[f]{Initialize}){\(j = 1, \dots  , N\)}{
 		\(p_j\gets 0\)\;
 	}
 	\;
@@ -321,7 +321,7 @@ Given an \hyperref[eg:English-auction]{English auction} for multiple goods, with
 		}\Else(){
 			\(N\gets\) \FC{\(\mathcal{G} \), \(M\)}\Comment*[r]{Find \(B^\prime \subseteq B\) s.t. \(\left\vert N(B^\prime) \right\vert < \left\vert B^\prime \right\vert\)}
 			\(S\gets\)\rand{\(N\)} \Comment*[r]{Pick any \(S\subseteq N(B)\) s.t. \(S \neq \varnothing \)}
-			\For(){\(i=1, \ldots  , N\)}{
+			\For(){\(i=1, \dots  , N\)}{
 				\(p_i\gets p_i + 1\)\;
 			}
 		}
@@ -343,9 +343,9 @@ If one carefully enough for choosing \(S\), he will always terminate in the mini
 \end{note}
 
 \section{Vickrey-Clarke-Groves Principle}
-Consider a \hyperref[eg:second-price-auction]{second price auction}. There is only \(1\) item to be sold with \(N\) buyers with valuation \(V_{1}, V_{2}, \ldots , V_{N}\). We further let
+Consider a \hyperref[eg:second-price-auction]{second price auction}. There is only \(1\) item to be sold with \(N\) buyers with valuation \(V_{1}, V_{2}, \dots , V_{N}\). We further let
 \[
-	V_{1}>V_{2}>V_{3}\geq \ldots V_{N}.
+	V_{1}>V_{2}>V_{3}\geq \dots V_{N}.
 \]
 
 In this case, we see that \hyperref[def:player]{agent} \(1\) gets the good with price \(V_{2}\). We denote the \hyperref[def:reward]{utility} as \(\Delta\coloneqq V_{1}-V_{2}>0\).

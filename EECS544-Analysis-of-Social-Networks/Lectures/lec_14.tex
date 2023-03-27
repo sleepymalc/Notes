@@ -84,7 +84,7 @@ Algorithmically, we have the following.
 	\SetKwFunction{RW}{RandomWalk}
 	\BlankLine
 
-	\For(){\(i = 1, \ldots, T\)}{
+	\For(){\(i = 1, \dots, T\)}{
 		\RW{\(v\)}\Comment*[r]{Perform a random walk starting at \(v\)}
 	}
 	\Return{}\;
@@ -134,7 +134,7 @@ We now introduce the first simulation-based algorithm to estimate page rank. The
 	\(v\gets \)\random{\(\mathcal{V}\)}\Comment*[r]{select a uniformly random node to start}
 	\(\arrival(v)\gets 1\)\;
 	\;
-	\For(){\(i = 1, \ldots, T\)}{
+	\For(){\(i = 1, \dots, T\)}{
 	\(\result\gets\)\toss{\(s\)}\Comment*[r]{Toss a biased coin with \(\Pr(\{\mathrm{H} \}) = s\), \(\Pr(\{\mathrm{T} \}) = 1 - s\)}
 	\uIf(\Comment*[f]{If heads}){\(\result = \mathrm{H}\)}{
 	\lIf(\Comment*[f]{Go to \(v\)'s neighbor randomly}){\(d_i^{\text{out}}\neq 0\)}{\(v\gets\) \random{\(N_i^{\text{out}}\)}}
@@ -152,15 +152,15 @@ We now introduce the first simulation-based algorithm to estimate page rank. The
 We can describe \hyperref[algo:random-walk-algorithm]{random walk} as a \hyperref[def:Markov-chain]{Markov chain}. Consider \(\left\{ X_n \right\}_{n\geq 0}\) where \(X_n\) is the location of the \hyperref[def:random-walker]{random walker} at time \(n\). We see that
 \[
 	\begin{split}
-		X_0 &\sim \mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{V} \right\vert\})\\
+		X_0 &\sim \mathrm{uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert\})\\
 		X_1 &=\begin{dcases}
-			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{V} \right\vert \}), & \text{ with probability }1 - s; \\
-			\mathrm{NextHop}(x_0),                                                    & \text{ with probability }s,     \\
+			\mathrm{uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert \}), & \text{ with probability }1 - s; \\
+			\mathrm{NextHop}(x_0),                                                   & \text{ with probability }s,     \\
 		\end{dcases}\\
 		&\vdots\\
 		X_t &=\begin{dcases}
-			\mathrm{uniform}(\{1, 2, \ldots , \left\vert \mathcal{V} \right\vert\}), & \text{ with probability }1 - s; \\
-			\mathrm{NextHop}(x_{t-1}),                                               & \text{ with probability }s      \\
+			\mathrm{uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert\}), & \text{ with probability }1 - s; \\
+			\mathrm{NextHop}(x_{t-1}),                                              & \text{ with probability }s      \\
 		\end{dcases}
 	\end{split}
 \]
@@ -246,7 +246,7 @@ Hence,
 \]
 where \(N^0\coloneqq I\).
 \begin{prev}
-	We have \((I - A)^{-1} = I + A + A^2 + \ldots\).
+	We have \((I - A)^{-1} = I + A + A^2 + \dots\).
 \end{prev}
 
 We now analysis the expression
@@ -258,7 +258,7 @@ Firstly, the term \(s^i(1-s) \coloneqq \tau\) is the so-called geometric \hyperr
 	We can think of \(\tau\) as the probability of tossing a series of \hyperref[def:independent]{independent} biased coins until first tail occurs, since we have
 	\[
 		\Pr(\tau = 0) = 1 - s,\quad
-		\Pr(\tau = 1) = s(1 - s), \ldots,
+		\Pr(\tau = 1) = s(1 - s), \dots,
 		\Pr(\tau = i) = s^i(1 - s).
 	\]
 \end{intuition}
@@ -294,7 +294,7 @@ Now, the suggested algorithm becomes follows.
 		\(\arrival(v)\gets 0\)\;
 	}
 	\;
-	\For(){\(i = 1, \ldots, K\)}{
+	\For(){\(i = 1, \dots, K\)}{
 		\(\tau \gets \) \geo{\(s\)}\Comment*[r]{Toss a \hyperref[int:geometric-random-variable]{geometric random variable}}
 		\(v\gets \)\random{\(\mathcal{V}\)}\Comment*[r]{select a uniformly random node}
 		\(\_, v\gets\)\RW{\(v\), \(\tau \), \(s\)}\Comment*[r]{\hyperref[algo:random-walk-algorithm]{Random walk} starting at \(v\) with \(\tau \) steps}
@@ -306,7 +306,7 @@ Now, the suggested algorithm becomes follows.
 	The result of \hyperref[algo:Monte-Carlo-algorithm-2]{the above algorithm} records the time the \hyperref[def:random-walker]{random walker} \textbf{ends up} at \(v\) for all \(v\in \mathcal{V} \) in every \hyperref[algo:random-walk-algorithm]{random walk}.
 \end{note}
 
-Denote those \(K\) \hyperref[def:random-variable]{random variables} \(\tau\) as \(\tau_1, \tau_2, \ldots , \tau_K\) and the associated \(X_{\tau}\) as \(X_{\tau_1}, X_{\tau_2}, \ldots , X_{\tau_K}\). We see that
+Denote those \(K\) \hyperref[def:random-variable]{random variables} \(\tau\) as \(\tau_1, \tau_2, \dots , \tau_K\) and the associated \(X_{\tau}\) as \(X_{\tau_1}, X_{\tau_2}, \dots , X_{\tau_K}\). We see that
 \[
 	\hat{\pi}_v^K(s) = \frac{1}{K}\sum\limits_{k=1}^{K} \mathbbm{1}_{\{X_{\tau_k} = v\}}.
 \]
@@ -331,7 +331,7 @@ Also, the variance can be derived as
 \end{figure}
 
 \begin{note}
-	We note that the empirical mean is unbiased while the empirical variance is biased. Let \(X_1, X_2, \ldots  ,X_N\) are \hyperref[def:i.i.d.]{i.i.d.} with mean \(\mu\) and variance \(\sigma^2\).
+	We note that the empirical mean is unbiased while the empirical variance is biased. Let \(X_1, X_2, \dots  ,X_N\) are \hyperref[def:i.i.d.]{i.i.d.} with mean \(\mu\) and variance \(\sigma^2\).
 	\begin{itemize}
 		\item\(\hat{\mu}_N\) is the empirical mean which is defined as
 		\[
@@ -391,7 +391,7 @@ Then, we proposed the following algorithm.
 	}
 	\;
 	\For(){\(i\in \mathcal{V}\)}{
-		\For(){\(j\in 1, \ldots, M\)}{
+		\For(){\(j\in 1, \dots, M\)}{
 			\(\tau^i \gets \) \geo{\(s\)}\Comment*[r]{Toss a \hyperref[int:geometric-random-variable]{geometric random variable}}
 			\(\_, v \gets\)\RW{\(i\), \(\tau ^i\) }\Comment*[r]{\hyperref[algo:random-walk-algorithm]{random walk} starting at \(i\) with steps \(\tau ^i\)}
 			\(\arrival(v)\gets \arrival(v) + 1\)\Comment*[r]{Record where the \hyperref[def:random-walker]{random walker} ends up at}
@@ -409,7 +409,7 @@ If we only take one walk, namely \(M = 1\), then
 	\pi_v(s) = \frac{1}{\left\vert \mathcal{V}  \right\vert }\sum\limits_{i\in\mathcal{V}}\sigma_{iv}(s).
 \]
 
-Now, for every node \(i\) in the network, we run \(M\) times with \(\tau^i_1, \tau^i_2, \ldots , \tau^i_M\) and \(X_{\tau_1}^i, X_{\tau_2}^i, \ldots , X_{\tau_M}^i\) and count the number of arrivals in node \(v\) and find the average. Explicitly, we have
+Now, for every node \(i\) in the network, we run \(M\) times with \(\tau^i_1, \tau^i_2, \dots , \tau^i_M\) and \(X_{\tau_1}^i, X_{\tau_2}^i, \dots , X_{\tau_M}^i\) and count the number of arrivals in node \(v\) and find the average. Explicitly, we have
 \[
 	\hat{\pi}_v(s)
 	= \frac{1}{\left\vert \mathcal{V} \right\vert}\sum\limits_{i=1}^{\left\vert \mathcal{V}\right\vert} \frac{1}{M}\sum\limits_{m=1}^{M} \mathbbm{1}_{\left\{X^i_{\tau^i_m} = v\right\}}

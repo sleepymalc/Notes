@@ -16,17 +16,17 @@ Let first see some common pitfalls of integer programming.
 	      \[
 		      \begin{alignedat}{3}
 			      & \underset{1 < i < j < n}{\forall}\      &  & x_{i}+x_{j} &  & \leq 1                  \\
-			      & \underset{i = 1, \ldots , n}{\forall}\  &  & x_{i}       &  & \geq 0 \text{ integer}.
+			      & \underset{i = 1, \dots , n}{\forall}\  &  & x_{i}       &  & \geq 0 \text{ integer}.
 		      \end{alignedat}
 	      \]
 
 	      Then, there are two \hyperref[def:feasible-solution]{feasible solutions} one can observe immediately, namely
 	      \[
-		      x_1 = x_2 = \ldots = x_{n} = \frac{1}{2};
+		      x_1 = x_2 = \dots = x_{n} = \frac{1}{2};
 	      \]
 	      and
 	      \[
-		      x_1 = 1, x_2 = \ldots = x_{n} = 0.
+		      x_1 = 1, x_2 = \dots = x_{n} = 0.
 	      \]
 	      It's then really hard to tell which is better. But again, if the right-hand side is \(2\) for the first constraint, then the problem is gone.
 \end{itemize}
@@ -82,34 +82,34 @@ We further see that if we make the constant \(M_{i}\) too large, we will have
 In terms of integer programming, this doesn't affect the integer feasible region. We call this \textbf{Big-M Method}. Although this is fine mathematically, but this is unfriendly to the solver.
 
 \subsection{Uncapacitated Facility-location Problem}
-Assume that there are \(m\) facilities with the fixed costs \(f_{i}\), \(i = 1, \ldots , m\). And assume there are \(n\) customers, denote by \(j = 1, \ldots , n\). Now, let \(c_{ij}\) be the cost of satisfying all demand of customer \(j\) from facility \(i\). The goal is to minimize the total cost of satisfying all customer's demand. We then define our variables as \(x_{ij}\) such that
+Assume that there are \(m\) facilities with the fixed costs \(f_{i}\), \(i = 1, \dots , m\). And assume there are \(n\) customers, denote by \(j = 1, \dots , n\). Now, let \(c_{ij}\) be the cost of satisfying all demand of customer \(j\) from facility \(i\). The goal is to minimize the total cost of satisfying all customer's demand. We then define our variables as \(x_{ij}\) such that
 \[
 	x_{ij} \coloneqq  \text{proportion of customer \(j\) demand satisfied facility \(i\)},
 \]
-where \(i = 1, \ldots , m\), \(j = 1, \ldots , n\). Furthermore, we need indicator variables \(y_{i}\) such that
+where \(i = 1, \dots , m\), \(j = 1, \dots , n\). Furthermore, we need indicator variables \(y_{i}\) such that
 \[
 	y_{i}\coloneqq \begin{dcases}
 		1, & \text{ if facility \(i\) operates} \\
 		0, & \text{ if not}
 	\end{dcases}
 \]
-for all \(i = 1, \ldots , m\).
+for all \(i = 1, \dots , m\).
 
 The optimization problem can now be modeled as
 \[
 	\begin{aligned}
-		\min~ & \sum\limits_{i=1}^{m} f_{i}y_{i} + \sum\limits_{i=1}^{m}\sum\limits_{j=1}^{n} c_{ij}x_{ij}                                                         \\
-		      & \sum\limits_{i=1}^{m} x_{ij} = 1,                                                          &  & \text{ for }j = 1, \ldots , n                      \\
-		      & -y_{i} + x_{ij}\leq 0,                                                                     &  & \text{ for }i = 1, \ldots , m,\ j = 1, \ldots , n  \\
-		      & 0\leq y_{i}\leq 1 \text{ integers},                                                        &  & \text{ for }i = 1, \ldots , m                      \\
-		      & x_{ij}\geq 0,                                                                              &  & \text{ for }i = 1, \ldots , m,\ j = 1, \ldots , n.
+		\min~ & \sum\limits_{i=1}^{m} f_{i}y_{i} + \sum\limits_{i=1}^{m}\sum\limits_{j=1}^{n} c_{ij}x_{ij}                                                       \\
+		      & \sum\limits_{i=1}^{m} x_{ij} = 1,                                                          &  & \text{ for }j = 1, \dots , n                     \\
+		      & -y_{i} + x_{ij}\leq 0,                                                                     &  & \text{ for }i = 1, \dots , m,\ j = 1, \dots , n  \\
+		      & 0\leq y_{i}\leq 1 \text{ integers},                                                        &  & \text{ for }i = 1, \dots , m                     \\
+		      & x_{ij}\geq 0,                                                                              &  & \text{ for }i = 1, \dots , m,\ j = 1, \dots , n.
 	\end{aligned}
 \]
 
 \begin{note}
 	The third constraint
 	\[
-		-y_{i} + x_{ij}\leq 0,\qquad \text{ for }i = 1, \ldots , m,\ j = 1, \ldots , n
+		-y_{i} + x_{ij}\leq 0,\qquad \text{ for }i = 1, \dots , m,\ j = 1, \dots , n
 	\]
 	is for the following reason. For any \(i\), if \(x_{ij}\) is positive for any \(j\), then we need \(y_{i} = 1\) to \emph{force} us to pay the fixed cost to operate the facility if anything is shipped out of facility \(i\). To get this constraint, we first see that we want
 	\[
@@ -123,11 +123,11 @@ The optimization problem can now be modeled as
 	\[
 		\sum\limits_{j=1}^{n} x_{ij}\leq y_{i}
 	\]
-	for every \(i = 1, \ldots , m\). But this causes some problem. If the facility is really cheap, then the sum may exceed \(1\). To solve this problem, we simply make \(y\) become \(n\cdot y\), namely
+	for every \(i = 1, \dots , m\). But this causes some problem. If the facility is really cheap, then the sum may exceed \(1\). To solve this problem, we simply make \(y\) become \(n\cdot y\), namely
 	\[
 		\sum\limits_{j=1}^{n} x_{ij}\leq n\cdot y_{i}
 	\]
-	for \(i = 1, \ldots, m\), where \(n\) is just the \textbf{Big-M} in the big-M Method.
+	for \(i = 1, \dots, m\), where \(n\) is just the \textbf{Big-M} in the big-M Method.
 \end{note}
 
 We now have two equivalent constraints, namely

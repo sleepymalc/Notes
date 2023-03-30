@@ -1,0 +1,204 @@
+\lecture{23}{30 Mar. 14:30}{Morse Theory and Flow Homology}
+Throughout this lecture, let \(\mathcal{M} \) be a compact \hyperref[def:Riemannian-manifold]{Riemannian manifold}, also, we'll keep mentioning the following example.
+
+\begin{eg}
+	Consider the following.
+	\begin{center}
+		\incfig{Morse-function-circles}
+	\end{center}
+	Then,
+	\begin{itemize}
+		\item \(f\): \(\mu _f(p_1) = 2\), \(\mu _f(p_2) = 0\).
+		\item \(g\): \(\mu _g(p_1) = \mu _g(p_2) = 2\), \(\mu _g(p_3) = 1\), and \(\mu _g(p_4)= 0\).
+	\end{itemize}
+\end{eg}
+
+Additionally, we can study some ``invariants'' about spaces, such as the Euler characteristic\footnote{We will make it formal.} of \(\mathcal{M} \), which is ``defined'' as
+\[
+	\chi (\mathcal{M} ) = \sum_{p \colon \text{critical point of } f} (-1)^{\mu (p)} \mu (p).
+\]
+
+\begin{eg}
+	\(\chi (A) = \chi (S^2) = 2\), and \(\chi (B) = 4 - 1 = 3\).
+\end{eg}
+
+To make \(\chi \) formal, we need to consider the homology as we did in algebraic topology, i.e., we need to define the ``boundary map'' and ``complexes''.
+
+\begin{intuition}
+	Intuitively, our complexes should be a vector space built on top of critical points; on the other hand, for two critical points \(p, q\) such that \(\mu (p) - \mu (q) = 1\), we want to count the trajectories from \(p\) to \(q\) modulo \(2\), i.e., the boundary map \(\partial \) should be somehow defined as
+	\[
+		\partial p \coloneqq \sum_{\substack{\text{\(p\) critical point of \(f\)}\\ \mu (q) = \mu (p) - 1}} (\# \{\text{flow lines from \(p\) to \(q\)}\} \bmod 2) \cdot q.
+	\]
+\end{intuition}
+
+\subsection{Morse Complex}
+We study so-called \hyperref[def:Morse-complex]{Morse complex}, and define the so-called \emph{flow homology}. We start by defining the so-called \hyperref[def:negative-gradient-flow]{negative gradient flow}.
+
+\begin{definition}[Negative gradient flow]\label{def:negative-gradient-flow}
+	The \emph{negative gradient flow} of \(f\) on \(\mathcal{M} \) is defined as the solution \(\phi \colon \mathcal{M} \times \mathbb{R} \to \mathcal{M}\) of
+	\[
+		\begin{dcases}
+			\frac{\partial }{\partial t} \phi (x, t) = -\mathop{\mathrm{grad}}(f(\phi (x, t))) ; \\
+			\phi (x, 0)                              = x & \text{ for }x\in \mathcal{M} .
+		\end{dcases}
+	\]
+\end{definition}
+
+\begin{note}
+	We will simply call \hyperref[def:negative-gradient-flow]{negative gradient flow} a \emph{flow} for simplicity.
+\end{note}
+
+\begin{remark}
+	From the \href{https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem}{Picard-Lindelöf theorem}, local existence of the \hyperref[def:negative-gradient-flow]{flow} is guaranteed. Moreover, if we have ``very good'' conditions, such a \hyperref[def:negative-gradient-flow]{flow} may even exist globally.	
+\end{remark}
+
+More generally, the Euler characteristic is an example of a \hyperref[def:negative-gradient-flow]{flow} \(\phi \colon \mathcal{M} \times \mathbb{R} \to \mathcal{M} \) such that
+\[
+	\begin{dcases}
+		\frac{\partial }{\partial t} \phi (x, t) & = -V(f(\phi (x, t))) ; \\
+		\phi (x, 0)                              & = x
+	\end{dcases}
+\]
+with some \hyperref[def:vector-field]{vector field} \(V\) on \(\mathcal{M} \).
+
+\begin{note}[Autonomous]
+	We have \(V(\phi (x, t))\), not \(V(\phi (x, t), t)\), i.e., it doesn't explicitly depend on \(t\).
+\end{note}
+
+\begin{remark}
+	The \hyperref[def:negative-gradient-flow]{flow} satisfies group property, i.e., \(\phi (x, t_1 + t_2) = \phi (\phi (x, t_1), t_2)\) for all \(t_1, t_2\in \mathbb{R} \).
+	\begin{itemize}
+		\item Moreover, for all \(x\in \mathcal{M} \), the \hyperref[def:negative-gradient-flow]{flow line} or orbit \(\gamma _x \coloneqq \left\{ \phi (x, t) \mid t\in \mathbb{R}  \right\}\) through point \(x\) is flow-invariant, i.e., for all \(y\in \gamma _x\), \(t\in \mathbb{R} \), we have \(\phi (y, t)\in \gamma _x\).
+		\item Finally, for all \(t\in \mathbb{R} \), \(\phi (\cdot, t) \colon \mathcal{M} \to \mathcal{M} \) is a \hyperref[def:diffeomorphism]{diffeomorphism} of \(\mathcal{M} \) onto its image.
+	\end{itemize}
+\end{remark}
+
+Naturally, we can consider the following two kinds of points of \(\mathcal{M} \).
+
+\begin{definition}[Stable manifold]\label{def:stable-manifold}
+	The \emph{stable manifold} at \(x_0\) of the \hyperref[def:negative-gradient-flow]{flow} \(\phi \) are defined as
+	\[
+		W^s (x_0) \coloneqq \left\{ y\in \mathcal{M} \mid \lim_{t \to \infty} \phi (y, t) = x_0 \right\}.
+	\]
+\end{definition}
+
+\begin{definition}[Unstable manifold]\label{def:unstable-manifold}
+	The \emph{unstable manifold} at \(x_0\) of the \hyperref[def:negative-gradient-flow]{flow} \(\phi \) are defined as
+	\[
+		W^u (x_0) \coloneqq \left\{ y\in \mathcal{M} \mid \lim_{t \to -\infty} \phi (y, t) = x_0 \right\}.
+	\]
+\end{definition}
+
+That is to say, we should focus on the dimension of \(W^u(p)\).
+
+\begin{intuition}
+	For \(t \to \pm \infty \), each flow line \(x(t)\) defined as \(x\colon \mathbb{R} \to \mathcal{M} \) with \(\dot{x} (t) = -\mathop{\mathrm{grad}} f(x(t))\) for all \(t\in \mathbb{R} \) converges to critical point, i.e.,
+	\[
+		p = x(-\infty ), \quad
+		p = x(+\infty )
+		\implies W^u(p) \text{ the all flow lines } x(t) \text{ with } x(-\infty ) = p.
+	\]
+\end{intuition}
+
+\begin{prev}
+	For a \hyperref[def:Morse-function]{Morse function} \(f\), the set of critical points \(C(f) \coloneqq \left\{ x\in \mathcal{M} \mid \mathrm{d} f (x) = 0 \right\} \)
+\end{prev}
+
+\begin{notation}
+	Denote the set of critical points of \(f\) of \hyperref[def:Morse-index]{index} \(k\) as \(\mathop{\mathrm{Crit}}\nolimits_{k}(f)\).
+\end{notation}
+
+\begin{definition}[Morse complex]\label{def:Morse-complex}
+	Define the vector space over \(\quotient{\mathbb{Z}}{2\mathbb{Z}} \) as
+	\[
+		C_k(f, \mathbb{Z} _2) = C_k(f) \coloneqq \left\{ \sum_{a \in \mathop{\mathrm{Crit}}\nolimits_{k}(f) } m_a a  \mid m_a \in \quotient{\mathbb{Z} }{2\mathbb{Z} } \right\}.
+	\]
+	\begin{definition}[Boundary operator]\label{def:boundary-operator}
+		The \emph{boundary operator} \(\partial _k \colon C_k(f) \to C_{k-1}(f)\) by specifying its behavior on the basis elements. Given a critical point \(a\in C_k(f)\), \(\partial _k\) sends \(a\) to a linear combination of points in \(\mathop{\mathrm{Crit}}\nolimits_{k-1}(f) \) defined as
+		\[
+			\partial _k(a) = \sum_{b\in \mathop{\mathrm{Crit}}\nolimits_{k-1}(f) } m(a, b) b
+		\]
+		with \(m(a, b) \in \quotient{\mathbb{Z} }{2\mathbb{Z} } \) being the number \(\bmod 2\) of trajectories from \(a\) to \(b\).\footnote{We can check that \(\partial \circ \partial = 0\).}
+	\end{definition}
+\end{definition}
+
+\subsection{Flow Homology}
+With all the notions we have established, we have the following naturally.
+
+\begin{definition}[Flow homology group]\label{def:flow-homology-group}
+	The \emph{flow homology group} is defined as
+	\[
+		H_k(\mathcal{M} , f, \mathbb{Z} _2) \coloneqq \quotient{\ker \partial \text{ on } C_k(f)}{\Im \partial  \text{ from } C_{k+1}(f)}.
+	\]
+\end{definition}
+
+\begin{remark}
+	The image of \(\partial \) from \(C_{k+1}(f, \mathbb{Z} _2)\) is always contained in the kernel of \(\partial\) on \(C_k(f, \mathbb{Z} _2)\).
+\end{remark}
+
+\begin{definition}[Betti number]\label{def:Betti-number}
+	The \emph{Betti number} is defined as \(b_k \coloneqq \dim _{\mathbb{Z} _2}H_k(\mathcal{M} , f, \mathbb{Z} _2)\).
+\end{definition}
+
+\begin{definition}[Euler characteristic]\label{def:Euler-characteristic}
+	The \emph{Euler characteristic} of \(\mathcal{M} \) is defined as
+	\[
+		\chi (\mathcal{M} ) = \sum_{i} (-1)^{i} b^i.
+	\]
+\end{definition}
+
+Let's now calculate all these on our examples \(A = S^2\) and \(B\).
+
+\begin{eg}
+	Revisit the example for \(f\), we have
+	\begin{itemize}
+		\item \(C_2(f) = \quotient{\mathbb{Z} }{2 \mathbb{Z} } [p_1]\);
+		\item \(C_0(f) = \quotient{\mathbb{Z} }{2 \mathbb{Z} } [p_2]\);
+		\item \(C_1(f) = 0\).
+	\end{itemize}
+	Also, we see that the chain complexes are
+	\begin{itemize}
+		\item \(C_2 = \mathbb{Z} _2[p_1]\);
+		\item \(C_0 = \mathbb{Z} _2[p_2]\);
+		\item \(C_1 = 0\);
+	\end{itemize}
+	For kernels,
+	\begin{itemize}
+		\item \(\ker \partial _2 = \left\{ p_1 \right\} \);
+		\item \(\ker \partial _0 = \left\{ p_2 \right\} \);
+		\item and since \(\partial _1\) is trivial, so all images are trivial.
+	\end{itemize}
+	Finally, we calculate the homology groups as
+	\begin{itemize}
+		\item \(H_2(A , f, \mathbb{Z} _2) = \mathbb{Z} _2\);
+		\item \(H_1(A , f, \mathbb{Z} _2) = 0\);
+		\item \(H_0(A , f, \mathbb{Z} _2) = \mathbb{Z} _2\).
+	\end{itemize}
+\end{eg}
+
+\begin{eg}
+	Revisit the example for \(g\), we have
+	\begin{itemize}
+		\item \(C_2(g) = \quotient{\mathbb{Z} }{2 \mathbb{Z} } [p_1]\);
+		\item \(C_1(g) = \quotient{\mathbb{Z} }{2 \mathbb{Z} } [p_3]\);
+		\item \(C_0(g) = \quotient{\mathbb{Z} }{2 \mathbb{Z} } [p_4]\);
+		\item \(C_k(g) = 0\) for \(k \geq 3\).
+	\end{itemize}
+	Also, we see that the chain complexes are
+	\begin{itemize}
+		\item \(\partial _2 (p_1) = p_3 = \partial _2(p_2)\), and \(\partial _2(p_1 + p_2) = 2 p_3 = 0\);
+		\item \(\partial _1 (p_3) = 2 p_4 = 0\).
+	\end{itemize}
+	So the kernels are
+	\begin{itemize}
+		\item \(\ker \partial _1 = \im\partial _2 = \mathbb{Z} _2[p_3]\);
+		\item \(\ker \partial _2 = \mathbb{Z} _2 [p_1 + p_2]\);
+		\item \(\ker \partial _0 = \mathbb{Z} _2[p_4]\),
+	\end{itemize}
+	and all other images and kernels are trivial. Finally, we calculate the homology groups as
+	\begin{itemize}
+		\item \(H_2(B , g, \mathbb{Z} _2) = \ker \partial _2 = \mathbb{Z} _2\);
+		\item \(H_1(B , g, \mathbb{Z} _2) = \quotient{\ker \partial _1}{\im \partial _2} = 0\);
+		\item \(H_0(B , g, \mathbb{Z} _2) = \mathbb{Z} _2\).
+	\end{itemize}
+\end{eg}

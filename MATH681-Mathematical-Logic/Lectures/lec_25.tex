@@ -1,0 +1,161 @@
+\lecture{25}{6 Apr. 11:30}{}
+\subsection{Applications in Algebra}
+\begin{problem}
+What else are \hyperref[def:ultraproduct]{ultraproducts} good for?
+\end{problem}
+\begin{answer}
+	The \emph{saturation}, the \hyperref[thm:Keisler-Shelah]{Keisler-Shelah theorem}, and to prove bounds in algebra.
+\end{answer}
+
+\begin{theorem}[Keisler-Shelah theorem]\label{thm:Keisler-Shelah}
+	Two \hyperref[def:structure]{\(\mathcal{L} \)-structures} are \hyperref[def:elementarily-equivalent]{elementarily equivalent} if and only if they have some\footnote{There exists an \hyperref[def:ultrafilter]{ultrafilter} on \(I\) such that \(\prod \quotient{\mathcal{M} }{\mathcal{U} } \cong \prod \quotient{\mathcal{N} }{\mathcal{U} } \).} \hyperref[def:isomorphism]{isomorphic} \hyperref[def:ultrapower]{ultrapowers}.
+\end{theorem}
+\begin{proof}
+	By \hyperref[thm:Los]{\defaultL{}oś's theorem}, \(\mathcal{M} \hookrightarrow \prod \quotient{\mathcal{M} }{\mathcal{U} } \) is an \hyperref[def:elementary-embedding]{elementary embedding}. To prove the other direction, it'll involve choosing index set and \hyperref[def:ultrapower]{ultrapower}, which is beyond our scope.
+\end{proof}
+
+We will focus on proving bounds in algebra. Let's first see one example.
+
+\begin{eg}
+	If \(K\) is a field, \(f_1, \dots , f_n, g\in K[x_1, \dots , x_n]\) have degree \(\leq d\). If \(g \in (f_1, \dots , f_n)\), i.e., \(g = h_1 f_1 + \dots + h_n f_n\), is there some number \(m = m(d, n)\) such that we can choose \(h_1, \dots , h_n\) of degree \(\leq m\)?
+\end{eg}
+
+To set up the problem, we let
+\begin{itemize}
+	\item \(K_1, K_2, \dots \) be fields;
+	\item \(\overline{x} = \left\{ x_1, \dots , x_n \right\} \);
+	\item \(\mathcal{U} \) be a non-\hyperref[eg:principal-filter]{principal} \hyperref[def:ultrafilter]{ultrafilter} on \(\mathbb{N} \);
+	\item \(K = \prod \quotient{K_i}{\mathcal{U} } \) (which is a filed);
+	\item \(K[\overline{x} ] = K[x_1, \dots , x_n]\) the polynomial ring over \(K\);
+	\item \(R = \prod \quotient{K_i[x_1, \dots , x_n]}{\mathcal{U} } \), which is a ring.
+\end{itemize}
+
+\begin{note}
+	Elements of \(K[\overline{x} ]\) look like
+	\[
+		\sum_{\text{monomial } M} [c_M(i)] M
+	\]
+	where \(M\) are monomials \(x_1^{r_1} \cdot \dots \cdot x_n^{r_n}\), and each \(c_M(i)\in K_i\).
+\end{note}
+
+\begin{note}
+	Elements of \(R\) look like
+	\[
+		\left[ \sum_{\text{monomial } M} c_M(i)M \right]
+	\]
+	where each \(\sum_{M} c_M(i)M\in K_i[\overline{x} ]\).
+\end{note}
+
+\begin{eg}
+	\([x_1^i]\in R\).
+\end{eg}
+
+\begin{claim}
+	\(K[\overline{x} ]\) is a subring of \(R\).
+\end{claim}
+\begin{explanation}
+	\(\sum_{M} [c_M(i)]M \in K[\overline{x} ]\) is identified with \([ \sum_{M} c_M(i)M ]\).
+
+	\begin{note}
+		\([x_1^i]\) is not in the image, i.e., not in \(K[\overline{x}]\).
+	\end{note}
+
+	Let \(\mathbb{N} ^{\ast} = \prod \quotient{\mathbb{N} }{\mathcal{U} } \), and define the \emph{total degree} \(\deg_i \colon K_i[\overline{x} ] \to \mathbb{N} \) such that \(\deg_i(x_1^{r_1}\cdot x_2^{r_2}\cdot \dots \cdot x_n^{r_n}) = r_1 + r_2 + \dots + r_n\). This induces
+	\[
+		\deg^{\ast} \colon R \to \mathbb{N} ^{\ast},\quad [f_i] \mapsto [\deg_i(f_i)].
+	\]
+	\begin{eg}
+		\(\deg^{\ast} ([x_1^i]) = [i]\in \mathbb{N} ^{\ast} - \mathbb{N} \).\footnote{Rememberer that \(\mathbb{N} \succeq \mathbb{N} ^{\ast} \).}
+	\end{eg}
+
+	\begin{claim}
+		\(K[\overline{x} ] = \{ f\in R \mid \deg^{\ast} (f) \in \mathbb{N}  \} \).
+	\end{claim}
+	\begin{explanation}
+		We see that \(K[\overline{x} ] \subseteq \{ f\in R \mid \deg^{\ast} (f)\in \mathbb{N}  \} \) since if \(f\in K[\overline{x} ]\), \(\deg^{\ast} (f) = \deg(f)\). To see this, let \(f = \sum_{M} [c_M(i)]M\), if \([c_M(i)] \neq 0\), then there is a set \(A_M\in \mathcal{U} \) such that for \(i\in A_M\), \(c_M(i) \neq 0\). Let \(A = \bigcap_{[c_M(i) \neq 0]} A_M \in \mathcal{U} \), then
+		\[
+			\deg_{i}\left( \sum_{M} c_M(i) M \right) = \deg(f)
+		\]
+		for \(i\in A\).
+
+		To show the other containment, let \(f = [\sum_{M} c_M(i)M]\in R\) have \(\deg^{\ast} (f)\in \mathbb{N} \), say \(d\). So there is \(A\in \mathcal{U} \) such that for \(i\in A\), \(\sum_{M} c_M(i) M\) has \(\deg_i=d\). Then, let \(g\in K[\overline{x} ]\) be
+		\[
+			\sum_{M \colon \deg(M) \leq d} [c_M(i)]M.
+		\]
+		Then, \(g \mapsto f\) under \(K[\overline{x} ] \hookrightarrow R\).
+	\end{explanation}
+
+	\begin{intuition}
+		Consider \(a_1 x \in K_1[x]\), \(a_2 x \in K_2[x]\), \(a_3 x \in K_3[x]\), etc., then we have \([a_i] x\).
+	\end{intuition}
+
+
+\end{explanation}
+
+\begin{theorem}\label{thm:lec25}
+	The following are equivalent.
+	\begin{enumerate}[(a)]
+		\item\label{thm:lec25-a} There is \(m = m(d, n)\) such that for any field \(K\), and polynomials \(f_1, \dots , f_{\ell }, g\in K[x_1, \dots , x_n]\) of \(\deg \leq d\), if \(g\in (f_1, \dots , f_{\ell } )\), then there are \(h_1, \dots , h_{\ell } \in K[x_1, \dots , x_n]\) of \(\deg \leq m\) such that \(g = h_1 f_1 + \dots + h_{\ell } f_{\ell } \).
+		\item\label{thm:lec25-b} For any fields \(K_i\), \(K = \prod \quotient{K_i}{\mathcal{U} } \), \(R = \prod \quotient{K_i[\overline{x} ]}{\mathcal{U} } \),\footnote{I.e., any instance of the setup.} if \(I\) is an \hyperref[def:ideal]{ideal} of \(K[\overline{x} ]\), then \(IR \cap K[\overline{x} ] = I\).\footnote{\(IR = \left\{ a_1 r_1 + \dots + a_{\ell }  r_{\ell }  \mid a_i \in I, r_i \in R \right\} \). If \(I = (f_1, \dots , f_{\ell } )\) in \(K[\overline{x} ]\), then \(IR = \left\{ r_1 f_1 + \dots + r_{\ell }  f_{\ell }  \mid r_i\in R\right\} \), i.e., the \hyperref[def:ideal]{ideal} generated by \(I\) in \(R\).}
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	We show that \autoref{thm:lec25-b} implies \autoref{thm:lec25-a}. Suppose not, fix \(d, n\) such that there is no such \(m\). For each \(m = 1, 2, \dots \), there is a field \(K_m\), polynomials \(f_1^m, \dots , f_{\ell }^m, g^m \in K_m[x_1, \dots , x_n]\) of \(\deg \leq d\)\footnote{\(m\) doesn't depend on \(\ell \), and \(\deg \leq d\) implies that we can always assume the same \(\ell \).} such that \(g^m\in (f_1^m, \dots , f_{\ell }^m )\) but there are no \(h_1^m, \dots , h_{\ell } ^m \) of \(\deg \leq m\) with \(g^m = h_1^m f_1^m + \dots + h_{\ell }^m f_{\ell }^m \). Do the ``setup'' to \(K_m\), let \(K = \prod \quotient{K_m}{\mathcal{U} } \), etc., and let \(f_1 = [f_1^{m} ]\in R, \dots , f_{\ell } = [f_{\ell }^m ]\in R , g = [g^m]\in R\). By the fact that they have \(\deg \leq d\), \(f_1, \dots , f_{\ell , g\in K[\overline{x} ]} \). Now, let \(I = (f_1, \dots , f_{\ell } ) \subseteq K[\overline{x} ]\).
+
+	\begin{claim}
+		\(g \notin I\).
+	\end{claim}
+	\begin{explanation}
+		If \(g\in I\), there are \(h_1 = [h_1^m], \dots , h_{\ell } = [h_{\ell }^m ] \in K[\overline{x} ]\) such that \(g = h_1 f_1 + \dots + h_{\ell } f_{\ell } \). So for most \(m\), \(g^m = h_1^m f_1^m + \dots + h_{\ell }^m f_{\ell }^m \), and \(\deg_m(h_i^m) = \deg^{\ast} (h_i) \in \mathbb{N} \). Let \(m\) larger than all of these degrees such that the above holds. Since \(\mathcal{U} \) is non-\hyperref[eg:principal-filter]{principal}, but we chose \(g^m, f_1^m, \dots , f_{\ell }^m \) so that this didn't happen, a contradiction.
+	\end{explanation}
+
+	\begin{claim}
+		\(g\in IR\).
+	\end{claim}
+	\begin{explanation}
+		For each \(m\), \(g^m \in (f_1^m, \dots , f_{\ell }^m )\), so choose \(h_1^m, \dots , h_{\ell }^m \) such that
+		\[
+			g^m = h_1^m f_1^m + \dots e h_{\ell } ^m f_{\ell } ^m.
+		\]
+		Let \(h_i = [h_i^m]\), then \(g = h_1 f_1 + \dots + h_{\ell } f_{\ell } \) in \(R\).\footnote{Note that \(h_i\in R\), but maybe not in \(K[\overline{x} ]\).} So \(g\in IR\).
+	\end{explanation}
+
+	Hence, \(g\in IR \cap K[\overline{x} ]\), but \(g \notin I\), contradicts \autoref{thm:lec25-b}, hence \autoref{thm:lec25-b} implies \autoref{thm:lec25-a}.
+
+	The other direction is in the same spirit, we basically just reverse the above argument.
+\end{proof}
+
+\begin{notation}[Faithfully flat]\label{not:faithfully-flat}
+	\(R\) is \emph{faithfully flat} over \(K[\overline{x} ]\) if \(IR \cap K[\overline{x} ] = I\).
+\end{notation}
+
+\begin{intuition}
+	\(R\) being \hyperref[not:faithfully-flat]{faithfully flat} says that if \(g\in K[\overline{x} ]\) has \(g = r_1 f_1 + \dots + r_{\ell } f_{\ell } \), \(r_i\in R\), then \(g = h_1 f_1 + \dots + h_{\ell } f_{\ell }  \) for some \(h_i \in K[\overline{x} ]\).
+\end{intuition}
+
+Hence, to show \autoref{thm:lec25-a}, we show \autoref{thm:lec25-b}. But this is somewhat algebraically involved, so we first do something easier. Recall that \hyperref[thm:weak-Hilbert-Nullstellensatz]{weak Hilbert's Nullstellensatz}.
+
+\begin{theorem}[Strong Nullstellensatz]\label{thm:strong-Hilbert-Nullstellensatz}
+	Let \(K\) be \hyperref[def:algebraically-closed]{algebraically closed}, and \(g, f_1, \dots , f_n\in K[\overline{x} ]\). Then every common zero of \(f_1, \dots , f_{\ell } \) is a zero of \(g\) if and only if \(g^m = (f_1, \dots , f_{\ell } )\) for some \(m\).
+\end{theorem}
+\begin{proof}
+	We use the so-called \href{https://en.wikipedia.org/wiki/Rabinowitsch_trick}{Rabinowitsch trick}, i.e., the \hyperref[thm:weak-Hilbert-Nullstellensatz]{weak} case in fact implies the \hyperref[thm:strong-Hilbert-Nullstellensatz]{strong} case.
+
+	To prove the forward direction, suppose that every common zero of \(f\)'s is a zero of \(g\).then, \(f_1, \dots , f_{\ell }, 1 - x_0 g \) has no common zero in \(K[x_0, x_1, \dots , x_n]\). By \hyperref[thm:weak-Hilbert-Nullstellensatz]{weak Hilbert's Nullstellensatz},
+	\[
+		1 = h_1 f_1 + \dots + h_{\ell } f_{\ell } + h_0 (1 - x_0 g)
+	\]
+	for \(h_i \in K[x_0, x_1, \dots , x_n]\). Substitute \(x_0 = 1 / g\), then
+	\[
+		1 = h_0(1 / g, \dots ) (1 - 1) + h_1 ( 1/g, \dots ) + h_1(1 / g, \dots )f_1 + \dots + h_{\ell } (1 / g, \dots ) f_{\ell }.
+	\]
+	Multiplying by \(g^m\) for some large \(m\) to clear the denominators, we have
+	\[
+		g^m = \underbrace{[g^m h_1(1 / g, \dots )]}_{\in K[x_1, \dots , x_n]} f_1 + \dots + \underbrace{[g^m h_{\ell } (1 / g, \dots )]}_{\in K[x_1, \dots , x_n]}f_{\ell },
+	\]
+	so \(g^m\in (f_1, \dots ,f_{\ell } )\).
+\end{proof}
+
+\begin{note}
+	The \hyperref[thm:weak-Hilbert-Nullstellensatz]{weak Hilbert's Nullstellensatz} is the case that \(g = 1\).
+\end{note}

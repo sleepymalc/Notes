@@ -1,12 +1,18 @@
 \lecture{7}{26 Jan. 13:00}{Hopf-Rinow Theorem}
-\section{Hopf-Rinow Theorem}
-We have shown the following in the homework.
+\subsection{Hopf-Rinow Theorem}
+By using \autoref{col:shortest-geodesic}, we have shown the following in the homework.
 
-\begin{theorem}
+\begin{lemma}\label{lma:exp-extend}
+	Let \((\mathcal{M} , g)\) be a compact \hyperref[def:Riemannian-manifold]{Riemannian manifold}. Then for all \(p\in \mathcal{M} \), the \hyperref[def:exponential-map]{exponential map} \(\exp _p\) is defined on all of \(T_p \mathcal{M} \) and any \hyperref[def:geodesic]{geodesic} may be extended indefinitely in each direction.
+\end{lemma}
+
+Then we use \autoref{lma:exp-extend} to show the following.
+
+\begin{theorem}\label{thm:homotopy-geodesic}
 	Let \((\mathcal{M} , g)\) be a compact \hyperref[def:Riemannian-manifold]{Riemannian manifold}.
 	\begin{enumerate}[(a)]
-		\item Any \(2\) points \(p, q\in \mathcal{M} \) can be connected by a minimizing \hyperref[def:geodesic]{geodesic}.
-		\item For all \(p\in \mathcal{M} \), the \hyperref[def:exponential-map]{exponential map} \(\exp _p\) is defined on all of \(T_p \mathcal{M} \) and any \hyperref[def:geodesic]{geodesic} may be extended indefinitely in each direction.
+		\item For any \(2\) points \(p, q\in \mathcal{M} \), there exists a \hyperref[def:geodesic]{geodesic} in every homotopy class of \hyperref[def:curve]{curves} from \(p\) to \(q\). Moreover, we can choose a shortest \hyperref[def:curve]{curve} as the \hyperref[def:geodesic]{geodesic} in the homotopy class.
+		\item Every homotopy class of closed \hyperref[def:curve]{curves} in \(\mathcal{M} \) contains a \hyperref[def:curve]{curve} that is shortest and \hyperref[def:geodesic]{geodesic}.
 	\end{enumerate}
 \end{theorem}
 
@@ -32,15 +38,9 @@ In other words, a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \(\mat
 	\end{enumerate}
 \end{theorem}
 \begin{proof}\let\qed\relax
-	We start by proving \autoref{thm:Hopf-Rinow-4} implies \autoref{thm:Hopf-Rinow-5}. Let \(\mathcal{M} \) be \hyperref[def:geodesically-complete]{geodesically complete}, and let \(r \coloneqq d(p, q)\), and let \(\rho \) be as in the corollary from handout for HW1. Let \(p_0 \in \partial B(p, \rho )\) be a point where the continuous functional \(d(q, \cdot)\) attains its minimum on the compact set \(\partial B(p, \rho )\). Then, for some \(V \in T_p \mathcal{M} \),
-	\[
-		p_0 = \exp _p \rho V.
-	\]
-	Consider the \hyperref[def:geodesic]{geodesic} \(c(t) = \exp _p tV\), by showing
-	\[
-		c(r) = q,
-	\]
-	\(\at{c}{[0, r]}{} \) will be the shortest \hyperref[def:geodesic]{geodesic} from \(p\) to \(q\). We start by defining
+	We start by proving \autoref{thm:Hopf-Rinow-4} implies \autoref{thm:Hopf-Rinow-5}. Let \(\mathcal{M} \) be \hyperref[def:geodesically-complete]{geodesically complete}, and let \(r \coloneqq d(p, q)\), and let \(\rho \) be as in \autoref{col:shortest-geodesic}. Let \(p_0 \in \partial B(p, \rho )\) be a point where the continuous functional \(d(q, \cdot)\) attains its minimum on the compact set \(\partial B(p, \rho )\). Then, for some \(V \in T_p \mathcal{M} \), \(p_0 = \exp _p \rho V\).
+
+	Consider the \hyperref[def:geodesic]{geodesic} \(c(t) = \exp _p tV\), by showing \(c(r) = q\), \(\at{c}{[0, r]}{} \) will be the shortest \hyperref[def:geodesic]{geodesic} from \(p\) to \(q\). We start by defining
 	\[
 		I\coloneqq \left\{ t\in[0, r] \mid d(c(t), q) = r-t \right\},
 	\]
@@ -60,26 +60,23 @@ In other words, a \hyperref[def:Riemannian-manifold]{Riemannian manifold} \(\mat
 	For every curve \(\gamma \) from \(c(t_0)\) to \(q\), there exists \(\gamma (t)\in \partial B(c(t_0), \rho _1)\), hence
 	\[
 		L(\gamma )
-		\geq \underbrace{d(c(t_0), \gamma (t))}_{\rho _1} + d(\gamma (t), q)
-		= \rho _1 + d(p_1, q),
+		\geq d(c(t_0), \gamma (t)) + d(\gamma (t), q)
+		= \rho _1 + d(p_1, q)
+		\implies d(q, c(t_0)) \geq \rho _1 + d(p_1, q)
 	\]
-	implying \(d(q, c(t_0)) \geq \rho _1 + d(p_1, q)\). But from the triangle inequality, we actually have
+	where we use \(d(c(t_0), \gamma (t)) = \rho _1\). But from the triangle inequality, we actually have
 	\[
 		d(q, c(t_0)) = \rho _1 + d(p_1, q)
 		\iff d(p_1, q) = \underbrace{d(q, c(t_0))}_{r-t_0} - \rho _1,
 	\]
 	hence \(d(p_1, p) \geq r-(r-t_0 - \rho _1) = t_0 + \rho _1\), i.e., this is a minimizing curve!
 
-	On the other hand, there exists a curve from \(p\) to \(p_1\) of length \(t_1 + \rho _1\) since it's composed by the portion from \(p\) to \(c(t_0)\) along \(c(t)\) and the portion being the \hyperref[def:geodesic]{geodesic} from \(c(t_0)\) to \(p_1\) of length \(\rho _1\). Then, by the theorem we have proved in the HW1\#5, this curve is a \hyperref[def:geodesic]{geodesic} curve. Finally, from the uniqueness of \hyperref[def:geodesic]{geodesic} with the given extra data, this \hyperref[def:geodesic]{geodesic} coincides with \(c\). Hence,
-	\[
-		p_1 = c ( t_0 + \rho _1),
-	\]
-	with \(d(p_1, q) = r-t_0 - \rho _1\),
+	On the other hand, there exists a curve from \(p\) to \(p_1\) of length \(t_1 + \rho _1\) since it's composed by the portion from \(p\) to \(c(t_0)\) along \(c(t)\) and the portion being the \hyperref[def:geodesic]{geodesic} from \(c(t_0)\) to \(p_1\) of length \(\rho _1\). Then, by \autoref{thm:homotopy-geodesic}, this curve is a \hyperref[def:geodesic]{geodesic} curve. Finally, from the uniqueness of \hyperref[def:geodesic]{geodesic} with the given extra data, this \hyperref[def:geodesic]{geodesic} coincides with \(c\). Hence, \(p_1 = c ( t_0 + \rho _1)\). With \(d(p_1, q) = r-t_0 - \rho _1\),
 	\[
 		d(c(t_0 + \rho _1), q)
 		= d(p_1, q)
 		= r - t_0 - \rho
 		= r-(t_0 + \rho _1),
 	\]
-	thus \(t_0 + \rho _1\in I\), hence \(I\) is open, i.e., \(I = [0, r]\), so \(c(r) = q\) follows.
+	so \(t_0 + \rho _1\in I\), implying that \(I\) is open, i.e., \(I = [0, r]\), so \(c(r) = q\) follows.\footnote{For a detailed proof, see \cite[Corollary 3.9]{flaherty2013riemannian}.}
 \end{proof}

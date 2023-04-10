@@ -1,7 +1,6 @@
 \lecture{20}{21 Mar. 13:00}{Sobolev Spaces and Cut Locus}
-Let's resume our proof about \autoref{lma:conjugate-point-index-form}.
 \begin{proof}[Proof of \autoref{lma:conjugate-point-index-form} (Continue)]
-	For the backward direction, assume that for \(t_0, t_1\in [a, b]\) (without loss of generality, let \(t_0 < t_1\)) such that \(c(t_0), c(t_1)\) are two \hyperref[def:conjugate-point]{conjugate points} along \(c\). Then, there exists a non-trivial \hyperref[def:Jacobi-field]{Jacobi field} \(X\) along \(c\) such that \(X(t_0) = 0 = X(t_1)\). Fix this, and consider
+	For the backward direction, assume that for \(t_0, t_1\in [a, b]\) (without loss of generality, let \(t_0 < t_1\)) such that \(c(t_0), c(t_1)\) are two \hyperref[def:conjugate-point]{conjugate points} along \(c\). Then, there exists a non-trivial \hyperref[def:Jacobi-field]{Jacobi field} \(X\) along \(c\) such that \(X(t_0) = 0 = X(t_1)\). Now, consider
 	\[
 		Y(t) = \begin{dcases}
 			0,    & \text{ if } a \leq t \leq t_0 ;   \\
@@ -15,7 +14,7 @@ Let's resume our proof about \autoref{lma:conjugate-point-index-form}.
 \section{The Cut Locus}
 We end this chapter by developing one more notion for later. We first take a detour to \hyperref[def:Sobolev-space]{Sobolev spaces}.
 
-\subsection{Sobolev Spaces}
+\subsection{Mobile Spaces}
 On \(\mathring{\nu }_c\), we introduce the norm
 \[
 	\lVert X \rVert \coloneqq \left( \int_{a}^{b} \left( \langle \dot{X} , \dot{X} \rangle + \left\langle X, X \right\rangle  \right)  \,\mathrm{d}t \right) ^{1 / 2},
@@ -38,20 +37,34 @@ and denote \(\mathring{H}_c\) the completion of \(\mathring{\nu}_c\) w.r.t.\ \(\
 \end{notation}
 
 \begin{definition}[Locally integrable]\label{def:locally-integrable}
-	Let \(\Omega \subseteq \mathbb{R} ^n\) be open, and let \(f\colon \Omega \to \mathbb{C} \) be Lebesgue measurable. Then
+	Let \(\Omega \subseteq \mathbb{R} ^n\) be open, and let \(f\colon \Omega \to \mathbb{C} \) be Lebesgue measurable. Then the \emph{locally integrable} (or locally summable) space is defined as
 	\[
-		L^1_{\text{loc} }(\Omega ) \coloneqq \left\{ f\colon \Omega \to \mathbb{C} \text{ measurable} \mid \at{f}{K}{} \in L^1(K)\ \forall \text{ compact } K \subseteq \Omega \right\}
+		L^1_{\text{loc} }(\Omega ) \coloneqq \left\{ f\colon \Omega \to \mathbb{C} \text{ measurable} \mid \at{f}{K}{} \in L^1(K)\ \forall \text{ compact } K \subseteq \Omega \right\}.
 	\]
-	is the \emph{locally integrable} (or locally summable) space.
 \end{definition}
 
 \begin{definition}[Weak derivative]\label{def:weak-derivative}
-	Let \(U \subseteq \mathbb{R} ^n\) be open, and \(u, v\in L^1_{\text{loc} }(U)\). Let \(\alpha\) be a multi-index. Then \(v\) is the \emph{weak derivative} of \(u\), denoted as \(D^\alpha _u = v\) provided
+	Let \(U \subseteq \mathbb{R} ^n\) be open, and \(u, v\in L^1_{\text{loc} }(U)\). Let \(\alpha\) be a multi-index. Then \(v\) is the \emph{\(\alpha ^{\text{th}}\)-weak derivative} of \(u\), denoted as \(D^\alpha u = v\) provided
 	\[
-		\int _U u\cdot D^\alpha \phi \,\mathrm{d} x = (-1)^{\vert \alpha \vert} \int _U v \phi \,\mathrm{d} x
+		\int _U u\cdot D^\alpha \varphi \,\mathrm{d} x = (-1)^{\vert \alpha \vert} \int _U v \varphi \,\mathrm{d} x
 	\]
-	for all test functions \(\phi \in C^{\infty} _c(U)\).
+	for all test functions \(\varphi \in C^{\infty} _c(U)\).
 \end{definition}
+
+\begin{notation}
+	\(C_c^{\infty} (U)\) is the space of smooth functions with compact support defined on \(U\).
+\end{notation}
+
+\begin{notation}
+	Here, \(D^\alpha \varphi \) means
+	\[
+		D^\alpha \varphi = \frac{\partial ^{\vert \alpha  \vert }\varphi }{\partial x_1^{\alpha_1} \dots \partial x_n^{\alpha_n} }.
+	\]
+\end{notation}
+
+\begin{note}
+	We can write \(D^\alpha u\) since it's unique (up to measure \(0\)).
+\end{note}
 
 \begin{remark}
 	If the \hyperref[def:weak-derivative]{weak derivative} exists, then it's unique up to a set of measure zero.
@@ -87,12 +100,16 @@ Thus, \(u\in W_0^{k, p}(U)\) if and only if there exists functions \(u_n \in C_c
 	Lastly, the upshot is that \(u\in W^{k, p}_0(U)\) if \(u\in W^{k, p}(U)\) such that ``\(D^\alpha u=0\) on \(\partial U\)'' for all \(\vert \alpha \vert \leq k - 1\), more precisely, use traces.
 \end{remark}
 
-\subsection{The Cut Locus}
-Let \(\left\{ V_i \right\} \) be an orthonormal basis of \hyperref[def:parallel]{parallel} \hyperref[def:vector-field]{vector fields}. Now, write \(X = \xi ^i Vvi\), so \(\dot{X} _i = \dot{\xi }^i V_i \), hence
+\subsection{The Index}
+Let \(\{ V_i \} _{i=1}^d\) for \(d = \dim \mathcal{M} \) be an orthonormal basis of \hyperref[def:parallel]{parallel} \hyperref[def:vector-field]{vector fields}. Now, write \(X = \xi ^i V_i\), so \(\dot{X} _i = \dot{\xi }^i V_i \), hence
 \[
-	\lVert X \rVert = \left( \int_{a}^{b} \left( \dot{\xi }^i \dot{\xi }^j + \xi ri \xi ^j \right)  \,\mathrm{d}t \right) ^{1 / 2}.
+	\lVert X \rVert = \left( \int_{a}^{b} \left( \dot{\xi }^i \dot{\xi }^j + \xi ^i \xi ^j \right)  \,\mathrm{d}t \right) ^{1 / 2}.
 \]
-Then, \(\mathring{H}_c^1\) can be identified with \hyperref[def:Sobolev-space]{Sobolev space} \(\mathring{H}^{1, 2}(I, \mathbb{R} ^d)\). Consider \(I\) of \(c\) as quadratic form on \(\mathring{H}^1_c \), i.e., \(I\colon \mathring{H}^1_c \times \mathring{H}^1_c \to \mathbb{R} \).
+Then, \(\mathring{H}_c^1\) can be identified with \hyperref[def:Sobolev-space]{Sobolev space} \(\mathring{H}^{1, 2}(I, \mathbb{R} ^d)\). Next, consider \(I\) (the \hyperref[def:index-form]{index form}) of \(c\) as quadratic form on \(\mathring{H}^1_c \), i.e., \(I\colon \mathring{H}^1_c \times \mathring{H}^1_c \to \mathbb{R} \) with
+\[
+	I(X, Y) = \int_{a}^{b} \left( \langle \dot{X} , \dot{Y} \rangle - \langle R(\dot{c} , X) Y, \dot{c}  \rangle \right)  \,\mathrm{d}t,
+\]
+and we define the following.
 
 \begin{definition}[Index]\label{def:index}
 	The \emph{index} of \(c\), \(\Ind(c)\), is the dimension of the largest subspace of \(\mathring{H}_c^1\), on which \(I\) is negative definite.
@@ -106,29 +123,41 @@ Then, \(\mathring{H}_c^1\) can be identified with \hyperref[def:Sobolev-space]{S
 	The \emph{nullity} is defined as  \(N(c) \coloneqq \Ind_{\circ} - \Ind(c)\).
 \end{definition}
 
-For \(t\in (a, b]\), let \(\mathcal{J} ^t_c\) be the space of \hyperref[def:Jacobi-field]{Jacobi fields} \(x\) along \(c\) with \(X(a)= 0 = X(t)\).
+\begin{notation}
+	For \(t\in (a, b]\), let \(\mathcal{J} ^t_c\) be the space of \hyperref[def:Jacobi-field]{Jacobi fields} \(x\) along \(c\) with \(X(a)= 0 = X(t)\).
+\end{notation}
+
+\begin{lemma}\label{lma:finite-index-nullity}
+	\(\Ind(c)\) and \(N(c)\) are always finite.
+\end{lemma}
+\begin{proof}
+	See~\cite{flaherty2013riemannian} (by contradiction).
+\end{proof}
 
 \begin{lemma}
 	\(\dim \mathcal{J} _c^b = N(c)\).
 \end{lemma}
 
-Let \((\mathcal{M}^n , g)\) be a \hyperref[def:geodesically-complete]{complete} \hyperref[def:Riemannian-manifold]{Riemannian manifold}. Let \(p\in \mathcal{M} \), and denote \(d\colon = d(p, \cdot)\). For all \(v\in S^{n-1}\), we can find a \hyperref[def:geodesic]{geodesic} \(c_v(t) = \exp _t(t v)\). Let \(R(v) \coloneqq \sup \left\{ T \mid \at{c_v}{[0, T]}{} \text{ minimizing}  \right\} \). If \(t < R(v)\), then \(d(p, c_v(t)) = t\).
+\subsection{The Cut Locus}
+Let \((\mathcal{M}^n , g)\) be a \hyperref[def:geodesically-complete]{complete} \hyperref[def:Riemannian-manifold]{Riemannian manifold}. Let \(p\in \mathcal{M} \), and denote \(d(\cdot) \coloneqq d(p, \cdot)\). Then we have seen that there is a normal neighborhood where \hyperref[def:geodesic]{geodesics} are minimizing and \(d\) is smooth away from \(p\). For all \(v\in S^{n-1}\), we can find a \hyperref[def:geodesic]{geodesic} \(c_v(t) = \exp _t(t v)\). Let \(R(v) \coloneqq \sup \left\{ T \mid \at{c_v}{[0, T]}{} \text{ minimizing}  \right\} \).
 
-\begin{eg}
-	If \(R(v) = \infty \), \(c_v\) minimizing.
-\end{eg}
+\begin{note}
+	If \(t < R(v)\), then \(d(p, c_v(t)) = t\); moreover, if \(R(v) = \infty \), \(c_v\) is minimizing.
+\end{note}
+
+We can then define the following.
 
 \begin{definition}[Cut locus]\label{def:cut-locus}
-	The \emph{cut locus} of \(p\) as
+	The \emph{cut locus} of \(p\) is defined as
 	\[
 		C(p) \coloneqq \left\{ c_v(R(v)) \mid v\in S^{n-1} \text{ such that } R(v) < \infty \right\}.
 	\]
 \end{definition}
 
 \begin{definition}[Cut point]\label{def:cut-point}
-	Consider \hyperref[def:geodesic]{geodesic} \(c\) with
-	\[
-		d(\underbrace{c(0)}_{p}, c(t)) = t
-	\]
-	on \([0, t_0]\) where \(t_0\) is the last point this holds. Then we say \(c(t_0)\) as a \emph{cut point}.
+	Consider a \hyperref[def:geodesic]{geodesic} \(c\) with \(d(c(0), c(t)) d(p, c(t)) = t\) on \(t \in [0, t_0]\) for \(t_0\) being the last point this holds. Then we say \(c(t_0)\) is a \emph{cut point} of \(p\) along \(c\).
 \end{definition}
+
+\begin{intuition}
+	The \hyperref[def:cut-locus]{cut locus} \(C(p)\) of \(p\) is the union of the \hyperref[def:cut-point]{cut points} of \(p\) along all \hyperref[def:geodesic]{geodesics} starting from \(p\).
+\end{intuition}

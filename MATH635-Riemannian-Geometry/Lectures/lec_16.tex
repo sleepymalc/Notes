@@ -1,84 +1,91 @@
 \chapter{Jacobi Fields}
 \lecture{16}{7 Mar. 13:00}{Jacobi Field}
 
+In this chapter, we derive a first relation between the two basic concepts introduced, i.e., \hyperref[def:geodesic]{geodesics} and \hyperref[def:Riemannian-curvature]{curvatures}. This is done by introducing \hyperref[def:Jacobi-field]{Jacobi field}: \hyperref[def:vector-field-along-curve]{vector fields along} \hyperref[def:geodesic]{geodesics}, defined by means of differential equations naturally from \hyperref[def:exponential-map]{exponential map}. Moreover, \hyperref[def:Jacobi-field]{Jacobi fields} allow us to obtain a simple characterization of the singularities of the \hyperref[def:exponential-map]{exponential map}.
+
+\begin{intuition}
+	The upshot is, as we will see, the \hyperref[def:sectional-curvature]{curvature} \(K(p, \sigma )\), \(\sigma \subseteq T_p \mathcal{M} \), determines how fast the \hyperref[def:geodesic]{geodesics}, that start from \(p\) and are tangent to \(\sigma \), spread apart.
+\end{intuition}
+
 \section{Jacobi Fields}
+As mentioned, we want to consider neighboring \hyperref[def:geodesic]{geodesics} under a \hyperref[def:vector-field-along-curve]{vector field along which}, and study how do they move. Their behaviors are essentially governed by \hyperref[def:Riemannian-curvature]{curvature}.
 
 \begin{definition}[Jacobi field]\label{def:Jacobi-field}
-	Let \(\mathcal{M} \) be a \(d\)-dimensional \hyperref[def:Riemannian-manifold]{Riemannian manifold}. Let \(c\colon I \to \mathcal{M} \) be a \hyperref[def:geodesic]{geodesic}. A \hyperref[def:vector-field-along-curve]{vector field \(X\) along \(c\)} is called a \emph{Jacobi field} if
+	Let \(\mathcal{M} \) be a \(d\)-dimensional \hyperref[def:Riemannian-manifold]{Riemannian manifold}. Let \(c\colon I \to \mathcal{M} \) be a \hyperref[def:geodesic]{geodesic}. A \hyperref[def:vector-field-along-curve]{vector field \(X\) along \(c\)} is called a \emph{Jacobi field} if it satisfies the \emph{Jacobi equation}
 	\begin{equation}\label{eq:Jacobi}
 		\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }X + R(X, \dot{c} )\dot{c} = 0.
 	\end{equation}
 \end{definition}
 
 \begin{notation}
-	We write \(\dot{X} \coloneqq \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }X\) and \(\ddot{X} \coloneqq \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } X\). So the \hyperref[eq:Jacobi]{Jacobi equation} writes as
-	\[
-		\ddot{X} + R (X, \dot{c} ) \dot{c} = 0.
-	\]
+	We write \(\dot{X} \coloneqq \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }X\) and \(\ddot{X} \coloneqq \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } X\).
 \end{notation}
 
-Then, we can label \(c\) as follows
+Using new notations, the \hyperref[eq:Jacobi]{Jacobi equation} is rewritten as
+\[
+	\ddot{X} + R (X, \dot{c} ) \dot{c} = 0.
+\]
+
+To understand \hyperref[def:Jacobi-field]{Jacobi field}, we first recall the \hyperref[prev:variation]{variation}.
+
+\begin{prev}[Variation]\label{prev:variation}
+	For some \(\epsilon > 0\), the \emph{variation} of a \hyperref[def:curve]{smooth curve} \(c\colon [a, b] \to \mathcal{M} \) is a differentiable map \(F\colon [a, b] \times (-\epsilon , \epsilon ) \to \mathcal{M}\) such that \(F(t, 0) = c(t)\) for \(t\in [a, b]\) with \(s\in (-\epsilon , \epsilon )\).
+\end{prev}
+
+Essentially, a \hyperref[def:Jacobi-field]{Jacobi field} studies the \hyperref[def:geodesic-variation]{variation of geodesics}: we can label \hyperref[def:geodesic]{geodesics} \(c\) as
 \begin{center}
 	\incfig{2nd-variation}
 \end{center}
-Notice that we might either fix the endpoints or left them open. Formally, we have the following.
+
+\begin{notation}[Proper variation]\label{not:proper-variation}
+	A \emph{proper variation} is a \hyperref[prev:variation]{variation} where the endpoints are fixed, i.e., \(F(a, s) = c(a)\) and \(F(b, s)=c(b)\) for all \(s\in (-\epsilon , \epsilon )\).
+\end{notation}
+
+\begin{note}
+	We might either fix the endpoints or left them open, i.e., we can consider both \hyperref[not:proper-variation]{proper} and non-\hyperref[not:proper-variation]{proper} cases.
+\end{note}
+
+\begin{intuition}\label{int:Jacobi-equation}
+	The \hyperref[eq:Jacobi]{Jacobi equation} can be viewed as the linearization of the \hyperref[eq:geodesic]{geodesic equation}.
+\end{intuition}
+
+Formally, we define the following.
 
 \begin{definition}[Geodesic variation]\label{def:geodesic-variation}
-	Let \(\mathcal{M} \) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold}. A variation of \hyperref[def:curve]{curves} \(c\colon (-\epsilon , \epsilon )\times I \to \mathcal{M} \) is called the \emph{geodesic variation} if for all \(s\in (-\epsilon , \epsilon )\), the \hyperref[def:curve]{curve} \(t\mapsto c_s(t) \coloneqq c(s, t)\) is a \hyperref[def:geodesic]{geodesic}.
-\end{definition}
-
-In general, for a \hyperref[def:curve]{smooth curve} \(c\colon [a, b] \to \mathcal{M} \) and \(\epsilon > 0\), a \hyperref[def:geodesic-variation]{geodesic variation} of \(c\) is a differentiable map
-\[
-	F\colon \underbrace{[a, b]}_{t} \times \underbrace{(-\epsilon , \epsilon )}_{s} \to \mathcal{M}
-\]
-such that \(F(t, 0) = c(t)\) for \(t\in [a, b]\).
-
-\begin{definition}[Proper variation]\label{def:proper-variation}
-	A \emph{proper variation} is a \hyperref[def:geodesic-variation]{geodesic variation} where the endpoints are fixed, i.e.,
-	\[
-		F(a, s) = c(a), F(b, s)=c(b)
-	\]
-	for all \(s\in (-\epsilon , \epsilon )\).
+	Let \(\mathcal{M} \) be a (\hyperref[def:pseudo-Riemannian-metric]{semi}-)\hyperref[def:Riemannian-manifold]{Riemannian manifold}. A \hyperref[prev:variation]{variation} of \hyperref[def:curve]{curves} \(c\colon I \times (-\epsilon , \epsilon ) \to \mathcal{M} \) is called a \emph{geodesic variation} if for all \(s\in (-\epsilon , \epsilon )\), the \hyperref[def:curve]{curve} \(t\mapsto c_s(t) \coloneqq c(t, s)\) is a \hyperref[def:geodesic]{geodesic}.
 \end{definition}
 
 \begin{notation}
 	We set \(c_s(t) = c(t, s)=F(t, s)\), and
 	\begin{itemize}
-		\item \(\dot{c}(t, s) \coloneqq \frac{\partial }{\partial t} c(t, s) \), i.e., \(\mathrm{d} F(\partial / \partial t) c(t, s)\), and
-		\item \(c^\prime (t, s) = \partial / \partial s c(t, s)\), i.e., \(\mathrm{d} F (\partial / \partial s)c(t, s)\).
+		\item \(\dot{c}(t, s) \coloneqq \frac{\partial }{\partial t} c(t, s) \), i.e., \(\mathrm{d} F(\partial / \partial t) c(t, s)\);
+		\item \(c^\prime (t, s) \coloneqq \frac{\partial}{\partial s} c(t, s)\), i.e., \(\mathrm{d} F (\partial / \partial s)c(t, s)\).
 	\end{itemize}
 \end{notation}
 
-Let \(\mathcal{M} \) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold} of dimension \(d\), and \(\mathcal{H} \) be a \hyperref[def:smooth-manifold]{differentiable manifold}.\footnote{Often times, \(H\) is an interval \(I\subseteq \mathbb{R} \) or a square \(I\times I \subseteq \mathbb{R} ^2\).} Let \(f\colon \mathcal{H}  \to \mathcal{M} \), smooth.\footnote{\(f\) may not be injective.} What is the \hyperref[def:tangent-space]{tangent space} of \(f(\mathcal{H} )\) of point \(p\in f(\mathcal{H} )\)?
-\begin{eg}
-	Let \(p = f(x) = f(y)\) for \(x \neq y\). For \(f\) being an \hyperref[def:immersion]{immersion}, we may restrict \(f\) to a sufficiently small neighborhood \(U, V\) at \(x, y\), respectively, such that \(f(U), f(V)\) have well-defined \hyperref[def:tangent-space]{tangent spaces} at \(p\). Then, in a double point of \(f(\mathcal{H} )\), the \hyperref[def:tangent-space]{tangent space} can be specified by specifying the preimage (\(x\) or \(y\)), i.e., consider \(f^{\ast} (T \mathcal{M} )\), the \hyperref[def:fiber]{fiber} over \(x\in \mathcal{H} \) is \(T_{f(x)} \mathcal{M} \) introduce \hyperref[def:linear-connection]{connection} \(f^{\ast} (\nabla )\) on \(f^{\ast} (T \mathcal{M} )\). Let \(X\in T_x \mathcal{H} \), \(Y\) a \hyperref[def:section]{section} of \(f^{\ast} (T \mathcal{M} )\). Set
-	\[
-		(f^{\ast} \nabla )_x Y\coloneqq \nabla _{\mathrm{d} (x)}Y,
-	\]
-	where \(f^{\ast} (T \mathcal{M} _x)\) is identified with \(T_{f(x)}\mathcal{M} \) with \(\nabla \) for \(f^{\ast} \nabla \). All this means that a \hyperref[def:section]{section} of \(f^{\ast} (T \mathcal{M} )\) is a \hyperref[def:vector-field-along-curve]{vector field along \(f\)}.
-\end{eg}
-
-\subsection{First Variations}
+\section{Variations of Length and Energy}
 Recall the following.
 
 \begin{prev}
-	The \hyperref[def:energy]{energy} is defined as
+	Given a \hyperref[prev:variation]{variation} of a \hyperref[def:geodesic]{geodesic} \(c_s(t)\), The \hyperref[def:energy]{energy} for \(c_s\) is defined as
 	\[
 		E(s) \coloneqq \frac{1}{2} \int_{a}^{b} \left\langle \frac{\partial c(t, s)}{\partial t} , \frac{\partial c(t, s)}{\partial t}  \right\rangle  \,\mathrm{d}t,
 	\]
-	and the \hyperref[def:length]{length} is defined as
+	and the \hyperref[def:length]{length} for \(c_s\) is defined as
 	\[
 		L(s) \coloneqq \int_{a}^{b} \left\langle \frac{\partial c(t, s)}{\partial t} , \frac{\partial c(t, s)}{\partial t}  \right\rangle ^{1 / 2} \,\mathrm{d}t.
 	\]
 \end{prev}
 
-Now, we consider
+And we want to compute
 \begin{itemize}
-	\item the first variations \(E^\prime (0) \) and \(L^\prime (0)\), i.e., the first derivatives;
-	\item for \(c = c_0\) \hyperref[def:geodesic]{geodesic}, compute the second variations \(E^{\prime\prime}(0) \) and \(L^{\prime\prime}(0)\), i.e., the second derivatives.
+	\item the first \hyperref[prev:variation]{variations} \(E^\prime (0) \) and \(L^\prime (0)\), i.e., the first derivatives;
+	\item for \(c = c_0\) \hyperref[def:geodesic]{geodesic}, compute the second \hyperref[prev:variation]{variations} \(E^{\prime\prime}(0) \) and \(L^{\prime\prime}(0)\), i.e., the second derivatives.
 \end{itemize}
+\subsection{First Variations}
+Let's consider the first \hyperref[prev:variation]{variations}, i.e., \(E^{\prime} (0)\) and \(L^{\prime} (0)\).
 
-\begin{lemma}
+\begin{lemma}\label{lma:1st-variation-geodesic}
 	If \(L(s)\), \(E(s)\) are differentiable w.r.t.\ \(s\), then
 	\[
 		L^\prime (0) = \int_{a}^{b} \left( \frac{\frac{\partial }{\partial t} \left\langle c^\prime , \dot{c}  \right\rangle }{\left\langle \dot{c} , \dot{c} \right\rangle ^{1 / 2}} - \frac{\left\langle c^\prime , \nabla _{\frac{\partial }{\partial t} } \dot{c} \right\rangle }{\left\langle \dot{c} , \dot{c} \right\rangle ^{1 / 2}}\right)  \,\mathrm{d}t,
@@ -99,7 +106,7 @@ Now, we consider
 	\]
 \end{note}
 
-If we consider the fixed endpoints case, we observe that \(E\) and \(L\) are stationary if and only if
+If we consider the fixed endpoints case (i.e., \hyperref[not:proper-variation]{proper variation}), we observe that \(E\) and \(L\) are stationary if and only if
 \[
 	\nabla _{\frac{\partial }{\partial t}} \dot{c} (t, 0) = 0,
 \]
@@ -108,7 +115,7 @@ i.e., when \(c\) is a \hyperref[def:geodesic]{geodesic}.
 \subsection{Second Variations}
 Now, let \(c = c_0\) be a \hyperref[def:geodesic]{geodesic}. Then we compute the second derivatives w.r.t.\ \(s\) of \(E\) and \(L\) at \(s = 0\).
 
-\begin{theorem}
+\begin{theorem}\label{thm:2nd-variation-geodesic}
 	Let \(c\colon [a, b] \to \mathcal{M} \) be a \hyperref[def:geodesic]{geodesic}. Then
 	\[
 		E^{\prime\prime}(0)
@@ -134,58 +141,103 @@ Now, let \(c = c_0\) be a \hyperref[def:geodesic]{geodesic}. Then we compute the
 	On a manifold with non-positive \hyperref[def:sectional-curvature]{sectional curvature}, the \hyperref[def:geodesic]{geodesics} with fixed endpoints are always locally minimizing.
 \end{corollary}
 
+\section{Index Form}
+\subsection{Pullback Connections}
+Let \(\mathcal{M} \) be a \hyperref[def:Riemannian-manifold]{Riemannian manifold} of dimension \(d\), and \(\mathcal{H} \) be a \hyperref[def:smooth-manifold]{differentiable manifold}.\footnote{Often times, \(\mathcal{H} \) is an interval \(I\subseteq \mathbb{R} \) or a square \(I\times I \subseteq \mathbb{R} ^2\).} Let \(f\colon \mathcal{H}  \to \mathcal{M} \), smooth, and \(f\) may not be injective. We ask the following question.
+
+\begin{problem}
+What is the \hyperref[def:tangent-space]{tangent space} of \(f(\mathcal{H} )\) of point \(p\in f(\mathcal{H} )\)?
+\end{problem}
+
+We see that even if \(f\) is an \hyperref[def:immersion]{immersion}, since it can be non-injective, there maybe issues.
+
+\begin{eg}
+	Let \(p = f(x) = f(y)\) for \(x \neq y\). For \(f\) being an \hyperref[def:immersion]{immersion}, we may restrict \(f\) to a sufficiently small neighborhood \(U, V\) at \(x, y\), respectively, such that \(f(U), f(V)\) have well-defined \hyperref[def:tangent-space]{tangent spaces} at \(p\). Then, in a double point (e.g., \(p\)) of \(f(\mathcal{H} )\), the \hyperref[def:tangent-space]{tangent space} can be specified by specifying the preimage (\(x\) or \(y\)).
+\end{eg}
+
+Formally, consider \(f^{\ast} (T \mathcal{M} )\), the \hyperref[def:tangent-bundle]{tangent bundle} \(T \mathcal{M} \) \hyperref[def:pullback-bundle]{pullback} by \(f\).
+
+\begin{note}
+	The \hyperref[def:fiber]{fiber} over \(x\in \mathcal{H} \) is \(T_{f(x)} \mathcal{M} \).
+\end{note}
+
+Then, we can introduce a \hyperref[def:linear-connection]{connection} \(f^{\ast} (\nabla )\) on \(f^{\ast} (T \mathcal{M} )\): let \(X\in T_x \mathcal{H} \), \(Y\) a \hyperref[def:section]{section} of \(f^{\ast} (T \mathcal{M} )\). Set
+\[
+	(f^{\ast} \nabla )_X Y\coloneqq \nabla _{\mathrm{d} f(X)} Y,
+\]
+where \(f^{\ast} (T \mathcal{M} )_x\) is identified with \(T_{f(x)}\mathcal{M} \) with \(\nabla \) for \(f^{\ast} \nabla \).
+
+\begin{note}
+	For \(\nabla _{\mathrm{d} f(X)}Y\) to be well-defined, we need to extend \(Y\) to a neighborhood of \(f(\mathcal{H} )\).\footnote{Hence, it does not depend on the choice of extension.}
+\end{note}
+
+\begin{notation}
+	Write \(\nabla \) for \(f^{\ast} \nabla \) in what follows.
+\end{notation}
+
 \subsection{Index Form}
-Let \(X\) be a \hyperref[def:vector-field-along-curve]{vector field along \(c\)} where \(c\) is a \hyperref[def:geodesic]{geodesic}. Then, there exists a \hyperref[def:geodesic-variation]{geodesic variation}
+Now, let \(f = c\colon I \to \mathcal{M} \) (often, \(c\) is a \hyperref[def:geodesic]{geodesic}), i.e., we consider \hyperref[def:vector-field-along-curve]{vector field along} \(c\).\footnote{In deed, a \hyperref[def:section]{section} of \(f^{\ast} (T \mathcal{M} )\) is a \emph{vector field along \(f\)} in general even for \(f\colon I^2 \to \mathcal{M} \).} Specifically, let \(X\) be a \hyperref[def:vector-field-along-curve]{vector field along \(c\)} where \(c\) is a \hyperref[def:geodesic]{geodesic}. Then, there exists a \hyperref[def:geodesic-variation]{geodesic variation}
 \[
 	c\colon [a, b] \times (-\epsilon , \epsilon )\to \mathcal{M}
 \]
-of \(c(t)\) with
-\[
-	\at{\frac{\partial c}{\partial s} }{s=0}{} = X.
-\]
-Put
+of \(c(t)\) with \(\at{\frac{\partial c}{\partial s} }{s=0}{} = X\). Consider the second \hyperref[prev:variation]{variation} of \hyperref[def:energy]{energy}: inspired from \autoref{thm:2nd-variation-geodesic}, we write
 \[
 	I(X, X)
 	\coloneqq \int_{a}^{b} \left( \langle \nabla _{\frac{\partial }{\partial t} }X, \nabla _{\frac{\partial }{\partial t} } X \rangle - \left\langle R(\dot{c}, X )X, \dot{c}  \right\rangle  \right)  \,\mathrm{d}t,
 \]
-i.e., \(I(X, X) = \frac{\mathrm{d}^2}{\mathrm{d}s^2} E(0)\) if \(X(a) = X(b) = 0\). Also, put
-\[
-	I(X, Y)
-	\coloneqq \int_{a}^{b} \left( \langle \nabla _{\frac{\partial }{\partial t} } X, \nabla _{\frac{\partial }{\partial t} } Y \rangle - \left\langle R(\dot{c} , X) Y, \dot{c} \right\rangle \right)  \,\mathrm{d}t.
-\]
-We see that \(I(X, Y)\) is a bilinear symmetric in \(X, Y\) where \(Y\coloneqq \frac{\partial c}{\partial x} \)
+i.e., \(I(X, X) = \frac{\mathrm{d}^2}{\mathrm{d}s^2} E(0)\) if \(X(a) = X(b) = 0\). Moreover, instead of considering a \(1\)-parameter \hyperref[prev:variation]{variation}, we can also consider a \(2\)-parameter \hyperref[prev:variation]{variation} on \(X\) and \(Y \coloneqq \frac{\partial c}{\partial t}\). In this case, we propose the following.
 
 \begin{definition}[Index form]\label{def:index-form}
-	\(I\) defined above is called the \emph{index form} of \hyperref[def:geodesic]{geodesic} \(c\).
+	The \emph{index form} of a \hyperref[def:geodesic]{geodesic} \(c\) on \(X = \at{\frac{\partial c}{\partial s} }{s=0}{} \) and \(Y = \frac{\partial c}{\partial t}\) is
+	\[
+		I(X, Y)
+		\coloneqq \int_{a}^{b} \left( \langle \nabla _{\frac{\partial }{\partial t} } X, \nabla _{\frac{\partial }{\partial t} } Y \rangle - \left\langle R(\dot{c} , X) Y, \dot{c} \right\rangle \right)  \,\mathrm{d}t.
+	\]
 \end{definition}
 
+\begin{note}
+	We see that \(I(X, Y)\) is a bilinear and symmetric in \(X, Y\).
+\end{note}
+
 \begin{prev}
-	Recall the \hyperref[eq:Jacobi]{Jacobi equation}, i.e.,
-	\[
-		\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }X + R(X, \dot{c} )\dot{c} = 0.
-	\]
+	Recall the \hyperref[eq:Jacobi]{Jacobi equation}, i.e., \(\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }X + R(X, \dot{c} )\dot{c} = 0\).
 \end{prev}
 
 \begin{proposition}[Jacobi field]\label{prop:Jacobi-field}
-	A \hyperref[def:vector-field-along-curve]{vector field \(X\) along a \hyperref[def:geodesic]{geodesic} \(c\colon [a, b] \to \mathcal{M} \)} is a \hyperref[def:Jacobi-field]{Jacobi-field} if and only if the \hyperref[def:index-form]{index form} of \(c\) satisfies \(I(X, Y) = 0\) for all \hyperref[def:vector-field-along-curve]{vector fields \(Y\) along \(c\)} with \(Y(a) = Y(b) = 0\).
+	A \hyperref[def:vector-field-along-curve]{vector field \(X\) along} a \hyperref[def:geodesic]{geodesic} \(c\colon [a, b] \to \mathcal{M} \) is a \hyperref[def:Jacobi-field]{Jacobi-field} if and only if the \hyperref[def:index-form]{index form} of \(c\) satisfies \(I(X, Y) = 0\) for all \hyperref[def:vector-field-along-curve]{vector fields \(Y\) along \(c\)} with \(Y(a) = Y(b) = 0\).
 \end{proposition}
 \begin{proof}
 	Observe that
-	\[
+	\begin{equation}\label{eq:prop:Jacobi-field}
 		\begin{split}
 			I(X, Y)
-			&\coloneqq \int_{a}^{b} \left( \left\langle \nabla _{\frac{\partial }{\partial t} } X, \nabla _{\frac{\partial }{\partial t} } Y \right\rangle - \left\langle R(\dot{c} , X) Y, \dot{c} \right\rangle \right)  \,\mathrm{d}t\\
-			&= \int_{a}^{b} \left( \left\langle \nabla _{\frac{\partial }{\partial t} } X, \nabla _{\frac{\partial }{\partial t} } Y \right\rangle - \left\langle R(X, \dot{c}) \dot{c}, Y \right\rangle \right)  \,\mathrm{d}t
-			= \int_{a}^{b} \left( \left\langle -\nabla _{\frac{\partial }{\partial t} } \nabla _{\frac{\partial }{\partial t} } X, Y \right\rangle - \left\langle R(X, \dot{c}) \dot{c}, Y \right\rangle \right)  \,\mathrm{d}t,
+			&= \int_{a}^{b} \left( \langle \nabla _{\frac{\partial }{\partial t} } X, \nabla _{\frac{\partial }{\partial t} } Y \rangle - \langle R(\dot{c} , X) Y, \dot{c} \rangle \right)  \,\mathrm{d}t\\
+			&= \int_{a}^{b} \left( \langle \nabla _{\frac{\partial }{\partial t} } X, \nabla _{\frac{\partial }{\partial t} } Y \rangle - \langle R(X, \dot{c}) \dot{c}, Y \rangle \right)  \,\mathrm{d}t
+			= \int_{a}^{b} \left( \langle -\nabla _{\frac{\partial }{\partial t} } \nabla _{\frac{\partial }{\partial t} } X, Y \rangle - \langle R(X, \dot{c}) \dot{c}, Y \rangle \right)  \,\mathrm{d}t,
 		\end{split}
+	\end{equation}
+	where the second inequality follows from the fact that \(\nabla \) is \hyperref[def:Riemannian]{Riemannian}, hence
+	\[
+		\nabla _{\frac{\mathrm{d} }{\mathrm{d} t} } \langle \nabla _{\frac{\mathrm{d} }{\mathrm{d} t} }X, Y \rangle
+		= \langle \nabla _{\frac{\mathrm{d}}{\mathrm{d}t}} \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } X, Y \rangle + \langle \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } X, \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } Y \rangle,
 	\]
-	where the second inequality follows from the fact that \(\nabla \) is \hyperref[def:Riemannian]{Riemannian}, and \(Y(a) = 0 = Y(b)\). We see that the right-hand side of the above vanishes for every \(Y\) if and only if
+	with \(Y(a) = 0 = Y(b)\),
+	\[
+		\int_{a}^{b} \nabla _{\frac{\mathrm{d} }{\mathrm{d} t} } \langle \nabla _{\frac{\mathrm{d} }{\mathrm{d} t} }X, Y \rangle  \,\mathrm{d}t
+		= \at{\langle \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } X, Y\rangle }{a}{b} = 0,
+	\]
+	so
+	\[
+		\int_{a}^{b} \langle \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } X, Y\rangle  \,\mathrm{d}t
+		= - \int_{a}^{b} \langle \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } x, \nabla _{\frac{\mathrm{d}}{\mathrm{d}t} } Y \rangle  \,\mathrm{d}t.
+	\]
+	We see that the right-hand side of \autoref{eq:prop:Jacobi-field} vanishes for every \(Y\) if and only if
 	\[
 		\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }\nabla _{\frac{\mathrm{d}}{\mathrm{d}t} }X + R(X, \dot{c} )\dot{c} = 0,
 	\]
 	which is just the \hyperref[eq:Jacobi]{Jacobi equation}, so the result follows.
 \end{proof}
 
-\begin{remark}
+\begin{intuition}
 	\autoref{prop:Jacobi-field} is really where the \hyperref[eq:Jacobi]{Jacobi equation} comes from.
-\end{remark}
+\end{intuition}

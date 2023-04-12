@@ -1,0 +1,92 @@
+\lecture{26}{11 Apr. 11:30}{}
+\begin{prev}
+	The setup is:
+	\begin{itemize}
+		\item \(\mathcal{U} \) be a non-\hyperref[eg:principal-filter]{principal} \hyperref[def:ultrafilter]{ultrafilter} on \(\mathbb{N} \);
+		\item \(K_1, K_2, \dots \) be a sequence of fields;
+		\item \(R = \prod \quotient{K_i[x_1, \dots , x_n]}{\mathcal{U} } \), which is a ring;
+		\item \(K[x_1, \dots , x_n] \hookrightarrow R\), with image \(\{ f\in R \colon \deg^{\ast} (f) \in \mathbb{N}\} \), where \(\deg^{\ast} \colon R \to \mathbb{N} ^{\ast} = \prod \quotient{\mathbb{N} }{\mathcal{U} } \).
+	\end{itemize}
+\end{prev}
+
+\begin{theorem}
+	Given \(n\) and \(d\), there is \(m=m(d, n)\) such that for any \hyperref[def:algebraically-closed]{algebraically closed} field \(F\) and \(f, g_1, \dots , g_{\ell }\in F[x_1, \dots , x_n]\) with \(\deg \leq d\), if every common zero of \(g_1, \dots , g_{\ell }\) is a zero of \(f\), then \(f^m \in (g_1, \dots , g_{\ell })\).
+\end{theorem}
+\begin{proof}
+	Suppose that for a fixed \(n, d\), no such \(m\) exists. So for each \(m\), there are an \hyperref[def:algebraically-closed]{algebraically closed} field \(K_m\) and \(f_m, g_{1, m}, \dots , g_{\ell , m}\) in \(K_m[x_1, \dots , x_n]\) with degree at most \(d\), such that every common zero of \(g_{1, m}, \dots , g_{\ell , m}\) is a zero of \(f_m\), but
+	\[
+		f^m_m \notin (g_{1, m} , \dots , g_{\ell , m}).
+	\]
+	Form \(f = [f_m]\) and \(g_i = [g_{i, m}]\), which are elements of \(R\), but actually in \(K[x_1, \dots , x_n]\) since \(\deg^{\ast} (f) \leq d\) and \(\deg^{\ast} (g_i) \leq d\). We want to apply the \hyperref[thm:strong-Hilbert-Nullstellensatz]{strong Hilbert-Nullstellensatz} in \(K[x_1, \dots , x_n]\) to \(f\) and \(g_1, \dots , g_{\ell } \). So we want to know that every common zero \(a=[a_i] \in K\) of \(g_1, \dots , g_{\ell } \) is a zero of \(f\). The set \(\{ m \mid g_{1,m} (a_m)= \dots = g_{\ell , m} (a_m) = 0\} \) is in the \hyperref[def:ultrafilter]{ultrafilter}.\footnote{Since \hyperref[thm:Los]{\defaultL{}oś's theorem} says \(g_i(a)= 0\) if and only if \(\{ m \mid g_{i, m}(a_m) = 0 \} \in \mathcal{U}\).} For each \(m\) in the set, \(a_m\) is a common zero of \(g_{1, m}, \dots , g_{\ell , m}\), and so it is a zero of \(f_m\), i.e., \(f_m(a_m) = 0\). This is true for almost every \(m\), so \(f(a)=0\) by \hyperref[thm:Los]{\defaultL{}oś's theorem}. So there is some \(t\in \mathbb{N} \) such that
+	\[
+		f^t \in (g_1, \dots , g_{\ell } ).
+	\]
+	By \hyperref[thm:Los]{\defaultL{}oś's theorem}, for almost every \(m\), \(f_m^t\in (g_1, \dots , g_{\ell } )\) in \(K_m[x_i, \dots , x_n]\). There is \(m > t\) for which this is true, then
+	\[
+		f_m^t\in (g_{1, m}, \dots , g_{\ell , m}) \to f_m^m = f_m^t \cdot f_m^{m-t} \in (g_{1, m}, \dots , g_{\ell , m}),
+	\]
+	which contradicts how we choose everything at the beginning (e.g., \(m\)).
+\end{proof}
+
+\begin{intuition}
+	This is a bounded version of the \hyperref[thm:strong-Hilbert-Nullstellensatz]{strong Hilbert-Nullstellensatz}.
+\end{intuition}
+
+\begin{note}
+	For some \(u_m\), \(f_m^{u_m}\in (g_{1, m}, \dots , g_{\ell , m})\). But \(u = [u_m]\in \mathbb{N} ^{\ast} \) and \(u \notin \mathbb{N} \), i.e., \(f^u \in (g_1, \dots , g_{\ell })\).
+\end{note}
+
+\begin{theorem}\label{thm:lec26}
+	If \(f_1, \dots , f_{\ell } \in K[x_1, \dots , x_n]\), then any solution of
+	\[
+		f_1 y_1 + \dots + f_{\ell } y_{\ell } = 0
+	\]
+	in \(R\) is an \(R\)-linear combination of solutions in \(K[x_1, \dots , x_n]\).\footnote{In this case, \(R\) is called a \emph{flat \(K[x_1, \dots , x_n]\)-module}.}
+\end{theorem}
+\begin{proof}
+	Let \(g = (g_1, \dots , g_{\ell } )\) be a solution in \(R\) of \(f_1 y_1 + \dots + f_{\ell } f_{\ell } = 0 \), we want to show that \(g\) is an \(R\)-linear combination of solutions in \(K[x_1, \dots , x_n]\). Without loss of generality, assume that \(f_1 \neq 0\), and we want to know that \(f_1\) is monic in \(x_n\), i.e.,
+	\[
+		f_1 = x_n^d + g_{d-1} x_n^{d-1} + \dots + g_0,
+	\]
+	where \(g_i\in K[x_1, \dots , x_{n-1}]\). To get this, we need to do a change of variables such that
+	\[
+		\begin{split}
+			x_1 &\mapsto x_1 + x_n^t \\
+			x_2 &\mapsto x_2 + x_n^t \\
+			\vdots& \\
+			x_n &\mapsto x_n.
+		\end{split}
+	\]
+	For example, \(x_1 x_2 x_3 \mapsto \dots + x_n^{3t}\), where we can choose a large enough \(t\) to make \(f_1\) into \(f_1^{\prime} \), monic.
+
+	\begin{note}
+		We need to make sure that we can go backwards. We will take care of this later.
+	\end{note}
+
+	\(f_1 y_1 + f_{\ell } y_{\ell }  \) has solutions \((-f_2, f_1, 0, \dots ), (-f_3, 0, f_1, 0, \dots )\), and so on. By long division in \(R\), there is \(h, r\) such that \(g_2 = f_1 h + r\) where \(\deg^{\ast} (r) < \deg ^{\ast} (f_1)\). Either by \hyperref[thm:Los]{\defaultL{}OS's theorem}\footnote{To do this, we need to consider \((K_i[x_1, \dots , x_n], \mathbb{N} , +, -, \cdot, < , \deg)\).} or for each \(i\), \(g_2^i = f_1^i h^i + r^i\) where \(\deg_{x_n}(r^i) < \deg_{x_n}(f_1^i)\) by long division in \(K_1[x_1, \dots ][x_n]\). Now take \((g_1, \dots , g_{\ell }) - h\cdot (-f_2, f_1, 0 \dots ) = (g_1 ^{\prime} , g_2 ^{\prime} , \dots )\) is a solution of our homogeneous equation. Note that \(g_2^{\prime} = r\), so \(\deg^{\ast} _{x_n}(g_2^{\prime} ) < \deg^{\ast} _{x_n}(f_1)\), which is finite. Moreover, \(g_3^{\prime} , g_4^{\prime} , \dots \) did not change.
+
+	Keep doing this with \((-f_3, 0, f_1, 0, \dots )\) and so on, then we get a solution \(g^{\prime} = (g_1^{\prime} , \dots , g_{\ell } ^{\prime} )\)\footnote{We have abused the notation here.} with \(\deg^{\ast} _{x_n}(g_i^{\prime} )\in \mathbb{N} \) for \(i > 1\). Since \(f_1 g_1^{\prime} + \dots + f_{\ell } g_{\ell }^{\prime}\), we know that
+	\[
+		f_1 g_1^{\prime} = -(f_2 g_2^{\prime} + \dots + f_{\ell } g_{\ell } ^{\prime} ),
+	\]
+	where the right-hand side is finite degree in \(x_n\), and \(f_1\) also has finite degree in \(x_n\), we see that \(\deg^{\ast} _{x_n}(g_1^{\prime} )\) is finite. So \(g^{\prime} \) is a solution in \(\left( \prod \quotient{K_i [x_1, \dots x_{n-1}] }{\mathcal{U} } \right) [x_n]\). Furthermore, \(g\) is an \(R\)-linear combination of \(g^{\prime} \) and solution in \(K[x_1, \dots , x_n]\).
+
+	Now, repeat this but with \(g^{\prime} \) and \(x_{n-1} \). But we have to make sure everything has finite degree in \(x_n\) still, i.e., we use \(\left( \prod \quotient{K_i[x_1, \dots , x_{n-1}]}{\mathcal{U} } \right) [x_n]\) instead of \(R\). Eventually, \(g\) is a linear combination of solutions in \(K[x_1, \dots , x_n]\) after \(n\) changes of variables. Finally, we reverse the changes of variables.
+\end{proof}
+
+\begin{theorem}
+	Given \(n\) and \(d\), there is an \(m=m(n, d)\) such that for any \(f_1, \dots , f_{\ell }\in K[x_1, \dots , x_n] \) of \(\deg \leq d\), any solution of
+	\[
+		f_1 y_1 + \dots e f_{\ell } y_{\ell } = 0
+	\]
+	is a \(K[x_1, \dots , x_n]\)-linear combination of solutions of \(\deg \leq m\).
+\end{theorem}
+\begin{proof}
+	This follows from the same idea as \autoref{thm:lec26}.
+\end{proof}
+
+Next, we think about
+\[
+	f_1 y_1 + \dots + f_{\ell } y_{\ell } = g,
+\]
+i.e., we are asking whether \(g\in (f_1, \dots , f_{\ell } )\).

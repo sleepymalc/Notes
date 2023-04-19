@@ -1,0 +1,205 @@
+\lecture{28}{18 Apr. 11:30}{Epilogue}
+\section{Real Closed Fields}
+Recall the \hyperref[def:theory]{theory} of \hyperref[prev:real-closed-field]{real-closed fields} \(\RCF = \mathop{\mathrm{Th}}(\mathbb{R} , 0, 1, +, -, \cdot, \leq )\) where \(\RCF\) can be axiomatized by
+\begin{itemize}
+	\item field axioms;
+	\item ordered field axioms;
+	\item \(-1\) is not a sum of squares;
+	\item for all \(x\), either \(x\) or \(-x\) is a square;
+	\item every polynomial of odd degree has a root.
+\end{itemize}
+
+\begin{remark}
+	If we omit the ordered field axioms, we get \(\mathop{\mathrm{Th}}(\mathbb{R} , 0, 1, +, -, \cdot) \).
+\end{remark}
+
+\begin{theorem}\label{thm:RCF-QE}
+	\(\RCF\) admits \hyperref[def:quantifier-elimination]{quantifier elimination}.
+\end{theorem}
+
+On the other hand, \(\mathop{\mathrm{Th}}(\mathbb{R} , 0, 1, +, -, \cdot) \) does not.
+
+\begin{eg}
+	\(\exists z\ y - x = z^2 \iff y \geq x\) is not equivalent to a \hyperref[not:quantifier-free]{quantifier free} \hyperref[def:formula]{formula} in the algebraic \hyperref[def:language]{language}.
+\end{eg}
+
+\subsection{Model Complete}
+However, \(\mathop{\mathrm{Th}}(\mathbb{R} , 0, 1, +, -, \cdot) \) is \hyperref[def:model-complete]{model complete}.
+
+\begin{definition}[Model complete]\label{def:model-complete}
+	A \hyperref[def:theory]{theory} is \emph{model complete} if every \hyperref[def:formula]{formula} is equivalent to an \hyperref[not:existential]{existential} \hyperref[def:formula]{formula} (and a \hyperref[not:universal]{universal} \hyperref[def:formula]{formula}).
+\end{definition}
+
+The last one can be seen by, for example,
+\[
+	\exists z\ y - x = z^2
+	\iff y \geq x
+	\iff x = y \lor \lnot x \geq y
+	\iff x = y \lor \lnot (\exists z\ x - y = z^2).
+\]
+
+\begin{lemma}
+	\(T\) is \hyperref[def:model-complete]{model complete} if and only if whenever \(\mathcal{M} , \mathcal{N} \models T\), \(\mathcal{M} \subseteq \mathcal{N} \), then \(\mathcal{M} \preceq \mathcal{N} \).
+\end{lemma}
+
+\subsection{Semialgebraic Sets}
+\autoref{thm:RCF-QE} says that the \hyperref[def:definable]{definable} sets in a \hyperref[def:model]{model} of \(\RCF\) are exactly the boolean combinations of sets of the form \(\{ \overline{x} \mid p(\overline{x} ) > 0 \} \).
+
+\begin{definition}[Semialgebraic]\label{def:semialgebraic}
+	These are the \emph{semialgebraic sets}.
+\end{definition}
+
+\begin{corollary}
+	If \(F \models \RCF\), and \(A \subseteq F^n\) is \hyperref[def:semialgebraic]{semialgebraic}, then the topological closure of \(A\) is \hyperref[def:semialgebraic]{semialgebraic}.
+\end{corollary}
+
+Abraham Robinson's simple proof of \hyperref[prb:Hilbert-17th]{Hilbert's 17th problem} (originally solved by Martin):
+
+\begin{problem}[Hilbert's 17th problem]\label{prb:Hilbert-17th}
+Let \(F\) be a \hyperref[prev:real-closed-field]{real-closed field}, \(f(\overline{x} )\in F(x_1, \dots , x_n)\) be a rational function. If \(f(\overline{a} ) \geq 0\) for all \(\overline{a} \in F\), then \(f(\overline{x} )\) is a sum of squares of rational functions.
+\end{problem}
+\begin{proof}
+	To prove this, we use \hyperref[def:model-complete]{model completeness}.
+\end{proof}
+
+\begin{eg}
+	\((x - y^2) ^2 + (x^2 y + z - z^5)^2\).
+\end{eg}
+
+
+\begin{theorem}
+	\(\RCF\) has definable \hyperref[def:built-in-Skolem-function]{Skolem functions}: Given \(\varphi (\overline{x} , \overline{y} )\), there is a definable function \(f(\overline{y} )\) such that
+	\[
+		\exists \overline{x} \ \varphi (\overline{x} , \overline{y} ) \to \varphi (f(\overline{y} ), \overline{y} ),
+	\]
+	or equivalently, if \(\{ \overline{a} \mid \mathcal{M} \models \varphi (\overline{a} , \overline{b} ) \} \neq \varnothing \), then \(f(\overline{b} )\in \{ \overline{a} \mid \mathcal{M} \models \varphi (\overline{a} , \overline{b} ) \} \).
+\end{theorem}
+
+\begin{eg}
+	\(\varphi (x, y, z) \coloneqq y < x < z\), so \(X_{b, c} = \{ a \mid \mathcal{M} \models \varphi (a, b, c) \} = (b, c)\) for \(f(y, z) = (y + z) / 2\).
+\end{eg}
+
+\begin{definition}[Cell]\label{def:cell}
+	A \emph{cell} is defined inductively as
+	\begin{itemize}
+		\item single points are \emph{\(0\)-cells};
+		\item intervals \((a, b) \subseteq F\) are \emph{\(1\)-cells}, \(a, b \in F \cup \{ \pm \infty \} \);
+		\item if \(X \subseteq F^n\) is an \hyperref[def:cell]{\(m\)-cell}, and \(f \colon X \to F\) is a continuous definable function, then \(Y = \{ (\overline{x} , f(\overline{x} )) \mid \overline{x} \in X \} \) is an \hyperref[def:cell]{\(m\)-cell};
+		\item if \(X \subseteq F^n\) is an \hyperref[def:cell]{\(m\)-cell}, \(f, g \colon X \to F\)  are continuous definable functions\footnote{Or \(g = +\infty \) or \(f = -\infty \).} with \(f(x) < g(x)\), then \(Y = \{ (\overline{x} , y) \mid \overline{x} \in X, f(\overline{x} ) < y < g(\overline{x} )\} \) is an \emph{\(m+1\)-cell}.
+	\end{itemize}
+\end{definition}
+
+\begin{center}
+	\incfig{cell}
+\end{center}
+
+\begin{theorem}
+	Every \hyperref[def:definable]{definable} set \(X \subseteq F^n\) for \(F \models \RCF\) is a finite union of \hyperref[def:cell]{cells}.
+\end{theorem}
+
+\begin{eg}
+	\(0 \leq x \leq 1 \land 0 \leq y \leq 1 \land 0 \leq z \leq 1\) defines a cube.
+\end{eg}
+
+\begin{eg}
+	\(x^2 + y^2 \leq 1\) defines a circle.
+\end{eg}
+
+\begin{remark}
+	\(\mathop{\mathrm{Th}}(\mathbb{R} _{\exp }) \coloneqq \mathop{\mathrm{Th}}(\mathbb{R} , 0, 1, +, -, \cdot, \leq , \exp ) \) is also \(o\)-minimal.
+\end{remark}
+
+\begin{remark}
+	\(\mathop{\mathrm{Th}}(\mathbb{R} , 0, 1, +, -, \cdot, \leq , \sin , \cos ) \) is not \(o\)-minimal.
+\end{remark}
+\begin{explanation}
+	Consider \(\{ x \mid \sin (x) = 0 \} \), which is not a finite union of points and intervals.
+\end{explanation}
+
+\begin{remark}
+	\(\mathop{\mathrm{Th}}(\mathbb{R} , 0, 1, +, -, \cdot, \leq , \sin{} \upharpoonright _{[0, 2\pi ]}, \cos{} \upharpoonright _{[0, 2\pi ]}) \) is \(o\)-minimal.
+\end{remark}
+
+\begin{definition}[Height]\label{def:height}
+	The \emph{height} between \(a, b\) cop rime is defined as \(\mathop{\mathrm{height}}(a / b) \coloneqq \max (a, b)\).
+\end{definition}
+
+\begin{theorem}[Pila-Wilke]
+	Let \(X \subseteq \mathbb{R} ^n\) be \hyperref[def:definable]{definable} in an \(o\)-minimal expansion of \(\mathbb{R} \). Let \(X^{\mathrm{alg} }\) is the union of all infinite \hyperref[def:semialgebraic]{semialgebraic} subsets of \(X\), and \(X^{\mathrm{tr} } = X - X^{\mathrm{alg} }\). Moreover, let \(N(X^{\mathrm{tr} }, T)\) be the number of rational points on \(X^{\mathrm{tr} }\) of \hyperref[def:height]{height} at most \(T\). Then for all \(\epsilon \), there is a \(c\) such that for all \(T\),
+	\[
+		N(X^{\mathrm{tr} }, T) \leq c T^{\epsilon } .
+	\]
+\end{theorem}
+
+\begin{intuition}
+	Few rational points on the transcendental part of \(X\).
+\end{intuition}
+
+\begin{eg}
+	\(X = \{ (x, y, z)\in \mathbb{R} ^3 \mid 1 < x, y < 2, z = x^y \} \). For \(q\) rational, \(1 < q < 2\),
+	\[
+		X_q = \{ (x, q, z) \in \mathbb{R} ^3 \mid 1 < x < 2, z = x^q \}
+	\]
+	is \hyperref[def:definable]{definable} purely algebraically. For example, \(z = x^{a / b} \iff z= \sqrt[b]{x\cdots x} \iff \underbrace{z\cdots z}_{\text{\(b\) times}} = \underbrace{x \cdots x}_{\text{\(a\) times} }\). Then \(X^{\mathrm{alg} } = \bigcup_{q} X_q\). \(X^{\mathrm{tr} }\) has no rational points.
+\end{eg}
+
+For now, let \(T\) a \hyperref[def:theory-complete]{complete} \hyperref[def:theory]{\(\mathcal{L} \)-theory}.
+
+\begin{notation}
+	An \emph{\(n\)-type} is a \hyperref[def:type]{type} where \(\overline{x} = (x_1, \dots , x_n)\).
+\end{notation}
+
+If \(\mathcal{M} \models T\), \(A \subseteq M\), we can also talk about \(n\)-types over \(A\), i.e., set of \hyperref[def:formula]{formulas} using \(A\) which are finitely realizable in \(\mathcal{M} \) (or actually realizable in some \(\mathcal{N} \succeq \mathcal{M} \)).
+
+\begin{eg}
+	Consider \(\DLO\) \((\mathbb{Q} , \leq )\). The \hyperref[def:type]{\(1\)-types} over \(\mathbb{Q} \) are ``cuts'' in \(\mathbb{Q} \).
+\end{eg}
+
+\begin{definition}[Complete]\label{def:type-complete}
+	A \hyperref[def:type]{type} \(p\) is \emph{complete} if for all \(\varphi\), \(\varphi \in p\) or \(\lnot \varphi \in p\).
+\end{definition}
+
+\begin{definition}[Isolated]\label{def:isolated}
+	A \hyperref[def:type]{type} \(p(\overline{x} )\) is \emph{isolated} if there is a \hyperref[def:formula]{formula} \(\varphi (\overline{x} )\) such that
+	\begin{enumerate}[(a)]
+		\item \(\varphi (\overline{x} ) \cup T\) is \hyperref[def:consistent]{consistent} implies \(T \models \exists \overline{x} \ \varphi (\overline{x} )\);
+		\item \(T \cup \{ \varphi (\overline{x} ) \} \models p(\overline{x} )\).
+	\end{enumerate}
+\end{definition}
+
+If \(p(\overline{x})\) is \hyperref[def:type-complete]{complete}, then \(\varphi (x) \in p(\overline{x} )\).
+
+\begin{eg}
+	\(\tp(\pi / \mathbb{Q} )\) is non-\hyperref[def:isolated]{isolated}.
+\end{eg}
+
+\begin{eg}
+	\(\tp(2 / \mathbb{Q} )\) is \hyperref[def:isolated]{isolated}.
+\end{eg}
+
+An \hyperref[def:isolated]{isolated} \hyperref[def:type]{type} must be realized in all \hyperref[def:model]{models}.
+
+\begin{theorem}[Omitting types]\label{thm:omitting-types}
+	Let \(\mathcal{L} \) be countable, \(T\) be \hyperref[def:theory-complete]{complete}, \(p_1(\overline{x} ), p_2(\overline{x} )\) countably many non-\hyperref[def:isolated]{isolated} \hyperref[def:type]{types}. Then there is \(\mathcal{M} \models T\) that omits\footnote{\emph{Omit} means that there is no \(\overline{a} \in M\) satisfies \(p_i\).} each \(p_i\).
+\end{theorem}
+
+\begin{eg}
+	Consider \(\mathcal{L} = \{ R_1, R_2, \dots \} \) be all unary. Then \(T\) says any finite combinations of the \(R_i\) is possible.
+\end{eg}
+
+\begin{definition}[Atomic]\label{def:atomic}
+	A \hyperref[def:model]{model} \(\mathcal{M} \) is \emph{atomic} of \(T\) if \(\mathcal{M} \) only realizes \hyperref[def:isolated]{isolated} \hyperref[def:type]{type}.
+\end{definition}
+
+\begin{definition}[Prime]\label{def:prime}
+	A \hyperref[def:model]{model} \(\mathcal{M} \) is \emph{prime} of \(T\) if for all \(\mathcal{N} \models T\), \(\mathcal{M} \hookrightarrow \mathcal{N} \) \hyperref[def:elementary-embedding]{elementary}.
+\end{definition}
+
+\begin{theorem}
+	Being \hyperref[def:atomic]{atomic} is equivalent to being \hyperref[def:prime]{prime}.
+\end{theorem}
+
+Countably many \hyperref[def:type]{types} implies that \hyperref[def:atomic]{atomic} \hyperref[def:model]{model} exists. There might also be saturated \hyperref[def:model]{models} which realizes lots of \hyperref[def:type]{types}.
+
+\subsection{}
+There is no \(T\) with only two countable models. Suppose not, \(T\) has two models \(\mathcal{M} \) and \(\mathcal{N} \). Then \(\mathcal{M} \) is atomic/prime, and \(\mathcal{N} \) is saturated, i.e., \(\mathcal{N} \) realizes some non-isolated types \(\mathcal{N} \models p(\overline{a} )\). \(\mathop{\mathrm{Th}}(\mathcal{N} , \overline{a} , M) \) is not countably categorical. Take \(\mathcal{A} \) prime/atomic ``over \(\overline{a} \)'', argued that \(\mathcal{A} \ncong \mathcal{N} \), \(\mathcal{A} \ncong \mathcal{M} \).

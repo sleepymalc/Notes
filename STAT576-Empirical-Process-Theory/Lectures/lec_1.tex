@@ -1,2 +1,57 @@
-\chapter{Language, Logic, and Structures}
-\lecture{1}{21 Aug. 9:00}{}
+\chapter{Introduction}
+\lecture{1}{21 Aug. 9:00}{Introduction to Mathematical Statistics}
+\section{Overview of Empirical Process Theory}
+Given inputs i.i.d. data points \(X_1, \dots , X_n\), the empirical CDF is the function
+\[
+	F_n(t) = \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{X_i \leq t} .
+\]
+The classical result is that, fixing \(t\), \(F_n(t) \to F(t)\) almost surely, while \(\sqrt{n} (F_n(t) - F(t)) \to \mathcal{N} (0, F(t)(1 - F(t)))\) in distribution. On the other hand, by the \href{https://en.wikipedia.org/wiki/Glivenko%E2%80%93Cantelli_theorem}{Glivenko-Cantelli theorem}, \(\sup _{t \leq\mathbb{R} } \vert F_n(t) - F(t) \vert \overset{n \to \infty }{\to } 0\) almost surely.
+
+In this example, the empirical process is \(\left\{ F_n(t) \right\}_{t\in \mathbb{R} } \). More generally, let \(\chi \) be the domain, \(\mathbb{P} \) be a distribution on \(\chi \), and \(\mathcal{F} \) be the class of function from \(\chi \to \mathbb{R} \). And we're interested in
+\[
+	G_n(f) = \frac{1}{n} \sum_{i=1}^{n} f(X_i) - \mathbb{E}_{}\left[f(X) \right]
+\]
+where \(X \sim X_1, \dots , X_n\). Then, \(\left\{ G_n(f) \colon f\in \mathcal{F}  \right\} \) is called the empirical process.
+
+Now, two questions arises:
+\begin{enumerate}
+	\item Uniform Law of Large Number: As \(n \to 0\), whether
+	      \[
+		      \sup _{f\in \mathcal{F} } \vert G_n(f) \vert \to 0,
+	      \]
+	      and if, at what rate?
+	\item Uniform Central Limit Theorem: In general, \(\sqrt{n} G_n(f) \to \mathcal{N} (0, \Var_{}\left[f(X) \right] )\) in distribution. Consider
+	      \begin{itemize}
+		      \item \(X_1, \dots , X_n\) i.i.d. from \(\mathcal{U} (0, 1)\).
+		      \item \(\mathcal{F} = \left\{ \mathbbm{1}_{[-\infty , t]} ::t\in \mathbb{R}  \right\} \)
+		      \item \(U_n(t) = \sqrt{n} (F_n(t) - t) \).
+	      \end{itemize}
+	      Then \(U_n(t) \to \mathcal{N} (0, t - t^2)\), \((U_n(t_1), \dots ., U_n(t_k)) \to \mathop{\mathrm{MVN}}(0, \Sigma ) \) where \(\Sigma _{ij} = \min (t_i, t_j)\).\todo{Check!}
+\end{enumerate}
+
+\subsection{\(M\)-Estimation}
+We're going to focus on the class of estimators called ``\(M\)-estimator'', which is
+\[
+	\hat{\theta} = \argmax_{\theta \in \Theta } \frac{1}{n} \sum_{i=1}^{n} M_\theta (X_i),
+\]
+where \(\Theta \) is the parameter space, and \(M_\theta \colon \chi \to \mathbb{R} \). For example,
+\begin{itemize}
+	\item \(M_\theta (X) = - \log P_\theta (X)\), then \(\hat{\theta} \) is the MLE;
+	\item \(M_\theta (X) = (X-\theta )^2\),  \(\vert X - \theta  \vert\), or \(- \mathbbm{1}_{\vert X - \theta  \vert \leq 1} \), which is the location estimator
+\end{itemize}
+
+Now, consider \(\theta _0 = \argmax_{\theta \in \Theta } \mathbb{E}_{}\left[M_\theta (X_1) \right] \) where \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim }\mathbb{P} \). Two questions are:
+\begin{itemize}
+	\item does \(\hat{\theta} \) converge to \(\theta _0\), i.e., \(d(\hat{\theta} , \theta _0)\to 0\) for some metric \(d\)?
+	\item What is the rate?
+\end{itemize}
+
+Consider \(M_n(\theta ) = \frac{1}{n} \sum_{i=1}^{n} M_\theta (X_i)\), then
+\[
+	\begin{split}
+		\mathbb{P} (d(\hat{\theta} , \theta _0) > \epsilon )
+		&\leq \mathbb{P} \left( \sup _{\theta \colon d(\theta , \theta _0) > \epsilon } M_n(\theta _0) - M_n(\theta ) \geq 0\right) \\
+		&= \mathbb{P} \left( \sup _{\theta \colon d(\theta , \theta _0) > \epsilon } \left( M_n(\theta _0) - M(\theta _0) - [M_n(\theta ) - M(\theta )] \right) \geq \inf _{\theta \colon d(\theta , \theta _0) > \epsilon } (M(\theta ) - M(\theta _0)) \right) \\
+		&\leq \mathbb{P} \left( 2 \sup_{\theta \in \Theta } \vert M_n(\theta ) - M(\theta ) \vert \geq \inf _{\theta \colon d(\theta , \theta _0) > \epsilon } (M(\theta ) - M(\theta _0)) \right) .
+	\end{split}
+\]

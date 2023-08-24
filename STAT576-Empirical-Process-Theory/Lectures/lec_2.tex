@@ -1,0 +1,186 @@
+\chapter{Concentration Bounds}
+\lecture{2}{23 Aug. 9:00}{A Glance at Concentration Inequalities}
+Let's first remind what the goal is:
+\begin{prev}
+	Given a domain \(\chi \), probability measure \(\mathbb{P} \) on \(\chi \), \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and a function class \(\mathscr{F}\ni f \colon \chi \to \mathbb{R}  \). We would like to bound (non-asymptotically)
+	\[
+		S_n(\mathscr{F} ) = \sup _{f\in \mathscr{F} } \left\vert \frac{1}{n} \sum_{i=1}^{n} f(X_i) - \mathbb{E}_{}\left[f(X) \right]  \right\vert.
+	\]
+\end{prev}
+
+To do this, the basic steps are
+\begin{enumerate}[(a)]
+	\item \(S_n(\mathscr{F} )\) ``concentrates'' around its expectation \(\mathbb{E}_{}\left[S_n(\mathscr{F} ) \right] \).
+	\item \(\mathbb{E}_{}\left[S_n(\mathscr{F} ) \right] \leq \) the Rademacher complexity of \(\mathscr{F} \) via ``symmetrization''.
+	\item Bounding the Radamacher complexity expected supremum of a ``sub-gaussian process'' by a technique called \emph{chaining}.
+\end{enumerate}
+
+Toward this end, we need some tools for showing concentration.
+
+\section{Concentration Inequalities}
+Consider \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P}\), and we would like to bound the tail, i.e., have something like
+\[
+	\mathbb{P} (\overline{X} - \mu \geq t) \leq  \dots.
+\]
+The first thing one can do is to observe that
+\[
+	\frac{\sqrt{n} (\overline{X} - \mu ) }{\sigma } \overset{d}{\to } \mathcal{N} (0, 1)
+\]
+as \(n \to \infty \). Hence, we can show the following facts which is helpful for this CLT approach.
+
+\begin{proposition}
+	For \(Z \sim \mathcal{N} (0, 1)\),
+	\[
+		\left( \frac{1}{t} - \frac{1}{t^3} \right) \frac{1}{\sqrt{2\pi } } e^{- t^2 / 2} \leq \mathbb{P}(Z \geq t) \leq \frac{1}{t} \cdot \frac{1}{\sqrt{2\pi } } e^{- t^2 / 2}.
+	\]
+\end{proposition}
+
+\begin{remark}
+	For \(p \geq 1\), \(\left( \mathbb{E}_{}\left[\vert Z \vert ^p \right]  \right) ^{1 / p} \leq C \sqrt{p} \). Moreover, for all \(\lambda \in \mathbb{R} \), \(\mathbb{E}_{}\left[e^{\lambda Z} \right] = e^{\lambda ^2 / 2}\).
+\end{remark}
+
+However, this will not get us there. To have more control, we would like to develop more tools.
+
+\begin{lemma}[Markov inequality]\label{lma:Markov-inequality}
+	For \(X \geq 0\),
+	\[
+		\mathbb{P} (X \geq t) \leq \frac{\mathbb{E}_{}\left[X \right] }{t}.
+	\]
+\end{lemma}
+
+\begin{note}
+	\hyperref[lma:Markov-inequality]{Markov inequality} is only valid for \(\mathbb{E}_{}\left[X \right] < \infty \). However, it doesn't even require the second moment to exist.
+\end{note}
+
+\begin{lemma}[Chebyshev inequality]\label{lma:Chebyshev-inequality}
+	\[
+		\mathbb{P} (\vert X - \mu  \vert \geq t ) = \mathbb{P} (\vert X - \mu  \vert^p \geq t ^p) \leq \min _{p \geq 1} \frac{\mathbb{E}_{}\left[\vert X-\mu  \vert^p \right] }{t^p}.
+	\]
+\end{lemma}
+
+\begin{remark}
+	For \(p = 2\), we have the usual form \(\mathbb{P} (\vert X - \mu  \vert \geq t) \leq \frac{\Var_{}\left[X \right] }{t^2}\).
+\end{remark}
+
+In the same vein, we have the following.
+
+\begin{corollary}[MGF trick (Crarmer-Ch... trick)]\todo{Fix}
+	\[
+		\mathbb{P} (X - \mu \geq t) = \mathbb{P} (e^{\lambda (X - \mu ) } \geq e^{\lambda t}) \leq \inf _{\lambda > 0} \frac{\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] }{e^{\lambda t}}.
+	\]
+\end{corollary}
+
+\subsection{Sub-Gaussian Random Variables}
+\begin{definition}[Sub-gaussian]\label{def:sub-gaussian}
+	Given a random variable \(X\) with \(\mathbb{E}_{}\left[X \right] = 0\), we say \(X\) is \emph{sub-gaussian} with variance factor\footnote{Also called proxy, sub-gaussian norm, etc.} \(\sigma ^2\) if
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{\frac{\sigma ^2 \lambda ^2}{2}}
+	\]
+	for all \(\lambda \in \mathbb{R} \).
+\end{definition}
+
+\begin{notation}
+	We write \(\mathop{\mathrm{Subg}}(\sigma ) \) for a compact representation of the class of \hyperref[def:sub-gaussian]{sub-gaussian} random variables with variance factor \(\sigma \).
+\end{notation}
+
+\begin{remark}
+	If \(X\) is in \(\mathop{\mathrm{Subg}}(\sigma ) \), then \(-X\) is in \(\mathop{\mathrm{Subg}}(\sigma ) \).
+\end{remark}
+
+\begin{remark}
+	\(X\in \mathop{\mathrm{Subg}}(s^2) \), then \(X\in \mathop{\mathrm{Subg}}(t^2) \) for \(t^2 > s^2\).
+\end{remark}
+
+\begin{remark}
+	\(X\in \mathop{\mathrm{Subg}}(s^2) \), then \(cX\in \mathop{\mathrm{Subg}}(cs^2) \).
+\end{remark}
+
+\begin{lemma}
+	Given \(X\) such that \(\mathbb{E}_{}\left[X \right] =0\). The following are equivalent for \(c_1, \dots , c_5 > 0\).
+	\begin{enumerate}[(a)]
+		\item \(\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{c_1^2 \lambda ^2}\) for all \(\lambda \in \mathbb{R} \).
+		\item \(\mathbb{P} (\vert X \vert \geq t) \leq 2 \exp \left( - \frac{t^2}{c_2^2} \right) \).
+		\item \(\left( \mathbb{E}_{}\left[\vert X \vert ^p \right]  \right)^{1 / p} \leq c_3 \sqrt{p}  \).
+		\item For all \(\lambda \) such that \(\vert \lambda  \vert \leq 1 / c^4 \), \(\mathbb{E}_{}\left[e^{\lambda X^2} \right] \leq e^{c_4^2 \lambda ^2} \).
+		\item For some \(c_5 < \infty \), \(\mathbb{E}_{}\left[\exp \left( \frac{x^2}{c_5^2} \right)  \right] \leq 2\).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	Let's just see the first implication. Given \(X \in \mathop{\mathrm{Subg}}(\sigma ) \),
+	\[
+		\mathbb{P} (X\geq t) \leq \inf _{\lambda > 0} e^{\lambda ^2 \sigma ^2 / 2 - \lambda t} \leq \exp (-\frac{t^2}{2\sigma ^2}).
+	\]
+	From the union bound, we get the factor of \(2\) precisely.
+\end{proof}
+
+Let's see some examples of the \hyperref[def:sub-gaussian]{sub-gaussian} random variables.
+
+\begin{eg}[Rademacher random variable]
+	\(\epsilon = \pm 1\) with probability \(1 / 2\) is a \hyperref[def:sub-gaussian]{sub-gaussian} random variable.
+
+\end{eg}
+\begin{explanation}
+	We see that
+	\[
+		\mathbb{E}_{}\left[e^{\lambda \epsilon } \right]
+		= \frac{1}{2} e^\lambda + \frac{1}{2} e^{-\lambda }
+		= \frac{1}{2} \sum_{k=1}^{\infty} \left( \frac{\lambda ^k}{k!} + \frac{(-\lambda )^k}{k!} \right)
+		= \sum_{k=1}^{\infty} \frac{\lambda ^{2k}}{(2k)!}
+		\leq 1 + \sum_{k=1}^{\infty} \frac{(\lambda ^2)^k}{2^k k!}
+		= e^{\lambda ^2 / 2}
+	\]
+	since \((2k)! \geq 2^k \cdot k!\).
+\end{explanation}
+
+\begin{lemma}
+	Given \(X\in [a, b]\) such that \(\mathbb{E}_{}\left[X \right] = 0\). Then
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \exp (\lambda ^2 \frac{(b-a)^2}{8})
+	\]
+	for all \(\lambda \in \mathbb{R} \).
+\end{lemma}
+\begin{proof}
+	Let \(X^{\prime} \overset{\text{i.i.d.} }{\sim } X\), then
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right]
+		= \mathbb{E}_{}\left[e^{\lambda (X - \mathbb{E}_{}\left[X^{\prime}  \right] )} \right]
+		= \mathbb{E}_{}\left[e^{\lambda X}\cdot e^{-\lambda (\mathbb{E}_{}\left[X^{\prime}  \right] )} \right]
+		\leq \mathbb{E}_{}\left[e^{\lambda X} \right] \cdot \mathbb{E}_{}\left[e^{-\lambda X^{\prime} } \right]
+		= \mathbb{E}_{}\left[e^{\lambda (X - X^{\prime} )} \right],
+	\]
+	where we have used the Jensen's inequality for \(e^{-\lambda \mathbb{E}_{}\left[X^{\prime}  \right] } \leq \mathbb{E}_{}\left[e^{-\lambda X^{\prime} } \right] \).\footnote{This is a trick called symmetrization. A basic example is \(\Var_{}\left[X \right] = \frac{1}{2} \mathbb{E}_{}\left[(X - X^{\prime} )^2 \right] \).} Now given a Rademacher random variable \(\epsilon = \pm 1\), we further have
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right]
+		\leq \mathbb{E}_{X, X^{\prime} }\left[e^{\lambda (X - X^{\prime} )} \right]
+		= \mathbb{E}_{X, X^{\prime} , \epsilon }\left[ e^{\lambda \cdot \epsilon (X - X^{\prime} )} \right]
+		= \mathbb{E}_{X, X^{\prime} }\left[ \mathbb{E}_{\epsilon }\left[e^{\lambda \epsilon (X - X^{\prime} )} \right]  \right] ,
+	\]
+	and \(\mathbb{E}_{\epsilon }\left[ e^{\lambda \epsilon (X - X^{\prime} )} \right] \leq \mathbb{E}_{}\left[e^{\frac{\lambda ^2(X - X^{\prime} )}{2}} \right] \leq e^{\frac{\lambda ^2(b - a)^2}{2}} \), hence in all, we get
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \mathbb{E}_{X, X^{\prime} }\left[e^{\frac{\lambda ^2(b-a)^2}{2}} \right] = e^{\frac{\lambda ^2(b-a)^2}{2}}.
+	\]
+\end{proof}
+
+\begin{note}
+	If \(a = -1\) and \(b = 1\), we get back to the earlier example.
+\end{note}
+
+\begin{lemma}[Closed under ...]\todo{Fix}
+	Let \(X_i\) be independent random variables with \(\mathbb{E}_{}\left[X_i \right] = \mu _i\), and \(X_i - \mu _i \in \mathop{\mathrm{Subg}}\left( \sigma _i^2 \right)  \). Then
+	\[
+		\sum_{i} X_i - \sum_{i} \mu _i \in \mathop{\mathrm{Subg}}\left( \sum_{i} \sigma _i^2 \right) .
+	\]
+\end{lemma}
+\begin{proof}
+	Since
+	\[
+		\mathbb{E}_{}\left[e^{\lambda \sum_{i} (X_i - \mu _i)} \right] \leq e^{\frac{\lambda ^2 (\sum_{i} \sigma _i^2)}{2}}.
+	\]
+\end{proof}
+
+\begin{lemma}[Hoeffding's inequality]\label{lma:Hoeffding-inequality}
+	Let \(X_i\) be independent random variables with \(\mathbb{E}_{}\left[X_i \right] = \mu _i\), and \(X_i - \mu _i \in \mathop{\mathrm{Subg}}(\sigma _i^2) \). Then
+	\[
+		\mathbb{P} \left( \sum_{i} (X_i - \mu _i) \geq t \right)  \leq \exp (\frac{-t^2}{2 \sum_{i} \sigma _i^2}).
+	\]
+\end{lemma}

@@ -1,58 +1,82 @@
-\chapter{Concentration Bounds}
-\lecture{2}{23 Aug. 9:00}{A Glance at Concentration Inequalities}
-Let's first remind what the goal is:
+\chapter{Bounding Supremum of Empirical Process}
+\lecture{2}{23 Aug. 9:00}{Concentration Inequalities and the MGF Trick}
+Most of this course will focus on bounding suprema of the \hyperref[def:empirical-process]{empirical process}. Let's first remind what the goal is:
 \begin{prev}
-	Given a domain \(\chi \), probability measure \(\mathbb{P} \) on \(\chi \), \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and a function class \(\mathscr{F}\ni f \colon \chi \to \mathbb{R}  \). We would like to bound (non-asymptotically)
+	Given a domain \(\chi \), probability measure \(\mathbb{P} \) on \(\chi \), data \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and a function class \(\mathscr{F}\ni f \colon \chi \to \mathbb{R}  \). We would like to bound (non-asymptotically)
 	\[
 		S_n(\mathscr{F} ) = \sup _{f\in \mathscr{F} } \left\vert \frac{1}{n} \sum_{i=1}^{n} f(X_i) - \mathbb{E}_{}\left[f(X) \right]  \right\vert.
 	\]
 \end{prev}
 
-To do this, the basic steps are
+To do this, broadly speaking, we will go through a route with three basic steps:
 \begin{enumerate}[(a)]
 	\item \(S_n(\mathscr{F} )\) ``concentrates'' around its expectation \(\mathbb{E}_{}\left[S_n(\mathscr{F} ) \right] \).
 	\item \(\mathbb{E}_{}\left[S_n(\mathscr{F} ) \right] \leq \) the Rademacher complexity of \(\mathscr{F} \) via ``symmetrization''.
 	\item Bounding the Radamacher complexity expected supremum of a ``sub-gaussian process'' by a technique called \emph{chaining}.
 \end{enumerate}
 
-Toward this end, we need some tools for showing concentration.
+Toward this end, we need some basic and fundamental concentration inequalities which are of wide interest and use.
 
 \section{Concentration Inequalities}
-Consider \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P}\), and we would like to bound the tail, i.e., have something like
-\[
-	\mathbb{P} (\overline{X} - \mu \geq t) \leq  \dots.
-\]
-The first thing one can do is to observe that
-\[
-	\frac{\sqrt{n} (\overline{X} - \mu ) }{\sigma } \overset{d}{\to } \mathcal{N} (0, 1)
-\]
-as \(n \to \infty \). Hence, we can show the following facts which is helpful for this CLT approach.
+\subsection{Gaussian Distribution}
+For us, the gold standard for concentration would be the Gaussian distribution. The property of the Gaussian distribution we are interested in now is its rapid tail decay. This is given in \autoref{lma:Gaussian-tail-bound}.
 
-\begin{proposition}
+\begin{lemma}\label{lma:Gaussian-tail-bound}
 	For \(Z \sim \mathcal{N} (0, 1)\),
 	\[
 		\left( \frac{1}{t} - \frac{1}{t^3} \right) \frac{1}{\sqrt{2\pi } } e^{- t^2 / 2} \leq \mathbb{P}(Z \geq t) \leq \frac{1}{t} \cdot \frac{1}{\sqrt{2\pi } } e^{- t^2 / 2}.
 	\]
-\end{proposition}
+\end{lemma}
 
-\begin{remark}
-	For \(p \geq 1\), \(\left( \mathbb{E}_{}\left[\vert Z \vert ^p \right]  \right) ^{1 / p} \leq C \sqrt{p} \). Moreover, for all \(\lambda \in \mathbb{R} \), \(\mathbb{E}_{}\left[e^{\lambda Z} \right] = e^{\lambda ^2 / 2}\).
-\end{remark}
+\begin{corollary}\label{col:Gaussian-tail-bound}
+	For all \(t \geq 1\), we have
+	\[
+		\mathbb{P} (\mathcal{N} (0, \sigma ^{2} ) \geq t) \leq e^{-t^2 / 2\sigma ^{2} }.
+	\]
+\end{corollary}
 
-However, this will not get us there. To have more control, we would like to develop more tools.
+Now, as is suggested by CLT, the following question arises.
 
-\begin{lemma}[Markov inequality]\label{lma:Markov-inequality}
-	For \(X \geq 0\),
+\begin{problem*}
+	Does \autoref{col:Gaussian-tail-bound} hold for sums of independent random variables? That is, given i.i.d.\ \(X_1, \dots , X_n\) with mean \(\mu \) and variance \(\sigma ^{2} \), whether
+	\[
+		\mathbb{P} (\sqrt{n}(\overline{X} - \mu ) \geq t )\leq e^{-t^2 / 2 \sigma ^{2} }
+	\]
+	for all \(t \geq 0\)?
+\end{problem*}
+\begin{answer}
+	Just invoking CLT is not enough, we need to handle the error term in the normal approximation. We will see that we can show the above directly for a class of distributions with fast tail decay.
+\end{answer}
+
+\subsection{MGF Trick}
+The most basic tool to bound tail probabilities is the \hyperref[lma:Markov-inequality]{Markov's inequality}.
+\begin{lemma}[Markov's inequality]\label{lma:Markov-inequality}
+	For a non-negative random variable \(X \geq 0\),
 	\[
 		\mathbb{P} (X \geq t) \leq \frac{\mathbb{E}_{}\left[X \right] }{t}.
 	\]
 \end{lemma}
 
 \begin{note}
-	\hyperref[lma:Markov-inequality]{Markov inequality} is only valid for \(\mathbb{E}_{}\left[X \right] < \infty \). However, it doesn't even require the second moment to exist.
+	\hyperref[lma:Markov-inequality]{Markov's inequality} is valid as soon as \(\mathbb{E}_{}\left[X \right] < \infty \). That is, it holds even when the second moment does not exist.
 \end{note}
 
-\begin{lemma}[Chebyshev inequality]\label{lma:Chebyshev-inequality}
+\begin{remark}
+	The rate of tail decay is slow; it is \(O(1 / t)\). For the Gaussian, by \autoref{lma:Gaussian-tail-bound}, it's actually \(O(e^{-t^2 / 2})\).
+\end{remark}
+
+By the above remark, as might ask the following.
+
+\begin{problem*}
+	Can we derive faster tail decay bounds in general?
+\end{problem*}
+\begin{answer}
+	Yes, if we assume more moments exist. If all moments exist and in particular the MGF (moment generating function) exists, like for the Gaussian, then we can expect faster tail decay.
+\end{answer}
+
+For example, if we assume second moment exists, then we can get a \(O(1 / t^2)\) tail decay by \hyperref[lma:Chebyshev-inequality]{Chebyshev inequality}.
+
+\begin{lemma}[Generalized Chebyshev inequality]\label{lma:Chebyshev-inequality}
 	\[
 		\mathbb{P} (\vert X - \mu  \vert \geq t ) = \mathbb{P} (\vert X - \mu  \vert^p \geq t ^p) \leq \min _{p \geq 1} \frac{\mathbb{E}_{}\left[\vert X-\mu  \vert^p \right] }{t^p}.
 	\]
@@ -62,15 +86,23 @@ However, this will not get us there. To have more control, we would like to deve
 	For \(p = 2\), we have the usual form \(\mathbb{P} (\vert X - \mu  \vert \geq t) \leq \frac{\Var_{}\left[X \right] }{t^2}\).
 \end{remark}
 
-In the same vein, we have the following.
+\begin{remark}
+	All tail bounds are derived using \hyperref[lma:Markov-inequality]{Markov's inequality}; the clever part is to apply it to the right random variable. In this sense, every tail bound is just \hyperref[lma:Markov-inequality]{Markov's inequality}.
+\end{remark}
 
-\begin{corollary}[MGF trick (Crarmer-Ch... trick)]\todo{Fix}
+In the same vein, we can now assume the MGF exists and apply \hyperref[lma:Markov-inequality]{Markov's inequality}.
+
+\begin{lemma}[MGF trick (Crarmer-Chernoff method)]\label{lma:MGF-trick}
 	\[
 		\mathbb{P} (X - \mu \geq t) = \mathbb{P} (e^{\lambda (X - \mu ) } \geq e^{\lambda t}) \leq \inf _{\lambda > 0} \frac{\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] }{e^{\lambda t}}.
 	\]
-\end{corollary}
+\end{lemma}
+
+We will use the \hyperref[lma:MGF-trick]{MGF trick} rather than the \hyperref[lma:Chebyshev-inequality]{generalized Chebyshev's inequality} to derive tail bounds because MGF of a sum of independent random variables decomposes as the product of the MGF's. It is messier to work with the \(p^{\text{th} } \) moment of a sum of independent random variables.
 
 \subsection{Sub-Gaussian Random Variables}
+We will now consider a class of distributions whose MGF is dominated by the MGF of a Gaussian. Then, in a very clean way, the \hyperref[lma:MGF-trick]{MGF trick} will give us Gaussian tail bounds for these distributions.
+
 \begin{definition}[Sub-gaussian]\label{def:sub-gaussian}
 	Given a random variable \(X\) with \(\mathbb{E}_{}\left[X \right] = 0\), we say \(X\) is \emph{sub-gaussian} with variance factor\footnote{Also called proxy, sub-gaussian norm, etc.} \(\sigma ^2\) if
 	\[
@@ -80,23 +112,20 @@ In the same vein, we have the following.
 \end{definition}
 
 \begin{notation}
-	We write \(\mathop{\mathrm{Subg}}(\sigma ) \) for a compact representation of the class of \hyperref[def:sub-gaussian]{sub-gaussian} random variables with variance factor \(\sigma \).
+	We write \(\mathop{\mathrm{Subg}}(\sigma ^{2} ) \) for a compact representation of the class of \hyperref[def:sub-gaussian]{sub-gaussian} random variables with variance factor \(\sigma ^{2} \).
 \end{notation}
 
 \begin{remark}
-	If \(X\) is in \(\mathop{\mathrm{Subg}}(\sigma ) \), then \(-X\) is in \(\mathop{\mathrm{Subg}}(\sigma ) \).
+	Observe that if \(X\in \mathop{\mathrm{Subg}}(\sigma ^{2} ) \):
+	\begin{itemize}
+		\item \(-X\in \mathop{\mathrm{Subg}}(\sigma ^{2} ) \);
+		\item \(X \in \mathop{\mathrm{Subg}}(t^2) \) if \(t^2 > \sigma ^{2} \);
+		\item \(cX\in \mathop{\mathrm{Subg}}(c \sigma ^{2} ) \).
+	\end{itemize}
 \end{remark}
 
-\begin{remark}
-	\(X\in \mathop{\mathrm{Subg}}(s^2) \), then \(X\in \mathop{\mathrm{Subg}}(t^2) \) for \(t^2 > s^2\).
-\end{remark}
-
-\begin{remark}
-	\(X\in \mathop{\mathrm{Subg}}(s^2) \), then \(cX\in \mathop{\mathrm{Subg}}(cs^2) \).
-\end{remark}
-
-\begin{lemma}\label{lma:sub-gaussian}
-	Given \(X\) such that \(\mathbb{E}_{}\left[X \right] =0\). For some \(c_1, \dots , c_5 > 0\), the following are equivalent.
+\begin{lemma}[Equivalent conditions]\label{lma:sub-gaussian}
+	Given a random variable \(X\) with \(\mathbb{E}_{}\left[X \right] =0\), the following are equivalent for absolute constants \(c_1, \dots , c_5 > 0\).
 	\begin{enumerate}[(a)]
 		\item\label{lma:sub-gaussian-a} \(\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{c_1^2 \lambda ^2}\) for all \(\lambda \in \mathbb{R} \).
 		\item\label{lma:sub-gaussian-b} \(\mathbb{P} (\vert X \vert \geq t) \leq 2 \exp \left( - \frac{t^2}{c_2^2} \right) \).
@@ -108,16 +137,15 @@ In the same vein, we have the following.
 \begin{proof}
 	Let's just see the first implication from \autoref{lma:sub-gaussian-a} to \autoref{lma:sub-gaussian-b}. Given \(X \in \mathop{\mathrm{Subg}}(\sigma ) \),
 	\[
-		\mathbb{P} (X\geq t) \leq \inf _{\lambda > 0} e^{\lambda ^2 \sigma ^2 / 2 - \lambda t} \leq \exp (-\frac{t^2}{2\sigma ^2}).
+		\mathbb{P} (X\geq t) \leq \inf _{\lambda > 0} e^{\lambda ^2 \sigma ^2 / 2 - \lambda t} \leq \exp (-\frac{t^2}{2\sigma ^2})
 	\]
-	From the union bound, we get the factor of \(2\) precisely.
+	where the last inequality is obtained by minimizing the quadratic function \(\lambda ^{2} \sigma ^{2} / 2 - \lambda t\) whose minimizer is \(\lambda ^{\ast} = t / \sigma ^{2} \). The same bound holds for the left tail and a union bound gives the two-sided version.
 \end{proof}
 
 Let's see some examples of the \hyperref[def:sub-gaussian]{sub-gaussian} random variables.
 
 \begin{eg}[Rademacher random variable]\label{eg:Rademacher-random-varaible}
-	\(\epsilon = \pm 1\) with probability \(1 / 2\) is a \hyperref[def:sub-gaussian]{sub-gaussian} random variable.
-
+	\(\epsilon = \pm 1\) with probability \(1 / 2\) is a \(\mathop{\mathrm{Subg}}(1) \) random variable.
 \end{eg}
 \begin{explanation}
 	We see that
@@ -132,15 +160,17 @@ Let's see some examples of the \hyperref[def:sub-gaussian]{sub-gaussian} random 
 	since \((2k)! \geq 2^k \cdot k!\).
 \end{explanation}
 
-\begin{lemma}
+In fact, the above can be generalized for any bounded random variable.
+
+\begin{lemma}\label{lma:bounded-rv-is-sub-gaussian}
 	Given \(X\in [a, b]\) such that \(\mathbb{E}_{}\left[X \right] = 0\). Then
 	\[
 		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \exp (\lambda ^2 \frac{(b-a)^2}{8})
 	\]
-	for all \(\lambda \in \mathbb{R} \).
+	for all \(\lambda \in \mathbb{R} \), i.e., \(X\in \mathop{\mathrm{Subg}}((b-a)^2 / 4) \).
 \end{lemma}
 \begin{proof}
-	Let \(X^{\prime} \overset{\text{i.i.d.} }{\sim } X\), then
+	We will prove this with a worse constant. Let \(X^{\prime} \overset{\text{i.i.d.} }{\sim } X\) be an i.i.d.\ copy, then
 	\[
 		\mathbb{E}_{}\left[e^{\lambda X} \right]
 		= \mathbb{E}_{}\left[e^{\lambda (X - \mathbb{E}_{}\left[X^{\prime}  \right] )} \right]
@@ -148,14 +178,14 @@ Let's see some examples of the \hyperref[def:sub-gaussian]{sub-gaussian} random 
 		\leq \mathbb{E}_{}\left[e^{\lambda X} \right] \cdot \mathbb{E}_{}\left[e^{-\lambda X^{\prime} } \right]
 		= \mathbb{E}_{}\left[e^{\lambda (X - X^{\prime} )} \right],
 	\]
-	where we have used the \href{https://en.wikipedia.org/wiki/Jensen%27s_inequality}{Jensen's inequality} for \(e^{-\lambda \mathbb{E}_{}\left[X^{\prime}  \right] } \leq \mathbb{E}_{}\left[e^{-\lambda X^{\prime} } \right] \).\footnote{This is a trick called symmetrization. A basic example is \(\Var_{}\left[X \right] = \frac{1}{2} \mathbb{E}_{}\left[(X - X^{\prime} )^2 \right] \).} Now given a \hyperref[eg:Rademacher-random-varaible]{Rademacher random variable} \(\epsilon = \pm 1\), we further have
+	where we have used the \href{https://en.wikipedia.org/wiki/Jensen%27s_inequality}{Jensen's inequality} for \(e^{-\lambda \mathbb{E}_{}\left[X^{\prime}  \right] } \leq \mathbb{E}_{}\left[e^{-\lambda X^{\prime} } \right] \).\footnote{This is a trick called symmetrization. A basic example is \(\Var_{}\left[X \right] = \frac{1}{2} \mathbb{E}_{}\left[(X - X^{\prime} )^2 \right] \).} Now we introduce a \hyperref[eg:Rademacher-random-varaible]{Rademacher random variable} \(\epsilon = \pm 1\), to further write
 	\[
 		\mathbb{E}_{}\left[e^{\lambda X} \right]
 		\leq \mathbb{E}_{X, X^{\prime} }\left[e^{\lambda (X - X^{\prime} )} \right]
 		= \mathbb{E}_{X, X^{\prime} , \epsilon }\left[ e^{\lambda \cdot \epsilon (X - X^{\prime} )} \right]
 		= \mathbb{E}_{X, X^{\prime} }\left[ \mathbb{E}_{\epsilon }\left[e^{\lambda \epsilon (X - X^{\prime} )} \right]  \right] ,
 	\]
-	and \(\mathbb{E}_{\epsilon }\left[ e^{\lambda \epsilon (X - X^{\prime} )} \right] \leq \mathbb{E}_{}\left[e^{\frac{\lambda ^2(X - X^{\prime} )}{2}} \right] \leq e^{\frac{\lambda ^2(b - a)^2}{2}} \), hence in all, we get
+	and \(\mathbb{E}_{\epsilon }\left[ e^{\lambda \epsilon (X - X^{\prime} )} \right] \leq \mathbb{E}_{}\left[e^{\frac{\lambda ^2(X - X^{\prime} )}{2}} \right] \leq e^{\frac{\lambda ^2(b - a)^2}{2}} \), where we used the known bound on MGF of a \hyperref[eg:Rademacher-random-varaible]{Rademacher random variable}, hence overall, we get
 	\[
 		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \mathbb{E}_{X, X^{\prime} }\left[e^{\frac{\lambda ^2(b-a)^2}{2}} \right] = e^{\frac{\lambda ^2(b-a)^2}{2}}.
 	\]
@@ -165,19 +195,32 @@ Let's see some examples of the \hyperref[def:sub-gaussian]{sub-gaussian} random 
 	If \(a = -1\) and \(b = 1\), we get back to the earlier example.
 \end{note}
 
-\begin{lemma}[Closed under ...]\todo{Fix}
+Just like independent Gaussians, sums of independent \hyperref[def:sub-gaussian]{sub-gaussians} remain \hyperref[def:sub-gaussian]{sub-gaussian}.
+
+\begin{lemma}[Closed under convolution]\label{lma:sub-gaussian-add}
 	Let \(X_i\) be independent random variables with \(\mathbb{E}_{}\left[X_i \right] = \mu _i\), and \(X_i - \mu _i \in \mathop{\mathrm{Subg}}\left( \sigma _i^2 \right)  \). Then
 	\[
-		\sum_{i} X_i - \sum_{i} \mu _i \in \mathop{\mathrm{Subg}}\left( \sum_{i} \sigma _i^2 \right) .
+		\sum_{i=1}^n X_i - \sum_{i=1}^n \mu _i \in \mathop{\mathrm{Subg}}\left( \sum_{i=1}^n \sigma _i^2 \right) .
 	\]
 \end{lemma}
 \begin{proof}
-	We simply observe that \(\mathbb{E}_{}\left[e^{\lambda \sum_{i} (X_i - \mu _i)} \right] \leq e^{\frac{\lambda ^2 (\sum_{i} \sigma _i^2)}{2}}\).
+	We simply observe that
+	\[
+		\mathbb{E}_{}\left[e^{\lambda \sum_{i} (X_i - \mu _i)} \right]
+		= \prod _{i=1}^n \mathbb{E}_{}\left[e^{\lambda (X_i - \mu _i)} \right]
+		\leq e^{\frac{\lambda ^2 (\sum_{i} \sigma _i^2)}{2}}.
+	\]
 \end{proof}
 
-\begin{lemma}[Hoeffding's inequality]\label{lma:Hoeffding-inequality}
+We can now immediately prove the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality}.
+
+\begin{theorem}[Hoeffding's inequality for sub-gaussian random variables]\label{thm:Hoeffding-inequality}
 	Let \(X_i\) be independent random variables with \(\mathbb{E}_{}\left[X_i \right] = \mu _i\), and \(X_i - \mu _i \in \mathop{\mathrm{Subg}}(\sigma _i^2) \). Then
 	\[
-		\mathbb{P} \left( \sum_{i} (X_i - \mu _i) \geq t \right)  \leq \exp (\frac{-t^2}{2 \sum_{i} \sigma _i^2}).
+		\mathbb{P} \left( \left\vert \sum_{i=1}^n (X_i - \mu _i) \right\vert \geq t \right) \leq 2 \exp (\frac{-t^2}{2 \sum_{i} \sigma _i^2})
 	\]
-\end{lemma}
+	for all \(t \geq 0\).\footnote{One-sided version holds without the factor \(2\).}
+\end{theorem}
+\begin{proof}
+	It's immediate from \autoref{lma:sub-gaussian-add} and the equivalent condition \autoref{lma:sub-gaussian-b} in \autoref{lma:sub-gaussian}.
+\end{proof}

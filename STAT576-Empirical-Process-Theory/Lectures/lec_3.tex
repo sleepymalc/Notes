@@ -1,0 +1,154 @@
+\lecture{3}{25 Aug. 9:00}{}
+\begin{corollary}
+	If \(X_i \in [a, b]\) and \(\sigma _i^2 = (b-a)^2 / 4\), then
+	\[
+		\mathbb{P} \left( \sum_{i} (X_i - \mu _i) \geq t \right)  \leq \exp (- \frac{2t^{2} }{n(b-a)^2}).
+	\]
+\end{corollary}
+
+\begin{remark}
+	If \(X_i\) are i.i.d., then
+	\[
+		\mathbb{P} (\sqrt{n} (\overline{X} - \mu ) \geq t) \leq \exp \left( -\frac{-2t^{2} }{(b-a)^{2} } \right).
+	\]
+	We also know that
+	\[
+		\mathbb{P} (\sqrt{n} (\overline{X} - \mu ) \geq t) \thickapprox \mathbb{P} (\mathcal{N} (0, \sigma ^{2} ) \geq t)	 \leq \exp \left( - \frac{t^2}{2 \sigma ^{2} } \right) ,
+	\]
+	i.e., \(\sigma ^{2} \sim (b-a)^2 / 4\).\footnote{Actually, \(\sigma ^{2} \leq (b-a)^{2} / 4\) always holds.}
+
+	In this case, we observe that for the asymptotic one, the confidence interval would be
+	\[
+		\left[  \overline{X} \pm  \frac{\sigma }{\sqrt{n}} Z_{\alpha / 2}\right],
+	\]
+	while from the Hoffding's inequality, we have
+	\[
+		\left[ \overline{X} \pm \frac{b-a}{2 \sqrt{n} } \sqrt{\log \frac{2}{\alpha }}  \right] ,
+	\]
+	which is much larger.
+\end{remark}
+
+We see that \(\mathbb{P} (X=0) = 1 - \frac{1}{k^2}\), and \(\mathbb{P} (X = \pm k) = \frac{1}{2k^{2} }\), i.e., if \(\Var_{}\left[X \right] \leq 1\), we will have range \(\to 2k\).
+
+Let's see some non-examples.
+
+\begin{eg}[Non-examples]
+	Cauchy, exponential, and Possion random variables are not \hyperref[def:sub-gaussian]{sub-gaussians}.
+\end{eg}
+
+\begin{problem*}
+	What about mixture? Let's say
+	\[
+		X = \begin{dcases}
+			Z_1, & \text{ w.p.\ } p ;   \\
+			Z_2, & \text{ w.p.\ } 1-p ,
+		\end{dcases}
+	\]
+	where both \(Z_1, Z_2\sim \mathop{\mathrm{Subg}}(\sigma ) \). Is this a \hyperref[def:sub-gaussian]{sub-gaussian} random variable?
+\end{problem*}
+
+\subsection{Sub-Exponential Random Variables}
+Let \(Z^2 \sim \chi ^2\), then \(\mathbb{P} (Z^2 > t) = 2\mathbb{P} (Z \geq \sqrt{t} ) \leq 2 e^{-t / 2}\). Then,
+\[
+	\mathbb{E}_{}\left[e^{\lambda (Z^2 - 1)} \right] =
+	\begin{dcases}
+		\frac{e^{-\lambda }}{\sqrt{1 - 2 \lambda } }, & \text{ if } 0 \leq \lambda < 1 / 2 ; \\
+		\infty ,                                      & \text{ if } \lambda  \geq 1 / 2 .
+	\end{dcases}
+\]
+
+\begin{definition}[Sub-exponential]\label{def:sub-exponential}
+	\(X\) is \emph{sub-exponential} with parameters \((\sigma ^{2} , \alpha )\) with mean \(\lambda \) if
+	\[
+		\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] \leq e^{\frac{\lambda ^{2} \sigma ^{2} }{2}}
+	\]
+	for all \(\vert \lambda  \vert < 1 / \alpha \).
+\end{definition}
+
+\begin{eg}
+	For \(Z^2 \sim \chi ^{2} \), \(Z^2 \sim \mathop{\mathrm{SubExp}}(2, 4) \).
+\end{eg}
+\begin{explanation}
+	For all \(\vert \lambda \vert < 1 / 4\), we have
+	\[
+		\frac{e^{-\lambda }}{\sqrt{1 - 2 \lambda } } \leq e^{2 \lambda ^{2} }.
+	\]
+	By \autoref{def:sub-exponential}, we're done.
+\end{explanation}
+
+\begin{lemma}
+	\(X \sim \mathop{\mathrm{SubExp}}(\sigma ^{2} , \alpha ) \) with mean \(\mu \). Then
+	\[
+		\mathbb{P} (X - \mu \geq t) \leq
+		\begin{dcases}
+			e^{- \frac{t^2}{2 \sigma ^{2} }}, & \text{ if } 0 \leq t \leq \frac{\sigma ^{2}}{\alpha } ; \\
+			e^{- \frac{t}{2\alpha }},         & \text{ if } t > \frac{\sigma ^{2} }{\alpha }.
+		\end{dcases}
+	\]
+\end{lemma}
+\begin{proof}
+	We see that
+	\[
+		\mathbb{P} (X- \mu \geq t)
+		\leq \frac{\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] }{e^{\lambda t}}
+		\leq e^{\frac{\lambda ^{2} \sigma ^{2} }{2} - \lambda t}
+	\]
+	for all \(0 \leq \lambda < 1 / \alpha \). Then, from elementary algebra, we see that
+	\begin{itemize}
+		\item \(\frac{t}{\sigma ^{2} } < \frac{1}{\alpha }\): we get the Gaussian bound.
+		\item \(\frac{t}{\sigma ^{2} } \geq \frac{1}{\alpha }\): the minimizer is \(1 / \alpha \), and we get the exponential bound.
+	\end{itemize}
+\end{proof}
+
+\begin{remark}
+	\(\mathbb{P} (\vert X - \mu  \vert \geq t) \leq 2 \exp \left( - \min \left\{ \frac{t^2}{2 \sigma ^{2} }, \frac{t}{2\alpha } \right\}  \right) \). Or by observing \(\min (1 / u, 1 / v ) \geq 1 / (u + v)\), we have
+	\[
+		\mathbb{P} (\vert X - \mu  \vert \geq t) \leq 2 \exp \left( - \frac{t^2}{2(\sigma ^{2} + t \alpha )} \right)
+	\]
+	for all \(t \geq 0\).
+\end{remark}
+
+\begin{lemma}
+	If \(X_i \sim \mathop{\mathrm{SubExp}}(\sigma _i^{2} , \alpha _i) \) are all independent, then
+	\[
+		\sum_{i=1}^{n} (X_i - \mu _i) \sim \mathop{\mathrm{SubExp}}\left( \sum_{i} \sigma _i^2, \lVert \alpha  \rVert_\infty \right).
+	\]
+\end{lemma}
+\begin{proof}
+	Since
+	\[
+		\mathbb{E}_{}\left[e^{\lambda \sum_{i=1}^{n} (X_i - \mu _i)} \right]
+		= \prod_{i=1}^{n} \mathbb{E}_{}\left[e^{\lambda (X_i - \mu _i)} \right]
+		\leq e^{\frac{\sum_{i} \lambda ^2 \sigma _i^2}{2}}
+	\]
+	for \(\vert \lambda \vert < 1 / \lVert \alpha \rVert_\infty \).
+\end{proof}
+
+
+\begin{theorem}[Bernstein's inequality]\label{thm:Bernstein-inequality}
+	Let \(X_i \sim \mathop{\mathrm{SubExp}}(\sigma ^{2} , \alpha ) \) are all independent, then
+	\[
+		\mathbb{P} \left( \left\vert \sum_{i=1}^{n} (X_i - \mu _i) \right\vert \geq t \right) \leq 2 \exp \left( - \min \left\{ \frac{t^{2} }{2 \sum_{i} \sigma _i^2}, \frac{t}{2 \lVert \alpha \rVert_\infty } \right\} \right) .
+	\]
+	Furthermore, let \(k \geq \sigma _i, \alpha _i\) for all \(i\), then for all \(a_i\in \mathbb{R} \), we have
+	\[
+		\mathbb{P} \left( \left\vert  \sum_{i=1}^{n} a_i(X_i - \mu _i) \right\vert  \geq t \right) \leq 2 \exp \left( - c \min \left\{ \frac{t^{2} }{k^2 \lVert a \rVert ^2}, \frac{t}{k \lVert a \rVert _\infty } \right\} \right) .
+	\]
+\end{theorem}
+
+\begin{note}
+	For \(a_i = 1 / \sqrt{n} \),
+	\[
+		\mathbb{P} \left( \left\vert \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (X_i - \mu _i) \right\vert \geq t \right) \leq
+		\begin{dcases}
+			2e^{-ct^{2} },    & \text{ if } 0 < t < c\sqrt{n}  ; \\
+			2e^{-t\sqrt{n} }, & \text{ if } t > c\sqrt{n} .
+		\end{dcases}
+	\]
+\end{note}
+
+Application of Bernstein to bounded random variable.
+
+\begin{lemma}
+	Let \(\vert X - \mu \vert \leq b\) and \(X - \mu \) is \(\mathop{\mathrm{Subg}}(b^2) \). It's also true that \(\mathop{\mathrm{SubExp}}(2 \sigma ^{2} , 2b) \).
+\end{lemma}

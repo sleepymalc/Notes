@@ -1,0 +1,125 @@
+\lecture{4}{28 Aug. 9:00}{Applications of Bernstein's Inequality to Bounded Random Variables}
+Now we see some applications of Bernstein's inequality to bounded random variables, addressing some weaknesses of \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality}.
+
+\begin{lemma}
+	Let \(\vert X - \mu \vert \leq b\) and \(X - \mu \) is \(\mathop{\mathrm{Subg}}(b^2) \). It's also true that \(\mathop{\mathrm{SubExp}}(2 \sigma ^{2} , 2b) \).
+\end{lemma}
+\begin{proof}
+	We have
+	\[
+		\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right]
+		= 1 + \frac{\lambda ^{2} }{2} \sigma ^{2} + \sum_{k=3}^{\infty} \lambda ^k \frac{\mathbb{E}_{}\left[X - \mu  \right] ^k}{k!}
+		\leq 1 + \frac{\lambda ^2 \sigma ^2}{2} + \frac{\lambda \sigma ^2}{2} \sum_{k=3}^{\infty} (\vert \lambda  \vert b)^{k - 2}
+	\]
+	where we have used \((X - \mu )^k \leq (X - \mu )^2 \vert X - \mu \vert ^{k - 2} \leq (X - \mu )^2 b^{k-2}\). The last sum is a geometric series, which converges if \(\vert \lambda  \vert < 1 / b\) to
+	\[
+		1 + \frac{\lambda ^2 \sigma ^2}{2} \left( \frac{1}{1 - b \vert \lambda \vert } \right) .
+	\]
+	Then from \(1 + x \leq e^x\), then the whole thing is less or equal to
+	\[
+		e^{\frac{\lambda ^2 \sigma ^{2} }{2(1 - b \vert \lambda \vert )}} \leq e^{\lambda ^{2} \sigma ^{2} }
+	\]
+	if \(\vert \lambda  \vert < 1 / 2b\).
+\end{proof}
+
+From this, we also get \(\sum_{i} (X_i - \mu _i) \in \mathop{\mathrm{SubExp}}(2 \sum_{i} \sigma _i^{2} , 2b) \), i.e., from
+\[
+	\mathbb{P} (\vert X - \mu  \vert \geq t) \leq 2 \exp \left( \frac{- t^2}{2(2\sigma ^{2} + t\cdot 2b)} \right),
+\]
+we similarly have
+\[
+	\mathbb{P} \left( \left\vert \sum_{i} X_i - \sum_{i} \mu _i \right\vert \geq t \right) \leq 2 \exp \left( \frac{-t^2}{4\left( \sum_{i} \sigma _i^2 + tb\right) } \right).
+\]
+
+\begin{corollary}
+	Let \(X_1, \dots , X_n\) be independent random variables with \(\mathbb{E}_{}\left[X_i \right] = \mu _i\), \(\Var_{}\left[X_i \right] = \sigma ^{2}\), and \(\vert X_i - \mu _i \vert \leq b\), we have
+	\[
+		\begin{split}
+			&\mathbb{P} \left( \left\vert X_i - \mu  \right\vert \geq t \right) \leq 2 \exp \left( \frac{- t^2 / 2}{n \sigma ^{2} + bt / 3 } \right) \\
+			\iff & \mathbb{P} \left( \left\vert \frac{1}{n}\sum_{i=1}^{n} X_i - \mu \right\vert \geq t \right) \leq 2 \exp \left( \frac{- nt^2 / 2}{\sigma ^{2} + bt / 3} \right).
+		\end{split}
+	\]
+\end{corollary}
+
+\begin{remark}
+	If \(t \leq 3 \sigma ^{2} / b\), we get back the \hyperref[def:sub-gaussian]{sub-gaussian} tail; if \(t > 3\sigma ^{2} / b\), we then need to look at \(bt / 3\) and get the \hyperref[def:sub-exponential]{sub-exponential} tail.
+\end{remark}
+
+\begin{proposition}
+	\[
+		\mathbb{P} \left( \left\vert \frac{1}{n} \sum_{i=1}^{n} X_i - \mu  \right\vert \leq \frac{\sigma}{\sqrt{n} } \sqrt{2 \log \frac{2}{\alpha }} + \frac{3b}{3n} \log \frac{2}{\alpha } \right) \geq 1 - \alpha
+	\]
+\end{proposition}
+\begin{proof}
+	Let
+	\[
+		\alpha = 2 \exp \left( \frac{- t^2}{2(V + bt / 3)} \right),
+	\]
+	then
+	\[
+		t^2 - \frac{2tb}{3}\log \frac{2}{\alpha } - 2 V \log \frac{2}{\alpha } = 0.
+	\]
+\end{proof}
+
+\begin{eg}
+	Let \(X_1 , \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathop{\mathrm{Bern}}(p) \), and \(\hat{p} = \overline{X} = 0\). Then \(p \leq \sqrt{p} / \sqrt{n} \dots + p \dots  \), i.e., \(p \leq O(\frac{1}{n})\).
+\end{eg}
+
+Now we go back to the discussion about \hyperref[def:empirical-process]{empirical process}. We do the first step, i.e., we want to show
+\[
+	S_n = \sup _{f \in \mathscr{F} } \left\vert \frac{1}{n}\sum_{i=1}^{n} f(X_i) - \mathbb{E}_{}\left[f(X) \right]  \right\vert
+\]
+``concentrates'' when \(\mathscr{F} \) is bounded provided that
+\[
+	\sup _{x\in X, f\in \mathscr{F} } \vert f(x) \vert \leq B.
+\]
+
+\begin{theorem}[Bounded difference concentration inequality]\label{thm:bounded-difference-concentration-inequality}
+	Let \(X_1, \dots , X_n\) be independent random variables taking values in \(\chi \), and let \(g\colon \chi ^n \to \mathbb{R} \) satisfying
+	\[
+		\sup _{x_1, \dots , x_n, x_i^{\prime} }\vert g(x_1, \dots , x_n) - g(x_1, \dots , x_i^{\prime} , \dots , x_n) \vert \leq c_i
+	\]
+	for all \(i\), then
+	\[
+		\mathbb{P} (g(X_1, \dots , X_n) - \mathbb{E}_{}\left[g \right] \geq t) \leq \exp \left( \frac{-2t^2}{\sum_{i=1}^{n} c_i^2} \right).
+	\]
+	The same bound holds for the left tail.
+\end{theorem}
+
+\begin{remark}
+	The qualitative statement is ``a random variable that depends on the influence of many independent random variables but not too many on any one of them concentrates''.
+\end{remark}
+
+\begin{remark}
+	This is a generalization of \hyperref[thm:Hoeffding-inequality]{Hoffding's inequality}, where we let
+	\[
+		g(x_1, \dots , x_n) = \frac{1}{n}(x_1 + \dots + x_n)
+	\]
+	for \(X_i \in [a_i, b_i]\). In this case, we have \(c_i = (b_i - a_i) / n\). Plugging in, we get back \hyperref[thm:Hoeffding-inequality]{Hoffding's inequality}.
+\end{remark}
+
+Now, one can show
+\[
+	\left\vert S_n(x_1, \dots , x_n) - S_n(x_1, \dots , x_i^{\prime} , \dots , x_n) \right\vert \leq \frac{2B}{n} \eqqcolon c_i.
+\]
+Then from \autoref{thm:bounded-difference-concentration-inequality},
+\[
+	\mathbb{P} (S_n \geq \mathbb{E}_{}\left[S_n \right] + t) \leq \exp \left( \frac{-nt^2}{2B^2} \right) \eqqcolon \delta ,
+\]
+or equivalently,
+\[
+	S_n \leq \mathbb{E}_{}\left[S_n \right] + B \sqrt{\frac{2}{n}\log \frac{1}{\delta }}
+\]
+with probability at least \(1 - \delta \).
+
+\begin{note}
+	\(B \sqrt{\frac{2}{n} \log \frac{1}{\delta }} \) is a lower order term, i.e., \(\mathbb{E}_{}\left[S_n \right] \) dominates it.
+\end{note}
+\begin{explanation}
+	Since
+	\[
+		\mathbb{E}_{}\left[S_n \right] \geq \mathbb{E}_{}\left[\left\vert \frac{1}{n} \sum_{i=1}^{n} f(x_i) - \mathbb{E}_{}\left[f \right] \right\vert \right] = \sqrt{\frac{\Var_{}\left[f(X_1) \right] }{n}} .
+	\]
+\end{explanation}
+
+All these imply that \emph{it's enough to bound \(\mathbb{E}_{}\left[S_n \right] \)}.

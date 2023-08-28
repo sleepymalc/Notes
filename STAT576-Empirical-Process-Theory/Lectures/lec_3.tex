@@ -1,83 +1,134 @@
 \lecture{3}{25 Aug. 9:00}{Sub-Exponential Random Variables}
+For bounded random variables, we can apply \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} to obtain the following.
+
 \begin{corollary}
-	If \(X_i \in [a, b]\) and \(\sigma _i^2 = (b-a)^2 / 4\), then
+	Let \(X_i \in [a, b]\) be random variables with mean \(\mu _i\),
 	\[
 		\mathbb{P} \left( \sum_{i} (X_i - \mu _i) \geq t \right)  \leq \exp (- \frac{2t^{2} }{n(b-a)^2}).
 	\]
 \end{corollary}
 
-\begin{remark}
-	If \(X_i\) are i.i.d., then
-	\[
-		\mathbb{P} (\sqrt{n} (\overline{X} - \mu ) \geq t) \leq \exp \left( -\frac{-2t^{2} }{(b-a)^{2} } \right).
-	\]
-	We also know that
-	\[
-		\mathbb{P} (\sqrt{n} (\overline{X} - \mu ) \geq t) \thickapprox \mathbb{P} (\mathcal{N} (0, \sigma ^{2} ) \geq t)	 \leq \exp \left( - \frac{t^2}{2 \sigma ^{2} } \right) ,
-	\]
-	i.e., \(\sigma ^{2} \sim (b-a)^2 / 4\).\footnote{Actually, \(\sigma ^{2} \leq (b-a)^{2} / 4\) always holds.}
+As a consequence, if \(X_i\) are i.i.d., then
+\[
+	\mathbb{P} (\sqrt{n} (\overline{X} - \mu ) \geq t) \leq \exp \left( -\frac{-2t^{2} }{(b-a)^{2} } \right).
+\]
+Compare this with Gaussian approximation, we then have
+\[
+	\mathbb{P} (\sqrt{n} (\overline{X} - \mu ) \geq t) \thickapprox \mathbb{P} (\mathcal{N} (0, \sigma ^{2} ) \geq t)	 \leq \exp \left( - \frac{t^2}{2 \sigma ^{2} } \right) ,
+\]
+i.e., \(\sigma ^{2} \sim (b-a)^2 / 4\).\footnote{Actually, \(\sigma ^{2} \leq (b-a)^{2} / 4\) always holds.}
 
-	In this case, we observe that for the asymptotic one, the confidence interval would be
-	\[
-		\left[  \overline{X} \pm  \frac{\sigma }{\sqrt{n}} Z_{\alpha / 2}\right],
-	\]
-	while from the Hoffding's inequality, we have
-	\[
-		\left[ \overline{X} \pm \frac{b-a}{2 \sqrt{n} } \sqrt{\log \frac{2}{\alpha }}  \right] ,
-	\]
-	which is much larger.
+\begin{remark}[Comparison between Hoeffding's bound and Gaussian tail bound]
+	We see that
+	\begin{enumerate}[(a)]
+		\item \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} can be used for any sample size, but Gaussian approximation can only be used when \(n\) is large.
+		\item As \(\sigma ^{2} \leq (b - a)^{2} / 4\), we see that Gaussian approximation gives a tighter tail bound.
+		\item Another way to state this is that from CLT we get the asymptotically valid confidence interval for \(\mu \) as
+		      \[
+			      \left[  \overline{X} \pm  \frac{\sigma }{\sqrt{n}} Z_{\alpha / 2}\right],
+		      \]
+		      while from the \hyperref[thm:Hoeffding-inequality]{Hoffding's inequality}, we have (finite sample valid) confidence interval
+		      \[
+			      \left[ \overline{X} \pm \frac{b-a}{2 \sqrt{n} } \sqrt{\log \frac{2}{\alpha }}  \right] ,
+		      \]
+		      which is much larger.
+	\end{enumerate}
 \end{remark}
 
-We see that \(\mathbb{P} (X=0) = 1 - \frac{1}{k^2}\), and \(\mathbb{P} (X = \pm k) = \frac{1}{2k^{2} }\), i.e., if \(\Var_{}\left[X \right] \leq 1\), we will have range \(\to 2k\).
+The above discussion suggests that if the range is very large compared to the variance, then \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} may not perform very well. Clearly, such random variables exist. Here are some examples.
+
+\begin{eg}
+	Suppose
+	\[
+		\begin{split}
+			&\mathbb{P} (X=0) = 1 - 1/k^2\\
+			&\mathbb{P} (X=\pm K) = 1/2k^2
+		\end{split}
+	\]
+	with \(\mathbb{E}_{}\left[X \right] =0\) and \(\Var_{}\left[X \right] \leq 1\). The range is \(2K\), which is very large compared to the variance. This is a case where \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} would not perform very well, in the sense that the confidence interval based on it would be too wide.
+\end{eg}
+
+Another example is the following.
+
+\begin{eg}
+	Let \(X_1, \dots, X_n\) be i.i.d.\ \(\mathop{\mathrm{Bernoulli}}(\lambda / n)\), where each one of them has range \(1\), but its variance is at most \(\frac{\lambda}{n} \ll 1\). Then a direct application of \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} gives
+	\[
+		\mathbb{P} \left( \sum_{i} X_i - \lambda \geq t \right) \leq \exp\left( \frac{-2t^2}{n} \right) .
+	\]
+
+	This suggests that \(\sum_{i} X_i = O(\sqrt{n})\) whereas we know that in this case that the distribution of \(\sum_{i} X_i\) is close to the \(\mathop{\mathrm{Poisson }}(\lambda)\) and thus should be \(O(1)\).
+
+	On the other hand, the CLT inspired bound would give the right order. This points out that we would like to be able to replace the range term by the variance in \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality}. This is what is done in \hyperref[thm:Bernstein-inequality]{Bernstein's inequality} which we will discuss next.
+\end{eg}
 
 Let's see some non-examples.
 
-\begin{eg}[Non-examples]
-	Cauchy, exponential, and Possion random variables are not \hyperref[def:sub-gaussian]{sub-gaussians}.
+\begin{eg}[Not sub-gaussian]
+	Some examples of random variables which are not \hyperref[def:sub-gaussian]{sub-gaussians} random variables are Cauchy, exponential, and Possion random variables.
 \end{eg}
 
+What about mixture?
+
 \begin{problem*}
-	What about mixture? Let's say
+	Suppose \(Z_1, Z_2 \in \mathop{\mathrm{Subg}}(\sigma ^{2} ) \) with mean \(0\), and consider
 	\[
 		X = \begin{dcases}
 			Z_1, & \text{ w.p.\ } p ;   \\
-			Z_2, & \text{ w.p.\ } 1-p ,
+			Z_2, & \text{ w.p.\ } 1-p .
 		\end{dcases}
 	\]
-	where both \(Z_1, Z_2\sim \mathop{\mathrm{Subg}}(\sigma ) \). Is this a \hyperref[def:sub-gaussian]{sub-gaussian} random variable?
+	Is this a \hyperref[def:sub-gaussian]{sub-gaussian} random variable?
 \end{problem*}
 
 \subsection{Sub-Exponential Random Variables}
-Let \(Z^2 \sim \chi ^2\), then \(\mathbb{P} (Z^2 > t) = 2\mathbb{P} (Z \geq \sqrt{t} ) \leq 2 e^{-t / 2}\). Then,
-\[
-	\mathbb{E}_{}\left[e^{\lambda (Z^2 - 1)} \right] =
-	\begin{dcases}
-		\frac{e^{-\lambda }}{\sqrt{1 - 2 \lambda } }, & \text{ if } 0 \leq \lambda < 1 / 2 ; \\
-		\infty ,                                      & \text{ if } \lambda  \geq 1 / 2 .
-	\end{dcases}
-\]
+The main reason for considering the class of \hyperref[def:sub-gaussian]{sub-gaussian} random variables is that the MGF is finite and thus the \hyperref[lma:MGF-trick]{MGF trick} works. So if we want to extend the \hyperref[lma:MGF-trick]{MGF trick}, we would like to ask the following:
 
-\begin{definition}[Sub-exponential]\label{def:sub-exponential}
-	\(X\) is \emph{sub-exponential} with parameters \((\sigma ^{2} , \alpha )\) with mean \(\lambda \) if
-	\[
-		\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] \leq e^{\frac{\lambda ^{2} \sigma ^{2} }{2}}
-	\]
-	for all \(\vert \lambda  \vert < 1 / \alpha \).
-\end{definition}
+\begin{problem*}
+	How fat could the tails of a distribution be so that the MGF is finite?
+\end{problem*}
+\begin{answer}
+	It turns out that we can allow fatter tails than \hyperref[def:sub-gaussian]{sub-gaussian}, essentially the PDF can decay no slower than an exponential with a proper exponent.
+\end{answer}
+
+Consider the following example.
 
 \begin{eg}
-	For \(Z^2 \sim \chi ^{2} \), \(Z^2 \sim \mathop{\mathrm{SubExp}}(2, 4) \).
+	Let \(Z^2 \sim \chi ^2\), then for all \(t \geq 1\), \(\mathbb{P} (Z^2 > t) = 2\mathbb{P} (Z \geq \sqrt{t} ) \leq 2 e^{-t / 2}\). It is seen that the rate of decrease of the \(\chi ^2\) tail probability is slower than that of normal. In fact, the MGF of \(\chi ^{2} \) is
+	\[
+		\mathbb{E}_{}\left[e^{\lambda (Z^2 - 1)} \right] =
+		\begin{dcases}
+			\frac{e^{-\lambda }}{\sqrt{1 - 2 \lambda } }, & \text{ if } 0 \leq \lambda < 1 / 2 ; \\
+			\infty ,                                      & \text{ if } \lambda  \geq 1 / 2 ,
+		\end{dcases}
+	\]
+	where we see that the MGF exists in a neighborhood around \(0\), but not everywhere.
+\end{eg}
+
+This motivates the following definition.
+
+\begin{definition}[Sub-exponential]\label{def:sub-exponential}
+	A random variable \(X\) is \emph{sub-exponential} with parameters \((\sigma ^{2} , \alpha )\) with mean \(\lambda \) if for all \(\vert \lambda  \vert < 1 / \alpha \)
+	\[
+		\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] \leq e^{\frac{\lambda ^{2} \sigma ^{2} }{2}}.
+	\]
+\end{definition}
+
+It's then immediate to see that \(\mathop{\mathrm{SubExp}}(\sigma^2,\alpha)\) random variables have the same bound on their MGF as a \(\mathop{\mathrm{Subg}}(\sigma^2)\) but only for \(\lambda\) in the interval \((-\frac{1}{\alpha},\frac{1}{\alpha})\).
+
+\begin{eg}
+	For the \(\chi ^2\) random variable \(Z^2\), we have \(Z^2 \in \mathop{\mathrm{SubExp}}(2, 4) \).
 \end{eg}
 \begin{explanation}
-	For all \(\vert \lambda \vert < 1 / 4\), we have
+	This is immediate from \autoref{def:sub-exponential} since For all \(\vert \lambda \vert < 1 / 4\), we have
 	\[
 		\frac{e^{-\lambda }}{\sqrt{1 - 2 \lambda } } \leq e^{2 \lambda ^{2} }.
 	\]
-	By \autoref{def:sub-exponential}, we're done.
 \end{explanation}
 
-\begin{lemma}
-	\(X \sim \mathop{\mathrm{SubExp}}(\sigma ^{2} , \alpha ) \) with mean \(\mu \). Then
+With \autoref{def:sub-exponential}, we can extend the \hyperref[lma:MGF-trick]{MGF trick} naturally.
+
+\begin{lemma}[Tail decay for sub-exponential random variable]\label{lma:MGF-trick-SubExp}
+	Let \(X \in \mathop{\mathrm{SubExp}}(\sigma ^{2} , \alpha ) \) with mean \(\mu \). Then
 	\[
 		\mathbb{P} (X - \mu \geq t) \leq
 		\begin{dcases}
@@ -90,54 +141,76 @@ Let \(Z^2 \sim \chi ^2\), then \(\mathbb{P} (Z^2 > t) = 2\mathbb{P} (Z \geq \sqr
 	We see that
 	\[
 		\mathbb{P} (X- \mu \geq t)
-		\leq \frac{\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] }{e^{\lambda t}}
-		\leq e^{\frac{\lambda ^{2} \sigma ^{2} }{2} - \lambda t}
+		\leq \inf _{0 \leq \lambda < 1 / \alpha } \frac{\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] }{e^{\lambda t}}
+		\leq \inf _{0 \leq \lambda < 1 / \alpha } e^{\frac{\lambda ^{2} \sigma ^{2} }{2} - \lambda t}.
 	\]
-	for all \(0 \leq \lambda < 1 / \alpha \). Then, from elementary algebra, we see that
+	Now, we just need to minimize the exponent, which is a convex quadratic function, in the range \((0,\frac{1}{\alpha})\). The infimum depends on the value of \(\alpha\):
 	\begin{itemize}
 		\item \(\frac{t}{\sigma ^{2} } < \frac{1}{\alpha }\): we get the Gaussian bound.
 		\item \(\frac{t}{\sigma ^{2} } \geq \frac{1}{\alpha }\): the minimizer is \(1 / \alpha \), and we get the exponential bound.
 	\end{itemize}
 \end{proof}
 
-\begin{remark}
-	\(\mathbb{P} (\vert X - \mu  \vert \geq t) \leq 2 \exp \left( - \min \left\{ \frac{t^2}{2 \sigma ^{2} }, \frac{t}{2\alpha } \right\}  \right) \). Or by observing \(\min (1 / u, 1 / v ) \geq 1 / (u + v)\), we have
+\begin{corollary}\label{col:MGF-trick-SubExp}
+	Let \(X \in \mathop{\mathrm{SubExp}}(\sigma ^{2} , \alpha ) \) with mean \(\mu \). Then
 	\[
 		\mathbb{P} (\vert X - \mu  \vert \geq t) \leq 2 \exp \left( - \frac{t^2}{2(\sigma ^{2} + t \alpha )} \right)
 	\]
 	for all \(t \geq 0\).
-\end{remark}
-
-\begin{lemma}
-	If \(X_i \sim \mathop{\mathrm{SubExp}}(\sigma _i^{2} , \alpha _i) \) are all independent, then
+\end{corollary}
+\begin{proof}
+	We see that
 	\[
-		\sum_{i=1}^{n} (X_i - \mu _i) \sim \mathop{\mathrm{SubExp}}\left( \sum_{i} \sigma _i^2, \lVert \alpha  \rVert_\infty \right).
+		\mathbb{P} (\vert X - \mu  \vert \geq t)
+		\leq 2 \exp \left( - \min \left\{ \frac{t^2}{2 \sigma ^{2} }, \frac{t}{2\alpha } \right\}  \right)
+		\leq 2 \exp \left( - \frac{t^2}{2(\sigma ^{2} + t \alpha )} \right)
+	\]
+	by observing \(\min (1 / u, 1 / v ) \geq 1 / (u + v)\).
+\end{proof}
+
+Just like \autoref{lma:sub-gaussian-add} for \hyperref[def:sub-gaussian]{sub-gaussian} random variables, \hyperref[def:sub-exponential]{sub-exponential} random variables are also closed under convolution.
+
+\begin{lemma}[Closed under convolution]\label{lma:sub-exponential-add}
+	Let \(X_i \in \mathop{\mathrm{SubExp}}(\sigma _i^{2} , \alpha _i) \) be all independent with mean \(\mu _i\), then
+	\[
+		\sum_{i} (X_i - \mu _i) \in \mathop{\mathrm{SubExp}}\left( \sum_{i} \sigma _i^2, \lVert \alpha  \rVert_\infty \right).
 	\]
 \end{lemma}
 \begin{proof}
 	Since
 	\[
-		\mathbb{E}_{}\left[e^{\lambda \sum_{i=1}^{n} (X_i - \mu _i)} \right]
+		\mathbb{E}_{}\left[e^{\lambda \sum_{i} (X_i - \mu _i)} \right]
 		= \prod_{i=1}^{n} \mathbb{E}_{}\left[e^{\lambda (X_i - \mu _i)} \right]
-		\leq e^{\frac{\sum_{i} \lambda ^2 \sigma _i^2}{2}}
+		\leq \prod_{i=1}^n e^{\lambda ^2 \sigma _i^2 / 2}
+		= e^{\lambda ^{2} \sum_{i} \sigma _i ^2 / 2}
 	\]
-	for \(\vert \lambda \vert < 1 / \lVert \alpha \rVert_\infty \).
+	where the inequality holds if \(\vert \lambda \vert < 1 / \alpha _i\) for all \(i\), i.e., \(\vert \lambda \vert < 1 / \lVert \alpha \rVert_\infty \).
 \end{proof}
 
+\subsection{Bernstein's Inequality}
+We are now ready to state the generalization of \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} to sums of independent \hyperref[def:sub-exponential]{sub-exponential} random variables.
 
-\begin{theorem}[Bernstein's inequality]\label{thm:Bernstein-inequality}
-	Let \(X_i \sim \mathop{\mathrm{SubExp}}(\sigma ^{2} , \alpha ) \) are all independent, then
+\begin{theorem}[Bernstein's inequality for sub-exponential random variables]\label{thm:Bernstein-inequality}
+	Let \(X_i \sim \mathop{\mathrm{SubExp}}(\sigma _i^{2} , \alpha _i) \) be all independent with mean \(\mu _i\), then
 	\[
 		\mathbb{P} \left( \left\vert \sum_{i=1}^{n} (X_i - \mu _i) \right\vert \geq t \right) \leq 2 \exp \left( - \min \left\{ \frac{t^{2} }{2 \sum_{i} \sigma _i^2}, \frac{t}{2 \lVert \alpha \rVert_\infty } \right\} \right) .
 	\]
-	Furthermore, let \(k \geq \sigma _i, \alpha _i\) for all \(i\), then for all \(a_i\in \mathbb{R} \), we have
-	\[
-		\mathbb{P} \left( \left\vert  \sum_{i=1}^{n} a_i(X_i - \mu _i) \right\vert  \geq t \right) \leq 2 \exp \left( - c \min \left\{ \frac{t^{2} }{k^2 \lVert a \rVert ^2}, \frac{t}{k \lVert a \rVert _\infty } \right\} \right) .
-	\]
 \end{theorem}
+\begin{proof}
+	This is immediate from \autoref{lma:MGF-trick-SubExp} and \autoref{lma:sub-exponential-add}.
+\end{proof}
+
+We can restate \hyperref[thm:Bernstein-inequality]{Bernstein's inequality} in a convenient way.
+
+\begin{corollary}\label{col:Bernstein-inequality}
+	Let \(X_i \sim \mathop{\mathrm{SubExp}}(\sigma _i^{2} , \alpha _i) \) be all independent with mean \(\mu _i\), and let \(k \geq \sigma _i, \alpha _i\) for all \(i\). Then for all \(a_i\in \mathbb{R} \), we have
+	\[
+		\mathbb{P} \left( \left\vert  \sum_{i=1}^{n} a_i(X_i - \mu _i) \right\vert  \geq t \right) \leq 2 \exp \left( - \min \left\{ \frac{t^{2} }{k^2 \lVert a \rVert ^2}, \frac{t}{k \lVert a \rVert _\infty } \right\} \right) .
+	\]
+\end{corollary}
 
 \begin{note}
-	For \(a_i = 1 / \sqrt{n} \),
+	If we let \(a_i = 1 / \sqrt{n} \), we obtain an absolute constant \(c\) (depending on \(k\) only)
 	\[
 		\mathbb{P} \left( \left\vert \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (X_i - \mu _i) \right\vert \geq t \right) \leq
 		\begin{dcases}
@@ -147,8 +220,6 @@ Let \(Z^2 \sim \chi ^2\), then \(\mathbb{P} (Z^2 > t) = 2\mathbb{P} (Z \geq \sqr
 	\]
 \end{note}
 
-Application of Bernstein to bounded random variable.
-
-\begin{lemma}
-	Let \(\vert X - \mu \vert \leq b\) and \(X - \mu \) is \(\mathop{\mathrm{Subg}}(b^2) \). It's also true that \(\mathop{\mathrm{SubExp}}(2 \sigma ^{2} , 2b) \).
-\end{lemma}
+\begin{remark}
+	Bernstein's inequality gives the \hyperref[def:sub-gaussian]{sub-gaussian} tail decay expected from CLT for most \(t\). Only in the very rare event regime, does the slower exponential tail decay come in.
+\end{remark}

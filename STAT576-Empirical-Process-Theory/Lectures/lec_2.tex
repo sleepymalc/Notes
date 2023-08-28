@@ -77,10 +77,14 @@ By the above remark, as might ask the following.
 For example, if we assume second moment exists, then we can get a \(O(1 / t^2)\) tail decay by \hyperref[lma:Chebyshev-inequality]{Chebyshev inequality}.
 
 \begin{lemma}[Generalized Chebyshev inequality]\label{lma:Chebyshev-inequality}
+	Given a random variable \(X\),
 	\[
 		\mathbb{P} (\vert X - \mu  \vert \geq t ) = \mathbb{P} (\vert X - \mu  \vert^p \geq t ^p) \leq \min _{p \geq 1} \frac{\mathbb{E}_{}\left[\vert X-\mu  \vert^p \right] }{t^p}.
 	\]
 \end{lemma}
+\begin{proof}
+	This is directly implied by the \hyperref[lma:Markov-inequality]{Markov's inequality}.
+\end{proof}
 
 \begin{remark}
 	For \(p = 2\), we have the usual form \(\mathbb{P} (\vert X - \mu  \vert \geq t) \leq \frac{\Var_{}\left[X \right] }{t^2}\).
@@ -93,6 +97,7 @@ For example, if we assume second moment exists, then we can get a \(O(1 / t^2)\)
 In the same vein, we can now assume the MGF exists and apply \hyperref[lma:Markov-inequality]{Markov's inequality}.
 
 \begin{lemma}[MGF trick (Crarmer-Chernoff method)]\label{lma:MGF-trick}
+	Given a random variable \(X\),
 	\[
 		\mathbb{P} (X - \mu \geq t) = \mathbb{P} (e^{\lambda (X - \mu ) } \geq e^{\lambda t}) \leq \inf _{\lambda > 0} \frac{\mathbb{E}_{}\left[e^{\lambda (X - \mu )} \right] }{e^{\lambda t}}.
 	\]
@@ -104,11 +109,10 @@ We will use the \hyperref[lma:MGF-trick]{MGF trick} rather than the \hyperref[lm
 We will now consider a class of distributions whose MGF is dominated by the MGF of a Gaussian. Then, in a very clean way, the \hyperref[lma:MGF-trick]{MGF trick} will give us Gaussian tail bounds for these distributions.
 
 \begin{definition}[Sub-gaussian]\label{def:sub-gaussian}
-	Given a random variable \(X\) with \(\mathbb{E}_{}\left[X \right] = 0\), we say \(X\) is \emph{sub-gaussian} with variance factor\footnote{Also called proxy, sub-gaussian norm, etc.} \(\sigma ^2\) if
+	Given a random variable \(X\) with \(\mathbb{E}_{}\left[X \right] = 0\), we say \(X\) is \emph{sub-gaussian} with variance factor\footnote{Also called proxy, sub-gaussian norm, etc.} \(\sigma ^2\) if for all \(\lambda \in \mathbb{R} \),
 	\[
-		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{\frac{\sigma ^2 \lambda ^2}{2}}
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{\frac{\sigma ^2 \lambda ^2}{2}}.
 	\]
-	for all \(\lambda \in \mathbb{R} \).
 \end{definition}
 
 \begin{notation}
@@ -137,9 +141,9 @@ We will now consider a class of distributions whose MGF is dominated by the MGF 
 \begin{proof}
 	Let's just see the first implication from \autoref{lma:sub-gaussian-a} to \autoref{lma:sub-gaussian-b}. Given \(X \in \mathop{\mathrm{Subg}}(\sigma ) \),
 	\[
-		\mathbb{P} (X\geq t) \leq \inf _{\lambda > 0} e^{\lambda ^2 \sigma ^2 / 2 - \lambda t} \leq \exp (-\frac{t^2}{2\sigma ^2})
+		\mathbb{P} (X\geq t) \leq \inf _{\lambda > 0} e^{\lambda ^2 \sigma ^2 / 2 - \lambda t} \leq e^{-\frac{t^2}{2\sigma ^2}}
 	\]
-	where the last inequality is obtained by minimizing the quadratic function \(\lambda ^{2} \sigma ^{2} / 2 - \lambda t\) whose minimizer is \(\lambda ^{\ast} = t / \sigma ^{2} \). The same bound holds for the left tail and a union bound gives the two-sided version.
+	where the last inequality follows from minimizing the quadratic function \(\lambda ^{2} \sigma ^{2} / 2 - \lambda t\) whose minimizer is \(\lambda ^{\ast} = t / \sigma ^{2} \). The same bound holds for the left tail and a union bound gives the two-sided version.
 \end{proof}
 
 Let's see some examples of the \hyperref[def:sub-gaussian]{sub-gaussian} random variables.
@@ -212,14 +216,14 @@ Just like independent Gaussians, sums of independent \hyperref[def:sub-gaussian]
 	\]
 \end{proof}
 
-We can now immediately prove the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality}.
+\subsection{Hoeffding's Inequality}
+We can now immediately prove the famous \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality}, which is the main tool in our interest.
 
 \begin{theorem}[Hoeffding's inequality for sub-gaussian random variables]\label{thm:Hoeffding-inequality}
-	Let \(X_i\) be independent random variables with \(\mathbb{E}_{}\left[X_i \right] = \mu _i\), and \(X_i - \mu _i \in \mathop{\mathrm{Subg}}(\sigma _i^2) \). Then
+	Let \(X_i\) be independent random variables with \(\mathbb{E}_{}\left[X_i \right] = \mu _i\), and \(X_i - \mu _i \in \mathop{\mathrm{Subg}}(\sigma _i^2) \). Then for all \(t \geq 0\),\footnote{One-sided version holds without the factor \(2\).}
 	\[
-		\mathbb{P} \left( \left\vert \sum_{i=1}^n (X_i - \mu _i) \right\vert \geq t \right) \leq 2 \exp (\frac{-t^2}{2 \sum_{i} \sigma _i^2})
+		\mathbb{P} \left( \left\vert \sum_{i=1}^n (X_i - \mu _i) \right\vert \geq t \right) \leq 2 \exp (\frac{-t^2}{2 \sum_{i} \sigma _i^2}).
 	\]
-	for all \(t \geq 0\).\footnote{One-sided version holds without the factor \(2\).}
 \end{theorem}
 \begin{proof}
 	It's immediate from \autoref{lma:sub-gaussian-add} and the equivalent condition \autoref{lma:sub-gaussian-b} in \autoref{lma:sub-gaussian}.

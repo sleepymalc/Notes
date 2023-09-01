@@ -1,0 +1,158 @@
+\lecture{5}{1 Sep.\ 9:00}{Proof of the Bounded Difference Concentration Inequality}
+We're now almost ready to prove the \hyperref[thm:bounded-difference-concentration-inequality]{bounded difference concentration inequality}. We first note the following.
+
+\begin{note}
+	The condition
+	\[
+		\sup _{x_1, \dots , x_n, x_i^{\prime} }\vert f(x_1, \dots , x_n) - f(x_1, \dots , x_i^{\prime} , \dots , x_n) \vert \leq c_i
+	\]
+	is equivalent as
+	\[
+		\vert f(x_1, \dots , x_n) - f(z_1, \dots , z_n) \vert \leq \sum_{i=1}^{n} cvi \mathbbm{1}_{x_i \neq z_i}.
+	\]
+\end{note}
+
+\begin{remark}
+	It's useful to go through the proof of martingale decomposition and Azuse-Hoeffding inequality.
+\end{remark}
+
+Now, we start our proof of \hyperref[thm:bounded-difference-concentration-inequality]{bounded difference concentration inequality}.
+
+\begin{proof}[Proof of \autoref{thm:bounded-difference-concentration-inequality}]
+	Firstly, we note that it's equivalent to show that \(f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f \right] \in \mathop{\mathrm{Subg}}(\sum_{i} c_i^2 / 4) \). Without loss of generality, let \(\mathbb{E}_{}\left[f \right] = 0\), and we want to show that
+	\[
+		\begin{split}
+			\mathbb{E}_{}\left[e^{\lambda (f(X) - \mathbb{E}_{}\left[f \right] )} \right] \leq e^{\frac{\lambda ^2 / \sum_{i} c_i}{8}}
+			&\iff  M(\lambda ) = \mathbb{E}_{}\left[e^{\lambda f(X)} \right] \leq \exp \left( \frac{\lambda ^2 \left( \sum_{i} c_i^2 \right) }{8} \right) \\
+			&\iff  \log M(\lambda ) \leq \lambda ^2 \frac{\sum_{i} c_i^2}{8}.
+		\end{split}
+	\]
+	Now, observe that it's enough to show
+	\[
+		\frac{\mathrm{d}\log M(\lambda )}{\mathrm{d}\lambda } = \frac{M^{\prime} (\lambda )}{M(\lambda )} \leq \lambda \cdot \frac{\sum_{i} c_i^2}{4}.
+	\]
+
+	\begin{note}
+		We will only show
+		\[
+			\frac{\mathrm{d}\log M(\lambda )}{\mathrm{d}\lambda } = \frac{M^{\prime} (\lambda )}{M(\lambda )} \leq \lambda \cdot \frac{\sum_{i} c_i^2}{2},
+		\]
+		however. To obtain the whole proof, we need MG decomposition.
+	\end{note}
+	Let \(X = (X_1, \dots , X_n)\), and \(X^{\prime} \overset{\text{i.i.d.} }{\sim } X\) be the i.i.d.\ copy of \(X\). Then define the following.
+	\begin{notation}\label{not:lec5}
+		Let \(X^{(i)} \coloneqq (X_1^{\prime} , \dots , X_i^{\prime} , X_{i+1}, \dots , X_n)\), and \(X^{[i]} \coloneqq (X_1, \dots , X_{i-1}, X_i^{\prime} , X_{i+1}, \dots , X_n)\).
+	\end{notation}
+
+	Note that this implies \(X^{(0)} = X\) and \(X^{(n)} = X^{\prime} \). Then, we have
+	\[
+		\begin{split}
+			M^{\prime} (\lambda )
+			&= \mathbb{E}_{}\left[f(X) - e^{\lambda f(X)} \right] \\
+			&= \mathbb{E}_{}\left[f(X) - f(X^{\prime} ) e^{\lambda f(X)}\right] \\
+			&= \mathbb{E}_{}\left[ \sum_{i=1}^{n} (f(X^{(i-1)}) - f(X^{(i)})) \cdot e^{\lambda f(X)}\right]\\
+			&= \mathbb{E}_{}\left[\frac{1}{2} \sum_{i=1}^{n} \left( f(X^{(i-1)}) - f(X^{(i)}) \right) \cdot \left( e^{\lambda f(X)} - e^{\lambda f(X^{[i]})} \right)  \right].
+		\end{split}
+	\]
+	\begin{claim}
+		For all \(x \neq y \in \mathbb{R} \),
+		\[
+			\frac{e^x - e^y}{x-y} \leq \frac{e^x + e^y}{2},
+		\]
+		hence
+		\[
+			\vert e^x - e^y \vert \leq \vert x - y \vert \left( \frac{e^x + e^y}{2} \right) .
+		\]
+	\end{claim}
+	\begin{explanation}
+		Since
+		\[
+			\frac{e^x - e^y}{x-y}
+			= \int_{0}^{1} e^{s x + (1 - s)y} \,\mathrm{d}s
+			= \frac{1}{x - y} \int_{x}^{y} e^t \,\mathrm{d}t
+		\]
+		where we let \(t = sx + (1 - s)y\). On the other hand, due to convexity, we also have
+		\[
+			\frac{e^x - e^y}{x-y}
+			= \int_{0}^{1} e^{s x + (1 - s)y} \,\mathrm{d}s
+			\leq \int_{0}^{1} s\cdot e^x + (1 - s)e^y \,\mathrm{d}s
+			= \frac{e^x + e^y}{2}.
+		\]
+	\end{explanation}
+
+	With this, we further have
+	\[
+		\begin{split}
+			M^{\prime} (\lambda )
+			&= \mathbb{E}_{}\left[\frac{1}{2} \sum_{i=1}^{n} \left( f(X^{(i-1)}) - f(X^{(i)}) \right) \cdot \left( e^{\lambda f(X)} - e^{\lambda f(X^{[i]})} \right)  \right] \\
+			&\leq \mathbb{E}_{}\left[\frac{\lambda }{2} \sum_{i=1}^{n} \left\vert f(X^{(i-1)}) - f(X^{(i)}) \right\vert \cdot \left\vert f(X) - f(X^{[i]}) \right\vert \cdot \left( \frac{e^{\lambda f(X)} + e^{\lambda f(X^{[i]})}}{2} \right)  \right] \\
+			&\leq \frac{\lambda}{2}\left( \sum_{i=1}^{n} c_i^2 \right) \cdot M(\lambda ).
+		\end{split}
+	\]
+\end{proof}
+
+\subsection{\(U\)-Statistics}
+
+Let \(g\colon \mathbb{R} ^2 \to \mathbb{R} \) be a symmetric function, and let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \). Consider
+\[
+	U(X) = \frac{1}{\binom{n}{2}} \sum_{j < k} g(X_j, X_k).
+\]
+
+\begin{eg}
+	\(g(x, y) = (x - y)^2\).
+\end{eg}
+
+\begin{eg}
+	\(g(x, y) = \vert x - y \vert \).
+\end{eg}
+
+\begin{eg}[Wilcoxm's ranksom test]
+	\(g(x, y) = \mathbbm{1}_{x_1 + x_2 > 0} \).
+\end{eg}
+
+Assuming \(g\) is bounded by \(B\), then
+\[
+	U(X) - U(X^{[k]}) \leq \frac{1}{\binom{n}{2}} (n-1) 2B \leq \frac{4B}{n},
+\]
+implying
+\[
+	\mathbb{P} (U - \mathbb{E}_{}\left[U \right] \geq t) \leq e^{-\frac{nt^2}{8b^2}}.
+\]
+
+\subsection{Beyond the Bounded Difference Concentration Inequality}
+Let's see some more advanced inequalities. Recall our \hyperref[not:lec5]{notation}.
+
+\begin{theorem}[Efron-Stein Inequality]\label{thm:Efron-Stein-inequality}
+	Let \(X_1, \dots , X_n\) be independent random variables, and \(X_1^{\prime} , \dots , X_n^{\prime} \) be i.i.d.\ copies of \(X_i\)'s. Let \(X = (X_1, \dots , X_n)\), then
+	\[
+		\Var_{}\left[f(X) \right] \leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}_{}\left[f(X) - f(X^{[i]})^2 \right]
+	\]
+\end{theorem}
+
+\begin{remark}
+	\begin{itemize}
+		\item \(\Var_{}\left[X \right] = \frac{1}{2}\mathbb{E}_{}\left[X-X^{\prime}  \right]^2 \).
+		\item \(f(X_1, \dots , X_n) = \sum_{i} X_i\)
+		\item If \(f\) satisfies bounded condition, then \(\Var_{}\left[f \right] \leq \frac{1}{2}\sum_{i} c_i^2\).
+	\end{itemize}
+
+\end{remark}
+
+\begin{notation}[Empirical process notation]
+	\(\mathbb{P} f\), \(\mathbb{P} _n \) be the empirical measure, then
+	\[
+		\frac{1}{n} \sum_{i} f(X_i) = \mathbb{P} _n f.
+	\]
+\end{notation}
+
+Recall that \[
+	S_n \leq \mathbb{E}_{}\left[S_n \right] + B \sqrt{\frac{2}{n}\log \frac{1}{\delta }}
+\]
+with probability at least \(1 - \delta \), where we assume \(\mathscr{F} \ni f\) is \(B\)-bounded. If \(\Var_{}\left[f(X) \right] \) is very small, then we would want to replace \(B\) in the inequality by \(\Var_{}\left[f(X) \right] \).
+
+\begin{theorem}[Talagrand's concentration inequality]
+	Let \(\mathscr{F} \) is \(B\)-bounded, and \(S_n = \sup f\in \mathscr{F} \vert \mathbb{P} _n f - \mathbb{P} f \vert \). Then
+	\[
+		S_n \leq c\cdot \mathbb{E}_{}\left[S_n \right] + c \sqrt{\frac{\sup_{f\in \mathscr{F}} \Var_{}\left[f(X_1) \right] }{n} \log \frac{1}{\alpha }} + c\cdot \frac{B}{n} \log \frac{1}{\alpha }.
+	\]
+\end{theorem}

@@ -1,1 +1,116 @@
-\lecture{6}{4 Sep.\ 9:00}{}
+\chapter{}
+\lecture{6}{6 Sep.\ 9:00}{}
+
+\begin{prev}[Uniform law of large numbers]
+	Goodness of Fit Testing: Given \(X_1, \dots , X_n \overset{\text{i.i.d.}}{\sim } \mathbb{P} \), we want to distinguish between \(H_0 \colon P = P_0\) and \(H_1\colon P \neq P_0\). Many tests are possible. One approach could be that
+
+	\(D_n\) should not converge to \(0\), under some alternative. Assuming continuity of \(F\), Kolmogorov showed that the distribution of \(D_n\) does not depend on \(F\), \(D_n = O_p(1 / \sqrt{n} )\), and \(\sqrt{n} D_n \to \sup _{t\in [0, 1]} \vert B(t) \vert \) where \(B(t)\) is the Broweian Bridge on \([0, 1]\). We'll take a non-asymptotic approach to this problem.
+\end{prev}
+
+\section{Statistical Learning and Empirical Risk Minimization}
+
+
+
+
+\begin{problem}[Empirical risk minimization]\label{prb:ERM}
+Let \(S = \{ (x_1, y_1) , \dots , (x_n, y_n)\} \) be \(n\) i.i.d.\ copies of \((X, Y) \in \chi \times \mathscr{Y} \subseteq \mathbb{R} \times \mathbb{R} ^d\) with distribution \(\mathbb{P} = \mathbb{P} _X \times \mathbb{P} _{Y \mid X}\). Given a loss function
+\[
+	\ell \colon \mathscr{Y} \times \mathscr{Y} \to \mathbb{R}
+\]
+and a class of functions
+\[
+	\mathscr{F} = \{ f\colon \chi \to \mathscr{Y}  \} ,
+\]
+the \emph{empirical risk minimization} is defined as the problem of finding
+\[
+	\hat{f} \in \argmin_{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \ell (f(x_i), y_i).
+\]
+\end{problem}
+
+\begin{eg}
+	Some examples of \(\mathscr{F} \) can be the set of neural networks, decision trees, linear functions.
+\end{eg}
+
+\begin{eg}[Linear regression]
+	Consider \(\chi = \mathbb{R} ^d\) and \(\mathscr{Y} = \mathbb{R} \), with \(\mathscr{F} = \{ x \to w^{\top} x \colon w\in \mathbb{R} ^d \} \) and \(\ell (a, b) = (a - b)^2\).
+\end{eg}
+
+\begin{eg}[Linear classification]
+	Consider \(\chi = \mathbb{R} ^d\) and \(\mathscr{Y} = \mathbb{R} \), with \(\mathscr{F} = \{ x \to (\sgn (w^{\top} x ) + 1)/ 2 \colon w\in B_2^d \} \) and \(\ell (a, b) = \mathbbm{1}_{a \neq b} \).
+\end{eg}
+
+Now, let's consider the expected loss (population/test error) of \(f\) be \(L(f) = \mathbb{E}_{(X, Y) \sim \mathbb{P} }\left[\ell (f(x), y) \right] \), and the empirical loss
+\[
+	\hat{L} (f) = \frac{1}{n}\sum_{i=1}^{n} \ell (f(x_i), y_i).
+\]
+
+\begin{problem}
+What is an upper-bound on the expected loss of \hyperref[prb:ERM]{ERM}?
+\end{problem}
+
+We see that while \(\hat{f} \) is a function of \(S\), \(L(\hat{f} ) = \mathbb{E}_{(X, Y)}\left[\ell (\hat{f} (x), Y) \right] \) is a random variable of \(S\).
+
+\begin{lemma}\label{lma:lec6}
+	For any \(\mathscr{F} \), the \hyperref[prb:ERM]{ERM} \(\hat{f} \) satisfies
+	\[
+		\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)
+		\leq \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } (L(f) - \hat{L} (f) )\right] .
+	\]
+\end{lemma}
+\begin{proof}
+	Let \(f^{\ast} = \inf _{f\in \mathscr{F} } L(f)\). Then
+	\[
+		L(\hat{f} ) - L(f^{\ast} )
+		= [L(\hat{f} ) - \hat{L} (\hat{f} )] + [\hat{L} (\hat{f} ) - \hat{L} (f^{\ast} )] + [\hat{L} (f^{\ast} ) - L(f^{\ast} )].
+	\]
+	We see that
+	\begin{itemize}
+		\item \(\hat{L} (\hat{f} ) - \hat{L} (f^{\ast} ) \leq 0\) by definition;
+		\item \(\hat{L} (f^{\ast} ) - L(f^{\ast} ) = 0\) in expectation,
+	\end{itemize}
+	hence
+	\[
+		L(\hat{f} ) - L(f^{\ast} )
+		\leq L(\hat{f} ) - \hat{L} (\hat{f} )
+		\leq \sup _{f\in \mathscr{F} } (L(f) - \hat{L} (f)).
+	\]
+
+	\begin{note}
+		We can't say \(\mathbb{E}_{}[L(\hat{f} ) - \hat{L} (\hat{f} ) ] = 0\) since \(\hat{f} \) is also random.
+	\end{note}
+
+
+\end{proof}
+
+\begin{notation}[Excess risk]
+	\(\mathbb{E}_{}\left[L(\hat{f} ) \right] - \inf _{f\in \mathscr{F} } L(f)\) is often called the \emph{excess risk} of \hyperref[prb:ERM]{ERM}.
+\end{notation}
+
+\begin{remark}
+	For ``curved'' loss function like square loss, supremum can be further ``localized''.
+\end{remark}
+
+\begin{remark}
+	The bound in \autoref{lma:lec6} can be vacuumed for now, e.g., for linear regression.
+\end{remark}
+
+\begin{eg}[1D classification with thresholds]
+	Let \(\ell (a, b) = \mathbbm{1}_{a \neq b} = a + (1 - 2a)b\) for \(a, b\in \{ 0, 1 \} \). Then
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } (L(f) - \hat{L} (f)) \right]
+		= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \mathbb{E}_{}\left[Y + (1 - 2Y)f(X) \right] - \frac{1}{n} \sum_{i=1}^{n} \left( y_i + (1 - 2y_i)f(x_i) \right) \right],
+	\]
+	which can be viewed essentially as\footnote{While \(Y - \sum_{i} y_i / n\) is independent of \(f\) so can be taken out, \(1 - 2Y\) is the sign which can also be dropped essentially.}
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \left( \mathbb{E}_{}\left[f(X) \right] - \frac{1}{n}\sum_{i=1}^{n} f(x_i) \right)  \right].
+	\]
+	If
+	\[
+		\mathscr{F} = \{ x \to \mathbbm{1}_{x \leq \theta } \colon \theta \in \mathbb{R}  \},
+	\]
+	then
+	\[
+		\mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } \left( \mathbb{P} (X \leq \theta ) - \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{x_i \leq \theta } \right) \right]
+		= \mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } (F(\theta ) - F_n(\theta )) \right] .
+	\]
+\end{eg}

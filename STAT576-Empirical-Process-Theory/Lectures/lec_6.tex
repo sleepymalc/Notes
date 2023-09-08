@@ -1,27 +1,36 @@
-\chapter{}
-\lecture{6}{6 Sep.\ 9:00}{}
+\chapter{Statistical Learning and Empirical Risk Minimization}
+\lecture{6}{6 Sep.\ 9:00}{A Glance at Statistical Learning Theory}
+Let's first see another motivation on studying uniform law of large numbers, i.e., the \emph{goodness of fit testing}. Given \(X_1, \dots , X_n \overset{\text{i.i.d.}}{\sim } \mathbb{P} \), we want to distinguish between
+\begin{itemize}
+	\item \(H_0 \colon P = P_0\); and
+	\item \(H_1\colon P \neq P_0\).
+\end{itemize}
+Many tests are possible. One approach could be the \href{https://en.wikipedia.org/wiki/Kolmogorov-Smirnov_test}{Kolmogorov-Smirnov test}: assume \(F\) is the CDF of \(\mathbb{P} _0\), then consider the \hyperref[def:Kolmogorov-Smirnov-statistics]{Kolmogorov-Smirnov statistics}:
 
-\begin{prev}[Uniform law of large numbers]
-	Goodness of Fit Testing: Given \(X_1, \dots , X_n \overset{\text{i.i.d.}}{\sim } \mathbb{P} \), we want to distinguish between \(H_0 \colon P = P_0\) and \(H_1\colon P \neq P_0\). Many tests are possible. One approach could be that
+\begin{definition}[Kolmogorov-Smirnov statistics]\label{def:Kolmogorov-Smirnov-statistics}
+	The \emph{Kolmogorov-Smirnov statistics} for a distribution \(\mathbb{P} \) is defined as
+	\[
+		D_n = \sup _{t\in \mathbb{R} } \vert F_n(t) - F(t) \vert
+	\]
+	where \(F_n(t)\) and \(F\) is the \hyperref[def:empirical-CDF]{empirical CDF} and the CDF of \(\mathbb{P} \), respectively.
+\end{definition}
 
-	\(D_n\) should not converge to \(0\), under some alternative. Assuming continuity of \(F\), Kolmogorov showed that the distribution of \(D_n\) does not depend on \(F\), \(D_n = O_p(1 / \sqrt{n} )\), and \(\sqrt{n} D_n \to \sup _{t\in [0, 1]} \vert B(t) \vert \) where \(B(t)\) is the Broweian Bridge on \([0, 1]\). We'll take a non-asymptotic approach to this problem.
-\end{prev}
+From \href{https://en.wikipedia.org/wiki/Glivenko-Cantelli_theorem}{Glivenko-Cantelli theorem}, \(D_n \to 0\) under \(H_0\), and \(D_n\) should not converge to \(0\), under some alternative.
+
+Assuming continuity of \(F\), Kolmogorov showed that
+\begin{enumerate}[(a)]
+	\item the distribution \(D_n\) does not depend on \(F\);
+	\item \(D_n = O_p(1 / \sqrt{n} )\);
+	\item \(\sqrt{n} D_n \to \sup _{t\in [0, 1]} \vert B(t) \vert \) where \(B(t)\) is the \href{https://en.wikipedia.org/wiki/Brownian_bridge}{Broweian bridge} on \([0, 1]\).
+	\item \(\mathbb{P} (\sqrt{n}D_n  \leq 2.4) \approx 0.999973\).
+\end{enumerate}
+We'll take a non-asymptotic approach to this problem. And the second main application that we have in mind for this course if the \(M\)-estimation.
 
 \section{Statistical Learning and Empirical Risk Minimization}
-
-
-
+Consider the following problem.
 
 \begin{problem}[Empirical risk minimization]\label{prb:ERM}
-Let \(S = \{ (x_1, y_1) , \dots , (x_n, y_n)\} \) be \(n\) i.i.d.\ copies of \((X, Y) \in \chi \times \mathscr{Y} \subseteq \mathbb{R} \times \mathbb{R} ^d\) with distribution \(\mathbb{P} = \mathbb{P} _X \times \mathbb{P} _{Y \mid X}\). Given a loss function
-\[
-	\ell \colon \mathscr{Y} \times \mathscr{Y} \to \mathbb{R}
-\]
-and a class of functions
-\[
-	\mathscr{F} = \{ f\colon \chi \to \mathscr{Y}  \} ,
-\]
-the \emph{empirical risk minimization} is defined as the problem of finding
+Let \(S = \{ (x_1, y_1) , \dots , (x_n, y_n)\} \) be \(n\) i.i.d.\ copies of \((X, Y) \in \chi \times \mathcal{Y} \subseteq \mathbb{R} ^d\times \mathbb{R}\) with distribution \(\mathbb{P} = \mathbb{P} _X \times \mathbb{P} _{Y \mid X}\). Given a loss function \(\ell \colon \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}\) and a class of functions \(\mathscr{F} = \{ f\colon \chi \to \mathcal{Y}  \} \), the \emph{empirical risk minimization} problem is defined as the problem of finding
 \[
 	\hat{f} \in \argmin_{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \ell (f(x_i), y_i).
 \]
@@ -32,32 +41,66 @@ the \emph{empirical risk minimization} is defined as the problem of finding
 \end{eg}
 
 \begin{eg}[Linear regression]
-	Consider \(\chi = \mathbb{R} ^d\) and \(\mathscr{Y} = \mathbb{R} \), with \(\mathscr{F} = \{ x \to w^{\top} x \colon w\in \mathbb{R} ^d \} \) and \(\ell (a, b) = (a - b)^2\).
+	Consider \(\chi = \mathbb{R} ^d\) and \(\mathcal{Y} = \mathbb{R} \), with \(\mathscr{F} = \{ x \to w^{\top} x \colon w\in \mathbb{R} ^d \} \) and \(\ell (a, b) = (a - b)^2\).
 \end{eg}
 
 \begin{eg}[Linear classification]
-	Consider \(\chi = \mathbb{R} ^d\) and \(\mathscr{Y} = \mathbb{R} \), with \(\mathscr{F} = \{ x \to (\sgn (w^{\top} x ) + 1)/ 2 \colon w\in B_2^d \} \) and \(\ell (a, b) = \mathbbm{1}_{a \neq b} \).
+	Consider \(\chi = \mathbb{R} ^d\) and \(\mathcal{Y} = \{ 0, 1 \} \), with
+	\[
+		\mathscr{F} = \{ x \to (\sgn (w^{\top} x ) + 1)/ 2 \colon w\in B_2^d \}
+	\]
+	where \(B_2^d\) is the unit ball in \(d\)-dimension, and \(\ell (a, b) = \mathbbm{1}_{a \neq b} \).
 \end{eg}
 
-Now, let's consider the expected loss (population/test error) of \(f\) be \(L(f) = \mathbb{E}_{(X, Y) \sim \mathbb{P} }\left[\ell (f(x), y) \right] \), and the empirical loss
+We also define the following.
+
+\begin{definition*}
+	Consider the set-up of \hyperref[prb:ERM]{ERM}.
+	\begin{definition}[Expected loss]\label{def:expected-loss}
+		The \emph{expected loss}\footnote{Also called \emph{population loss} and \emph{test error}.} of \(f\in \mathscr{F} \) is defined as
+		\[
+			L(f) = \mathbb{E}_{(X, Y) \sim \mathbb{P} }\left[\ell (f(X), Y) \right].
+		\]
+	\end{definition}
+
+	\begin{definition}[Empirical loss]\label{def:empirical-loss}
+		The \emph{empirical loss} is defined as
+		\[
+			\hat{L} (f) = \frac{1}{n}\sum_{i=1}^{n} \ell (f(x_i), y_i).
+		\]
+	\end{definition}
+\end{definition*}
+
+The main question in statistical learning is that, what is an upper-bound on the \hyperref[def:expected-loss]{expected loss} of \hyperref[prb:ERM]{ERM}? If we plug in \(\hat{f} \) instead of \(f\), this is asking the \hyperref[def:expected-loss]{test error} of \(\hat{f} \).
+
+To be specific, \(\hat{f} \) is basically a function of training data \(S\), but when we look at
 \[
-	\hat{L} (f) = \frac{1}{n}\sum_{i=1}^{n} \ell (f(x_i), y_i).
+	L(\hat{f} ) = \mathbb{E}_{(X, Y)}\left[\ell (\hat{f} (x), Y) \right],
 \]
+it is the expectation of future data points, i.e., it becomes a random variable, which is a function of \(S\).
 
-\begin{problem}
-What is an upper-bound on the expected loss of \hyperref[prb:ERM]{ERM}?
-\end{problem}
-
-We see that while \(\hat{f} \) is a function of \(S\), \(L(\hat{f} ) = \mathbb{E}_{(X, Y)}\left[\ell (\hat{f} (x), Y) \right] \) is a random variable of \(S\).
-
-\begin{lemma}\label{lma:lec6}
+\begin{lemma}\label{lma:ERM}
 	For any \(\mathscr{F} \), the \hyperref[prb:ERM]{ERM} \(\hat{f} \) satisfies
 	\[
 		\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)
-		\leq \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } (L(f) - \hat{L} (f) )\right] .
+		\leq \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \big(L(f) - \hat{L} (f) \big) \right] .
 	\]
 \end{lemma}
-\begin{proof}
+
+Before proving \autoref{lma:ERM}, let us first decode what is it claiming.
+\begin{itemize}
+	\item Since \(L(f)\) is the \hyperref[def:expected-loss]{population error} of \(f\) and \(\hat{L} (f)\) is the \hyperref[def:empirical-loss]{empirical loss} of \(f\),
+	      \[
+		      \sup _{f\in \mathscr{F} } \big( L(f) - \hat{L} (f) \big)
+	      \]
+	      is the supremum of an \hyperref[def:EP]{empirical process}.
+	\item For the left-hand side, it represents the \hyperref[def:expected-loss]{expected loss} of \(\hat{f} \) and the best possible out-of-sample error.\footnote{Or the best possible prediction error of \(\mathscr{F} \).} This is often called the \hyperref[not:excess-risk]{excess risk}.
+	      \begin{notation}[Excess risk]\label{not:excess-risk}
+		      \(\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)\) is often called the \emph{excess risk} of an \hyperref[prb:ERM]{ERM}.
+	      \end{notation}
+\end{itemize}
+
+\begin{proof}[Proof of \autoref{lma:ERM}]
 	Let \(f^{\ast} = \inf _{f\in \mathscr{F} } L(f)\). Then
 	\[
 		L(\hat{f} ) - L(f^{\ast} )
@@ -65,52 +108,49 @@ We see that while \(\hat{f} \) is a function of \(S\), \(L(\hat{f} ) = \mathbb{E
 	\]
 	We see that
 	\begin{itemize}
-		\item \(\hat{L} (\hat{f} ) - \hat{L} (f^{\ast} ) \leq 0\) by definition;
-		\item \(\hat{L} (f^{\ast} ) - L(f^{\ast} ) = 0\) in expectation,
+		\item \(\hat{L} (\hat{f} ) - \hat{L} (f^{\ast} ) \leq 0\) by \hyperref[prb:ERM]{definition};
+		\item \(\hat{L} (f^{\ast} ) - L(f^{\ast} ) = 0\) in expectation since \(f^{\ast} \) is fixed,
+		\item We can't say \(\mathbb{E}_{}[L(\hat{f} ) - \hat{L} (\hat{f} ) ] = 0\) since \(\hat{f} \) is also random.
 	\end{itemize}
-	hence
+	Combine all these, we have
 	\[
-		L(\hat{f} ) - L(f^{\ast} )
-		\leq L(\hat{f} ) - \hat{L} (\hat{f} )
-		\leq \sup _{f\in \mathscr{F} } (L(f) - \hat{L} (f)).
+		\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)
+		= \mathbb{E}_{}[ L(\hat{f} ) - L(f^{\ast} ) ]
+		\leq \mathbb{E}_{}[ L(\hat{f} ) - \hat{L} (\hat{f} ) ]
+		\leq \mathbb{E}_{}\left[ \sup _{f\in \mathscr{F} } \big(L(f) - \hat{L} (f) \big) \right].
 	\]
-
-	\begin{note}
-		We can't say \(\mathbb{E}_{}[L(\hat{f} ) - \hat{L} (\hat{f} ) ] = 0\) since \(\hat{f} \) is also random.
-	\end{note}
-
-
 \end{proof}
-
-\begin{notation}[Excess risk]
-	\(\mathbb{E}_{}\left[L(\hat{f} ) \right] - \inf _{f\in \mathscr{F} } L(f)\) is often called the \emph{excess risk} of \hyperref[prb:ERM]{ERM}.
-\end{notation}
 
 \begin{remark}
 	For ``curved'' loss function like square loss, supremum can be further ``localized''.
 \end{remark}
 
 \begin{remark}
-	The bound in \autoref{lma:lec6} can be vacuumed for now, e.g., for linear regression.
+	The bound in \autoref{lma:ERM} can be vacuumed for now, e.g., for linear regression.
 \end{remark}
 
-\begin{eg}[1D classification with thresholds]
-	Let \(\ell (a, b) = \mathbbm{1}_{a \neq b} = a + (1 - 2a)b\) for \(a, b\in \{ 0, 1 \} \). Then
+\begin{eg}[1-D classification with thresholds]
+	Let \(\ell (a, b) = \mathbbm{1}_{a \neq b} = a + (1 - 2a)b\) for \(a, b\in \{ 0, 1 \} \). Then consider \(a = y\) and \(b = f(x)\),
 	\[
-		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } (L(f) - \hat{L} (f)) \right]
-		= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \mathbb{E}_{}\left[Y + (1 - 2Y)f(X) \right] - \frac{1}{n} \sum_{i=1}^{n} \left( y_i + (1 - 2y_i)f(x_i) \right) \right],
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \big( L(f) - \hat{L} (f) \big) \right]
+		= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \left( \mathbb{E}_{}\left[Y + (1 - 2Y)f(X) \right] - \frac{1}{n} \sum_{i=1}^{n} \big( y_i + (1 - 2y_i)f(x_i) \big) \right)  \right],
 	\]
-	which can be viewed essentially as\footnote{While \(Y - \sum_{i} y_i / n\) is independent of \(f\) so can be taken out, \(1 - 2Y\) is the sign which can also be dropped essentially.}
+	which can be viewed essentially as\footnote{For now, since \(Y - \sum_{i} y_i / n\) is independent of \(f\), so let's drop it; and \(1 - 2Y\) is the sign which can also be dropped essentially.} the \hyperref[def:EP]{empirical process} on the function \(f\) instead of \(\ell \),
 	\[
 		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \left( \mathbb{E}_{}\left[f(X) \right] - \frac{1}{n}\sum_{i=1}^{n} f(x_i) \right)  \right].
 	\]
-	If
+	For 1-D case, assume that
 	\[
 		\mathscr{F} = \{ x \to \mathbbm{1}_{x \leq \theta } \colon \theta \in \mathbb{R}  \},
 	\]
 	then
 	\[
 		\mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } \left( \mathbb{P} (X \leq \theta ) - \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{x_i \leq \theta } \right) \right]
-		= \mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } (F(\theta ) - F_n(\theta )) \right] .
+		= \mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } (F(\theta ) - F_n(\theta )) \right] ,
 	\]
+	i.e., \(P(X \leq \theta )\) is the CDF of the marginal distribution of \(X\), \(F(\theta )\), and \(\frac{1}{n}\sum_{i=1}^{n} \mathbbm{1}_{x_i \leq \theta } \) is the \hyperref[def:empirical-CDF]{empirical CDF} \(F_n(\theta )\). Therefore, we go back to the same problem we introduced in the beginning of the chapter, i.e., the \hyperref[def:Kolmogorov-Smirnov-statistics]{Kolmogorov-Smirnov statistics}.
+
+	Let the term \(\mathbb{P} (X \leq \theta ) - \frac{1}{n}\sum_{i=1}^{n} \mathbbm{1}_{x_i \leq \theta } \) to be a random variable \(U_\theta \). One problem here is, we have infinitely many random variables, and they are also correlated with each other quite a lot. So how does this supremum behave?
+
+	Since each \(U_\theta \) is at most \(1\), for any \(\theta \), i.e., \(\sup U_\theta \leq 1\). So the worst case here is \(1\), and probably the best case is \(O(1 / \sqrt{n} )\).
 \end{eg}

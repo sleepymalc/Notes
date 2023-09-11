@@ -1,0 +1,82 @@
+\lecture{8}{11 Sep.\ 9:00}{}
+\begin{definition}[Rademacher weight]\label{def:Rademacher-weight}
+	Given \(A \subseteq \mathbb{R} ^n\), the \emph{Rademacher weight}\footnote{Also called \emph{Rademacher average}.} of \(A\) is defined as
+	\[
+		R_n(A) = \sup _{a\in A} \frac{1}{n} \sum_{i=1}^{n} \epsilon _i a_i.
+	\]
+\end{definition}
+
+By symmetrization,
+\begin{align*}
+	\mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } \mathbb{P} (X \leq \theta ) - \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{X_i \leq \theta }  \right]
+	 & \leq 2 \mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{X_i \leq \theta } \right]                                 \\
+	\shortintertext{now, condition on \(X_1, \dots , X_n\), let \(V_\theta \coloneqq \frac{1}{n}\sum_{i} \epsilon _i \mathbbm{1}_{X_i \leq \theta } \), we see that there are only \(n+1\) distinct \(V_\theta \)'s, so }
+	 & = 2 \mathbb{E}_{X_i}\left[ \mathbb{E}_{\epsilon _i}\left[ \max _{\theta \in \{ \theta _1, \dots , \theta _{n+1} \} } V_\theta  \mid X_1, \dots , X_n \right]  \right] \\
+	\shortintertext{with \(V_\theta \sim \mathop{\mathrm{Subg}}(1 / n) \),\footnote{}}
+	 & \leq 2 \sqrt{\frac{2}{n} \log (n+1)}
+\end{align*}
+by \autoref{lma:lec7}.
+
+\begin{remark}
+	Looking back to the \hyperref[eg:1D-classification-thresholds]{example of 1-D thresholds classification}, we see that the \hyperref[not:excess-risk]{excess risk} of \hyperref[prb:ERM]{ERM} is \(O(\sqrt{\log n / n} )\).
+\end{remark}
+
+\begin{definition}[Glivenko-Cantelli]\label{def:Glivenko-Cantelli}
+	A function class \(\mathscr{F} = \{ f\colon \chi \to \mathbb{R} \} \) is called \emph{Glivenko-Cantelli} w.r.t.\ \(\mathbb{P} \) if
+	\[
+		\sup _{f\in \mathscr{F} } \left\vert \mathbb{P} f - \mathbb{P} _n f \right\vert \to 0
+	\]
+	as \(n \to \infty \).
+\end{definition}
+
+\begin{eg}
+	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ \mathbbm{1}_{\text{finite set} }  \} \), and \(\mathbb{P} = \mathcal{N} (0, 1)\). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.
+\end{eg}
+\begin{explanation}
+	Then we see that \(\mathbb{P} f = 0\) while there exists \(f\) such that \(\mathbb{P} _n f = 1\).
+\end{explanation}
+
+\begin{eg}
+	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ \text{all bounded continuous functions} \} \), and \(\mathbb{P} = \mathcal{U} [0, 1]\). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.
+\end{eg}
+
+Let \(\mathscr{F} (x_1, \dots , x_n) = \{ \big(f(x_1), \dots , f(x_n)\big) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n\). Then we have
+\[
+	\mathbb{E}_{X_i}\left[R_n( \mathscr{F} (X_1, \dots , X_n)) \right]
+	= \sup _{f\in \mathscr{F} }\frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(X_i),
+\]
+i.e., we get back the \hyperref[def:Rademacher-complexity]{Rademacher complexity}. Moreover, we see that if \(\mathscr{F} \) be the set of indicator functions as before, then \(\mathscr{F} (X_1, \dots , X_n)\) is finite, we then have
+\[
+	\mathbb{E}_{X_i}\left[R_n(\mathscr{F} (X_1, \dots , X_n)) \right]
+	\leq 2 \sqrt{\frac{2 \log \vert \mathscr{F} (X_1, \dots , X_n) \vert }{n}} .
+\]
+
+\begin{remark}
+	The same rate holds for all \(\vert \mathscr{F} (X_1, \dots , X_n) \vert \leq n^d\).
+\end{remark}
+
+\begin{definition}[Boolean function class]\label{def:boolean-function-class}
+	A function class \(\mathscr{F} \) is called a \emph{boolean function class} on \(\chi \) if it has a polynomial discrimination for all \(x_1, \dots , x_n\in \chi \),
+	\[
+		\left\vert \mathscr{F} (x_1, \dots , x_n) \right\vert \leq \mathop{\mathrm{poly}}(n).
+	\]
+\end{definition}
+
+\begin{definition}[VC dimension]\label{def:VC-dimension}
+	The \emph{VC dimension} of \(\mathscr{F} \) on \(\chi \) is maximum integer \(D\) such that there exists a finite set \(\{ x_1, \dots , x_D \} \subseteq \chi \) satisfying \(\mathscr{F} (x_1, \dots , x_d) = \{ 0, 1 \} ^D\).
+\end{definition}
+
+Consider \(\chi = \mathbb{R} \).
+
+\begin{eg}
+	The \hyperref[def:VC-dimension]{VC dimension} of \(\mathscr{F} = \{ \mathbbm{1}_{X \leq \theta } \colon \theta \in \mathbb{R} \} \) is \(1\).
+\end{eg}
+
+\begin{eg}
+	The \hyperref[def:VC-dimension]{VC dimension} of \(\mathscr{F} = \{ \mathbbm{1}_{[a, b]} \colon a, b \in \mathbb{R}  \} \) is \(2\).
+\end{eg}
+
+Let's look at one example with \(\chi = \mathbb{R} ^2\).
+\begin{eg}
+	The \hyperref[def:VC-dimension]{VC dimension} of \(\mathscr{F} = \{ \mathbbm{1}_{[a, b]\times [c, d]} \colon a, b , c, d\in \mathbb{R} \} \) is \(4\).
+\end{eg}

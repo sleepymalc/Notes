@@ -1,26 +1,56 @@
 \lecture{8}{11 Sep.\ 9:00}{Symmetrization on 1-D Threshold Classification}
-\begin{definition}[Rademacher weight]\label{def:Rademacher-weight}
-	Given \(A \subseteq \mathbb{R} ^n\), the \emph{Rademacher weight}\footnote{Also called \emph{Rademacher average}.} of \(A\) is defined as
+Analogous to the \hyperref[def:Rademacher-complexity]{Rademacher complexity} defined for a function class w.r.t.\ \(\mathbb{P} \), we can define it on a set.
+
+\begin{definition}[Rademacher width]\label{def:Rademacher-width}
+	Given \(A \subseteq \mathbb{R} ^n\), the \emph{Rademacher width}\footnote{Also called \emph{Rademacher average}.} of \(A\) is defined as
 	\[
-		R_n(A) = \sup _{a\in A} \frac{1}{n} \sum_{i=1}^{n} \epsilon _i a_i.
+		R_n(A) = \mathbb{E}_{\epsilon _i}\left[ \sup _{a\in A} \frac{1}{n} \sum_{i=1}^{n} \epsilon _i a_i \right].
 	\]
 \end{definition}
 
-By symmetrization,
-\begin{align*}
-	\mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } \mathbb{P} (X \leq \theta ) - \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{X_i \leq \theta }  \right]
-	 & \leq 2 \mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{X_i \leq \theta } \right]                                 \\
-	\shortintertext{now, condition on \(X_1, \dots , X_n\), let \(V_\theta \coloneqq \frac{1}{n}\sum_{i} \epsilon _i \mathbbm{1}_{X_i \leq \theta } \), we see that there are only \(n+1\) distinct \(V_\theta \)'s, so }
-	 & = 2 \mathbb{E}_{X_i}\left[ \mathbb{E}_{\epsilon _i}\left[ \max _{\theta \in \{ \theta _1, \dots , \theta _{n+1} \} } V_\theta  \mid X_1, \dots , X_n \right]  \right] \\
-	\shortintertext{with \(V_\theta \sim \mathop{\mathrm{Subg}}(1 / n) \),\footnote{}}
-	 & \leq 2 \sqrt{\frac{2}{n} \log (n+1)}
-\end{align*}
-by \autoref{lma:lec7}.
+\begin{notation}
+	People sometimes just say ``Rademacher complexity'' for \hyperref[def:Rademacher-width]{Rademacher width}.
+\end{notation}
+
+Now, applying the \hyperref[lma:symmetrization]{symmetrization lemma} to \(\mathscr{F} = \{ \mathbbm{1}_{X \leq \theta} \colon \theta \in \mathbb{R} \} \), we have the following result that is comparable to \autoref{prop:bracketing}.
+
+\begin{proposition}\label{prop:symmetrization}
+	Let \(x_1, \dots , x_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and \(\mathscr{F} = \{ \mathbbm{1}_{x \leq \theta} \colon \theta \in \mathbb{R} \} \). Then
+	\[
+		\mathbb{E}_{X}\left[ \sup _{f\in \mathscr{F} } \left( \mathbb{P} (X \leq \theta ) - \frac{1}{n}\sum_{i=1}^{n} \mathbbm{1}_{x_i \leq \theta } \right) \right] = O\left( \sqrt{\frac{\log n}{n}}  \right).
+	\]
+\end{proposition}
+\begin{proof}
+	From the \hyperref[lma:symmetrization]{symmetrization lemma},
+	\begin{align*}
+		\mathbb{E}_{X, x_i}\left[\sup _{\theta \in \mathbb{R} } \left( \mathbb{P} (X \leq \theta ) - \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{x_i \leq \theta } \right) \right]
+		 & \leq 2 \mathbb{E}_{\epsilon _i, x_i}\left[\sup _{\theta \in \mathbb{R} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \right]\tag*{condition on \(x_1, \dots , x_n\)}                   \\
+		 & = 2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \middle| x_1, \dots , x_n \right]  \right] .
+	\end{align*}
+	Let
+	\[
+		V_\theta \coloneqq \frac{1}{n}\sum_{i} \epsilon _i \mathbbm{1}_{x_i \leq \theta } ,
+	\]
+	we see that there are only \(n+1\) distinct \(V_\theta \)'s, and it's constant in the intervals \(\theta \in [X_{(k)}, X_{(k+1)})\) for \(k = 0, \dots , n-1\) where \(X_{(k)}\) are the order statistics with \(X_{(0)} \coloneqq -\infty \). Now, define \(\theta _k \coloneqq X_{(k)}\), we can then write
+	\[
+		\sup _{\theta \in \mathbb{R} }\frac{1}{n} \sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta }
+		= \max _{k=0, \dots , n} \frac{1}{n}\sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta _k},
+	\]
+	hence,
+	\begin{align*}
+		2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \middle| x_1, \dots , x_n \right]  \right]
+		 & = 2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \max _{k=0, \dots , n} V_{\theta _k} \middle| x_1, \dots , x_n \right]  \right] \\
+		\shortintertext{with \(V_{\theta _k} \sim \mathop{\mathrm{Subg}}(1 / n) \) and \autoref{lma:lec7},}
+		 & \leq 2 \mathbb{E}_{x_i}\left[ \sqrt{\frac{2}{n} \log (n+1)} \right]                                                                                \\
+		 & = O\left( \sqrt{\frac{\log n	}{n}} \right).
+	\end{align*}
+\end{proof}
 
 \begin{remark}
 	Looking back to the \hyperref[eg:1D-classification-thresholds]{example of 1-D thresholds classification}, we see that the \hyperref[not:excess-risk]{excess risk} of \hyperref[prb:ERM]{ERM} is \(O(\sqrt{\log n / n} )\).
 \end{remark}
 
+\section{Glivenko-Cantelli Classes and Vapnik-Chervonenkis Dimension}
 \begin{definition}[Glivenko-Cantelli]\label{def:Glivenko-Cantelli}
 	A function class \(\mathscr{F} = \{ f\colon \chi \to \mathbb{R} \} \) is called \emph{Glivenko-Cantelli} w.r.t.\ \(\mathbb{P} \) if
 	\[
@@ -28,6 +58,8 @@ by \autoref{lma:lec7}.
 	\]
 	as \(n \to \infty \).
 \end{definition}
+
+From \hyperref[prop:bracketing]{bracketing} and \hyperref[prop:symmetrization]{symmetrization}, we know that \(\mathscr{F} = \{ \mathbbm{1}_{-(-\infty , \theta ]} \colon \theta \in \mathbb{R} \} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}. Let's see some counterexamples.
 
 \begin{eg}
 	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ \mathbbm{1}_{\text{finite set} }  \} \), and \(\mathbb{P} = \mathcal{N} (0, 1)\). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.

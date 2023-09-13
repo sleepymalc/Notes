@@ -1,22 +1,14 @@
 \lecture{5}{1 Sep.\ 9:00}{Proof of McDiarmid's Inequality}
-Before proving \hyperref[thm:McDiarmid-inequality]{McDiarmid inequality}, we should note that the usual proof of which involves \href{https://en.wikipedia.org/wiki/Doob_decomposition_theorem}{martingale decomposition} and \href{https://en.wikipedia.org/wiki/Azuma%27s_inequality}{Azuma-Hoeffding inequality}.
+We should note that the usual proof of \hyperref[thm:McDiarmid-inequality]{McDiarmid inequality} involves \href{https://en.wikipedia.org/wiki/Doob_decomposition_theorem}{martingale decomposition} and \href{https://en.wikipedia.org/wiki/Azuma%27s_inequality}{Azuma-Hoeffding inequality}, a generalization of \hyperref[thm:Hoeffding-inequality]{Hoffding's inequality} for \hyperref[def:martingale-difference-sequence]{martingale difference sequence}.
 
 \begin{definition}[Martingale difference sequence]\label{def:martingale-difference-sequence}
 	A \emph{martingale difference sequence} is a sequence of random variables \(\Delta _1, \dots \) such that \(\mathbb{E}_{}\left[\Delta _i \mid \Delta _{i-1} \right] = 0\) for all \(i\).
 \end{definition}
 
-\begin{note}
-	\href{https://en.wikipedia.org/wiki/Azuma%27s_inequality}{Azuma-Hoeffding inequality} is a generalization of \hyperref[thm:Hoeffding-inequality]{Hoffding's inequality} for \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. 
-\end{note}
-
 However, we will not go with this route; instead, we prove something weaker but tricker.\footnote{In fact, what we're going to prove is not even a weaker version: we prove something weaker while we really need the original (stronger) statement to hold.}
 
 \begin{note}
-	The condition
-	\[
-		\sup _{x_1, \dots , x_n, x_i^{\prime} }\vert f(x_1, \dots , x_n) - f(x_1, \dots , x_i^{\prime} , \dots , x_n) \vert \leq c_i
-	\]
-	is equivalent as
+	The condition \(\sup _{x_1, \dots , x_n, x_i^{\prime} }\vert f(x_1, \dots , x_n) - f(x_1, \dots , x_i^{\prime} , \dots , x_n) \vert \leq c_i\) is equivalent to
 	\[
 		\vert f(x_1, \dots , x_n) - f(z_1, \dots , z_n) \vert \leq \sum_{i=1}^{n} c_i \mathbbm{1}_{x_i \neq z_i}.
 	\]
@@ -77,6 +69,8 @@ We're now ready.
 		 & \leq \frac{\lambda}{2}\left( \sum_{i=1}^{n} c_i^2 \right) \cdot M(\lambda ).
 	\end{align*}
 \end{proof}
+
+We note the following.
 
 \begin{note}
 	The above proof doesn't even show a weaker version of \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality}.
@@ -151,7 +145,7 @@ with probability at least \(1 - \delta \). However, what if the variance \(\Var_
 	Let \(\mathbb{P} f = \mathbb{E}_{}\left[f \right] \) and \(\mathbb{P} _n f = \sum_{i} f(X_i) / n\).
 \end{notation}
 
-This is achieved by the following.
+This is achieved by the following, although it's much harder to prove~\cite[\defaultS 12]{boucheron2013concentration}.
 
 \begin{theorem}[Talagrand's concentration inequality]\label{thm:Talagrand-concentration-inequality}
 	Let \(\mathscr{F} \) is \(B\)-bounded, and \(S_n = \sup _{f\in \mathscr{F}} \vert \mathbb{P} _n f - \mathbb{P} f \vert \). Then
@@ -160,3 +154,7 @@ This is achieved by the following.
 	\]
 	with probability at least \(1 - \alpha \).
 \end{theorem}
+
+\begin{remark}
+	We might encounter an explicit situation where \hyperref[thm:Talagrand-concentration-inequality]{Talagrand's concentration} is more profitable to use than \hyperref[thm:McDiarmid-inequality]{bounded differences inequality} later in the course.
+\end{remark}

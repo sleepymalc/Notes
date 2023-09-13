@@ -1,11 +1,8 @@
-\chapter{}
+\chapter{The Supremum of Empirical Process}
 \lecture{6}{6 Sep.\ 9:00}{A Glance at Statistical Learning Theory}
-\section{Statistical Learning}
-Let's first see another motivation on studying uniform law of large numbers, i.e., the \emph{goodness of fit testing}. Given \(X_1, \dots , X_n \overset{\text{i.i.d.}}{\sim } \mathbb{P} \), we want to distinguish between
-\begin{itemize}
-	\item \(H_0 \colon P = P_0\); and
-	\item \(H_1\colon P \neq P_0\).
-\end{itemize}
+\section{Goodness of Fit Testing}
+Let's first see another motivation on studying uniform law of large numbers, i.e., the \emph{goodness of fit testing}. Given \(X_1, \dots , X_n \overset{\text{i.i.d.}}{\sim } \mathbb{P} \), we want to distinguish between \(H_0 \colon \mathbb{P} = \mathbb{P} _0\) and \(H_1\colon \mathbb{P} \neq \mathbb{P} _0\).
+
 Many tests are possible. One approach could be the \href{https://en.wikipedia.org/wiki/Kolmogorov-Smirnov_test}{Kolmogorov-Smirnov test}: assume \(F\) is the CDF of \(\mathbb{P} _0\), then consider the \hyperref[def:Kolmogorov-Smirnov-statistics]{Kolmogorov-Smirnov statistics}:
 
 \begin{definition}[Kolmogorov-Smirnov statistics]\label{def:Kolmogorov-Smirnov-statistics}
@@ -16,29 +13,28 @@ Many tests are possible. One approach could be the \href{https://en.wikipedia.or
 	where \(F_n(t)\) and \(F\) is the \hyperref[def:empirical-CDF]{empirical CDF} and the CDF of \(\mathbb{P} \), respectively.
 \end{definition}
 
-From \href{https://en.wikipedia.org/wiki/Glivenko-Cantelli_theorem}{Glivenko-Cantelli theorem}, \(D_n \to 0\) under \(H_0\), and \(D_n\) should not converge to \(0\), under some alternative.
-
-Assuming continuity of \(F\), Kolmogorov showed that
+From \href{https://en.wikipedia.org/wiki/Glivenko-Cantelli_theorem}{Glivenko-Cantelli theorem}, \(D_n \to 0\) under \(H_0\), and \(D_n\) should not converge to \(0\), under some alternative. Assuming continuity of \(F\), Kolmogorov showed that
 \begin{enumerate}[(a)]
 	\item the distribution \(D_n\) does not depend on \(F\);
 	\item \(D_n = O_p(1 / \sqrt{n} )\);
 	\item \(\sqrt{n} D_n \to \sup _{t\in [0, 1]} \vert B(t) \vert \) where \(B(t)\) is the \href{https://en.wikipedia.org/wiki/Brownian_bridge}{Broweian bridge} on \([0, 1]\).
 	\item \(\mathbb{P} (\sqrt{n}D_n  \leq 2.4) \approx 0.999973\).
 \end{enumerate}
-We'll take a non-asymptotic approach to this problem. And the second main application that we have in mind for this course if the \(M\)-estimation.
+We'll take a non-asymptotic approach to this problem, i.e., we may not get such sharp constants.
 
+\section{Statistical Learning}
 \subsection{Empirical Risk Minimization}
 Consider the following problem.
 
 \begin{problem}[Empirical risk minimization]\label{prb:ERM}
-Let \(S = \{ (x_1, y_1) , \dots , (x_n, y_n)\} \) be \(n\) i.i.d.\ copies of \((X, Y) \in \chi \times \mathcal{Y} \subseteq \mathbb{R} ^d\times \mathbb{R}\) with distribution \(\mathbb{P} = \mathbb{P} _X \times \mathbb{P} _{Y \mid X}\). Given a loss function \(\ell \colon \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}\) and a class of functions \(\mathscr{F} = \{ f\colon \chi \to \mathcal{Y}  \} \), the \emph{empirical risk minimization} problem is defined as the problem of finding
+Let \(S = \{ (x_1, y_1) , \dots , (x_n, y_n)\} \) be \(n\) i.i.d.\ copies of \((X, Y) \in \chi \times \mathcal{Y} \subseteq \mathbb{R} ^d\times \mathbb{R}\) with distribution \(\mathbb{P} = \mathbb{P} _X \times \mathbb{P} _{Y \mid X}\). Given a loss function \(\ell \colon \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}\) and a function class \(\mathscr{F} = \{ f\colon \chi \to \mathcal{Y}  \} \), the \emph{empirical risk minimization} is
 \[
 	\hat{f} \in \argmin_{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \ell (f(x_i), y_i).
 \]
 \end{problem}
 
 \begin{eg}
-	Some examples of \(\mathscr{F} \) can be the set of neural networks, decision trees, linear functions.
+	\(\mathscr{F} \) can be the set of neural networks, decision trees, linear functions.
 \end{eg}
 
 \begin{eg}[Linear regression]
@@ -56,7 +52,7 @@ Let \(S = \{ (x_1, y_1) , \dots , (x_n, y_n)\} \) be \(n\) i.i.d.\ copies of \((
 We also define the following.
 
 \begin{definition*}
-	Consider the set-up of \hyperref[prb:ERM]{ERM}.
+	Consider the set-up of \hyperref[prb:ERM]{empirical risk minimization}.
 	\begin{definition}[Expected loss]\label{def:expected-loss}
 		The \emph{expected loss}\footnote{Also called \emph{population loss} and \emph{test error}.} of \(f\in \mathscr{F} \) is defined as
 		\[
@@ -87,21 +83,7 @@ it is the expectation of future data points, i.e., it becomes a random variable,
 		\leq \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \big(L(f) - \hat{L} (f) \big) \right] .
 	\]
 \end{lemma}
-
-Before proving \autoref{lma:ERM}, let us first decode what is it claiming.
-\begin{itemize}
-	\item Since \(L(f)\) is the \hyperref[def:expected-loss]{population error} of \(f\) and \(\hat{L} (f)\) is the \hyperref[def:empirical-loss]{empirical loss} of \(f\),
-	      \[
-		      \sup _{f\in \mathscr{F} } \big( L(f) - \hat{L} (f) \big)
-	      \]
-	      is the supremum of an \hyperref[def:EP]{empirical process}.
-	\item For the left-hand side, it represents the \hyperref[def:expected-loss]{expected loss} of \(\hat{f} \) and the best possible out-of-sample error.\footnote{Or the best possible prediction error of \(\mathscr{F} \).} This is often called the \hyperref[not:excess-risk]{excess risk}.
-	      \begin{notation}[Excess risk]\label{not:excess-risk}
-		      \(\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)\) is often called the \emph{excess risk} of an \hyperref[prb:ERM]{ERM}.
-	      \end{notation}
-\end{itemize}
-
-\begin{proof}[Proof of \autoref{lma:ERM}]
+\begin{proof}
 	Let \(f^{\ast} = \inf _{f\in \mathscr{F} } L(f)\). Then
 	\[
 		L(\hat{f} ) - L(f^{\ast} )
@@ -122,6 +104,18 @@ Before proving \autoref{lma:ERM}, let us first decode what is it claiming.
 	\]
 \end{proof}
 
+\begin{note}
+	Let us decode what \autoref{lma:ERM} is claiming.
+	\begin{itemize}
+		\item Since \(L(f)\) is the \hyperref[def:expected-loss]{population error} of \(f\) and \(\hat{L} (f)\) is the \hyperref[def:empirical-loss]{empirical loss} of \(f\), \(\sup _{f\in \mathscr{F} } \big( L(f) - \hat{L} (f) \big)\) is the supremum of an \hyperref[def:EP]{empirical process}.
+		\item For the left-hand side, it represents the \hyperref[def:expected-loss]{expected loss} of \(\hat{f} \) and the best possible out-of-sample error.\footnote{Or the best possible prediction error of \(\mathscr{F} \).} This is often called the \hyperref[not:excess-risk]{excess risk}.
+	\end{itemize}
+\end{note}
+
+\begin{notation}[Excess risk]\label{not:excess-risk}
+	\(\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)\) is often called the \emph{excess risk} of an \hyperref[prb:ERM]{ERM}.
+\end{notation}
+
 \begin{remark}
 	For ``curved'' loss function like square loss, supremum can be further ``localized''.
 \end{remark}
@@ -140,11 +134,7 @@ Before proving \autoref{lma:ERM}, let us first decode what is it claiming.
 	\[
 		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \left( \mathbb{E}_{}\left[f(X) \right] - \frac{1}{n}\sum_{i=1}^{n} f(x_i) \right)  \right].
 	\]
-	For 1-D case, assume that
-	\[
-		\mathscr{F} = \{ x \mapsto \mathbbm{1}_{x \leq \theta } \colon \theta \in \mathbb{R}  \},
-	\]
-	then
+	For 1-D case, assume that \(\mathscr{F} = \{ x \mapsto \mathbbm{1}_{x \leq \theta } \colon \theta \in \mathbb{R}  \}\), then
 	\[
 		\mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } \left( \mathbb{P} (X \leq \theta ) - \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{x_i \leq \theta } \right) \right]
 		= \mathbb{E}_{}\left[\sup _{\theta \in \mathbb{R} } (F(\theta ) - F_n(\theta )) \right] ,

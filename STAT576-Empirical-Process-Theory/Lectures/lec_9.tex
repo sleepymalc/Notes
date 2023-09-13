@@ -1,0 +1,101 @@
+\lecture{9}{13 Sep.\ 9:00}{VC Dimension}
+\begin{lemma}[Sauer-Shelah]\label{lma:Sauer-Shelah}
+	If \(\mathop{\mathrm{VC}}(\mathscr{F}) = D\), then for every and \(\{ x_1, \dots , x_n \} \),
+	\[
+		\vert \mathscr{F} (x_1, \dots , x_n) \vert
+		\leq \binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{D}
+		\leq \left( \frac{en}{D} \right) ^D.
+	\]
+\end{lemma}
+
+To prove \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma}, it suffices to show the following.
+
+\begin{lemma}[Pajor's lemma]\label{lma:Pajor}
+	Given a \hyperref[def:boolean-function-class]{boolean function class} \(\mathscr{F} \) on a finite set \(\Omega \), then
+	\[
+		\vert \mathscr{F} \vert \leq \#\{ S \subseteq \Omega \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} \}.
+	\]
+\end{lemma}
+\begin{proof}
+	We do an induction. The base case for \(n = 1\) holds trivially. Now, assume that the statement holds for \(n\), then for \(\vert \Omega \vert = n+1\), write \(\Omega = \Omega _0 \cup \{ x_0 \} \). Let
+	\[
+		\mathscr{F} _0 = \{ f\in \mathscr{F} \colon f(x_0) = 0\} ,\quad
+		\mathscr{F} _1 = \{ f\in \mathscr{F} \colon f(x_0) = 1\} .
+	\]
+	Think of \(\mathscr{F} _0\) and \(\mathscr{F} _1\) as function classes on \(\Omega _0\). We then have
+	\[
+		\vert \mathscr{F} \vert
+		= \vert \mathscr{F} _0 \vert + \vert \mathscr{F} _1 \vert
+		\leq \vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert
+	\]
+	where
+	\[
+		S_{\mathscr{F} _0} = \{ S \subseteq \Omega _0 \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} _0 \} ,\quad
+		S_{\mathscr{F} _1} = \{ S \subseteq \Omega _0 \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} _1 \}.
+	\]
+	We claim that \(\vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert \leq \vert S _{\mathscr{F} } \vert\). Let \(S \subseteq \Omega _0\) be \hyperref[def:shatter]{shattered} by both \(\mathscr{F} _0\) and \(\mathscr{F} _1\), then we know
+	\begin{itemize}
+		\item \(S\) is \hyperref[def:shatter]{shattered} by \(\mathscr{F} \); and
+		\item \(S \cup \{ x_0 \} \) is \hyperref[def:shatter]{shattered} by \(\mathscr{F} \);
+	\end{itemize}
+	hence we always count at least twice, so we're fine.
+\end{proof}
+
+
+\begin{proposition}\label{prop:lec9}
+	For any function class \(\mathscr{F} \), if \(n \geq \mathop{\mathrm{VC}}(\mathscr{F} ) \),
+	\[
+		R_n(\mathscr{F} ) \leq c \sqrt{\frac{\mathop{\mathrm{VC}}(\mathscr{F} ) }{n} \log \left( \frac{en}{\mathop{\mathrm{VC}}(\mathscr{F} ) } \right) }
+	\]
+	for some constant \(c\).
+\end{proposition}
+
+\begin{remark}
+	We see that \autoref{prop:lec9} is independent of \(\mathbb{P} \).
+\end{remark}
+
+\begin{remark}
+	If \(\mathop{\mathrm{VC}}(\mathscr{F} ) = \infty \), then ``distribution-free'' uniform convergence fails.
+\end{remark}
+
+However, if we don't care about distribution-free property, we do have examples that the uniform convergence holds for a particular \(\mathbb{P} \) when \(\mathop{\mathrm{VC}}(\mathscr{F} ) = \infty \).
+
+\begin{eg}
+	For \(\mathscr{F} = \{ \mathbbm{1}_{A} \colon \text{compact convex } A \subseteq [0, 1]^d \} \), \(\mathop{\mathrm{VC}}(\mathscr{F} ) = \infty \). If \(\mathbb{P} \) is continuous w.r.t.\ Lebesgue's measure, then the uniform law of large number still holds.
+\end{eg}
+
+\begin{remark}
+	The \(\sqrt{\log n} \) factors in \autoref{prop:lec9} is superfluous.
+\end{remark}
+
+\begin{eg}
+	Let \(V\) be a \(D\)-dimensional vector space of real function on \(\chi \), and \(\mathscr{F} = \{ \mathbbm{1}_{f\geq 0} \colon f \in V\} \). Then \(\mathop{\mathrm{VC}}(\mathscr{F} ) \leq D\).
+\end{eg}
+\begin{explanation}
+	We want to show that for any \(\{ x_1, \dots , x_{D+1} \} \) can't be \hyperref[def:shatter]{shatterred}. Let
+	\[
+		T = \{ \big( f(x_1), \dots , f(x_{D+1}) \big) \colon f\in V \},
+	\]
+	which is a linear subspace of \(\mathbb{R} ^{D+1}\) such that \(\dim (T) \leq D\). This implies that there exists a non-zero \(y \in \mathbb{R} ^{D+1}\) such that
+	\[
+		\sum_{i=1}^{D+1} y_i f(x_i) = 0
+	\]
+	for all \(f\in V\). Now, without loss of generality, there exists an index \(k\) such that \(y_k > 0\). If \(\mathscr{F} \) \hyperref[def:shatter]{shatters} \(\{ x_1, \dots , x_{D+1} \} \), then there exists \(f\in V\) such that
+	\[
+		\begin{dcases}
+			f(x_i) < 0,    & \forall i\colon y_i > 0  ;  \\
+			f(x_i) \geq 0, & \forall i\colon y_i \leq 0.
+		\end{dcases}
+	\]
+	But then \(\sum_{i} y_i f(x_i) < 0\), which is a contradiction.
+\end{explanation}
+
+\begin{eg}[Half-space]
+	Consider \(\mathscr{F} \) being the indicators of all closed half-spaces in \(\mathbb{R} ^d\). Then \(\mathop{\mathrm{VC}}(\mathscr{F} ) = d+1 \).
+\end{eg}
+
+It seems like the \hyperref[def:VC-dimension]{VC dimension} is approximately the number of parameters; however, it's not always the case.
+
+\begin{eg}
+	Consider \(\mathscr{F} = \{ x \mapsto \mathbbm{1}_{\sin tx \geq 0} \colon t \in \mathbb{R} ^+\} \), then \(\mathop{\mathrm{VC}}(\mathscr{F} ) = \infty \).
+\end{eg}

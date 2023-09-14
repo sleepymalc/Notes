@@ -81,44 +81,55 @@ From \hyperref[prop:bracketing]{bracketing} and \hyperref[prop:symmetrization]{s
 	This implies \(\sup _{f\in \mathscr{F} } \vert \mathbb{P} f - \mathbb{P} _n f \vert \geq 1 - \delta  \) for all \(n \in \mathbb{N} \).
 \end{explanation}
 
-Now, let's introduce some notation.
+\subsection{Vapnik-Chervonenkis Dimension}
+Let's first introduce a common notation.
 
 \begin{notation}
 	Let \(\mathscr{F} (x_1, \dots , x_n) \coloneqq \{ \big(f(x_1), \dots , f(x_n)\big) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n\).
 \end{notation}
 
-Then we have
+Then we can relate the \hyperref[def:Rademacher-width]{Rademacher width} of \(\mathscr{F} (X_1, \dots , X_n)\) to the \hyperref[def:Rademacher-complexity]{Rademacher complexity} of \(\mathscr{F} \) since
 \[
 	\mathbb{E}_{X_i}\left[R_n( \mathscr{F} (X_1, \dots , X_n)) \right]
-	= \sup _{f\in \mathscr{F} }\frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(X_i),
+	= \mathbb{E}_{X_i, \epsilon _i}\left[ \sup _{f\in \mathscr{F} }\frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(X_i) \right]
+	= R_n(\mathscr{F} ).
 \]
-i.e., we get back the \hyperref[def:Rademacher-complexity]{Rademacher complexity}. Moreover, we see that if \(\mathscr{F} \) be the set of indicator functions as before, then \(\mathscr{F} (X_1, \dots , X_n)\) is finite, we then have
+
+\begin{note}
+	This is why people overload these two notations.
+\end{note}
+
+Moreover, we see that if \(\mathscr{F} (X_1, \dots , X_n)\) is finite, by the same proof as in \autoref{prop:symmetrization},
 \[
 	\mathbb{E}_{X_i}\left[R_n(\mathscr{F} (X_1, \dots , X_n)) \right]
 	\leq 2 \sqrt{\frac{2 \log \vert \mathscr{F} (X_1, \dots , X_n) \vert }{n}} .
 \]
 
+The up-shot is the following.
+
 \begin{remark}
-	The same rate holds for all \(\vert \mathscr{F} (X_1, \dots , X_n) \vert \leq n^d\).
+	If \(\vert \mathscr{F} (X_1, \dots , X_n) \vert \leq n^d\) for some \(d\in \mathbb{N}^+ \), then we again get an \(O(\sqrt{\log n / n} )\) bound.
 \end{remark}
 
-\subsection{Vapnik-Chervonenkis Dimension}
+This is captured by the notion of \hyperref[def:polynomial-discrimination]{polynomial discrimination}. In particular, we'll look into the class of boolean function.
 
-
-\begin{definition}[Boolean function class]\label{def:boolean-function-class}
-	A function class \(\mathscr{F} \) is a \emph{boolean function class} on \(\chi \) if it has a polynomial discrimination for all \(x_1, \dots , x_n\in \chi \), i.e.,
-	\[
-		\left\vert \mathscr{F} (x_1, \dots , x_n) \right\vert \leq \poly(n).
-	\]
+\begin{definition}[Polynomial discrimination]\label{def:polynomial-discrimination}
+	We say that a boolean function class \(\mathscr{F} \) on \(\chi \) has a \emph{polynomial discrimination} if for all \(x_1, \dots , x_n\in \chi \), \(\left\vert \mathscr{F} (x_1, \dots , x_n) \right\vert \leq \poly(n)\).
 \end{definition}
 
-\begin{definition}[Shatter]\label{def:shatter}
-	A finite set \(\{ x_1, \dots , x_D \} \subseteq \chi \) is \emph{shattered} by a \hyperref[def:boolean-function-class]{boolean function class} \(\mathscr{F} \) if \(\mathscr{F} (x_1, \dots , x_d) = \{ 0, 1 \} ^D\).
-\end{definition}
+To characterize \(\vert \mathscr{F} (x_1, \dots , x_n) \vert \), we will look at the \hyperref[def:VC-dimension]{VC dimension} of \(\mathscr{F} \), which is related to the size of the discrimination of \(\mathscr{F} \) in a non-trivial way.
 
-\begin{definition}[VC dimension]\label{def:VC-dimension}
-	The \emph{VC dimension} of a \hyperref[def:boolean-function-class]{boolean function class} \(\mathscr{F} \) on \(\chi \) is the maximum integer \(D\) such that there exists a size \(D\) finite set \(A \subseteq \chi \) \hyperref[def:shatter]{shattered} by \(\mathscr{F} \).
-\end{definition}
+\begin{definition*}
+	Let \(\mathscr{F} \) be a boolean function class on \(\chi \).
+	\begin{definition}[Shatter]\label{def:shatter}
+		A finite set \(\{ x_1, \dots , x_D \} \subseteq \chi \) is \emph{shattered} by \(\mathscr{F} \) if \(\mathscr{F} (x_1, \dots , x_D) = \{ 0, 1 \} ^D\).
+	\end{definition}
+
+	\begin{definition}[VC dimension]\label{def:VC-dimension}
+		The \emph{VC dimension} of \(\mathscr{F} \) on \(\chi \) is the maximum integer \(D\) such that there exists a size \(D\) finite set \(A \subseteq \chi \) \hyperref[def:shatter]{shattered} by \(\mathscr{F} \).
+	\end{definition}
+\end{definition*}
+
 
 \begin{remark}
 	We take the convention that \(\varnothing \) is always \hyperref[def:shatter]{shattered}.

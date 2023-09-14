@@ -40,7 +40,7 @@ Now, applying the \hyperref[lma:symmetrization]{symmetrization lemma} to \(\math
 	\begin{align*}
 		2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \middle| x_1, \dots , x_n \right]  \right]
 		 & = 2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \max _{k=0, \dots , n} V_{\theta _k} \middle| x_1, \dots , x_n \right]  \right] \\
-		\shortintertext{with \(V_{\theta _k} \sim \mathop{\mathrm{Subg}}(1 / n) \) and \autoref{lma:lec7},}
+		\shortintertext{with \(V_{\theta _k} \sim \Subg(1 / n) \) and \autoref{lma:lec7},}
 		 & \leq 2 \mathbb{E}_{x_i}\left[ \sqrt{\frac{2}{n} \log (n+1)} \right]                                                                                \\
 		 & = O\left( \sqrt{\frac{\log n	}{n}} \right).
 	\end{align*}
@@ -50,7 +50,8 @@ Now, applying the \hyperref[lma:symmetrization]{symmetrization lemma} to \(\math
 	Looking back to the \hyperref[eg:1D-classification-thresholds]{example of 1-D thresholds classification}, we see that the \hyperref[not:excess-risk]{excess risk} of \hyperref[prb:ERM]{ERM} is \(O(\sqrt{\log n / n} )\).
 \end{remark}
 
-\section{Glivenko-Cantelli Classes and Vapnik-Chervonenkis Dimension}
+\section{Glivenko-Cantelli Class and Vapnik-Chervonenkis Dimension}
+\subsection{Glivenko-Cantelli Class}
 \begin{definition}[Glivenko-Cantelli]\label{def:Glivenko-Cantelli}
 	A function class \(\mathscr{F} = \{ f\colon \chi \to \mathbb{R} \} \) is called \emph{Glivenko-Cantelli} w.r.t.\ \(\mathbb{P} \) if
 	\[
@@ -59,20 +60,34 @@ Now, applying the \hyperref[lma:symmetrization]{symmetrization lemma} to \(\math
 	as \(n \to \infty \).
 \end{definition}
 
-From \hyperref[prop:bracketing]{bracketing} and \hyperref[prop:symmetrization]{symmetrization}, we know that \(\mathscr{F} = \{ \mathbbm{1}_{-(-\infty , \theta ]} \colon \theta \in \mathbb{R} \} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}. Let's see some counterexamples.
+From \hyperref[prop:bracketing]{bracketing} and \hyperref[prop:symmetrization]{symmetrization}, we know that \(\mathscr{F} = \{ \mathbbm{1}_{X \leq \theta } \colon \theta \in \mathbb{R} \} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}. Let's see some counterexamples.
 
 \begin{eg}
-	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ \mathbbm{1}_{\text{finite set} }  \} \), and \(\mathbb{P} = \mathcal{N} (0, 1)\). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.
+	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ \mathbbm{1}_{A} \colon A \subseteq \chi, \vert A \vert < \infty \} \), and \(\mathbb{P} \) be any continuous measure on \(\chi \). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli} w.r.t.\ \(\mathbb{P} \).
 \end{eg}
 \begin{explanation}
-	Then we see that \(\mathbb{P} f = 0\) while there exists \(f\) such that \(\mathbb{P} _n f = 1\).
+	For \(f = \mathbbm{1}_{A} \), \(\mathbb{P} f = \mathbb{P} (X\in A) = 0\) since \(\vert A \vert < \infty \). On the other hand, let \(A_0 = \{ X_1, \dots , X_n \} \) be the observed empirical data, \(\mathbb{P} _n f = 1\), i.e., \(\sup _{f\in \mathscr{F} } \vert \mathbb{P} f - \mathbb{P} _n f \vert = 1\) for all \(n\in \mathbb{N} \).
 \end{explanation}
 
 \begin{eg}
-	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ \text{all bounded continuous functions} \} \), and \(\mathbb{P} = \mathcal{U} [0, 1]\). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.
+	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ f\colon \chi \to \mathbb{R} \text{ bounded and continuous}\} \), and \(\mathbb{P} = \mathcal{U} [0, 1]\). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.
 \end{eg}
+\begin{explanation}
+	Consider
+	\begin{itemize}
+		\item \(f(X_i) = 1\) for \(i = 1, \dots , n\) and \(f = 0\) elsewhere (in a continuous manner).\footnote{E.g., sharp peak at \(X_i\)'s.}
+		\item Then we can make \(\int_{0}^{1} f(t) \,\mathrm{d}t < \delta \) for some \(\delta \in (0, 1)\).
+	\end{itemize}
+	This implies \(\sup _{f\in \mathscr{F} } \vert \mathbb{P} f - \mathbb{P} _n f \vert \geq 1 - \delta  \) for all \(n \in \mathbb{N} \).
+\end{explanation}
 
-Let \(\mathscr{F} (x_1, \dots , x_n) = \{ \big(f(x_1), \dots , f(x_n)\big) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n\). Then we have
+Now, let's introduce some notation.
+
+\begin{notation}
+	Let \(\mathscr{F} (x_1, \dots , x_n) \coloneqq \{ \big(f(x_1), \dots , f(x_n)\big) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n\).
+\end{notation}
+
+Then we have
 \[
 	\mathbb{E}_{X_i}\left[R_n( \mathscr{F} (X_1, \dots , X_n)) \right]
 	= \sup _{f\in \mathscr{F} }\frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(X_i),
@@ -87,23 +102,26 @@ i.e., we get back the \hyperref[def:Rademacher-complexity]{Rademacher complexity
 	The same rate holds for all \(\vert \mathscr{F} (X_1, \dots , X_n) \vert \leq n^d\).
 \end{remark}
 
+\subsection{Vapnik-Chervonenkis Dimension}
+
+
 \begin{definition}[Boolean function class]\label{def:boolean-function-class}
-	A function class \(\mathscr{F} \) is called a \emph{boolean function class} on \(\chi \) if it has a polynomial discrimination for all \(x_1, \dots , x_n\in \chi \),
+	A function class \(\mathscr{F} \) is a \emph{boolean function class} on \(\chi \) if it has a polynomial discrimination for all \(x_1, \dots , x_n\in \chi \), i.e.,
 	\[
-		\left\vert \mathscr{F} (x_1, \dots , x_n) \right\vert \leq \mathop{\mathrm{poly}}(n).
+		\left\vert \mathscr{F} (x_1, \dots , x_n) \right\vert \leq \poly(n).
 	\]
 \end{definition}
 
-\begin{definition}[VC dimension]\label{def:VC-dimension}
-	The \emph{VC dimension} of \(\mathscr{F} \) on \(\chi \) is maximum integer \(D\) such that there exists a finite set \(\{ x_1, \dots , x_D \} \subseteq \chi \) satisfying \(\mathscr{F} (x_1, \dots , x_d) = \{ 0, 1 \} ^D\).
+\begin{definition}[Shatter]\label{def:shatter}
+	A finite set \(\{ x_1, \dots , x_D \} \subseteq \chi \) is \emph{shattered} by a \hyperref[def:boolean-function-class]{boolean function class} \(\mathscr{F} \) if \(\mathscr{F} (x_1, \dots , x_d) = \{ 0, 1 \} ^D\).
 \end{definition}
 
-\begin{definition}[Shatter]\label{def:shatter}
-
+\begin{definition}[VC dimension]\label{def:VC-dimension}
+	The \emph{VC dimension} of a \hyperref[def:boolean-function-class]{boolean function class} \(\mathscr{F} \) on \(\chi \) is the maximum integer \(D\) such that there exists a size \(D\) finite set \(A \subseteq \chi \) \hyperref[def:shatter]{shattered} by \(\mathscr{F} \).
 \end{definition}
 
 \begin{remark}
-	We take the convention that \(\epsilon \) is always \hyperref[def:shatter]{shattered}.
+	We take the convention that \(\varnothing \) is always \hyperref[def:shatter]{shattered}.
 \end{remark}
 
 Consider \(\chi = \mathbb{R} \).

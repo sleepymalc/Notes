@@ -2,60 +2,89 @@
 Firstly, given \hyperref[def:VC-dimension]{VC dimension}, we can upper-bound the size of the discrimination.
 
 \begin{lemma}[Sauer-Shelah lemma]\label{lma:Sauer-Shelah}
-  If \(\VC(\mathscr{F}) = D\), then for every \(\{ x_1, \dots , x_n \} \subseteq \chi \),
+  Let \(\mathscr{F} \) be a boolean function class such that \(\VC(\mathscr{F}) = D\), then for every \(\{ x_1, \dots , x_n \} \subseteq \chi \) such that \(n \geq D\),
   \[
     \vert \mathscr{F} (x_1, \dots , x_n) \vert
     \leq \binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{D}
     \leq \left( \frac{en}{D} \right) ^D.
   \]
 \end{lemma}
-\begin{proof}
-  It follows directly from \hyperref[lma:Pajor]{Pajor's lemma}.
-\end{proof}
+
+To prove \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma}, we need \hyperref[lma:Pajor]{Pajor's lemma}.
 
 \begin{lemma}[Pajor's lemma]\label{lma:Pajor}
   Given a boolean function class \(\mathscr{F} \) on a finite set \(\Omega \), then
   \[
-    \vert \mathscr{F} \vert \leq \#\{ S \subseteq \Omega \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} \}.
+    \vert \mathscr{F} \vert \leq \vert \{ S \subseteq \Omega \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} \} \vert.
   \]
 \end{lemma}
 \begin{proof}
-  We do an induction. The base case for \(n = 1\) holds trivially. Now, assume that the statement holds for \(n\), then for \(\vert \Omega \vert = n+1\), write \(\Omega = \Omega _0 \cup \{ x_0 \} \). Let
+  We prove this by induction on \(n\). For \(n = 1\) (base case), it holds trivially since
+  \[
+    \vert \mathscr{F} \vert = 2 \leq \vert \{ S \subseteq \Omega \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} \} \vert.
+  \]
+  Assume the statement holds for all \(\Omega \) such that \(\vert \Omega \vert = n\). For \(\vert \Omega \vert = n+1\), write
+  \[
+    \Omega = (\Omega \setminus \{ x_0 \} ) \cup \{ x_0 \} \eqqcolon \Omega _0 \cup \{ x_0 \}
+  \]
+  and let \(\mathscr{F} _0\) and \(\mathscr{F} _1\) be two boolean function classes defined on \(\Omega _0\) as
   \[
     \mathscr{F} _0 = \{ f\in \mathscr{F} \colon f(x_0) = 0\} ,\quad
     \mathscr{F} _1 = \{ f\in \mathscr{F} \colon f(x_0) = 1\} .
   \]
-  Think of \(\mathscr{F} _0\) and \(\mathscr{F} _1\) as function classes on \(\Omega _0\). We then have
+  We further define \(S_{\mathscr{F} ^{\prime} }\) as \(S_{\mathscr{F} ^{\prime} } = \{ S \subseteq \Omega ^{\prime} \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} ^{\prime} \}\) for any function class \(\mathscr{F} ^{\prime} \) defined on \(\Omega ^{\prime} \). Then, by induction hypothesis, \(\vert \mathscr{F} _i \vert \leq \vert S_{\mathscr{F} _i} \vert \), hence
   \[
     \vert \mathscr{F} \vert
     = \vert \mathscr{F} _0 \vert + \vert \mathscr{F} _1 \vert
-    \leq \vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert
+    \leq \vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert.
   \]
-  where
+  Finally, we claim the following.
+
+  \begin{claim}
+    \(\vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert \leq \vert S _{\mathscr{F} } \vert\).
+  \end{claim}
+  \begin{explanation}
+    Let \(S \subseteq \Omega _0\) \hyperref[def:shatter]{shattered} by both \(\mathscr{F} _0\) and \(\mathscr{F} _1\), then we know \(S\) is \hyperref[def:shatter]{shattered} by \(\mathscr{F} \) too. We further observe that \(S \cup \{ x_0 \} \) is \hyperref[def:shatter]{shattered} by \(\mathscr{F} \), but not \(\mathscr{F} _i\) since \(f(x_0)\) is fixed for \(f\in \mathscr{F} _i\).
+
+    Now, when
+    \begin{itemize}
+      \item \(S\) is \hyperref[def:shatter]{shattered} by only one of the \(\mathscr{F} _i\)'s, it contributes one unit both to \(\vert S_{\mathscr{F} } \vert \) and \(\vert S_{\mathscr{F} _i} \vert \);
+      \item \(S\) is \hyperref[def:shatter]{shattered} by both \(\mathscr{F} _i\)'s, \(S\) and \(S \cup \{ x_0 \} \) are \hyperref[def:shatter]{shattered} by \(\mathscr{F} \), i.e., \(S\) contributes two unit to \(\vert S_{\mathscr{F} } \vert \) and one unit to both \(\vert S_{\mathscr{F} _i} \vert \)'s.
+    \end{itemize}
+    By counting, the inequality always holds.\footnote{It's possible that \(S\) is \hyperref[def:shatter]{shattered} by \(\mathscr{F} \) but not by \(\mathscr{F} _i\)'s, so \(\leq \).}
+  \end{explanation}
+
+  This implies \(\vert \mathscr{F} \vert \leq \vert S_{\mathscr{F} } \vert \) for \(\vert \Omega \vert = n+1\), i.e., the induction is done.
+\end{proof}
+
+We can then prove the \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma}.
+
+\begin{proof}[Proof of \autoref{lma:Sauer-Shelah}]
+  Let \(\Omega \) be a set of size \(n\), then the number of subsets with size less or equal to \(D\) is
   \[
-    S_{\mathscr{F} _0} = \{ S \subseteq \Omega _0 \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} _0 \} ,\quad
-    S_{\mathscr{F} _1} = \{ S \subseteq \Omega _0 \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} _1 \}.
+    \binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{D}.
   \]
-  We claim that \(\vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert \leq \vert S _{\mathscr{F} } \vert\). Let \(S \subseteq \Omega _0\) be \hyperref[def:shatter]{shattered} by both \(\mathscr{F} _0\) and \(\mathscr{F} _1\), then we know
-  \begin{itemize}
-    \item \(S\) is \hyperref[def:shatter]{shattered} by \(\mathscr{F} \); and
-    \item \(S \cup \{ x_0 \} \) is \hyperref[def:shatter]{shattered} by \(\mathscr{F} \);
-  \end{itemize}
-  hence we always count at least twice, so we're fine.
+  By the definition of \hyperref[def:VC-dimension]{VC dimension}, we see that
+  \[
+    \vert \{ S \subseteq \Omega \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} \} \vert
+    \leq \binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{D}.
+  \]
 \end{proof}
 
 Then, as our motivation suggests, the same proof of \autoref{prop:symmetrization} applies, giving the following.
 
 \begin{proposition}\label{prop:lec9}
-  For any function class \(\mathscr{F} \), if \(n \geq \VC(\mathscr{F} ) \),
+  For any function class \(\mathscr{F} \), if \(n \geq \VC(\mathscr{F} ) \), for some constant \(c\),
   \[
-    R_n(\mathscr{F} ) \leq c \sqrt{\frac{\VC(\mathscr{F} ) }{n} \log \left( \frac{en}{\VC(\mathscr{F} ) } \right) }
+    R_n(\mathscr{F} ) \leq c \sqrt{\frac{\VC(\mathscr{F} ) }{n} \log \left( \frac{en}{\VC(\mathscr{F} ) } \right) }.
   \]
-  for some constant \(c\).
 \end{proposition}
 
 \begin{remark}
-  We see that \autoref{prop:lec9} is independent of \(\mathbb{P} \).
+  We see that \autoref{prop:lec9} is independent of \(\mathbb{P} \), i.e.,
+  \[
+    \sup _{\mathbb{P} } \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert \right] \leq c \sqrt{\frac{\VC(\mathscr{F} )}{n} \log \left( \frac{en}{\VC(\mathscr{F} )} \right) } .
+  \]
 \end{remark}
 
 \begin{remark}
@@ -98,7 +127,7 @@ However, if we don't care about distribution-free property, we do have examples 
   Consider \(\mathscr{F} \) being the indicators of all closed half-spaces in \(\mathbb{R} ^d\). Then \(\VC(\mathscr{F} ) = d+1 \).
 \end{eg}
 
-It seems like the \hyperref[def:VC-dimension]{VC dimension} is approximately the number of parameters; however, it's not always the case.
+It seems like the \hyperref[def:VC-dimension]{VC dimension} is always approximately the number of parameters; however, it's not true in general.
 
 \begin{eg}
   Consider \(\mathscr{F} = \{ x \mapsto \mathbbm{1}_{\sin tx \geq 0} \colon t \in \mathbb{R} ^+\} \), then \(\VC(\mathscr{F} ) = \infty \).

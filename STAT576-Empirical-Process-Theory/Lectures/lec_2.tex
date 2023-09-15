@@ -12,8 +12,8 @@ Given a domain \(\chi \), a probability measure \(\mathbb{P} \) on \(\chi \), da
   To do this, broadly speaking, we will go through a route with three basic steps:
   \begin{enumerate}[(a)]
     \item \(S_n(\mathscr{F} )\) ``concentrates'' around its expectation \(\mathbb{E}_{}\left[S_n(\mathscr{F} ) \right] \).
-    \item \(\mathbb{E}_{}\left[S_n(\mathscr{F} ) \right] \leq \) the Rademacher complexity of \(\mathscr{F} \) via ``symmetrization''.
-    \item Bounding the Radamacher complexity expected supremum of a ``sub-gaussian process'' by a technique called \emph{chaining}.
+    \item \(\mathbb{E}_{}\left[S_n(\mathscr{F} ) \right] \leq \) the \hyperref[def:Rademacher-complexity]{Rademacher complexity} of \(\mathscr{F} \) via \hyperref[lma:symmetrization]{``symmetrization''}.
+    \item Bounding the \hyperref[def:Rademacher-complexity]{Rademacher complexity}'s expected supremum of a ``sub-gaussian process'' by a technique called \emph{chaining}.
   \end{enumerate}
 \end{answer}
 
@@ -25,17 +25,46 @@ As we just saw, to solve \autoref{prb:bounded-sup-of-EP}, we need some basic too
 However, to get a concrete, non-asymptotic bound for \(S_n(\mathscr{F} )\), we would need more sophisticated tools. Let's start with the basics, i.e., the Gaussian distribution.
 
 \section{Gaussian Distribution}
-For us, the gold standard for concentration would be the Gaussian distribution. The property of the Gaussian distribution we are interested in now is its rapid tail decay as we mentioned. This is given in \autoref{lma:Gaussian-tail-bound}.
+For us, the gold standard for concentration would be the Gaussian distribution. The property of the Gaussian distribution we are interested in is its rapid tail decay as we mentioned:
 
-\begin{lemma}\label{lma:Gaussian-tail-bound}\todo{Add proof}
+\begin{lemma}\label{lma:Gaussian-tail-bound}
   For \(Z \sim \mathcal{N} (0, 1)\),
   \[
     \left( \frac{1}{t} - \frac{1}{t^3} \right) \frac{1}{\sqrt{2\pi } } e^{- t^2 / 2} \leq \mathbb{P}(Z \geq t) \leq \frac{1}{t} \cdot \frac{1}{\sqrt{2\pi } } e^{- t^2 / 2}.
   \]
 \end{lemma}
 \begin{proof}
-  Omitted as a homework.
+  We want to show
+  \[
+    \begin{split}
+      &\left( \frac{1}{t} - \frac{1}{t^3} \right) \frac{1}{\sqrt{2\pi } } e^{-t^2 / 2}
+      \leq \int_{t}^{\infty} \frac{1}{\sqrt{2\pi } } e^{- x^2 / 2} \,\mathrm{d}x
+      \leq \frac{1}{t}\cdot \frac{1}{\sqrt{2\pi } } e^{-t^2 / 2}\\
+      \iff &\left( \frac{1}{t} - \frac{1}{t^3} \right) e^{-t^2 / 2}
+      \leq \int_{t}^{\infty} e^{- x^2 / 2} \,\mathrm{d}x
+      \leq \frac{1}{t}\cdot e^{-t^2 / 2}.
+    \end{split}
+  \]
+  Observe that from integration by part (with \(x / x\) introduced),
+  \[
+    \int_{t}^{\infty} \frac{x}{x}\cdot e^{-x^2 / 2} \,\mathrm{d}x
+    = \at{- \frac{e^{-x^2 / 2}}{x}}{t}{\infty } - \int_{t}^{\infty} \frac{e^{-x^2 / 2}}{x^2} \,\mathrm{d}x
+    = \frac{e^{-t^2 / 2}}{t} - \int_{t}^{\infty} \frac{e^{-x^2 / 2}}{x^2} \,\mathrm{d}x
+    \leq \frac{1}{t}\cdot e^{-t^2 / 2}
+  \]
+  since the integrand \(e^{-x^2 / 2} / x^2\) is non-negative, which is the desired upper-bound. For the lower bound, if we again apply integration by part (with \(x / x\) introduced again), then
+  \[
+    \begin{split}
+      \int_{t}^{\infty} e^{-x^2 / 2} \,\mathrm{d}x
+      &= \frac{e^{-t^2 / 2}}{t} - \int_{t}^{\infty} \frac{x}{x} \cdot \frac{e^{-x^2 / 2}}{x^2} \,\mathrm{d}x\\
+      &= \frac{e^{-t^2 / 2}}{t} - \left( \at{- \frac{e^{-x^2 / 2}}{x^3}}{t}{\infty } - \int_{t}^{\infty} 3 \frac{e^{-x^2 / 2}}{x^4} \,\mathrm{d}x \right)\\
+      &= \frac{e^{-t^2 / 2}}{t} - \frac{e^{-t^2 / 2}}{t^3} + \int_{t}^{\infty} 3 \frac{e^{-x^2 / 2}}{x^4} \,\mathrm{d}x\\
+      &\geq \left( \frac{1}{t} - \frac{1}{t^3} \right) e^{-t^2 / 2},
+    \end{split}
+  \]
+  since, again, the integrand \(3 e^{-x^2 / 2} / x^4\) is non-negative, so the last term is positive, hence we get the desired lower-bound.
 \end{proof}
+
 \begin{corollary}\label{col:Gaussian-tail-bound}
   For all \(t \geq 1\), we have
   \[
@@ -46,14 +75,13 @@ For us, the gold standard for concentration would be the Gaussian distribution. 
 Now, as is suggested by CLT, the following question arises.
 
 \begin{problem*}
-  Does \autoref{col:Gaussian-tail-bound} hold for sums of independent random variables? That is, given i.i.d.\ \(X_1, \dots , X_n\) with mean \(\mu \) and variance \(\sigma ^{2} \), whether
+  Does \autoref{col:Gaussian-tail-bound} hold for sums of independent random variables? That is, given i.i.d.\ \(X_1, \dots , X_n\) with mean \(\mu \) and variance \(\sigma ^{2} \), whether for all \(t \geq 0\),
   \[
-    \mathbb{P} (\sqrt{n}(\overline{X} - \mu ) \geq t )\leq e^{-t^2 / 2 \sigma ^{2} }
+    \mathbb{P} (\sqrt{n}(\overline{X} - \mu ) \geq t )\leq e^{-t^2 / 2 \sigma ^{2} }?
   \]
-  for all \(t \geq 0\)?
 \end{problem*}
 \begin{answer}
-  Just invoking CLT is not enough, we need to handle the error term in the normal approximation. We will see that we can show the above directly for a class of distributions with fast tail decay.
+  Just invoking CLT is not enough, we need to handle the error term in the normal approximation. We can show this directly for a class of distributions with fast tail decay.
 \end{answer}
 
 To go beyond Gaussian tail bound, let start with the \hyperref[lma:MGF-trick]{moment generating function (MGF) trick}.
@@ -76,10 +104,10 @@ To start with, the most basic tool to bound tail probabilities is the \hyperref[
 \end{note}
 
 \begin{remark}
-  The rate of tail decay is slow; it is \(O(1 / t)\). For the Gaussian, by \autoref{lma:Gaussian-tail-bound}, it's actually \(O(e^{-t^2 / 2})\).
+  The rate of tail decay is slow (\(O(1 / t)\)). For the Gaussian, by \autoref{lma:Gaussian-tail-bound}, it's \(O(e^{-t^2 / 2})\).
 \end{remark}
 
-By the above remark, as might ask the following.
+By the above remark, one might ask the following.
 
 \begin{problem*}
   Can we derive faster tail decay bounds in general?

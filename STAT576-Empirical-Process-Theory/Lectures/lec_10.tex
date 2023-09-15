@@ -1,0 +1,121 @@
+\lecture{10}{15 Sep.\ 9:00}{Discretization of a Space}
+\section{Covering Number and Packing Number}
+Now, our goal is to extend the result from boolean function classes.
+
+\begin{intuition}[Informal principle]
+  We want to bound \(\mathbb{E}_{}\left[\sup _{t\in T } X_t \right]\). If \(\{ X_t \} _{t\in T}\) is sufficiently continuous, then \(\mathbb{E}_{}\left[\sup _{t\in T} X_t\right] \) is governed by metric properties of \(T\).
+\end{intuition}
+
+\begin{definition}[Pseudo-metric]\label{def:pseudo-metric}
+  Given a space \(T\), a function \(d\colon T \times T \to \mathbb{R} ^+\) is a \emph{pseudo-metric} if
+  \begin{enumerate}[(a)]
+    \item \(d(x, x) = 0\) for all \(x \in T\);
+    \item \(d(x, y) = d(y, x)\) for all \(x, y\in T\);
+    \item \(d(x, y) \leq d(x, z) + d(y, z)\) for all \(x, y, z\in T\).
+  \end{enumerate}
+\end{definition}
+
+\begin{note}
+  If \(d\) further satisfies that \(d(x, y) > 0\) for all \(x \neq y\), then it becomes a \emph{metric}.
+\end{note}
+
+Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space in the remaining of this section, unless specified.
+
+\begin{definition}[\(\epsilon \)-net]\label{def:eps-net}
+  A set \(N\) is an \emph{\(\epsilon \)-net} of \((T, d)\) if for all \(t\in T\), there exists \(\pi (t) \in N\) such that \(d(t, \pi (t)) \leq \epsilon \).
+\end{definition}
+
+\begin{definition}[Covering number]\label{def:covering-number}
+  The \emph{covering number} \(N(T, d, \epsilon )\) of \((T, d)\) is defined as
+  \[
+    N(T, d, \epsilon ) \coloneqq \inf \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-net]{\(\epsilon\)-net} for \((T, d)\)} \}.
+  \]
+\end{definition}
+
+\begin{remark}
+  \(N\) is not necessary a subset of \(T\) for convenience. Furthermore, if \(N \nsubseteq T\), one can construct another \hyperref[def:eps-net]{net} \(N^{\prime} \) such that \(N^{\prime} \subseteq T\) and \(N^{\prime} \) is a \hyperref[def:eps-net]{\(2 \epsilon\)-net}.
+\end{remark}
+
+\begin{definition}[Totally bounded]\label{def:totally-bounded}
+  \((T, d)\) is \emph{totally bounded} if for all \(\epsilon > 0\), \(N(T, d, \epsilon ) < \infty \).
+\end{definition}
+
+\begin{definition}[\(\epsilon \)-packing]\label{def:eps-packing}
+  A set \(N \subseteq T\) is an \emph{\(\epsilon \)-packing} of \((T, d)\) if for all \(t \neq t^{\prime} \) in \(N\), \(d(t, t^{\prime} ) > \epsilon \).
+\end{definition}
+
+\begin{definition}[Packing number]\label{def:packing-number}
+  The \emph{pacing number} \(M(T, d, \epsilon )\) of \((T, d)\) is defined as
+  \[
+    M(T, d, \epsilon ) = \sup \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-packing]{\(\epsilon\) -packing} of \((T, d)\)}\}.
+  \]
+\end{definition}
+
+\begin{lemma}\label{lma:lec10}
+  For any \(\epsilon > 0\),
+  \[
+    M(T, d, 2\epsilon ) \leq N(T, d, \epsilon ) \leq M(T, d, \epsilon ).
+  \]
+\end{lemma}
+\begin{proof}
+  We first show that \(M(T, d, 2\epsilon ) \leq N(T, d, \epsilon )\). Take \(M\) to be a maximum \hyperref[def:eps-packing]{\(2\epsilon\)-packing}, and we want to show \(N\) is an \hyperref[def:eps-net]{\(\epsilon\)-net}. Take \(t\in N\), consider \(B(t, \epsilon )\).
+
+  On the other hand, to show \(N(T, d, \epsilon ) \leq M(T, d, \epsilon )\), take \(M\) be a maximum \hyperref[def:eps-packing]{\(\epsilon\)-packing}, we want to show that \(M\) is also an \hyperref[def:eps-net]{\(\epsilon\)-net}, i.e., for all \(t\in T\), there exists \(x\in M\) such that \(d(x, t) \leq \epsilon \). Suppose not, then \(d(t, x) > \epsilon \) for all \(x\in M\), i.e., we can add \(x\) to \(M\), contradiction.
+\end{proof}
+
+\begin{notation}
+  If \((T, d)\) and \(\epsilon \) are clear from the context, we often write \(N \coloneqq N(T, d, \epsilon )\) and \(M \coloneqq M(T, d, \epsilon )\).
+\end{notation}
+
+\begin{proposition}\label{prop:packing-covering}
+  Consider \((\mathbb{R} ^d, \lVert \cdot \rVert )\) where \(\lVert \cdot \rVert \) is any norm. Denote \(B = \{ x \colon \lVert x \rVert \leq 1 \} \), then for all \(\epsilon > 0\),
+  \[
+    (1 / \epsilon) ^d \leq M(B, \lVert \cdot \rVert , \epsilon ) \leq (1 + 2 / \epsilon )^d.
+  \]
+\end{proposition}
+\begin{proof}
+  For the lower-bound, we see that
+  \[
+    N \mathop{\mathrm{Vol}}(\epsilon B) \geq \mathop{\mathrm{Vol}}(B)
+    \implies N \epsilon ^d \geq 1.
+  \]
+  With \(N \leq M\) from \autoref{lma:lec10}, we get the lower-bound.
+
+  For the upper-bound, since \(\epsilon / 2\) balls around points in \(M\) are disjoint, union of these \(\epsilon / 2\) balls will lie in \((1 + \epsilon / 2)B\). This implies
+  \[
+    M \times \left( \frac{\epsilon}{2} \right) ^d \times \mathop{\mathrm{Vol}}(B) \leq \left( 1 + \frac{\epsilon}{2} \right) ^d \times \mathop{\mathrm{Vol}}(B)
+    \implies M \leq \left( 1 + \frac{2}{\epsilon } \right) ^d.
+  \]
+\end{proof}
+
+\begin{definition}[Metric entropy]\label{def:metric-entropy}
+  The \emph{metric entropy} of \((T, d)\) is defined as \(\log M(T, d, \epsilon )\).
+\end{definition}
+
+\begin{note}
+  From \autoref{prop:packing-covering}, \(\log M(\mathbb{R} ^d, \lVert \cdot \rVert , \epsilon ) \approx d \log 1 / \epsilon \).
+\end{note}
+
+\begin{definition}[Hölder smooth function class]\label{def:Holder-smooth-function-class}
+  Fix \(\alpha > 0\), and \(\beta \) is the greatest integer \(< \alpha \). Then the \emph{Hölder smooth function class} \(S_\alpha \) is defined to be the class of functions on \([0, 1]\) such that
+  \begin{enumerate}[(a)]
+    \item \(f\) continuous on \([0, 1]\);
+    \item \(f\) is \(\beta \)-times differentiable;
+    \item \(\vert f^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta \);
+    \item \(\vert f^{(\beta )}(x) - f^{(\beta )}(y) \vert \leq \vert x - y \vert ^{\alpha - \beta }\) for all \(x, y \in [0, 1]\).
+  \end{enumerate}
+\end{definition}
+
+Now, let \(d(f, g) = \sup _{x\in [0, 1]} \vert f(x) - g(x) \vert \), then \((S_\alpha , d)\) is a \hyperref[def:pseudo-metric]{pseudo-metric} space.
+
+\begin{theorem}
+  There exists \(c_1, c_2\) such that for all \(\epsilon > 0\),
+  \[
+    \exp \left( c_2 \epsilon ^{-1 / \alpha } \right)
+    \leq M(S_\alpha , d, \epsilon )
+    \leq \exp \left( c_1 \epsilon ^{-1 / \alpha } \right) .
+  \]
+\end{theorem}
+\begin{proof}
+
+\end{proof}

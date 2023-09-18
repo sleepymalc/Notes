@@ -30,7 +30,7 @@ Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space i
 \end{definition}
 
 \begin{definition}[Covering number]\label{def:covering-number}
-  The \emph{covering number} \(N(T, d, \epsilon )\) of \((T, d)\) is defined as
+  The \emph{\(\epsilon \)-covering number} \(N(T, d, \epsilon )\) of \((T, d)\) is defined as
   \[
     N(T, d, \epsilon ) \coloneqq \inf \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-net]{\(\epsilon\)-net} for \((T, d)\)} \}.
   \]
@@ -49,9 +49,9 @@ Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space i
 \end{definition}
 
 \begin{definition}[Packing number]\label{def:packing-number}
-  The \emph{pacing number} \(M(T, d, \epsilon )\) of \((T, d)\) is defined as
+  The \emph{\(\epsilon \)-pacing number} \(M(T, d, \epsilon )\) of \((T, d)\) is defined as
   \[
-    M(T, d, \epsilon ) = \sup \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-packing]{\(\epsilon\) -packing} of \((T, d)\)}\}.
+    M(T, d, \epsilon ) = \sup \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-packing]{\(\epsilon\)-packing} of \((T, d)\)}\}.
   \]
 \end{definition}
 
@@ -100,6 +100,9 @@ Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space i
   From \autoref{prop:packing-covering}, \(\log M(\mathbb{R} ^d, \lVert \cdot \rVert , \epsilon ) \approx d \log 1 / \epsilon \).
 \end{note}
 
+\subsection{Hölder Smooth Functions}
+We are interested in looking at function spaces, and the following are the canonical smooth function classes studied in \emph{nonparametric regression}.
+
 \begin{definition}[Hölder smooth function class]\label{def:Holder-smooth-function-class}
   Fix \(\alpha > 0\), and \(\beta \) is the greatest integer \(< \alpha \). Then the \emph{Hölder smooth function class} \(S_\alpha \) is defined to be the class of functions on \([0, 1]\) such that
   \begin{enumerate}[(a)]
@@ -110,9 +113,17 @@ Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space i
   \end{enumerate}
 \end{definition}
 
+\begin{note}
+  When \(\alpha = 1\), \(S_\alpha \) is a class of \(1\)-Lipschitz functions.
+\end{note}
+
+\begin{remark}
+  The \hyperref[def:Holder-smooth-function-class]{Hölder smooth function classes} are nested, so it's not surprising that the \hyperref[def:metric-entropy]{metric entropies} decrease as \(\alpha \) increases.
+\end{remark}
+
 Now, let \(d(f, g) = \sup _{x\in [0, 1]} \vert f(x) - g(x) \vert \), then \((S_\alpha , d)\) is a \hyperref[def:pseudo-metric]{pseudo-metric} space.
 
-\begin{theorem}
+\begin{theorem}\label{thm:metric-entropy}
   There exists \(c_1, c_2\) such that for all \(\epsilon > 0\),
   \[
     \exp \left( c_2 \epsilon ^{-1 / \alpha } \right)
@@ -121,5 +132,33 @@ Now, let \(d(f, g) = \sup _{x\in [0, 1]} \vert f(x) - g(x) \vert \), then \((S_\
   \]
 \end{theorem}
 \begin{proof}
+  Here we illustrate the basic idea when \(\alpha = 1\), i.e., the set of \([0,1]\) valued \(1\)-Lipschitz functions on \([0,1]\). We only sketch the proof of the upper-bound, since the lower-bound is similar.
 
+  Firstly, we partition both the domain and the range of \(f\) with small intervals with width \(\epsilon\), resulting in \(1/\epsilon\) small intervals on both the \(x\)-axis and the \(y\)-axis.
+
+  Take any function \(f \in \mathscr{F} \). We construct a piece-wise constant function \(\widetilde{f}\) which approximates \(f\). On each small interval in the \(x\) axis, we can define \(\widetilde{f}\) to be constant, taking value equal to the midpoint of the interval in the \(y\) axis where the value of \(f\) at the left endpoint of this interval (in the \(x\)-axis) lies. Then, we have the following.
+  \begin{claim}
+    \(\sup_{x \in [0,1]} |f(x) - \widetilde{f}(x)| \leq C \epsilon\).
+  \end{claim}
+  \begin{explanation}
+    Since \(f\) cannot vary by more than \(\epsilon\) in any interval of length \(\epsilon\).
+  \end{explanation}
+
+  Now, as we vary \(f \in \mathscr{F} \), consider the following.
+
+  \begin{problem*}
+    What is the number of distinct \(\widetilde{f}\) we can get?
+  \end{problem*}
+  \begin{answer}
+    Clearly, in each small interval on the \(x\) axis, it takes one of the midpoints of the intervals on the \(y\) axis and hence, the number of such functions is bounded by \((\frac{1}{\epsilon})^{\frac{1}{\epsilon}}\). We can do slightly better.
+  \end{answer}
+
+  Note that, for the first interval, the number of possible values of \(\widetilde{f}\) is \(\frac{1}{\epsilon}\). However, after that, in the next interval, the value of \(\widetilde{f}\) can only go up one interval, down one interval, or stay the same (due to \(1\)-Lipschitzness of \(f\)), i.e., there are only \(3\) choices afterward for every interval, going from left to right, resulting an upper bound on the number of distinct \(\widetilde{f}\) as
+  \[
+    \frac{1}{\epsilon} 3^{\frac{1}{\epsilon} - 1} \leq \exp(\frac{C}{\epsilon}).
+  \]
 \end{proof}
+
+\begin{remark}
+  Comparing \autoref{prop:packing-covering} and \autoref{thm:metric-entropy}, we see that the \hyperref[def:metric-entropy]{metric entropy} is logarithmic in \(1 / \epsilon \) versus some exponent of \(1 / \epsilon \). This is typically the hallmark of a parametric versus a nonparametric function class.
+\end{remark}

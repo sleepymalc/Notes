@@ -1,164 +1,181 @@
 \lecture{10}{15 Sep.\ 9:00}{Discretization of a Space}
-\section{Covering Number and Packing Number}
+\section{Metric Entropy Methods}
 In the previous two lectures, we focused on boolean function class with finite \hyperref[def:VC-dimension]{VC dimension}. Now, our goal is to extend the result to functions that are not necessarily boolean. We start from studying the discretization of a space.
 
-\begin{intuition}[Informal principle]
-  We want to bound \(\mathbb{E}_{}\left[\sup _{t\in T } X_t \right]\). If \(\{ X_t \} _{t\in T}\) is sufficiently continuous, then \(\mathbb{E}_{}\left[\sup _{t\in T} X_t\right] \) is governed by metric properties of \(T\).
+\begin{intuition}[Informal principle]\label{int:informal-principle}
+	We want to bound \(\mathbb{E}_{}\left[\sup _{t\in T } X_t \right]\). If \(\{ X_t \} _{t\in T}\) is sufficiently continuous, then \(\mathbb{E}_{}\left[\sup _{t\in T} X_t\right] \) is governed by metric properties of \(T\).
 \end{intuition}
 
 \begin{definition}[Pseudo-metric]\label{def:pseudo-metric}
-  Given a space \(T\), a function \(d\colon T \times T \to \mathbb{R} ^+\) is a \emph{pseudo-metric} if
-  \begin{enumerate}[(a)]
-    \item \(d(x, x) = 0\) for all \(x \in T\);\footnote{If \(d\) further satisfies that \(d(x, y) > 0\) for all \(x \neq y\), then it becomes a \emph{metric}.}
-    \item \(d(x, y) = d(y, x)\) for all \(x, y\in T\);
-    \item \(d(x, y) \leq d(x, z) + d(y, z)\) for all \(x, y, z\in T\).
-  \end{enumerate}
+	Given a space \(T\), a function \(d\colon T \times T \to \mathbb{R} ^+\) is a \emph{pseudo-metric} if
+	\begin{enumerate}[(a)]
+		\item \(d(x, x) = 0\) for all \(x \in T\);\footnote{If \(d\) further satisfies that \(d(x, y) > 0\) for all \(x \neq y\), then it becomes a \emph{metric}.}
+		\item \(d(x, y) = d(y, x)\) for all \(x, y\in T\);
+		\item \(d(x, y) \leq d(x, z) + d(y, z)\) for all \(x, y, z\in T\).
+	\end{enumerate}
 \end{definition}
 
 \begin{note}
-  The motivation of looking at \hyperref[def:pseudo-metric]{pseudo-metric} instead of the usual metric is because, consider observed data \(x_1, \dots , x_n\) at hands, the most natural distance might be
-  \[
-    (f, g) \mapsto \sqrt{\frac{1}{n} \sum_{i=1}^{n} \big(f(x_i) - g(x_i)\big)^2},
-  \]
-  which is a \hyperref[def:pseudo-metric]{pseudo-metric} since \(f\) and \(g\) can agree only on \(x_i\)'s and vary elsewhere.
+	The motivation of looking at \hyperref[def:pseudo-metric]{pseudo-metric} instead of the usual metric is because, consider observed data \(x_1, \dots , x_n\) at hands, the most natural distance might be
+	\[
+		(f, g) \mapsto \sqrt{\frac{1}{n} \sum_{i=1}^{n} \big(f(x_i) - g(x_i)\big)^2},
+	\]
+	which is a \hyperref[def:pseudo-metric]{pseudo-metric} since \(f\) and \(g\) can agree only on \(x_i\)'s and vary elsewhere.
 \end{note}
 
+\subsection{Covering Number and Packing Number}
 Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space in the remaining of this section, unless specified.
 
 \begin{definition}[\(\epsilon \)-net]\label{def:eps-net}
-  A set \(N\) is an \emph{\(\epsilon \)-net} of \((T, d)\) if for all \(t\in T\), there exists \(\pi (t) \in N\) such that \(d(t, \pi (t)) \leq \epsilon \).
+	A set \(N\) is an \emph{\(\epsilon \)-net} of \((T, d)\) if for all \(t\in T\), there exists \(\pi (t) \in N\) such that \(d(t, \pi (t)) \leq \epsilon \).
 \end{definition}
 
 \begin{definition}[Covering number]\label{def:covering-number}
-  The \emph{\(\epsilon \)-covering number} \(N(T, d, \epsilon )\) of \((T, d)\) is defined as
-  \[
-    N(T, d, \epsilon ) \coloneqq \inf \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-net]{\(\epsilon\)-net} for \((T, d)\)} \}.
-  \]
+	The \emph{\(\epsilon \)-covering number} \(N(T, d, \epsilon )\) of \((T, d)\) is defined as
+	\[
+		N(T, d, \epsilon ) \coloneqq \inf \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-net]{\(\epsilon\)-net} for \((T, d)\)} \}.
+	\]
 \end{definition}
 
 \begin{remark}
-  \(N\) is not necessary a subset of \(T\) for convenience. Furthermore, if \(N \nsubseteq T\), one can construct another \hyperref[def:eps-net]{net} \(N^{\prime} \) such that \(N^{\prime} \subseteq T\) and \(N^{\prime} \) is a \hyperref[def:eps-net]{\(2 \epsilon\)-net}.
+	\(N\) is not necessary a subset of \(T\) for convenience. Furthermore, if \(N \nsubseteq T\), one can construct another \hyperref[def:eps-net]{net} \(N^{\prime} \) such that \(N^{\prime} \subseteq T\) and \(N^{\prime} \) is a \hyperref[def:eps-net]{\(2 \epsilon\)-net}.
 \end{remark}
 
 \begin{definition}[Totally bounded]\label{def:totally-bounded}
-  \((T, d)\) is \emph{totally bounded} if for all \(\epsilon > 0\), \(N(T, d, \epsilon ) < \infty \).
+	\((T, d)\) is \emph{totally bounded} if for all \(\epsilon > 0\), \(N(T, d, \epsilon ) < \infty \).
 \end{definition}
 
 \begin{definition}[\(\epsilon \)-packing]\label{def:eps-packing}
-  A set \(N \subseteq T\) is an \emph{\(\epsilon \)-packing} of \((T, d)\) if for all \(t \neq t^{\prime} \) in \(N\), \(d(t, t^{\prime} ) > \epsilon \).
+	A set \(N \subseteq T\) is an \emph{\(\epsilon \)-packing} of \((T, d)\) if for all \(t \neq t^{\prime} \) in \(N\), \(d(t, t^{\prime} ) > \epsilon \).
 \end{definition}
 
 \begin{definition}[Packing number]\label{def:packing-number}
-  The \emph{\(\epsilon \)-pacing number} \(M(T, d, \epsilon )\) of \((T, d)\) is defined as
-  \[
-    M(T, d, \epsilon ) = \sup \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-packing]{\(\epsilon\)-packing} of \((T, d)\)}\}.
-  \]
+	The \emph{\(\epsilon \)-pacing number} \(M(T, d, \epsilon )\) of \((T, d)\) is defined as
+	\[
+		M(T, d, \epsilon ) = \sup \{ \vert N \vert \colon N \text{ is an \hyperref[def:eps-packing]{\(\epsilon\)-packing} of \((T, d)\)}\}.
+	\]
 \end{definition}
 
 \begin{lemma}\label{lma:lec10}
-  For any \(\epsilon > 0\),
-  \[
-    M(T, d, 2\epsilon ) \leq N(T, d, \epsilon ) \leq M(T, d, \epsilon ).
-  \]
+	For any \(\epsilon > 0\),
+	\[
+		M(T, d, 2\epsilon ) \leq N(T, d, \epsilon ) \leq M(T, d, \epsilon ).
+	\]
 \end{lemma}
 \begin{proof}
-  We first show that \(M(T, d, 2\epsilon ) \leq N(T, d, \epsilon )\). Take \(\mathcal{M} \) to be a maximum \hyperref[def:eps-packing]{\(2\epsilon\)-packing}, and we want to show \(\mathcal{N} \) is an \hyperref[def:eps-net]{\(\epsilon\)-net}. Take \(t\in \mathcal{N} \), consider \(B(t, \epsilon )\).
+	We show them one by one.
 
-  On the other hand, to show \(N(T, d, \epsilon ) \leq M(T, d, \epsilon )\), take \(\mathcal{M} \) be a maximum \hyperref[def:eps-packing]{\(\epsilon\)-packing}, we want to show that \(\mathcal{M} \) is also an \hyperref[def:eps-net]{\(\epsilon\)-net}, i.e., for all \(t\in T\), there exists \(x\in \mathcal{M} \) such that \(d(x, t) \leq \epsilon \). Suppose not, then \(d(t, x) > \epsilon \) for all \(x\in \mathcal{M} \), i.e., we can add \(x\) to \(\mathcal{M} \), contradiction.
+	\begin{claim}
+		\(M(T, d, 2\epsilon ) \leq N(T, d, \epsilon )\).
+	\end{claim}
+	\begin{explanation}
+		Take \(\mathcal{M} \) to be a \hyperref[def:eps-packing]{\(2\epsilon\)-packing} and \(\mathcal{N} \) to be an \hyperref[def:eps-net]{\(\epsilon\)-net}. Then for any \(t\in \mathcal{N} \), consider \(B(t, \epsilon )\). We see that there is at most one \(x\in \mathcal{M} \) such that \(d(t, x) \leq \epsilon \) since otherwise, if \(x, x^{\prime} \in \mathcal{M} \) such that \(x \neq x^{\prime} \) and \(d(t, x), d(t, x^{\prime} ) \leq \epsilon \), then \(d(x, x^{\prime} ) \leq 2\epsilon \), a contradiction to \(\mathcal{M} \).
+	\end{explanation}
+
+	\begin{claim}
+		\(N(T, d, \epsilon ) \leq M(T, d, \epsilon )\).
+	\end{claim}
+	\begin{explanation}
+		Take \(\mathcal{M} \) to be a maximum \hyperref[def:eps-packing]{\(\epsilon\)-packing}, it suffices to show that \(\mathcal{M} \) is also an \hyperref[def:eps-net]{\(\epsilon\)-net}, i.e., for all \(t\in T\), there exists \(x\in \mathcal{M} \) such that \(d(x, t) \leq \epsilon \). Suppose not, then \(d(t, x) > \epsilon \) for all \(x\in \mathcal{M} \), i.e., we can add \(x\) to \(\mathcal{M} \), contradiction.
+	\end{explanation}
 \end{proof}
 
+\subsection{Unit balls}
+For simplicity, we will use the following notations.
+
 \begin{notation}
-  If \((T, d)\) and \(\epsilon \) are clear from the context, we often write \(N \coloneqq N(T, d, \epsilon )\) and \(M \coloneqq M(T, d, \epsilon )\).
+	If \((T, d)\) and \(\epsilon \) are clear from the context, we write \(N \coloneqq N(T, d, \epsilon )\) and \(M \coloneqq M(T, d, \epsilon )\).
 \end{notation}
 
+Turns out that there's a characterization of the \hyperref[def:packing-number]{packing number} of the unit ball in euclidean space.
+
 \begin{proposition}\label{prop:packing-covering}
-  Consider \((\mathbb{R} ^d, \lVert \cdot \rVert )\) where \(\lVert \cdot \rVert \) is any norm. Denote \(B = \{ x \colon \lVert x \rVert \leq 1 \} \), then for all \(\epsilon > 0\),
-  \[
-    (1 / \epsilon) ^d \leq M(B, \lVert \cdot \rVert , \epsilon ) \leq (1 + 2 / \epsilon )^d.
-  \]
+	Consider \((\mathbb{R} ^d, \lVert \cdot \rVert )\) where \(\lVert \cdot \rVert \) is any norm. Denote \(B = \{ x \colon \lVert x \rVert \leq 1 \} \), then for all \(\epsilon > 0\),
+	\[
+		(1 / \epsilon) ^d \leq M(B, \lVert \cdot \rVert , \epsilon ) \leq (1 + 2 / \epsilon )^d.
+	\]
 \end{proposition}
 \begin{proof}
-  For the lower-bound, we see that
-  \[
-    N \mathop{\mathrm{Vol}}(\epsilon B) \geq \mathop{\mathrm{Vol}}(B)
-    \implies N \epsilon ^d \geq 1.
-  \]
-  With \(N \leq M\) from \autoref{lma:lec10}, we get the lower-bound.
+	For the lower-bound, we see that
+	\[
+		N \mathop{\mathrm{Vol}}(\epsilon B) \geq \mathop{\mathrm{Vol}}(B)
+		\implies N \epsilon ^d \geq 1.
+	\]
+	With \(N \leq M\) from \autoref{lma:lec10}, we get the lower-bound.
 
-  For the upper-bound, since \(\epsilon / 2\) balls around points in \(M\) are disjoint, union of these \(\epsilon / 2\) balls will lie in \((1 + \epsilon / 2)B\). This implies
-  \[
-    M \times \left( \frac{\epsilon}{2} \right) ^d \times \mathop{\mathrm{Vol}}(B) \leq \left( 1 + \frac{\epsilon}{2} \right) ^d \times \mathop{\mathrm{Vol}}(B)
-    \implies M \leq \left( 1 + \frac{2}{\epsilon } \right) ^d.
-  \]
+	For the upper-bound, since \(\epsilon / 2\) balls around points in \(M\) are disjoint, union of these \(\epsilon / 2\) balls will lie in \((1 + \epsilon / 2)B\). This implies
+	\[
+		M \times \left( \frac{\epsilon}{2} \right) ^d \times \mathop{\mathrm{Vol}}(B)
+		\leq \left( 1 + \frac{\epsilon}{2} \right) ^d \times \mathop{\mathrm{Vol}}(B)
+		\implies M \leq \left( 1 + \frac{2}{\epsilon } \right) ^d.
+	\]
 \end{proof}
 
 \begin{definition}[Metric entropy]\label{def:metric-entropy}
-  The \emph{metric entropy} of \((T, d)\) is defined as \(\log M(T, d, \epsilon )\).
+	The \emph{metric entropy} of \((T, d)\) is defined as \(\log M(T, d, \epsilon )\).
 \end{definition}
 
 \begin{note}
-  From \autoref{prop:packing-covering}, \(\log M(\mathbb{R} ^d, \lVert \cdot \rVert , \epsilon ) \approx d \log 1 / \epsilon \).
+	From \autoref{prop:packing-covering}, \(\log M(\mathbb{R} ^d, \lVert \cdot \rVert , \epsilon ) \approx d \log 1 / \epsilon \).
 \end{note}
 
 \subsection{Hölder Smooth Functions}
 We are interested in looking at function spaces, and the following are the canonical smooth function classes studied in \emph{nonparametric regression}.
 
 \begin{definition}[Hölder smooth function class]\label{def:Holder-smooth-function-class}
-  Fix \(\alpha > 0\), and \(\beta \) is the greatest integer \(< \alpha \). Then the \emph{Hölder smooth function class} \(S_\alpha \) is defined to be the class of functions on \([0, 1]\) such that
-  \begin{enumerate}[(a)]
-    \item \(f\) continuous on \([0, 1]\);
-    \item \(f\) is \(\beta \)-times differentiable;
-    \item \(\vert f^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta \);
-    \item \(\vert f^{(\beta )}(x) - f^{(\beta )}(y) \vert \leq \vert x - y \vert ^{\alpha - \beta }\) for all \(x, y \in [0, 1]\).
-  \end{enumerate}
+	Fix \(\alpha > 0\), and \(\beta \) is the greatest integer \(< \alpha \). Then the \emph{Hölder smooth function class} \(S_\alpha \) is defined to be the class of functions on \([0, 1]\) such that
+	\begin{enumerate}[(a)]
+		\item \(f\) continuous on \([0, 1]\);
+		\item \(f\) is \(\beta \)-times differentiable;
+		\item \(\vert f^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta \);
+		\item \(\vert f^{(\beta )}(x) - f^{(\beta )}(y) \vert \leq \vert x - y \vert ^{\alpha - \beta }\) for all \(x, y \in [0, 1]\).
+	\end{enumerate}
 \end{definition}
 
 \begin{note}
-  When \(\alpha = 1\), \(S_\alpha \) is a class of \(1\)-Lipschitz functions.
+	When \(\alpha = 1\), \(S_\alpha \) is a class of \(1\)-Lipschitz functions.
 \end{note}
 
 \begin{remark}
-  The \hyperref[def:Holder-smooth-function-class]{Hölder smooth function classes} are nested, so it's not surprising that the \hyperref[def:metric-entropy]{metric entropies} decrease as \(\alpha \) increases.
+	The \hyperref[def:Holder-smooth-function-class]{Hölder smooth function classes} are nested, so it's not surprising that the \hyperref[def:metric-entropy]{metric entropies} decrease as \(\alpha \) increases.
 \end{remark}
 
 Now, let \(d(f, g) = \sup _{x\in [0, 1]} \vert f(x) - g(x) \vert \), then \((S_\alpha , d)\) is a \hyperref[def:pseudo-metric]{pseudo-metric} space.
 
 \begin{theorem}\label{thm:metric-entropy}
-  There exists \(c_1, c_2\) such that for all \(\epsilon > 0\),
-  \[
-    \exp \left( c_2 \epsilon ^{-1 / \alpha } \right)
-    \leq M(S_\alpha , d, \epsilon )
-    \leq \exp \left( c_1 \epsilon ^{-1 / \alpha } \right) .
-  \]
+	There exists \(c_1, c_2\) such that for all \(\epsilon > 0\),
+	\[
+		\exp \left( c_2 \epsilon ^{-1 / \alpha } \right)
+		\leq M(S_\alpha , d, \epsilon )
+		\leq \exp \left( c_1 \epsilon ^{-1 / \alpha } \right) .
+	\]
 \end{theorem}
 \begin{proof}
-  Here we illustrate the basic idea when \(\alpha = 1\), i.e., the set of \([0,1]\) valued \(1\)-Lipschitz functions on \([0,1]\). We only sketch the proof of the upper-bound, since the lower-bound is similar.
+	Here we illustrate the basic idea when \(\alpha = 1\), i.e., the set of \([0,1]\) valued \(1\)-Lipschitz functions on \([0,1]\). We only sketch the proof of the upper-bound, since the lower-bound is similar.
 
-  Firstly, we partition both the domain and the range of \(f\) with small intervals with width \(\epsilon\), resulting in \(1/\epsilon\) small intervals on both the \(x\)-axis and the \(y\)-axis.
+	Firstly, we partition both the domain and the range of \(f\) with small intervals with width \(\epsilon\), resulting in \(1/\epsilon\) small intervals on both the \(x\)-axis and the \(y\)-axis.
 
-  Take any function \(f \in \mathscr{F} \). We construct a piece-wise constant function \(\widetilde{f}\) which approximates \(f\). On each small interval in the \(x\) axis, we can define \(\widetilde{f}\) to be constant, taking value equal to the midpoint of the interval in the \(y\) axis where the value of \(f\) at the left endpoint of this interval (in the \(x\)-axis) lies. Then, we have the following.
-  \begin{claim}
-    \(\sup_{x \in [0,1]} |f(x) - \widetilde{f}(x)| \leq C \epsilon\).
-  \end{claim}
-  \begin{explanation}
-    Since \(f\) cannot vary by more than \(\epsilon\) in any interval of length \(\epsilon\).
-  \end{explanation}
+	Take any function \(f \in \mathscr{F} \). We construct a piece-wise constant function \(\widetilde{f}\) which approximates \(f\). On each small interval in the \(x\)-axis, we can define \(\widetilde{f}\) to be constant, taking value equal to the midpoint of the interval in the \(y\)-axis where the value of \(f\) at the left endpoint of this interval (in the \(x\)-axis) lies. Then, we have the following.
+	\begin{claim}
+		\(\sup_{x \in [0,1]} |f(x) - \widetilde{f}(x)| \leq C \epsilon\).
+	\end{claim}
+	\begin{explanation}
+		Since \(f\) cannot vary by more than \(\epsilon\) in any interval of length \(\epsilon\).
+	\end{explanation}
 
-  Now, as we vary \(f \in \mathscr{F} \), consider the following.
+	Now, as we vary \(f \in \mathscr{F} \), consider the following.
 
-  \begin{problem*}
-    What is the number of distinct \(\widetilde{f}\) we can get?
-  \end{problem*}
-  \begin{answer}
-    Clearly, in each small interval on the \(x\) axis, it takes one of the midpoints of the intervals on the \(y\) axis and hence, the number of such functions is bounded by \((\frac{1}{\epsilon})^{\frac{1}{\epsilon}}\). We can do slightly better.
-  \end{answer}
+	\begin{problem*}
+		What is the number of distinct \(\widetilde{f}\) we can get?
+	\end{problem*}
+	A trivial bound is that, in each small interval on the \(x\)-axis, it takes one of the midpoints of the intervals on the \(y\)-axis and hence, the number of such functions is bounded by \((\frac{1}{\epsilon})^{\frac{1}{\epsilon}}\).
 
-  Note that, for the first interval, the number of possible values of \(\widetilde{f}\) is \(\frac{1}{\epsilon}\). However, after that, in the next interval, the value of \(\widetilde{f}\) can only go up one interval, down one interval, or stay the same (due to \(1\)-Lipschitzness of \(f\)), i.e., there are only \(3\) choices afterward for every interval, going from left to right, resulting an upper bound on the number of distinct \(\widetilde{f}\) as
-  \[
-    \frac{1}{\epsilon} 3^{\frac{1}{\epsilon} - 1} \leq \exp(\frac{C}{\epsilon}).
-  \]
+	We can do slightly better. Note that, for the first interval, the number of possible values of \(\widetilde{f}\) is \(\frac{1}{\epsilon}\). However, after that, in the next interval, the value of \(\widetilde{f}\) can only go up one interval, down one interval, or stay the same (due to \(1\)-Lipschitzness of \(f\)), i.e., there are only \(3\) choices afterward for every interval, going from left to right, resulting an upper bound on the number of distinct \(\widetilde{f}\) as
+	\[
+		\frac{1}{\epsilon} 3^{\frac{1}{\epsilon} - 1} \leq \exp(\frac{C}{\epsilon}).
+	\]
 \end{proof}
 
 \begin{remark}
-  Comparing \autoref{prop:packing-covering} and \autoref{thm:metric-entropy}, we see that the \hyperref[def:metric-entropy]{metric entropy} is logarithmic in \(1 / \epsilon \) versus some exponent of \(1 / \epsilon \). This is typically the hallmark of a parametric versus a nonparametric function class.
+	Comparing \autoref{prop:packing-covering} and \autoref{thm:metric-entropy}, we see that the \hyperref[def:metric-entropy]{metric entropy} is logarithmic in \(1 / \epsilon \) versus some exponent of \(1 / \epsilon \). This is typically the hallmark of a parametric versus a nonparametric function class.
 \end{remark}

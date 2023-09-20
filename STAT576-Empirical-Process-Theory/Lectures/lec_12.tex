@@ -1,0 +1,89 @@
+\lecture{12}{20 Sep.\ 9:00}{Chaining Method}
+
+\begin{definition}[Separable]\label{def:separable}
+	\({X_t}_{t\in T}\) is a \emph{separable} process if there exists a countable \(T_0 \subseteq T\) such that (outside a null set) for all \(t\in T\), there exists \(\{t_n \in T_0\}_{n}\) such that \(d(t_n, t) \to 0\) satisfying \(\lim_{n \to \infty} X_{t_n} = X_t\).
+\end{definition}
+
+It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\).
+
+\begin{eg}
+	If \((T, d)\) has a countable dense set, \(\{ X_t \} \) has countable sample ...\todo{fix} almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
+\end{eg}
+
+\begin{theorem}[Dudley's entropy bound]\label{thm:Dudley-entropy-bound}
+	Let \(\{ X_t \} _{t\in T}\) be a centered, \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\). Then
+	\[
+		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \leq 6 \sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T, d, 2^{-k})} .
+	\]
+\end{theorem}
+\begin{proof}
+	Consider the following cases.
+	\begin{claim}
+		The result holds for \(\vert T \vert < \infty \).
+	\end{claim}
+	\begin{explanation}
+		Let \(K_0\) be the largest integer such that \(2^{-K_0} \geq \mathop{\mathrm{Diam}}(T) \), and let \(K_1\) be the smallest integer such that \(0 < 2^{-K_1} < \min _{s \neq t\in T} d(s, t)\). Then we let \(N_k\) be a \hyperref[def:eps-net]{\(2^{-k}\)-net} of \(T\) such that
+		\begin{itemize}
+			\item \(k = K_0\): \(N_{K_0} = \{ t_0 \} \) is a \hyperref[def:eps-net]{\(2^{-K_0}\)-net} of \(T\) for a fixed \(t_0\in T\).
+			\item \(k = K_1\): \(N_{K_1} = T\) is a \hyperref[def:eps-net]{\(2^{-K_1}\)-net} of \(T\).
+		\end{itemize}
+		Recall that for \(t\in T\), we write \(\pi _k(t)\) for the closest element in \(N_k\) to \(t\). In particular, \(d(t, \pi _k(t)) \leq 2^{-k}\). We see that by writing
+		\[
+			X_t
+			= X_{\pi _{K_1} (t)} - X_{\pi _{K_0} (t)}
+			= X_{\pi _{K_1}(t)} - X_{\pi _{K_1 - } (t)} + X_{\pi _{k_{(1)}} (t)} - \dots + X_{\pi _{K_0 + 1} (t)} - X_{\pi _{K_0} (t)},
+		\]
+		we have
+		\[
+			\begin{split}
+				\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
+				= \mathbb{E}_{}&\left[\sup _{t\in T} X_t - X_{t_0} \right]\\
+				&= \mathbb{E}_{}\left[\sup _{t\in T} \sum_{k=K_0 + 1}^{K_1} \left( X_{\pi _k (t)} - X_{\pi _{k-1}(t)} \right) \right]
+				\leq \sum_{k=K_0 + 1}^{K_1} \mathbb{E}_{}\left[\sup _{t\in T} \left( X_{\pi _k(t)} - X_{\pi _{k-1} (t)} \right) \right].
+			\end{split}
+		\]
+		Since the cardinality of \(\{ X_{\pi _k(t)} - X_{\pi _{k-1} (t)} \}_{t\in T}\) is \(\vert N_k \vert \vert N_{k-1} \vert \leq \vert N_k \vert ^2\), with
+		\[
+			X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \sim \Subg(d(\pi _k(t), \pi _{k-1}(t)))
+		\]
+		where \(d(\pi _k(t), t) + d(t, \pi _{k-1}(t)) \leq 2^{-k} + 2^{-(k+1)} \leq 3\cdot 2^{-k}\), for each \(k\),
+		\[
+			\mathbb{E}_{}\left[\sup _{t\in T} \left( X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \right) \right]
+			\leq 3 \times 2^{-k} \sqrt{2 \log \vert N_k \vert ^2}
+			= 6 \times 2^{-k} \sqrt{\log \vert N_k \vert }
+		\]
+		from \autoref{lma:sub-Gaussian-finite-maximum}, hence we have the result.
+	\end{explanation}
+
+	\begin{claim}
+		The result holds for \(\vert T \vert = \infty \).
+	\end{claim}
+	\begin{explanation}
+		From \hyperref[def:separable]{separability}, there exists a countable \(T_0\) such that \(\mathbb{E}_{}\left[\sup _{t\in T_0} X_t \right] = \mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \). Now, consider a countable approximation \(T_k\) of \(T_0\), we then have \(\sup _{t\in T_k} X_t \to \sup _{t\in T_0} X_t\) as \(k \to \infty \). Then this reduces to the finite case, with the fact that \(N(T_K, d, 2^{-k}) \leq N(T, d, 2^{-k})\) for all \(k\), we're done.
+	\end{explanation}
+\end{proof}
+
+This method is called \emph{chaining} because we're constructing a chain of \(X_{\pi _{k}(t)}\), with smaller and smaller distance.
+\begin{figure}[H]
+	\centering
+	\incfig{chaining}
+	\caption{Chaining.}
+	\label{fig:chaining}
+\end{figure}
+
+\begin{remark}[Dubley integral entropy bound]\label{rmk:Dubley-integral-entropy-bound}
+	An alternative integral form of \hyperref[thm:Dudley-entropy-bound]{Dubley entropy bound} is given by
+	\[
+		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \leq 12 \int_{0}^{\mathop{\mathrm{Diam}}(T) }\sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon.
+	\]
+\end{remark}
+\begin{explanation}
+	Observe that
+	\begin{align*}
+		\sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T, d, 2^{-k})}
+		 & = 2 \sum_{k\in \mathbb{Z} } \int_{2^{-k-1}}^{2^{-k}} \sqrt{\log N(T, d, 2^{-k})}  \,\mathrm{d} \epsilon                                                                        \\
+		 & \leq 2 \sum_{k\in \mathbb{Z} } \int_{2^{-k-1}}^{2^{-k}} \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d} \epsilon \tag*{\(N(T, d, \epsilon ) \nearrow \) as \(\epsilon \searrow \)} \\
+		 & = 2 \int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon                                                                                                      \\
+		 & = 2 \int_{0}^{\mathop{\mathrm{Diam}}(T) } \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon. \tag*{\(\epsilon > \mathop{\mathrm{Diam}}(T) \), \(N(T, d, \epsilon ) = 1\)}
+	\end{align*}
+\end{explanation}

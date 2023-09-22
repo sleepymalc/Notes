@@ -1,9 +1,9 @@
 \lecture{10}{15 Sep.\ 9:00}{Discretization of a Space}
 \section{Metric Entropy Methods}
-In the previous two lectures, we focused on boolean function class with finite \hyperref[def:VC-dimension]{VC dimension}. Now, our goal is to extend the result to functions that are not necessarily boolean. We start from studying the discretization of a space.
+We have been focusing on boolean function class with finite \hyperref[def:VC-dimension]{VC dimension}, and our goal now is to generalize beyond the boolean case. This can be done by discretizing of a space.
 
 \begin{intuition}[Informal principle]\label{int:informal-principle}
-	We want to bound \(\mathbb{E}_{}\left[\sup _{t\in T } X_t \right]\). If \(\{ X_t \} _{t\in T}\) is sufficiently continuous, then \(\mathbb{E}_{}\left[\sup _{t\in T} X_t\right] \) is governed by metric properties of \(T\).
+	We want to bound \(\mathbb{E}_{}\left[\sup _{t\in T } X_t \right]\). If \(\{ X_t \} _{t\in T}\) is ``sufficiently continuous'', then \(\mathbb{E}_{}\left[\sup _{t\in T} X_t\right] \) is governed by metric properties of \(T\) (\hyperref[def:metric-entropy]{metric entropy}!).
 \end{intuition}
 
 \begin{definition}[Pseudo-metric]\label{def:pseudo-metric}
@@ -56,7 +56,15 @@ Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space i
 	\]
 \end{definition}
 
-\begin{lemma}\label{lma:lec10}
+As the title suggests, we define the following \hyperref[def:pseudo-metric]{metric} properties, which is an essential notion helps us bound the expected \hyperref[def:EP]{empirical process} supremum.
+
+\begin{definition}[Metric entropy]\label{def:metric-entropy}
+	The \emph{metric entropy} of \((T, d)\) is defined as \(\log M(T, d, \epsilon )\).
+\end{definition}
+
+The fact that we're using \hyperref[def:packing-number]{packing number} \(M(T, d, \epsilon )\) when defining \hyperref[def:metric-entropy]{metric entropy} is not relevant here due to the following.
+
+\begin{lemma}\label{lma:covering-packing}
 	For any \(\epsilon > 0\),
 	\[
 		M(T, d, 2\epsilon ) \leq N(T, d, \epsilon ) \leq M(T, d, \epsilon ).
@@ -80,7 +88,6 @@ Now, let \((T, d)\) denote a \hyperref[def:pseudo-metric]{pseudo-metric} space i
 	\end{explanation}
 \end{proof}
 
-\subsection{Unit balls}
 For simplicity, we will use the following notations.
 
 \begin{notation}
@@ -101,7 +108,7 @@ Turns out that there's a characterization of the \hyperref[def:packing-number]{p
 		N \mathop{\mathrm{Vol}}(\epsilon B) \geq \mathop{\mathrm{Vol}}(B)
 		\implies N \epsilon ^d \geq 1.
 	\]
-	With \(N \leq M\) from \autoref{lma:lec10}, we get the lower-bound.
+	With \(N \leq M\) from \autoref{lma:covering-packing}, we get the lower-bound.
 
 	For the upper-bound, since \(\epsilon / 2\) balls around points in \(M\) are disjoint, union of these \(\epsilon / 2\) balls will lie in \((1 + \epsilon / 2)B\). This implies
 	\[
@@ -110,10 +117,6 @@ Turns out that there's a characterization of the \hyperref[def:packing-number]{p
 		\implies M \leq \left( 1 + \frac{2}{\epsilon } \right) ^d.
 	\]
 \end{proof}
-
-\begin{definition}[Metric entropy]\label{def:metric-entropy}
-	The \emph{metric entropy} of \((T, d)\) is defined as \(\log M(T, d, \epsilon )\).
-\end{definition}
 
 \begin{note}
 	From \autoref{prop:packing-covering}, \(\log M(\mathbb{R} ^d, \lVert \cdot \rVert , \epsilon ) \approx d \log 1 / \epsilon \).

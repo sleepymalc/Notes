@@ -27,11 +27,7 @@ Now, applying the \hyperref[lma:symmetrization]{symmetrization lemma} to \(\math
 		 & \leq 2 \mathbb{E}_{\epsilon _i, x_i}\left[\sup _{\theta \in \mathbb{R} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \right]\tag*{condition on \(x_1, \dots , x_n\)}                   \\
 		 & = 2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \middle| x_1, \dots , x_n \right]  \right] .
 	\end{align*}
-	Let
-	\[
-		V_\theta \coloneqq \frac{1}{n}\sum_{i} \epsilon _i \mathbbm{1}_{x_i \leq \theta } ,
-	\]
-	we see that there are only \(n+1\) distinct \(V_\theta \)'s, and it's constant in the intervals \(\theta \in [X_{(k)}, X_{(k+1)})\) for \(k = 0, \dots , n-1\) where \(X_{(k)}\) are the order statistics with \(X_{(0)} \coloneqq -\infty \). Now, define \(\theta _k \coloneqq X_{(k)}\), we can then write
+	Let \(V_\theta \coloneqq \frac{1}{n}\sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \), we see that there are only \(n+1\) distinct \(V_\theta \)'s, and it's constant in the intervals \(\theta \in [X_{(k)}, X_{(k+1)})\) for \(k = 0, \dots , n-1\) where \(X_{(k)}\) are the order statistics with \(X_{(0)} \coloneqq -\infty \). Now, define \(\theta _k \coloneqq X_{(k)}\), we can then write
 	\[
 		\sup _{\theta \in \mathbb{R} }\frac{1}{n} \sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta }
 		= \max _{k=0, \dots , n} \frac{1}{n}\sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta _k},
@@ -41,8 +37,8 @@ Now, applying the \hyperref[lma:symmetrization]{symmetrization lemma} to \(\math
 		2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \mathbbm{1}_{x_i \leq \theta } \middle| x_1, \dots , x_n \right]  \right]
 		 & = 2 \mathbb{E}_{x_i}\left[ \mathbb{E}_{\epsilon _i \mid x_i}\left[ \max _{k=0, \dots , n} V_{\theta _k} \middle| x_1, \dots , x_n \right]  \right] \\
 		\shortintertext{with \(V_{\theta _k} \sim \Subg(1 / n) \) and \autoref{lma:sub-Gaussian-finite-maximum},}
-		 & \leq 2 \mathbb{E}_{x_i}\left[ \sqrt{\frac{2}{n} \log (n+1)} \right]                                                                                \\
-		 & = O\left( \sqrt{\frac{\log n	}{n}} \right).
+		 & \leq 2 \mathbb{E}_{x_i}\left[ \sqrt{\frac{2}{n} \log (n+1)} \right]
+		= O\left( \sqrt{\frac{\log n }{n}} \right).
 	\end{align*}
 \end{proof}
 
@@ -51,19 +47,18 @@ Now, applying the \hyperref[lma:symmetrization]{symmetrization lemma} to \(\math
 \end{remark}
 
 \section{Vapnik-Chervonenkis Dimension}
+\subsection{Glivenko-Cantelli Class}
 From \hyperref[prop:bracketing]{bracketing} and \hyperref[prop:symmetrization]{symmetrization}, we see that there are classes of functions such that
 \[
 	\sup _{f\in \mathscr{F} } \left\vert \mathbb{P} f - \mathbb{P} _n f \right\vert \to 0
 \]
 as \(n \to \infty \). They deserve their own name.
 
-\subsection{Glivenko-Cantelli Class}
 \begin{definition}[Glivenko-Cantelli]\label{def:Glivenko-Cantelli}
-	A function class \(\mathscr{F} = \{ f\colon \chi \to \mathbb{R} \} \) is called \emph{Glivenko-Cantelli} w.r.t.\ \(\mathbb{P} \) if
+	A function class \(\mathscr{F} = \{ f\colon \chi \to \mathbb{R} \} \) is \emph{Glivenko-Cantelli} w.r.t.\ \(\mathbb{P} \) if as \(n \to \infty \),
 	\[
-		\sup _{f\in \mathscr{F} } \left\vert \mathbb{P} f - \mathbb{P} _n f \right\vert \to 0
+		\sup _{f\in \mathscr{F} } \left\vert \mathbb{P} f - \mathbb{P} _n f \right\vert \to 0.
 	\]
-	as \(n \to \infty \).
 \end{definition}
 
 From \hyperref[prop:bracketing]{bracketing} and \hyperref[prop:symmetrization]{symmetrization}, we know that \(\mathscr{F} = \{ \mathbbm{1}_{X \leq \theta } \colon \theta \in \mathbb{R} \} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}. Let's see some counterexamples.
@@ -79,17 +74,10 @@ From \hyperref[prop:bracketing]{bracketing} and \hyperref[prop:symmetrization]{s
 	Let \(\chi = \mathbb{R} \), \(\mathscr{F} = \{ f\colon \chi \to \mathbb{R} \text{ bounded and continuous}\} \), and \(\mathbb{P} = \mathcal{U} [0, 1]\). Then \(\mathscr{F} \) is not \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.
 \end{eg}
 \begin{explanation}
-	Consider
-	\begin{itemize}
-		\item \(f(X_i) = 1\) for \(i = 1, \dots , n\) and \(f = 0\) elsewhere (in a continuous manner).\footnote{E.g., sharp peak at \(X_i\)'s.}
-		\item Then we can make \(\int_{0}^{1} f(t) \,\mathrm{d}t < \delta \) for some \(\delta \in (0, 1)\).
-	\end{itemize}
-	This implies \(\sup _{f\in \mathscr{F} } \vert \mathbb{P} f - \mathbb{P} _n f \vert \geq 1 - \delta  \) for all \(n \in \mathbb{N} \).
+	Consider \(f(X_i) = 1\) for \(i = 1, \dots , n\) and \(f = 0\) elsewhere (continuously),\footnote{E.g., sharp peak at \(X_i\)'s.} then we can make \(\int_{0}^{1} f(t) \,\mathrm{d}t < \delta \) for some \(\delta \in (0, 1)\). This implies \(\sup _{f\in \mathscr{F} } \vert \mathbb{P} f - \mathbb{P} _n f \vert \geq 1 - \delta  \) for all \(n \in \mathbb{N} \).
 \end{explanation}
 
 \subsection{Vapnik-Chervonenkis Dimension}
-Let's first introduce a common notation.
-
 \begin{notation}
 	Let \(\mathscr{F} (x_1, \dots , x_n) \coloneqq \{ \big(f(x_1), \dots , f(x_n)\big) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n\).
 \end{notation}
@@ -113,7 +101,7 @@ The up-shot is the following.
 	If \(\vert \mathscr{F} (X_1, \dots , X_n) \vert \leq n^d\) for some \(d\in \mathbb{N}^+ \), then we again get an \(O(\sqrt{\log n / n} )\) bound.
 \end{remark}
 
-This is captured by the notion of \hyperref[def:polynomial-discrimination]{polynomial discrimination}. In particular, we'll look into the class of boolean function.
+This is captured by the \hyperref[def:polynomial-discrimination]{polynomial discrimination}, where we're going to focus on boolean functions.
 
 \begin{definition}[Polynomial discrimination]\label{def:polynomial-discrimination}
 	We say that a boolean function class \(\mathscr{F} \) on \(\chi \) has a \emph{polynomial discrimination} if for all \(x_1, \dots , x_n\in \chi \), \(\left\vert \mathscr{F} (x_1, \dots , x_n) \right\vert \leq \poly(n)\).
@@ -124,18 +112,13 @@ To characterize \(\vert \mathscr{F} (x_1, \dots , x_n) \vert \), we will look at
 \begin{definition*}
 	Let \(\mathscr{F} \) be a boolean function class on \(\chi \).
 	\begin{definition}[Shatter]\label{def:shatter}
-		A finite set \(\{ x_1, \dots , x_D \} \subseteq \chi \) is \emph{shattered} by \(\mathscr{F} \) if \(\mathscr{F} (x_1, \dots , x_D) = \{ 0, 1 \} ^D\).
+		A finite set \(\{ x_1, \dots , x_D \} \subseteq \chi \) is \emph{shattered} by \(\mathscr{F} \) if \(\mathscr{F} (x_1, \dots , x_D) = \{ 0, 1 \} ^D\).\footnote{We take the convention that \(\varnothing \) is always \hyperref[def:shatter]{shattered}.}
 	\end{definition}
 
 	\begin{definition}[Vapnik-Chervonenkis dimension]\label{def:VC-dimension}
 		The \emph{VC dimension} of \(\mathscr{F} \) on \(\chi \) is the maximum integer \(D\) such that there exists a size \(D\) finite set \(A \subseteq \chi \) \hyperref[def:shatter]{shattered} by \(\mathscr{F} \).
 	\end{definition}
 \end{definition*}
-
-
-\begin{remark}
-	We take the convention that \(\varnothing \) is always \hyperref[def:shatter]{shattered}.
-\end{remark}
 
 Let's consider some examples on \(\chi = \mathbb{R} \).
 

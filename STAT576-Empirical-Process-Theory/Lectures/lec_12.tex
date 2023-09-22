@@ -1,19 +1,15 @@
 \lecture{12}{20 Sep.\ 9:00}{Chaining Method and Dudley's Entropy Bound}
 \subsection{Dudley's Entropy Bound}
-To overcome the limitation of the \hyperref[lma:single-scale-bound]{single scale bound}, we consider iterating the process of taking \hyperref[def:eps-net]{\(\epsilon\)-net}, which is considered as a \emph{multi-scale bound}. The theorem requires one technical assumption of the stochastic process.
+To overcome the limitation of the \hyperref[lma:single-scale-bound]{single scale bound}, we can repeatedly taking \hyperref[def:eps-net]{\(\epsilon\)-net}, which is considered as a \emph{multi-scale bound}. The theorem requires one technical assumption of the stochastic process.
 
 \begin{definition}[Separable]\label{def:separable}
 	We say that \(\{X_t\}_{t\in T}\) is a \emph{separable} process if there exists a countable \(T_0 \subseteq T\) such that (outside a null set) for all \(t\in T\), there exists \(\{t_n \in T_0\}_{n}\) such that \(d(t_n, t) \to 0\) satisfying \(\lim_{n \to \infty} X_{t_n} = X_t\).
 \end{definition}
 
-It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\). Moreover, this notion is consistent with the \hyperref[prev:separable]{separability of a topological space} we saw in real analysis.
-
-\begin{prev}[Separable]\label{prev:separable}
-	A topological space is called \emph{separable} if it contains a countable dense subset.
-\end{prev}
+It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\). Moreover, this notion is consistent with the separability of a topological space\footnote{A topological space is \emph{separable} if it contains a countable dense subset.} we saw in real analysis.
 
 \begin{eg}[Separable metric space]
-	If \((T, d)\) is \hyperref[prev:separable]{separable}, \(\{ X_t \} \) has countable sample path almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
+	If \((T, d)\) is \hyperref[prev:separable]{separable} (as a topological space), \(\{ X_t \} \) has countable sample path almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
 \end{eg}
 
 Now, we can state the bound we want.
@@ -25,7 +21,8 @@ Now, we can state the bound we want.
 	\]
 \end{theorem}
 \begin{proof}
-	Consider the following cases.
+	Consider the case that \(\vert T \vert < \infty \) and \(\vert T \vert = \infty \).
+
 	\begin{claim}
 		The result holds for \(\vert T \vert < \infty \).
 	\end{claim}
@@ -35,7 +32,7 @@ Now, we can state the bound we want.
 			\item \(k = K_0\): \(N_{K_0} = \{ t_0 \} \) is a \hyperref[def:eps-net]{\(2^{-K_0}\)-net} of \(T\) for a fixed \(t_0\in T\).
 			\item \(k = K_1\): \(N_{K_1} = T\) is a \hyperref[def:eps-net]{\(2^{-K_1}\)-net} of \(T\).
 		\end{itemize}
-		Recall that for \(t\in T\), we write \(\pi _k(t)\) for the closest element in \(N_k\) to \(t\). In particular, \(d(t, \pi _k(t)) \leq 2^{-k}\). We see that by writing
+		Write \(\pi _k(t)\) for the closest element in \(N_k\) to \(t\), in particular, \(d(t, \pi _k(t)) \leq 2^{-k}\). By writing
 		\[
 			X_t
 			= X_{\pi _{K_1} (t)} - X_{\pi _{K_0} (t)}
@@ -54,24 +51,23 @@ Now, we can state the bound we want.
 		\[
 			X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \sim \Subg(d(\pi _k(t), \pi _{k-1}(t)))
 		\]
-		where \(d(\pi _k(t), t) + d(t, \pi _{k-1}(t)) \leq 2^{-k} + 2^{-(k+1)} \leq 3\cdot 2^{-k}\), for each \(k\),
+		where \(d(\pi _k(t), t) + d(t, \pi _{k-1}(t)) \leq 2^{-k} + 2^{-(k+1)} \leq 3\cdot 2^{-k}\). From \autoref{lma:sub-Gaussian-finite-maximum}, for each \(k\),
 		\[
 			\mathbb{E}_{}\left[\sup _{t\in T} \left( X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \right) \right]
 			\leq 3 \times 2^{-k} \sqrt{2 \log \vert N_k \vert ^2}
-			= 6 \times 2^{-k} \sqrt{\log \vert N_k \vert }
+			= 6 \times 2^{-k} \sqrt{\log \vert N_k \vert }.
 		\]
-		from \autoref{lma:sub-Gaussian-finite-maximum}, hence we have the result.
 	\end{explanation}
 
 	\begin{claim}
 		The result holds for \(\vert T \vert = \infty \).
 	\end{claim}
 	\begin{explanation}
-		From \hyperref[def:separable]{separability}, there exists a countable \(T_0\) such that \(\mathbb{E}_{}\left[\sup _{t\in T_0} X_t \right] = \mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \). Now, consider a countable approximation \(T_k\) of \(T_0\), then \(\sup _{t\in T_k} X_t \to \sup _{t\in T_0} X_t \) as \(k \to \infty\), implying
+		From \hyperref[def:separable]{separability}, there exists a countable \(T_0\) such that \(\mathbb{E}_{}\left[\sup _{t\in T_0} X_t \right] = \mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \). Let \(T_k\) be a countable approximation of \(T_0\), then \(\sup _{t\in T_k} X_t \to \sup _{t\in T_0} X_t \) as \(k \to \infty\), so
 		\[
 			\mathbb{E}_{}\left[\sup _{t\in T_k} X_t \right] \to  \mathbb{E}_{}\left[\sup _{t\in T_0} X_t \right] = \mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \text{ as }k \to \infty
 		\]
-		from monotone convergence theorem. Hence, to bound \(\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \), it suffices to bound \(\mathbb{E}_{}\left[\sup _{t\in T_k} X_t \right] \) for each \(k\). Since \(\vert T_k \vert < \infty \), with the fact that \(N(T_k, d, 2^{-k}) \leq N(T_0, d, 2^{-k})\) for all \(k\)
+		from monotone convergence theorem. Hence, it suffices to bound \(\mathbb{E}_{}\left[\sup _{t\in T_k} X_t \right] \) instead of \(\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \) for each \(k\). As \(\vert T_k \vert < \infty \) and \(N(T_k, d, 2^{-k}) \leq N(T_0, d, 2^{-k})\) for all \(k\),
 		\[
 			6 \sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T_k, d, 2^{-k})} \leq 6 \sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T_0, d, 2^{-k})} .
 		\]

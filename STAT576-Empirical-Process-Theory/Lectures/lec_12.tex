@@ -1,17 +1,29 @@
 \lecture{12}{20 Sep.\ 9:00}{Chaining Method}
+\subsection{Dudley's Entropy Bound}
+To overcome the limitation of the \hyperref[lma:single-scale-bound]{single scale bound}, we consider iterating the process of taking \hyperref[def:eps-net]{\(\epsilon\)-net}, which is considered as a \emph{multi-scale bound}. The theorem requires one technical assumption of the stochastic process.
 
 \begin{definition}[Separable]\label{def:separable}
-	\({X_t}_{t\in T}\) is a \emph{separable} process if there exists a countable \(T_0 \subseteq T\) such that (outside a null set) for all \(t\in T\), there exists \(\{t_n \in T_0\}_{n}\) such that \(d(t_n, t) \to 0\) satisfying \(\lim_{n \to \infty} X_{t_n} = X_t\).
+	We say that \(\{X_t\}_{t\in T}\) is a \emph{separable} process if there exists a countable \(T_0 \subseteq T\) such that (outside a null set) for all \(t\in T\), there exists \(\{t_n \in T_0\}_{n}\) such that \(d(t_n, t) \to 0\) satisfying \(\lim_{n \to \infty} X_{t_n} = X_t\).
 \end{definition}
 
-It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\).
+This notion is consistent with the \hyperref[prev:separable]{separability of a topological space} we saw in real analysis.
 
-\begin{eg}
-	If \((T, d)\) has a countable dense set, \(\{ X_t \} \) has countable sample ...\todo{fix} almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
+\begin{prev}[Separable]\label{prev:separable}
+	A topological space is called \emph{separable} if it contains a countable dense subset.
+\end{prev}
+
+\begin{eg}[Separable metric space]
+	If \((T, d)\) is \hyperref[prev:separable]{separable}, \(\{ X_t \} \) has countable sample path almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
 \end{eg}
 
+\begin{remark}
+	It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\).
+\end{remark}
+
+Now, we can state the ultimate bound we want.
+
 \begin{theorem}[Dudley's entropy bound]\label{thm:Dudley-entropy-bound}
-	Let \(\{ X_t \} _{t\in T}\) be a centered, \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\). Then
+	Let \(\{ X_t \} _{t\in T}\) be a centered and \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\). Then
 	\[
 		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \leq 6 \sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T, d, 2^{-k})} .
 	\]
@@ -59,20 +71,29 @@ It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\).
 		The result holds for \(\vert T \vert = \infty \).
 	\end{claim}
 	\begin{explanation}
-		From \hyperref[def:separable]{separability}, there exists a countable \(T_0\) such that \(\mathbb{E}_{}\left[\sup _{t\in T_0} X_t \right] = \mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \). Now, consider a countable approximation \(T_k\) of \(T_0\), we then have \(\sup _{t\in T_k} X_t \to \sup _{t\in T_0} X_t\) as \(k \to \infty \). Then this reduces to the finite case, with the fact that \(N(T_K, d, 2^{-k}) \leq N(T, d, 2^{-k})\) for all \(k\), we're done.
+		From \hyperref[def:separable]{separability}, there exists a countable \(T_0\) such that \(\mathbb{E}_{}\left[\sup _{t\in T_0} X_t \right] = \mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \). Now, consider a countable approximation \(T_k\) of \(T_0\), then \(\sup _{t\in T_k} X_t \to \sup _{t\in T_0} X_t \) as \(k \to \infty\), implying
+		\[
+			\mathbb{E}_{}\left[\sup _{t\in T_k} X_t \right] \to  \mathbb{E}_{}\left[\sup _{t\in T_0} X_t \right] = \mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \text{ as }k \to \infty
+		\]
+		from monotone convergence theorem. Hence, to bound \(\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \), it suffices to bound \(\mathbb{E}_{}\left[\sup _{t\in T_k} X_t \right] \) for each \(k\). Since \(\vert T_k \vert < \infty \), with the fact that \(N(T_k, d, 2^{-k}) \leq N(T_0, d, 2^{-k})\) for all \(k\)
+		\[
+			6 \sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T_k, d, 2^{-k})} \leq 6 \sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T_0, d, 2^{-k})} .
+		\]
 	\end{explanation}
 \end{proof}
 
-This method is called \emph{chaining} because we're constructing a chain of \(X_{\pi _{k}(t)}\), with smaller and smaller distance.
-\begin{figure}[H]
-	\centering
-	\incfig{chaining}
-	\caption{Chaining.}
-	\label{fig:chaining}
-\end{figure}
+\begin{note}[Chaining method]
+	This method is called \emph{chaining} since we're constructing a chain of \(X_{\pi _{k}(t)}\), with smaller and smaller distances.
+	\begin{figure}[H]
+		\centering
+		\incfig{chaining}
+		\caption{The chaining method.}
+		\label{fig:chaining}
+	\end{figure}
+\end{note}
 
-\begin{remark}[Dubley integral entropy bound]\label{rmk:Dubley-integral-entropy-bound}
-	An alternative integral form of \hyperref[thm:Dudley-entropy-bound]{Dubley entropy bound} is given by
+\begin{remark}[Dudley integral entropy bound]\label{rmk:Dudley-integral-entropy-bound}
+	An alternative integral form of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound} is given by
 	\[
 		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \leq 12 \int_{0}^{\mathop{\mathrm{Diam}}(T) }\sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon.
 	\]
@@ -87,3 +108,25 @@ This method is called \emph{chaining} because we're constructing a chain of \(X_
 		 & = 2 \int_{0}^{\mathop{\mathrm{Diam}}(T) } \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon. \tag*{\(\epsilon > \mathop{\mathrm{Diam}}(T) \), \(N(T, d, \epsilon ) = 1\)}
 	\end{align*}
 \end{explanation}
+
+Now, we note that we have finally reached the optimal bound for \(S_1\), solving the problems we saw in the \hyperref[eg:non-optimal-empirical-process-supremum-S1]{previous example}. 
+
+\begin{eg}[Supremum of empirical process]
+	Consider the \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} \(X_f = \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f)\) for \(\mathscr{F} = S_1\). In particular, \(f, g\in \mathscr{F} \) are \(1\)-Lipschitz on \([0, 1]\) satisfying \(\vert f \vert , \vert g \vert \leq 1\) and \(X_f - X_g\in \Subg(2^2 \lVert f - g \rVert ^2_\infty )\). Since \(\mathop{\mathrm{Diam}}(\mathscr{F} ) = 2 \) and for all \(\epsilon < 1 / 2\),
+	\[
+		N(S_1, \lVert \cdot \rVert _\infty , \epsilon ) = \exp (c / \epsilon )
+	\]
+	from \autoref{thm:metric-entropy}. Then by the \hyperref[rmk:Dudley-integral-entropy-bound]{Dudley's integral entropy bound},
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } X_f \right]
+		\leq 12\int_{0}^{2} \sqrt{\log N(S_1, \lVert \cdot \rVert _\infty , \epsilon )} \,\mathrm{d}\epsilon
+		= 12 \int_{0}^{2} \sqrt{\frac{c}{\epsilon }} \,\mathrm{d}\epsilon 
+		= 24 \sqrt{2c} 
+		< O_n(1).
+	\]
+	Dividing both sides by \(\sqrt{n} \), we achieve the optimal rate \(\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } (\mathbb{P} _n f - \mathbb{P} f) \right] = O(1 / \sqrt{n} )\).
+\end{eg}
+
+\begin{remark}
+	The \hyperref[rmk:Dudley-integral-entropy-bound]{Dudley's integral entropy bound} for \(S_\alpha \) is also finite; while for function classes with \hyperref[def:covering-number]{covering number} as \(\exp (c / \epsilon ^2)\) is divergent.
+\end{remark}

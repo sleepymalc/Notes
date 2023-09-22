@@ -1,73 +1,107 @@
 \lecture{11}{18 Sep.\ 9:00}{Gaussian and Sub-Gaussian Process}
+\subsection{Sub-Gaussian Process}
+
 \begin{prev}
 	Given a stochastic process \(\{ X_t \} _{t\in T}\) with \((T, d)\), we want to bound \(\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \).
 \end{prev}
 
-Recall our \hyperref[int:informal-principle]{informal principle}, i.e., if \(\{ X_t \} _{t\in T}\) is sufficiently continuous w.r.t.\ \(d\), then \(\mathbb{E}_{}\left[\sup _{t\in T} X_t\right] \) is governed by metric properties (e.g., \hyperref[def:metric-entropy]{metric entropy}) of \(T\).
-
-What we mean by ``sufficiently continuous'' is the following.
+Recall our \hyperref[int:informal-principle]{informal principle}, i.e., if \(\{ X_t \} _{t\in T}\) is ``sufficiently continuous'' w.r.t.\ \(d\), then \(\mathbb{E}_{}\left[\sup _{t\in T} X_t\right] \) is governed by metric properties (e.g., \hyperref[def:metric-entropy]{metric entropy}) of \(T\). We start by considering the \hyperref[def:Gaussian-process]{Gaussian process}.
 
 \begin{definition}[Gaussian process]\label{def:Gaussian-process}
 	A stochastic process \(\{ X_t \} _{t\in T}\) is a \emph{Gaussian process} if for any finite set of indices \({t_1, \dots , t_k}\), \((X_{t_1}, \dots , X_{t_k}) \sim \mathcal{N} (0, \mathbf{\Sigma} ) \).
 \end{definition}
 
-We see that
-\[
-	\mathbb{E}_{}\left[e^{\lambda (X_t - X_{t^{\prime} })} \right]
-	= e^{\lambda ^2 / 2 \mathbb{E}_{}\left[X_t - X_{t^{\prime} } \right] }
-	= \exp \left( \frac{\lambda ^2}{2} d^2(t, t^{\prime} ) \right),
-\]
-where \(d(t, t^{\prime} ) = \sqrt{\mathbb{E}_{}\left[ (X_t - X_{t^{\prime} })^2 \right]}\).
+Clearly, this is a very strong notion due to the following.
+
+\begin{note}
+	For \(d(t, t^{\prime} ) = \sqrt{\mathbb{E}_{}\left[ (X_t - X_{t^{\prime} })^2 \right]}\), we have
+	\[
+		\mathbb{E}_{}\left[e^{\lambda (X_t - X_{t^{\prime} })} \right]
+		= e^{\lambda ^2 / 2 \mathbb{E}_{}\left[X_t - X_{t^{\prime} } \right] }
+		= \exp \left( \frac{\lambda ^2}{2} d^2(t, t^{\prime} ) \right).
+	\]
+\end{note}
+
+The following generalized process characterizes the concept of ``sufficiently continuous''.
 
 \begin{definition}[Sub-Gaussian process]\label{def:sub-Gaussian-process}
-	A stochastic process \(\{ X_t \} _{t\in T}\) is a \emph{sub-Gaussian process} w.r.t.\ \(d\) if \(X_t - X_s \sim \Subg(d^2(t, s))\).
+	A stochastic process \(\{ X_t \} _{t\in T}\) is a \emph{sub-Gaussian process} w.r.t.\ \(d\) if \(X_t - X_s \sim \Subg(d^2(t, s))\). Assume \(\mathbb{E}_{}\left[X_t \right] = 0\) for all \(t\in T\), then equivalently, for all \(t \neq s \in T\) and \(\lambda \in \mathbb{R} \),
+	\[
+		\mathbb{E}_{}\left[e^{\lambda (X_t - X_s)} \right]
+		\leq \exp \left( \frac{\lambda ^2}{2} d^2(t, s) \right).
+	\]
 \end{definition}
 
-In other words, assume \(\mathbb{E}_{}\left[X_t \right] = 0\) for all \(t\in T\), and
-\[
-	\mathbb{E}_{}\left[e^{\lambda (X_t - X_s)} \right]
-	\leq \exp \left( \frac{\lambda ^2}{2} d^2(t, s) \right)
-\]
-for all \(t \neq s\in T\).
+It's clear that the \hyperref[def:sub-Gaussian-process]{sub-Gaussian} condition encodes a strong notion of continuity (in probability) of the stochastic process \(\{ X_t \} _{t\in T}\) w.r.t.\ \(d\).
+
+\begin{eg}[Gaussian process]
+	We see that \(d(t, t^{\prime} ) = \sqrt{\mathbb{E}_{}\left[ (X_t - X_{t^{\prime} })^2 \right]}\) is the naturally induced \hyperref[def:pseudo-metric]{pseudo-metric} such that a \hyperref[def:Gaussian-process]{Gaussian process} is \hyperref[def:sub-Gaussian-process]{sub-Gaussian}.
+\end{eg}
+
+Another interesting example is the following.
 
 \begin{eg}[Rademacher process]\label{eg:Rademacher-process}
-	Consider the \hyperref[def:Rademacher-width]{Rademacher width} (without normalization) of a set \(T \subseteq \mathbb{R} ^n\),
+	Consider the unnormalized \hyperref[def:Rademacher-width]{Rademacher width} of a set \(T \subseteq \mathbb{R} ^n\),
 	\[
 		R_n(T) = \mathbb{E}_{}\left[\sup _{t\in \mathbb{R} ^n} \sum_{i=1}^{n} \epsilon _i t_i \right] .
 	\]
-	Let \(X_t = \langle \epsilon , t \rangle \), then \(X_t - X_{t^{\prime} } = \langle \epsilon , t-t^{\prime}  \rangle \sim \Subg(\lVert t - t^{\prime}  \rVert_2^2 )\), i.e., \(X_t \sim \Subg\) w.r.t.\ \(\lVert \cdot \rVert _2\).
+	Let \(X_t = \langle \epsilon , t \rangle \), then from \autoref{lma:sub-Gaussian-add}, \(X_t - X_{t^{\prime} } = \langle \epsilon , t-t^{\prime}  \rangle \sim \Subg(\lVert t - t^{\prime}  \rVert_2^2 )\), i.e., \(X_t \sim \Subg\) w.r.t.\ \(\lVert \cdot \rVert _2\). This is the so-called \emph{Rademacher process}.
 \end{eg}
 
-\begin{eg}[Gaussian width]\label{eg:Gaussian-width}
-	The \emph{Gaussian width} of a set \(T \subseteq \mathbb{R} ^n\) is defined as \(X_t = \langle g, t \rangle \), i.e., we replace \(\epsilon \) by \(g\) for \(g\) being random Gaussian vector. We have \(X_t \sim \Subg\) w.r.t.\ \(\lVert \cdot \rVert _2\).
-\end{eg}
+Inspired by the above example, one can also define the \hyperref[def:Gaussian-width]{Gaussian width}.
 
-\begin{theorem}
-	Denote \(\mathop{\mathrm{GW}}(T) \) be the \hyperref[eg:Gaussian-width]{Gaussian width} of a set \(T\), then
+\begin{definition}[Gaussian width]\label{def:Gaussian-width}
+	Let \(g_i \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\). Then the \emph{Gaussian width} of a set \(A \subseteq \mathbb{R} ^n\) is defined as
 	\[
-		R_n(T) \leq \mathop{\mathrm{GW}}(T) \leq \sqrt{n} R_n(T)
+		\mathop{\mathrm{GW}}\nolimits_n(A) = \mathbb{E}_{}\left[\sup _{a\in A} \sum_{i=1}^{n} \frac{1}{n} g_i a_i \right].
+	\]
+\end{definition}
+
+This means that the \hyperref[eg:Rademacher-process]{Rademacher process} can be slightly modified as follows.
+
+\begin{eg}
+	Consider \(X_t = \langle g, t \rangle \) where \(g\) is a random Gaussian vector. We then have \(X_t \sim \Subg\) w.r.t.\ \(\lVert \cdot \rVert _2\).
+\end{eg}
+
+\begin{theorem}[Gaussian width and Rademacher width are similar]
+	For any \(n \geq 1\) and any set \(T \subseteq \mathbb{R} ^n\),
+	\[
+		R_n(T) \leq \mathop{\mathrm{GW}}\nolimits_n(T) \leq \sqrt{\log n} R_n(T).
 	\]
 \end{theorem}
 
 Let's look at some examples of \hyperref[def:Rademacher-width]{Rademacher width}.
 
 \begin{eg}
-	\(R(B_\infty ^n) = n\), \(R(B_2^n)= \sqrt{n} \), and \(R(B_1^n) \leq \lVert \epsilon \rVert _\infty \lVert t \rVert _1 = 1\) by Holder's inequality.
+	\(R(B_\infty ^n) = n\), \(R(B_2^n)= \sqrt{n} \), and \(R(B_1^n) 1\).
 \end{eg}
+\begin{explanation}
+	We see that
+	\begin{itemize}
+		\item for \(\ell _\infty \), the supremum is achieved by matching signs of \(\epsilon \), which gives \(R_n(B_\infty ^n) = n\);
+		\item for \(\ell _2\) the supremum is achieved by choosing \(t = \epsilon / \lVert \epsilon \rVert _2\), then we get \(R(B_2^n) = \mathbb{E}_{}\left[\epsilon \right] = \sqrt{n} \);
+		\item for \(\ell _1\), from Hölder's inequality, \(\langle \epsilon , t \rangle \leq \lVert \epsilon \rVert _\infty \lVert t \rVert _1 = 1\).
+	\end{itemize}
+\end{explanation}
 
-\begin{eg}
+\begin{eg}[Supremum of empirical process]\label{eg:supremum-of-empirical-process}
 	Let \(\mathscr{F} \) be a class of functions bounded by \(1\). Let \(X_f = \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f)\), and consider \(\{ X_f \}_{f\in \mathscr{F} } \). Then,
 	\[
 		X_f - X_g
-		= \sqrt{n} \frac{1}{n}\sum_{i=1}^{n} ( \underbrace{f(x_i) - g(x_i) - \mathbb{P} f - \mathbb{P} g }_{\leq 2 \lVert f-g \rVert _\infty })
+		= \sqrt{n} \cdot \frac{1}{n}\sum_{i=1}^{n} ( \underbrace{f(x_i) - g(x_i) - \mathbb{P} f - \mathbb{P} g }_{\leq 2 \lVert f-g \rVert _\infty })
 		\sim \Subg\left( 4 \lVert f - g \rVert _\infty ^2 \right) ,
 	\]
-	hence \(\{ X_f \} _{f\in \mathscr{F} } \sim \Subg\) w.r.t.\ \(\lVert \cdot \rVert _\infty \).
+	hence \(\{ X_f \} _{f\in \mathscr{F} } \sim \Subg\) w.r.t.\ \(d(f, g) = 2\lVert f - g \rVert _\infty\).
 \end{eg}
+
+These are all simple sets. For an arbitrary set however, we need more general tools in order to compute the \hyperref[def:Rademacher-width]{Rademacher width}. Firstly, recall the following.
 
 \begin{definition}[Diameter]\label{def:diameter}
 	The \emph{diameter} of \((T, d)\) is defined as \(\mathop{\mathrm{Diam}}(T) = \sup _{t, t^{\prime} \in T} d(t, t^{\prime} )\).
 \end{definition}
+
+\subsection{Single Scale Bound for Expected Supremum of Sub-Gaussian Process}
+We're going to see the most sophisticated tools in this course. We first see a preliminary version of which and generalize it later.
 
 \begin{lemma}[Single scale bound]\label{lma:single-scale-bound}
 	Let \(\{ X_t \} _{t\in T}\) be a centered \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\). Then
@@ -95,36 +129,71 @@ Let's look at some examples of \hyperref[def:Rademacher-width]{Rademacher width}
 	\]
 \end{proof}
 
+\begin{notation}[Approximation error]
+	The first term in the \hyperref[lma:single-scale-bound]{single scale bound} is the \emph{approximation error}.
+\end{notation}
+
+We see that the first term in the \hyperref[lma:single-scale-bound]{single scale bound} is still an infinite maximum, so it is not clear how to bound it. Typically, we have to do something crude here. There are some exceptions, though.
+
 \begin{eg}
-	For \hyperref[eg:Rademacher-process]{Rademacher process}, we have \(\mathbb{E}_{}\left[\sup _{t, t^{\prime} \in T \colon \lVert t - t^{\prime} \rVert \leq \epsilon } \langle \vec{\epsilon} , t - t^{\prime}  \rangle  \right] \leq \lVert \vec{\epsilon} \rVert \epsilon \leq \sqrt{n} \epsilon  \).
+	For \hyperref[eg:Rademacher-process]{Rademacher processes}, we have \(\mathbb{E}_{}\left[\sup _{t, t^{\prime} \in T \colon \lVert t - t^{\prime} \rVert \leq \delta } \langle \epsilon , t - t^{\prime}  \rangle  \right] \leq \lVert \epsilon \rVert \delta \leq \sqrt{n} \delta \).
 \end{eg}
 
-Let's see some applications of \hyperref[lma:single-scale-bound]{single scale bound}.
+\begin{remark}
+	As \(\epsilon \) decreases, the approximation error should get smaller and the finite maximum increases. Therefore, when we use the \hyperref[lma:single-scale-bound]{single scale bound} we can then choose an optimum \(\epsilon \) to minimize the sum of these two.
+\end{remark}
+
+Let's see some applications of \hyperref[lma:single-scale-bound]{single scale bound} which show that the \hyperref[lma:single-scale-bound]{single scale bound} may not get the optimal rate.
 
 \begin{eg}
-	Let \(T = \{ (0, 0, \dots , 0), (1, 0, \dots , 0), \dots , (1, 1, \dots , 1) \} \subseteq \mathbb{R} ^n\), then
+	Consider a finite set \(T = \{ (0, 0, \dots , 0), (1, 0, \dots , 0), \dots , (1, 1, \dots , 1) \} \subseteq \mathbb{R} ^n\), i.e., the footprint of the boolean function class on \(\mathbb{R} \) given by \(\{ \mathbbm{1}_{x \leq \theta } \}_{\theta \in \mathbb{R}} \). By \autoref{lma:sub-Gaussian-finite-maximum}, \(R_n(T) \leq \sqrt{n \log n}\).
+
+	\begin{prev}
+		We \hyperref[rmk:log-n-superfluous]{claimed} that \(\log n\) is superfluous.
+	\end{prev}
+
+	We still can't remove the \(\sqrt{\log n}\): from the \hyperref[lma:single-scale-bound]{single scale bound}, with \(\mathop{\mathrm{Diam}}(T) = \sqrt{n} \),
 	\[
-		R_n(T) \leq \sqrt{n \log n} .
+		R_n(T) \leq \sqrt{n} \epsilon + \sqrt{n} \sqrt{\log N(T, \lVert \cdot \rVert _2, \epsilon )}.
 	\]
-	We see that we still can't remove the \(\sqrt{\log n}\): from the \hyperref[lma:single-scale-bound]{single scale bound},
-	\[
-		\sqrt{n} \epsilon + \sqrt{n} \sqrt{\log N(T, \lVert \cdot \rVert _2, \epsilon )}.
-	\]
-	To remove \(\log n\), one need to choose \(\epsilon = O(1)\), but then \(\log N(T, \lVert \cdot \rVert _2, \epsilon )\) goes to infinity, and we fail.
+	To remove \(\log n\), \(\epsilon\) needs to be \(O(1)\) for the first term. But then \(\log N(T, \lVert \cdot \rVert _2, \epsilon ) \to \infty \), and we fail.
 \end{eg}
 
-\begin{eg}
-	Again, consider \(X_f = \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f)\) on \(\mathscr{F} \) of functions bounded by \(1\). Then \(X_f \sim \Subg(2^2 \lVert f-g \rVert _\infty ^2)\). By letting \(\mathscr{F} = S_1\) (\autoref{def:Holder-smooth-function-class}),
+Now, let's revisit the \hyperref[eg:supremum-of-empirical-process]{previous example}, and recall the following.
+
+\begin{prev}
+	For a class of functions bounded by \(1\), \(X_f \sim \Subg(2^2 \lVert f-g \rVert _\infty ^2)\), i.e., \(X_f - X_g \leq c \sqrt{n} \lVert f - g \rVert _\infty \) almost surely.
+\end{prev}
+
+\begin{eg}[Empriical process supremum]\label{eg:non-optimal-empirical-process-supremum-S1}
+	Consider \(X_f = \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f)\) on \(\mathscr{F} = S_1\), i.e., functions bounded by \(1\) and are \(1\)-Lipschitz on \([0, 1]\). So in particular, \(X_f - X_g \leq c \sqrt{n} \lVert f - g \rVert _\infty\). From the \hyperref[lma:single-scale-bound]{single scale bound} and \autoref{thm:metric-entropy},
 	\[
-		\mathbb{E}_{}\left[\sup X_f \right]
-		\leq c \left(  \sqrt{n} \epsilon + \sqrt{1 / \epsilon } \right)
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } X_f \right]
+		\leq c \left(\sqrt{n} \epsilon + \sqrt{1 / \epsilon } \right)
+		= c(\sqrt{n} \cdot n^{-1 / 3})
 	\]
-	from \hyperref[lma:single-scale-bound]{single scale bound} and \autoref{thm:metric-entropy}. By letting \(\epsilon = n^{-1 / 3}\), this bound is minimized, giving us
+	by letting \(\epsilon = n^{-1 / 3}\) (where this bound is minimized), giving us
 	\[
-		\mathbb{E}_{}\left[\sup \mathbb{P} _n f - \mathbb{P} f \right] \leq \frac{c}{n^{1 / 3}}.
+		\mathbb{E}_{}\left[\sup _{f\in S_1}\mathbb{P} _n f - \mathbb{P} f \right] \leq \frac{c}{n^{1 / 3}}.
 	\]
-	However, this is not optimal.
+	This is the first non-trivial bound we have shown besides boolean function classes.
+
+	However, observe that \(X_f - X_g \leq C \sqrt{n} \lVert f - g \rVert _\infty \) implies \(X_f - X_g \leq \lVert f - g \rVert _\infty \) in probability. The fact that we are stuck with the above almost surely bound and don't know how to incorporate this additional information, suggests that this bound is still not optimal.
 	\begin{remark}
-		The optimal bound is \(c / \sqrt{n} \).
+		The optimal bound for \(S_1\) is \(c / \sqrt{n} \), i.e., the CLT rate.
 	\end{remark}
 \end{eg}
+
+It's perhaps surprising that for the class of functions \(S_1\), we get the \(O(n^{-1 / 2})\) rate for the supremum of the \hyperref[def:EP]{empirical process}, because even for a single function \(f\in S_1\), we would still have got the \(O(n^{-1 / 2})\) rate. This is not always the case, though. For Lipschitz function defined on \([0, 1]^d\), the rates are slower. We state this result without proof for now.
+
+\begin{lemma}
+	Let \(S_{1, d}\) to be the set of \(1\)-bounded \(1\)-Lipschitz functions w.r.t.\ the Euclidean norm defined on \([0, 1]^d\). Then there exists a universal constant \(C > 0\) such that
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in S_{1, d}} \mathbb{P} _n f - \mathbb{P} f\right]
+		\leq \begin{dcases}
+			C n^{-1 / 2},       & \text{ if } d = 1 , 3, \dots ; \\
+			Cn^{-1 / 2} \log n, & \text{ if } d = 2 ;            \\
+		\end{dcases}
+	\]
+	These rates are tight and corresponding lower bounds are also known~\cite[Problem 5.11 (d)]{noauthororeditor}.
+\end{lemma}

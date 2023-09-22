@@ -1,4 +1,4 @@
-\lecture{12}{20 Sep.\ 9:00}{Chaining Method}
+\lecture{12}{20 Sep.\ 9:00}{Chaining Method and Dudley's Entropy Bound}
 \subsection{Dudley's Entropy Bound}
 To overcome the limitation of the \hyperref[lma:single-scale-bound]{single scale bound}, we consider iterating the process of taking \hyperref[def:eps-net]{\(\epsilon\)-net}, which is considered as a \emph{multi-scale bound}. The theorem requires one technical assumption of the stochastic process.
 
@@ -6,7 +6,7 @@ To overcome the limitation of the \hyperref[lma:single-scale-bound]{single scale
 	We say that \(\{X_t\}_{t\in T}\) is a \emph{separable} process if there exists a countable \(T_0 \subseteq T\) such that (outside a null set) for all \(t\in T\), there exists \(\{t_n \in T_0\}_{n}\) such that \(d(t_n, t) \to 0\) satisfying \(\lim_{n \to \infty} X_{t_n} = X_t\).
 \end{definition}
 
-This notion is consistent with the \hyperref[prev:separable]{separability of a topological space} we saw in real analysis.
+It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\). Moreover, this notion is consistent with the \hyperref[prev:separable]{separability of a topological space} we saw in real analysis.
 
 \begin{prev}[Separable]\label{prev:separable}
 	A topological space is called \emph{separable} if it contains a countable dense subset.
@@ -16,11 +16,7 @@ This notion is consistent with the \hyperref[prev:separable]{separability of a t
 	If \((T, d)\) is \hyperref[prev:separable]{separable}, \(\{ X_t \} \) has countable sample path almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
 \end{eg}
 
-\begin{remark}
-	It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\).
-\end{remark}
-
-Now, we can state the ultimate bound we want.
+Now, we can state the bound we want.
 
 \begin{theorem}[Dudley's entropy bound]\label{thm:Dudley-entropy-bound}
 	Let \(\{ X_t \} _{t\in T}\) be a centered and \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\). Then
@@ -82,23 +78,23 @@ Now, we can state the ultimate bound we want.
 	\end{explanation}
 \end{proof}
 
-\begin{note}[Chaining method]
+\begin{note}[Chaining method]\label{note:chaining}
 	This method is called \emph{chaining} since we're constructing a chain of \(X_{\pi _{k}(t)}\), with smaller and smaller distances.
 	\begin{figure}[H]
 		\centering
 		\incfig{chaining}
-		\caption{The chaining method.}
-		\label{fig:chaining}
 	\end{figure}
 \end{note}
 
-\begin{remark}[Dudley integral entropy bound]\label{rmk:Dudley-integral-entropy-bound}
-	An alternative integral form of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound} is given by
+An alternative integral form of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound} is given by the following.
+
+\begin{corollary}[Dudley integral entropy bound]\label{col:Dudley-integral-entropy-bound}
+	Let \(\{ X_t \} _{t\in T}\) be a centered and \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\). Then
 	\[
 		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \leq 12 \int_{0}^{\mathop{\mathrm{Diam}}(T) }\sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon.
 	\]
-\end{remark}
-\begin{explanation}
+\end{corollary}
+\begin{proof}
 	Observe that
 	\begin{align*}
 		\sum_{k\in \mathbb{Z} } 2^{-k} \sqrt{\log N(T, d, 2^{-k})}
@@ -107,26 +103,26 @@ Now, we can state the ultimate bound we want.
 		 & = 2 \int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon                                                                                                      \\
 		 & = 2 \int_{0}^{\mathop{\mathrm{Diam}}(T) } \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon. \tag*{\(\epsilon > \mathop{\mathrm{Diam}}(T) \), \(N(T, d, \epsilon ) = 1\)}
 	\end{align*}
-\end{explanation}
+\end{proof}
 
-Now, we note that we have finally reached the optimal bound for \(S_1\), solving the problems we saw in the \hyperref[eg:non-optimal-empirical-process-supremum-S1]{previous example}. 
+Now, we note that we have finally reached the optimal bound for \(S_1\), solving the problems we saw in the \hyperref[eg:non-optimal-EP-supremum-S1]{previous example}.
 
-\begin{eg}[Supremum of empirical process]
+\begin{eg}[Supremum of empirical process for \(S_1\)]\label{eg:optimal-EP-supremum-S1}
 	Consider the \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} \(X_f = \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f)\) for \(\mathscr{F} = S_1\). In particular, \(f, g\in \mathscr{F} \) are \(1\)-Lipschitz on \([0, 1]\) satisfying \(\vert f \vert , \vert g \vert \leq 1\) and \(X_f - X_g\in \Subg(2^2 \lVert f - g \rVert ^2_\infty )\). Since \(\mathop{\mathrm{Diam}}(\mathscr{F} ) = 2 \) and for all \(\epsilon < 1 / 2\),
 	\[
 		N(S_1, \lVert \cdot \rVert _\infty , \epsilon ) = \exp (c / \epsilon )
 	\]
-	from \autoref{thm:metric-entropy}. Then by the \hyperref[rmk:Dudley-integral-entropy-bound]{Dudley's integral entropy bound},
+	from \autoref{thm:metric-entropy}. Then by the \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound},
 	\[
 		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } X_f \right]
 		\leq 12\int_{0}^{2} \sqrt{\log N(S_1, \lVert \cdot \rVert _\infty , \epsilon )} \,\mathrm{d}\epsilon
-		= 12 \int_{0}^{2} \sqrt{\frac{c}{\epsilon }} \,\mathrm{d}\epsilon 
-		= 24 \sqrt{2c} 
+		= 12 \int_{0}^{2} \sqrt{\frac{c}{\epsilon }} \,\mathrm{d}\epsilon
+		= 24 \sqrt{2c}
 		< O_n(1).
 	\]
 	Dividing both sides by \(\sqrt{n} \), we achieve the optimal rate \(\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } (\mathbb{P} _n f - \mathbb{P} f) \right] = O(1 / \sqrt{n} )\).
 \end{eg}
 
 \begin{remark}
-	The \hyperref[rmk:Dudley-integral-entropy-bound]{Dudley's integral entropy bound} for \(S_\alpha \) is also finite; while for function classes with \hyperref[def:covering-number]{covering number} as \(\exp (c / \epsilon ^2)\) is divergent.
+	The \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound} for \(S_\alpha \) is also finite; while for function classes with \hyperref[def:covering-number]{covering number} as \(\exp (c / \epsilon ^2)\) is divergent.
 \end{remark}

@@ -1,1 +1,177 @@
-\lecture{13}{22 Sep.\ 9:00}{}
+\lecture{13}{22 Sep.\ 9:00}{More on Chaining}
+Let's see some alternate forms of \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound}. In the following, assume that \(\{ X_t \} _{t\in T}\) is a centered and \hyperref[def:separable]{separable} \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\).
+
+\begin{corollary}[Difference form]\label{col:Dudley-integral-entropy-bound-difference}
+	The same bound as the \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound} holds for \(\mathbb{E}_{}\left[\sup _{t\in T} \vert X_t - X_{t_0} \vert \right]\) and \(\mathbb{E}_{}\left[\sup _{s, t\in T} \vert X_s - X_t \vert \right]\).
+\end{corollary}
+\begin{proof}
+	This can be proved by the same \hyperref[note:chaining]{chaining argument} with triangle inequality.
+\end{proof}
+
+\begin{corollary}[High probability form]\label{col:Dudley-integral-entropy-bound-hp}
+	The high probability bound version holds:
+	\[
+		\mathbb{P} \left(
+		\sup _{s, t\in T} \vert X_s - X_t \vert
+		\leq C \left( \int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon )}  \,\mathrm{d}\epsilon + u \mathop{\mathrm{Diam}}(T) \right)
+		\right) \geq 1 - 2 e^{-u^2}.
+	\]
+\end{corollary}
+\begin{proof}
+	The proof is the same, where we first show the high probability bound for finite case.
+\end{proof}
+
+\begin{corollary}[Finite resolution form]\label{col:Dudley-integral-entropy-bound-finite-resolution}
+	The following generalizes the \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound} in the sense that \(\delta > 0\):
+	\[
+		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right] \leq c \left( \left[ \sup _{\substack{t, t^{\prime} \in T \\ d(t, t^{\prime} ) \leq \delta }} X_t - X_{t^{\prime} } \right] + \int_{\delta }^{\infty} \sqrt{\log N(T, d, \epsilon )}  \,\mathrm{d}\epsilon \right) .
+	\]
+\end{corollary}
+\begin{proof}
+	The proof is still the same, but instead we start with finite resolution.
+\end{proof}
+
+The \hyperref[col:Dudley-integral-entropy-bound-finite-resolution]{finite resolution version} is useful since the \hyperref[def:metric-entropy]{entropy}, integral can diverge, e.g., if \(\log N(t, d, \epsilon ) = \Omega (1 / \epsilon ^2)\). Moreover, this can be used to show \autoref{lma:lec11}.
+
+\begin{remark}
+	We can moreover write
+	\[
+		\begin{split}
+			\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
+			&\leq c \int_{0}^{\mathop{\mathrm{Diam}}(T) } \sqrt{\log N(T, d, \epsilon )}  \,\mathrm{d}\epsilon \\
+			&\leq c \left( \int_{0}^{\mathop{\mathrm{Diam}}(T) / 2} \sqrt{\log N(T, d, \epsilon )}  \,\mathrm{d}\epsilon + \int_{\mathop{\mathrm{Diam}}(T) / 2}^{\mathop{\mathrm{Diam}}(T) } \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon \right) \\
+			&\leq 2c \int_{0}^{\mathop{\mathrm{Diam}}(T) / 2} \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon .
+		\end{split}
+	\]
+\end{remark}
+
+\subsection{Uniform Entropy Integral Bound}
+Let's discuss some limitation of the \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound}. First, recall the following.
+
+\begin{prev}
+	In the \hyperref[eg:optimal-EP-supremum-S1]{example of the optimal rate for \(S_1\)}, whenever
+	\[
+		\int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon < \infty
+		\implies \mathbb{E}_{}\left[\sup _f \mathbb{P} _n f - \mathbb{P} f \right] \leq c / \sqrt{n}.
+	\]
+\end{prev}
+
+Note that we're doing \hyperref[note:chaining]{chaining} w.r.t.\ \(\lVert \cdot \rVert _\infty \) on \(\mathscr{F} \) so far. To see its limitation, consider again the boolean function classes \(\mathscr{F} \) and let \(X_f = \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \sim \Subg (c^2 \lVert \cdot \rVert ^2_\infty )\). From \autoref{prop:lec9},
+\[
+	\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \mathbb{P} _n f - \mathbb{P} f \right]
+	\leq \sqrt{\frac{\VC(\mathscr{F} ) \log n }{n}}.
+\]
+Now, observe that for any \(f \neq g\) in \(\mathscr{F} \), \(\lVert f - g \rVert _\infty = 1\). This implies that by taking \(\epsilon \in (0, 1)\),
+\[
+	N(\mathscr{F} , \lVert \cdot \rVert _\infty , \epsilon ) = \vert \mathscr{F} \vert = \infty
+\]
+for any interesting case, e.g., \(\mathscr{F} = \{ \mathbbm{1}_{x \leq \theta } \}_{\theta \in \mathbb{R}} \), i.e., \hyperref[note:chaining]{chaining} w.r.t.\ \(\lVert \cdot \rVert _\infty \) only gives a vacuous bound.
+
+\begin{intuition}
+	To fix this, we can use the idea of the \hyperref[lma:symmetrization]{symmetrization}.
+\end{intuition}
+
+Firstly, given some observed i.i.d.\ data \(x_1, \dots , x_n\), recall the following.
+
+\begin{prev}
+	By conditioning on the data \(x_1, \dots , x_n\), \hyperref[lma:symmetrization]{symmetrization} shows that
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \mathbb{P} _n f - \mathbb{P} f \right]
+		\leq R_n(\mathscr{\mathscr{F} } )
+		= \mathbb{E}_{x, \epsilon }\left[ \sup _{f\in \mathscr{F} } \sum_{i=1}^{n} \epsilon _i f(x_i) \right] .
+	\]
+\end{prev}
+
+Specifically, we want to look at \(\mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[ \sup _{f\in \mathscr{F} } X_f \right] \right]\) and compute the \hyperref[def:Rademacher-width]{Rademacher width}. Let
+\[
+	X_f = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i),
+\]
+we have
+\[
+	X_f - X_g
+	= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i \big(f(x_i) - g(x_i)\big)
+	\sim \Subg(\left\lVert \big(f(x_i)\big)_i - \big(g(x_i)\big)_i \right\rVert _2^2)
+	= \Subg\left( \frac{1}{n}\sum_{i=1}^{n} \big(f(x_i) - g(x_i)\big)^2 \right) ,
+\]
+where \((f(x_i))_i = (f(x_1), \dots , f(x_n))\). Hence, \(X_f \sim \Subg\left( \frac{1}{n}\sum_{i} (f(x_i) - g(x_i))^2 \right) \).
+
+\begin{note}
+	We're already doing better since \(\sqrt{\frac{1}{n}\sum_{i} (f(x_i) - g(x_i))^2} \leq \lVert f - g \rVert _\infty \).
+\end{note}
+
+We see that \(\sqrt{\frac{1}{n}\sum_{i} (f(x_i) - g(x_i))^2}\) is similar to \(\lVert f - g \rVert _2\), but just on the empirical measure (with i.i.d.\ data \(x_i\)'s). Hence, consider the following notation.
+
+\begin{notation}
+	Let \(L_2(\mathbb{P} _n)\) denote the \hyperref[def:pseudo-metric]{metric} w.r.t.\ \(\mathbb{P} _n\)\footnote{Formally, \(\mathbb{P} _n\) is the empirical measure uniform on \(\{ x_i \} _{i=1}^n\).} such that
+	\[
+		L_2^2(\mathbb{P} _n) (f, g) \coloneqq \frac{1}{n}\sum_{i=1}^{n} \big(f(x_i) - g(x_i)\big)^2.
+	\]
+\end{notation}
+
+In our new notation, \(X_f \sim \Subg(L_2(\mathbb{P} _n))\). Now, we can do the \hyperref[note:chaining]{chaining argument} on \(L_2(\mathbb{P} _n)\) and get
+\[
+	\mathbb{E}_{}\left[\sup \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \right]
+	\leq \int_{0}^{\mathop{\mathrm{Diam}}(\mathscr{F} ) } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon ,
+\]
+where
+\[
+	\mathop{\mathrm{Diam}}(\mathscr{F} )
+	= \sup _{f, g} L_2(\mathbb{P} _n)(f, g) = \frac{1}{n} \sum_{i=1}^{n} \big(f(x_i) - g(x_i)\big)^2
+	\leq \sup _{f\in \mathscr{F} } \sqrt{\mathbb{P} _n f^2},
+\]
+we have
+\[
+	\mathbb{E}_{x}\left[ c\cdot \int_{0}^{\sup \limits_{f\in \mathscr{F} } \sqrt{\mathbb{P} _n f^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right].
+\]
+However, there's a problem.
+
+\begin{problem*}
+	\(L_2(\mathbb{P} _n)\) is a ``random'' \hyperref[def:pseudo-metric]{metric}, so \(N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )\) is hard to compute.
+\end{problem*}
+\begin{answer}
+	To resolve this, we take the supremum over all measures \(\mu \) supported on \(\chi \), i.e.,
+	\[
+		\mathbb{E}_{x}\left[ c\cdot \int_{0}^{\sup\limits_{f\in \mathscr{F} } \sqrt{\mathbb{P} _n f^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right]
+		\leq c\cdot \mathbb{E}_{x}\left[\int_{0}^{\sup\limits_{f\in \mathscr{F} } \sqrt{\mathbb{P} _n f^2} } \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon )} \,\mathrm{d}\epsilon \right].
+	\]
+\end{answer}
+
+This might seem very bad, but actually it's not since \(L_2(\mu ) < L_\infty\). Specifically, to bound this supremum over all measures, consider the following.
+
+\begin{definition}[Koltchinskii-Pollard entropy]\label{def:Koltchinskii-Pollard-entropy}
+	The \emph{Koltchinskii-Pollard entropy} of \(\mathscr{F} \) is defined as
+	\[
+		\sup _{\mu } \log N(\mathscr{F} , L_2(\mu ), \epsilon ).
+	\]
+\end{definition}
+
+\begin{eg}
+	For boolean function classes, \(\sup _f \sqrt{\mathbb{P} _n f^2} \leq 1\).
+\end{eg}
+
+We then have the following for the boolean function classes.
+
+\begin{theorem}[Uniform entropy integral bound]\label{thm:uniform-entropy-integral-bound}
+	Let \(\mathscr{F} \) be a boolean function class, and let \(F\) be an envelope for \(\mathscr{F} \) such that \(\mathbb{P} F^2 < \infty \).\footnote{Think of \(F \equiv 1\).} Then the \emph{uniform entropy integral bound} is given by
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
+		\leq c \int_{0}^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon )}  \,\mathrm{d}\epsilon.
+	\]
+\end{theorem}
+
+\begin{problem*}
+	How can we compute the \hyperref[def:Koltchinskii-Pollard-entropy]{Koltchinskii-Pollard entropy}?
+\end{problem*}
+\begin{answer}
+	We can use some notions of combinatorial dimension (e.g., \hyperref[def:VC-dimension]{VC dimension}) upper-bounds the \hyperref[def:Koltchinskii-Pollard-entropy]{Koltchinskii-Pollard entropy} such that
+	\[
+		\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon )
+		\leq \left( c_1 / \epsilon \right) ^{c_2 \times \VC(\mathscr{F} )}
+		\approx \epsilon ^{-d}
+	\]
+	for \(d\) being ``dimension'' (parametric).
+\end{answer}
+
+\begin{remark}
+	This implies a \(\sqrt{\VC(\mathscr{F} ) / n} \) rate (without a \(\log \) term!) for \(\mathbb{E}_{}\left[\sup (\mathbb{P} _n f - \mathbb{P} f) \right] \).
+\end{remark}

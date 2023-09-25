@@ -1,0 +1,183 @@
+\lecture{14}{25 Sep.\ 9:00}{Uniform Entropy Integral Bound}
+\begin{prev}
+	Motivated by the fact that boolean function classes are not \hyperref[def:totally-bounded]{totally bounded} w.r.t.\ \(\ell _\infty \), \(\lVert f - g \rVert _\infty = 1\), we're trying to bound
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \right]
+		\leq 2 \mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[\sup _{f\in \mathscr{F} } \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i) \right]  \right]
+	\]
+	where the inner expectation is just the \hyperref[def:Rademacher-width]{Rademacher width} \(R_n (\{ f(x_1) / \sqrt{n} , \dots , f(x_n) / \sqrt{n} \}_{f\in \mathscr{F} } )\). Let \(X_f = \langle \epsilon , f \rangle / \sqrt{n} \), then \(\{ X_f \} _{f\in \mathscr{F} }\) is \hyperref[def:sub-Gaussian-process]{sub-Gaussian} w.r.t.\ \(L_2(\mathbb{P} _n)\).\footnote{Recall that \(L_2^2(\mathbb{P} _n)(f, g) = \frac{1}{n}\sum_{i=1}^{n} \big(f(X_i) - g(X_i)\big)^2\), compared to \(L_2(\mathbb{P} )(f, g) = \int \big(f(x) - g(x)\big)^2 \,\mathrm{d} \mathbb{P} \).} In all, we have
+	\[
+		\begin{split}
+			\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \right]
+			&\leq 2 \mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[\sup _{f\in \mathscr{F} } \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i) \right]  \right] \\
+			&\leq C\mathbb{E}_{x}\left[ \int_{0}^{\sup\limits _{f, g\in \mathscr{F} } \frac{L_2(\mathbb{P} _n)(f, g)}{2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right]\\
+			& \leq C\mathbb{E}_{x}\left[ \int_{0}^{\sup\limits _{f\in \mathscr{F} } \sqrt{\mathbb{P} _n f^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right]\\
+			& \leq C\mathbb{E}_{x}\left[ \int_{0}^{\sqrt{\mathbb{P} _n F^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right],
+		\end{split}
+	\]
+	where in the last step we use some upper-bound \(F\) of \(f\) to help us, as we saw in the \hyperref[int:main-bound]{intuition}.
+\end{prev}
+
+The above \(F\) is called \hyperref[def:envelope]{envelope}.
+
+\begin{definition}[Envelope]\label{def:envelope}
+	A non-negative valued function \(F\colon \chi \to [0, \infty ]\) is an \emph{envelope} for \(\mathscr{F} \) if \(\sup _{f\in\mathscr{F} } \vert f(x) \vert \leq F(x)\) for all \(x\in \chi \).
+\end{definition}
+
+\begin{eg}
+	For boolean function classes, \(F(x) = 1\) is an \hyperref[def:envelope]{envelope}.
+\end{eg}
+
+\begin{remark}
+	Let \(F\) be an \hyperref[def:envelope]{envelope} of \(\mathscr{F} \), then \(\sup _{f\in \mathscr{F} }\sqrt{\mathbb{P} _n f^2} \leq \sqrt{\mathbb{P} _n F^2} \), as we want.
+\end{remark}
+
+With this new notion, we can state the main bound we want, i.e., the \hyperref[thm:uniform-entropy-integral-bound]{uniform entropy integral bound}.
+
+\begin{theorem}[Uniform entropy integral bound]\label{thm:uniform-entropy-integral-bound}
+	Given a function class \(\mathscr{F} \) and an \hyperref[def:envelope]{envelope} \(F\) of \(\mathscr{F} \) such that \(\mathbb{P} F^2 < \infty \), then
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
+		\leq C \lVert F \rVert _{L_2(\mathbb{P} )} \int_{0}^{1} \sqrt{\log \sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon \sqrt{\mu F^2} )}  \,\mathrm{d}\epsilon .
+	\]
+\end{theorem}
+\begin{proof}
+	Continue on what we have seen,
+	\begin{align*}
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \right]
+		 & \leq C \mathbb{E}_{x}\left[ \int_{0}^{\sup\limits _{f\in \mathscr{F} } \sqrt{\mathbb{P} _n f^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right] \\
+		 & \leq C \mathbb{E}_{x}\left[\int_{0}^{\sqrt{\mathbb{P} _n F^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right]                                   \\
+		 & = C \mathbb{E}_{x}\left[ \sqrt{\mathbb{P} _n F^2} \int_{0}^{1} \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon \sqrt{\mathbb{P} _n F^2} )} \,\mathrm{d}\epsilon \right]           \\
+		 & \leq C \mathbb{E}_{x}\left[\sqrt{\mathbb{P} _n F^2} \int_{0}^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon \sqrt{\mu F^2} )} \,\mathrm{d}\epsilon \right]                  \\
+		 & \leq C \left[ \int_{0}^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon \sqrt{\mu F^2} )} \,\mathrm{d}\epsilon \right] \mathbb{E}_{x}\left[\sqrt{\mathbb{P} _n F^2}  \right]  \\
+		\shortintertext{from Jensen's inequality, \(\mathbb{E}_{}\left[\sqrt{\mathbb{P} _n F^2} \right] \leq \sqrt{\mathbb{E}_{}\left[\mathbb{P} _n F^2 \right] } = \sqrt{\mathbb{P} F^2} = \lVert F \rVert _{L_2(\mathbb{P} )}\),}
+		 & \leq C \lVert F \rVert _{L_2(\mathbb{P} )} \left[ \int_{0}^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon \sqrt{\mu F^2} )} \,\mathrm{d}\epsilon \right] .
+	\end{align*}
+\end{proof}
+
+\begin{notation}
+	We sometimes denote \(\displaystyle \int_{0}^{1} \sqrt{\log \sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon \sqrt{\mu F^2} )}  \,\mathrm{d}\epsilon \) by \(\bm{J} (F, \mathscr{F} )\).
+\end{notation}
+
+\begin{remark}
+	\(\mathscr{F} \) needs not to be bounded, instead, what we really need is an \hyperref[def:envelope]{envelope}.
+\end{remark}
+
+\begin{remark}
+	The \hyperref[def:Koltchinskii-Pollard-entropy]{Koltchinskii-Pollard entropy} integral is free from \(\mathbb{P} \), while \(\lVert F \rVert _{L_2(\mathbb{P} )}\) depends on \(\mathbb{P} \).
+\end{remark}
+
+\begin{eg}
+	For boolean function classes, \(\lVert F \rVert _{L_2(\mathbb{P} )} \leq 1\), so the \hyperref[thm:uniform-entropy-integral-bound]{bound} is uniform over \(\mathbb{P} \).
+\end{eg}
+
+Now, we want to show that \hyperref[def:Koltchinskii-Pollard-entropy]{Koltchinskii-Pollard entropy} is upper-bounded by \(\epsilon ^{-\VC(\mathscr{F} )}\), answering the \hyperref[prb:lec13]{problem} we asked in the previous lecture.
+
+\begin{prev}
+	For boolean function classes,
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
+		\leq c \sqrt{\VC(\mathscr{F} )\log \frac{en}{\VC(\mathscr{F} )}} .
+	\]
+\end{prev}
+
+\begin{theorem}[Dudley]\label{thm:Dudley}
+	Let \(\mathscr{F} \) be a boolean function class, then for some absolute constants \(c_1, c_2\),
+	\[
+		\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) \leq \left( \frac{c_1}{\epsilon } \right) ^{c_2 \VC(\mathscr{F} )}
+	\]
+\end{theorem}
+\begin{proof}
+	To upper-bound the \hyperref[def:packing-number]{packing number} via \(d\coloneqq \VC(\mathscr{F} )\), first fix a probability measure \(\mu \) on \(\chi \), consider a maximum \hyperref[def:eps-packing]{\(\epsilon\)-packing} \(M=\{ f_1, \dots , f_N \} \) of \(\mathscr{F} \) w.r.t.\ \(L_2(\mu )\). Then for all \(i \neq j\),
+	\[
+		\int (f_i - f_j)^2 \,\mathrm{d} \mu
+		= \mu (f_i \neq f_j)
+		> \epsilon ^2.
+	\]
+	Then, sample \(K\) points \(W_1, \dots , W_K\) i.i.d.\ from \(\mu \), we want that all \(\{ f_i \}_{i=1}^N \) to have different values on \((w_1, \dots , w_K)\). Note that for \(i \neq j\),
+	\[
+		\mu (f_i = f_j \text{ on } w_1, \dots , w_K)
+		\leq (1-\epsilon ^2)^K
+		\leq e^{-K \epsilon ^2}
+	\]
+	from \((1-x)^k \leq e^{-kx}\). This implies
+	\[
+		\mu  (\exists \text{ at least one pair \(i\neq j\) such that \(f_i = f_j\) on \(w_1, \dots , w_K\)}) \leq \binom{N}{2}e^{-K \epsilon ^2},
+	\]
+	hence
+	\[
+		\mu (\text{all the \(f_i\)'s are distinct on \(w_1, \dots , w_k\) }) \geq 1 - \binom{N}{2}e^{-K\epsilon ^2} \geq \frac{1}{2}
+	\]
+	by choosing \(K\epsilon ^2 \approx 2 \log N\). We conclude that there exists \(K\) points \(w_1, \dots , w_K\) such that all the \(f_i\)'s are distinct on \(\{ w_1, \dots , w_K \} \). From \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma},\footnote{Note that we have only shown the case for \(K \geq \VC(\mathscr{F} )\). However, for \(K < \VC(\mathscr{F} )\), it's also easy to show.}
+	\[
+		N
+		= \vert \mathscr{F} (w_1, \dots , w_K) \vert
+		\leq \left( \frac{eK}{d} \right) ^{d}
+		= \left( \frac{2e \log N}{\epsilon ^2 d} \right) ^d.
+	\]
+	We see that \(N \leq (\log N)^d\). To further bound \(N\), consider\footnote{We see that this works as long as we make the exponent \(a\) of \(\log N^a\) \(< 1 / d\).}
+	\[
+		N^{1 / d} \leq \frac{4e \log N}{2 d \epsilon ^2} = \frac{4e}{\epsilon ^2} \log N^{1 / 2d} \leq \frac{4e}{\epsilon ^2} N^{1 / 2d}
+	\]
+	from \(\log x \leq x\), hence \(N^{1 / 2d} \leq 4e / \epsilon ^2\), or equivalently,
+	\[
+		N
+		\leq (4e)^{2d} \left( \frac{1}{\epsilon } \right) ^{4d}
+		= \left( \frac{2\sqrt{e} }{\epsilon } \right) ^{4d}
+		\eqqcolon \left( \frac{c_1}{\epsilon } \right) ^{c_2 d}.
+	\]
+\end{proof}
+
+\begin{remark}
+	For boolean function classes, while \(N(\mathscr{F} , L_\infty , \epsilon ) = \infty \), \(\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) < \infty \).
+\end{remark}
+
+\begin{corollary}\label{col:EP-bound-VC}
+	Let \(\mathscr{F} \) be a boolean function class, for some constant \(C\), we have
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert \right]
+		\leq C \sqrt{\VC(\mathscr{F} )} .
+	\]
+\end{corollary}
+\begin{proof}
+	Applying \hyperref[thm:uniform-entropy-integral-bound]{uniform entropy integral bound}, with \(\lVert F \rVert _{L_2(\mathbb{P} )} = 1\) and \autoref{thm:Dudley},
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert \right]
+		\leq C \int_{0}^{1} \sqrt{c_2 \VC(\mathscr{F} ) \log \frac{c_1}{\epsilon }}  \,\mathrm{d}\epsilon
+		\leq C^{\prime} \sqrt{\VC(\mathscr{F} )} \int_{0}^{1} \log \frac{1}{\epsilon } \,\mathrm{d}\epsilon
+		\leq C^{\prime} \sqrt{\VC(\mathscr{F} )} .
+	\]
+\end{proof}
+
+\begin{remark}
+	Consider the \hyperref[eg:1D-classification-thresholds]{classification problem} in the statistical learning setting, where \(\hat{f} \) is the \hyperref[prb:ERM]{ERM},
+	\[
+		\mathbb{E}_{}\left[L(\hat{f} ) \right] - \inf _{f\in \mathscr{F} } \mathbb{E}_{}\left[L(\hat{f} ) \right]
+		\leq \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \left( \mathbb{E}_{}\left[f(X) \right] - \frac{1}{n}\sum_{i=1}^{n} f(x_i) \right) \right]
+		\leq 2R_n(\mathscr{F} )
+	\]
+	from \hyperref[lma:symmetrization]{symmetrization}, where we get a \(\log (en / \VC(\mathscr{F} ))\) from \autoref{prop:lec9}. However, from \autoref{col:EP-bound-VC}, we finally show that the \(\log \) factor is superfluous.
+\end{remark}
+
+\todo[inline]{not sure how does \(R_n(\mathscr{F} ) \leq C \sqrt{\VC(\mathscr{F} ) / n} \) follow.}
+
+\begin{remark}
+	\autoref{col:EP-bound-VC} is independent of \(\mathbb{P} \), i.e.,
+	\[
+		\sup _{\mathbb{P} } \mathbb{E}_{}\left[\sup _{f\in \mathscr{F}} \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right] \leq C \sqrt{\frac{\VC(\mathscr{F} )}{n}} .
+	\]
+	This means that boolean function classes are uniform \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli}.
+\end{remark}
+
+We note that the ``machinery'' we have done is the following:
+\begin{enumerate}
+	\item Bound uniform entropy w.r.t.\ \(L_2\) (\hyperref[thm:uniform-entropy-integral-bound]{uniform entropy integral bound}).
+	\item Uniform \(L_2\) entropy \(\leq \) \hyperref[def:VC-dimension]{VC dimension} (\autoref{thm:Dudley}).
+\end{enumerate}
+
+\begin{problem*}
+	How to extend this ``machinery'' to non-boolean function classes?
+\end{problem*}
+\begin{answer}
+	Define \hyperref[def:VC-dimension]{VC dimension} for non-boolean function classes.
+\end{answer}

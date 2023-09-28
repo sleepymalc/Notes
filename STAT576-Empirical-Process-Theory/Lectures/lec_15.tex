@@ -1,0 +1,148 @@
+\lecture{15}{27 Sep.\ 9:00}{Parametric v.s.\ Non-Parametric}
+\section{Parametric and Non-Parametric}
+We start by asking the following problem.
+
+\begin{problem*}
+	What makes a function class ``parametric'' or ``non-parametric''?
+\end{problem*}
+\begin{answer}
+	If it's a vector space, we have the linear algebra notion of dimension.
+\end{answer}
+
+Consider the following (not very precise) definition.
+
+\begin{definition}[Parametric]\label{def:parametric}
+	A function class \(\mathscr{F} \) is \emph{parametric} if there exists a notion of dimension and a constant \(C\) such that
+	\[
+		\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) \leq \left( \frac{C}{\epsilon } \right) ^{\dim(\mathscr{F} )}.
+	\]
+\end{definition}
+
+\begin{eg}
+	Boolean function class on \(\chi \) with finite \hyperref[def:VC-dimension]{VC dimension} is \hyperref[def:parametric]{parametric}.
+\end{eg}
+\begin{explanation}
+	\hyperref[thm:Dudley]{Dudley's result} directly applies.
+\end{explanation}
+
+\begin{definition}[Non-parametric]\label{def:non-parametric}
+	A function class \(\mathscr{F} \) is \emph{non-parametric} if there is a \(p > 0\) and a constant \(C\) such that
+	\[
+		\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon ) \leq \left( \frac{C}{\epsilon } \right) ^p.
+	\]
+\end{definition}
+
+Let's consider any \hyperref[def:parametric]{parametric} class \(\mathscr{F} \) bounded by \(1\) with \(\dim \mathscr{F} = d\). Then
+\[
+	\mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[\sup _{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(x_i) \right]  \right]
+	\leq \frac{12}{\sqrt{n} } \int_{0}^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon )} \,\mathrm{d}\epsilon
+	\leq \frac{12}{\sqrt{n} } \int_{0}^{1} \sqrt{d \log \frac{C}{\epsilon }} \,\mathrm{d}\epsilon
+	\leq C^{\prime} \sqrt{\frac{d}{n}}.
+\]
+Again, this result is distribution-free. Analogously, we want to know what we get for a \hyperref[def:non-parametric]{non-parametric} function class (uniform bounded by \(1\))? Now, since for a \hyperref[def:non-parametric]{non-parametric} class, the uniform \(L_2\) \hyperref[def:metric-entropy]{entropy} is \(\leq (C / \epsilon )^p\),
+\begin{align*}
+	\mathbb{E}_{\epsilon }\Bigg[ & \sup _{f\in \mathscr{F} } \underbrace{\frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i)}_{X_f \sim \Subg(L_2(\mathbb{P} _n))} \Bigg] \\
+	                             & \leq \mathbb{E}_{}\left[\sup _{\substack{f, g\in \mathscr{F} \colon                                                                      \\ L_2(\mathbb{P} _n) (f, g) \leq \delta }} X_f - X_g \right] + \int_{\delta }^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon )} \,\mathrm{d}\epsilon \tag*{modified \autoref{col:Dudley-integral-entropy-bound-finite-resolution}} \\
+	                             & \leq \sqrt{n} \cdot \delta + \int_{\delta }^{1} \left( \frac{C}{\epsilon } \right) ^{p / 2} \,\mathrm{d}\epsilon
+\end{align*}
+\begin{itemize}
+	\item \(p < 2\): Take \(\delta = 0\) because the integral converges, and we get a bound for some constant \(c\):
+	      \[
+		      \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(x_i) \right] \leq \frac{c}{\sqrt{n} }.
+	      \]
+	      \begin{eg}
+		      1-D \hyperref[def:Holder-smooth-function-class]{Hölder smooth classes}.
+	      \end{eg}
+	\item \(p > 2\): We see that for all \(\delta \in (0, 1)\),
+	      \begin{align*}
+		      \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(x_i) \right]
+		       & \leq \delta + \frac{1}{\sqrt{n} } \int_{\delta }^{1} \left( \frac{C}{\epsilon } \right) ^{p / 2} \,\mathrm{d}\epsilon        \\
+		       & = \delta + \frac{C^{p / 2}}{\sqrt{n} } \cdot \at{ \frac{\epsilon ^{-p / 2 + 1}}{1 - p / 2}}{\delta }{1}                      \\
+		       & \approx \delta + \frac{1}{\sqrt{n} } \at{(-\epsilon ^{-p / 2 + 1})}{\delta }{1} \tag*{dropping constant (\(1 - p / 2 < 0\))} \\
+		       & \leq \inf _{\delta \in (0, 1)} \delta + \frac{1}{\sqrt{n} } \delta ^{1 - p / 2}
+		      = O(n^{-1 / p}),
+	      \end{align*}
+	      by solving the infimum by setting \(\delta = \delta ^{1 - p / 2} / \sqrt{n} \), we have \(\delta = n^{-1 / p}\).
+	      \begin{remark}
+		      \(O(n^{-1 / p})\) is a \hyperref[def:non-parametric]{non-parametric} rate.
+	      \end{remark}
+
+	      \begin{eg}
+		      \(1\)-bounded and \(1\)-Lipschitz functions on \([0, 1]^d\).
+	      \end{eg}
+	      \begin{explanation}
+		      Since \(\vert f(x) - f(y) \vert \leq \lVert x - y \rVert _2\), for \(d > 2\), \(p = d\).
+	      \end{explanation}
+	\item \(p = 2\): From the same calculation, we have
+	      \begin{align*}
+		      \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(x_i) \right]
+		       & \leq \delta + \frac{1}{\sqrt{n} } \int_{\delta }^{1} \frac{C}{\epsilon } \,\mathrm{d}\epsilon \\
+		       & = \delta + \at{\frac{C}{\sqrt{n} } \ln \epsilon}{\delta }{1}                                  \\
+		       & = \delta + \frac{C}{\sqrt{n} } \ln \frac{1}{\delta}
+		      = O\left( \frac{1}{\sqrt{n} } \log n \right)
+	      \end{align*}
+	      by setting \(\delta = O(1 / \sqrt{n} )\).
+\end{itemize}
+
+\begin{remark}
+	To summarize, we have the following.
+	\begin{itemize}
+		\item \hyperref[def:parametric]{Parametric class}: \(C \sqrt{d / n} \).
+		\item \hyperref[def:non-parametric]{Non-parametric class}:
+		      \begin{itemize}
+			      \item \(p < 2\): \(\sqrt{c / n} \).
+			      \item \(p = 2\): \(c \log n / \sqrt{n} \).
+			      \item \(p > 2\): \(c\cdot n^{-1 / p}\).
+		      \end{itemize}
+	\end{itemize}
+\end{remark}
+
+\begin{eg}[Linear function class]
+	Let \(\chi = B_2^d\), and \(\mathscr{F} = \{ x \mapsto w^{\top} x \colon w\in B_2^d \} \). For a given data \(x_1, \dots , x_n \in \mathbb{R} ^d\),
+	\[
+		\at{\mathscr{F}}{x_1, \dots , x_n}{} = \left\{ X w \colon w\in B_2^d, X_{n \times d} = \begin{bmatrix}
+			x_1 ^{\top} \\
+			\vdots      \\
+			x_n ^{\top} \\
+		\end{bmatrix} \right\}.
+	\]
+	To determine whether \(\mathscr{F} \) is \hyperref[def:parametric]{parametric} or \hyperref[def:non-parametric]{non-parametric}, we need to bound \(N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )\):
+	\[
+		\begin{alignedat}{4}
+			& \sqrt{\frac{1}{n}\sum_{i=1}^{n} \left( \langle w, x_i \rangle - \langle w^{\prime} , x_i \rangle \right) ^2 } &                    & N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )                \\
+			& \leq \max _{i\in[n]} \vert \langle w-w^{\prime} , x_i \rangle \vert                                           &                    & \leq N(\mathscr{F} , L_\infty (\mathbb{P} _n), \epsilon )     \\
+			& \leq \max _{x\in B_2^d} \vert \langle w - w^{\prime} , x \rangle  \vert                                       & \qquad \iff \qquad & \leq N(\mathscr{F} , \lVert \cdot \rVert _\infty , \epsilon ) \\
+			& \leq \lVert w - w^{\prime} \rVert _2                                                                          &                    & \leq N(B_2^d, \lVert \cdot \rVert _2, \epsilon )              \\
+			& \leq \epsilon,                                                                                                &                    &
+		\end{alignedat}
+	\]
+	where \(\max _{x\in B_2^d} \vert \langle w - w^{\prime} , x \rangle \vert \leq \lVert w - w^{\prime}  \rVert _2\) since \(\lVert x \rVert _2 \leq 1\). Then, from \autoref{prop:packing-covering},
+	\[
+		N(B_2^d, \lVert \cdot \rVert _2, \epsilon )
+		\left( 1 + \frac{2}{\epsilon } \right)^d,
+	\]
+	so we get a \(\sqrt{d / n} \) rate since this satisfies \hyperref[def:parametric]{parametric} condition.\footnote{In high dimension situation, this bound can be loose.} However, one can show
+	\[
+		\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon ) \leq \frac{1}{\epsilon ^2},
+	\]
+	i.e., a dimension-free bound, hence \(\mathscr{F} \) also behaves like a \hyperref[def:non-parametric]{non-parametric} class!
+\end{eg}
+
+We make an important remark.
+
+\begin{remark}
+	A function class can be viewed as \hyperref[def:parametric]{parametric} and \hyperref[def:non-parametric]{non-parametric} at the same time.
+\end{remark}
+
+There are other examples.
+
+\begin{eg}
+	Neural networks are like this: we can either measure its complexity by the \emph{number of parameters}, or do some \emph{norm-based estimations}.
+\end{eg}
+
+\begin{problem*}
+	For what function classes can be bound in terms of uniform \(L_2\) \hyperref[def:metric-entropy]{entropy}?
+\end{problem*}
+\begin{answer}
+	We have seen boolean function classes with finite \hyperref[def:VC-dimension]{VC dimension}, and \hyperref[def:Holder-smooth-function-class]{Hölder smooth function class}.
+\end{answer}

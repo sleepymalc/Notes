@@ -1,0 +1,95 @@
+\lecture{16}{4 Oct.\ 9:00}{Fat-Shattering Dmension}
+
+\begin{definition*}
+	Let \(\mathscr{F} \) be a function class.
+	\begin{definition}[\(\epsilon \)-shattered]\label{def:eps-shattered}
+		A set \(\{ x_1, \dots , x_n \} \) of \(\chi \) is \emph{\(\epsilon \)-shattered} by \(\mathscr{F} \) if there exists \(t_1, \dots , t_n\) such that for all \(S \subseteq [n]\), there exists \(f\in \mathscr{F} \) such that
+		\[
+			\begin{dcases}
+				f(x_s) \leq t_s,             & \text{ if } s\in S ;   \\
+				f(x_s) \geq t_s + \epsilon , & \text{ if } s\notin S.
+			\end{dcases}
+		\]
+	\end{definition}
+	\begin{definition}[Fat shattering dimension]\label{def:fat-shattering-dimension}
+		The \emph{fat-shattering dimension} \(\VC(\mathscr{F}, \epsilon)\) of \(\mathscr{F} \) is the maximum dimension of an \hyperref[def:eps-shattered]{\(\epsilon\)-shattered} set.
+	\end{definition}
+\end{definition*}
+
+We see that \(\VC(\mathscr{F} , \epsilon )\) is a non-increasing function of \(\epsilon \).
+
+\begin{note}
+	If \(\mathscr{F} \) is boolean, then \(\VC(\mathscr{F} , \epsilon ) = \VC(\mathscr{F} )\) for all \(\epsilon \in (0, 1)\) by setting \(t_s = 0\) for all \(s\).
+\end{note}
+
+\begin{eg}
+	Consider \(\mathcal{M} = \{ f\colon I \to [-1, 1] \text{ non-decreasing}  \} \). Then for all \(\epsilon > 0\), \(\VC(\mathcal{M} , \epsilon ) \leq 1 + 2 / \epsilon \).
+\end{eg}
+
+\begin{eg}
+	Consider \(\mathop{\mathrm{BV}}(2) \coloneqq \{ f \colon \mathop{\mathrm{TV}}(f) \leq 2 \} \) where the total variation
+	\[
+		\mathop{\mathrm{TV}}(f) \coloneqq \sup _{n \geq 1} \sup _{x_1 < x_2 < \dots < x_n \in I} \sum_{i=1}^{n} \vert f(x_i) - f(x_{i-1}) \vert
+	\]
+	is bounded by \(2\). If \(f^{\prime} (x)\) exists, then \(\mathop{\mathrm{TV}}(f) = \int \vert f^{\prime} (x) \vert \,\mathrm{d} x\). We see that \(\mathop{\mathrm{BV}}(2) \supseteq \mathcal{M} \) since for any non-decreasing function \(f\) ranging in \([a, b]\), \(\mathop{\mathrm{TV}}(f) = b - a\).
+\end{eg}
+
+\begin{lemma}
+	Let \(\mathscr{F} \colon I \to \mathbb{R} \) with \(\mathop{\mathrm{TV}}(f) \leq V\), i.e., \(\mathscr{F} \) is in \(\mathop{\mathrm{BV}}(V) \). Then
+	\[
+		\VC(\mathop{\mathrm{BV}}(V) , \epsilon ) = 1 + \left\lfloor \frac{V}{\epsilon } \right\rfloor.
+	\]
+\end{lemma}
+\begin{proof}
+	We prove this by proving two directions.
+	\begin{claim}
+		\(\VC(\mathop{\mathrm{BV}}(V) , \epsilon ) \leq 1 + \lfloor V / \epsilon \rfloor\).
+	\end{claim}
+	\begin{explanation}
+		Let \(\{ x_1, \dots , x_n \} \) be \hyperref[def:eps-shattered]{\(\epsilon\)-shattered} by \(\mathscr{F} \), then there exists \(t_1, \dots , t_n\) and \(f_1, f_2\) such that
+		\[
+			\begin{dcases}
+				f_1(x_i) \leq t_i,             & \text{ if \(i\) is odd} ;  \\
+				f_1(x_i) \geq t_i + \epsilon , & \text{ if \(i\) is even} ;
+			\end{dcases},\quad
+			\begin{dcases}
+				f_2(x_i) \leq t_i,             & \text{ if \(i\) is even} ; \\
+				f_2(x_i) \geq t_i + \epsilon , & \text{ if \(i\) is odd} .
+			\end{dcases}
+		\]
+		Consider \(f = (f_1 + f_2) / 2\), then
+		\[
+			\begin{dcases}
+				f(x_i) \leq - \epsilon / 2, & \text{ if \(i\) is odd} ;  \\
+				f(x_i) \geq \epsilon / 2 ,  & \text{ if \(i\) is even} ,
+			\end{dcases}
+		\]
+		and \(\mathop{\mathrm{TV}}(f) \geq (n-1) \epsilon \). Furthermore, we see that
+		\[
+			\mathop{\mathrm{TV}}(f) \leq \frac{\mathop{\mathrm{TV}}(f_1) + \mathop{\mathrm{TV}}(f_2) }{2} \leq V,
+		\]
+		hence \((n-1) \epsilon \leq V\), i.e., \(n \leq 1 + \lfloor V / \epsilon  \rfloor\).
+	\end{explanation}
+
+	\begin{claim}
+		\(\VC(\mathop{\mathrm{BV}}(V) , \epsilon ) \geq 1 + \lfloor V / \epsilon \rfloor\).
+	\end{claim}
+	\begin{explanation}
+		Let \(d = \lfloor V / \epsilon \rfloor\), and consider \(y_1 < y_2 < \dots < y_d\) which induces \(d+1\) intervals \(I_j = [y_j, y_{j+1})\) with \(I_0 = (-\infty , y_1)\) and \(I_d = [y_d, \infty )\). Let \(G\) be the set of piece-wise continuous functions on \(I_0, \dots , I_d\) taking values between \(\{ 0, \epsilon  \} \), so \(\vert G \vert = 2^{d+1}\). Then, the set \(\{ x_1, \dots , x_{d+1} \} \) such that \(x_j \in I_j\), then this set is \hyperref[def:eps-shattered]{\(\epsilon\)-shattered} by \(G\). Finally, since \(\mathop{\mathrm{TV}}(g) \leq d\epsilon \leq V\), we're done.
+	\end{explanation}
+\end{proof}
+
+Consider the following result (which we will not prove).
+
+\begin{theorem}[Mendelson-Vershynin]\label{thm:Mendelson-Vershynin}
+	Let \(\mathscr{F} \) be a class of functions that is uniformly bounded by \(1\). Then there exists \(c > 1\) such that for every \(0 < \epsilon \leq 1\),
+	\[
+		\sup _\mu M(\mathscr{F} , \epsilon , L_2(\mu )) \leq \left( \frac{2}{\epsilon } \right) ^{c \VC(\mathscr{F} , \frac{\epsilon}{c})}.
+	\]
+\end{theorem}
+
+\begin{remark}
+	For \(\mathop{\mathrm{BV}}(2) \), \hyperref[thm:Mendelson-Vershynin]{Mendelson-Vershynin thoerem} gives \(\sup _\mu M(\mathop{\mathrm{BV}}(2) , \epsilon , L_2(\mu )) \leq \exp (\frac{c}{\epsilon } \log 2\epsilon )\).\footnote{Note that \(\log 2\epsilon \) is superfluous again.}
+\end{remark}
+
+Now, consider the classification such that \(\chi = B_2^d\), and \(\mathscr{F} = \{ x \mapsto w^{\top} x \colon w\in B_2^d \} \). Then \(\VC(\mathscr{F} , \epsilon ) \leq d\); and if we consider \(\sgn (w^{\top} x)\), we get a similar \(\VC(\mathscr{F} , \epsilon )\).

@@ -4,9 +4,9 @@
 	\[
 		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \right]
 		\leq 2 \mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[\sup _{f\in \mathscr{F} } \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i) \right]  \right]
-		= R_n(\mathscr{F} )
+		= \frac{1}{\sqrt{n} } R_n(\mathscr{F} )
 	\]
-	where the inner expectation is just the \hyperref[def:Rademacher-width]{Rademacher width} \(R_n (\{ f(x_1) / \sqrt{n} , \dots , f(x_n) / \sqrt{n} \}_{f\in \mathscr{F} } )\). Let \(X_f = \langle \epsilon , f \rangle / \sqrt{n} \), then \(\{ X_f \} _{f\in \mathscr{F} }\) is \hyperref[def:sub-Gaussian-process]{sub-Gaussian} w.r.t.\ \(L_2(\mathbb{P} _n)\).\footnote{Recall that \(L_2^2(\mathbb{P} _n)(f, g) = \frac{1}{n}\sum_{i=1}^{n} \big(f(X_i) - g(X_i)\big)^2\), compared to \(L_2(\mathbb{P} )(f, g) = \int \big(f(x) - g(x)\big)^2 \,\mathrm{d} \mathbb{P} \).}
+	where the inner expectation is just the \hyperref[def:Rademacher-width]{Rademacher width} \(R_n (\{ f(x_1), \dots , f(x_n)\}_{f\in \mathscr{F} } )\).\footnote{We can also abuse the notation \(R_n(\mathscr{F} )\) by \(R_n (\{ f(x_1) / \sqrt{n} , \dots , f(x_n) / \sqrt{n} \}_{f\in \mathscr{F} } )\), but let's not do this.} Let \(X_f = \langle \epsilon , f \rangle / \sqrt{n} \), then \(\{ X_f \} _{f\in \mathscr{F} }\) is \hyperref[def:sub-Gaussian-process]{sub-Gaussian} w.r.t.\ \(L_2(\mathbb{P} _n)\).\footnote{Recall that \(L_2^2(\mathbb{P} _n)(f, g) = \frac{1}{n}\sum_{i=1}^{n} \big(f(X_i) - g(X_i)\big)^2\), compared to \(L_2(\mathbb{P} )(f, g) = \int \big(f(x) - g(x)\big)^2 \,\mathrm{d} \mathbb{P} \).}
 \end{prev}
 
 The obstacle we're facing is the lack of control of \(\sup _{f\in \mathscr{F} } \sqrt{\mathbb{P} f^2} \). Consider the following notion.
@@ -29,7 +29,7 @@ With this new notion, we can state the main bound we want, i.e., the \hyperref[t
 	Given a function class \(\mathscr{F} \) and an \hyperref[def:envelope]{envelope} \(F\) of \(\mathscr{F} \) such that \(\mathbb{P} F^2 < \infty \), then for \(x_1, \dots , x_n \overset{\text{i.i.d.}}{\sim } \mathbb{P} \),
 	\[
 		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
-		\leq 2R_n(\mathscr{F} )
+		\leq \frac{2}{\sqrt{n} } R_n(\mathscr{F} )
 		\leq C \lVert F \rVert _{L_2(\mathbb{P} )} \int_{0}^{1} \sqrt{\log \sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon \sqrt{\mu F^2} )}  \,\mathrm{d}\epsilon .
 	\]
 \end{theorem}
@@ -37,7 +37,8 @@ With this new notion, we can state the main bound we want, i.e., the \hyperref[t
 	Summarizing what we have established, we have
 	\begin{align*}
 		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \right]
-		 & \leq 2 \mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[\sup _{f\in \mathscr{F} } \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i) \right]  \right] \text{(\(= 2R_n (\mathscr{F} )\))}                                              \tag*{\hyperref[lma:symmetrization]{symmetrization}}                                                             \\
+		 & \leq 2 \mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[\sup _{f\in \mathscr{F} } \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i) \right]  \right]                                              \tag*{\hyperref[lma:symmetrization]{symmetrization}}                                                                                                \\
+		 & = \frac{2}{\sqrt{n} }R_n (\mathscr{F} )                                                                                                                                                                                                                                                                                                                  \\
 		 & \leq C\mathbb{E}_{x}\left[ \int_{0}^{\sup\limits _{f, g\in \mathscr{F} } \frac{L_2(\mathbb{P} _n)(f, g)}{2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right]                                                              \tag*{\hyperref[col:Dudley-integral-entropy-bound-finite-resolution]{Dudley's bound}} \\
 		 & \leq C\mathbb{E}_{x}\left[ \int_{0}^{\sup\limits _{f\in \mathscr{F} } \sqrt{\mathbb{P} _n f^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right]                                                                                                                                                                 \\
 		 & \leq C\mathbb{E}_{x}\left[ \int_{0}^{\sqrt{\mathbb{P} _n F^2} } \sqrt{\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon )} \,\mathrm{d}\epsilon \right]                                                                                                                                                                                                  \\

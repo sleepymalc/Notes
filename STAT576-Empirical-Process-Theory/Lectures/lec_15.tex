@@ -6,13 +6,13 @@ We start by asking the following question.
 	What makes a function class ``parametric'' or ``non-parametric''?
 \end{problem*}
 \begin{answer}
-	If it's a vector space, we have the linear algebra notion of dimension.
+	If the function class is a vector space, we can usually use the linear algebra notion of dimensio.
 \end{answer}
 
-Consider the following (not very precise) definition.
+Consider the following (not very precise) definition in terms of the \hyperref[def:Koltchinskii-Pollard-entropy]{uniform \(L_2\) entropy}.
 
 \begin{definition}[Parametric]\label{def:parametric}
-	A function class \(\mathscr{F} \) is \emph{parametric} if there exists a notion of dimension and a constant \(C\) such that
+	A function class \(\mathscr{F} \) is \emph{parametric} if there exists a notion of dimension \(\dim \mathscr{F} \) and a constant \(C\) such that
 	\[
 		\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) \leq \left( \frac{C}{\epsilon } \right) ^{\dim(\mathscr{F} )}.
 	\]
@@ -32,26 +32,33 @@ Consider the following (not very precise) definition.
 	\]
 \end{definition}
 
-Let's consider any \hyperref[def:parametric]{parametric} class \(\mathscr{F} \) bounded by \(1\) with \(\dim \mathscr{F} = d\). Then
+Let's consider any \hyperref[def:parametric]{parametric} class \(\mathscr{F} \) uniformly bounded by \(1\) with \(\dim \mathscr{F} = d\). Then from \hyperref[thm:Dudley]{Dudley's theorem}, the \hyperref[def:Rademacher-complexity]{Rademacher complexity} can be bounded as
 \[
 	\mathbb{E}_{x}\left[\mathbb{E}_{\epsilon }\left[\sup _{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(x_i) \right]  \right]
 	\leq \frac{12}{\sqrt{n} } \int_{0}^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon )} \,\mathrm{d}\epsilon
 	\leq \frac{12}{\sqrt{n} } \int_{0}^{1} \sqrt{d \log \frac{C}{\epsilon }} \,\mathrm{d}\epsilon
 	\leq C^{\prime} \sqrt{\frac{d}{n}}.
 \]
-Again, this result is distribution-free. Analogously, we want to know what we get for a \hyperref[def:non-parametric]{non-parametric} function class (uniform bounded by \(1\))? Now, since for a \hyperref[def:non-parametric]{non-parametric} class, the uniform \(L_2\) \hyperref[def:metric-entropy]{entropy} is \(\leq (C / \epsilon )^p\),
+Hence, we get the \hyperref[def:parametric]{parametric} rate \(O(\sqrt{d / n} )\), and this result is distribution-free.
+
+Analogously, we want to know what we will get for a \hyperref[def:non-parametric]{non-parametric} function class (uniform bounded by \(1\))? Now, since for a \hyperref[def:non-parametric]{non-parametric} class, the \hyperref[def:Koltchinskii-Pollard-entropy]{uniform \(L_2\) entropy} is \(\leq (C / \epsilon )^p\),
 \begin{align*}
-	\mathbb{E}_{\epsilon }\Bigg[ & \sup _{f\in \mathscr{F} } \underbrace{\frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i)}_{X_f \sim \Subg(L_2(\mathbb{P} _n))} \Bigg] \\
-	                             & \leq \mathbb{E}_{}\left[\sup _{\substack{f, g\in \mathscr{F} \colon                                                                      \\ L_2(\mathbb{P} _n) (f, g) \leq \delta }} X_f - X_g \right] + \int_{\delta }^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon )} \,\mathrm{d}\epsilon \tag*{modified \autoref{col:Dudley-integral-entropy-bound-finite-resolution}} \\
-	                             & \leq \sqrt{n} \cdot \delta + \int_{\delta }^{1} \left( \frac{C}{\epsilon } \right) ^{p / 2} \,\mathrm{d}\epsilon
+	 & \mathbb{E}_{\epsilon }\left[  \sup _{f\in \mathscr{F} } \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i)\right] \tag*{\(\displaystyle \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \epsilon _i f(x_i) = X_f \sim \Subg(L_2(\mathbb{P} _n))\)} \\
+	 & \leq \mathbb{E}_{}\left[\sup _{\substack{f, g\in \mathscr{F} \colon                                                                                                                                                                      \\ L_2(\mathbb{P} _n) (f, g) \leq \delta }} X_f - X_g \right] + \int_{\delta }^{1} \sqrt{\sup _\mu \log N(\mathscr{F} , L_2(\mu ), \epsilon )} \,\mathrm{d}\epsilon \tag*{modified \autoref{col:Dudley-integral-entropy-bound-finite-resolution}} \\
+	 & \leq \sqrt{n} \cdot \delta + \int_{\delta }^{1} \left( \frac{C}{\epsilon } \right) ^{p / 2} \,\mathrm{d}\epsilon
 \end{align*}
+
+Since the choice of \(\delta \) is arbitrary, we can optimize in terms of \(\delta \). There are three cases:
 \begin{itemize}
-	\item \(p < 2\): Take \(\delta = 0\) because the integral converges, and we get a bound for some constant \(c\):
+	\item \(p < 2\): Take \(\delta = 0\) because the integral converges, and we get a \hyperref[def:parametric]{parametric} rate bound for \(R_n\) with some constant \(c\):
 	      \[
 		      \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n}\sum_{i=1}^{n} \epsilon _i f(x_i) \right] \leq \frac{c}{\sqrt{n} }.
 	      \]
+	      \begin{remark}
+		      \(O(1 / \sqrt{n} )\) is a \hyperref[def:parametric]{parametric} rate.
+	      \end{remark}
 	      \begin{eg}
-		      1-D \hyperref[def:Holder-smooth-function-class]{Hölder smooth classes}.
+		      Consider \hyperref[def:Holder-smooth-function-class]{Hölder smooth classes}. Even though these function classes are \hyperref[def:non-parametric]{non-parametric} according to \autoref{def:non-parametric}, in terms of \(R_n\) or supremum of \hyperref[def:EP]{empirical process}, the rate is still \hyperref[def:parametric]{parametric}.
 	      \end{eg}
 	\item \(p > 2\): We see that for all \(\delta \in (0, 1)\),
 	      \begin{align*}
@@ -59,19 +66,19 @@ Again, this result is distribution-free. Analogously, we want to know what we ge
 		       & \leq \delta + \frac{1}{\sqrt{n} } \int_{\delta }^{1} \left( \frac{C}{\epsilon } \right) ^{p / 2} \,\mathrm{d}\epsilon        \\
 		       & = \delta + \frac{C^{p / 2}}{\sqrt{n} } \cdot \at{ \frac{\epsilon ^{-p / 2 + 1}}{1 - p / 2}}{\delta }{1}                      \\
 		       & \approx \delta + \frac{1}{\sqrt{n} } \at{(-\epsilon ^{-p / 2 + 1})}{\delta }{1} \tag*{dropping constant (\(1 - p / 2 < 0\))} \\
-		       & \leq \inf _{\delta \in (0, 1)} \delta + \frac{1}{\sqrt{n} } \delta ^{1 - p / 2}
-		      = O(n^{-1 / p}),
+		       & \approx \delta + \frac{1}{\sqrt{n} } \delta ^{1 - p / 2}.
 	      \end{align*}
-	      by solving the infimum by setting \(\delta = \delta ^{1 - p / 2} / \sqrt{n} \), we have \(\delta = n^{-1 / p}\).
+	      Now by optimizing over \(\delta \), setting \(\delta = \delta ^{1 - p / 2} / \sqrt{n} \), we get the bound \(O(n^{-1 / p})\).
 	      \begin{remark}
-		      \(O(n^{-1 / p})\) is a \hyperref[def:non-parametric]{non-parametric} rate.
+		      \(O(n^{-1 / p})\) is a \hyperref[def:non-parametric]{non-parametric} rate, strictly slower than the \hyperref[def:parametric]{parametric} rate \(O(n^{-1 / 2})\).
 	      \end{remark}
 
+	      This upper bound is also tight for certain function classes.
 	      \begin{eg}
-		      \(1\)-bounded and \(1\)-Lipschitz functions on \([0, 1]^d\).
+		      For \(1\)-bounded and \(1\)-Lipschitz functions on \([0, 1]^d\), the \hyperref[def:Koltchinskii-Pollard-entropy]{uniform \(L_2\) entropy} (in fact the \(L_\infty \) \hyperref[def:metric-entropy]{entropy}) grows like \((1 / \epsilon )^d\).
 	      \end{eg}
 	      \begin{explanation}
-		      Since \(\vert f(x) - f(y) \vert \leq \lVert x - y \rVert _2\), for \(d > 2\), \(p = d\).
+		      Since \(\vert f(x) - f(y) \vert \leq \lVert x - y \rVert _2\), \(O(n^{-1 / d})\) rate here is tight for \(d > 2\).
 	      \end{explanation}
 	\item \(p = 2\): From the same calculation, we have
 	      \begin{align*}
@@ -81,18 +88,18 @@ Again, this result is distribution-free. Analogously, we want to know what we ge
 		       & = \delta + \frac{C}{\sqrt{n} } \ln \frac{1}{\delta}
 		      = O\left( \frac{1}{\sqrt{n} } \log n \right)
 	      \end{align*}
-	      by setting \(\delta = O(1 / \sqrt{n} )\).
+	      by setting \(\delta = O(1 / \sqrt{n} )\). Hence, the \hyperref[def:Rademacher-complexity]{Rademacher complexity} is bounded by \(\log n / \sqrt{n} \), which is ``almost'' the \hyperref[def:parametric]{parametric} rate up to the extra \(\log \) factor. This might not be tight.
 \end{itemize}
 
 \begin{remark}
-	To summarize, we have the following.
+	To summarize, we have the following bounds on the \hyperref[def:Rademacher-complexity]{Rademacher complexity}:
 	\begin{itemize}
 		\item \hyperref[def:parametric]{Parametric class}: \(C \sqrt{d / n} \).
 		\item \hyperref[def:non-parametric]{Non-parametric class}:
 		      \begin{itemize}
-			      \item \(p < 2\): \(\sqrt{c / n} \);
-			      \item \(p = 2\): \(c \log n / \sqrt{n} \);
-			      \item \(p > 2\): \(c\cdot n^{-1 / p}\).
+			      \item \(p < 2\): \(C \sqrt{1 / n} \);
+			      \item \(p = 2\): \(C \log n / \sqrt{n} \);
+			      \item \(p > 2\): \(C \cdot n^{-1 / p}\).
 		      \end{itemize}
 	\end{itemize}
 \end{remark}
@@ -121,14 +128,14 @@ Again, this result is distribution-free. Analogously, we want to know what we ge
 		N(B_2^d, \lVert \cdot \rVert _2, \epsilon )
 		\leq \left( 1 + \frac{2}{\epsilon } \right)^d,
 	\]
-	so we get a \(\sqrt{d / n} \) rate since this satisfies \hyperref[def:parametric]{parametric} condition.\footnote{In high dimension situation, this bound can be loose.} However, one can show
-	\[
-		\log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon ) \leq \frac{1}{\epsilon ^2},
-	\]
-	i.e., a dimension-free bound, hence \(\mathscr{F} \) also behaves like a \hyperref[def:non-parametric]{non-parametric} class!
+	so we get a \(\sqrt{d / n} \) rate since this satisfies \hyperref[def:parametric]{parametric} condition.\footnote{In high dimension situation, this bound can be loose.}
 \end{eg}
 
-We make an important remark.
+It turns out that one can use the norm constraints to also show that
+\[
+	\sup _\mu \log N(\mathscr{F} , L_2(\mathbb{P} _n), \epsilon ) \leq \frac{C}{\epsilon ^2},
+\]
+i.e., a dimension-free bound, hence \(\mathscr{F} \) also behaves like a \hyperref[def:non-parametric]{non-parametric} class! This bound will be useful in high dimensional setting when \(d\) is not small compared to \(n\). Thus, we make this an important remark.
 
 \begin{remark}
 	A function class can be viewed as \hyperref[def:parametric]{parametric} and \hyperref[def:non-parametric]{non-parametric} at the same time.

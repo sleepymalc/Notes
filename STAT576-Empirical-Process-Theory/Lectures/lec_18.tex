@@ -1,0 +1,104 @@
+\lecture{18}{11 Oct.\ 9:00}{Beyond Uniform Entropy Bound: Bracketing Bound}
+\section{Bracketing Bound}
+\begin{prev}
+	So far, we have the \hyperref[thm:uniform-entropy-integral-bound]{uniform entropy bound}
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert \right]
+		\leq \frac{c}{\sqrt{n} } \lVert F \rVert _{L_2(\mathbb{P} )} \int_{0}^{1} \sqrt{\log \sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon \lVert F \rVert _{L_2(\mathbb{P} )})}  \,\mathrm{d}x,
+	\]
+	where \(F\) is an \hyperref[def:envelope]{envelope} of \(\mathscr{F} \).
+\end{prev}
+
+In this lecture, we will see another bound using bracketing (recall \autoref{prop:bracketing}).
+
+\begin{definition}[\(\epsilon \)-bracket]\label{def:eps-bracket}
+	Given a probability measure \(\mathbb{P} \) on \(\chi \) and two functions \(\ell , u\colon \chi \to \mathbb{R} \), an \emph{\(\epsilon \)-bracket}, denoted as \([\ell , u]\), is defined as
+	\[
+		[\ell , u] \coloneqq \{ f\colon \chi \to \mathbb{R} \colon \ell (x) \leq f(x) \leq u(x) \text{ for all } x\in \chi  \}
+	\]
+	such that \(\lVert u - \ell \rVert _{L_2(\mathbb{P} )} \leq \epsilon \).\footnote{This is the \(L_2(\mathbb{P} )\) size of \([\ell , u]\).}
+\end{definition}
+
+\begin{definition}[Bracketing number]\label{def:bracketing-number}
+	For every \(\epsilon > 0\), the \emph{\(\epsilon \)-bracketing number} \(N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon )\) of a function class \(\mathscr{F} \) from \(\chi \) to \(\mathbb{R} \) is defined as the smallest number of \hyperref[def:eps-bracket]{\(\epsilon \)-brackets} such that every \(f\in \mathscr{F} \) belongs to only one of the \hyperref[def:eps-bracket]{brackets}.
+\end{definition}
+
+
+\begin{lemma}
+	For every \(\epsilon > 0\), \(N(\mathscr{F} , L_2(\mathbb{P} ), \epsilon / 2) \leq N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon )\).
+\end{lemma}
+\begin{proof}
+	Consider \hyperref[def:eps-bracket]{\(\epsilon \)-brackets} \([\ell _i, u_i]\) for \(i = 1, \dots , N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon )\), then \(\{ (\ell _i + u_i) / 2 \}_i\) forms an \hyperref[def:eps-net]{\(\epsilon / 2\)-net} since for any \(f\in\mathscr{F} \) and any \(x\in \chi \),
+	\[
+		\left\lVert f - \frac{u_i + \ell _i}{2} \right\rVert _{L_2(\mathbb{P} )}
+		\leq \left\lVert \frac{u_i - \ell _i}{2} \right\rVert _{L_2(\mathbb{P} )}
+		\leq \frac{\epsilon}{2}
+	\]
+	from the fact that \(u_i \geq f \geq \ell _i\) and \(\lVert u_i - \ell _i \rVert _{L_2(\mathbb{P} )} \leq \epsilon \).
+\end{proof}
+
+Let's see one simple example of computing \hyperref[def:eps-bracket]{bracketing functions}.
+
+\begin{eg}
+	Let \(\mathscr{F} = \{ \mathbbm{1}_{[-\infty , t]} \colon t \in \mathbb{R}  \} \) and \(\mathbb{P} \) be a probability measure on \(\mathbb{R} \). Then for all \(\epsilon > 0\),
+	\[
+		N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ) , \epsilon ) \leq 1 + 1 / \epsilon.
+	\]
+\end{eg}
+\begin{explanation}
+	Let \(t_0 = -\infty \), and recursively define \(t_i = \sup \{x\colon x> t_{i-1} \colon \mathbb{P}((t_{i-1}, x]) \leq \epsilon \} \). Finally, let \(k \geq 1\) be the smaller integer such that \(t_k = \infty \). We then have
+	\begin{itemize}
+		\item \(\mathbb{P} ((t_{i-1} , t_i))\leq \epsilon \): for every \(\delta > 0\), \(\mathbb{P} ((t_{i-1}, t_i - \delta ]) \leq \epsilon \), as \(\delta \to 0\), \(\mathbb{P} ((t_{i-1} , t_i)) \leq \epsilon \).
+		\item \(\mathbb{P} ((t_{i-1}, t_i]) \geq \epsilon \): for every \(\delta > 0\), \(\mathbb{P} ((t_{i-1}, t_i + \delta ]) > \epsilon \), as \(\delta \to 0\), \(\mathbb{P} ((t_{i-1}, t_i]) \geq \epsilon \).
+	\end{itemize}
+	Then,
+	\[
+		1
+		= \mathbb{P} ((-\infty , \infty ))
+		\geq \sum_{i=1}^{k} \mathbb{P} ((t_{i-1}, t_i])
+		\geq (k-1) \epsilon,
+	\]
+	implying \(k \leq 1 + \frac{1}{\epsilon }\). Specifically, consider the \hyperref[def:eps-bracket]{brackets} \([\mathbbm{1}_{(-\infty , t_{i-1})} , \mathbbm{1}_{(-\infty , t_i)} ]\) which cover \(\mathscr{F} \) with \(L_2(\mathbb{P} )\) size equal to \(\mathbb{P} ((t_{i-1} , t_i)) \leq \epsilon \). Hence, this is a set of valid \hyperref[def:eps-bracket]{\(\epsilon \)-brackets} with size \(\leq 1 + 1 / \epsilon \).
+\end{explanation}
+\begin{proposition}
+	Let \(\mathscr{F} \) to be a function class such that \(N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon ) < \infty \) for all \(\epsilon > 0\). Then,
+	\[
+		\sup _{f\in\mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert \overset{\text{a.s.} }{\to } 0.
+	\]
+\end{proposition}
+\begin{proof}
+	Fix \(\epsilon > 0\), let \([\ell _i, u_i]\) for \(i = 1, \dots , N\) to be a set of \hyperref[def:eps-bracket]{\(\epsilon \)-brackets}. Then, it suffices to show\footnote{It then implies \(\limsup_{n \to \infty} \vert \mathbb{P} _n f - \mathbb{P} f \vert \leq \epsilon \) almost surely just by the law of large number. By taking \(\epsilon = 1 / m\) to \(0\), we can say that \(\vert \mathbb{P} _n f - \mathbb{P} f \vert \to 0\) almost surely.}
+	\[
+		\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert
+		\leq \left( \max _{1 \leq i \leq N } \max (\vert \mathbb{P} _n u_i - \mathbb{P} u_i \vert , \vert \mathbb{P} _n \ell _i - \mathbb{P} \ell _i \vert ) \right) + \epsilon.
+	\]
+	To show this, let \(f\in [\ell _i, u_i]\) for some \(i\), then
+	\[
+		\mathbb{P} _n f - \mathbb{P} f
+		\leq (\mathbb{P} _n u_i - \mathbb{P} u_i) + (\mathbb{P} u_i - \mathbb{P} f)
+		\leq (\mathbb{P} _n u_i - \mathbb{P} u_i) + \mathbb{P} (u_i - \ell _i)
+		\leq \mathbb{P} _n u_i - \mathbb{P} u_i + \epsilon
+	\]
+	since \(\mathbb{P} (u_i - \ell _i) \leq \lVert u_i - \ell _i \rVert _{L_2(\mathbb{P} )} \leq \epsilon \). On the other hand, we also have
+	\[
+		\mathbb{P} f - \mathbb{P} _n f
+		\leq (\mathbb{P} f - \mathbb{P} \ell _i) + (\mathbb{P} \ell _i - \mathbb{P} _n \ell _i)
+		\leq (\mathbb{P} u_i - \mathbb{P} \ell _i) + (\mathbb{P} \ell _i - \mathbb{P} _n \ell _i)
+		\leq \vert \mathbb{P} _n \ell _i - \mathbb{P} \ell _i \vert + \epsilon,
+	\]
+	hence we're done.
+\end{proof}
+
+\begin{theorem}[Bracketing bound]\label{thm:bracketing-bound}
+	Let \(F\) be an \hyperref[def:envelope]{envelope} of \(\mathscr{F} \) such that \(\mathbb{P} F^2 < \infty \). Then for some constant \(C > 0\),
+	\[
+		\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} (\mathbb{P} _n f - \mathbb{P} f) \right]
+		\leq C \lVert F \rVert _{L_2(\mathbb{P} )} \int_{0}^{1} \sqrt{\log N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon \lVert F \rVert _{L_2(\mathbb{P} )})}  \,\mathrm{d}\epsilon .
+	\]
+\end{theorem}
+
+It's the same as the \hyperref[thm:uniform-entropy-integral-bound]{uniform entropy bound}, except that the \hyperref[def:covering-number]{covering number} is replaced by \hyperref[def:bracketing-number]{bracketing number}.
+
+\begin{remark}
+	We do not have the \(\sup _\mu \), hence the \hyperref[thm:bracketing-bound]{bracketing bound} is only w.r.t.\ \(\mathbb{P} \).
+\end{remark}

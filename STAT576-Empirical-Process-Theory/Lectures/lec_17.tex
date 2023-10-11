@@ -1,1 +1,105 @@
-\lecture{17}{6 Oct.\ 9:00}{}
+\lecture{17}{6 Oct.\ 9:00}{Perceptron Algorithm}
+\begin{prev}
+	In the \hyperref[eg:lec16]{previous example}, we state that the \hyperref[def:fat-shattering-dimension]{fat-shattering dimension} for a linear function class is \(\VC(\mathcal{F}, \epsilon) \leq d\), which is not dimension free.	1
+\end{prev}
+
+If we further impose a norm constraint \(\lVert w \rVert _2\), then a dimension-free bound can be obtained; specifically, for all \(\epsilon > 0\), we can show that
+\[
+	\VC(\mathcal{F}, \epsilon) \leq \frac{C}{\epsilon^2}
+\]
+where \(C\) is some constant. To prove the above, we can use the \hyperref[algo:perceptron]{perceptron algorithm}.
+
+\begin{algorithm}[H]\label{algo:perceptron}
+	\DontPrintSemicolon
+	\caption{Perceptron Algorithm}
+	\KwData{A data sequence \(\{ (x_i, y_i) \} _{i = 1}^{T}\), observed one-by-one}
+	\KwResult{A linear function with weight \(w\)}
+	\SetKwFunction{unif}{uniform}
+	\BlankLine
+
+	\(\hat{w} _1\gets 0\)\;
+	\For(){\(t = 1, \dots  , T\)}{
+	observe \(x_t \in \chi \)\Comment*[r]{data}
+	\(\hat{y} _t \gets \sgn(\hat{w} _t ^{\top} x_t)\)\Comment*[r]{predict \(\hat{y} _t\)}
+	observe \(y_t \in \{ \pm 1 \} \)\Comment*[r]{true label}
+	\(\hat{w} _{t+1} \gets \hat{w} _t + \mathbbm{1}_{\hat{y} _t \neq y_t} y_t x_t\)\;
+	}
+	\Return{\(\hat{w} _{T+1}\)}\;
+\end{algorithm}
+
+\begin{remark}
+	Suppose there exists \(w\) such that \(y_t = 1\) whenever \(w^{\top} x_t \geq 0\), and \(y_t = -1\) whenever \(w^{\top} x_t < 0\), then \(y_t w^{\top} x_t > 0\).
+\end{remark}
+
+The following lemma (see, e.g.,~\cite{novikoff1962convergence}) provides an error bound for the \hyperref[algo:perceptron]{perceptron algorithm}.
+
+\begin{lemma}[Perceptron Mistake Bound]\label{lma:perceptron-mistake-bound}
+	For any sequence \((x_1, y_1), \ldots, (x_T, y_T) \in B_2^d \times \{\pm 1\}\), the \hyperref[algo:perceptron]{perceptron algorithm} makes at most \(1/\gamma^2\) mistakes, where
+	\[
+		\gamma = \max_{w \in B_2^d} \min_{1 \leq t \leq T} y_t w^{\top} x_t
+	\]
+	is the margin of the data sequence \(\{ (x_i, y_i) \} _{i = 1}^T\).
+\end{lemma}
+\begin{proof}
+	Let \(M\) be the total number of mistakes make when running the \hyperref[algo:perceptron]{perceptron algorithm}. Suppose a mistake is made in round \(t\), then
+	\[
+		\lVert \hat{w}_{t+1} \rVert ^2
+		= \lVert \hat{w}_t +y_t x_t \rVert ^2
+		= \lVert \hat{w} _t \rVert ^2 + 2 \underbrace{\langle \hat{w} _t, y_t x_t \rangle}_{\leq 0} + \lVert x_t \rVert ^2
+		\leq \lVert \hat{w}_t \rVert ^2 + 1,
+	\]
+	implying that \(\lVert \hat{w}_{t+1} \rVert \leq \sqrt{M}\).
+
+	Now, consider the margin \(\gamma\): when \(\gamma \) is achieved at \(w = w^{\ast} \), \(\gamma \leq y_t (w^{\ast})^{\top} x_t\); moreover, if there is a mistake at round \(t\),
+	\[
+		\gamma
+		\leq y_t (w^{\ast})^{\top} x_t
+		= (w^{\ast})^{\top} (\hat{w}_{t+1} -\hat{w}_t)
+	\]
+	since \(y_t x_t = \hat{w} _{t+1} - \hat{w} _t\) in this case. Summing the above over \(t\) results in a telescoping sum
+	\[
+		M \gamma \leq (w^{\ast})^{\top} \hat{w}_{T+1}
+		\leq \lVert w^{\ast} \rVert \lVert \hat{w}_{T+1} \rVert
+		\leq \lVert \hat{w}_{T+1} \rVert
+		\leq \sqrt{M},
+	\]
+	hence \(M \leq 1 / \gamma ^2\).
+\end{proof}
+
+We are now ready to prove the following.
+
+\begin{theorem}
+	Let \(\chi = B_2^d\), and \(\mathscr{F} = \{ x \mapsto w^{\top} x \colon w \in B_2^d \} \). Then for all \(\epsilon > 0\),
+	\[
+		\VC(\mathscr{F} , \epsilon ) \leq \frac{4}{\epsilon ^2}.
+	\]
+\end{theorem}
+\begin{proof}
+	Suppose \(\{x_1, \ldots, x_T\}\) is \hyperref[def:eps-shattered]{\(\epsilon\)-shattered} by \(\mathcal{F}\). Then, there exists \(t_1, \ldots, t_n \in [-1,1]\) such that for all \(S \subset \{1, \ldots , n\}\), there exists \(w_S \in B_2^d\) such that
+	\[
+		\begin{dcases}
+			w_S^{\top} x_i \geq t_i +\frac{\epsilon}{2}, & \text{ if } i \in S ;   \\
+			w_S^{\top} x_i \leq t_i -\frac{\epsilon}{2}, & \text{ if } i \notin S.
+		\end{dcases}
+	\]
+	Let \(\widetilde{x}_i = (x_i, t_i) \in \mathbb{R} ^{d+1}\) and \(\widetilde{w}_S = (w_S, -1) \in \mathbb{R} ^{d+1}\), we can rewrite the above as
+	\[
+		\begin{dcases}
+			\widetilde{w}_S^{\top} \widetilde{x}_i \geq \frac{\epsilon}{2},  & \text{ if } i \in S ;    \\
+			\widetilde{w}_S^{\top} \widetilde{x}_i \leq -\frac{\epsilon}{2}, & \text{ if } i \notin S .
+		\end{dcases}
+	\]
+	Equivalently, for any sign vector \(y\in \{ \pm 1 \} ^T\), there exists \(\widetilde{w} _y\) such that for all \(i\), \(y_i \widetilde{w} _y ^{\top} \widetilde{x} _i \geq \epsilon / 2\), i.e., the margin \(\gamma \geq \epsilon / 2\). This means that if we run the \hyperref[algo:perceptron]{perceptron algorithm} with \(\{\widetilde{x}_i, y_i\}_{i=1}^T\) such that
+	\[
+		y_i = - \hat{y} _i = \sgn (\hat{w} _t ^{\top} x_t),
+	\]
+	i.e., the \hyperref[algo:perceptron]{perceptron algorithm} makes mistake every round, i.e., \(M = T\). But since \(\gamma \geq \epsilon / 2\), \(M \leq 4/\epsilon^2\) from the \hyperref[lma:perceptron-mistake-bound]{perceptron mistake bound}. Combining these two, we have \(T = M \leq 4 / \epsilon ^2\) if a size \(T\) subset of \(\chi \) is \hyperref[def:eps-shattered]{\(\epsilon\)-shattered} by \(\mathcal{F}\), i.e., \(\VC(\mathscr{F} , \epsilon ) \leq 4 / \epsilon ^2\).
+\end{proof}
+
+\begin{remark}
+	We can try to use the above together with the \hyperref[thm:Mendelson-Vershynin]{Mendelson-Vershynin theorem}.
+\end{remark}
+
+\begin{remark}
+	Suppose \(f_1,\ldots,f_d\) are linearly independent. If \(\mathcal{F} = \{\sum_{i=1}^d c_i f_i\}\), \(\VC(\mathcal{F}, \epsilon) = d\) for all \(\epsilon > 0\).
+\end{remark}

@@ -1,0 +1,185 @@
+\lecture{19}{13 Oct.\ 9:00}{Applications to \(M\)-Estimators}
+The following shows that using the \hyperref[def:bracketing-number]{bracketing number} is more tractable than using the uniform \(L_2\) \hyperref[def:covering-number]{covering number}.
+
+\begin{lemma}[Parametric Lipschitz functin class]\label{lma:parametric-Lipschitz}
+	Let \(\Theta \subseteq \mathbb{R} ^d\) be constrained in an \(L_2\) ball of radius \(R\), and let \(\mathscr{F} = \{ m_\theta \colon \chi \to \mathbb{R} \colon \theta \in \Theta  \} \) be a function class indexed by \(\theta \). Suppose there exists a function \(M(x)\) with \(\lVert M \rVert _{L_2(\mathbb{P} )} < \infty \) such that
+	\[
+		\vert m_{\theta _1}(x) - m_{\theta _2}(x) \vert
+		\leq M(x) \lVert \theta _1 - \theta _2 \rVert _2
+	\]
+	for all \(x\in \chi \) and \(\theta _1, \theta _2 \in \Theta \). Then, for all \(\epsilon > 0\),
+	\[
+		N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon \lVert M \rVert _{L_2(\mathbb{P} )}) \leq \left( 1 + \frac{4R}{\epsilon } \right) ^d.
+	\]
+\end{lemma}
+\begin{proof}
+	Let \(\{ \theta _i \}_{i=1}^N\) be a maximal \hyperref[def:eps-packing]{\(\epsilon / 2\)-packing} of \(\Theta \), and consider the following \hyperref[def:eps-bracket]{brackets}:
+
+	\begin{claim}
+		The \hyperref[def:eps-bracket]{brackets} \([m_{\theta _i} \pm \epsilon M / 2]\) for \(i = 1, \dots , N\) cover \(\mathscr{F} \).
+	\end{claim}
+	\begin{explanation}
+		First, note that a maximal \hyperref[def:eps-packing]{packing set} is indeed a \hyperref[def:eps-net]{covering net} with the same \(\epsilon \). Therefore, for all \(m_\theta \in \mathscr{F} \), there exists \(i\) such that \(\lVert \theta - \theta _i \rVert _2 \leq \epsilon / 2\), hence
+		\[
+			\vert m_\theta (x) - m_{\theta _i}(x) \vert
+			\leq M(x) \lVert \theta - \theta _i \rVert _2
+			\leq M(x) \frac{\epsilon}{2},
+		\]
+		for all \(x\in \chi \), i.e., \(m_\theta \in [m_{\theta _i} \pm \epsilon M / 2]\). This means the \hyperref[def:eps-bracket]{brackets} \([m_{\theta _i} \pm \epsilon M / 2]\) cover \(\mathscr{F} \).
+	\end{explanation}
+	Furthermore, the size of each \hyperref[def:eps-bracket]{bracket} is \(\epsilon \lVert M \rVert _{L_2(\mathbb{P} )}\), with \autoref{prop:packing-covering}, we're done.
+\end{proof}
+
+Some examples of the parametric Lipschitz function classes are the following.
+
+\begin{eg}
+	For \(m_\theta (x) = \theta ^{\top} x\), \(\vert \theta _1 ^{\top} x - \theta _2 ^{\top} x \vert \leq \lVert \theta _1 - \theta _2 \rVert _2 \lVert x \rVert _2\) from \href{https://en.wikipedia.org/wiki/Cauchy-Schwarz_inequality}{Cauchy-Schwarz}. Hence, \(M(x) = \lVert x \rVert _2\). For \autoref{lma:parametric-Lipschitz} to apply, consider \(\mathbb{P} \) such that \(\mathbb{P} \lVert x \rVert < \infty \).
+\end{eg}
+
+\begin{eg}[Quantile regression]
+	For \(m_\theta (x) = \vert x - \theta \vert \), \(\vert m_{\theta _1}(x) - m_{\theta _2}(x) \vert \leq \vert \theta _1 - \theta _2 \vert \) with \(M(x) =1\). In this case, since any measure \(\mathbb{P} \) gives \(\mathbb{P} 1 < \infty \), so \autoref{lma:parametric-Lipschitz} applies for all \(\mathbb{P} \).
+\end{eg}
+
+The above examples extends to essentially all \(p\)-norm.
+
+\begin{eg}
+	\(m_\theta (x) = \lVert x - \theta  \rVert _p\).
+\end{eg}
+
+Finally, let's see some standards result on the \hyperref[def:bracketing-number]{bracketing numbers}.
+
+\begin{eg}[\(\alpha \)-Hölder smooth function class]
+	For \(\mathcal{S} _\alpha \) on \([0, 1] \to [0, 1]\),
+	\[
+		\log N_{[\ ]}(\mathcal{S} _\alpha , L_2(\mathbb{P} ), \epsilon )
+		\leq C\left( \frac{1}{\epsilon } \right) ^\alpha .
+	\]
+\end{eg}
+
+\begin{eg}
+	Let \(\mathcal{M} \) be the monotone function class on \(\mathbb{R} \to [0, 1]\),
+	\[
+		\log N_{[\ ]}(\mathcal{M} , L_2(\mathbb{P} ), \epsilon )
+		\leq C \left( \frac{1}{\epsilon } \right).
+	\]
+\end{eg}
+
+\begin{eg}
+	Consider \(\mathcal{C} \) be the set of convex function class on \([0, 1] \to [0, 1]\). Let \(\mathcal{U} \) be the uniform distribution on \([0, 1]\). Then
+	\[
+		\log N_{[\ ]}(\mathscr{C} , L_2(\mathcal{U} ), \epsilon )
+		\leq C \left( \frac{1}{\sqrt{\epsilon } } \right) .
+	\]
+\end{eg}
+
+More examples are available in~\cite{vandervaartWeakConvergenceEmpirical1996}. To conclude this section, we ask the following:
+
+\begin{problem}
+Is there a function class for which the \hyperref[thm:uniform-entropy-integral-bound]{uniform entropy bound} is infinite, while the \hyperref[thm:bracketing-bound]{bracketing bound} is finite?
+\end{problem}
+\begin{answer}
+	Yes! For boolean function class \(\mathscr{F} \), \(\VC(\mathscr{F} ) < \infty \), hence \(\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) < \infty \) by the \hyperref[thm:Dudley]{Dudley's theorem}. It's also true that \(\VC(\mathscr{F} ) = \infty \), then for all \(\epsilon < 1 / 2\), the \hyperref[thm:Dudley]{Dudley's theorem} gives \(\infty \) for \(\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon )\).
+
+	However, it's possible that when \(\VC(\mathscr{F} ) = \infty \), \(\mathscr{F} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli} w.r.t.\ some \(\mathbb{P} \).
+\end{answer}
+
+\begin{eg}
+	Let \(\mathscr{F} = \{ \mathbbm{1}_{C} \colon \text{\(C\) is compact convex subset of \([0, 1]^d\) }  \} \). Then \(\VC(\mathscr{F} )= \infty \), and \(\mathscr{F} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli} w.r.t.\ any \(\mathbb{P} \) having a density w.r.t.\ the Lebesgue measure.
+\end{eg}
+
+\begin{lemma}
+	Let \(\mathscr{F} \) be a class of function uniformly bounded by \(1\). Then for every \(\epsilon > 0\),
+	\[
+		\frac{1}{8}\VC(\mathscr{F} , 4\epsilon )
+		\leq \log \sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon )
+	\]
+\end{lemma}
+
+\chapter{Applications to \(M\)-Estimation}
+In this chapter, we will define the ``rate of convergence'' for \(M\)-estimators, and look at some examples.
+
+\section{Problem Setup and a Running Example}
+Consider the problem of \hyperref[prb:M-estimation]{\(M\)-estimation}:
+
+\begin{problem}[\(M\)-estimation]\label{prb:M-estimation}
+Let \(\Theta \) be an abstract parameter space,\footnote{E.g., \(\mathbb{R} ^d\), or some function spaces.} and let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \) be the data. Let \(M(\theta ) \colon \Theta \to \mathbb{R} \), and let \(M_n\colon \Theta \to \mathbb{R} \) be a stochastic process or random functions depend on \(X_1, \dots , X_n\). Let the true parameter be
+\[
+	\theta _0 = \argmax_{\theta \in \Theta } M(\theta ),
+\]
+and the goal is to estimate \(\theta _0\). We minimize \(M_n(\theta )\) instead and find
+\[
+	\hat{\theta} _n = \argmax_{\theta \in \Theta } M_n(\theta ).
+\]
+Typically, for each fixed \(\theta \in \Theta \), we have \(M_n(\theta ) \overset{p}{\to } M(\theta )\).
+\end{problem}
+
+We have seen some examples in the beginning of the class.
+
+\begin{eg}[\defaultS\ref{subsec:M-estimators}]
+	Mean, Quantile, and Mode estimation.
+\end{eg}
+
+\begin{eg}[Least square estimation]
+	Let \((X_1, Y_1), \dots , (X_n, Y_n) \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and let \(\Theta = \mathscr{F} \). Consider \(M(f) = - \mathbb{P} (y - f(x))^2\) and \(M_n(f) = -\mathbb{P} _n (y - f(x))^2\).
+\end{eg}
+
+\begin{eg}[ERM in classification]
+	Let \(M(f) = - \mathbb{P} (y \neq \sgn (f(x)))\) and \(M_n(f) = -\mathbb{P} _n(y \neq \sgn (f(x)))\).
+\end{eg}
+
+\begin{eg}[MLE]
+	Let \(M(\theta ) = p \log p_\theta \) and \(M_n(\theta ) = p_n \log p_\theta \), where \(\{ p_\theta  \}_{\theta \in \Theta } \) is a class of densities w.r.t.\ some measure.
+\end{eg}
+
+We then have three questions (progressively harder) we can ask for an \hyperref[prb:M-estimation]{\(M\)-estimator}.
+\begin{enumerate}[(a)]
+	\item Is the estimator ``consistent''? I.e., does \(d(\hat{\theta} _n, \theta _0) \overset{p}{\to } 0\) as \(n\to \infty \) for some \hyperref[def:pseudo-metric]{metric} \(d\)?
+	\item What's the ``rage of convergence''? E.g., the rate for the mean is \(O(1 / \sqrt{n} )\).
+	\item What is the limiting (asymptotic) distribution of \(\hat{\theta} - \theta _0\)?
+\end{enumerate}
+
+\subsection{Running Example}
+In the remaining class, we will consider the \hyperref[prb:sample-mode]{sample mode} as our running example.
+
+\begin{problem}[Sample Mode]\label{prb:sample-mode}
+Suppose we have \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} _{\theta _0}\) supported on \(\mathbb{R} \) such that \(\mathbb{P} _{\theta _0}\) has smooth and bounded density \(p_{\theta _0} (x)\) w.r.t.\ Lebesgue measure, with \(p^{\prime} _{\theta _0} (x) > 0\) for \(x < \theta _0\), and \(p^{\prime} _{\theta _0} (x) < 0\) for \(x > \theta _0\). Consider
+\[
+	M(\theta ) = -\mathbb{P} _{\theta _0}(\theta -1 \leq X \leq \theta +1),
+\]
+so the true parameter \(\theta _0 = \argmin_{\theta \in \Theta } M(\theta )\) is the mode. Let
+\[
+	M_n(\theta ) = -\frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{\theta -1 \leq X_i \leq \theta +1},
+\]
+and let \(\hat{\theta} _n = \argmin_{\theta \in \Theta } M_n(\theta )\), i.e., the sample mode.
+\end{problem}
+
+\begin{remark}
+	Notice that in the \hyperref[prb:sample-mode]{sample mode} example, we can check that
+	\begin{itemize}
+		\item \(M^{\prime} (\theta _0) = 0\);
+		\item \(M^{\prime} (\theta ) < 0\) when \(\theta < 0\), and \(M^{\prime} (\theta ) > 0\) when \(\theta > 0\);
+		\item \(M^{\prime\prime} (\theta ) > 0\).
+	\end{itemize}
+	These conditions guarantee that \(\theta _0\) is the unique minimum.
+\end{remark}
+
+To check the consistency, recall the ``basic inequality'' step, i.e.,
+\[
+	\vert M(\hat{\theta} _n) - M(\theta _0) \vert
+	= \vert M(\hat{\theta} _n) - M_n(\hat{\theta} _n) + \underbrace{M_n(\hat{\theta} _n) - M_n(\theta _0)}_{\leq 0} + M_n(\theta _0) - M(\theta _0) \vert
+	\leq 2 \sup _{\theta \in \Theta } \vert M_n(\theta ) - M(\theta ) \vert.
+\]
+
+In the example of \hyperref[prb:sample-mode]{sample mode} example, denote \(m_\theta (x) = \mathbbm{1}_{\theta -1 \leq x \leq \theta +1} \), and \(\mathscr{F} = \{ m_\theta \colon \theta \in \mathbb{R} \} \), then \(M_n(\theta ) = \mathbb{P} _n m_\theta \) and \(M(\theta ) = \mathbb{P} m_\theta \). We have
+\[\sup _{\theta \in \Theta } \vert M_n(\theta ) - M(\theta ) \vert
+	= \sup _{\theta \in \mathbb{R} }\vert \mathbb{P} _n m_\theta - \mathbb{P} m_\theta  \vert
+	\overset{p}{\to } 0
+\]
+since \(\VC(\mathscr{F} ) = 2\). Hence, we conclude that \(M(\hat{\theta} ) - M(\theta _0) \overset{p}{\to } 0\) as \(n \to \infty \).
+
+\begin{problem*}
+	Does \(\hat{\theta} \to \theta _0\), i.e., does \(d(\hat{\theta} , \theta _0) \to 0\)?
+\end{problem*}
+\begin{answer}
+	Need to relate the \(d\) to \(M\) function.
+\end{answer}

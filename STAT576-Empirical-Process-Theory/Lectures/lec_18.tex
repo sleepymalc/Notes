@@ -19,7 +19,7 @@ Consider the following.
 	\[
 		[\ell , u] \coloneqq \{ f\colon \chi \to \mathbb{R} \colon \ell (x) \leq f(x) \leq u(x) \text{ for all } x\in \chi  \}
 	\]
-	such that \(\lVert u - \ell \rVert _{L_2(\mathbb{P} )} \leq \epsilon \).\footnote{This is the \(L_2(\mathbb{P} )\) size of \([\ell , u]\).}
+	such that \(\lVert u - \ell \rVert _{L_2(\mathbb{P} )} \leq \epsilon \).\footnote{This is the \(L_2(\mathbb{P} )\) size of \([\ell , u]\), i.e., \(\left( \int _\chi (u(x) - \ell (x))^2 \mathbb{P} (\,\mathrm{d} x) \right) ^{1 / 2}\).}
 \end{definition}
 
 \begin{definition}[Bracketing number]\label{def:bracketing-number}
@@ -45,11 +45,15 @@ Let's see one simple example of computing \hyperref[def:eps-bracket]{bracketing 
 \begin{eg}
 	Let \(\mathscr{F} = \{ \mathbbm{1}_{[-\infty , t]} \colon t \in \mathbb{R}  \} \) and \(\mathbb{P} \) be a probability measure on \(\mathbb{R} \). Then for all \(\epsilon > 0\),
 	\[
-		N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ) , \epsilon ) \leq 1 + 1 / \epsilon.
+		N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ) , \epsilon ) \leq 1 + 1 / \epsilon^2 .
 	\]
 \end{eg}
 \begin{explanation}
-	Let \(t_0 = -\infty \), and recursively define \(t_i = \sup \{x\colon x> t_{i-1} \colon \mathbb{P}((t_{i-1}, x]) \leq \epsilon \} \). Finally, let \(k \geq 1\) be the smaller integer such that \(t_k = \infty \). We then have
+	We show this by finding a collection of \hyperref[def:eps-bracket]{\(\sqrt{\epsilon }\)-brackets} with at most \(1 + 1 / \epsilon \) many of the \hyperref[def:eps-bracket]{brackets}. Let \(t_0 = -\infty \), and recursively define
+	\[
+		t_i = \sup \{x\colon x> t_{i-1} \colon \mathbb{P}((t_{i-1}, x]) \leq \epsilon \} .
+	\]
+	Finally, let \(k \geq 1\) be the smaller integer such that \(t_k = \infty \). We then have
 	\begin{itemize}
 		\item \(\mathbb{P} ((t_{i-1} , t_i))\leq \epsilon \): for every \(\delta > 0\), \(\mathbb{P} ((t_{i-1}, t_i - \delta ]) \leq \epsilon \), as \(\delta \to 0\), \(\mathbb{P} ((t_{i-1} , t_i)) \leq \epsilon \).
 		\item \(\mathbb{P} ((t_{i-1}, t_i]) \geq \epsilon \): for every \(\delta > 0\), \(\mathbb{P} ((t_{i-1}, t_i + \delta ]) > \epsilon \), as \(\delta \to 0\), \(\mathbb{P} ((t_{i-1}, t_i]) \geq \epsilon \).
@@ -61,10 +65,11 @@ Let's see one simple example of computing \hyperref[def:eps-bracket]{bracketing 
 		\geq \sum_{i=1}^{k} \mathbb{P} ((t_{i-1}, t_i])
 		\geq (k-1) \epsilon,
 	\]
-	implying \(k \leq 1 + \frac{1}{\epsilon }\). Specifically, consider the \hyperref[def:eps-bracket]{brackets} \([\mathbbm{1}_{(-\infty , t_{i-1})} , \mathbbm{1}_{(-\infty , t_i)} ]\) which cover \(\mathscr{F} \) with \(L_2(\mathbb{P} )\) size equal to \(\mathbb{P} ((t_{i-1} , t_i)) \leq \epsilon \). Hence, this is a set of valid \hyperref[def:eps-bracket]{\(\epsilon \)-brackets} with size \(\leq 1 + 1 / \epsilon \).
+	implying \(k \leq 1 + \frac{1}{\epsilon }\). Now, consider \hyperref[def:eps-bracket]{brackets} \([\mathbbm{1}_{(-\infty , t_{i-1})} , \mathbbm{1}_{(-\infty , t_i)} ]\) which cover \(\mathscr{F} \) with \(L_2(\mathbb{P} )\) size equal to \(\sqrt{\mathbb{P} ((t_{i-1} , t_i))} \leq \sqrt{\epsilon} \). Hence, this is a collection of valid \hyperref[def:eps-bracket]{\(\sqrt{\epsilon }\)-brackets} of size \(\leq 1 + 1 / \epsilon \), i.e., by replacing \(\epsilon \gets \sqrt{\epsilon }\), we have \(N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon )\leq 1 + 1 / \epsilon ^2\).
 \end{explanation}
+
 \begin{proposition}
-	Let \(\mathscr{F} \) to be a function class such that \(N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon ) < \infty \) for all \(\epsilon > 0\). Then,
+	Let \(\mathscr{F} \) to be a function class such that \(N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon ) < \infty \) for all \(\epsilon > 0\). Then as \(n\to \infty \),
 	\[
 		\sup _{f\in\mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert \overset{\text{a.s.} }{\to } 0.
 	\]

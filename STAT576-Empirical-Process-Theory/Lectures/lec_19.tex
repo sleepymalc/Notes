@@ -74,13 +74,20 @@ Finally, let's see some standards result on the \hyperref[def:bracketing-number]
 
 More examples are available in~\cite{vandervaartWeakConvergenceEmpirical1996}. To conclude this section, we ask the following:
 
-\begin{problem}
+\begin{problem}[Necessity of VC dimension of boolean function class]
 Is there a function class for which the \hyperref[thm:uniform-entropy-integral-bound]{uniform entropy bound} is infinite, while the \hyperref[thm:bracketing-bound]{bracketing bound} is finite?
 \end{problem}
 \begin{answer}
-	Yes! For boolean function class \(\mathscr{F} \), \(\VC(\mathscr{F} ) < \infty \), hence \(\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) < \infty \) by the \hyperref[thm:Dudley]{Dudley's theorem}. It's also true that \(\VC(\mathscr{F} ) = \infty \), then for all \(\epsilon < 1 / 2\), the \hyperref[thm:Dudley]{Dudley's theorem} gives \(\infty \) for \(\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon )\).
-
-	However, it's possible that when \(\VC(\mathscr{F} ) = \infty \), \(\mathscr{F} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli} w.r.t.\ some \(\mathbb{P} \).
+	Yes! For boolean function class \(\mathscr{F} \), from the \hyperref[thm:Dudley]{Dudley's theorem},
+	\begin{itemize}
+		\item \(\VC(\mathscr{F} ) < \infty \): \(\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) < \infty\);
+		\item \(\VC(\mathscr{F} ) = \infty \): \(\sup _\mu N(\mathscr{F} , L_2(\mu ), \epsilon ) = \infty \) for all \(\epsilon < 1 / 2\).
+	\end{itemize}
+	In addition, if \(\VC(\mathscr{F} ) = \infty \), uniform \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli} does not hold, i.e.,
+	\[
+		\liminf_{n \to \infty} \sup _\mathbb{P} \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \mathbb{P} _n f - \mathbb{P} f \right] > 0.
+	\]
+	However, it's still possible that when \(\VC(\mathscr{F} ) = \infty \), \(\mathscr{F} \) is \hyperref[def:Glivenko-Cantelli]{Glivenko-Cantelli} w.r.t.\ some \(\mathbb{P} \).
 \end{answer}
 
 \begin{eg}
@@ -98,7 +105,7 @@ Is there a function class for which the \hyperref[thm:uniform-entropy-integral-b
 \chapter{Applications to \(M\)-Estimation}
 In this chapter, we will define the ``rate of convergence'' for \(M\)-estimators, and look at some examples.
 
-\section{Problem Setup and a Running Example}
+\section{The \(M\)-Estimation Problem}
 Consider the problem of \hyperref[prb:M-estimation]{\(M\)-estimation}:
 
 \begin{problem}[\(M\)-estimation]\label{prb:M-estimation}
@@ -137,27 +144,27 @@ We have seen some examples in the beginning of the class.
 We then have three questions (progressively harder) we can ask for an \hyperref[prb:M-estimation]{\(M\)-estimator}.
 \begin{enumerate}[(a)]
 	\item Is the estimator ``consistent''? I.e., does \(d(\hat{\theta} _n, \theta _0) \overset{p}{\to } 0\) as \(n\to \infty \) for some \hyperref[def:pseudo-metric]{metric} \(d\)?
-	\item What's the ``rage of convergence''? E.g., the rate for the mean is \(O(1 / \sqrt{n} )\).
+	\item What's the ``rate of convergence''? E.g., the rate for the mean is \(O(1 / \sqrt{n} )\).
 	\item What is the limiting (asymptotic) distribution of \(\hat{\theta} - \theta _0\)?
 \end{enumerate}
 
 \subsection{Running Example}
-In the remaining class, we will consider the \hyperref[prb:sample-mode]{sample mode} as our running example.
+In the remaining class, we will consider the \hyperref[prb:mode-estimation]{sample mode estimation} as our running example.
 
-\begin{problem}[Sample Mode]\label{prb:sample-mode}
-Suppose we have \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} _{\theta _0}\) supported on \(\mathbb{R} \) such that \(\mathbb{P} _{\theta _0}\) has smooth and bounded density \(p_{\theta _0} (x)\) w.r.t.\ Lebesgue measure, with \(p^{\prime} _{\theta _0} (x) > 0\) for \(x < \theta _0\), and \(p^{\prime} _{\theta _0} (x) < 0\) for \(x > \theta _0\). Consider
+\begin{problem}[Mode estimation]\label{prb:mode-estimation}
+Let \(\chi = \Theta = \mathbb{R} \), and suppose we have \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} _{\theta _0}\) supported on \(\chi \) such that \(\mathbb{P} _{\theta _0}\) has smooth and bounded density \(p_{\theta _0} (x)\) w.r.t.\ Lebesgue measure, with \(p^{\prime} _{\theta _0} (x) > 0\) for \(x < \theta _0\), and \(p^{\prime} _{\theta _0} (x) < 0\) for \(x > \theta _0\). The \emph{mode estimation} problem considers
 \[
-	M(\theta ) = -\mathbb{P} _{\theta _0}(\theta -1 \leq X \leq \theta +1),
+	M(\theta ) = \mathbb{P} _{\theta _0}(\theta -1 \leq X \leq \theta +1),
 \]
-so the true parameter \(\theta _0 = \argmin_{\theta \in \Theta } M(\theta )\) is the mode. Let
+so the true parameter \(\theta _0 = \argmax_{\theta \in \Theta } M(\theta )\) is the mode. Let
 \[
-	M_n(\theta ) = -\frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{\theta -1 \leq X_i \leq \theta +1},
+	M_n(\theta ) = \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{\theta -1 \leq X_i \leq \theta +1},
 \]
-and let \(\hat{\theta} _n = \argmin_{\theta \in \Theta } M_n(\theta )\), i.e., the sample mode.
+and let \(\hat{\theta} _n = \argmax_{\theta \in \Theta } M_n(\theta )\), i.e., the sample mode.
 \end{problem}
 
-\begin{remark}
-	Notice that in the \hyperref[prb:sample-mode]{sample mode} example, we can check that
+\begin{remark}[Unique optimal]
+	Notice that in the \hyperref[prb:mode-estimation]{mode estimation} problem, we can check that
 	\begin{itemize}
 		\item \(M^{\prime} (\theta _0) = 0\);
 		\item \(M^{\prime} (\theta ) < 0\) when \(\theta < 0\), and \(M^{\prime} (\theta ) > 0\) when \(\theta > 0\);
@@ -167,14 +174,14 @@ and let \(\hat{\theta} _n = \argmin_{\theta \in \Theta } M_n(\theta )\), i.e., t
 \end{remark}
 
 \subsection{Consistency}
-To check the consistency, recall the ``basic inequality'' step, i.e.,
+Consistency is the easiest task among others, and we do this without making it into its own section. To check it, recall the ``basic inequality'' step, i.e.,
 \[
 	\vert M(\hat{\theta} _n) - M(\theta _0) \vert
 	= \vert M(\hat{\theta} _n) - M_n(\hat{\theta} _n) + \underbrace{M_n(\hat{\theta} _n) - M_n(\theta _0)}_{\leq 0} + M_n(\theta _0) - M(\theta _0) \vert
 	\leq 2 \sup _{\theta \in \Theta } \vert M_n(\theta ) - M(\theta ) \vert.
 \]
 
-In the example of \hyperref[prb:sample-mode]{sample mode} example, denote \(m_\theta (x) = \mathbbm{1}_{\theta -1 \leq x \leq \theta +1} \), and \(\mathscr{F} = \{ m_\theta \colon \theta \in \mathbb{R} \} \), then \(M_n(\theta ) = \mathbb{P} _n m_\theta \) and \(M(\theta ) = \mathbb{P} m_\theta \). We have
+In the example of \hyperref[prb:mode-estimation]{mode estimation} example, denote \(m_\theta (x) = \mathbbm{1}_{\theta -1 \leq x \leq \theta +1} \), and \(\mathscr{F} = \{ m_\theta \colon \theta \in \mathbb{R} \} \), then \(M_n(\theta ) = \mathbb{P} _n m_\theta \) and \(M(\theta ) = \mathbb{P} m_\theta \). We have
 \[\sup _{\theta \in \Theta } \vert M_n(\theta ) - M(\theta ) \vert
 	= \sup _{\theta \in \mathbb{R} }\vert \mathbb{P} _n m_\theta - \mathbb{P} m_\theta  \vert
 	\overset{p}{\to } 0
@@ -182,7 +189,7 @@ In the example of \hyperref[prb:sample-mode]{sample mode} example, denote \(m_\t
 since \(\VC(\mathscr{F} ) = 2\). Hence, we conclude that \(M(\hat{\theta} ) - M(\theta _0) \overset{p}{\to } 0\) as \(n \to \infty \).
 
 \begin{problem*}
-	Does \(\hat{\theta} \to \theta _0\), i.e., does \(d(\hat{\theta} , \theta _0) \to 0\)?
+	Does \(\hat{\theta} \overset{p}{\to} \theta _0\), i.e., does \(d(\hat{\theta} , \theta _0) \to 0\)?
 \end{problem*}
 \begin{answer}
 	Need to relate \(d\) to \(M\) function.

@@ -1,4 +1,4 @@
-\lecture{20}{16 Oct.\ 9:00}{Rate of Convergence}
+\lecture{20}{16 Oct.\ 9:00}{Rate of Convergence Argument}
 To show \(\hat{\theta} \overset{p}{\to} \theta _0\), we need ``curvature'' or ``growth'' condition on \(M\) at \(\theta _0\).
 
 \begin{center}
@@ -10,7 +10,7 @@ Consider the following.
 \begin{definition}[Growth condition]\label{def:growth-condition}
 	The \emph{growth condition} on \(M(\theta )\) is that for all \(\epsilon > 0\),
 	\[
-		\sup _{\theta \colon d(\theta, \theta _0) \vert > \epsilon } M(\theta ) < M(\theta _0).
+		\sup _{\theta \colon d(\theta, \theta _0) > \epsilon } M(\theta ) < M(\theta _0).
 	\]
 \end{definition}
 
@@ -18,13 +18,13 @@ Equivalently, the \hyperref[def:growth-condition]{growth condition} implies that
 \[
 	\inf _{\theta \colon d(\theta, \theta _0 ) > \epsilon } M(\theta _0) - M(\theta ) > \delta .
 \]
-Hence, as \(\epsilon \to 0\), \(\mathbb{P} (d(\hat{\theta} , \theta _0 ) > \epsilon ) \leq \mathbb{P} (M(\theta _0) - M(\hat{\theta} ) > \delta ) \to 0\). In our \hyperref[prb:mode-estimation]{mode estimation} problem, since
+Hence, as \(\epsilon \to 0\), \(\mathbb{P} (d(\hat{\theta} , \theta _0 ) > \epsilon ) \leq \mathbb{P} (M(\theta _0) - M(\hat{\theta} ) > \delta ) \to 0\). In our \hyperref[eg:mode-estimation]{mode estimation} example, since
 \[
 	M(\theta )
 	= \mathbb{P} (\theta -1 \leq X \leq \theta +1)
-	= \int_{\theta -1}^{\theta + 1} p(x) \,\mathrm{d}x,
+	= \int_{\theta -1}^{\theta + 1} p_{\theta _0}(x) \,\mathrm{d}x,
 \]
-if we assume that \(p\) is increasing until \(\theta _0\), and then decreasing after \(\theta _0\),\footnote{Since \(\theta _0\) is the unique maximum.} one can check that
+if we assume that \(p_{\theta _0}\) is increasing until \(\theta _0\) and decreasing after \(\theta _0\),\footnote{Since \(\theta _0\) is the unique maximum.} one can check that
 \[
 	\sup _{\theta \colon d(\theta, \theta _0) > \epsilon } M(\theta )
 	= \max (M(\theta _0 + \epsilon ), M(\theta _0 - \epsilon ))
@@ -46,15 +46,21 @@ from \(p^{\prime\prime} < 0\) at \(\theta _0\). More generally, one can refer to
 \end{remark}
 
 \section{Rate of Convergence}
-Let's first see some heuristics before introducing the general theory. In the \hyperref[prb:mode-estimation]{mode estimation} problem,
+Let's first see some heuristics before introducing the general theory.
+
+\begin{prev}
+	Recall the previously defined \hyperref[not:M-estimation]{notation} for the \hyperref[eg:mode-estimation]{mode estimation} example, i.e., \(M_n(\theta ) = \mathbb{P} _n m_\theta \) and \(M(\theta ) = \mathbb{P} m_\theta \) where \(m_\theta (x) = \mathbbm{1}_{\theta -1 \leq x \leq \theta +1} \).
+\end{prev}
+
+We then see that in the \hyperref[eg:mode-estimation]{mode estimation} example,
 \[
-	M(\theta _0) - M(\hat{\theta} )
-	\leq (\mathbb{P} _n - \mathbb{P} ) (m_{\hat{\theta} } - m_\theta )
-	\leq 2 \sup _{\theta \in \Theta } \vert \mathbb{P} _n m_\theta - \mathbb{P} m_\theta  \vert,
+	M(\theta _0) - M(\hat{\theta} _n)
+	\leq (\mathbb{P} _n - \mathbb{P} ) (m_{\hat{\theta } _n } - m_{\theta _0})
+	\leq 2 \sup _{\theta \in \Theta } \vert \mathbb{P} _n m_\theta - \mathbb{P} m_\theta \vert,
 \]
-in our \hyperref[prb:mode-estimation]{mode estimation} problem, in expectation, we can further upper-bound it by \(c / \sqrt{n} \), hence
+and we can further upper-bound it by \(c / \sqrt{n} \) in expectation, i.e., in expectation,
 \[
-	M(\theta _0) - M(\hat{\theta} ) = O_p(1 / \sqrt{n} ).
+	M(\theta _0) - M(\hat{\theta } _n ) = O_p(1 / \sqrt{n} ).
 \]
 
 \begin{note}
@@ -68,7 +74,7 @@ in our \hyperref[prb:mode-estimation]{mode estimation} problem, in expectation, 
 	\]
 \end{remark}
 \begin{explanation}
-	From Taylor expansion, there exists \(\chi\) between \(\theta \) and \(\theta _0\) such that
+	From Taylor expansion, there exists \(\xi \) between \(\theta \) and \(\theta _0\) such that
 	\[
 		M(\theta ) - M(\theta _0)
 		= d(\theta, \theta _0) M^{\prime} (\theta _0) + \frac{d(\theta, \theta _0)^2}{2} M^{\prime\prime} (\xi ),
@@ -76,40 +82,49 @@ in our \hyperref[prb:mode-estimation]{mode estimation} problem, in expectation, 
 	with \(M^{\prime} (\theta _0) = 0\), \(M(\theta ) - M(\theta _0) > c \cdot d(\theta, \theta _0)^2\) for some \(c\).
 \end{explanation}
 
-We know that \(\hat{\theta} \) is consistent, we can assume \(\hat{\theta} \in I\).
-
-\begin{remark}
-	\hyperref[def:growth-condition]{Growth condition} is satisfied not for all \(\theta \in \mathbb{R} \), but for \(\theta \) in a fixed neighborhood \(I\) of \(\theta _0\).
-\end{remark}
+Since we know that \(\hat{\theta } _n \) is \hyperref[def:consistent]{consistent}, we can assume \(\hat{\theta } _n \in I\). The upshot is that we want the \hyperref[def:growth-condition]{growth condition} to be satisfied not for all \(\theta \in \mathbb{R} \), but for \(\theta \) in a fixed neighborhood \(I\) of \(\theta _0\).
 
 \begin{intuition}
-	Since \(\hat{\theta} \) is consistent, the \hyperref[def:growth-condition]{growth condition} on a ball around \(\theta _0\) should suffice.
+	Since \(\hat{\theta } _n \) is \hyperref[def:consistent]{consistent}, the \hyperref[def:growth-condition]{growth condition} on a ball around \(\theta _0\) should suffice.
 \end{intuition}
 
 In this case, we have
 \[
-	d(\hat{\theta}, \theta _0)^2 \lesssim M(\theta ) - M(\theta _0) = O_p(1 / \sqrt{n} ),
+	d(\hat{\theta } _n, \theta _0)^2 \lesssim M(\theta ) - M(\theta _0) = O_p(1 / \sqrt{n} ),
 \]
-hence \(d(\hat{\theta}, \theta _0) = O_p(n^{-1 / 4})\). In our example,
+hence \(d(\hat{\theta } _n, \theta _0) = O_p(n^{-1 / 4})\). In our example of \hyperref[eg:mode-estimation]{mode estimation},
 \[
 	M^{\prime\prime} (\theta _0)
-	= p^{\prime} (\theta _0 + 1) - p^{\prime} (\theta _0 - 1)
+	= p_{\theta _0}^{\prime} (\theta _0 + 1) - p_{\theta _0}^{\prime} (\theta _0 - 1)
 	< 0
 \]
 since \(p^{\prime} (\theta _0+1) < 0\) and \(p^{\prime} (\theta _0 - 1) > 0\).
 
-We cannot get better than \(O_p(n^{-1 / 4})\) with this argument. But there exist problems where the rate is better! In our example, the right rate is \(O_p(n^{-1 / 3})\), for \hyperref[def:parametric]{``parametric''} problems like mean estimation and quantile estimation, the right rate is \(O_p(1 / \sqrt{n} )\). We need to do ``localization''! Specifically, we now have
+\begin{note}
+	\(M^{\prime\prime} \) is constant because \(p_{\theta _0}^{\prime} \) is constant.
+\end{note}
+
+\begin{remark}[The right rate]
+	We cannot get better than \(O_p(n^{-1 / 4})\) with this argument. But there exist problems where the rate is better!
+	\begin{itemize}
+		\item In our example of \hyperref[eg:mode-estimation]{mode estimation}, the right rate is \(O_p(n^{-1 / 3})\).
+		\item For \hyperref[def:parametric]{``parametric''} problems,\footnote{E.g., mean estimation and quantile estimation.} the right rate is \(O_p(1 / \sqrt{n} )\).
+	\end{itemize}
+	We need to do ``localization''!
+\end{remark}
+
+Specifically, we now have
 \[
-	d(\hat{\theta}, \theta _0)^2
-	\lesssim M(\theta _0) - M(\hat{\theta} )
-	\leq (\mathbb{P} _n - \mathbb{P} ) (m_{\hat{\theta} } - m_{\theta _0})
+	d(\hat{\theta } _n, \theta _0)^2
+	\lesssim M(\theta _0) - M(\hat{\theta } _n )
+	\leq (\mathbb{P} _n - \mathbb{P} ) (m_{\hat{\theta } _n } - m_{\theta _0})
 	\leq 2 \sup _{\theta \in \Theta } \vert \mathbb{P} _n m_\theta - \mathbb{P} m_\theta \vert
 	\leq \frac{c}{\sqrt{n} }
 	= O_p \left( \frac{1}{\sqrt{n} } \right)
 \]
 in expectation.
 
-Let's first compute the bound for \(\mathbb{E}_{}\left[(\mathbb{P} _n - \mathbb{P} ) (m_\theta - m_{\theta _0})\right] \). For a fixed \(\theta \) close to \(\theta _0\),
+Let's first compute the bound for \(\mathbb{E}_{}\left[(\mathbb{P} _n - \mathbb{P} ) (m_\theta - m_{\theta _0})\right] \) for a fixed \(\theta \) close to \(\theta _0\). We have
 \[
 	\begin{split}
 		\mathbb{E}_{}\left[\vert (\mathbb{P} _n - \mathbb{P} ) (m_\theta - m_{\theta _0}) \vert \right]
@@ -118,7 +133,7 @@ Let's first compute the bound for \(\mathbb{E}_{}\left[(\mathbb{P} _n - \mathbb{
 		&\leq \frac{1}{\sqrt{n} } \sqrt{\mathbb{E}_{}\left[\left( m_\theta (X_1) - m_{\theta _0}(X_1) \right) ^2 \right] } .
 	\end{split}
 \]
-In our \hyperref[prb:mode-estimation]{mode estimation} problem, if \(\theta \) is close to \(\theta _0\) (with \(\theta < \theta _0\)),
+In our \hyperref[eg:mode-estimation]{mode estimation} problem, if \(\theta \) is close to \(\theta _0\) (with \(\theta < \theta _0\)),
 \[
 	m_\theta (x) - m_{\theta _0}(x)
 	= \mathbbm{1}_{\theta -1 \leq x \leq \theta _0 - 1} + \mathbbm{1}_{\theta +1 \leq x \leq \theta _0 + 1},
@@ -128,36 +143,41 @@ hence
 	\begin{split}
 		\mathbb{E}_{}\left[\left( m_\theta (X_1) - m_{\theta _0}(X_1) \right) ^2 \right]
 		&\leq \mathbb{P} (\theta -1 \leq X_1 \leq \theta _0 - 1) + \mathbb{P} (\theta +1 \leq X_1 \leq \theta _0 + 1) \\
-		&\leq 2 p(\theta _0) \cdot d(\theta , \theta _0) \\
+		&\leq 2 p_{\theta _0}(\theta _0) \cdot d(\theta , \theta _0) \\
 		&\lesssim d(\theta , \theta _0)
 	\end{split}
 \]
-since \(p\) is bounded. In all, we have
+since \(p_{\theta _0}\) is bounded. In all, we have
 \[
 	(\mathbb{P} _n - \mathbb{P} )(m_\theta - m_{\theta _0})
 	= O_p \left( \sqrt{\frac{d(\theta , \theta _0)}{n}} \right) .
 \]
-Heuristically,
+
+\begin{intuition}[Heuristic]
+	Heuristically, we might want to conclude that
+	\[
+		(\mathbb{P} _n - \mathbb{P} ) (m_{\hat{\theta } _n } - m_{\theta _0})
+		= O_p \left( \sqrt{\frac{d(\hat{\theta } _n - \theta _0)}{n}} \right),
+	\]
+	which is a better bound than before.
+\end{intuition}
+
+If this is true, then the overall bound becomes
 \[
-	(\mathbb{P} _n - \mathbb{P} ) (m_{\hat{\theta} } - m_{\theta _0})
-	= O_p \left( \sqrt{\frac{d(\hat{\theta} - \theta _0)}{n}} \right),
+	d(\hat{\theta } _n , \theta _0)^2
+	\leq O_p \left( \sqrt{\frac{d(\hat{\theta } _n - \theta _0)}{n}} \right) .
 \]
-which is a better bound than before. This implies
+Canceling \(\sqrt{d(\hat{\theta } _n - \theta _0)} \) from both sides,
 \[
-	d(\hat{\theta} , \theta _0)^2
-	\leq O_p \left( \sqrt{\frac{d(\hat{\theta} - \theta _0)}{n}} \right) .
+	d(\hat{\theta } _n , \theta _0)^{3 / 2} = O_p \left( \frac{1}{\sqrt{n} } \right)
+	\implies d(\hat{\theta } _n , \theta _0) = O_p(n^{-1 / 3}),
 \]
-Canceling \(d(\hat{\theta} - \theta _0)\) from both sides,
-\[
-	d(\hat{\theta} , \theta _0)^{3 / 2} = O_p \left( \frac{1}{\sqrt{n} } \right)
-	\implies d(\hat{\theta} , \theta _0) = O_p(n^{-1 / 3}),
-\]
-which is the correct rate for \(\hat{\theta} - \theta _0\).
+which is the correct rate for \(\hat{\theta } _n - \theta _0\).
 
 \begin{remark}
 	In fact, the limiting distribution is also known where we have
 	\[
-		n^{1 / 3} (\hat{\theta} - \theta _0) \overset{d}{\to } \argmax_{h\in \mathbb{R} } aB_h - b h^2,
+		n^{1 / 3} (\hat{\theta } _n - \theta _0) \overset{d}{\to } \argmax_{h\in \mathbb{R} } aB_h - b h^2,
 	\]
 	where \(a, b\) are constants depend on \(p\).
 \end{remark}

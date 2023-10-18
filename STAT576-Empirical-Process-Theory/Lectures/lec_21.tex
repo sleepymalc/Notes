@@ -13,14 +13,14 @@ We're now going to show the general argument for bounding the \hyperref[def:rate
 Recall that instead of using the old \hyperref[def:growth-condition]{growth condition} used when showing \hyperref[def:consistent]{consistency}, we need an alternative form. Consider the following.
 
 \begin{definition}[Growth condition*]\label{def:growth-condition*}
-	The \emph{growth condition} on \(M(\theta )\) is that for all \(\theta \in \Theta \), \(d(\theta , \theta _0)^2 \leq M(\theta )\ - M(\theta _0)\).
+	The \emph{growth condition} on \(M(\theta )\) is that for all \(\theta \in \Theta \),
+	\[
+		d(\theta , \theta _0)^2 \leq M(\theta )\ - M(\theta _0).
+	\]
 \end{definition}
 
 \begin{note}
-	For such \hyperref[def:growth-condition*]{growth condition}, the canonical choice of \(d\) is
-	\[
-		d(\theta , \theta _0) = \sqrt{M(\theta _0) - M(\theta )}.
-	\]
+	For such \hyperref[def:growth-condition*]{growth condition}, the canonical choice of \(d\) is \(d(\theta , \theta _0) = \sqrt{M(\theta _0) - M(\theta )}\).
 \end{note}
 
 It suffices to show that given \(\epsilon > 0\), there exists \(M\) (not depending on \(n\)) such that for all \(n\),
@@ -46,7 +46,7 @@ Firstly, we apply the \emph{peeling step} to get
 	\]
 \end{note}
 
-With this, we can further upper-bound the \autoref{eq:peeling-step} by
+With this, we can further upper-bound \autoref{eq:peeling-step} by
 \begin{align*}
 	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
 	 & = \sum_{j > M} \mathbb{P} (2^{j-1} \delta _n < d(\hat{\theta} _n, \theta _0) \leq 2^j \delta _n)\tag*{\hyperref[eq:peeling-step]{peeling step}}                                        \\
@@ -57,11 +57,13 @@ With this, we can further upper-bound the \autoref{eq:peeling-step} by
 by \hyperref[lma:Markov-inequality]{Markov's  inequality}, where we need to assume that it's non-negative. Now, we define the following.
 
 \begin{definition}[Localized empirical process]\label{def:localized-EP}
-	The \emph{localized empirical process} for the \hyperref[prb:M-estimation]{\(M\)-estimaton problem} is defined as
+	The \emph{localized empirical process} for an \hyperref[prb:M-estimation]{\(M\)-estimaton problem} for \(t > 0\) is defined as
 	\[
 		\mathbb{E}_{}\left[\sup _{\theta \colon d(\theta , \theta _0) \leq t} (M_n - M)(\theta _0) - (M_n - M)(\theta ) \right].
 	\]
 \end{definition}
+
+Note the following.
 
 \begin{note}
 	For nearly all \hyperref[prb:M-estimation]{\(M\)-estimaton problems}, the \hyperref[def:localized-EP]{localized empirical process} can be upper-bounded by a sequence of functions \(\phi _n\colon [0, \infty ] \to [0, \infty ]\) such that for all \(t > 0\),
@@ -70,13 +72,13 @@ by \hyperref[lma:Markov-inequality]{Markov's  inequality}, where we need to assu
 	\]
 \end{note}
 
-With this, we proceed upper-bounding \autoref{eq:peeling-step} as
+Assuming \(\phi _n\)'s exist, we then proceed upper-bounding \autoref{eq:peeling-step} as
 \[
 	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
 	\leq \sum_{j > M} \frac{\mathbb{E}_{}\left[\sup _{\theta \colon d(\theta , \theta _0) \leq 2^j \delta _n} (M_n - M)(\theta _0) - (M_n - M)(\theta ) \right] }{2^{2j - 2} \delta _n^2 }
 	\leq \sum_{j > M} \frac{\phi _n(2^j \delta _n)}{2^{2j - 2} \delta _n^2}.
 \]
-Now, to further bound the right-hand side, consider the following.
+To further bound the right-hand side, consider the following.
 
 \begin{definition}[Sub-quadratic assumption]\label{def:sub-quadratic-assumption}
 	The \emph{sub-quadratic assumption} assumes that there exists \(\alpha < 2\) such that for all \(n\), \(c > 1\), and \(x > 0\),
@@ -88,6 +90,7 @@ Now, to further bound the right-hand side, consider the following.
 With \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption}, we get
 \[
 	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
+	\leq \sum_{j > M} \frac{\phi _n(2^j \delta _n)}{2^{2j - 2} \delta _n^2}
 	\leq 4 \sum_{j > M} \frac{2^{\alpha j} \phi _n(\delta _n)}{2^{2j} \delta _n^2}.
 \]
 
@@ -100,11 +103,15 @@ This is basically the final bound we will get by introducing \(\phi _n\)'s. Now,
 	\]
 \end{definition}
 
+\begin{remark}
+	It's important to check that whether such \(c\) exists for all \(n\).
+\end{remark}
+
 \begin{intuition}
 	We want to have \(\phi _n(\delta _n) \approx \delta _n^2\).
 \end{intuition}
 
-Finally, by utilizing the \hyperref[def:rate-determining-equation]{rate-determining equation}, we get
+Finally, assuming the \hyperref[def:rate-determining-equation]{rate-determining equation} exists for some \(c\), we get
 \[
 	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
 	\leq 4 \sum_{j > M} \frac{2^{\alpha j} \phi _n(\theta _n)}{2^{2j} \delta _n^2}
@@ -127,7 +134,7 @@ Putting the above together, we have the following.
 Back to the \hyperref[eg:mode-estimation]{mode estimation} example, we now want to formally show that the \hyperref[def:rate-of-convergence]{rate of convergence} for \(\vert \hat{\theta} _n - \theta _0 \vert \) is \(O_p(n^{-1 / 3})\).
 
 \begin{proposition}
-	In the \hyperref[eg:mode-estimation]{mode estimation} example, the \hyperref[def:rate-of-convergence]{rate of convergence} for \(\vert \hat{\theta} _n - \theta _0 \vert \) is \(O_p(n^{-1 / 3})\).
+	For the \hyperref[eg:mode-estimation]{mode estimation problem}, the \hyperref[def:rate-of-convergence]{rate of convergence} for \(\hat{\theta} _n\) is \(O_p(n^{-1 / 3})\).
 \end{proposition}
 \begin{proof}
 	We check the following.

@@ -1,0 +1,193 @@
+\lecture{21}{18 Oct.\ 9:00}{The General Argument for Rate of Convergence}
+\subsection{A General Approach}
+We're now going to show the general argument for bounding the \hyperref[def:rate-of-convergence]{rate of convergence}. In this section, we will assume that our \hyperref[prb:M-estimation]{\(M\)-estimation problem} is defined for minimum rather than maximum.\footnote{This can be done without loss of generality since we can simply add a negative sign for \(M\) and \(M_n\).}
+
+\begin{note}
+	Hence, \(M(\theta ) \geq M(\theta _0)\) for all \(\theta \in \Theta \) now.
+\end{note}
+
+\begin{definition}[Rate of convergence]\label{def:rate-of-convergence}
+	The \emph{rate of convergence} for \(\hat{\theta} _n\) is defined as the sequence \(\{ \delta _n \} \) such that \(d(\hat{\theta} _n, \theta _0) = O_p(\delta _n)\).
+\end{definition}
+
+Recall that instead of using the old \hyperref[def:growth-condition]{growth condition} used when showing \hyperref[def:consistent]{consistency}, we need an alternative form. Consider the following.
+
+\begin{definition}[Growth condition*]\label{def:growth-condition*}
+	The \emph{growth condition} on \(M(\theta )\) is that for all \(\theta \in \Theta \), \(d(\theta , \theta _0)^2 \leq M(\theta )\ - M(\theta _0)\).
+\end{definition}
+
+\begin{note}
+	For such \hyperref[def:growth-condition*]{growth condition}, the canonical choice of \(d\) is
+	\[
+		d(\theta , \theta _0) = \sqrt{M(\theta _0) - M(\theta )}.
+	\]
+\end{note}
+
+It suffices to show that given \(\epsilon > 0\), there exists \(M\) (not depending on \(n\)) such that for all \(n\),
+\[
+	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n) \leq \epsilon.
+\]
+
+Firstly, we apply the \emph{peeling step} to get
+\begin{equation}\label{eq:peeling-step}
+	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
+	= \sum_{j > M} \mathbb{P} (2^{j-1} \delta _n < d(\hat{\theta} _n, \theta _0) \leq 2^j \delta _n).
+\end{equation}
+
+\begin{note}
+	From the \hyperref[def:growth-condition*]{growth condition} and the basic inequality,
+	\[
+		\begin{split}
+			d(\hat{\theta} _n, \theta _0)^2
+			&\leq M(\hat{\theta} _n ) - M(\theta _0)\\
+			&\leq M(\hat{\theta} _n) - M_n(\hat{\theta} _n) + \underbrace{M_n(\hat{\theta} _n) - M_n(\theta _0)}_{\leq 0} + M_n(\theta _0) - M(\theta _0)\\
+			&\leq (M_n - M)(\hat{\theta} _n) - (M_n - M)(\theta _0).
+		\end{split}
+	\]
+\end{note}
+
+With this, we can further upper-bound the \autoref{eq:peeling-step} by
+\begin{align*}
+	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
+	 & = \sum_{j > M} \mathbb{P} (2^{j-1} \delta _n < d(\hat{\theta} _n, \theta _0) \leq 2^j \delta _n)\tag*{\hyperref[eq:peeling-step]{peeling step}}                                        \\
+	 & \leq \sum_{j > M} \mathbb{P} ((M_n - M)(\theta _0) - (M_n - M)(\hat{\theta} _n) \geq 2^{2j-2} \delta _n^2 \cap d(\hat{\theta} _n, \theta _0) \leq 2^j \delta _n)                       \\
+	 & \leq \sum_{j > M} \mathbb{P} \left( \sup _{\theta \colon d(\theta , \theta _0) \leq 2^j \delta _n} (M_n - M)(\theta _0) - (M_n - M)(\theta ) \geq 2^{2j - 2} \delta _n^2 \right)       \\
+	 & \leq \sum_{j > M} \frac{\mathbb{E}_{}\left[\sup _{\theta \colon d(\theta , \theta _0) \leq 2^j \delta _n} (M_n - M)(\theta _0) - (M_n - M)(\theta ) \right] }{2^{2j - 2} \delta _n^2 }
+\end{align*}
+by \hyperref[lma:Markov-inequality]{Markov's  inequality}, where we need to assume that it's non-negative. Now, we define the following.
+
+\begin{definition}[Localized empirical process]\label{def:localized-EP}
+	The \emph{localized empirical process} for the \hyperref[prb:M-estimation]{\(M\)-estimaton problem} is defined as
+	\[
+		\mathbb{E}_{}\left[\sup _{\theta \colon d(\theta , \theta _0) \leq t} (M_n - M)(\theta _0) - (M_n - M)(\theta ) \right].
+	\]
+\end{definition}
+
+\begin{note}
+	For nearly all \hyperref[prb:M-estimation]{\(M\)-estimaton problems}, the \hyperref[def:localized-EP]{localized empirical process} can be upper-bounded by a sequence of functions \(\phi _n\colon [0, \infty ] \to [0, \infty ]\) such that for all \(t > 0\),
+	\[
+		\mathbb{E}_{}\left[\sup _{\theta \colon d(\theta , \theta _0) \leq t} (M_n - M)(\theta _0) - (M_n - M)(\theta ) \right] \leq \phi _n(t).
+	\]
+\end{note}
+
+With this, we proceed upper-bounding \autoref{eq:peeling-step} as
+\[
+	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
+	\leq \sum_{j > M} \frac{\mathbb{E}_{}\left[\sup _{\theta \colon d(\theta , \theta _0) \leq 2^j \delta _n} (M_n - M)(\theta _0) - (M_n - M)(\theta ) \right] }{2^{2j - 2} \delta _n^2 }
+	\leq \sum_{j > M} \frac{\phi _n(2^j \delta _n)}{2^{2j - 2} \delta _n^2}.
+\]
+Now, to further bound the right-hand side, consider the following.
+
+\begin{definition}[Sub-quadratic assumption]\label{def:sub-quadratic-assumption}
+	The \emph{sub-quadratic assumption} assumes that there exists \(\alpha < 2\) such that for all \(n\), \(c > 1\), and \(x > 0\),
+	\[
+		\phi _n(cx) \leq c^\alpha \cdot \phi _n(x).
+	\]
+\end{definition}
+
+With \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption}, we get
+\[
+	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
+	\leq 4 \sum_{j > M} \frac{2^{\alpha j} \phi _n(\delta _n)}{2^{2j} \delta _n^2}.
+\]
+
+This is basically the final bound we will get by introducing \(\phi _n\)'s. Now, to control them, consider the so-called \hyperref[def:rate-determining-equation]{rate-determining equation}.
+
+\begin{definition}[Rate-determinig equation]\label{def:rate-determining-equation}
+	Given a sequence \(\{ \delta _n \} \), the \emph{rate-determining equation} for a \hyperref[def:localized-EP]{localized empirical process}'s upper-bounds \(\phi _n\)'s is that for some \(c\) such that for all \(n\),
+	\[
+		\phi _n(\delta _n) \leq c \delta _n^2.
+	\]
+\end{definition}
+
+\begin{intuition}
+	We want to have \(\phi _n(\delta _n) \approx \delta _n^2\).
+\end{intuition}
+
+Finally, by utilizing the \hyperref[def:rate-determining-equation]{rate-determining equation}, we get
+\[
+	\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n)
+	\leq 4 \sum_{j > M} \frac{2^{\alpha j} \phi _n(\theta _n)}{2^{2j} \delta _n^2}
+	\leq 4c\cdot \sum_{j > M} \frac{2^{\alpha j}}{2^{2j}} ,
+\]
+and from the \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption}, \(\alpha < 2\), so the above sum converges to \(0\) as \(M \to \infty \).
+
+\begin{remark}
+	We can choose \(M\) not depending on \(n\) such that the right-hand side is \(\leq \epsilon \).
+\end{remark}
+
+Putting the above together, we have the following.
+\begin{theorem}[Non-asymptotic rate of convergence]\label{thm:non-asymptotic-rate-of-convergence}
+	For an \hyperref[prb:M-estimation]{\(M\)-estimation problem}, assume the \hyperref[def:growth-condition*]{growth condition} on \(M\), and the \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption} (with parameter \(\alpha < 2\)) and the \hyperref[def:rate-determining-equation]{rate-determining equation} are valid for \(\phi _n\)'s arose from bounding the \hyperref[def:localized-EP]{localized empirical process},
+	\[
+		\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n) \leq 4c \sum_{j > M} 2^{(\alpha -2) j}.
+	\]
+\end{theorem}
+
+Back to the \hyperref[eg:mode-estimation]{mode estimation} example, we now want to formally show that the \hyperref[def:rate-of-convergence]{rate of convergence} for \(\vert \hat{\theta} _n - \theta _0 \vert \) is \(O_p(n^{-1 / 3})\).
+
+\begin{proposition}
+	In the \hyperref[eg:mode-estimation]{mode estimation} example, the \hyperref[def:rate-of-convergence]{rate of convergence} for \(\vert \hat{\theta} _n - \theta _0 \vert \) is \(O_p(n^{-1 / 3})\).
+\end{proposition}
+\begin{proof}
+	We check the following.
+	\begin{itemize}
+		\item The \hyperref[def:growth-condition*]{growth condition} is checked in a ball around \(\theta _0\) and not for all \(\theta \in \Theta \) (since it's \hyperref[def:consistent]{consistent}).
+		\item Consider the \hyperref[def:localized-EP]{localized empirical process} with notation \(m_\theta (x) = \mathbbm{1}_{[\theta -1, \theta +1]} \), we have
+		      \[
+			      \mathbb{E}_{}\left[\sup _{\theta \colon \vert \theta - \theta _0 \vert \leq t} \vert \mathbb{P} _n(m_\theta - m_{\theta _0}) - \mathbb{P} (m_\theta - m_{\theta _0}) \vert \right].
+		      \]
+		      Let \(f_\theta (x) = m_\theta (x) - m_{\theta _0}(x)\), and \(\mathscr{F} = \{ f_\theta \colon \vert \theta -\theta _0 \vert \leq t \} \). One can check that
+		      \[
+			      f(x) = \mathbbm{1}_{\theta _0 - 1 - t \leq x \leq \theta _0 - 1 + t} + \mathbbm{1}_{\theta _0 + 1 - t \leq x \leq \theta _0 + 1 + t}
+		      \]
+		      is an \hyperref[def:envelope]{envelope} for \(\mathscr{F} \). Then, we have
+		      \[
+			      \mathbb{P} F^2
+			      \leq \int_{\theta _0 - 1 - t}^{\theta _0 - 1 + t} p_{\theta _0}(x) \,\mathrm{d}x + \int_{\theta _0 + 1 - t}^{\theta _0 + 1 + t} p_{\theta _0}(x)  \,\mathrm{d}x
+			      \leq p_{\theta _0}(\theta _0) \cdot 4t
+			      \leq C_{p_{\theta _0}} t
+			      < \infty
+		      \]
+		      for some constant \(C_{p_{\theta _0}}\) depending on \(p_{\theta _0}\). With the \hyperref[thm:bracketing-bound]{bracketing bound}, for some constant \(C > 0\),
+		      \[
+			      \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \sqrt{n} \vert \mathbb{P} _n f - \mathbb{P} f \vert \right]
+			      \leq C\cdot \lVert F \rVert _{L_2(\mathbb{P} )} \int_{0}^{1} \sqrt{\log N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon \lVert F \rVert _{L_2(\mathbb{P} )})} \,\mathrm{d}\epsilon .
+		      \]
+		      \begin{claim}
+			      For all \(\epsilon\), there exists some constant \(C^{\prime} > 0\) such that
+			      \[
+				      N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon )
+				      \leq \left( \frac{1}{\epsilon } \right) ^{C^{\prime} } < \infty .
+			      \]
+		      \end{claim}
+		      With the above claim and \(\lVert F \rVert _{L_2(\mathbb{P} )} \leq \sqrt{C_{p_{\theta _0}} t} \), the integral can be further bounded as
+		      \[
+			      \int_{0}^{1} \sqrt{\log N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon \lVert F \rVert _{L_2(\mathbb{P} )})} \,\mathrm{d}\epsilon
+			      \leq \int_{0}^{1} \sqrt{C^{\prime} \log \frac{1}{\epsilon \lVert F \rVert _{L_2(\mathbb{P} )}} } \,\mathrm{d}\epsilon
+			      < \infty,
+		      \]
+		      hence, there exists some constant \(C> 0\) such that
+		      \[
+			      \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
+			      \leq C \sqrt{\frac{t}{n}}.
+		      \]
+		      This motivates us to define \(\phi _n (t)\) as \(C \sqrt{t / n} \).
+		\item To check the \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption}, for all \(n\) and \(c > 1\), we have
+		      \[
+			      \phi _n (ct)
+			      = C \sqrt{\frac{ct}{n}}
+			      = \sqrt{c} \cdot \left( C \sqrt{\frac{t}{n}} \right)
+			      = \sqrt{c} \cdot \phi _n
+		      \]
+		      hence the \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption} is satisfied with \(\alpha = 1 / 2\).
+		\item The existence of the \hyperref[def:rate-determining-equation]{rate-determining equation} is evident since \(\phi _n(t) \leq t^2\) (omitting constant \(C\)). Then, for \(t = \delta _n\),
+		      \[
+			      \sqrt{t / n} \leq t^2
+			      \iff \sqrt{\delta _n / n} \leq \delta _n^2
+			      \implies 1 / \sqrt{n} \leq \delta _n^{3 / 2}
+			      \implies \delta _n \approx 1 / n^{1 / 3}.
+		      \]
+	\end{itemize}
+	In all, we have \(\vert \hat{\theta} _n - \theta _0 \vert = O_p(n^{-1 / 3})\).
+\end{proof}

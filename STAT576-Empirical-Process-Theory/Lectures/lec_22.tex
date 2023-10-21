@@ -1,0 +1,162 @@
+\lecture{22}{20 Oct.\ 9:00}{More Examples on Rate of Convergence}
+We note the following.
+
+\begin{remark}
+	The rate obtained in \autoref{thm:non-asymptotic-rate-of-convergence} is usually correct. Recall that the tail bound we get is
+	\[
+		\mathbb{P} (d(\hat{\theta} , \theta _0) > t \delta _n) \lesssim \frac{1}{t},
+	\]
+	with \(t = 2^M\) in the argument, which can be weak. This does not imply \(\mathbb{E}_{}\left[d(\hat{\theta} , \theta _0) \right] = O(\delta _n)\). Potentially, more sophisticated concentration arguments can be used.
+\end{remark}
+
+\begin{remark}
+	The main step  to apply this result is to bound the \hyperref[def:localized-EP]{localized empirical process}, which can be hard.
+\end{remark}
+
+
+In some situations, we cannot expect the \hyperref[def:growth-condition*]{growth condition} to hold for all \(\theta \in \Theta \); instead, typically we only have \(\theta \in B(\theta _0, u^{\ast} )\). We can still prove \autoref{thm:non-asymptotic-rate-of-convergence}, however.
+
+\begin{theorem}\label{thm:non-asymptotic-rate-of-convergence-extend}
+	For an \hyperref[prb:M-estimation]{\(M\)-estimation problem}, assume the \hyperref[def:growth-condition*]{growth condition} on \(M\) holds for \(\theta \in B(\theta _0, u^{\ast} )\) for some \(u^{\ast} \), and the \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption} (with parameter \(\alpha < 2\)) and the \hyperref[def:rate-determining-equation]{rate-determining equation} are valid for \(\phi _n\)'s arose from bounding the \hyperref[def:localized-EP]{localized empirical process},
+	\[
+		\mathbb{P} (d(\hat{\theta} _n, \theta _0) > 2^M \delta _n) \leq 4c \sum_{j > M} 2^{(\alpha -2) j}.
+	\]
+\end{theorem}
+\begin{proof}
+	We do the \hyperref[eq:peeling-step]{peeling step}, but this time
+	\[
+		\mathbb{P} (d(\hat{\theta} , \theta _0) > 2^M \delta _n)
+		\leq \sum_{j > M\colon 2^j \delta _n \leq u^{\ast} } \mathbb{P} (2^{j-1} \delta _n < d(\hat{\theta} , \theta _0) < 2^j \delta _n) + \mathbb{P} \left( d(\hat{\theta} , \theta _0) > \frac{u^{\ast} }{2} \right),
+	\]
+	and essentially we handle the first term as in \autoref{thm:non-asymptotic-rate-of-convergence}, and we can show that the second term goes to \(0\).
+\end{proof}
+
+\subsection{Sample Quantile}
+Let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \)  which has density \(f\) w.r.t.\ Lebesgue measure such that for \(0 < \tau < 1\),
+\[
+	\rho _{\tau } (x) = \begin{dcases}
+		(\tau -1 ), & \text{ if } x < 0 ;    \\
+		\tau x,     & \text{ if } x \geq 0 .
+	\end{dcases}
+\]
+Let \(m_\theta (x) = \rho _\theta (x - \theta )\) for all \(\theta \in \mathbb{R} \), so \(M(\theta )= \mathbb{E}_{}\left[m_\theta (x) \right] \); furthermore, let \(M_n(\theta ) = \frac{1}{n} \sum_{i=1}^{n} f_{\tau } (x_i - \theta )\). We have \(\theta _0 = \argmin_{\theta } M(\theta )\), which is the \(\tau ^{\text{th} }\) quantile of \(\mathbb{P} \), and let \(\hat{\theta} = \argmin_{\theta } M_n(\theta )\). The classical result shows that
+\[
+	\sqrt{n} (\hat{\theta} - \theta _0) \overset{d}{\to } \mathcal{N} \left( 0, \frac{1}{4 ( f(\theta _0) )^2} \right).
+\]
+
+\begin{claim}
+	\(\vert m_{\theta _1}(x) - m_{\theta _2}(x) \vert \leq \vert \theta _1 - \theta _2 \vert \), i.e., this is a Lipschitz \hyperref[def:parametric]{parametric} class.
+\end{claim}
+
+\begin{lemma}
+	For all \(w, v\in \mathbb{R} \),
+	\[
+		\theta _\tau (w - u) - \rho _\tau (w) = - v(\tau - \mathbbm{1}_{w \leq 0} ) + \int_{0}^{v} \left[ \mathbbm{1}_{w \leq z} - \mathbbm{1}_{w \leq 0}  \right]  \,\mathrm{d}z .
+	\]
+\end{lemma}
+
+\begin{claim}
+	For \(d(\theta , \theta _0) = \vert \theta - \theta _0 \vert \), \(\vert \theta - \theta _0 \vert ^2 \lesssim M(\theta ) - M(\theta _0)\).
+\end{claim}
+
+Then,
+\[
+	\begin{split}
+		M(\theta _0 + \delta ) - M(\theta _0)
+		&= \mathbb{E}_{}\left[\rho _\tau (x - \theta _0 - \delta ) - \rho _\tau (x - \theta _0) \right] \\
+		&= \mathbb{E}_{}\left[-\delta (\tau - \mathbbm{1}_{x - \theta _0 \leq 0} ) \right] + \mathbb{E}_{}\left[\int_{0}^{\delta } ( \mathbbm{1}_{x - \theta _0 \leq z} - \mathbbm{1}_{x - \theta _0 \leq 0} ) \,\mathrm{d}z \right] \\
+		&= \int_{0}^{\delta } (F(\theta _0 + z) - F(\theta _0)) \,\mathrm{d}z.
+	\end{split}
+\]
+If we assume that there exists a neighborhood of \(\theta _0\) where \(f \geq L > 0\), then
+\[
+	M(\theta _0 + \delta ) - M(\theta _0)
+	\geq L\cdot \int_{0}^{\delta } z \,\mathrm{d}z
+	= L \frac{\delta ^2}{2},
+\]
+i.e., in this neighborhood, \(M\) grows quadratically.
+
+\begin{note}
+	\(\hat{\theta} \) is \hyperref[def:consistent]{consistent}.
+\end{note}
+
+We're working on \(\mathscr{F} = \{ m_\theta - m_{\theta _0} \colon \vert \theta - \theta _0 \vert \leq t \} \), and
+\[
+	\mathbb{E}_{}\left[\sup _{\theta \colon \vert \theta - \theta _0 \vert \leq t} \vert (\mathbb{P} _n - \mathbb{P} ) m_\theta - (\mathbb{P} _n - \mathbb{P} ) m_{\theta _0} \vert \right].
+\]
+Since \(F(x) = t\) is an \hyperref[def:envelope]{envelope} with \(\lVert F \rVert _{L_2(\mathbb{P} )} = t\), from the \hyperref[thm:bracketing-bound]{bracketing bound},
+\[
+	\frac{t}{\sqrt{n} } \int_{0}^{1} \sqrt{\log N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon t)}  \,\mathrm{d}\epsilon
+	\leq \frac{t}{\sqrt{n} } \int_{0}^{1} \sqrt{\log \left( 1 + \frac{4}{\epsilon } \right) } \,\mathrm{d}x ,
+\]
+i.e., the \hyperref[def:localized-EP]{localized empirical process} can be upper-bounded by \(\phi _n(t) \approx t / \sqrt{n} \). By the \hyperref[def:rate-determining-equation]{rate-determining equation}, \(\delta _n / \sqrt{n} \approx \delta _n^2\), we have \(\delta _n = 1 / \sqrt{n} \), hence \(\vert \hat{\theta} _n - \theta _0 \vert = O_p(1 / \sqrt{n} )\).
+
+\subsection{High-Dimensional Linear Regression}
+Consider \(Z = (Y, X_1, \dots , X_p) \in \mathbb{R} ^{p + 1}\) such that \(Z_1, \dots , Z_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and we want to predict \(Y\) by \(\beta ^{\top} X\). Let \(M(\beta ) = \mathbb{E}_{}\left[(Y - \beta ^{\top} X) ^2 \right] \) with
+\[
+	\beta ^{\ast} = \argmin_{\beta \colon \lVert \beta \rVert _1 \leq L}  M(\beta )
+\]
+for some \(L\), and let \(M_n(\beta ) = \frac{1}{n} \sum_{i=1}^{n} (Y^i - \beta ^{\top} X^i)^2\) with
+\[
+	\hat{\beta} = \argmin_{\beta \colon \lVert \beta  \rVert _2 \leq L} M_n(\beta ).
+\]
+
+\begin{intuition}
+	We want a \emph{sparse} \(\beta ^{\ast} \).
+\end{intuition}
+
+\begin{note}
+	We're not assuming the underlying \(\mathbb{P} \) to be linear.
+\end{note}
+
+\begin{problem*}[Persistency]
+	How large can \(L = L(n, p)\) be such that \(M(\hat{\beta} ) - M(\beta ^{\ast} ) \to 0\) as \(n, p \to \infty \)?
+\end{problem*}
+
+\begin{theorem}
+	Let \(Y = X_0\) and define \(F(Z) = \max _{0 \leq j, k \leq p} \vert X_j X_k - \mathbb{E}_{}\left[X_j X_k \right] \vert \). Assume further that \(\mathbb{E}_{}\left[F^2(Z) \right] < \infty \), then
+	\[
+		M(\hat{\beta} ) - M(\beta ^{\ast} ) = O_p \left( L \sqrt[4]{\frac{\log p}{n}} \right).
+	\]
+\end{theorem}
+\begin{proof}
+	Since \(M(\hat{\beta} ) - M(\beta ^{\ast} ) \leq 2 \sup _{\beta \colon \lVert \beta  \rVert _1 \leq L} \vert M_n(\beta ) - M(\beta ) \vert \) from the basic inequality, and we can write
+	\[
+		M_n(\beta ) = \gamma ^{\top} \Sigma _n \gamma ,\quad
+		M(\beta ) = \gamma ^{\top} \Sigma \gamma
+	\]
+	where \(\gamma = (-1, \beta )\), \(\Sigma _n = \left( \frac{1}{n} \sum_{i=1}^{n} X_j^i X_n^i \right)_{j, k = 0, \dots , p} \), and \(\Sigma = \left( \mathbb{E}_{}\left[X_j^1 X_k^1 \right] \right) _{j, k = 0, \dots , p} \). Hence,
+	\[
+		\sup _{\beta \colon \lVert \beta  \rVert _1 \leq L} \vert M_n(\beta ) - M(\beta ) \vert
+		= \vert \gamma ^{\top} \Sigma _n \gamma - \gamma ^{\top} \Sigma \gamma  \vert
+		\leq \lVert \gamma  \rVert _1^2 \cdot \lVert \Sigma _n - \Sigma  \rVert _\infty
+		\leq (1 + L)^2 \lVert \Sigma _n - \Sigma  \rVert _\infty ,
+	\]
+	which implies
+	\[
+		\begin{split}
+			\mathbb{P} (M(\hat{\beta} ) - M(\beta ^{\ast} ) > \epsilon )
+			&\leq \mathbb{P} (M(\hat{\beta} ) - M(\beta ^{\ast} ) > \epsilon )\\
+			&\leq P((1 + L)^2 \lVert \Sigma _n - \Sigma  \rVert _\infty > \epsilon )\\
+			&\leq \frac{(1 + L)^2 \mathbb{E}_{}\left[\lVert \Sigma _n - \Sigma  \rVert _\infty  \right] }{\epsilon }.
+		\end{split}
+	\]
+	Finally, we observe that
+	\[
+		\mathbb{E}_{}\left[\lVert \Sigma _n - \Sigma  \rVert _\infty  \right]
+		= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
+	\]
+	where \(\mathscr{F} = \{  \} \). Now, \(F\) is clearly an \hyperref[def:envelope]{envelope}, and define \hyperref[def:eps-bracket]{\(\epsilon\)-brackets} to be \(\{ [f_{j,k}] \pm \epsilon / 2 \} \) ,
+	\[
+		N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon ) \leq (p + 1) ^2.
+	\]
+	By the \hyperref[thm:bracketing-bound]{bracketing bound},
+	\[
+		\frac{1}{\sqrt{n} } \lVert F \rVert _{L_2(\mathbb{P} )} \sqrt{2 \log (p + 1)}.
+	\]
+
+\end{proof}
+
+\begin{remark}
+	\hyperref[thm:bracketing-bound]{Bracketing bound} can be used for any \hyperref[def:EP]{empirical process} induced by finite class.
+\end{remark}

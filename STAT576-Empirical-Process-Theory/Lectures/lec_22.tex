@@ -13,7 +13,7 @@ Before we extend \autoref{thm:non-asymptotic-rate-of-convergence} to handle the 
 	The main step  to apply \autoref{thm:non-asymptotic-rate-of-convergence} is to bound the expected supremum of \hyperref[def:localized-EP]{localized empirical process}, which can be hard.
 \end{remark}
 
-Finally, note that in some situations, we cannot expect the \hyperref[def:growth-condition*]{growth condition} to hold for all \(\theta \in \Theta \); instead, typically we only have \(\theta \in B(\theta _0, u^{\ast} )\) for some \(u^{\ast} \in \mathbb{R} \). In this case, a variation of \autoref{thm:non-asymptotic-rate-of-convergence} still holds.
+Finally, as shown in some situations, we cannot expect the \hyperref[def:growth-condition*]{growth condition} to hold for all \(\theta \in \Theta \); instead, typically we only have \(\theta \in B(\theta _0, u^{\ast} )\) for some \(u^{\ast} \in \mathbb{R} \). In this case, a variation of \autoref{thm:non-asymptotic-rate-of-convergence} still holds~\cite[Theorem 3.2.5]{vandervaartWeakConvergenceEmpirical1996}.
 
 \begin{theorem}\label{thm:non-asymptotic-rate-of-convergence-extend}
 	For an \hyperref[prb:M-estimation]{\(M\)-estimation problem}, assume the \hyperref[def:growth-condition*]{growth condition} on \(M\) holds for \(\theta \in B(\theta _0, u^{\ast} )\) for some \(u^{\ast} \), and the \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption} (with parameter \(\alpha < 2\)) and the \hyperref[def:rate-determining-equation]{rate-determining equation} are valid for \(\phi _n\)'s arose from bounding the \hyperref[def:localized-EP]{localized empirical process},
@@ -22,18 +22,18 @@ Finally, note that in some situations, we cannot expect the \hyperref[def:growth
 	\]
 \end{theorem}
 \begin{proof}
-	We do the \hyperref[eq:peeling-step]{peeling step}, but this time
+	We again start by doing the \hyperref[eq:peeling-step]{peeling step}, but this time consider
 	\[
 		\mathbb{P} (d(\hat{\theta} , \theta _0) > 2^M \delta _n)
-		\leq \sum_{j > M\colon 2^j \delta _n \leq u^{\ast} } \mathbb{P} (2^{j-1} \delta _n < d(\hat{\theta} , \theta _0) < 2^j \delta _n) + \mathbb{P} \left( d(\hat{\theta} , \theta _0) > \frac{u^{\ast} }{2} \right),
+		\leq \sum_{\substack{j > M\colon \\ 2^j \delta _n \leq u^{\ast} }} \mathbb{P} (2^{j-1} \delta _n < d(\hat{\theta} , \theta _0) < 2^j \delta _n) + \mathbb{P} \left( d(\hat{\theta} , \theta _0) > \frac{u^{\ast} }{2} \right).
 	\]
-	and essentially we handle the first term as in \autoref{thm:non-asymptotic-rate-of-convergence}, and we can show that the second term goes to \(0\).
+	We then handle the first term as in \autoref{thm:non-asymptotic-rate-of-convergence}, and show the second term goes to \(0\).
 \end{proof}
 
 \subsection{More Examples}
 We see two more examples of using \autoref{thm:non-asymptotic-rate-of-convergence-extend}.
 
-\begin{eg}[Sample Quantile]
+\begin{eg}[Sample quantile]
 	Let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \)  which has density \(f\) w.r.t.\ Lebesgue measure. Moreover, for \(0 < \tau < 1\), let
 	\[
 		\rho _{\tau } (x) = \begin{dcases}
@@ -94,14 +94,14 @@ We see two more examples of using \autoref{thm:non-asymptotic-rate-of-convergenc
 		\item By the \hyperref[def:rate-determining-equation]{rate-determining equation},
 		      \[
 			      \delta _n / \sqrt{n} \approx \delta _n^2
-			      \implies \delta _n = 1 / \sqrt{n}
-			      \implies \vert \hat{\theta} _n - \theta _0 \vert = O_p \left( \frac{1}{\sqrt{n} } \right) .
+			      \implies \delta _n = 1 / \sqrt{n},
 		      \]
+		      implying \(\vert \hat{\theta} _n - \theta _0 \vert = O_p (1 / \sqrt{n}) \).
 	\end{itemize}
 \end{explanation}
 
 \begin{remark}
-	In this sample quantile example, the classical result further shows that
+	In this sample quantile example, the classical result for \(\tau = 0.5\) shows that
 	\[
 		\sqrt{n} (\hat{\theta} - \theta _0) \overset{d}{\to } \mathcal{N} \left( 0, \frac{1}{4 ( f(\theta _0) )^2} \right).
 	\]
@@ -109,7 +109,7 @@ We see two more examples of using \autoref{thm:non-asymptotic-rate-of-convergenc
 
 Another example is the high-dimensional linear regression.
 
-\begin{eg}[High-Dimensional Linear Regression]
+\begin{eg}[High-dimensional linear regression]\label{eg:high-dim-LR}
 	Consider \(Z = (Y, X_1, \dots , X_p) \in \mathbb{R} ^{p + 1}\) such that \(Z_1, \dots , Z_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and we want to predict \(Y\) by \(\beta ^{\top} X\). Let \(M(\beta ) = \mathbb{E}_{}\left[(Y - \beta ^{\top} X) ^2 \right] \) with
 	\[
 		\beta ^{\ast} = \argmin_{\beta \colon \lVert \beta \rVert _1 \leq L}  M(\beta )
@@ -127,55 +127,62 @@ Another example is the high-dimensional linear regression.
 		We're not assuming the underlying \(\mathbb{P} \) to be linear.
 	\end{note}
 
+	The main question of interest is the following.
+
 	\begin{problem*}[Persistency]
 		How large can \(L = L(n, p)\) be so \(M(\hat{\beta} ) - M(\beta ^{\ast} ) \to 0\) as \(n, p \to \infty \)?
 	\end{problem*}
-
-	\begin{theorem}
-		Let \(Y = X_0\) and define \(F(Z) = \max _{0 \leq j, k \leq p} \vert X_j X_k - \mathbb{E}_{}\left[X_j X_k \right] \vert \). Assume further that \(\mathbb{E}_{}\left[F^2(Z) \right] < \infty \), then
-		\[
-			M(\hat{\beta} ) - M(\beta ^{\ast} ) = O_p \left( L \sqrt[4]{\frac{\log p}{n}} \right).
-		\]
-	\end{theorem}
-	\begin{proof}
-		Since \(M(\hat{\beta} ) - M(\beta ^{\ast} ) \leq 2 \sup _{\beta \colon \lVert \beta  \rVert _1 \leq L} \vert M_n(\beta ) - M(\beta ) \vert \) from the basic inequality, and we can write
-		\[
-			M_n(\beta ) = \gamma ^{\top} \Sigma _n \gamma ,\quad
-			M(\beta ) = \gamma ^{\top} \Sigma \gamma
-		\]
-		where \(\gamma = (-1, \beta )\), \(\Sigma _n = \left( \frac{1}{n} \sum_{i=1}^{n} X_j^i X_n^i \right)_{j, k = 0, \dots , p} \), and \(\Sigma = \left( \mathbb{E}_{}\left[X_j^1 X_k^1 \right] \right) _{j, k = 0, \dots , p} \). Hence,
-		\[
-			\sup _{\beta \colon \lVert \beta  \rVert _1 \leq L} \vert M_n(\beta ) - M(\beta ) \vert
-			= \vert \gamma ^{\top} \Sigma _n \gamma - \gamma ^{\top} \Sigma \gamma  \vert
-			\leq \lVert \gamma  \rVert _1^2 \cdot \lVert \Sigma _n - \Sigma  \rVert _\infty
-			\leq (1 + L)^2 \lVert \Sigma _n - \Sigma  \rVert _\infty ,
-		\]
-		which implies
-		\[
-			\begin{split}
-				\mathbb{P} (M(\hat{\beta} ) - M(\beta ^{\ast} ) > \epsilon )
-				&\leq \mathbb{P} (M(\hat{\beta} ) - M(\beta ^{\ast} ) > \epsilon )\\
-				&\leq P((1 + L)^2 \lVert \Sigma _n - \Sigma  \rVert _\infty > \epsilon )\\
-				&\leq \frac{(1 + L)^2 \mathbb{E}_{}\left[\lVert \Sigma _n - \Sigma  \rVert _\infty  \right] }{\epsilon }.
-			\end{split}
-		\]
-		Finally, we observe that
-		\[
-			\mathbb{E}_{}\left[\lVert \Sigma _n - \Sigma  \rVert _\infty  \right]
-			= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
-		\]
-		where \(\mathscr{F} = \{  \} \). Now, \(F\) is clearly an \hyperref[def:envelope]{envelope}, and define \hyperref[def:eps-bracket]{\(\epsilon\)-brackets} to be \(\{ [f_{j,k}] \pm \epsilon / 2 \} \) ,
-		\[
-			N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon ) \leq (p + 1) ^2.
-		\]
-		By the \hyperref[thm:bracketing-bound]{bracketing bound},
-		\[
-			\frac{1}{\sqrt{n} } \lVert F \rVert _{L_2(\mathbb{P} )} \sqrt{2 \log (p + 1)}.
-		\]
-
-	\end{proof}
-
-	\begin{remark}
-		\hyperref[thm:bracketing-bound]{Bracketing bound} can be used for any \hyperref[def:EP]{empirical process} induced by finite class.
-	\end{remark}
+	\begin{answer}
+		With some assumptions, \autoref{thm:lec22} shows that \(L \lesssim \sqrt[4]{\log p / n} \).
+	\end{answer}
 \end{eg}
+
+\begin{theorem}\label{thm:lec22}
+	Under the setup of \hyperref[eg:high-dim-LR]{high-dimensional linear regression}, let \(Y = X_0\) and define \(F(Z) = \max _{0 \leq j, k \leq p} \vert X_j X_k - \mathbb{E}_{}\left[X_j X_k \right] \vert \). Assume further that \(\mathbb{E}_{}\left[F^2(Z) \right] < \infty \), then
+	\[
+		M(\hat{\beta} ) - M(\beta ^{\ast} ) = O_p \left( L , \sqrt[4]{\frac{\log p}{n}} \right).
+	\]
+\end{theorem}
+\begin{proof}
+	From the basic inequality, \(M(\hat{\beta} ) - M(\beta ^{\ast} ) \leq 2 \sup _{\beta \colon \lVert \beta  \rVert _1 \leq L} \vert M_n(\beta ) - M(\beta ) \vert \). By letting
+	\[
+		\gamma = (-1, \beta )^{\top},\quad
+		\Sigma = \left( \mathbb{E}_{}\left[X_j^1 X_k^1 \right] \right) _{j, k = 0, \dots , p},\quad
+		\Sigma _n = \left( \frac{1}{n} \sum_{i=1}^{n} X_j^i X_n^i \right)_{j, k = 0, \dots , p} ,
+	\]
+	we may then write \(M(\beta ) = \gamma ^{\top} \Sigma \gamma\) and \(M_n(\beta ) = \gamma ^{\top} \Sigma _n \gamma\). Hence,
+	\[
+		\sup _{\beta \colon \lVert \beta  \rVert _1 \leq L} \vert M_n(\beta ) - M(\beta ) \vert
+		= \vert \gamma ^{\top} \Sigma _n \gamma - \gamma ^{\top} \Sigma \gamma  \vert
+		\leq \lVert \gamma  \rVert _1^2 \cdot \lVert \Sigma _n - \Sigma  \rVert _\infty
+		\leq (1 + L)^2 \lVert \Sigma _n - \Sigma  \rVert _\infty ,
+	\]
+	which implies
+	\[
+		\sup _{\beta \colon \lVert \beta  \rVert _1 \leq L} \mathbb{P} (M(\hat{\beta} ) - M(\beta ^{\ast} ) > \epsilon )
+		\leq P((1 + L)^2 \lVert \Sigma _n - \Sigma  \rVert _\infty > \epsilon )
+		\leq \frac{(1 + L)^2 \mathbb{E}_{}\left[\lVert \Sigma _n - \Sigma  \rVert _\infty  \right] }{\epsilon }
+	\]
+	by \hyperref[lma:Markov-inequality]{Markov's inequality}. Finally, we observe that
+	\[
+		\mathbb{E}_{}\left[\lVert \Sigma _n - \Sigma  \rVert _\infty  \right]
+		= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \vert \mathbb{P} _n f - \mathbb{P} f \vert  \right]
+	\]
+	where \(\mathscr{F} = \{ f_{jk} \colon 0 \leq j, k \leq p\} \) with \(f_{jk} = X_j X_k - \mathbb{E}_{}\left[X_j X_k \right] \). Now, \(F\) is clearly an \hyperref[def:envelope]{envelope} with \(\lVert F \rVert _{L_2(\mathbb{P} )} < \infty \), and by defining \hyperref[def:eps-bracket]{\(\epsilon\)-brackets} to be \(\{ [f_{j,k} \pm \epsilon / 2 ]\} \), we have
+	\[
+		N_{[\ ]}(\mathscr{F} , L_2(\mathbb{P} ), \epsilon ) \leq (p + 1) ^2.
+	\]
+	By the \hyperref[thm:bracketing-bound]{bracketing bound}, \(\mathbb{E}_{}\left[\lVert \Sigma _n - \Sigma  \rVert _\infty  \right] \leq \frac{1}{\sqrt{n} } \lVert F \rVert _{L_2(\mathbb{P} )} \sqrt{2 \log (p+1)} \), i.e.,
+	\[
+		M(\hat{\beta} ) - M(\beta ^{\ast} )
+		\leq \frac{(1 + L)^2 }{\sqrt{n} } \lVert F \rVert _{L_2(\mathbb{P} )} \sqrt{2 \log (p + 1)} .
+	\]
+	In order to let this goes to \(0\), we require \(L \lesssim \sqrt[4]{n / \log p}\), which finally implies
+	\[
+		M(\hat{\beta} ) - M(\beta ^{\ast} ) = O_p \left( L, \sqrt[4]{\frac{\log p}{n}} \right).
+	\]
+\end{proof}
+
+\begin{remark}
+	Observe that in the above proof, we do not need to \hyperref[def:localized-EP]{localize the empirical process}, i.e., the \hyperref[thm:bracketing-bound]{bracketing bound} can be used for any \hyperref[def:EP]{empirical process} induced by finite class.
+\end{remark}

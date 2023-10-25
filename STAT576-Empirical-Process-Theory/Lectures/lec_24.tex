@@ -1,1 +1,103 @@
-\lecture{24}{25 Oct.\ 9:00}{}
+\lecture{24}{25 Oct.\ 9:00}{Contraction Principle for Rademacher Complexity}
+
+\begin{prev}
+	Given \(\mathscr{F} = \{ f\colon \chi \to \mathscr{Y} \} \) and a loss \(\ell (f(x), y)\), the \hyperref[not:excess-risk]{excess risk} of \(\hat{f} \in \mathscr{F} \) is
+	\[
+		\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)
+		= \mathbb{E}_{}[\ell (\hat{f} (X), Y) ] - \inf _{f\in \mathscr{F} } \mathbb{E}_{}\left[\ell (f(X), Y) \right]
+	\]
+	where \(\hat{f} \) is the \hyperref[prb:ERM]{ERM} \(\hat{f} = \argmin_{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \ell (f(x_i), y_i)\).
+\end{prev}
+
+We know that from \autoref{lma:ERM} and \hyperref[lma:symmetrization]{symmetrization}, the \hyperref[not:excess-risk]{excess risk} is bounded by
+\[
+	\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \left( \mathbb{E}_{}\left[\ell (f(X), Y) \right] - \frac{1}{n} \sum_{i=1}^{n} \ell (f(x_i), y_i) \right) \right]
+	\leq 2 \cdot \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \ell (f(x_i), y_i) \right] ,
+\]
+i.e., two times of the \hyperref[def:Rademacher-complexity]{Rademacher complexity} (actually the \hyperref[def:Rademacher-width]{Rademacher width}) of the set
+\[
+	\ell \circ \mathscr{F} \big( (x_1, y_1), \dots , (x_n, y_n) \big)
+	\coloneqq \left\{ \ell (f(x_1), y_1), \dots , \ell (f(x_n), y_n) \right\} _{f\in \mathscr{F} }.
+\]
+We would like to further upper-bound this \hyperref[def:Rademacher-complexity]{Rademacher complexity} by the \hyperref[def:Rademacher-complexity]{Rademacher complexity} of \(\mathscr{F} \) only. This can be done if \(\ell \) is Lipschitz in the first argument for every fixed second argument.
+
+\begin{theorem}[Contraction principle]\label{thm:contraction-principle}
+	Suppose we have \(\Theta \subseteq \mathbb{R} ^n\) with the \hyperref[def:Rademacher-width]{Rademacher width} \(R(\Theta ) = \mathbb{E}_{}\left[\sup _{\theta \in \Theta } \langle \epsilon , \theta  \rangle \right] \). Let \(\phi _i \colon \mathbb{R} \to \mathbb{R} \) be \(1\)-Lipschitz for \(i=1, \dots , n\), and let
+	\[
+		\phi \circ \Theta \coloneqq \{ \left(\phi _1(\theta _1), \phi _2(\theta _2), \dots , \phi _n(\theta _n) \right) \colon \theta \in \Theta \}.
+	\]
+	Then, \(R(\phi \circ \Theta ) \leq R(\Theta )\).
+\end{theorem}
+\begin{proof}
+	Let \(\phi \circ \theta = (\phi _1(\theta _1), \phi _2(\theta _2), \dots , \phi _n(\theta _n))\), then
+	\[
+		R(\phi \circ \Theta )
+		= \mathbb{E}_{\epsilon _1, \dots , \epsilon _{n-1}}\left[ \mathbb{E}_{\epsilon _n}\left[ \sup _{\theta \in \Theta } \langle \phi \circ \theta , \epsilon  \rangle  \right] \right] .
+	\]
+	Condition on \(\epsilon _1, \dots , \epsilon _{n-1}\), we have
+	\begin{align*}
+		 & \mathbb{E}_{\epsilon _n}\left[ \sup _{\theta \in \Theta } \langle \phi \circ \theta , \epsilon  \rangle  \right]                                                            \\
+		 & = \frac{1}{2} \left[
+			\sup _{\theta \in \Theta } \big( \langle (\phi \circ \theta) _{1 \colon n-1}, \epsilon _{1 \colon n-1} \rangle + \phi _n(\theta _n) \big)
+			+ \sup _{\theta ^{\prime} \in \Theta } \big( \langle (\phi \circ \theta ^{\prime}) _{1\colon n-1} , \epsilon _{1\colon n-1} \rangle - \phi _n (\theta ^{\prime} _n) \big)
+		\right]                                                                                                                                                                        \\
+		 & = \frac{1}{2} \left[
+			\sup _{\theta , \theta ^{\prime} \in \Theta } \big( \langle (\phi \circ \theta )_{1 \colon n-1}, \epsilon _{1 \colon n-1} \rangle
+			+ \langle (\phi \circ \theta ^{\prime} )_{1\colon n-1} , \epsilon _{1 \colon n-1}\rangle + \phi _n(\theta _n) - \phi _n(\theta ^{\prime} _n) \big)
+		\right]                                                                                                                                                                        \\
+		\shortintertext{sine \(\phi _n(\theta _n) - \phi _n(\theta _n^{\prime} ) \leq \vert \theta _n - \theta _n^{\prime} \vert \),}
+		 & \leq \frac{1}{2} \left[
+			\sup _{\theta , \theta ^{\prime} \in \Theta } \big( \langle (\phi \circ \theta )_{1 \colon n-1}, \epsilon _{1 \colon n-1} \rangle
+			+ \langle (\phi \circ \theta ^{\prime} )_{1\colon n-1} , \epsilon _{1 \colon n-1} \rangle + \vert \theta _n - \theta _n^{\prime} \vert \big)
+		\right]                                                                                                                                                                        \\
+		 & = \frac{1}{2} \left[
+			\sup _{\theta , \theta ^{\prime} \in \Theta } \big( \langle (\phi \circ \theta )_{1 \colon n-1}, \epsilon _{1 \colon n-1} \rangle
+			+ \langle (\phi \circ \theta ^{\prime} )_{1\colon n-1} , \epsilon _{1 \colon n-1} \rangle + \theta _n - \theta _n^{\prime} \big)
+		\right] \tag*{symmetry of \(\theta , \theta ^{\prime} \)}                                                                                                                      \\
+		 & = \frac{1}{2} \left[
+			\sup _{\theta \in \Theta } \big( \langle (\phi \circ \theta )_{1 \colon n-1}, \epsilon _{1 \colon n-1} \rangle + \theta _n \big)
+			+ \sup _{\theta ^{\prime} \in \Theta } \big( \langle (\phi \circ \theta ^{\prime} )_{1\colon n-1} , \epsilon _{1 \colon n-1} \rangle - \theta _n^{\prime} \big)
+		\right]                                                                                                                                                                        \\
+		 & = \frac{1}{2} \left[
+			\sup _{\theta \in \Theta } \big( \langle (\phi \circ \theta )_{1 \colon n-1}, \epsilon _{1 \colon n-1} \rangle + \theta _n \big)
+			+ \sup _{\theta \in \Theta } \big( \langle (\phi \circ \theta )_{1\colon n-1} , \epsilon _{1 \colon n-1} \rangle - \theta _n^{\prime} \big)
+		\right]                                                                                                                                                                        \\
+		 & = \mathbb{E}_{\epsilon _n}\left[ \sup _{\theta \in \Theta } \langle (\phi \circ \theta )_{1 \colon n-1} , \epsilon _{1 \colon n-1} \rangle + \theta _n \epsilon _n \right].
+	\end{align*}
+	We see that we have got rid of \(\phi _n\)! Now, by considering iterate this method for all \(i\), and taking the expectation over all \(\epsilon _i\)'s, we can then get rid of \(\phi \) entirely, and hence get \(R(\Theta )\) finally.
+\end{proof}
+
+\begin{corollary}\label{col:contraction-principle}
+	The same conclusion of \hyperref[thm:contraction-principle]{contraction principle} holds for \(\phi _i\)'s being \(L\)-Lipschitz, specifically, \(R(\phi \circ \Theta ) \leq L\cdot R(\Theta )\).
+\end{corollary}
+
+Now, going back to bounding \hyperref[not:excess-risk]{excess risk}, we let \(\phi _i (x) \coloneqq \ell (x, y_i)\).\footnote{The second argument is fixed at \(y_i\) for each \(\phi _i\) as we noted before.} If these \(\phi _i\)'s are \(L\)-Lipschitz, the \hyperref[col:contraction-principle]{contraction principle} with \(\Theta = \{ (f(x_1), \dots , f(x_n)) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n \) gives
+\[
+	\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \ell (f(x_i), y_i) \right]
+	\leq L\cdot \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i f(x_i) \right]
+\]
+where \(\ell (f(x_i), y_i) = \phi _i(f(x_i))\).
+
+\begin{eg}
+	Square loss is Lipschitz if \(\mathscr{F} \) is uniformly bounded and \(\mathscr{Y} \) is also uniformly bounded.
+\end{eg}
+
+\subsection{Constrained Least Square}
+Now, we consider the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design} case with well specified case, i.e., given \(x_1, \dots , x_n \in \chi \), let \(y_i = f^{\ast} (x_i) + \epsilon _i\) and assume \(\epsilon _1, \dots , \epsilon _n \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1) \).\footnote{This can be generalized to any \(\Subg(\sigma )\).} We further assume that \(f^{\ast} \in \mathscr{F} \).
+
+Constrained least sqaures where
+\[
+	\hat{f} = \argmin_{f\in\mathscr{F} } \sum_{i=1}^{n} (y_i - f(x_i))^2.
+\]
+\begin{remark}
+	Take away message: local Gaussian complexity of \(\mathscr{F} \) around \(f^{\ast} \); determine the rate of convergence of \(\hat{f} \).
+\end{remark}
+
+The goal is to give non-asymptotic bound on \(\vert \hat{f} - f^{\ast} \vert ^2 _{L_2(\mathbb{P} )} = \frac{1}{n} \sum_{i=1}^{n} (\hat{f} (x_i) - f^{\ast} (x_i))^2\) for \(\mathbb{P} _n = \{ x_1, \dots , x_n \} \). In contrast, in random design, we assume \(x_1, \dots , x_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and the goal is to give
+\[
+	\vert \hat{f} - f^{\ast} \vert ^2_{L_2(\mathbb{P} )} = \mathbb{E}_{X}\left[(\hat{f} (X) - f^{\ast} (X))^2 \right] .
+\]
+
+\begin{intuition}
+	Fixed design is signal/image denoising (statistical signal denoising). Since \(x_i = (i / n, j / n)\).
+\end{intuition}

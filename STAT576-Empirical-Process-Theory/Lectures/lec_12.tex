@@ -9,7 +9,7 @@ To overcome the limitation of the \hyperref[lma:single-scale-bound]{single scale
 It's clear that \(\sup _{t\in T_0} X_t = \sup _{t\in T} X_t\). Moreover, this notion is consistent with the separability of a topological space\footnote{A topological space is \emph{separable} if it contains a countable dense subset.} we saw in real analysis.
 
 \begin{eg}[Separable metric space]
-	If \((T, d)\) is \hyperref[prev:separable]{separable} (as a topological space), \(\{ X_t \} \) has countable sample path almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
+	If \((T, d)\) is separable (as a topological space), \(\{ X_t \} \) has countable sample path almost surely, then \(\{ X_t \} \) is \hyperref[def:separable]{separable}.
 \end{eg}
 
 Now, we can state the bound we want.
@@ -34,11 +34,11 @@ Now, we can state the bound we want.
 		\end{itemize}
 		Write \(\pi _k(t)\) for the closest element in \(N_k\) to \(t\), in particular, \(d(t, \pi _k(t)) \leq 2^{-k}\). By writing
 		\[
-			X_t
+			X_t - X_{t_0}
 			= X_{\pi _{K_1} (t)} - X_{\pi _{K_0} (t)}
-			= X_{\pi _{K_1}(t)} - X_{\pi _{K_1 - } (t)} + X_{\pi _{k_{(1)}} (t)} - \dots + X_{\pi _{K_0 + 1} (t)} - X_{\pi _{K_0} (t)},
+			= X_{\pi _{K_1}(t)} - X_{\pi _{K_1 - 1} (t)} + X_{\pi _{K_1 - 1} (t)} - \dots + X_{\pi _{K_0 + 1} (t)} - X_{\pi _{K_0} (t)},
 		\]
-		we have
+		hence we have
 		\[
 			\begin{split}
 				\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
@@ -47,16 +47,17 @@ Now, we can state the bound we want.
 				\leq \sum_{k=K_0 + 1}^{K_1} \mathbb{E}_{}\left[\sup _{t\in T} \left( X_{\pi _k(t)} - X_{\pi _{k-1} (t)} \right) \right].
 			\end{split}
 		\]
-		Since the cardinality of \(\{ X_{\pi _k(t)} - X_{\pi _{k-1} (t)} \}_{t\in T}\) is \(\vert N_k \vert \vert N_{k-1} \vert \leq \vert N_k \vert ^2\), with
+		Since the cardinality of \(\{ X_{\pi _k(t)} - X_{\pi _{k-1} (t)} \}_{t\in T}\) is \(\vert N_k \vert \vert N_{k-1} \vert \leq \vert N_k \vert ^2\), and
 		\[
-			X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \sim \Subg(d(\pi _k(t), \pi _{k-1}(t)))
+			X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \sim \Subg(d^2(\pi _k(t), \pi _{k-1}(t)))
 		\]
-		where \(d(\pi _k(t), t) + d(t, \pi _{k-1}(t)) \leq 2^{-k} + 2^{-(k+1)} \leq 3\cdot 2^{-k}\). From \autoref{lma:sub-Gaussian-finite-maximum}, for each \(k\),
+		with \(d(\pi _k(t), \pi _{k-1}(t)) \leq d(\pi _k(t), t) + d(t, \pi _{k-1}(t)) \leq 2^{-k} + 2^{-k+1} \leq 3\cdot 2^{-k}\), from \autoref{lma:sub-Gaussian-finite-maximum},
 		\[
 			\mathbb{E}_{}\left[\sup _{t\in T} \left( X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \right) \right]
 			\leq 3 \times 2^{-k} \sqrt{2 \log \vert N_k \vert ^2}
-			= 6 \times 2^{-k} \sqrt{\log \vert N_k \vert }.
+			= 6 \times 2^{-k} \sqrt{\log \vert N_k \vert }
 		\]
+		for each \(k\). Summing over \(k\) yields the result.
 	\end{explanation}
 
 	\begin{claim}

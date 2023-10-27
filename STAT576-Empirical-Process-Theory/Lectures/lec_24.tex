@@ -86,21 +86,27 @@ where \(\ell (f(x_i), y_i) = \phi _i(f(x_i))\).
 Now, we consider an example of the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design} case with well specified case.
 
 \begin{problem}[Constrained least square]\label{prb:constrained-least-square}
-Given \(x_1, \dots , x_n \in \chi \), let \(y_i = f^{\ast} (x_i) + \epsilon _i\) and assume \(\epsilon _1, \dots , \epsilon _n \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1) \).\footnote{This can be generalized to any \(\Subg(\sigma )\).} We further assume that \(f^{\ast} \in \mathscr{F} \). Constrained least sqaures where
+Given a function class \(\mathscr{F} \) on \(\chi \), let \(x_1, \dots , x_n \in \chi \) and \(y_i = f^{\ast} (x_i) + \epsilon _i\) where \(\epsilon _1, \dots , \epsilon _n \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2) \)\footnote{This can be generalized to any \(\Subg(\sigma )\).} and assume that \(f^{\ast} \in \mathscr{F} \). Then, the \emph{constrained least square} aims to estimate \(f^{\ast} \) via
 \[
-	\hat{f} = \argmin_{f\in\mathscr{F} } \sum_{i=1}^{n} (y_i - f(x_i))^2.
+	\hat{f} = \argmin_{f\in\mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} (y_i - f(x_i))^2.
 \]
 \end{problem}
 
-\begin{remark}
-	Take away message: local Gaussian complexity of \(\mathscr{F} \) around \(f^{\ast} \); determine the rate of convergence of \(\hat{f} \).
-\end{remark}
-
-The goal is to give non-asymptotic bound on \(\vert \hat{f} - f^{\ast} \vert ^2 _{L_2(\mathbb{P} )} = \frac{1}{n} \sum_{i=1}^{n} (\hat{f} (x_i) - f^{\ast} (x_i))^2\) for \(\mathbb{P} _n = \{ x_1, \dots , x_n \} \). In contrast, in random design, we assume \(x_1, \dots , x_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and the goal is to give
+Next, we will see that ``local''\footnote{Recall the localization we did before, i.e., the \hyperref[def:localized-EP]{localized empirical process}. We will do the similar things here.} \hyperref[def:Gaussian-width]{Gaussian complexity} of \(\mathscr{F} \) around \(f^{\ast} \) determines the \hyperref[def:rate-of-convergence]{rate of convergence} of \(\hat{f} \). Specifically, the goal is to give non-asymptotic bound on
 \[
-	\vert \hat{f} - f^{\ast} \vert ^2_{L_2(\mathbb{P} )} = \mathbb{E}_{X}\left[(\hat{f} (X) - f^{\ast} (X))^2 \right] .
+	\lVert \hat{f} - f^{\ast} \rVert ^2 _{L_2(\mathbb{P} _n)}
+	= \frac{1}{n} \sum_{i=1}^{n} \left( \hat{f} (x_i) - f^{\ast} (x_i) \right) ^2
 \]
+for \(\mathbb{P} _n = \{ x_1, \dots , x_n \} \).
 
-\begin{intuition}
-	Fixed design is signal/image denoising (statistical signal denoising). Since \(x_i = (i / n, j / n)\).
-\end{intuition}
+\begin{note}
+	In contrast, in random design, we assume \(x_1, \dots , x_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), and the goal is to give bound on
+	\[
+		\lVert \hat{f} - f^{\ast} \rVert ^2_{L_2(\mathbb{P} )}
+		= \mathbb{E}_{X}\left[(\hat{f} (X) - f^{\ast} (X))^2 \right] .
+	\]
+\end{note}
+
+\begin{eg}[Image denoising]
+	In the case of fixed design, a typical example is image denoising where \(x_i = (i / n, j / n)\) are the pixels.
+\end{eg}

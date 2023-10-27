@@ -1,1 +1,166 @@
-\lecture{25}{27 Oct.\ 9:00}{}
+\lecture{25}{27 Oct.\ 9:00}{Constrained Least Square}
+First, observe that we can think of \(\mathscr{F} \subseteq \mathbb{R} ^n\), i.e., \(f^{\ast} \in \mathbb{R} ^n\), \(y\in \mathbb{R} ^n\), and \(\epsilon \in \mathbb{R} ^n\) since all we care about is the values on the fixed points \(x_1, \dots , x_n\). In this case, \(y = f^{\ast} + \epsilon \), and the goal is to find an estimation vector \(\hat{f} \in \mathbb{R} ^n\), and we want to find a bound on
+\[
+	\frac{1}{n} \lVert \hat{f} - f^{\ast} \rVert ^2.
+\]
+Let's see some interesting examples of \(\mathscr{F} \).
+
+\begin{notation}[Risk]\label{not:risk}
+	The \emph{risk} is defined as
+	\[
+		R(\hat{f} , f^{\ast} )
+		= \mathbb{E}_{f^{\ast} }\left[ \frac{1}{n} \sum_{i=1}^{n} (\hat{f} _i - f^{\ast} _i)^2 \right]
+		= \mathbb{E}_{f^{\ast} }\left[ \frac{1}{n} \lVert \hat{f} - f^{\ast} \rVert ^2 \right] .
+	\]
+\end{notation}
+
+\begin{eg}[Linear regression]
+	When \(f^{\ast} = X \beta ^{\ast} \) for some \(X_{n \times d}\), we can regard \(\mathscr{F} = \mathcal{C} (X_{n\times d})\), where \(\mathcal{C} \) denotes the column space. In this case, \(\hat{f} = X \hat{\beta} \) where \(\hat{\beta} \) is the ordinary least square estimator with the \hyperref[not:risk]{risk} being
+	\[
+		\mathbb{E}_{}\left[\frac{1}{n} \lVert X \hat{\beta} - X \beta ^{\ast} \rVert ^2 \right] = \frac{\rank (X)}{n} \cdot \sigma ^2.
+	\]
+\end{eg}
+
+\begin{eg}[Smoothness constraints]
+	If \(\theta ^{\ast} _i = f^{\ast} (i / n)\) for \(f^{\ast} \in S_\alpha \), i.e., the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square}, the \hyperref[not:risk]{risk} has order \(O(n^{- \frac{2\alpha }{2\alpha + 1}})\) for \(\alpha > 1 / 2\) as shown in \autoref{thm:fixed-design-non-parametric-LS}.
+\end{eg}
+
+\begin{eg}[Constrained Lasso]
+	\(\mathscr{F} = \{ X \beta \colon \lVert \beta \rVert _1 \leq L \} \)
+\end{eg}
+
+\begin{eg}[Isotonic regression]
+	\(\mathscr{F} = \{f \colon f_1 \leq f_2 \leq \dots \leq f_n \} \)
+\end{eg}
+
+\begin{eg}[Low rank]
+	\(\mathscr{F} = \{f \in \mathbb{R} ^{n \times n} \colon \rank (f) = k \} \) for some small \(k\).
+\end{eg}
+
+\begin{eg}
+	\(\mathscr{F} = \{f \colon \sum_{i = 1}^n \vert f_{i+1} - f_i \vert \leq V \} \).
+\end{eg}
+
+\begin{eg}
+	\(\mathscr{F} = \{f \colon \sum_{i=1}^{m} \sum_{j=1}^{m} \vert f_{i+1, j} - f_{i, j} \vert + \vert f_{i, j+1} , f_{i, j} \vert \leq V \} \).
+\end{eg}
+
+To summarize, the constraints comes from \(\mathscr{F} \) in the \hyperref[prb:constrained-least-square]{constrained least square}. Now, to start bounding \(\lVert \hat{f} - f^{\ast} \rVert \), we first see a basic inequality: since \(f^{\ast} \in \mathscr{F} \) and \(\hat{f} \) is the minimizer of \(\lVert y - \hat{f} \rVert ^2 / n \),
+\[
+	\lVert y - \hat{f} \rVert ^2 \leq \lVert y - f^{\ast}  \rVert ^2.
+\]
+With \(y = f^{\ast} + \epsilon \), the above is equivalent to
+\[
+	\begin{split}
+		&\lVert f^{\ast} + \epsilon - \hat{f}  \rVert ^2 \leq \lVert \epsilon \rVert ^2 \\
+		\iff &\langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle \\
+		\iff &\langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \\
+		\iff &\langle f^{\ast} - \hat{f} , f^{\ast} - \hat{f} \rangle \leq \langle \hat{f} - f^{\ast} , \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \\
+		\iff &\langle \hat{f} - f^{\ast} , \hat{f} - f^{\ast} \rangle \leq 2 \langle \epsilon , \hat{f} - f^{\ast} \rangle \\
+		\iff &\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast}  \rangle .
+	\end{split}
+\]
+We call this the \emph{basic inequality}
+\begin{equation}\label{eq:basic-inequality}
+	\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast}  \rangle
+\end{equation}
+
+Consider a toy example.
+
+\begin{eg}
+	Let \(\mathscr{F} = \mathcal{C} (X_{n\times d})\), then \(\hat{f} = P_X y\) where \(P_X\) is the project matrix. From the \hyperref[eq:basic-inequality]{basic inequality}, \(\lVert X \hat{\beta} - X \beta ^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , X \hat{\beta} - X \beta ^{\ast} \rangle\). Dividing both sides by \(\lVert X \hat{\beta} - X \beta ^{\ast} \rVert \) leads to
+	\[
+		\lVert X \hat{\beta} - X \beta ^{\ast} \rVert \leq 2 \left\langle \epsilon , \frac{X \hat{\beta} - X \beta ^{\ast}}{\lVert X \hat{\beta} - X \beta ^{\ast} \rVert } \right\rangle
+		\leq 2\cdot \sup _{v = X \beta - X \beta ^{\ast} } \left\langle \epsilon , \frac{v}{\lVert v \rVert } \right\rangle
+		= 2 \sup _{\substack{v\in \mathcal{C} (X) \\ \lVert v \rVert = 1}} \langle \epsilon , v \rangle
+		= 2 \lVert P_X \epsilon  \rVert,
+	\]
+	so we have \(\lVert X \hat{\beta} - X \beta ^{\ast} \rVert \leq 2 \lVert P_X \epsilon \rVert \).\footnote{In this specific example, the factor \(2\) is superfluous since \(X \hat{\beta} - X \beta ^{\ast} = P_X y = X \beta ^{\ast} + P_X \epsilon - X \beta ^{\ast} \). Furthermore, we have \(\mathbb{E}_{}\left[ \lVert P_X \epsilon \rVert ^2 \right] \sim \chi ^2_{\rank (X)}\).}
+\end{eg}
+
+Now, going back to the general case, we note the following.
+
+\begin{note}[Compact \(\mathscr{F} \)]
+	If \(\mathscr{F} \) is compact, then the \hyperref[eq:basic-inequality]{basic inequality} gives us an upper-bound as
+	\[
+		\lVert \hat{f} - f^{\ast} \rVert ^2 \leq 2 \sup _{f\in \mathscr{F} } \langle \epsilon , f - f^{\ast} \rangle.
+	\]
+\end{note}
+
+\begin{intuition}
+	This upper-bound depends on the complexity of neighborhood around \(f^{\ast} \) within \(\mathscr{F} \).
+\end{intuition}
+
+To proceed, we mimic the above calculation and replace the \hyperref[eq:basic-inequality]{basic inequality} by
+\[
+	\lVert \hat{f} - f^{\ast} \rVert \leq 2 \sup _{f\in \mathscr{F} } \left\langle \epsilon , \frac{f - f^{\ast} }{\lVert f - f^{\ast} \rVert } \right\rangle .
+\]
+To simplify the notation, let \(\mathscr{F} ^{\ast} = \{ f - f^{\ast} \colon f \in \mathscr{F} \} \), i.e., we center \(\mathscr{F} \) by \(f^{\ast} \), then
+\[
+	\lVert \hat{f} - f^{\ast} \rVert \leq 2 \sup _{f\in \mathscr{F} ^{\ast} } \left\langle \epsilon , \frac{f}{\lVert f \rVert } \right\rangle .
+\]
+We see that this supremum depends on the set \(\{ f / \lVert f \rVert \colon f\in \mathscr{F} ^{\ast} \} \), and actually it's just the (scaled) \hyperref[def:Gaussian-width]{Gaussian width} of \(\{ f / \lVert f \rVert \colon f\in \mathscr{F} ^{\ast} \}\).
+
+\begin{note}
+	The set \(\{ f / \lVert f \rVert \} _{f\in \mathscr{F} ^{\ast} }\) is the (sub)set of unit vectors, i.e., \(\{ f / \lVert f \rVert \} _{f\in \mathscr{F} ^{\ast} } \subseteq S^{n-1}\). If this set is the full sphere \(S^{n-1}\), then the supremum is just \(2 \lVert \epsilon \rVert = O_p (\sqrt{n} )\). In this case,
+	\[
+		\frac{1}{n} \lVert \hat{f} - f^{\ast}  \rVert ^2 = O(1),
+	\]
+	i.e., the \hyperref[not:risk]{risk} doesn't go to \(0\), which is not good, indicating that \(\mathscr{F} \) is too large.
+\end{note}
+
+Hence, we need \(\mathscr{F} ^{\ast} \) to be significantly ``smaller'' than \(S^{n-1}\) in the \hyperref[def:Gaussian-width]{Gaussian width} sense; like linear subspace with rank \(d\). However, we observe that as long as there's a smaller ball inside \(\mathscr{F} ^{\ast} \), this rescaling will force us to consider all \(S^{n-1}\), leading to non-convergence \hyperref[not:risk]{risk}.
+
+\begin{center}
+	\incfig{star-shape}
+\end{center}
+
+\begin{intuition}
+	We should take advantage of the fact that at larger scale, we don't have a smaller sphere.
+\end{intuition}
+
+This suggests us to look instead at that for some \(t > 0\), \(\sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \geq t} \left\langle \epsilon , f / \lVert f \rVert \right\rangle \). To do this, consider
+\[
+	\begin{split}
+		\lVert \hat{f} - f^{\ast} \rVert
+		&= \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert \leq t} \cdot \lVert \hat{f} - f^{\ast} \rVert + \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \cdot \lVert \hat{f} - f^{\ast} \rVert \\
+		&\leq t + \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \cdot \lVert \hat{f} - f^{\ast} \rVert \\
+		&\leq t + 2 \left\langle \epsilon , \frac{\hat{f} - f^{\ast} }{\lVert \hat{f} - f^{\ast} \rVert } \right\rangle \cdot \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \\
+		&\leq t + 2 \sup _{\substack{f \in\mathscr{F} ^{\ast} \colon f \geq t}} \left\langle \epsilon , \frac{f}{\lVert f \rVert } \right\rangle .
+	\end{split}
+\]
+To control the intersections between \(\mathscr{F} ^{\ast} \) and \(S^{n-1}\), a good assumption is the following.
+
+\begin{definition}[Star-shaped]\label{def:star-shaped}
+	A class of functions \(\mathscr{H} \) is \emph{star-shaped} around \(0\) if for all \(h\in \mathscr{H} \), \(\lambda h\in \mathscr{H} \) for \(\lambda \in [0, 1]\).
+\end{definition}
+
+\begin{eg}[Convex]
+	If \(\mathscr{H} \) is convex and contains \(0\), then it's \hyperref[def:star-shaped]{star-shaped}.
+\end{eg}
+
+Now, if \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped} around \(0\), for any \(f\in \mathscr{F} ^{\ast} \) with \(\lVert f \rVert > t\), there exists \(u \in \mathscr{F} ^{\ast} \) such that \(u = t \cdot f / \lVert f \rVert \) with \(\lVert u \rVert = t\). Hence,
+\[
+	\left\langle \epsilon , \frac{f}{\lVert f \rVert } \right\rangle
+	= \frac{1}{t} \langle \epsilon , u \rangle ,
+\]
+i.e., under the assumption that \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped}, we can rewrite the bound as
+\[
+	\lVert \hat{f} - f^{\ast} \rVert
+	\leq t + \frac{2}{t} \sup _{\substack{u\in \mathscr{F} ^{\ast} \\ \lVert u \rVert = t}} \langle \epsilon , u \rangle
+	\leq t + \frac{2}{t} \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \langle \epsilon , f \rangle .
+\]
+We see that this is the same as the localization we did before, where \(\sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \leq t} \langle \epsilon , f \rangle \) is just the supremum of the \hyperref[def:localized-EP]{localized empirical process}. To bound this further, we will use concentration for the supremum. Denote
+\[
+	Z(t) = \sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \leq t} \langle \epsilon , f \rangle
+\]
+and \(G(t) = \mathbb{E}_{}\left[Z(t) \right] \). We will show that \(Z(t) \approx G(t)\) so that the bound becomes \(t + 2 G(t) / t\). To minimize this, we again balance these two terms and look for the minimum. This suggests the following.
+
+\begin{definition}[Critical radius]\label{def:critical-radius}
+	The \emph{critical radius} is defined as
+	\[
+		t^{\ast} = \inf _{t > 0} \{ t \colon G(t) \leq t^2 / 2 \} .
+	\]
+\end{definition}
+
+In this case, the \hyperref[def:critical-radius]{critical radius} will minimize the bound, hence \(\lVert \hat{f} - f^{\ast}  \rVert = O(t^{\ast} )\).

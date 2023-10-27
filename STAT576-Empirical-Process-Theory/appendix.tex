@@ -1,0 +1,530 @@
+\chapter{Missing Proofs}
+\section{Concentration Inequalities}
+\subsection{Sub-Gaussian Random Variable}
+We start by providing the equivalent conditions of a random variable being \hyperref[def:sub-Gaussian]{sub-Gaussian}.
+
+\begin{lemma}[Equivalent conditions (\autoref{lma:sub-Gaussian})]\label{pf-lma:sub-Gaussian}
+	Given a random variable \(X\) with \(\mathbb{E}_{}\left[X \right] =0\), the following are equivalent for absolute constants \(c_1, \dots , c_5 > 0\).
+	\begin{enumerate}[(a)]
+		\item\label{pf-lma:sub-Gaussian-a} \(\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{c_1^2 \lambda ^2}\) for all \(\lambda \in \mathbb{R} \).
+		\item\label{pf-lma:sub-Gaussian-b} \(\mathbb{P} (\vert X \vert \geq t) \leq 2 e^{- t^2 / c_2^2}\).
+		\item\label{pf-lma:sub-Gaussian-c} \(\left( \mathbb{E}_{}\left[\vert X \vert ^p \right]  \right)^{1 / p} \leq c_3 \sqrt{p}  \).
+		\item\label{pf-lma:sub-Gaussian-d} For all \(\lambda \) such that \(\vert \lambda  \vert \leq 1 / c_4 \), \(\mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{c_4^2 \lambda ^2} \).
+		\item\label{pf-lma:sub-Gaussian-e} For some \(c_5 < \infty \), \(\mathbb{E}_{}\left[e^{X^2 / c_5^2}  \right] \leq 2\).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	We show that \autoref{pf-lma:sub-Gaussian-a} \(\implies \) \autoref{pf-lma:sub-Gaussian-b} \(\implies \) \autoref{pf-lma:sub-Gaussian-c} \(\implies \) \autoref{pf-lma:sub-Gaussian-d} \(\implies \) \autoref{pf-lma:sub-Gaussian-e} \(\implies \) \autoref{pf-lma:sub-Gaussian-a}.
+	\begin{itemize}
+		\item \autoref{pf-lma:sub-Gaussian-a} \(\implies \) \autoref{pf-lma:sub-Gaussian-b}: This is already shown in \autoref{lma:sub-Gaussian}.
+		\item \autoref{pf-lma:sub-Gaussian-b} \(\implies \) \autoref{pf-lma:sub-Gaussian-c}: Assume \(\mathbb{P} (\vert X \vert \geq t) \leq 2 \exp (-t^2 / c_2^2)\).
+
+		      \begin{claim}
+			      We have
+			      \[
+				      \mathbb{E}_{}\left[\vert X \vert ^p \right] = \int_{0}^{\infty} p t^{p-1} \mathbb{P} (\vert X \vert > t) \,\mathrm{d}t.
+			      \]
+		      \end{claim}
+		      \begin{explanation}
+			      Working backwards, we see that
+			      \[
+				      \begin{split}
+					      \int_{0}^{\infty} p t^{p-1} \mathbb{P} (\vert X \vert \geq t) \,\mathrm{d}t
+					      &= \int_{0}^{\infty} p t^{p-1} \left( \int \mathbbm{1}_{t \leq \vert X \vert } \,\mathrm{d} \mathbb{P} \right)  \,\mathrm{d}t \\
+					      &= \int \int_{0}^{\infty} p t^{p-1} \mathbbm{1}_{t \leq \vert X \vert } \,\mathrm{d}t \,\mathrm{d} \mathbb{P} \\
+					      &= \int \int_{0}^{\vert X \vert } p t^{p-1} \,\mathrm{d}t \,\mathrm{d} \mathbb{P}
+					      = \int \vert X \vert ^p \,\mathrm{d} \mathbb{P}
+					      = \mathbb{E}_{}\left[\vert X \vert ^p \right],
+				      \end{split}
+			      \]
+			      where the interchanging of the order of integration is given by Tonally's theorem.
+		      \end{explanation}
+
+		      With the claim, we see that
+		      \[
+			      \begin{split}
+				      \mathbb{E}_{}\left[\vert X \vert ^p \right]
+				      &= \int_{0}^{\infty} p t^{p-1} \mathbb{P} (\vert X \vert \geq t) \,\mathrm{d}t                        \\
+				      &\leq \int_{0}^{\infty} p t^{p-1} 2\cdot e^{-t^2 / c^2_2} \,\mathrm{d}t
+				      = p\cdot c_2^p \int_{0}^{\infty} u^{\frac{p}{2} - 1} e^{-u} \,\mathrm{d}u
+				      = p c^p_2 \cdot \Gamma (p / 2),
+			      \end{split}
+		      \]
+		      where \(u = t^2 / c_2^2\). This implies \((\mathbb{E}_{}\left[\vert X \vert ^p \right] )^{1 / p} \leq (p c_2^p\cdot \Gamma (p / 2))^{1 / p}\). Using the Stirling's formula \(\Gamma (x) \leq x^x\), we have
+		      \[
+			      (\mathbb{E}_{}\left[\vert X \vert ^p \right] )^{1 / p}
+			      \leq \left( p c_2^p \Gamma \left( \frac{p}{2} \right)  \right) ^{1 / p}
+			      \leq \left( p c_2^p \left( \frac{p}{2} \right) ^{p / 2} \right) ^{1 / p}
+			      \leq \frac{e^{1 / e} c_2}{\sqrt{2}} \sqrt{p}
+			      \eqqcolon c_3 \sqrt{p}
+		      \]
+		      where we use the fact that \(\max x^{1 / x} = e^{1 / e}\).
+		\item \autoref{pf-lma:sub-Gaussian-c} \(\implies \) \autoref{pf-lma:sub-Gaussian-d}: Assume \((\mathbb{E}_{}\left[\vert X \vert ^p \right] )^{1 / p} \leq c_3 \sqrt{p} \). Then from the fact that both sides are non-negative and \(p \geq 1\), we can safely raise both sides to power of \(p\) and get
+		      \[
+			      \mathbb{E}_{}\left[\vert X \vert ^p \right] \leq c_3^p p^{p / 2}.
+		      \]
+
+		      From \(e^x = 1 + \sum_{p=1}^{\infty } x^p / p! \), for all \(\vert \lambda \vert \leq 1 / c_4\) for some \(c_4 > 0\), we have
+		      \begin{align*}
+			      \mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right]
+			       & = \mathbb{E}_{}\left[1 + \sum_{p=1}^{\infty} \frac{(\lambda ^2 X^2)^p}{p!} \right]                            \\
+			       & = 1 + \sum_{p=1}^{\infty} \frac{\lambda ^{2p}}{p!}\mathbb{E}_{}\left[ X^{2p} \right]                          \\
+			       & \leq 1 + \sum_{p=1}^{\infty} \frac{(c_3^2 \cdot \lambda ^2 )^p }{p!} \cdot (2p)^{p}                           \\
+			       & = 1 + \sum_{p=1}^{\infty} (2 c_3^2 \lambda ^2 )^p \cdot \frac{p^p}{p!}                                        \\
+			       & \leq 1 + \sum_{p=1}^{\infty} (2 c_3^2 \lambda ^2 )^p \frac{p^p}{(p / e)^p} \tag*{since \(p! \geq (p / e)^p\)} \\
+			       & = \sum_{p=0}^{\infty} (2e c_3^2 \lambda ^2 )^p                                                                \\
+			       & = \frac{1}{1 - 2e c_3^2 \lambda ^2 }
+		      \end{align*}
+		      if \(2e \lambda ^2 c_3^2 < 1 \iff \vert \lambda \vert < \frac{1}{\sqrt{2e} c_3}\). Recall that \(1 / (1 - x) \leq e^{2x}\) for \(x\in [0, 1 / 2]\), we further have
+		      \[
+			      \mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{4e c_3^2 \lambda ^2 }
+		      \]
+		      for all \(\vert \lambda \vert \leq \min ( \frac{1}{\sqrt{2e} c_3} , \frac{1}{2 c_3 \sqrt{e} }) = \frac{1}{2 c_3 \sqrt{e} }\),\footnote{We omit the fact that we require a strict \(<\) in the first case.} i.e., by letting \(c_4 \coloneqq 2 c_3 \sqrt{e} \),
+		      \[
+			      \mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{c_4^2 \lambda ^2}
+		      \]
+		      as desired.
+		\item \autoref{pf-lma:sub-Gaussian-d} \(\implies \) \autoref{pf-lma:sub-Gaussian-e}: Assume that for all \(\lambda \) such that \(\vert \lambda  \vert \leq 1 / c_4\), we have \(\mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{c_4^2 \lambda ^2}\). Then, by choosing \(c_5 < \infty \) such that \(1 / c_5^2 \leq 1 / c_4^2\) (i.e., \(\lambda ^2 \coloneqq 1 / c_5^2\)),
+		      \[
+			      \mathbb{E}_{}\left[e^{X^2 / c_5^2} \right]
+			      \leq e^{c_4^2 / c_5^2} \leq 2
+		      \]
+		      for large enough \(c_5^2\).\footnote{Which corresponds to small enough \(\vert \lambda \vert = 1 / c_5\) hence the conditions are consistent.}
+		\item \autoref{pf-lma:sub-Gaussian-e} \(\implies \) \autoref{pf-lma:sub-Gaussian-a}: Assume that \(\mathbb{E}_{}\left[e^{X^2 / c_5^2} \right] \leq 2\) for some \(c_5 < \infty \). Then for all \(\lambda \in \mathbb{R} \),
+		      \begin{align*}
+			      \mathbb{E}_{}\left[e^{\lambda X} \right]
+			       & = 1 + \mathbb{E}_{}\left[\sum_{p=2}^{\infty} \frac{(\lambda X)^p}{p!} \right] \tag*{since \(\mathbb{E}_{}\left[X \right] = 0\)}                                                                                                                                                                          \\
+			       & \leq 1 + \frac{\lambda ^2}{2} \mathbb{E}_{}\left[ X^2 \sum_{p=2}^{\infty} \frac{\vert \lambda X \vert ^{p-2}}{(p-2)!} \right] \tag*{extract \(\frac{\lambda ^2 X^2}{2}\), holds since \(p \geq 2\)}                                                                                                      \\
+			       & = 1 + \frac{\lambda ^2}{2} \mathbb{E}_{}\left[X^2 e^{\vert \lambda X \vert } \right]                                                                                                                                                                                                                     \\
+			       & \leq 1 + \frac{\lambda ^2}{2} \mathbb{E}_{}\left[X^2 \exp \left( \frac{\lambda ^2 c_5^2}{2} + \frac{X^2}{2 c_5^2} \right) \right]                                                                                                                                   \tag*{\(ab \leq a^2 / 2 + b^2 / 2\)} \\
+			       & = 1 + \frac{\lambda ^2}{2} \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)\cdot \mathbb{E}_{}\left[X^2 \exp \left( \frac{X^2}{2c_5^2} \right)\right]                                                                                                                                                \\
+			       & = 1 + \frac{\lambda ^2}{2} \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)\cdot 2c_5^2 \cdot \mathbb{E}_{}\left[\frac{X^2}{2c_5^2}\exp \left( \frac{X^2}{2c_5^2} \right)\right]                                                                                                                     \\
+			       & \leq 1 + \lambda ^2 c_5^2 \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right) \cdot \mathbb{E}_{}\left[e^{X^2 / c_5^2 } \right] \tag*{since \(X^2 / 2c_5^2 \leq e^{X^2 / 2c_5^2}\)}                                                                                                                     \\
+			       & \leq 1 + 2 \lambda ^2 c_5^2 \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)                                                                                                                                                                                                                         \\
+			       & \leq \left( 1 + 2 \lambda ^2 c_5^2 \right) \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)                                                                                                                                                                                                                \\
+			       & \leq \exp \left( 2\lambda ^2 c_5^2 + \frac{\lambda ^2 c_5^2}{2} \right) \tag*{\(1+x \leq e^x\)}                                                                                                                                                                                                          \\
+			       & = \exp \left( \frac{5 c_5^2}{2} \lambda ^2 \right).
+		      \end{align*}
+		      By letting \(c_1^2 \coloneqq 5c_5^2 / 2\), we recover \(\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{c_1^2 \lambda ^2}\) for all \(\lambda \in \mathbb{R} \).
+	\end{itemize}
+\end{proof}
+
+Now, we look at \autoref{lma:bounded-rv-is-sub-Gaussian}, and this time we prove it with the correct constant.
+\begin{lemma}[\autoref{lma:bounded-rv-is-sub-Gaussian}]\label{pf-lma:bounded-rv-is-sub-Gaussian}
+	Given \(X\in [a, b]\) such that \(\mathbb{E}_{}\left[X \right] = 0\). Then
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \exp (\lambda ^2 \frac{(b-a)^2}{8})
+	\]
+	for all \(\lambda \in \mathbb{R} \), i.e., \(X\in \Subg((b-a)^2 / 4) \).
+\end{lemma}
+\begin{proof}
+	We first show the following.
+
+	\begin{claim}\label{clm:variance-bound}
+		For any bounded random variable \(Z\in [a, b]\),
+		\[
+			\Var_{}\left[Z \right] \leq \frac{(b-a)^2}{4}.
+		\]
+	\end{claim}
+	\begin{explanation}
+		Since
+		\[
+			\Var_{}\left[Z \right]
+			= \Var_{}\left[Z - \frac{a+b}{2} \right]
+			\leq \mathbb{E}_{}\left[\left( Z - \frac{a+b}{2} \right) ^2 \right]
+			\leq \frac{(b-a)^2}{4}.
+		\]
+	\end{explanation}
+
+	Then, following the hint, define \(\psi (\lambda ) = \ln \mathbb{E}_{}\left[e^{\lambda X} \right] \), we have
+	\[
+		\psi ^{\prime} (\lambda ) = \frac{\mathbb{E}_{}\left[X e^{\lambda X} \right] }{\mathbb{E}_{}\left[e^{\lambda X} \right] },\quad
+		\psi ^{\prime\prime} (\lambda ) = \frac{\mathbb{E}_{}\left[X^2 e^{\lambda X} \right] }{\mathbb{E}_{}\left[e^{\lambda X} \right] } - \left( \frac{\mathbb{E}_{}\left[X e^{\lambda X} \right] }{\mathbb{E}_{}\left[e^{\lambda X} \right] } \right) ^2.
+	\]
+	Now, observe that \(\psi ^{\prime\prime} \) is the variance under the law of \(X\) re-weighted by \(\frac{e^{\lambda X}}{\mathbb{E}_{}\left[e^{\lambda X} \right] }\), i.e., by a change of measure, consider a new distribution \(\mathbb{P} _\lambda \) (w.r.t.\ the original distribution \(\mathbb{P} \) of \(X\)) as
+	\[
+		\,\mathrm{d} \mathbb{P} _\lambda (x) \coloneqq \frac{e^{\lambda X}}{\mathbb{E}_{\mathbb{P} }\left[e^{\lambda X} \right] }\,\mathrm{d} \mathbb{P} (x),
+	\]
+	then
+	\[
+		\psi ^{\prime} (\lambda )
+		= \frac{\mathbb{E}_{\mathbb{P} }\left[X e^{\lambda X} \right] }{\mathbb{E}_{\mathbb{P} }\left[e^{\lambda X} \right] }
+		= \int \frac{x e^{\lambda x}}{\mathbb{E}_{\mathbb{P} }\left[ e^{\lambda X}\right] } \,\mathrm{d} \mathbb{P} (x)
+		= \mathbb{E}_{\mathbb{P} _\lambda }\left[ X \right]
+	\]
+	and
+	\[
+		\psi ^{\prime\prime} (\lambda )
+		= \frac{\mathbb{E}_{\mathbb{P} }\left[ X^2 e^{\lambda X} \right] }{\mathbb{E}_{\mathbb{P} }\left[ e^{\lambda X} \right] } - \left( \frac{\mathbb{E}_{\mathbb{P} }\left[ X e^{\lambda X} \right] }{\mathbb{E}_{\mathbb{P} }\left[ e^{\lambda X}\right] } \right) ^2
+		= \mathbb{E}_{\mathbb{P} _\lambda }\left[ X^2 \right] - \mathbb{E}_{\mathbb{P} _\lambda }\left[ X \right] ^2
+		= \Var_{\mathbb{P} _\lambda }\left[X \right] .
+	\]
+	From the above claim, we know that \(\psi ^{\prime\prime} (\lambda ) = \Var_{\mathbb{P} _\lambda }\left[X \right] \leq (b-a)^2 / 4\) since \(X\) under the new distribution \(\mathbb{P} _\lambda \) is still bounded between \(a\) and \(b\). Then by Taylor's theorem, there exists some \(\widetilde{\lambda} \in [0, \lambda ]\) such that
+	\[
+		\psi (\lambda )
+		= \psi (0) + \psi ^{\prime} (0) \lambda + \frac{1}{2} \psi ^{\prime\prime} (\widetilde{\lambda} )\lambda ^{2}
+		= \frac{1}{2} \psi ^{\prime\prime} (\widetilde{\lambda} )\lambda ^{2}
+	\]
+	since \(\psi (0) = \psi ^{\prime} (0) = 0\). By bounding \(\psi ^{\prime\prime} (\widetilde{\lambda} )\lambda ^{2} / 2\), we finally have
+	\[
+		\ln \mathbb{E}_{}\left[e^{\lambda X} \right] = \psi (\lambda ) \leq \frac{1}{2}\cdot \frac{(b-a)^{2} }{4}\lambda ^{2} = \lambda ^{2} \frac{(b-a)^2}{8},
+	\]
+	or equivalently,
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \exp \left( \lambda ^2 \frac{(b-a)^2}{8} \right) .
+	\]
+\end{proof}
+
+We now prove \autoref{lma:sub-Gaussian-finite-maximum}.
+
+\begin{lemma}\label{pf-lma:sub-Gaussian-finite-maximum}
+	Let \(X_1, \dots , X_n \sim \Subg(\sigma _i^{2} ) \), not necessary independent. Then for some absolute constant \(c > 0\),
+	\[
+		\mathbb{E}_{}\left[\max _i \vert X_i \vert \right] \leq c \sqrt{\log n} \max _{1 \leq i \leq n} \sigma _i.
+	\]
+\end{lemma}
+\begin{proof}
+	We see that for any \(\lambda > 0\),
+	\begin{align*}
+		\mathbb{E}_{}\left[\max _{i\in [n]} Y_i\right]
+		 & = \frac{1}{\lambda} \mathbb{E}_{}\left[\ln \exp \left( \lambda \max _{i\in [n]} Y_i \right)  \right]                               \\
+		 & \leq \frac{1}{\lambda} \ln \mathbb{E}_{}\left[\exp \left( \lambda \max _{i\in [n]} Y_i \right)  \right] \tag*{Jensen's inequality} \\
+		 & = \frac{1}{\lambda} \ln \mathbb{E}_{}\left[\max _{i\in [n]} e^{sY_i} \right]                                                       \\
+		 & \leq \frac{1}{\lambda} \ln \mathbb{E}_{}\left[\sum_{i=1}^{n} e^{\lambda Y_i} \right]                                               \\
+		 & \leq \frac{1}{\lambda} \ln \sum_{i=1}^{n} \exp \left( \frac{\sigma _i^2 \lambda ^2}{2} \right)                                     \\
+		 & \leq \frac{1}{\lambda } \ln \left( n\cdot \exp \left( \frac{\lambda^2\cdot \max _i \sigma _i^2}{2} \right) \right)                 \\
+		 & = \frac{\ln n}{\lambda } + \frac{\lambda \max _i \sigma _i^2}{2}.
+	\end{align*}
+	Now, take \(\lambda = \sqrt{2 \ln n / \max _i \sigma_i^2 } \), we have
+	\[
+		\mathbb{E}_{}\left[\max _{i\in [n]} Y_i \right]
+		\leq \sqrt{\frac{\ln n \cdot \max _i \sigma _i^2}{2}} + \frac{\sqrt{2 \ln n \cdot \max _i \sigma _i^2} }{2}
+		= \sqrt{2} \cdot \sqrt{\ln n} \cdot \max _i \sigma _i.
+	\]
+	Finally, apply this result to \(\{ Z_i \} _{i\in [2n]}\) such that \(Z_i = Y_i\) and \(Z_{i+n} = -Y_i\) for \(i\in [n]\), then
+	\[
+		\mathbb{E}_{}\left[\max _{i\in [n]} \vert Y_i \vert \right]
+		= \mathbb{E}_{}\left[\max _{i\in [2n]} Z_i \right]
+		\leq \sqrt{2}\cdot \sqrt{\ln 2n} \cdot \max _i \sigma _i ,
+	\]
+	which is the desired result by setting \(c \coloneqq \sqrt{2 \ln 2n} / \sqrt{\ln n}\).
+\end{proof}
+
+\subsection{McDiarmid's Inequality}
+As mentioned, in the lecture, we did not prove \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality} in fact. To properly do this, we will need the tool of \hyperref[def:martingale-decomposition]{martingale decomposition} and \hyperref[thm:Azuma-Hoeffding-inequality]{Azuma-Hoeffding inequality}. We start by proving the \hyperref[thm:Azuma-Hoeffding-inequality]{Azuma-Hoeffding inequality}. Consider first the following definition.
+
+\begin{definition}[Martingale difference sequence]\label{def:martingale-difference-sequence}
+	A \emph{martingale difference sequence} is a sequence of random variables \(\Delta _1, \dots \) such that \(\mathbb{E}_{}\left[\Delta _i \mid \Delta _{i-1} \right] = 0\) for all \(i\).
+\end{definition}
+
+\begin{theorem}[Azuma-Hoeffding inequality]\label{thm:Azuma-Hoeffding-inequality}
+	Suppose \(\mathcal{F} _0, \mathcal{F} _1, \dots , \mathcal{F} _n \) are increasing \(\sigma \)-fields, and let \(X_i \in \mathcal{F} _i\) measurable and \(\mathbb{E}_{}\left[X_i \mid \mathcal{F} _{i-1} \right] = 0\) almost surely for all \(i=1, \dots , n\), i.e., a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. Suppose also that \(\vert X_i \vert \leq c_i\) almost surely for all \(i = 1, \dots , n\). Then, the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} holds for this \hyperref[def:martingale-difference-sequence]{martingale difference sequence}, i.e.,
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right) \leq \exp(- \frac{2t^2}{\sum_{i=1}^{n} c_i^2}),
+	\]
+	and the same bound holds for the left tail.
+\end{theorem}
+\begin{proof}
+	First, by \hyperref[lma:MGF-trick]{MGF trick}, we have that for any \(\lambda >0\),
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right)
+		\leq \frac{\mathbb{E}_{}\left[\exp (\lambda \sum_{i} X_i) \right] }{\exp (\lambda t)}.
+	\]
+	Note that since \(\vert X_i \vert \leq c_i\), we have \(X_i \in [- c_i, c_i]\). Now,
+	\begin{align*}
+		\mathbb{E}_{}\left[\exp (\lambda \sum_{i} X_i) \right]
+		 & = \mathbb{E}_{}\left[\mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^n X_i ) \middle| \mathcal{F} _{n-1} \right]  \right]                  \\
+		\shortintertext{since \(\exp (\lambda \sum_{i=1}^{n-1} X_i )\) is \(\mathcal{F} _{n-1}\)-measurable,}
+		 & = \mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n-1} X_i) \mathbb{E}_{}\left[\exp (\lambda X_n) \mid \mathcal{F} _{n-1} \right] \right] \\
+		\shortintertext{from \autoref{lma:bounded-rv-is-sub-Gaussian} and \(\vert X_i \vert \leq c_i\), \(\mathbb{E}_{}\left[\exp (\lambda X_n) \mid \mathcal{F} _{n-1} \right] \leq \exp (\lambda ^2 (2c_n)^2 / 8) = \exp (\lambda ^2 c_n^2 / 2)\),}
+		 & \leq \exp \left( \frac{\lambda ^2 c_n^2}{2} \right) \mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n-1} X_i) \right].
+	\end{align*}
+	We see that this can be repeatedly apply to the last \(X_i\) and get
+	\[
+		\mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n} X_i) \right]
+		\leq \exp \left( \frac{\lambda ^2}{2}\sum_{i=1}^{n} c_i^2 \right),
+	\]
+	i.e., \(\sum_{i} X_i\in \mathop{\mathrm{Subg}}(\sum_{i} c_i^2) \). From (one-sided) \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality},
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right)
+		\leq \exp \left( \frac{-t^2}{2\cdot \sum_{i} c_i^2} \right).
+	\]
+\end{proof}
+
+Then, we introduce the tool of \hyperref[def:martingale-decomposition]{martingale decomposition}.
+
+\begin{definition}[Martingale decomposition]\label{def:martingale-decomposition}
+	Let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P} \) on \(\chi \). Let \(f \colon \chi ^n \to \mathbb{R} \) satisfying the \hyperref[def:bounded-difference-property]{bounded difference property} with parameters \(c_1, \dots , c_n\). Then the \emph{martingale decomposition} of \(f\) is defined as
+	\[
+		\begin{split}
+			f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f(X_1, \dots , X_n) \right]
+			&= Y_n - Y_0 \\
+			&= (Y_n - Y_{n-1}) + (Y_{n-1} - Y_{n-2}) + \dots + (Y_1 - Y_0) \\
+			&\eqqcolon \Delta _n + \Delta _{n-1} + \dots + \Delta _1,
+		\end{split}
+	\]
+	where \(Y_i = \mathbb{E}_{}\left[f(X_1, \dots , X_n) \mid X_1, \dots , X_i \right] \).
+\end{definition}
+
+Then, we can show the \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality}.
+
+\begin{theorem}[McDiarmid's inequality (\autoref{thm:McDiarmid-inequality})]\label{pf-thm:McDiarmid-inequality}
+	Let \(X_1, \dots , X_n\) be i.i.d.\ random variables on \(\chi \), and let \(f\colon \chi ^n \to \mathbb{R} \) satisfying the \hyperref[def:bounded-difference-property]{bounded difference property} with parameters \(c_1, \dots , c_n\). Then for any \(t > 0\),
+	\[
+		\mathbb{P} (f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f (X_1, \dots , X_n)\right] \geq t) \leq \exp \left( \frac{-2t^2}{\sum_{i} c_i^2} \right).
+	\]
+	The same bound holds for the left tail.
+\end{theorem}
+\begin{proof}
+	We first note that for any integrable random variable \(Y\), \(Z_i = \mathbb{E}_{}\left[Y \mid X_1, \dots , X_i \right] \) form a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. From the construction, we see that \(f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f(X_1, \dots , X_n) \right] = \sum_{i=1}^{n} \Delta _{i}\). Denote \(X = (X_1, \dots , X_n)\), and recall that
+	\[
+		h_i(x)
+		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_{i-1} \right]
+		= \mathbb{E}_{}\left[f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n) \right],
+	\]
+	and
+	\[
+		Y_i
+		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_i \right]
+		= \mathbb{E}_{}\left[f(x_1, \dots , x_i, X_{i+1}, \dots , X_n) \right].
+	\]
+	Now, define random variables
+	\[
+		A_i \coloneqq \inf _{x\in \chi } h_i(x) - Y_{i-1} ,\quad
+		B_i \coloneqq \sup _{x\in \chi } h_i(x) - Y_{i-1} .
+	\]
+	It's obvious that \(B_i \geq A_i\) almost everywhere for all \(i = 1, \dots , n\). Moreover, we have
+	\[
+		\Delta _i - A_i
+		= (Y_i - Y_{i-1}) - (\inf _{x\in \chi } h_i(x) - Y_{i-1} )
+		= Y_i - \inf _{x\in \chi } h_i(x) \geq 0
+	\]
+	almost everywhere, and similarly we have \(\Delta _i - B_i \leq 0\) almost everywhere, hence
+	\[
+		A_i \leq \Delta _i \leq B_i.
+	\]
+	Observe that
+	\begin{align*}
+		\Delta _i
+		 & = Y_i - Y_{i-1}                                                                                                                                                                    \\
+		 & \leq B_i - A_i \tag*{\(Y_i \leq \inf _{x\in \chi } h_i(x)\) and \(\inf _{x\in \chi } h_i(x) \leq Y_{i-1} \)}                                                                       \\
+		 & = \sup _{x\in \chi } h_i(x) - \inf _{y\in \chi } h_i(y)                                                                                                                            \\
+		 & = \sup _{x, y\in \chi } h_i(x) - h_i(y)                                                                                                                                            \\
+		 & = \sup _{x, y\in \chi } \mathbb{E}_{}\left[f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n ) - f(x_1, \dots , x_{i-1}, y, X_{i+1}, \dots , X_n)\right]                             \\
+		 & \leq \mathbb{E}_{}\left[\sup _{x, y\in \chi } \left\vert f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n ) - f(x_1, \dots , x_{i-1}, y, X_{i+1}, \dots , X_n) \right\vert  \right] \\
+		 & \leq c_i.
+	\end{align*}
+	Moreover, since \(B_i - A_i \geq 0\), so \(\vert \Delta _i \vert \leq \sup _{x\in \chi } h(x) - \inf _{y\in \chi } h(y)\) also holds, and hence \(\vert \Delta _i \vert \leq c_i\) almost surely. Finally, apply the \hyperref[thm:Azuma-Hoeffding-inequality]{Azuma-Hoeffding inequality} to \(\sum_{i=1}^{n} \Delta _i\), we have
+	\[
+		\mathbb{P} (f(X) - \mathbb{E}_{}\left[f(X) \right] \geq t )
+		= \mathbb{P} \left( \sum_{i=1}^{n} \Delta _i \geq t \right)
+		\leq \exp \left( \frac{-2t^2}{\sum_{i} c_i^2} \right).
+	\]
+\end{proof}
+
+Finally, we provide a proof for the \hyperref[thm:Efron-Stein-inequality]{Efron-Stein inequality}.
+
+\begin{theorem}[Efron-Stein inequality (\autoref{thm:Efron-Stein-inequality})]\label{pf-thm:Efron-Stein-inequality}
+	Let \(X_1, \dots , X_n\) be independent random variables, and \(X_1^{\prime} , \dots , X_n^{\prime} \) be i.i.d.\ copies of \(X_i\)'s. Then
+	\[
+		\Var_{}\left[f(X) \right] \leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}_{}\left[\big(f(X) - f(X^{[i]}) \big)^2 \right].
+	\]
+\end{theorem}
+\begin{proof}
+	To make the notation concise, let \(X = (X_1, \dots , X_n)\), \(X^{\prime} = (X_1^{\prime} , \dots , X_n^{\prime} )\), \(X_{[i:j]} = (X_i, \dots , X_j)\), and
+	\[
+		\mathbb{E}_{i}\left[f(X) \right]
+		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_{i-1}, X_{i+1}, \dots , X_n \right]
+		= \mathbb{E}_{}\left[f(X) \mid X_{[1:i-1]}, X_{[i+1:n]} \right] .
+	\]
+	Define \(\Delta _i\) as \(\Delta _i = Y_i - Y_{i-1} \) where \(Y_i\) is defined the same as in \hyperref[ex2]{Exercise 2}. Hence, \(f(X) - \mathbb{E}_{}\left[f(X) \right] = \sum_{i=1}^{n} \Delta _i\). Now, observe that
+	\[
+		\begin{split}
+			\Var_{}\left[f(X) \right]
+			&= \mathbb{E}_{}\left[(f(X) - \mathbb{E}_{}\left[f(X) \right] )^2 \right]\\
+			&= \mathbb{E}_{}\left[\left( \sum_{i=1}^{n} \Delta _i \right) ^2 \right]\\
+			&= \mathbb{E}_{}\left[\sum_{i=1}^{n} \Delta _i ^2 \right] + 2 \mathbb{E}_{}\left[\sum_{i > j} \Delta _i \Delta _j \right] .
+		\end{split}
+	\]
+
+	Since \(\mathbb{E}_{}\left[XY \right] = \mathbb{E}_{}\left[\mathbb{E}_{}\left[XY \mid Y \right] \right] = \mathbb{E}_{}\left[Y \mathbb{E}_{}\left[X \mid Y \right] \right] \), \(\mathbb{E}_{}\left[\Delta _j \Delta _i \right] = \mathbb{E}_{}\left[\Delta _i \mathbb{E}_{}\left[\Delta _j \mid X_{[1:i]} \right] \right] \). But since for \(i > j\), \(\mathbb{E}_{}\left[\Delta _j \mid X_{[1:i]} \right] = 0\), we have
+	\[
+		\Var_{}\left[f(X) \right] = \mathbb{E}_{}\left[\sum_{i=1}^{n} \Delta _i^2 \right] = \sum_{i=1}^{n} \mathbb{E}_{}\left[\Delta _i^2 \right] .
+	\]
+	Now, expand everything,
+	\[
+		\begin{split}
+			\Var_{}\left[f(X) \right]
+			&= \sum_{i=1}^{n} \mathbb{E}_{}\left[\Delta _i^2 \right] \\
+			&= \sum_{i=1}^{n} \mathbb{E}_{X_{[1:i]}}\left[\big( \mathbb{E}_{X_{[i+1:n]}}\left[f(X) \mid X_{[1:i]} \right] - \mathbb{E}_{X_{[i:n]}}\left[f(X) \mid X_{[1:i-1]} \right] \big)^2 \right] \\
+			&= \sum_{i=1}^{n} \mathbb{E}_{X_{[1:i]}}\left[ \big( \mathbb{E}_{X_{[i+1:n]}}\left[f(X) \mid X_{[1:i]} \right] - \mathbb{E}_{X_{[i+1:n]}}\left[ \mathbb{E}_{X_i}\left[f(X) \mid X_{[1:i-1]} \right] \right] \big)^2 \right]\\
+			&\leq \sum_{i=1}^{n} \mathbb{E}_{X_{[1:i]}, X_{[i+1:n]}}\left[\big( f(X) - \mathbb{E}_{X_i}\left[f(X) \mid X_{[1:i-1]}, X_{[i+1:n]} \right] \big)^2 \right]
+		\end{split}
+	\]
+	where the last line follows from Jensen's inequality with the fact that \(x^2\) is convex. Using our notation, we write
+	\[
+		\Var_{}\left[f(X) \right] \leq \sum_{i=1}^{n} \mathbb{E}_{}\left[\big(f(X) - \mathbb{E}_{i}\left[f(X) \right] \big)^2\right] .
+	\]
+
+	Finally, note that for two i.i.d.\ samples \(x, y \overset{\text{i.i.d.} }{\sim } \mathbb{P} \),
+	\[
+		\mathbb{E}_{}\left[(x-y)^2 \right] = \mathbb{E}_{}\left[x^2 + y^2 - 2xy \right] = 2 \mathbb{E}_{}\left[x^2 \right] - 2(\mathbb{E}_{}\left[x \right] )^2
+		\implies \Var_{}\left[x \right] = \mathbb{E}_{}\left[\frac{1}{2}(x-y)^2 \right].
+	\]
+	This implies that
+	\[
+		\mathbb{E}_{i}\left[\big(f(X) - \mathbb{E}_{i}\left[f(X) \right] \big)^2 \right]
+		= \frac{1}{2} \mathbb{E}_{i}\left[(f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n))^2 \right] ,
+	\]
+	thus we have the final inequality
+	\[
+		\Var_{}\left[f(X) \right]
+		\leq \frac{1}{2}\sum_{i=1}^{n} \mathbb{E}_{}\left[\big( f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n) \big)^2 \right],
+	\]
+	or equivalently,\footnote{Where \((x)_+\) means \(\max (0, x)\), so we're avoiding double-counting.}
+	\[
+		\Var_{}\left[f(X) \right]
+		\leq \sum_{i=1}^{n} \mathbb{E}_{}\left[\big( f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n) \big)_+^2 \right].
+	\]
+
+	If \(f\) satisfies the bounded-differences assumption with \(c_1, \dots , c_n > 0\), then from the \hyperref[clm:variance-bound]{claim},
+	\[
+		\mathbb{E}_{}\left[\big(f(X) - \mathbb{E}_{i}\left[f(X) \right] \big)^2\right]
+		= \Var_{i}\left[f(X) \right]
+		\leq \frac{c_i^2}{4},
+	\]
+	hence
+	\[
+		\Var_{}\left[f(X) \right]
+		\leq \frac{1}{4}\sum_{i=1}^{n} c_i^2.
+	\]
+\end{proof}
+
+\section{Expected Supremum of Empirical Process}
+\subsection{Metric Entropy Method}
+\begin{theorem}[\autoref{thm:metric-entropy}]\label{pf-thm:metric-entropy}
+	There exists \(c_1, c_2\) such that for all \(\epsilon > 0\),
+	\[
+		\exp \left( c_2 \epsilon ^{-1 / \alpha } \right)
+		\leq M(\mathcal{S} _\alpha , d, \epsilon )
+		\leq \exp \left( c_1 \epsilon ^{-1 / \alpha } \right) .
+	\]
+\end{theorem}
+\begin{proof}
+
+\end{proof}
+
+We now provide some missing proofs for different forms of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound}.
+
+\begin{corollary}[High probability form (\autoref{col:Dudley-integral-entropy-bound-hp})]\label{pf-col:Dudley-integral-entropy-bound-hp}
+	The high probability bound version holds:
+	\[
+		\mathbb{P} \left(
+		\sup _{s, t\in T} \vert X_s - X_t \vert
+		\leq C \left( \int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon )}  \,\mathrm{d}\epsilon + u \mathop{\mathrm{Diam}}(T) \right)
+		\right) \geq 1 - 2 e^{-u^2}.
+	\]
+\end{corollary}
+\begin{proof}
+	Adopting the same notation as in the proof of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound} for \(K_0\), \(K_1\), \(N_k\), and \(\pi _k(t)\). By writing
+	\[
+		\begin{split}
+			X_t - X_{t_0}
+			&= X_{\pi _{K_1} (t)} - X_{\pi _{K_0} (t)}\\
+			&= X_{\pi _{K_1}(t)} - X_{\pi _{K_1 - 1} (t)} + X_{\pi _{K_1 - 1} (t)} - \dots + X_{\pi _{K_0 + 1} (t)} - X_{\pi _{K_0} (t)} \\
+			&= \sum_{k = K_0 + 1}^{K_1} X_{\pi _{k} (t)} - X_{\pi _{k - 1} (t)},
+		\end{split}
+	\]
+	which implies
+	\[
+		\sup _{t\in T} X_t - X_{t_0}
+		\leq \sum_{k = K_0 + 1}^{K_1} \sup _{t\in T} \left( X_{\pi _{k} (t)} - X_{\pi _{k - 1} (t)} \right).
+	\]
+	To prove a tail bound, we claim the following.
+
+	\begin{claim}
+		If \(\{ X_t \} _{t\in T}\) is \(\Subg(\sigma ^2)\), for all \(u \geq 0\),
+		\[
+			\Pr(\sup _{t\in T} X_t \geq \sqrt{2 \sigma ^2 \log \vert T \vert } + u ) \leq \exp(- \frac{u^2}{2\sigma ^2})
+		\]
+	\end{claim}
+	\begin{explanation}
+		From \hyperref[lma:MGF-trick]{Chernoff bound},
+		\[
+			\Pr(\sup _{t\in T} X_t \geq u)
+			= \Pr(\bigcup_{t\in T} \{ X_t \geq u \} )
+			\leq \sum_{t\in T} \Pr_{}(X_t \geq u)
+			\leq \vert T \vert e^{-u^2 / 2\sigma ^2}.
+		\]
+		Now, let \(u^{\prime} \coloneqq \sqrt{2 \sigma ^2 \log \vert T \vert } + u \), we obtain
+		\[
+			\Pr(\sup _{t\in T} X_t \geq u^{\prime} )
+			\leq \exp(\log \vert T \vert - \frac{2\sigma ^2 \log \vert T \vert + 2 \sqrt{2\sigma ^2 \log \vert T \vert } u + u^2}{2\sigma ^2})
+			\leq \exp(- \frac{u^2}{2\sigma ^2}).
+		\]
+	\end{explanation}
+
+	Then, since \(X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \sim \Subg(d^2(\pi _k(t), \pi _{k-1}(t)))\) with
+	\[
+		d(\pi _k(t), \pi _{k-1}(t))
+		\leq d(\pi _k(t), t) + d(t, \pi _{k-1}(t))
+		\leq 2^{-k} + 2^{-k+1}
+		\leq 3\cdot 2^{-k}
+	\]
+	from the above claim,
+	\[
+		\Pr(\sup _{t\in T} X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \geq 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z ) \leq e^{-z^2 / 2}
+	\]
+	by letting \(u = 3\cdot 2^{-k} z\). Now, we apply a union bound over \(k\) with \(z_k \coloneqq u + \sqrt{k - K_{0} } \), which yields
+	\begin{align*}
+		 & \Pr(\exists k \colon \sup _{t\in T} X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \geq 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z_k )            \\
+		 & \leq \sum_{k=K_0 + 1}^{K_1} \Pr(\sup _{t\in T} X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \geq 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z_k ) \\
+		 & \leq \sum_{k=K_0 + 1}^{K_1} e^{- z_k^2 / 2}                                                                                                                \\
+		 & = \sum_{k=K_0 + 1}^{K_1} \exp (- \frac{u^2 + 2x \sqrt{k - K_0} + (k - K_0)}{2})                                                                            \\
+		 & \leq e^{-u^2 / 2} \sum_{k = 1}^{\infty } e^{- k / 2}                                                                                                       \\
+		 & \leq 2 e^{-u^2 / 2} \tag*{\(\sum_{k} e^{- k / 2} = \frac{1}{e^{1 / 2} - 1} \approx 1.541\)}.
+	\end{align*}
+	This means that with probability at least \(1 - 2 e^{-u^2 / 2}\),
+	\[
+		\begin{split}
+			\sup _{t\in T} X_t - X_{t_0}
+			&\leq \sum_{k=K_0 + 1}^{K_1} \sup _{t\in T} \left( X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \right)\\
+			&\leq \sum_{k=K_0 + 1}^{K_1} 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z_k\\
+			&\leq 6 \sum_{k > K_0} 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-K_0} \sum_{k > 0} 2^{-k} \sqrt{k} + 3 \times 2^{-K_0} \sum_{k > 0} 2^{-k} u \\
+			&\leq C \left( \int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon)}  \,\mathrm{d}\epsilon + u \mathop{\mathrm{Diam}}(T) \right)
+		\end{split}
+	\]
+	since \(2^{-K_0} \leq 2 \mathop{\mathrm{Diam}}(T) \) and
+	\[
+		2^{-K_0} \leq C 2^{- K_0 - 1} \sqrt{\log N(T, d, 2^{-K_0 - 1})} \leq C \sum_{k > K_0} 2^{-k} \sqrt{\log \vert N_k \vert } .
+	\]
+	Finally, observe that by considering the same bound for \(X_s - X_{t_0}\) and use triangle inequality, we obtain the desired result.
+\end{proof}
+
+\begin{corollary}[Finite resolution form (\autoref{col:Dudley-integral-entropy-bound-finite-resolution})]\label{pf-col:Dudley-integral-entropy-bound-finite-resolution}
+	The following generalizes the \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound} in the sense that \(\delta > 0\):
+	\[
+		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
+		\leq C  \left( \mathbb{E}_{}\left[ \sup _{\substack{t, t^{\prime} \in T \\ d(t, t^{\prime} ) \leq \delta }} X_t - X_{t^{\prime} } \right] + \int_{\delta }^{\infty} \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon \right) .
+	\]
+\end{corollary}
+\begin{proof}
+	Again, we adopt the same notation as in the proof of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound} for \(K_0\), \(K_1\), \(N_k\), and \(\pi _k(t)\). Moreover, for any \(t, t^{\prime} \in T\), let \(N_{k_{\delta }}\) be a minimal \(\delta \)-net,\footnote{\(k_\delta \) is determined by \(\delta \); specifically, \(2^{-k_\delta } = \delta \).} then we have
+	\[
+		\begin{split}
+			X_t - X_{t^{\prime} }
+			&= X_t - X_{\pi _{k_{\delta }}(t)} + X_{\pi _{k_{\delta }}(t)} - X_{\pi _{k_{\delta }}(t^{\prime} )} + X_{\pi _{k_{\delta }}(t^{\prime} )} - X_{t^{\prime} }\\
+			&\leq 2 \sup _{\substack{t, t^{\prime} \in T \colon \\ d(t, t^{\prime} ) \leq \delta }} \left( X_t - X_{t^{\prime} } \right) + \sup _{\hat{t} , \hat{t} ^{\prime} \in N_{k_\delta }} \left( X_{\hat{t} } - X_{\hat{t} ^{\prime} } \right).
+		\end{split}
+	\]
+	Hence, we have
+	\[
+		\begin{split}
+			\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
+			= \mathbb{E}_{}\left[\sup _{t\in T} X_t - X_{t^{\prime} } \right]
+			&\leq \mathbb{E}_{}\left[\sup _{t, t^{\prime} } X_t - X_{t^{\prime} } \right]\\
+			&\leq 2 \mathbb{E}_{}\left[ \sup _{\substack{t, t^{\prime} \in T \colon \\ d(t, t^{\prime} ) \leq \delta }} \left( X_t - X_{t^{\prime} } \right) \right] + \mathbb{E}_{}\left[\sup _{\hat{t} , \hat{t} ^{\prime} \in N_{k_\delta }} \left( X_{\hat{t} } - X_{\hat{t} ^{\prime} } \right) \right].
+		\end{split}
+	\]
+	We can then handle the second term as in the proof of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound}, just that now we're summing over \(k\) from \(k_\delta + 1\), not \(K_0 + 1\). With the fact that when making the chaining sum into integral turns the lower limit into \(2^{-k_\delta } = \delta \), we're done.
+\end{proof}

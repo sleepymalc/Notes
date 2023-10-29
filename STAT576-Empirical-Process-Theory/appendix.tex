@@ -101,7 +101,11 @@ We start by providing the equivalent conditions of a random variable being \hype
 	\end{itemize}
 \end{proof}
 
-Now, we look at \autoref{lma:bounded-rv-is-sub-Gaussian}, and this time we prove it with the correct constant. Before doing that, we need a small lemma.
+\begin{note}
+	It's possible to assume \(c_1, \dots , c_5 = 1\), which significantly simplify the proof.
+\end{note}
+
+Before proving \autoref{lma:bounded-rv-is-sub-Gaussian} with the correct constant, we need a small lemma.
 
 \begin{lemma}\label{lma:variance-bound}
 	For any bounded random variable \(Z\in [a, b]\),
@@ -217,9 +221,9 @@ As mentioned, in the lecture, we did not prove \hyperref[thm:McDiarmid-inequalit
 \end{definition}
 
 \begin{theorem}[Azuma-Hoeffding inequality]\label{thm:Azuma-Hoeffding-inequality}
-	Suppose \(\mathcal{F} _0, \mathcal{F} _1, \dots , \mathcal{F} _n \) are increasing \(\sigma \)-fields, and let \(X_i \in \mathcal{F} _i\) measurable and \(\mathbb{E}_{}\left[X_i \mid \mathcal{F} _{i-1} \right] = 0\) almost surely for all \(i=1, \dots , n\), i.e., a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. Suppose also that \(\vert X_i \vert \leq c_i\) almost surely for all \(i = 1, \dots , n\). Then, the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} holds for this \hyperref[def:martingale-difference-sequence]{martingale difference sequence}, i.e.,
+	Suppose \(\mathcal{F} _0, \mathcal{F} _1, \dots , \mathcal{F} _n \) are increasing \(\sigma \)-fields, and let \(X_i \in \mathcal{F} _i\) measurable and \(\mathbb{E}_{}\left[X_i \mid \mathcal{F} _{i-1} \right] = 0\) almost surely for all \(i=1, \dots , n\), i.e., \(X_1, X_2, \dots , X_n\) is a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. Suppose also that \(\vert X_i \vert \leq c_i\) almost surely for all \(i = 1, \dots , n\). Then, the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} holds for this \hyperref[def:martingale-difference-sequence]{martingale difference sequence}, i.e.,
 	\[
-		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right) \leq \exp(- \frac{2t^2}{\sum_{i=1}^{n} c_i^2}),
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right) \leq \exp(- \frac{t^2}{2 \sum_{i} c_i^2}),
 	\]
 	and the same bound holds for the left tail.
 \end{theorem}
@@ -231,7 +235,7 @@ As mentioned, in the lecture, we did not prove \hyperref[thm:McDiarmid-inequalit
 	\]
 	Note that since \(\vert X_i \vert \leq c_i\), we have \(X_i \in [- c_i, c_i]\). Now,
 	\begin{align*}
-		\mathbb{E}_{}\left[\exp (\lambda \sum_{i} X_i) \right]
+		\mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n} X_i) \right]
 		 & = \mathbb{E}_{}\left[\mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^n X_i ) \middle| \mathcal{F} _{n-1} \right]  \right]                  \\
 		\shortintertext{since \(\exp (\lambda \sum_{i=1}^{n-1} X_i )\) is \(\mathcal{F} _{n-1}\)-measurable,}
 		 & = \mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n-1} X_i) \mathbb{E}_{}\left[\exp (\lambda X_n) \mid \mathcal{F} _{n-1} \right] \right] \\
@@ -246,14 +250,24 @@ As mentioned, in the lecture, we did not prove \hyperref[thm:McDiarmid-inequalit
 	i.e., \(\sum_{i} X_i\in \mathop{\mathrm{Subg}}(\sum_{i} c_i^2) \). From (one-sided) \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality},
 	\[
 		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right)
-		\leq \exp \left( \frac{-t^2}{2\cdot \sum_{i} c_i^2} \right).
+		\leq \exp \left( \frac{-t^2}{2 \sum_{i} c_i^2} \right).
 	\]
 \end{proof}
+
+The above is actually a special symmetric version since we have a two-sided bound for \(X_i\), i.e., we assume \(\vert X_i \vert \leq c_i\). However, if the known bound is asymmetric, e.g., \(a_i \leq X_i \leq b_i\), to use \hyperref[thm:Azuma-Hoeffding-inequality]{Azuma-Hoeffding inequality}, one would need to choose \(c_i = \max (\vert a_i \vert , \vert b_i \vert )\), which might not be optimal. A slight change can be made as follows.
+
+\begin{corollary}[General Azuma-Hoeffding inequality]\label{col:general-Azuma-Hoeffding-inequality}
+	Suppose \(\mathcal{F} _0, \mathcal{F} _1, \dots , \mathcal{F} _n \) are increasing \(\sigma \)-fields, and let \(X_i \in \mathcal{F} _i\) measurable and \(\mathbb{E}_{}\left[X_i \mid \mathcal{F} _{i-1} \right] = 0\) almost surely for all \(i=1, \dots , n\), i.e., \(X_1, X_2, \dots , X_n\) is a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. Suppose also that \(A_i \leq X_i \leq B_i\) almost surely for all \(i = 1, \dots , n\) such that \(B_i - A_i \leq c_i\) almost surely. Then, the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} holds for this \hyperref[def:martingale-difference-sequence]{martingale difference sequence}, i.e.,
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right) \leq \exp(- \frac{2 t^2}{\sum_{i} c_i^2}),
+	\]
+	and the same bound holds for the left tail.
+\end{corollary}
 
 Then, we introduce the tool of \hyperref[def:martingale-decomposition]{martingale decomposition}.
 
 \begin{definition}[Martingale decomposition]\label{def:martingale-decomposition}
-	Let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P}\) on \(\chi \). Let \(f \colon \chi ^n \to \mathbb{R} \) satisfying the \hyperref[def:bounded-difference-property]{bounded difference property} with parameters \(c_1, \dots , c_n\). Then the \emph{martingale decomposition} of \(f\) is defined as
+	Let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P}\) on \(\chi \). Let \(f \colon \chi ^n \to \mathbb{R} \) satisfying the \hyperref[def:bounded-difference-property]{bounded-difference property} with parameters \(c_1, \dots , c_n\). Then the \emph{martingale decomposition} of \(f\) is defined as
 	\[
 		\begin{split}
 			f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f(X_1, \dots , X_n) \right]
@@ -262,8 +276,12 @@ Then, we introduce the tool of \hyperref[def:martingale-decomposition]{martingal
 			&\eqqcolon \Delta _n + \Delta _{n-1} + \dots + \Delta _1,
 		\end{split}
 	\]
-	where \(Y_i = \mathbb{E}_{}\left[f(X_1, \dots , X_n) \mid X_1, \dots , X_i \right] \).
+	where \(Y_i = \mathbb{E}_{}\left[f(X_1, \dots , X_n) \mid X_1, \dots , X_i \right] \) and \(\Delta _i \coloneqq Y_i - Y_{i-1}\).
 \end{definition}
+
+\begin{note}
+	For any integrable random variable \(Y\), \(Y_i = \mathbb{E}_{}\left[Y \mid X_1, \dots , X_i \right] \) form a \hyperref[def:martingale-difference-sequence]{martingale difference sequence} if centered, i.e., \(\Delta _i = Y_i - Y_{i-1}\).
+\end{note}
 
 Then, we can show the \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality}.
 
@@ -275,7 +293,7 @@ Then, we can show the \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality
 	The same bound holds for the left tail.
 \end{theorem}
 \begin{proof}
-	We first note that for any integrable random variable \(Y\), \(Z_i = \mathbb{E}_{}\left[Y \mid X_1, \dots , X_i \right] \) form a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. From the construction, we see that \(f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f(X_1, \dots , X_n) \right] = \sum_{i=1}^{n} \Delta _{i}\). Denote \(X = (X_1, \dots , X_n)\), and recall that
+	Consider the \hyperref[def:martingale-decomposition]{martingale decomposition} of \(f\) such that \(f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f(X_1, \dots , X_n) \right] = \sum_{i=1}^{n} \Delta _{i}\). Denote \(X = (X_1, \dots , X_n)\), and recall that
 	\[
 		h_i(x)
 		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_{i-1} \right]
@@ -298,22 +316,16 @@ Then, we can show the \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality
 		= (Y_i - Y_{i-1}) - (\inf _{x\in \chi } h_i(x) - Y_{i-1} )
 		= Y_i - \inf _{x\in \chi } h_i(x) \geq 0
 	\]
-	almost everywhere, and similarly we have \(\Delta _i - B_i \leq 0\) almost everywhere, hence
-	\[
-		A_i \leq \Delta _i \leq B_i.
-	\]
-	Observe that
+	almost everywhere, and similarly \(\Delta _i - B_i \leq 0\), hence \(A_i \leq \Delta _i \leq B_i\). Observe that
 	\begin{align*}
-		\Delta _i
-		 & = Y_i - Y_{i-1}                                                                                                                                                                    \\
-		 & \leq B_i - A_i \tag*{\(Y_i \leq \inf _{x\in \chi } h_i(x)\) and \(\inf _{x\in \chi } h_i(x) \leq Y_{i-1} \)}                                                                       \\
+		B_i - A_i
 		 & = \sup _{x\in \chi } h_i(x) - \inf _{y\in \chi } h_i(y)                                                                                                                            \\
 		 & = \sup _{x, y\in \chi } h_i(x) - h_i(y)                                                                                                                                            \\
 		 & = \sup _{x, y\in \chi } \mathbb{E}_{}\left[f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n ) - f(x_1, \dots , x_{i-1}, y, X_{i+1}, \dots , X_n)\right]                             \\
 		 & \leq \mathbb{E}_{}\left[\sup _{x, y\in \chi } \left\vert f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n ) - f(x_1, \dots , x_{i-1}, y, X_{i+1}, \dots , X_n) \right\vert  \right] \\
 		 & \leq c_i.
 	\end{align*}
-	Moreover, since \(B_i - A_i \geq 0\), so \(\vert \Delta _i \vert \leq \sup _{x\in \chi } h(x) - \inf _{y\in \chi } h(y)\) also holds, and hence \(\vert \Delta _i \vert \leq c_i\) almost surely. Finally, apply the \hyperref[thm:Azuma-Hoeffding-inequality]{Azuma-Hoeffding inequality} to \(\sum_{i=1}^{n} \Delta _i\), we have
+	Then, by applying the \hyperref[col:general-Azuma-Hoeffding-inequality]{general Azuma-Hoeffding inequality} to \(\sum_{i=1}^{n} \Delta _i\), we have
 	\[
 		\mathbb{P} (f(X) - \mathbb{E}_{}\left[f(X) \right] \geq t )
 		= \mathbb{P} \left( \sum_{i=1}^{n} \Delta _i \geq t \right)
@@ -336,7 +348,7 @@ Finally, we provide a proof for the \hyperref[thm:Efron-Stein-inequality]{Efron-
 		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_{i-1}, X_{i+1}, \dots , X_n \right]
 		= \mathbb{E}_{}\left[f(X) \mid X_{[1:i-1]}, X_{[i+1:n]} \right] .
 	\]
-	Define \(\Delta _i\) as \(\Delta _i = Y_i - Y_{i-1} \) where \(Y_i\) is defined the same as in \hyperref[pf-thm:McDiarmid-inequality]{McDiarmid's inequality}. Hence, \(f(X) - \mathbb{E}_{}\left[f(X) \right] = \sum_{i=1}^{n} \Delta _i\). Now, observe that
+	Define \(\Delta _i\) as \(\Delta _i = Y_i - Y_{i-1} \) where \(Y_i\) is defined the same as in \hyperref[def:martingale-decomposition]{martingale decomposition}. Hence, \(f(X) - \mathbb{E}_{}\left[f(X) \right] = \sum_{i=1}^{n} \Delta _i\). Now, observe that
 	\[
 		\Var_{}\left[f(X) \right]
 		= \mathbb{E}_{}\left[(f(X) - \mathbb{E}_{}\left[f(X) \right] )^2 \right]
@@ -376,25 +388,34 @@ Finally, we provide a proof for the \hyperref[thm:Efron-Stein-inequality]{Efron-
 	thus we have the final inequality
 	\[
 		\Var_{}\left[f(X) \right]
-		\leq \frac{1}{2}\sum_{i=1}^{n} \mathbb{E}_{}\left[\big( f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n) \big)^2 \right],
+		\leq \frac{1}{2}\sum_{i=1}^{n} \mathbb{E}_{}\left[\big( f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n) \big)^2 \right].
 	\]
-	or equivalently,\footnote{Where \((x)_+\) means \(\max (0, x)\), so we're avoiding double-counting.}
+\end{proof}
+
+\begin{remark}
+	Equivalently, one can write the bound of \hyperref[thm:Efron-Stein-inequality]{Efron-Stein inequality} as\footnote{Where \((x)_+\) means \(\max (0, x)\), so we're avoiding double-counting.}
 	\[
 		\Var_{}\left[f(X) \right]
 		\leq \sum_{i=1}^{n} \mathbb{E}_{}\left[\big( f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n) \big)_+^2 \right].
 	\]
+\end{remark}
 
-	If \(f\) satisfies the bounded-differences assumption with \(c_1, \dots , c_n > 0\), then from the \hyperref[lma:variance-bound]{claim},
+We have an additional corollary for \hyperref[thm:Efron-Stein-inequality]{Efron-Stein inequality}.
+
+\begin{corollary}
+	Let \(X_1, \dots , X_n\) be independent random variables. If the function \(f\) satisfies the \hyperref[def:bounded-difference-property]{bounded-difference property} with parameters \(c_1, \dots , c_n\), then
+	\[
+		\Var_{}\left[f(X_1, \dots , X_n) \right] \leq \frac{1}{4} \sum_{i=1}^{n} c_i^2.
+	\]
+\end{corollary}
+\begin{proof}
+	From \autoref{lma:variance-bound},
 	\[
 		\mathbb{E}_{}\left[\big(f(X) - \mathbb{E}_{i}\left[f(X) \right] \big)^2\right]
 		= \Var_{i}\left[f(X) \right]
 		\leq \frac{c_i^2}{4},
 	\]
-	hence
-	\[
-		\Var_{}\left[f(X) \right]
-		\leq \frac{1}{4}\sum_{i=1}^{n} c_i^2.
-	\]
+	hence \(\Var_{}\left[f(X) \right] \leq \frac{1}{4}\sum_{i=1}^{n} c_i^2\).
 \end{proof}
 
 \section{Expected Supremum of Empirical Process}
@@ -449,8 +470,7 @@ The proof is rather long, and we first state and prove some general facts about 
 \begin{proof}
 	For \(f\in \mathcal{S} _\alpha \) and \(0 \leq i \leq \beta \), we know that \(g = f^{(i)}\) satisfies
 	\begin{itemize}
-		\item \(g\) is \((\beta - i)\)-times differentiable;
-		\item[\(\implies \)] \(g\) is continuous on \([0, 1]\) (if \(i < \beta \));\footnote{When \(i = \beta \), \(g\in \mathcal{S} _0\) obviously.}
+		\item \(g\) is \((\beta - i)\)-times differentiable, and hence it is continuous on \([0, 1]\) (if \(i < \beta \));\footnote{When \(i = \beta \), \(g\in \mathcal{S} _0\) obviously.}
 		\item \(\vert g^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta - i\);
 		\item \(\vert g^{(\beta - i)} (x) - g^{(\beta - i)}(y)\vert \leq \vert x - y \vert ^{(\alpha - i) - (\beta - i)}\) for all \(x, y\in [0, 1]\).
 	\end{itemize}
@@ -475,10 +495,10 @@ The proof is rather long, and we first state and prove some general facts about 
 	where \(C(\alpha ) = \sum_{k=0}^{\beta } 1 / k! + 2 / \beta !\).
 \end{lemma}
 \begin{proof}
-	Given \(f, g\in \mathcal{S} _\alpha \) such that \(\vert f^{(k)}(x) - g^{(k)}(x) \vert \leq \epsilon ^{1 - (k / \alpha )}\) for all \(k=0, \dots , \beta \) and a fixed \(\epsilon > 0\), we know that for every \(h\in \mathbb{R} \) with \(\vert h \vert \leq \epsilon ^{1 / \alpha }\) and \(x, x + h \in (0, 1)\),
+	Given a fixed \(\epsilon > 0\), we know that for every \(h\in \mathbb{R} \) with \(\vert h \vert \leq \epsilon ^{1 / \alpha }\) and \(x, x + h \in (0, 1)\),
 	\[
 		\begin{split}
-			&\vert f(x+h) - g(x+h) \vert\\
+			\vert f(x+h) - g(x+h) \vert
 			&= \left\vert \left( \sum_{k=0}^{\beta } \frac{h^k}{k!}f^{(k)}(x) + R_f(x, h) \right) - \left( \sum_{k=0}^{\beta } \frac{h^k}{k!}g^{(k)}(x) + R_g(x, h) \right) \right\vert\\
 			&\leq \left\vert \sum_{k=0}^{\beta } \frac{h^k}{k!}(f^{(k)}(x) - g^{(k)}(x)) \right\vert + \vert R_f(x, h) - R_g(x, h) \vert \\
 			&\leq \left\vert \sum_{k=0}^{\beta } \frac{h^k}{k!} \epsilon ^{1 - (k / \alpha )} \right\vert + \vert R_f(x, h) - R_g(x, h) \vert \\
@@ -514,24 +534,9 @@ The proof is rather long, and we first state and prove some general facts about 
 		\]
 	\end{claim}
 	\begin{explanation}
-		Let \(N\) be a minimal \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net} of \((\mathcal{S} _\alpha , d )\) such that \(\vert N \vert = N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon)\). We want to show that \(\vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha } \vert \geq N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon )\). It suffices to show that the set of representatives \(R\), one from each \(\mathcal{G} (f)\), forms a \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net}. If this is the case, then \(\vert R \vert \geq \vert N \vert \) by the minimality of \(N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\). For two representative \(f \neq g \in R\) picked from \(\mathcal{G} (f) \neq \mathcal{G} (g)\), respectively, there exists \(1 \leq i \leq s\) and \(0 \leq k \leq \beta \) such that
-		\[
-			\left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor
-			\neq \left\lfloor \frac{g^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor.
-		\]
-		Choosing the closest \(g\) w.r.t.\ \(f\) in terms of the difference, i.e., \(\left\vert \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor - \left\lfloor \frac{g^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \right\vert \geq 1\). Observe that the difference is actually attainable by \(1\) as \(g\) can range over the entire \(\mathcal{S} _\alpha \), hence, there exists a \(g\) such that \(\vert f^{(k)}(x_i) - g^{(k)}(x_i) \vert \leq \epsilon ^{1 - (k / \alpha )}\). Then from \autoref{lma:Holder-smooth-3}, for \(x \in [x_i - \epsilon ^{1 / \alpha }, x_i + \epsilon ^{1 / \alpha }]\), \(\vert f(x) - g(x) \vert \leq C(\alpha )\epsilon\). Since this holds for every \(x_i\) (which is separated by \(\epsilon ^{1 / \alpha }\) exactly), this bounds extends for all \(x\in (0, 1)\), i.e.,
-		\[
-			d (f, g)
-			= \sup _{0 < x < 1} \vert f(x) - g(x) \vert
-			\leq C(\alpha )\epsilon,
-		\]
-		i.e., \(R\) is a \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net}, hence \(\vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha } \vert \geq N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\).
+		Let \(N\) be a minimal \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net} of \((\mathcal{S} _\alpha , d )\) such that \(\vert N \vert = N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon)\). We want to show that \(\vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha } \vert \geq N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon )\). It suffices to show that the set of representatives \(R\), one from each \(\mathcal{G} (f)\), forms a \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net}. If this is the case, then \(\vert R \vert \geq \vert N \vert \) by the minimality of \(N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\). For two representative \(f \neq g \in R\) picked from \(\mathcal{G} (f) \neq \mathcal{G} (g)\), respectively, there exists \(1 \leq i \leq s\) and \(0 \leq k \leq \beta \) such that \(\left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \neq \left\lfloor \frac{g^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor\). Choosing the closest \(g\) w.r.t.\ \(f\) in terms of the difference, i.e., \(\left\vert \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor - \left\lfloor \frac{g^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \right\vert \geq 1\). Observe that the difference is actually attainable by \(1\) as \(g\) can range over the entire \(\mathcal{S} _\alpha \), hence, there exists a \(g\) such that \(\vert f^{(k)}(x_i) - g^{(k)}(x_i) \vert \leq \epsilon ^{1 - (k / \alpha )}\). Then from \autoref{lma:Holder-smooth-3}, for \(x \in [x_i - \epsilon ^{1 / \alpha }, x_i + \epsilon ^{1 / \alpha }]\), \(\vert f(x) - g(x) \vert \leq C(\alpha )\epsilon\). Since this holds for every \(x_i\) (which is separated by \(\epsilon ^{1 / \alpha }\) exactly), this bounds extends for all \(x\in (0, 1)\), i.e., \(d (f, g) = \sup _{0 < x < 1} \vert f(x) - g(x) \vert \leq C(\alpha )\epsilon\), hence \(R\) is a \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net}, implying \(\vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha } \vert \geq N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\).
 
-		It's now easy to see that \(N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon ) \leq \vert I \vert \) as for every \(\mathcal{G} (f)\), there exists a one-to-one corresponding element in \(I\) defined exactly by
-		\[
-			\left( \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \right) _{\substack{i = 1, \dots , s \\ k = 0, \dots , \beta }},
-		\]
-		hence \(\vert I \vert = \vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha }\vert \geq N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\).
+		It's now easy to see that \(N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon ) \leq \vert I \vert \) as for every \(\mathcal{G} (f)\), there exists a one-to-one corresponding element in \(I\) defined exactly by \(\left( \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \right) _{\substack{i = 1, \dots , s \\ k = 0, \dots , \beta }}\), hence \(\vert I \vert = \vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha }\vert \geq N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\).
 	\end{explanation}
 
 	\begin{claim}\label{clm:metric-entropy-b}

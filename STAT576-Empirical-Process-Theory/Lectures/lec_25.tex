@@ -21,8 +21,8 @@ Let's see some interesting examples of \(\mathscr{F} \).
 	\]
 \end{eg}
 
-\begin{eg}[Smoothness constraints]
-	If \(\theta ^{\ast} _i = f^{\ast} (i / n)\) for \(f^{\ast} \in S_\alpha \), i.e., the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square}, the \hyperref[not:risk]{risk} has order \(O(n^{- \frac{2\alpha }{2\alpha + 1}})\) for \(\alpha > 1 / 2\) as shown in \autoref{thm:fixed-design-non-parametric-LS}.
+\begin{eg}[Smoothness constraint]
+	If \(\theta ^{\ast} _i = f^{\ast} (i / n)\) for \(f^{\ast} \in S_\alpha \), i.e., the \hyperref[prb:smooth-LS]{smooth constrained least square}, the \hyperref[not:risk]{risk} has order \(O(n^{- \frac{2\alpha }{2\alpha + 1}})\) for \(\alpha > 1 / 2\) as shown in \autoref{thm:fixed-design-non-parametric-LS}.
 \end{eg}
 
 \begin{eg}[Constrained Lasso]
@@ -45,24 +45,25 @@ Let's see some interesting examples of \(\mathscr{F} \).
 	\(\mathscr{F} = \{f \colon \sum_{i=1}^{m} \sum_{j=1}^{m} \vert f_{i+1, j} - f_{i, j} \vert + \vert f_{i, j+1} , f_{i, j} \vert \leq V \} \).
 \end{eg}
 
-To summarize, the constraints comes from \(\mathscr{F} \) in the \hyperref[prb:constrained-least-square]{constrained least square}. Now, to start bounding \(\lVert \hat{f} - f^{\ast} \rVert \), we first see a basic inequality: since \(f^{\ast} \in \mathscr{F} \) and \(\hat{f} \) is the minimizer of \(\lVert y - \hat{f} \rVert ^2 / n \),
+To summarize, the constraints comes from \(\mathscr{F} \) in the \hyperref[prb:constrained-LS]{constrained least square}. Now, to start bounding \(\lVert \hat{f} - f^{\ast} \rVert \), we first see a basic inequality: since \(f^{\ast} \in \mathscr{F} \) and \(\hat{f} \) is the minimizer of \(\lVert y - \hat{f} \rVert ^2 / n \),
 \[
-	\lVert y - \hat{f} \rVert ^2 \leq \lVert y - f^{\ast}  \rVert ^2.
+	\lVert y - \hat{f} \rVert ^2 \leq \lVert y - f^{\ast} \rVert ^2.
 \]
 With \(y = f^{\ast} + \epsilon \), the above is equivalent to
 \[
 	\begin{split}
-		&\lVert f^{\ast} + \epsilon - \hat{f}  \rVert ^2 \leq \lVert \epsilon \rVert ^2 \\
-		\iff &\langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle \\
-		\iff &\langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \\
-		\iff &\langle f^{\ast} - \hat{f} , f^{\ast} - \hat{f} \rangle \leq \langle \hat{f} - f^{\ast} , \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \\
-		\iff &\langle \hat{f} - f^{\ast} , \hat{f} - f^{\ast} \rangle \leq 2 \langle \epsilon , \hat{f} - f^{\ast} \rangle \\
-		\iff &\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast}  \rangle .
+		     & \lVert f^{\ast} + \epsilon - \hat{f}  \rVert ^2 \leq \lVert \epsilon \rVert ^2                                                                                                                                                                                                                                                             \\
+		\iff & \langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle                                                                                                                                                                                                                     \\
+		\iff & \langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \\
+		\iff & \langle f^{\ast} - \hat{f} , f^{\ast} - \hat{f} \rangle \leq \langle \hat{f} - f^{\ast} , \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle                                                                                                                                                                                 \\
+		\iff & \langle \hat{f} - f^{\ast} , \hat{f} - f^{\ast} \rangle \leq 2 \langle \epsilon , \hat{f} - f^{\ast} \rangle                                                                                                                                                                                                                               \\
+		\iff & \lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast}  \rangle .
 	\end{split}
 \]
 We call this the \emph{basic inequality}
+
 \begin{equation}\label{eq:basic-inequality}
-	\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast}  \rangle
+	\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast} \rangle
 \end{equation}
 
 Consider a toy example.
@@ -123,10 +124,10 @@ This suggests us to look instead at that for some \(t > 0\), \(\sup _{f\in \math
 \[
 	\begin{split}
 		\lVert \hat{f} - f^{\ast} \rVert
-		&= \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert \leq t} \cdot \lVert \hat{f} - f^{\ast} \rVert + \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \cdot \lVert \hat{f} - f^{\ast} \rVert \\
-		&\leq t + \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \cdot \lVert \hat{f} - f^{\ast} \rVert \\
-		&\leq t + 2 \left\langle \epsilon , \frac{\hat{f} - f^{\ast} }{\lVert \hat{f} - f^{\ast} \rVert } \right\rangle \cdot \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \\
-		&\leq t + 2 \sup _{\substack{f \in\mathscr{F} ^{\ast} \colon f \geq t}} \left\langle \epsilon , \frac{f}{\lVert f \rVert } \right\rangle .
+		 & = \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert \leq t} \cdot \lVert \hat{f} - f^{\ast} \rVert + \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \cdot \lVert \hat{f} - f^{\ast} \rVert \\
+		 & \leq t + \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t} \cdot \lVert \hat{f} - f^{\ast} \rVert                                                                                         \\
+		 & \leq t + 2 \left\langle \epsilon , \frac{\hat{f} - f^{\ast} }{\lVert \hat{f} - f^{\ast} \rVert } \right\rangle \cdot \mathbbm{1}_{\lVert \hat{f} - f^{\ast} \rVert > t}                    \\
+		 & \leq t + 2 \sup _{\substack{f \in\mathscr{F} ^{\ast} \colon \lVert f \rVert \geq t}} \left\langle \epsilon , \frac{f}{\lVert f \rVert } \right\rangle .
 	\end{split}
 \]
 
@@ -137,7 +138,7 @@ This suggests us to look instead at that for some \(t > 0\), \(\sup _{f\in \math
 To control the intersections between \(\mathscr{F} ^{\ast} \) and \(S^{n-1}\), a good assumption is the following.
 
 \begin{definition}[Star-shaped]\label{def:star-shaped}
-	A class of functions \(\mathscr{H} \) is \emph{star-shaped} around \(0\) if for all \(h\in \mathscr{H} \), \(\lambda h\in \mathscr{H} \) for \(\lambda \in [0, 1]\).
+	A class of functions \(\mathscr{H} \) is \emph{star-shaped} around \(0\) if for all \(h \in \mathscr{H} \), \(\lambda h \in \mathscr{H} \) for \(\lambda \in [0, 1]\).
 \end{definition}
 
 \begin{eg}[Convex \(\mathscr{H} \)]
@@ -150,22 +151,33 @@ Now, if \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped} arou
 	= \frac{1}{t} \langle \epsilon , u \rangle ,
 \]
 i.e., under the assumption that \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped}, we can rewrite the bound as
-\[
+\begin{equation}\label{eq:constrained-LS-one-step-localized-EP-bound}
 	\lVert \hat{f} - f^{\ast} \rVert
-	\leq t + \frac{2}{t} \sup _{\substack{u\in \mathscr{F} ^{\ast} \\ \lVert u \rVert = t}} \langle \epsilon , u \rangle
-	\leq t + \frac{2}{t} \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \langle \epsilon , f \rangle .
-\]
-We see that this is the same as the localization we did before, where \(\sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \leq t} \langle \epsilon , f \rangle \) is just the supremum of the \hyperref[def:localized-EP]{localized empirical process}. To bound this further, we will use concentration for the supremum. Denote
+	\leq t + \frac{2}{t} \sup _{\substack{u\in \mathscr{F} ^{\ast} \\ \lVert u \rVert \leq t}} \langle \epsilon , u \rangle
+	\leq t + \frac{2}{t} \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \langle \epsilon , f \rangle.
+\end{equation}
+This is the same as the localization we did before, where \(\sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \leq t} \langle \epsilon , f \rangle \) is just the supremum of the \hyperref[def:localized-EP]{localized empirical process}.
+
+\begin{intuition}
+	To bound this further, we will use concentration for the supremum.
+\end{intuition}
+
+First, denote
 \[
-	Z(t) = \sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \leq t} \langle \epsilon , f \rangle
+	Z(t) = \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \langle \epsilon , f \rangle
+	,\quad G(t) = \mathbb{E}_{}\left[Z(t) \right],
 \]
-and \(G(t) = \mathbb{E}_{}\left[Z(t) \right] \). We will show that \(Z(t) \approx G(t)\) so that the bound becomes \(t + 2 G(t) / t\). To minimize this, we again balance these two terms and look for the minimum. This suggests the following.
+so \autoref{eq:constrained-LS-one-step-localized-EP-bound} becomes
+\begin{equation}\label{eq:constrained-LS-one-step-localized-EP-bound-reduced}
+	\lVert \hat{f} - f^{\ast} \rVert \leq t + \frac{2}{t} Z(t).
+\end{equation}
+By showing \(Z(t) \approx G(t)\) with high probability, the bound becomes \(t + 2 G(t) / t\), which is a deterministic quantity. Balancing these two terms and looking for the minimum, we then get the tightest upper-bound. Since balancing \(t\) and \(2G(t) / t\) means setting these two terms to \(G(t) = t^2 / 2\), this suggests the following.
 
 \begin{definition}[Critical radius]\label{def:critical-radius}
-	The \emph{critical radius} is defined as
+	The \emph{critical radius} for a \hyperref[prb:constrained-LS]{constrained least square} is defined as
 	\[
 		t^{\ast} = \inf _{t > 0} \{ t \colon G(t) \leq t^2 / 2 \} .
 	\]
 \end{definition}
 
-In this case, the \hyperref[def:critical-radius]{critical radius} will minimize the bound, hence \(\lVert \hat{f} - f^{\ast}  \rVert = O(t^{\ast} )\).
+In this case, the \hyperref[def:critical-radius]{critical radius} will minimize the bound, hence \(\lVert \hat{f} - f^{\ast} \rVert = O(t^{\ast} )\).

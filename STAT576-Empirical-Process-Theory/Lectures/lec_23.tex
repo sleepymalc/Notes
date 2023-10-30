@@ -1,26 +1,26 @@
 \lecture{23}{23 Oct.\ 9:00}{Fixed Design Non-Parametric Regression}
-\section{Non-Parametric Regression}
+\section{Fixed Design Non-Parametric Regression}
 Now, we can see more advanced applications based on \hyperref[prb:M-estimation]{\(M\)-estimations}.
 
-\subsection{Fixed Design}
+\subsection{Smooth Constrained Least Square}
 First, consider the following problem.
 
-\begin{problem}[Fixed design non-parametric least square]\label{prb:fixed-design-non-parametric-LS}
+\begin{problem}[Smooth constrained least square]\label{prb:smooth-LS}
 Let \(\mathscr{F} = \{ f\colon [0, 1] \to [-1, 1] \text{ \(1\)-Lipschitz} \}\), and consider \(\epsilon _1, \dots , \epsilon _n \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2)\) such that for a fixed \(f^{\ast} \in \mathscr{F} \), for all \(i = 1, \dots , n\),
 \[
 	y_i = f^{\ast} (i / n) + \epsilon _i
 \]
-Then, the problem of \emph{fixed design non-parametric least square} is to find the least square estimate
+Then, the problem of \emph{smooth constrained least square} is to find the least square estimate
 \[
 	\hat{f} _n = \argmin_{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \left( y_i - f (i / n) \right) ^2.
 \]
 \end{problem}
 
 \begin{notation}
-	\hyperref[prb:fixed-design-non-parametric-LS]{Fixed design non-parametric least square} problem is fixed in the sense of the data \((x, y = f(x) + \epsilon )\) is generated at the fixed grid \(x\in \{ 1 / n, \dots , 1 \} \).
+	\hyperref[prb:smooth-LS]{Smooth constrained least square} problem is fixed in the sense of the data \((x, y = f(x) + \epsilon )\) is generated at the fixed grid \(x\in \{ 1 / n, \dots , 1 \} \).
 \end{notation}
 
-The main idea to solve the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square} is because it appeals to solve an \hyperref[prb:M-estimation]{\(M\)-estimation} problem.
+The main idea to solve the \hyperref[prb:smooth-LS]{smooth constrained least square} is because it appeals to solve an \hyperref[prb:M-estimation]{\(M\)-estimation} problem.
 
 \begin{remark}
 	\(\hat{f} _n \) is an \hyperref[prb:M-estimation]{\(M\)-estimator}.
@@ -59,7 +59,7 @@ Since \(\hat{f} _n \) is an \hyperref[prb:M-estimation]{\(M\)-estimator}, we wan
 	where \(\mathbb{P} _n\) is the empirical measure on the grid \(\{ 1 / n, 2 / n, \dots , 1 \} \), we see that it satisfies the \hyperref[def:growth-condition*]{growth condition} automatically.
 \end{explanation}
 
-To bound the \hyperref[def:localized-EP]{localized empirical process} for the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square}
+To bound the \hyperref[def:localized-EP]{localized empirical process} for the \hyperref[prb:smooth-LS]{smooth constrained least square}
 \[
 	\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} \colon d(f, f^{\ast} ) \leq \delta } (M_n - M)(f) - (M_n - M)(f^{\ast} ) \right].
 \]
@@ -84,9 +84,9 @@ To bound the \hyperref[def:localized-EP]{localized empirical process} for the \h
 	when \(\sigma ^2 = 1\).\footnote{Without this assumption, we just have \(\sigma ^2\) in the final bound, which is still a \hyperref[def:sub-Gaussian-process]{sub-Gaussian process}.} So, by \hyperref[col:Dudley-integral-entropy-bound]{Dudley's entropy integral bound}, for some \(c> 0\),
 	\[
 		\begin{split}
-			\mathbb{E}_{}\left[\sup _{\substack{f\in \mathscr{F} \colon \\ d(f, f^{\ast} ) \leq \delta } } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \left( f (i / n) - f^{\ast} (i / n) \right) \right]
-			&\leq \frac{12}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N (\mathscr{F} , d, \epsilon )}  \,\mathrm{d}\epsilon \\
-			&\leq \frac{1}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\frac{c}{\epsilon } }  \,\mathrm{d}\epsilon = c \sqrt{\frac{\delta}{n}} \eqqcolon \phi _n (\delta )
+			\mathbb{E}_{}\left[\sup _{\substack{f\in \mathscr{F} \colon                                                                                              \\ d(f, f^{\ast} ) \leq \delta } } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \left( f (i / n) - f^{\ast} (i / n) \right) \right]
+			 & \leq \frac{12}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N (\mathscr{F} , d, \epsilon )}  \,\mathrm{d}\epsilon                                         \\
+			 & \leq \frac{1}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\frac{c}{\epsilon } }  \,\mathrm{d}\epsilon = c \sqrt{\frac{\delta}{n}} \eqqcolon \phi _n (\delta )
 		\end{split}
 	\]
 	since \(N(\mathscr{F} , d, \epsilon ) \leq N(\mathscr{F} , \lVert \cdot \rVert _\infty , \epsilon ) \leq \exp (c_1 / \epsilon )\) from \autoref{thm:metric-entropy}.
@@ -119,21 +119,21 @@ or more specifically, from \autoref{thm:non-asymptotic-rate-of-convergence-exten
 \]
 
 \begin{remark}
-	The \hyperref[def:rate-of-convergence]{rate of convergence} in mean-square error (i.e., w.r.t.\ \(d^2 = L_2^2(\mathbb{P} )\)) for \(1\)-Lipschitz regression is \(n^{-2 / 3}\). Moreover, the ``min-max rate'' worst case over all \(f^{\ast} \in \mathscr{F} \) is \(n^{-2 / 3}\), hence the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square estimator} is ``min-max rate optimal''. These terms will make sense in the next \hyperref[rmk:min-max-rate-optimal]{remark}.
+	The \hyperref[def:rate-of-convergence]{rate of convergence} in mean-square error (i.e., w.r.t.\ \(d^2 = L_2^2(\mathbb{P} )\)) for \(1\)-Lipschitz regression is \(n^{-2 / 3}\). Moreover, the ``min-max rate'' worst case over all \(f^{\ast} \in \mathscr{F} \) is \(n^{-2 / 3}\), hence the \hyperref[prb:smooth-LS]{smooth constrained least square estimator} is ``min-max rate optimal''. These terms will make sense in the next \hyperref[rmk:min-max-rate-optimal]{remark}.
 \end{remark}
 
-More generally, if we assume that \(f^{\ast} \in \mathcal{S} _{\alpha }\), we can also solve the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square} over \(\mathcal{S} _\alpha \) as follows.
+More generally, if we assume that \(f^{\ast} \in \mathcal{S} _{\alpha }\), we can also solve the \hyperref[prb:smooth-LS]{smooth constrained least square} over \(\mathcal{S} _\alpha \) as follows.
 
 \begin{theorem}\label{thm:fixed-design-non-parametric-LS}
-	Consider the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square} problem over \(\mathcal{S} _\alpha \), the \hyperref[def:rate-of-convergence]{rate of convergence} of \(d(\hat{f} _n, f^{\ast} )\) for the canonical \(d\) is \(O_p(n^{- \frac{\alpha }{2\alpha + 1}})\) for \(\alpha > 1 / 2\).
+	Consider the \hyperref[prb:smooth-LS]{smooth constrained least square} problem over \(\mathcal{S} _\alpha \), the \hyperref[def:rate-of-convergence]{rate of convergence} of \(d(\hat{f} _n, f^{\ast} )\) for the canonical \(d\) is \(O_p(n^{- \frac{\alpha }{2\alpha + 1}})\) for \(\alpha > 1 / 2\).
 \end{theorem}
 \begin{proof}
 	From the same calculation, the corresponding \hyperref[def:localized-EP]{localized empirical process} is bounded by
 	\[
 		\begin{split}
-			\mathbb{E}_{}\left[\sup _{\substack{f\in \mathcal{S} _\alpha \colon \\ d(f, f^{\ast} ) \leq \delta }} \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \left( f (i / n) - f^{\ast} (i / n) \right) \right]
-			&\leq \frac{c}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N(\mathcal{S} _\alpha , d, \epsilon )}  \,\mathrm{d}\epsilon \\
-			&\leq \frac{c}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N(\mathcal{S} _\alpha , \lVert \cdot \rVert _\infty , \epsilon )}  \,\mathrm{d}\epsilon
+			\mathbb{E}_{}\left[\sup _{\substack{f\in \mathcal{S} _\alpha \colon                                                                               \\ d(f, f^{\ast} ) \leq \delta }} \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \left( f (i / n) - f^{\ast} (i / n) \right) \right]
+			 & \leq \frac{c}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N(\mathcal{S} _\alpha , d, \epsilon )}  \,\mathrm{d}\epsilon                            \\
+			 & \leq \frac{c}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N(\mathcal{S} _\alpha , \lVert \cdot \rVert _\infty , \epsilon )}  \,\mathrm{d}\epsilon
 			\leq \frac{c}{\sqrt{n} } \int_{0}^{\delta } \left( \frac{1}{\epsilon } \right) ^{\frac{1}{2\alpha } } \,\mathrm{d}\epsilon
 		\end{split}
 	\]
@@ -163,7 +163,7 @@ It's usually more natural to consider the rate for \(d^2(\hat{f} _n, f^{\ast} ) 
 	\[
 		\inf _{\hat{f} _n} \sup _{f \in \mathscr{F} } \mathbb{E}_{}\left[ L_2^2(\mathbb{P} ) (\hat{f} _n, f^{\ast} )\right] \geq c n^{-\frac{2\alpha}{2\alpha + 1}}.
 	\]
-	Hence, the rate for the \hyperref[prb:fixed-design-non-parametric-LS]{fixed design non-parametric least square estimator} is \emph{min-max rate optimal} over \(\mathcal{S} _\alpha \) for \(\alpha > 1 / 2\). However, it's not known whether the same conclusion holds for \(\alpha < 1 / 2\).
+	Hence, the rate for the \hyperref[prb:smooth-LS]{smooth constrained least square estimator} is \emph{min-max rate optimal} over \(\mathcal{S} _\alpha \) for \(\alpha > 1 / 2\). However, it's not known whether the same conclusion holds for \(\alpha < 1 / 2\).
 \end{explanation}
 
 We do not know \(\alpha \). A natural question is the following.

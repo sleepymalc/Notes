@@ -1,0 +1,153 @@
+\lecture{26}{30 Oct.\ 9:00}{Rate of Constrained Least Square}
+Before we proceed, we note the following.
+
+\begin{remark}
+	\(t^{\ast} \) is well-defined, i.e., there exists \(t\) such that \(G(t) \leq t^2 / 2\).
+\end{remark}
+\begin{explanation}
+	From Cauchy-Schwarz,
+	\[
+		G(t) \leq \mathbb{E}_{}\left[ \lVert \epsilon \rVert \cdot t \right] \leq (\mathbb{E}_{}\left[ \lVert \epsilon \rVert ^2 \right] )^{1 / 2} t \leq \sqrt{n} \cdot t.
+	\]
+	Hence, \(G\) is bounded by a linear function of \(t\), so there exists \(t\) such that \(G(t) \leq t^2 / 2\).
+\end{explanation}
+
+\begin{remark}
+	The rate of \(t^{\ast} \to \infty \) with \(n \to \infty \) is typically that \(t^{\ast} / n \to 0\).
+\end{remark}
+
+We first show some property of \(G(t) / t\).
+
+\begin{lemma}\label{lma:lec26-non-increasing}
+	If \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped}, then the map \(t \mapsto G(t) / t\) is non-increasing.
+\end{lemma}
+\begin{proof}
+	Take \(t^{\ast} \leq t^{\prime} \leq t\) and any \(f \in \mathscr{F} ^{\ast} \) such that \(\lVert f \rVert \leq t\). By the \hyperref[def:star-shaped]{star-shaped} assumption on \(\mathscr{F} ^{\ast} \), \(t^{\prime} \cdot f / t \in \mathscr{F} ^{\ast}\). Note that \(\lVert t^{\prime} / t \cdot f \rVert \leq t^{\prime} \), which implies
+	\[
+		Z(t)
+		= \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}}\langle \epsilon , f \rangle
+		= \frac{t}{t^{\prime} } \cdot \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \left\langle \epsilon , \frac{t^{\prime} }{t} \cdot f\right\rangle
+		\leq \frac{t}{t^{\prime} } \cdot \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t^{\prime} }} \left\langle \epsilon , f \right\rangle
+		= \frac{t}{t^{\prime} } Z(t^{\prime} ).
+	\]
+	Hence, \(Z(t) \leq t / t^{\prime} \cdot Z(t^{\prime} )\), i.e., \(Z(t) / t \leq Z(t^{\prime} ) / t^{\prime} \). Taking the expectation gives the result.
+\end{proof}
+
+Now, observe the following.
+
+\begin{corollary}\label{col:lec26-non-increasing}
+	For any \(t \geq t^{\ast} \), \(G(t) \leq t^2 / 2\).
+\end{corollary}
+\begin{proof}
+	Let \(t \geq t^{\ast} \), we have
+	\[
+		G(t)
+		= t \cdot \frac{G(t)}{t}
+		\leq t \cdot \frac{G(t^{\ast} )}{t^{\ast} }
+		\leq t \cdot \frac{t^{\ast} }{2}
+		\leq \frac{t^2}{2}
+	\]
+	where the first and second inequality follows from \autoref{lma:lec26-non-increasing} and \autoref{def:critical-radius}.
+\end{proof}
+
+Now, we return to bound \autoref{eq:constrained-LS-one-step-localized-EP-bound-reduced} with the concentration argument. We have the following.
+
+\begin{theorem}[Gaussian concentration for Lipschitz functions]\label{thm:Gaussian-concentration-for-Lipschitz}
+	Let \(\epsilon _1, \dots , \epsilon _n \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2)\) and \(\phi \colon \mathbb{R} ^n \to \mathbb{R} \) be \(L\)-Lipschitz w.r.t.\ the Euclidean norm, i.e., \(\vert \phi (x) - \phi (y) \vert \leq L \lVert x - y \rVert _2\). Then for every \(t \geq 0\),
+	\[
+		\mathbb{P} \left( \phi (\epsilon ) - \mathbb{E}_{}\left[\phi (\epsilon ) \right] > t \right) \leq e^{-\frac{t^2}{2L^2 \sigma ^2}}.
+	\]
+\end{theorem}
+
+\autoref{thm:Gaussian-concentration-for-Lipschitz} means that \(\phi (\epsilon )\) has the same tail decay as \(\mathcal{N} (0, L)\). Now, to apply \autoref{thm:Gaussian-concentration-for-Lipschitz}, we need to show that \(Z(t)\) is indeed Lipschitz.
+
+\begin{lemma}\label{lma:lec26-Lipschitz}
+	\(Z(t)\) is a \(t\)-Lipschitz function of \(\epsilon \).
+\end{lemma}
+\begin{proof}
+	Let \(Z(t) = Z(t, \epsilon )\), then
+	\[
+		\phi (\epsilon ) - \phi (\epsilon ^{\prime} )
+		= Z(t, \epsilon ) - Z(t, \epsilon ^{\prime} )
+		= \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \langle \epsilon , f \rangle - \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \langle \epsilon ^{\prime} , f \rangle.
+	\]
+	Let \(\hat{f} = \arg \sup _{\substack{f\in \mathscr{F} ^{\ast} \\ \lVert f \rVert \leq t}} \langle \epsilon , f \rangle\), we further have
+	\[
+		\phi (\epsilon ) - \phi (\epsilon ^{\prime} )
+		\leq \langle \epsilon , \hat{f} \rangle - \langle \epsilon ^{\prime} , \hat{f} \rangle
+		= \langle \epsilon - \epsilon ^{\prime} , \hat{f}  \rangle
+		\leq \lVert \epsilon - \epsilon ^{\prime} \rVert \lVert \hat{f} \rVert
+		\leq t\lVert \epsilon - \epsilon ^{\prime} \rVert
+	\]
+	from Cauchy-Schwarz. The other side is the same.
+\end{proof}
+
+Hence, we have the following.
+
+\begin{corollary}\label{col:lec26-Lipschitz-probability}
+	For every \(u, t \geq 0\),
+	\[
+		\mathbb{P} \left( Z(t) - G(t) \geq u \right) \leq \exp(- \frac{u^2}{2 t^2 \sigma ^2}).
+	\]
+\end{corollary}
+\begin{proof}
+	This directly follows from \autoref{thm:Gaussian-concentration-for-Lipschitz} and \autoref{lma:lec26-Lipschitz}.
+\end{proof}
+
+\begin{note}
+	Set \(u = t^2\) in \autoref{col:lec26-Lipschitz-probability}, we have \(\mathbb{P} \left( Z(t) \geq G(t) + t^2 \right) \leq e^{- t^2 / 2 \sigma ^2}\).
+\end{note}
+
+Hence, for all \(t \geq t^{\ast} \), from \autoref{col:lec26-Lipschitz-probability}, with probability at least \(1 - e^{-t^2 / 2 \sigma ^2}\),
+\[
+	Z(t) \leq G(t) + t^2 \leq \frac{t^2}{2} + t^2 = \frac{3}{2}t^2
+\]
+with \autoref{col:lec26-non-increasing}. In all, with probability at least \(1 - e^{-t^2 / 2 \sigma ^2}\), the bound \autoref{eq:constrained-LS-one-step-localized-EP-bound-reduced} becomes
+\[
+	\lVert \hat{f} - f^{\ast} \rVert
+	\leq t + \frac{2}{t} Z(t)
+	\leq 4t,
+\]
+i.e., we have shown that for all \(t \geq t^{\ast} \),
+\[
+	\mathbb{P} \left( \lVert \hat{f} - f^{\ast} \rVert \leq 4t \right) \geq 1 - e^{-\frac{t^2}{2 \sigma ^2}}.
+\]
+Putting this into a theorem, we have the following.
+
+\begin{theorem}[Non-asymptotic bound on constrained least square error]\label{thm:non-asymptotic-bound-on-constrained-LS-error}
+	Consider the \hyperref[prb:constrained-LS]{constrained least square} problem over \(\mathscr{F} \) such that \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped}. Then for all \(s \geq 1\),
+	\[
+		\mathbb{P} \left( \lVert \hat{f} - f^{\ast} \rVert \leq 4 s t^{\ast} \right) \geq 1 - e^{-\frac{(s t^{\ast} )^2}{2 \sigma ^2}}.
+	\]
+\end{theorem}
+\begin{proof}
+	We let \(t \geq t^{\ast} \) to be \(t \coloneqq s t^{\ast} \) for some \(s \geq 1\), iterative the above argument gives the result.
+\end{proof}
+
+The expectation version of \autoref{thm:non-asymptotic-bound-on-constrained-LS-error} is the following.
+
+\begin{remark}
+	For some constant \(C > 0\), \(\mathbb{E}_{}[ \lVert \hat{f} - f^{\ast} \rVert ^2 ] \leq C (\sigma ^2 {t^{\ast} }^2 + 1)\).
+\end{remark}
+
+We make several important notes.
+
+\begin{note}
+	\autoref{thm:non-asymptotic-bound-on-constrained-LS-error} says that \(t^{\ast} \) determines the mean square error between \(\hat{f} \) and \(f^{\ast} \), where the explicit non-asymptotic one-sided tail bound states that the tail decay is Gaussian.
+\end{note}
+
+\begin{note}
+	\autoref{thm:non-asymptotic-bound-on-constrained-LS-error} can be generalized to \(\epsilon _1, \dots , \epsilon _n \) bounded by \(1\).
+\end{note}
+\begin{explanation}
+	Then the main step of proving \autoref{thm:non-asymptotic-bound-on-constrained-LS-error} is \autoref{thm:Gaussian-concentration-for-Lipschitz}, which does not hold in this case. However, a similar concentration result holds for convex and Lipschitz function of \(\epsilon \). Hence, showing \(Z(t)\) is convex as a function of \(\epsilon \) and with \autoref{lma:lec26-Lipschitz}, i.e., \(Z(t)\) is \(t\)-Lipschitz suffices.
+\end{explanation}
+
+\begin{note}
+	If \(\mathscr{F} \) is convex (which is stronger than being \hyperref[def:star-shaped]{star-shaped} as noted), a two-sided tail bound holds under a different definition of \hyperref[def:critical-radius]{critical radius} where now \(t^{\ast} = \argmax_{t} G(t) - t^2 / 2\). In particular,
+	\[
+		{t^{\ast} }^2 - C\cdot {t^{\ast} }^{3 / 2}
+		\leq \mathbb{E}_{}\left[ \lVert \hat{f} - f^{\ast} \rVert ^2 \right]
+		\leq {t^{\ast} }^2 + C\cdot {t^{\ast} }^{3 / 2}.
+	\]
+\end{note}

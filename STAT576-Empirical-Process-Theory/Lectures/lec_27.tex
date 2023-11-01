@@ -1,1 +1,123 @@
-\lecture{27}{1 Nov.\ 9:00}{}
+\lecture{27}{1 Nov.\ 9:00}{Another Approach of Localization}
+\subsection{Offset Gaussian Rademacher Complexity}
+We'll see another approach of bounding \autoref{eq:basic-inequality}. First, the \hyperref[eq:basic-inequality]{basic inequality} \(\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast} \rangle\) can be rewritten as
+\[
+	\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 4 \langle \epsilon , \hat{f} - f^{\ast}  \rangle - \lVert \hat{f} - f^{\ast} \rVert ^2
+	\leq \sup _{f\in \mathscr{F} } 4 \langle \epsilon , f - f^{\ast}  \rangle - \lVert f - f^{\ast}  \rVert ^2
+	= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } 4 \langle \epsilon , f - f^{\ast}  \rangle - \lVert f - f^{\ast}  \rVert ^2 \right]
+\]
+which is the offset complexity of \(\mathscr{F} \) around \(f^{\ast} \).
+
+\begin{theorem}
+	If \(t^{\ast} \) is the \hyperref[def:critical-radius]{critical radius} and \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped}. Then for all \(s > 0\),
+	\[
+		\mathbb{P} \left( \sup _{f\in \mathscr{F} } 4 \langle \epsilon , f \rangle - \lVert f \rVert ^2 \leq 4 (t^{\ast} + s)^2 \right) \geq 1 - e^{-s^2 / 2}.
+	\]
+\end{theorem}
+\begin{proof}
+	From \autoref{col:lec26-Lipschitz-probability}, we have
+	\[
+		\mathbb{P} \left( Z(t^{\ast} ) \leq G(t^{\ast} ) + s \cdot t^{\ast}  \right) \geq 1 - e^{- s^2 / 2}.
+	\]
+	Take any \(f \in \mathscr{F} ^{\ast} \):
+	\begin{itemize}
+		\item \(\lVert f \rVert \leq t^{\ast} \): then
+		      \[
+			      4 \langle \epsilon , f \rangle - \lVert f \rVert ^2
+			      \leq 4 \langle \epsilon , f \rangle
+			      \leq 4 Z(t^{\ast} ).
+		      \]
+		      On the event,
+		      \[
+			      \leq 4 (G(t^{\ast} ) + s t^{\ast} )
+			      \leq 4 \left( \frac{{t^{\ast} }^2}{2} + s \cdot t^{\ast} \right)
+			      \leq 4 \left( \frac{{t^{\ast} }^2}{2} + s \cdot t^{\ast} + \frac{s^2}{2}\right)
+			      = 2(t^{\ast} + s)^2
+		      \]
+		\item \(\lVert f \rVert > t^{\ast} \): let \(\gamma = t^{\ast} / \lVert f \rVert < 1\), we have
+		      \[
+			      4 \langle \epsilon , f \rangle - \lVert f \rVert ^2
+			      = 4 \cdot \frac{1}{\gamma } \langle \epsilon , \gamma f \rangle - \frac{{t^{\ast} }^2}{\gamma ^2}
+			      \leq \frac{4}{\gamma } Z(t^{\ast} ) - \frac{{t^{\ast} }^2}{2}
+			      = \frac{4 t^{\ast} }{\gamma } \cdot \frac{Z(t^{\ast} )}{t^{\ast} } - \frac{{t^{\ast} }^2}{\gamma ^2}
+			      \leq 4 \left( \frac{Z(t^{\ast} )}{t^{\ast} } \right) ^2
+		      \]
+		      from \(2ab - b^2 \leq a^2\). On the event,
+		      \[
+			      \leq \frac{4 ( G(t^{\ast} ) + s\cdot t^{\ast} )^2}{{t^{\ast} }^2}
+			      \leq 4 \left( \frac{{t^{\ast} }^2 / 2 + s\cdot t^{\ast} }{t^{\ast} } \right) ^2
+			      \leq 4 ( t^{\ast} + s)^2.
+		      \]
+	\end{itemize}
+\end{proof}
+
+\begin{remark}
+	It implies that \(\lVert \hat{f} - f^{\ast}  \rVert ^2\) after \({t^{\ast} }^2\) has a tail with exponentially decay. Compared to what we have done before, it's the same since previously we have \(\lVert \hat{f} - f^{\ast}  \rVert \) after \(t^{\ast} \) has a tail with Gaussian decay. The same thing.
+\end{remark}
+
+\begin{eg}
+	Consider \(\mathscr{F} = \{ X \beta \colon \beta \in \mathbb{R} ^d \} \), where \(X\) is a fixed \(n \times d\) matrix. Then
+	\[
+		\sup _{\beta \in \mathbb{R} ^d} \langle \epsilon , X \beta  \rangle - \lVert X \beta  \rVert ^2 \approx \rank (X ^{\top} X).
+	\]
+\end{eg}
+
+\begin{eg}
+	Abuse the notation a bit, we can write
+	\[
+		\mathscr{F} = \{ (f(1 / n), f(2 / n), \dots , f(1)) \colon f\in \mathscr{F} \}.
+	\]
+	We need to bound \(t^{\ast} \). Write
+	\[
+		\mathop{\mathrm{GW}}(\mathscr{F} - f^{\ast} , t)
+		= \mathbb{E}_{}\left[\sup _{\substack{f\in \mathscr{F} \\ \lVert f - f^{\ast} \rVert \leq t}} \left\langle \epsilon , f - f^{\ast}  \right\rangle \right] = G(t).
+	\]
+	Often, we can replace \(\mathop{\mathrm{GW}}(\mathscr{F} - f^{\ast} , t) \) by \(\mathop{\mathrm{GW}}(\mathscr{F} - \mathscr{F} , t) \). If \(\mathscr{F} \) is \(L\)-Lipschitz, then \(\mathscr{F} - \mathscr{F} \) is \(2L\)-Lipschitz.
+\end{eg}
+
+Instead of doing \(\sup _{f\in \mathscr{F} } f - f^{\ast} \), we consider \(\sup _{f, g \in \mathscr{F} } f - g\). This gives a worst case rate.
+
+\begin{eg}[Holder smooth functions]
+	Consider \(\mathscr{F} = \mathcal{S} _\alpha \), then
+	\[
+		\log N(\mathscr{F} - \mathscr{F} , \lVert \cdot \rVert _2 / \sqrt{n} , \epsilon ) = c \left( \frac{1}{\epsilon } \right) ^{1 / \alpha }.
+	\]
+\end{eg}
+
+\begin{eg}[Bounded isotonic functions]
+	Consider
+	\[
+		\mathscr{F} = \{(f_1, \dots , f_n) \colon 0 \leq f_1 \leq f_2 \leq \dots \leq f_n \leq 1 \}.
+	\]
+	We have
+	\[
+		\log N(\mathscr{F} , \lVert \cdot \rVert _2 / \sqrt{n} , \epsilon ) \approx \frac{c}{\epsilon }.
+	\]
+	If instead we consider the unbounded case
+	\[
+		\mathscr{F} = \{(f_1, \dots , f_n) \colon f_1 \leq f_2 \leq \dots \leq f_n \},
+	\]
+	i.e., \(\hat{f} \) will not have tuning parameters. Then \(\mathop{\mathrm{GW}}(\mathscr{F} - f^{\ast} , t) \leq C n^{1 / 4} {v^{\ast} }^{1 / 2} t^{1 / 2}\) where \(v^{\ast} = (f^{\ast} _n - f^{\ast} _1)\). This can be bound since we're always looking at some bounded ball, i.e., it's compact. Equating this with \(t^2\) we have
+	\[
+		t^{\ast} \approx (v^{\ast} _n)^{1 / 6}
+		\implies \frac{{t^{\ast} }^2}{n} \approx \frac{{v^{\ast} }^{1 / 3}}{n^{2 / 3}}.
+	\]
+\end{eg}
+
+\begin{eg}[Unimodal]
+	Consider
+	\[
+		\mathscr{F} = \{ (f_1, \dots , f_n) \colon \exists i \colon f_1 \leq f_2 \leq \dots \leq f_i \geq f_{i+1} \geq \dots \geq f_n \}.
+	\]
+	Then
+	\[
+		\log N(\mathscr{F} , \lVert \cdot \rVert _2 / \sqrt{n} , \epsilon ) \leq \frac{c}{\epsilon },
+	\]
+	and we get \(n^{-2 / 3}\) rate for MSE. This is non-convex, but it's \hyperref[def:star-shaped]{star-shaped}, hence \(\mathscr{F} - \mathscr{F} \) is also \hyperref[def:star-shaped]{star-shaped} because \(\mathscr{F} \) is \hyperref[def:star-shaped]{star-shaped} around \(0\).
+\end{eg}
+
+\begin{remark}[Isotonic, unimodal, convex]
+	We actually have \(\mathop{\mathrm{GW}}(\mathscr{F} - f^{\ast} , t) \approx f^{\ast} \). If \(f^{\ast} \) is linear, then the rate is \(n^{-2 / 3}\); if \(f^{\ast} \) is \(K\) pieces-wise constant, we get \(k \log n / n\). This means the geometry of \(\mathscr{F} \) is different around different \(f^{\ast} \).
+\end{remark}
+
+The geometric and local Gaussian complexity around \(f^{\ast} \) as a function of \(t\)

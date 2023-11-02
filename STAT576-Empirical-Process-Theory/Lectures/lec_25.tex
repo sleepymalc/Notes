@@ -52,12 +52,12 @@ To summarize, the constraints comes from \(\mathscr{F} \) in the \hyperref[prb:c
 With \(y = f^{\ast} + \epsilon \), the above is equivalent to
 \[
 	\begin{split}
-		     & \lVert f^{\ast} + \epsilon - \hat{f}  \rVert ^2 \leq \lVert \epsilon \rVert ^2                                                                                                                                                                                                                                                             \\
-		&\iff \langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle                                                                                                                                                                                                                     \\
-		&\iff \langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \\
-		&\iff \langle f^{\ast} - \hat{f} , f^{\ast} - \hat{f} \rangle \leq \langle \hat{f} - f^{\ast} , \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle                                                                                                                                                                                 \\
-		&\iff \langle \hat{f} - f^{\ast} , \hat{f} - f^{\ast} \rangle \leq 2 \langle \epsilon , \hat{f} - f^{\ast} \rangle                                                                                                                                                                                                                               \\
-		&\iff \lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast}  \rangle .
+		 & \lVert f^{\ast} + \epsilon - \hat{f}  \rVert ^2 \leq \lVert \epsilon \rVert ^2                                                                                                                                                                                                                                                                  \\
+		 & \iff \langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle                                                                                                                                                                                                                     \\
+		 & \iff \langle f^{\ast} + \epsilon - \hat{f} , f^{\ast} + \epsilon - \hat{f} \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \leq \langle \epsilon , \epsilon \rangle - \langle f^{\ast} + \epsilon - \hat{f}, \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle \\
+		 & \iff \langle f^{\ast} - \hat{f} , f^{\ast} - \hat{f} \rangle \leq \langle \hat{f} - f^{\ast} , \epsilon \rangle - \langle \epsilon , f^{\ast} - \hat{f} \rangle                                                                                                                                                                                 \\
+		 & \iff \langle \hat{f} - f^{\ast} , \hat{f} - f^{\ast} \rangle \leq 2 \langle \epsilon , \hat{f} - f^{\ast} \rangle                                                                                                                                                                                                                               \\
+		 & \iff \lVert \hat{f} - f^{\ast}  \rVert ^2 \leq 2 \langle \epsilon , \hat{f} - f^{\ast}  \rangle .
 	\end{split}
 \]
 We call this the \emph{basic inequality}
@@ -171,7 +171,22 @@ so \autoref{eq:constrained-LS-one-step-localized-EP-bound} becomes
 \begin{equation}\label{eq:constrained-LS-one-step-localized-EP-bound-reduced}
 	\lVert \hat{f} - f^{\ast} \rVert \leq t + \frac{2}{t} Z(t).
 \end{equation}
-By showing \(Z(t) \approx G(t)\) with high probability, the bound becomes \(t + 2 G(t) / t\), which is a deterministic quantity. Balancing these two terms and looking for the minimum, we then get the tightest upper-bound. Since balancing \(t\) and \(2G(t) / t\) means setting these two terms to \(G(t) = t^2 / 2\), this suggests the following.
+
+Digress from bounding \(Z(t)\) for now, we note that the definition of \(G(t)\) reminds us the (scaled) \hyperref[def:Gaussian-width]{Gaussian width} for the set \(\mathscr{F} ^{\ast} \), where the difference lies in the norm constraint in \(Z(t)\), i.e., \(\lVert f \rVert \leq t\). This suggests the following definition.
+
+\begin{definition}[Localized Gaussian width]\label{def:localized-Gaussian-width}
+	Let \(g_i \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\). Then the \emph{localized Gaussian width} of a set \(A \subseteq \mathbb{R} ^n\) of some \(t > 0\) is defined as
+	\[
+		\GW\nolimits_n (A, t)
+		= \mathbb{E}_{}\left[\sup _{a \in A \colon \lVert a \rVert \leq t} \frac{1}{n} \left\langle g , a \right\rangle \right].
+	\]
+\end{definition}
+
+\begin{note}
+	If \(\epsilon _i \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2)\) with \(\sigma ^2 = 1\), then \(G(t) = \mathbb{E}_{}\left[ \sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \leq t} \langle \epsilon , f \rangle \right] = n \GW_n(\mathscr{F} ^{\ast} , t)\).
+\end{note}
+
+Back to bounding \(Z(t)\). By showing \(Z(t) \approx G(t)\) with high probability, the bound becomes \(t + 2 G(t) / t\). Balancing these two terms and looking for the minimum, we get the tightest upper-bound. Since balancing \(t\) and \(2G(t) / t\) means setting these two terms to \(G(t) = t^2 / 2\), this suggests the following.
 
 \begin{definition}[Critical radius]\label{def:critical-radius}
 	The \emph{critical radius} for a \hyperref[prb:constrained-LS]{constrained least square} is defined as

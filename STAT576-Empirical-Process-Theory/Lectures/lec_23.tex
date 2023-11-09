@@ -1,9 +1,65 @@
-\lecture{23}{23 Oct.\ 9:00}{Fixed Design Non-Parametric Regression}
-\section{Fixed Design Non-Parametric Regression}
-Now, we can see more advanced applications based on \hyperref[prb:M-estimation]{\(M\)-estimations}.
+
+\chapter{Fixed Design Non-Parametric Regression}
+\lecture{23}{23 Oct.\ 9:00}{Smooth Constrained Least Square}
+In this chapter, we're going to study the \emph{fixed design non-parametric regression}, a more advanced application based on \hyperref[prb:M-estimation]{\(M\)-estimations}. Here, fixed design refers to the case that when an \hyperref[prb:ERM]{empirical risk minimization} problem has data \(X_i\)'s given are ``fixed'', i.e., the only randomness comes from \(Y_i\)'s.\footnote{In contrast, there is also \emph{random design}, where \(X_i\)'s are also sampled from a distribution.}
+
+\section{Smooth Constrained Least Square}
+In this section, we will see an example of \hyperref[prb:constrained-LS]{constrained least square} called \hyperref[prb:smooth-LS]{smooth constrained least square}. This helps us prepared for developing  a more unified theory towards the former problem.
+
+\subsection{Prediction and Estimation: Statistical Learning v.s.\ \(M\)-Estimation}
+Since we're going to consider regression problems, i.e., \hyperref[prb:ERM]{empirical risk minimizations}, with the tools developed for \hyperref[prb:M-estimation]{\(M\)-estimations}, it's natural to compare ``prediction'' and ``estimation''. Recall the following.
+
+\begin{prev}[Prediction]
+	Given \((X_1, Y_1), \dots , (X_n, Y_n) \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), let \(f^{\ast} (x) = \mathbb{E}_{}\left[Y \mid X = x \right] \), i.e.,
+	\[
+		f^{\ast} = \argmin_{f \text{ measurable} } \mathbb{E}_{(X, Y)}\left[ \left( Y - f(X)  \right) ^2 \right] .
+	\]
+	More generally, given a class of function \(\mathscr{F} \), we can define the predictor
+	\[
+		f_{\mathscr{F} } = \argmin_{f\in \mathscr{F} } \mathbb{E}_{}\left[ ( Y - f(X) ) ^2 \right] .
+	\]
+	For any prediction function \(f\colon \chi \to \mathbb{R} \), its \hyperref[def:excess-risk]{excess risk} is
+	\[
+		\mathbb{E}_{}\left[ ( Y - f(X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( Y - h(X) ) ^2 \right] .
+	\]
+\end{prev}
+
+We now ask, how does this ``prediction'' approach relates to the problem of ``estimation'', e.g., \hyperref[prb:M-estimation]{\(M\)-estimation}? Observe that we can write
+\begin{align*}
+	 & \mathbb{E}_{}\left[ ( Y - f(X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( Y - h(X) ) ^2 \right]                                                      \\
+	 & = \mathbb{E}_{}\left[ ( Y - f(X) \pm f^{\ast} (X) ) ^2 \right]  - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( Y - h(X) \pm f^{\ast} (X)) ^2 \right]                  \\
+	 & = \mathbb{E}_{}\left[ ( f(X) - f^{\ast} (X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( h(X) - f^{\ast} (X) ) ^2 \right] \tag*{cross terms are \(0\)} \\
+	 & = \lVert f - f^{\ast}  \rVert _{L_2(\mathbb{P} )}^2 - \inf _{h\in \mathscr{F} } \lVert h - f^{\ast}  \rVert _{L_2(\mathbb{P} )} ^2,
+\end{align*}
+where the last equation is the estimation error in the traditional statistics terminology. Looking at the last line, we see that ``prediction'' and ``estimation'' are the same in this content.
+
+\begin{intuition}
+	Predicting \(\mathbb{E}_{}\left[Y \mid X = x \right] \) given \(x\) is equivalent to estimating \(f^{\ast} \) in the view of minimizing \hyperref[def:excess-risk]{excess risk} and \(L_2(\mathbb{P} )\) difference, respectively.
+\end{intuition}
+
+\subsection{Oracle Inequality}
+If we change \(f\) in the above bound to a predictor \(\hat{f} _n \) (depending on the training data), we have the so-called \emph{oracle inequality}
+\begin{equation}\label{eq:oracle-inequality}
+	\mathbb{E}_{}\left[ ( Y - \hat{f} _n(X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[ ( Y - h(X) ) ^2 \right]
+	= \lVert \hat{f} _n - f^{\ast}  \rVert _{L_2(\mathbb{P} )}^2 - \inf _{h\in \mathscr{F} } \lVert h - f^{\ast}  \rVert _{L_2(\mathbb{P} )} ^2
+\end{equation}
+
+There are two standard scenarios regarding bounding the \hyperref[eq:oracle-inequality]{oracle inequality}.
+
+\begin{definition}[Well specified]\label{def:well-specified}
+	Given a function class \(\mathscr{F} \), an \hyperref[prb:ERM]{empirical risk minimization} is \emph{well specified} if \(f^{\ast} \in \mathscr{F} \), i.e., \(\mathbb{P} \) is such that \(f(x) = \mathbb{E}_{}\left[Y \mid X = x \right] \in \mathscr{F} \).
+\end{definition}
+
+In the \hyperref[def:well-specified]{well specified} case, the \hyperref[def:excess-risk]{excess risk} of \(\hat{f} _n \) is just \(\lVert \hat{f} _n - f^{\ast} \rVert _{L_2(\mathbb{P} )}^2 \) since \(\inf _{h\in \mathscr{F} } \lVert h - f^{\ast} \rVert ^2 _{L_2(\mathbb{P} )} = 0\), i.e., the estimation error in \(L_2(\mathbb{P} )\). This is what we usually assume in the traditional statistics. On the other hand, we can also consider the contrary.
+
+\begin{definition}[Misspecified]\label{def:misspecified}
+	Given a function class \(\mathscr{F} \), an \hyperref[prb:ERM]{empirical risk minimization} is \emph{misspecified} if \(f^{\ast} \notin \mathscr{F} \), i.e., \(\mathbb{P} \) is such that \(f(x) = \mathbb{E}_{}\left[Y \mid X = x \right] \notin \mathscr{F} \).
+\end{definition}
+
+In the \hyperref[def:misspecified]{misspecified} case, we need to bound the \hyperref[eq:oracle-inequality]{oracle inequality} entirely.
 
 \subsection{Smooth Constrained Least Square}
-First, consider the following problem.
+First, consider the following fixed-design problem with data generated at the fixed grid \(x\in \{ 1 / n, \dots , 1 \} \).
 
 \begin{problem}[Smooth constrained least square]\label{prb:smooth-LS}
 Let \(\mathscr{F} = \{ f\colon [0, 1] \to [-1, 1] \text{ \(1\)-Lipschitz} \}\), and consider \(\epsilon _1, \dots , \epsilon _n \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2)\) such that for a fixed \(f^{\ast} \in \mathscr{F} \), for all \(i = 1, \dots , n\),
@@ -16,11 +72,11 @@ Then, the problem of \emph{smooth constrained least square} is to find the least
 \]
 \end{problem}
 
-\begin{notation}
-	\hyperref[prb:smooth-LS]{Smooth constrained least square} problem is fixed in the sense of the data \((x, y = f(x) + \epsilon )\) is generated at the fixed grid \(x\in \{ 1 / n, \dots , 1 \} \).
+\begin{notation}[Sequence model]\label{not:sequence-model}
+	The \emph{sequence model} refers to the noise \(\epsilon _i\) being \(\epsilon _i \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2)\).
 \end{notation}
 
-The main idea to solve the \hyperref[prb:smooth-LS]{smooth constrained least square} is because it appeals to solve an \hyperref[prb:M-estimation]{\(M\)-estimation} problem.
+We may use our techniques in \hyperref[prb:M-estimation]{\(M\)-estimations} due to the following.
 
 \begin{remark}
 	\(\hat{f} _n \) is an \hyperref[prb:M-estimation]{\(M\)-estimator}.
@@ -81,15 +137,13 @@ Next, we bound the \hyperref[def:localized-EP]{localized empirical process} for 
 	\[
 		\mathbb{P} ( \vert X_f - X_g \vert \geq u) \leq \exp \left( - \frac{u^2}{2 d^2(f, g)} \right)
 	\]
-	when \(\sigma ^2 = 1\).\footnote{Without this assumption, we just have \(\sigma ^2\) in the final bound, which is still a \hyperref[def:sub-Gaussian-process]{sub-Gaussian process}.} So, by \hyperref[col:Dudley-integral-entropy-bound]{Dudley's entropy integral bound}, for some \(c> 0\),
+	when \(\sigma ^2 = 1\).\footnote{Without this assumption, we just have \(\sigma ^2\) in the final bound, which is still a \hyperref[def:sub-Gaussian-process]{sub-Gaussian process}.} So, by \hyperref[col:Dudley-integral-entropy-bound]{Dudley's entropy integral bound}, for some \(c> 0\), from \autoref{thm:metric-entropy},
 	\[
-		\begin{split}
-			\mathbb{E}_{}\left[\sup _{\substack{f\in \mathscr{F} \colon                                                                                              \\ d(f, f^{\ast} ) \leq \delta } } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \left( f (i / n) - f^{\ast} (i / n) \right) \right]
-			 & \leq \frac{12}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N (\mathscr{F} , d, \epsilon )}  \,\mathrm{d}\epsilon                                         \\
-			 & \leq \frac{1}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\frac{c}{\epsilon } }  \,\mathrm{d}\epsilon = c \sqrt{\frac{\delta}{n}} \eqqcolon \phi _n (\delta )
-		\end{split}
+		\mathbb{E}_{}\left[\sup _{\substack{f\in \mathscr{F} \colon                                                                                              \\ d(f, f^{\ast} ) \leq \delta } } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \left( f (i / n) - f^{\ast} (i / n) \right) \right]
+		\leq \frac{12}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\log N (\mathscr{F} , d, \epsilon )}  \,\mathrm{d}\epsilon
+		\leq \frac{1}{\sqrt{n} } \int_{0}^{\delta } \sqrt{\frac{c}{\epsilon } }  \,\mathrm{d}\epsilon = c \sqrt{\frac{\delta}{n}}
 	\]
-	since \(N(\mathscr{F} , d, \epsilon ) \leq N(\mathscr{F} , \lVert \cdot \rVert _\infty , \epsilon ) \leq \exp (c_1 / \epsilon )\) from \autoref{thm:metric-entropy}.
+	since \(N(\mathscr{F} , d, \epsilon ) \leq N(\mathscr{F} , \lVert \cdot \rVert _\infty , \epsilon ) \leq \exp (c_1 / \epsilon )\). Let \(\phi _n (\delta ) \coloneqq c \sqrt{\delta / n} \) concludes the proof.
 \end{explanation}
 
 Then, we verify the \hyperref[def:sub-quadratic-assumption]{sub-quadratic assumption} for such \(\phi _n\)'s.
@@ -174,45 +228,3 @@ We do not know \(\alpha \). A natural question is the following.
 \begin{answer}
 	Yes. There are several ways to do this~\cite{tsybakov2008introduction}.
 \end{answer}
-
-\subsection{Contraction Principle}
-Before we consider the more general setting, i.e., the random design case (data does not come from a fixed grid), we first recall the \hyperref[sec:statistical-learning]{statistical learning set-up} to compare Prediction and estimation.
-
-\begin{prev}
-	Given \((X_1, Y_1), \dots , (X_n, Y_n) \overset{\text{i.i.d.} }{\sim } \mathbb{P} \), with \(f^{\ast} (x) = \mathbb{E}_{}\left[Y \mid X = x \right] \), i.e.,
-	\[
-		f^{\ast} = \argmin_{f \text{ measurable} } \mathbb{E}_{(X, Y)}\left[ \left( Y - f(X)  \right) ^2 \right] .
-	\]
-\end{prev}
-
-Given a class of function \(\mathscr{F} \), we can define
-\[
-	f_{\mathscr{F} } = \argmin_{f\in \mathscr{F} } \mathbb{E}_{}\left[ ( Y - f(X) ) ^2 \right] .
-\]
-For any prediction function \(f\colon \chi \to \mathbb{R} \), its \hyperref[not:excess-risk]{excess risk} is
-\[
-	\mathbb{E}_{}\left[ ( Y - f(X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( Y - h(X) ) ^2 \right] .
-\]
-Observe that we can write
-\begin{align*}
-	 & \mathbb{E}_{}\left[ ( Y - f(X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( Y - h(X) ) ^2 \right]                                                      \\
-	 & = \mathbb{E}_{}\left[ ( Y - f(X) \pm f^{\ast} (X) ) ^2 \right]  - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( Y - h(X) \pm f^{\ast} (X)) ^2 \right]                  \\
-	 & = \mathbb{E}_{}\left[ ( f(X) - f^{\ast} (X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[( h(X) - f^{\ast} (X) ) ^2 \right] \tag*{cross terms are \(0\)} \\
-	 & = \lVert f - f^{\ast}  \rVert _{L_2(\mathbb{P} )}^2 - \inf _{h\in \mathscr{F} } \lVert h - f^{\ast}  \rVert _{L_2(\mathbb{P} )} ^2,
-\end{align*}
-where the last equation is the estimation error in the traditional statistics terminology.
-
-\begin{remark}
-	Prediction and estimation are the same in this content.
-\end{remark}
-
-Now, if we change \(f\) to a predictor \(\hat{f} _n \) (depending on the training data), we have
-\[
-	\mathbb{E}_{}\left[ ( Y - \hat{f} _n(X) ) ^2 \right] - \inf _{h \in \mathscr{F} } \mathbb{E}_{}\left[ ( Y - h(X) ) ^2 \right]
-	= \lVert \hat{f} _n - f^{\ast}  \rVert _{L_2(\mathbb{P} )}^2 - \inf _{h\in \mathscr{F} } \lVert h - f^{\ast}  \rVert _{L_2(\mathbb{P} )} ^2
-\]
-There are two standard scenarios:
-\begin{enumerate}[(a)]
-	\item Well specified case: Given \(\mathscr{F} \), assume \(f^{\ast} \in \mathscr{F} \). In particular, \(\mathbb{P} \) is such that \(f(x) = \mathbb{E}_{}\left[Y \mid X = x \right] \in \mathscr{F} \). In this case, the \hyperref[not:excess-risk]{excess risk} of \(\hat{f} _n \) is just \(\lVert \hat{f} _n - f^{\ast} \rVert _{L_2(\mathbb{P} )}^2 \) since \(\inf _{h\in \mathscr{F} } \lVert h - f^{\ast} \rVert ^2 _{L_2(\mathbb{P} )} = 0\), i.e., the estimation error in \(L_2(\mathbb{P} )\). (this is just the traditional statistics).
-	\item Mis-specified case: do not assume \(f^{\ast} \in \mathscr{F} \), we need to bound the \emph{oracle inequality} (which bounds both terms) entirely.
-\end{enumerate}

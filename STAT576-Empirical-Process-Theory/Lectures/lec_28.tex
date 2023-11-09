@@ -1,0 +1,154 @@
+\lecture{28}{8 Nov.\ 9:00}{Misspecified Non-Parametric Regression}
+\section{Misspecified Constrained Least Square}
+So far, we assume that \(f^{\ast} \in \mathscr{F} \), i.e., we're assuming the \hyperref[def:well-specified]{well-specified} case. Now, we consider \(f^{\ast} \notin \mathscr{F} \) with the goal of finding a non-asymptotic bound on the \hyperref[eq:oracle-inequality]{oracle inequality}
+\[
+	\lVert \hat{f} - f^{\ast}  \rVert _{L_2(\mathbb{P} )}^2 - \inf _{f \in \mathscr{F} } \lVert f - f^{\ast}  \rVert _{L_2(\mathbb{P} )} ^2
+\]
+for an estimator \(\hat{f} \) (potentially depends on \(n\)).
+
+\subsection{Convex Function Class}
+We start by considering the case when \(\mathscr{F} \) is convex. In the \hyperref[def:well-specified]{well specified} case, recall the following.
+
+\begin{prev}
+	If \(f^{\ast} \in \mathscr{F} \) and \(\hat{f} \) is the minimizer of \(\frac{1}{n} \lVert y - \hat{f} \rVert ^2 \), \(\lVert y - \hat{f} \rVert ^2 \leq \lVert y - f^{\ast} \rVert ^2\). This is the first step of deriving the \hyperref[eq:basic-inequality]{basic inequality}.
+\end{prev}
+
+However, if \(f^{\ast} \notin \mathscr{F} \), the \hyperref[eq:basic-inequality]{basic inequality} cannot be used since the first step already breaks down. In this case, we may instead consider \(\proj_{\mathscr{F} }(f^{\ast} ) \) to force \(f^{\ast} \) ``lies'' in \(\mathscr{F} \). Note the following fact.
+
+\begin{note}
+	If \(\mathscr{F} \) is closed and convex, then the project is uniquely defined.
+\end{note}
+\begin{explanation}
+	For any \(y\in \mathbb{R} ^n\), \(\hat{f} = \argmin_{f\in \mathscr{F} } \lVert y - f \rVert ^2\) uniquely exists, and the least square solution corresponds to the projection of \(y\) to \(\mathscr{F} \).\footnote{This holds for infinite dimensional vector space \(\mathscr{F} \) too from functional analysis. See \href{https://www.pbb.wtf/posts/Notes\#functional-analysis-math602}{note}.}
+\end{explanation}
+
+Using this, we might derive the following mimicking the \hyperref[eq:basic-inequality]{basic inequality}.
+
+\begin{lemma}[Obtuse angle lemma]\label{lma:obtuse-angle}
+	Let \(\mathscr{F} \) be a closed and convex set, then for any \(y\in \mathbb{R} ^n\), \(\hat{f} = \proj_{\mathscr{F} }(y) \) if and only if for every \(f\in \mathscr{F} \), \(\langle y - \hat{f} , f - \hat{f} \rangle \leq 0\).
+\end{lemma}
+\begin{proof}
+	Consider
+	\[
+		d(\lambda ) = \lVert y - \lambda \hat{f} + (1 - \lambda )f \rVert ^2,
+	\]
+	which is minimized when \(\lambda = 1\). Now, take the derivative when \(\lambda \to 1\).
+\end{proof}
+
+\begin{center}
+	\incfig{obtuse-angle-lemma}
+\end{center}
+
+\begin{remark}
+	The above is the characterizing property of \(\hat{f} \), which corresponds to the KKT condition of the corresponding optimization problem.
+\end{remark}
+
+We can now bound \(\lVert y - \hat{f} \rVert ^2\) for \(\hat{f} = \proj_{\mathscr{F} }(y)\) by considering for any \(f\in \mathscr{F} \),
+\[
+	\lVert y - f \rVert ^2
+	= \lVert y - \hat{f}  \rVert ^2 + \lVert \hat{f} - f \rVert ^2 + 2 \langle y - \hat{f} , \hat{f} - f \rangle
+	\geq \lVert y - \hat{f}  \rVert ^2 + \lVert \hat{f} - f \rVert ^2,
+\]
+since \(2 \langle y - \hat{f} , \hat{f} - f \rangle \geq 0\) from the \hyperref[lma:obtuse-angle]{obtuse angle lemma}, we conclude
+\[
+	\lVert y - \hat{f} \rVert ^2
+	\leq \lVert y - f \rVert ^2 - \lVert \hat{f} - f \rVert ^2.
+\]
+This leads to the improved version of the \hyperref[eq:basic-inequality]{basic inequality} by plugging in \(y = f^{\ast} + \epsilon \),
+\[
+	\lVert f^{\ast} - \hat{f}  \rVert ^2 + \lVert \epsilon  \rVert ^2 + 2 \langle \epsilon , f^{\ast} - \hat{f}  \rangle
+	\leq \lVert f^{\ast} - f \rVert ^2 + \lVert \epsilon  \rVert ^2 + 2 \langle \epsilon , f^{\ast} - f \rangle - \lVert \hat{f} - f \rVert ^2.
+\]
+Rearranging, we get
+\[
+	\lVert \hat{f} - f^{\ast}  \rVert ^2 - \lVert f - f^{\ast}  \rVert ^2
+	\leq 2 \langle \epsilon , \hat{f} - f \rangle - \lVert \hat{f} - f \rVert ^2.
+\]
+Since this is true for all \(f\in \mathscr{F} \), so we can use this for \(\overline{f} = \proj_{\mathscr{F} } (f^{\ast} ) \), hence
+\[
+	\lVert \hat{f} - f^{\ast}  \rVert ^2 - \lVert \overline{f} - f^{\ast}  \rVert ^2
+	\leq 2 \langle \epsilon , \hat{f} - \overline{f} \rangle - \lVert \hat{f} - \overline{f} \rVert ^2
+\]
+with \(\lVert \overline{f} - f^{\ast} \rVert ^2 = \inf _{f\in \mathscr{F} } \lVert f - f^{\ast} \rVert ^2\), we get the \emph{misspecified basic inequality} for convex \(\mathscr{F} \)
+\begin{equation}\label{eq:misspecified-convex-basic-inequality}
+	\lVert \hat{f} - f^{\ast} \rVert ^2
+	\leq \inf _{f\in \mathscr{F} } \lVert f - f^{\ast}  \rVert ^2 + 2 \langle \epsilon , \hat{f} - \overline{f} \rangle - \lVert \hat{f} - \overline{f} \rVert ^2.
+\end{equation}
+To provide a uniform upper-bound, we may take a supremum over the last two terms, which yields
+\[
+	\lVert \hat{f} - f^{\ast} \rVert ^2
+	\leq \inf _{f\in \mathscr{F} } \lVert f - f^{\ast}  \rVert ^2 + \sup _{f\in \mathscr{F} - \overline{f} } 2\langle \epsilon , f \rangle - \lVert f \rVert ^2.
+\]
+We see that the supremum is just the (skewed) \hyperref[def:offset-Gaussian-Rademacher-complexity]{offset Gaussian Rademacher complexity} of \(\mathscr{F} - \overline{f} \), and from \autoref{col:non-asymptotic-bound-on-constrained-LS-offset}, it's \( \lesssim {t^{\ast} }^2\) with high probability using the developed \hyperref[def:critical-radius]{critical radius} machinery.
+
+\begin{remark}[Well specified]
+	If \(f^{\ast} \in \mathscr{F} \), i.e., back to the \hyperref[def:well-specified]{well specified} case, then \(\inf _{f\in \mathscr{F} } \lVert f - f^{\ast} \rVert ^2 = 0\), and we just get back to the previous result.\footnote{Actually, now this is even with a better constant \(2\) than \(4\).}
+\end{remark}
+
+\subsection{Non-Convex Function Class}
+If \(\mathscr{F} \) is not convex, we do not have the KKT condition, nor the \hyperref[eq:misspecified-convex-basic-inequality]{misspecified basic inequality} just derived. In this case, least square, i.e., the projection approach can be ``suboptimal'' in terms of bounding \(\lVert \hat{f} - f^{\ast} \rVert ^2\). To understand what do we mean by ``suboptimal'' here, consider the following.
+
+\begin{intuition}
+	If we look at the \hyperref[eq:oracle-inequality]{oracle inequality}, then we're essentially considering
+	\[
+		\lVert \hat{f} - f^{\ast}  \rVert ^2 \leq c \cdot \inf _{f\in \mathscr{F} } \lVert f - f^{\ast}  \rVert ^2 + \text{bound of \hyperref[eq:oracle-inequality]{oracle inequality}},
+	\]
+	where we're interested in \(c = 1\).\footnote{We call this the \emph{sharp} \hyperref[eq:oracle-inequality]{oracle inequality}.}
+\end{intuition}
+
+In this point of view, it's know that taking the least square over the convex hull of \(\mathscr{F} \) can be suboptimal when \(c = 1\). To overcome this, consider a ``two-step estimation''. Let
+\[
+	\hat{g} = \argmin_{f\in \mathscr{F} } \lVert y - f \rVert ^2
+	\quad\text{ and }\quad
+	\hat{f} = \argmin_{f\in \mathop{\mathrm{Star}}(\hat{g} , \mathscr{F} ) } \lVert y - f \rVert ^2,
+\]
+where \(\mathop{\mathrm{Star}}(\hat{g} , \mathscr{F} ) = \{ \lambda \hat{g} + (1 - \lambda ) f \colon f\in \mathscr{F} , 0 \leq \lambda \leq 1 \} \). More generally, consider the following.
+
+\begin{definition}[Star set]\label{def:star-set}
+	Given a set \(A\) and an element \(x\),\footnote{Not necessary in \(A\).} the \emph{star set} of \(A\) w.r.t.\ \(x\) is defined as
+	\[
+		\mathop{\mathrm{Star}}(x, A) \coloneqq \{ \lambda x + (1 - \lambda ) a \colon a\in A , 0 \leq \lambda \leq 1 \}.
+	\]
+	More generally, given two sets \(A, B\), \(\mathop{\mathrm{Star}}(A, B) \coloneqq \{ \lambda a + (1 - \lambda ) b \colon a\in A , b\in B, 0 \leq \lambda \leq 1 \}\).
+\end{definition}
+
+This two-step estimator \(\hat{f} \) is also called \emph{star-estimator} due to the use of \hyperref[def:star-set]{star set}.
+
+\begin{figure}[H]
+	\centering
+	\incfig{star-estimator}
+	\caption{Illustration of two-step estimator \(\hat{f} \). Note that \(\hat{g} \) might not be unique.}
+	\label{fig:star-estimator}
+\end{figure}
+
+The up-shot is that, one can show the following.
+
+\begin{lemma}[Improved basic inequality]\label{lma:improved-basic-inequality}
+	In the \hyperref[def:misspecified]{misspecified} \hyperref[prb:constrained-LS]{constrained least square}, for all \(f\in \mathscr{F} \),
+	\[
+		\lVert y - \hat{f}  \rVert ^2 \leq \lVert y - f \rVert ^2 - \frac{1}{18} \lVert \hat{f} - f \rVert ^2
+	\]
+\end{lemma}
+
+\begin{remark}
+	The \hyperref[lma:improved-basic-inequality]{improved basic inequality} is like the Pythagorean inequality for non-convex sets.
+\end{remark}
+
+As a consequence, plug \(y = f^{\ast} + \epsilon \) in the \hyperref[lma:improved-basic-inequality]{improved basic inequality}, for all \(f\in \mathscr{F} \) we have
+\[
+	\lVert \hat{f} - f^{\ast}  \rVert ^2 - \lVert f - f^{\ast}  \rVert ^2
+	\leq 2 \langle \epsilon , \hat{f} - f \rangle - \frac{1}{18} \lVert \hat{f} - f \rVert ^2.
+\]
+Let \(f = \overline{f} \coloneqq \proj_{\mathscr{F} }(f^{\ast} ) \), and again note that \(\lVert \overline{f} - f^{\ast} \rVert ^2 = \inf _{f\in \mathscr{F} } \lVert f - f^{\ast} \rVert ^2\), we finally get
+\[
+	\begin{split}
+		\lVert \hat{f} - f^{\ast} \rVert ^2
+		 & \leq \lVert \overline{f} - f^{\ast} \rVert ^2 +  2 \langle \epsilon , \hat{f} - \overline{f} \rangle - \frac{1}{18} \lVert \hat{f} - \overline{f} \rVert ^2                                                       \\
+		 & \leq \inf _{f\in \mathscr{F} } \lVert f - f^{\ast} \rVert ^2 + \sup _{f\in \mathop{\mathrm{Star}}(\mathscr{F} , \mathscr{F} ) - \overline{f}  } 2 \langle \epsilon , f \rangle - \frac{1}{18} \lVert f \rVert ^2.
+	\end{split}
+\]
+We see that the supremum is again the (non-evenly skewed) \hyperref[def:offset-Gaussian-Rademacher-complexity]{offset Gaussian Rademacher complexity} of the convex hull of \(\mathscr{F} \)\footnote{It's easy to check that \(\mathop{\mathrm{Star}}(A, A) = \mathop{\mathrm{Conv}}(A) \) for any set \(A\).} minus \(\overline{f} \).
+
+\begin{remark}
+	The \hyperref[def:offset-Gaussian-Rademacher-complexity]{complexities} of \(\mathop{\mathrm{Star}}(\mathscr{F} , \mathscr{F} ) - \overline{f} \) and \(\mathscr{F} \) itself are often of the same order.
+\end{remark}

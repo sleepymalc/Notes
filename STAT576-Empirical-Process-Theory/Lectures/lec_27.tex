@@ -68,6 +68,8 @@ Note that \(\epsilon \) is random, so a natural goal now is to consider the expe
 	Combining two bounds, we have the desired result.
 \end{proof}
 
+We see that by using either \hyperref[def:localized-Gaussian-width]{localized Gaussian width} or \hyperref[def:offset-Gaussian-Rademacher-complexity]{offset Gaussian Rademacher complexity}, we successfully get the \hyperref[def:rate-of-convergence]{rate of convergence} for the \hyperref[not:risk]{risk} of \hyperref[prb:constrained-LS]{constrained least square}.
+
 \begin{remark}
 	Comparing \autoref{thm:non-asymptotic-bound-on-constrained-LS-offset} and \autoref{thm:non-asymptotic-bound-on-constrained-LS}, we see that
 	\begin{itemize}
@@ -76,7 +78,17 @@ Note that \(\epsilon \) is random, so a natural goal now is to consider the expe
 	\end{itemize}
 \end{remark}
 
-We note that in order to apply either \autoref{thm:non-asymptotic-bound-on-constrained-LS-offset} or \autoref{thm:non-asymptotic-bound-on-constrained-LS}, the critical step is to first find \(t^{\ast} \), which involves bounding \(G(t)\). First, recall the following.
+We note that \autoref{thm:non-asymptotic-bound-on-constrained-LS-offset} directly generalizes to constants other than \(4\).
+
+\begin{corollary}\label{col:non-asymptotic-bound-on-constrained-LS-offset}
+	Consider the \hyperref[prb:constrained-LS]{constrained least square} over \(\mathscr{F} \) such that \(\mathscr{F} ^{\ast} \) is \hyperref[def:star-shaped]{star-shaped}, and let \(t^{\ast} \) be the \hyperref[def:critical-radius]{critical radius}. Then for all \(s, c > 0\), the \hyperref[def:offset-Gaussian-Rademacher-complexity]{offset Gaussian Rademacher complexity} satisfies
+	\[
+		\mathbb{P} \left( \sup _{f\in \mathscr{F} ^{\ast} } c \langle \epsilon , f \rangle - \lVert f \rVert ^2 \leq \frac{c^2}{2} (t^{\ast} + s)^2 \right) \geq 1 - e^{-\frac{s^2}{2\sigma ^2}}.
+	\]
+\end{corollary}
+
+\subsection{Rate of Convergence for Constrained Least Square}
+We note that in order to apply either \autoref{thm:non-asymptotic-bound-on-constrained-LS-offset} or \autoref{thm:non-asymptotic-bound-on-constrained-LS}, the critical step is to first find \(t^{\ast} \), which involves bounding \(G(t)\) and equating it with \(t^2 / 2\). First, recall the following.
 
 \begin{prev}
 	Bounding \(G(t)\) is equivalent to bounding the \hyperref[def:localized-Gaussian-width]{localized Gaussian width} since
@@ -85,7 +97,7 @@ We note that in order to apply either \autoref{thm:non-asymptotic-bound-on-const
 		= \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} ^{\ast} \colon \lVert f \rVert \leq t} \langle \epsilon , f \rangle \right]
 		= n \cdot \GW(\mathscr{F} - f^{\ast} , t).
 	\]
-	Essentially, it is an expectation of the supremum of the \hyperref[def:localized-EP]{localized empirical process}, so to bound this, we can use either the \hyperref[thm:bracketing-bound]{bracketing bound} or the \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound}.
+	Essentially, it is an expectation of the supremum of the \hyperref[def:localized-EP]{localized empirical process}, so we may apply the \hyperref[thm:bracketing-bound]{bracketing bound} or \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound}, which in terms depends on the \hyperref[def:covering-number]{covering number}.
 \end{prev}
 
 Let's now see some examples of \(\mathscr{F} \) of the \hyperref[prb:constrained-LS]{constrained least square} problem and their corresponding \hyperref[def:localized-Gaussian-width]{localized Gaussian width}. Consider the fixed grid setup as in the \hyperref[prb:smooth-LS]{smooth constrained least square}: given a function class \(\mathscr{F} \) from \(\mathbb{R} \) to \(\mathbb{R} \), define the set \(\mathscr{F} \)\footnote{We're abusing the notation here: we iteratively define the ``set'' \(\mathscr{F} \) by the function class \(\mathscr{F} \).} to be
@@ -103,7 +115,9 @@ We note the following.
 		\GW(\mathscr{F} - f^{\ast} , t)   \iff \sup _{f\in \mathscr{F} } f - f^{\ast}, \quad \text{ and } \quad
 		\GW(\mathscr{F} - \mathscr{F} , t) \iff \sup _{f, g \in \mathscr{F} } f - g
 	\]
-	The latter gives the worst case rate since the supremum is taken ``uniformly'' over all \(g\in \mathscr{F} \). However, the local geometry of \(\mathscr{F} \) is usually quite ``uniform'', so the \hyperref[def:rate-of-convergence]{rate} doesn't blow up.
+	The latter gives the worst case \hyperref[def:rate-of-convergence]{rate} since the supremum is taken ``uniformly'' over all \(g\in \mathscr{F} \). However, the local geometry of \(\mathscr{F} \) is usually quite ``uniform'', so the \hyperref[def:rate-of-convergence]{rate} doesn't blow up.
+
+	Another reason is that since our machinery requires \(\mathscr{F} ^{\ast} \) to be \hyperref[def:star-shaped]{star-shaped}, but if it's not, as long as \(\mathscr{F} \) is, then \(\mathscr{F} - \mathscr{F} \) is also \hyperref[def:star-shaped]{star-shaped}, which is another reason to look at \(\mathscr{F} - \mathscr{F} \).
 \end{explanation}
 
 We can then look at some examples of \(\mathscr{F} \) with their corresponding \(\log \)-\hyperref[def:covering-number]{covering number}.
@@ -113,16 +127,37 @@ We can then look at some examples of \(\mathscr{F} \) with their corresponding \
 	\[
 		\log N(\mathscr{F} - \mathscr{F} , \lVert \cdot \rVert _2 / \sqrt{n} , \epsilon ) \leq c \left( \frac{1}{\epsilon } \right) ^{1 / \alpha }.
 	\]
+	The \hyperref[def:rate-of-convergence]{rate} of \(\mathbb{E}_{}[\lVert \hat{f} - f^{\ast} \rVert ^2 ] / \sqrt{n} \) is \(n^{- \frac{\alpha}{2\alpha + 1}}\).
 \end{eg}
 \begin{explanation}
-	We note that if \(\mathscr{F} \) is \(L\)-Lipschitz, then \(\mathscr{F} - \mathscr{F} \) is \(2L\)-Lipschitz. Similar things hold for \(\mathcal{S} _\alpha \) for \(\alpha > 1 / 2\), hence \autoref{thm:metric-entropy} applies.
+	If \(\mathscr{F} \) is \(L\)-Lipschitz, then \(\mathscr{F} - \mathscr{F} \) is \(2L\)-Lipschitz. Similar result holds for \(\mathcal{S} _\alpha \) for \(\alpha > 1 / 2\), hence \autoref{thm:metric-entropy} applies. Then from \autoref{thm:fixed-design-non-parametric-LS} with the \(1 / \sqrt{n} \)-scaling, we get the \hyperref[def:rate-of-convergence]{rate}.
 \end{explanation}
+
+It's worth noting that another function class different from \(\mathcal{S} _\alpha \) that are studied are shape-constrained function classes. We now see another example where we consider \(\mathscr{F} - \mathscr{F} \) instead.
+
+\begin{eg}[Unimodal functions]
+	Consider the class of \emph{unimodal functions} defined as
+	\[
+		\mathscr{F} = \{ (f_1, \dots , f_n) \in \mathbb{R} ^n \colon \exists i \colon f_1 \leq f_2 \leq \dots \leq f_i \geq f_{i+1} \geq \dots \geq f_n \},
+	\]
+	which is non-convex but \hyperref[def:star-shaped]{star-shaped} around \(0\). Then for some \(c > 0\),
+	\[
+		\log N(\mathscr{F} , \lVert \cdot \rVert _2 / \sqrt{n} , \epsilon ) \leq \frac{c}{\epsilon }
+	\]
+	with \(\mathbb{E}_{}[\lVert \hat{f} - f^{\ast}  \rVert ^2 ] / \sqrt{n} \leq n^{- 2 / 3}\).
+\end{eg}
+\begin{explanation}
+	Observe that \(\mathscr{F} \) is a finite union of convex sets. If we take any \(f^{\ast} \in \mathscr{F} \), \(\mathscr{F} - f^{\ast} \) is not necessarily \hyperref[def:star-shaped]{star-shaped}, so we consider \(\mathscr{F} - \mathscr{F} \) instead since at least it itself is \hyperref[def:star-shaped]{star-shaped}.
+\end{explanation}
+
+Lastly, let's consider the class of isotonic functions, where the sequence \(\{ f_i \} \) are increasing.
 
 \begin{eg}[Bounded isotonic functions]
 	Consider the class of \emph{bounded isotonic functions} defined as \(\mathscr{F} = \{(f_1, \dots , f_n) \in \mathbb{R} ^n \colon 0 \leq f_1 \leq f_2 \leq \dots \leq f_n \leq 1 \}\). Then for some \(c > 0\), we have
 	\[
 		\log N(\mathscr{F} , \lVert \cdot \rVert _2 / \sqrt{n} , \epsilon ) \leq \frac{c}{\epsilon }.
 	\]
+	This is similar as \(1\)-Lipschitz functions, so the \hyperref[def:rate-of-convergence]{rate} of \(\mathbb{E}_{}[\lVert \hat{f} - f^{\ast} \rVert ^2 ] / \sqrt{n} \) is just \(1 / n^{2 / 3}\).
 \end{eg}
 
 \begin{eg}[Unbounded isotonic functions]
@@ -133,7 +168,7 @@ We can then look at some examples of \(\mathscr{F} \) with their corresponding \
 	with \(\mathbb{E}_{}[\lVert \hat{f} - f^{\ast}  \rVert ^2 ] \leq (v^{\ast} / n)^{2 / 3}\).
 \end{eg}
 \begin{explanation}
-	This can be bound since we're always looking at some bounded ball, which is compact. Moreover, if we accept the bound on \(\GW\), then equating this with \(t^2\) we have
+	First, we note that obtaining such a bound is possible even if \(\mathscr{F} \) is non-compact,\footnote{Recall the previous \hyperref[rmk:GW]{remark}: the set we want to evaluate the \hyperref[def:Gaussian-width]{Gaussian width} is the intersection of \(\mathscr{F} \) with some bounded ball, which is compact.} i.e., \(\GW(\mathscr{F} ^{\ast} , t)\) is finite even if \(\mathscr{F} \) is unbounded. Moreover, if we accept the bound on \(\GW\), then equating this with \(t^2\) gives
 	\[
 		t^{\ast} \approx {v^{\ast} _n}^{1 / 3} n^{1 / 6}
 		\implies \mathbb{E}_{}\left[\lVert \hat{f} - f^{\ast} \rVert ^2 \right] \lesssim {t^{\ast} }^2 / n \approx (v^{\ast} / n)^{2 / 3}
@@ -141,25 +176,10 @@ We can then look at some examples of \(\mathscr{F} \) with their corresponding \
 	where we need to divide by \(n\) due to \(G(t) = n \GW(\mathscr{F} ^{\ast} , t)\).
 \end{explanation}
 
-We now see another example where we consider \(\mathscr{F} - \mathscr{F} \) instead.
+In general, if \(\mathscr{F} \) is an isotonic function class with \(f^{\ast} \) being a smooth increasing function, then the mean square error will be of the order \(n^{-2 / 3}\); and if \(f^{\ast} \) is a piecewise constant function with \(k\) pieces, then the \hyperref[def:rate-of-convergence]{rate} of the least squared estimators will be of order \(\frac{k}{n}\log n\), which is faster.
 
-\begin{eg}[Unimodal functions]
-	Consider the class of \emph{unimodal functions} defined as
-	\[
-		\mathscr{F} = \{ (f_1, \dots , f_n) \in \mathbb{R} ^n \colon \exists i \colon f_1 \leq f_2 \leq \dots \leq f_i \geq f_{i+1} \geq \dots \geq f_n \}.
-	\]
-	Then
-	\[
-		\log N(\mathscr{F} , \lVert \cdot \rVert _2 / \sqrt{n} , \epsilon ) \leq \frac{c}{\epsilon },
-	\]
-	and we get an \(n^{-2 / 3}\) \hyperref[def:rate-of-convergence]{rate} for mean square error.
-\end{eg}
-\begin{explanation}
-	Observe that \(\mathscr{F} \) is non-convex, but it's \hyperref[def:star-shaped]{star-shaped}, hence \(\mathscr{F} - \mathscr{F} \) is also \hyperref[def:star-shaped]{star-shaped} because \(\mathscr{F} \) is \hyperref[def:star-shaped]{star-shaped} around \(0\).
-\end{explanation}
+\begin{intuition}
+	The above means that the geometry of \(\mathscr{F} \) is different around different \(f^{\ast} \).
+\end{intuition}
 
-\begin{remark}[Isotonic, unimodal, convex]
-	We actually have \(\GW(\mathscr{F} - f^{\ast} , t) \approx f^{\ast} \). If \(f^{\ast} \) is linear, then the rate is \(n^{-2 / 3}\); if \(f^{\ast} \) is \(K\) pieces-wise constant, we get \(k \log n / n\). This means the geometry of \(\mathscr{F} \) is different around different \(f^{\ast} \).
-\end{remark}
-
-The geometric and local Gaussian complexity around \(f^{\ast} \) as a function of \(t\)
+To conclude, the above intuition is true in general since \(G(t)\) (and hence the \hyperref[def:localized-Gaussian-width]{localized Gaussian width}) is a geometric quantity around \(f^{\ast} \) as a function of \(t\), hence, this depends on the choice of \(f^{\ast} \).

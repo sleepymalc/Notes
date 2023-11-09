@@ -1,15 +1,17 @@
 \lecture{24}{25 Oct.\ 9:00}{Contraction Principle for Rademacher Complexity}
+\section{Contraction Principle}
+Before delve into the general \hyperref[prb:constrained-LS]{constrained least square}, we take a detour to see another way of bounding the \hyperref[def:excess-risk]{excess risk}.
 
 \begin{prev}
-	Given \(\mathscr{F} = \{ f\colon \chi \to \mathscr{Y} \} \) and a loss \(\ell (f(x), y)\), the \hyperref[not:excess-risk]{excess risk} of \(\hat{f} \in \mathscr{F} \) is
+	Given \(\mathscr{F} = \{ f\colon \chi \to \mathscr{Y} \} \) and a loss \(\ell (f(x), y)\), the \hyperref[def:excess-risk]{excess risk} of \(\hat{f} \in \mathscr{F} \) is
 	\[
 		\mathbb{E}_{}[L(\hat{f} ) ] - \inf _{f\in \mathscr{F} } L(f)
 		= \mathbb{E}_{}[\ell (\hat{f} (X), Y) ] - \inf _{f\in \mathscr{F} } \mathbb{E}_{}\left[\ell (f(X), Y) \right]
 	\]
-	where \(\hat{f} \) is the \hyperref[prb:ERM]{ERM} \(\hat{f} = \argmin_{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \ell (f(x_i), y_i)\).
+	where \(\hat{f} \) is the \hyperref[prb:ERM]{empirical risk minimizer} \(\hat{f} = \argmin_{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \ell (f(x_i), y_i)\).
 \end{prev}
 
-We know that from \autoref{lma:ERM} and \hyperref[lma:symmetrization]{symmetrization}, the \hyperref[not:excess-risk]{excess risk} is bounded by
+We know that from \autoref{lma:ERM} and \hyperref[lma:symmetrization]{symmetrization}, the \hyperref[def:excess-risk]{excess risk} is bounded by
 \[
 	\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \left( \mathbb{E}_{}\left[\ell (f(X), Y) \right] - \frac{1}{n} \sum_{i=1}^{n} \ell (f(x_i), y_i) \right) \right]
 	\leq 2 \cdot \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \ell (f(x_i), y_i) \right] ,
@@ -53,7 +55,7 @@ We would like to further upper-bound this \hyperref[def:Rademacher-complexity]{R
 	The same conclusion of \hyperref[thm:contraction-principle]{contraction principle} holds for \(\phi _i\)'s being \(L\)-Lipschitz, specifically, \(R(\phi \circ \Theta ) \leq L\cdot R(\Theta )\).
 \end{corollary}
 
-Now, going back to bounding \hyperref[not:excess-risk]{excess risk}, we let \(\phi _i (x) \coloneqq \ell (x, y_i)\).\footnote{The second argument is fixed at \(y_i\) for each \(\phi _i\) as we noted before.} If these \(\phi _i\)'s are \(L\)-Lipschitz, the \hyperref[col:contraction-principle]{contraction principle} with \(\Theta = \{ (f(x_1), \dots , f(x_n)) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n \) gives
+Now, going back to bounding \hyperref[def:excess-risk]{excess risk}, we let \(\phi _i (x) \coloneqq \ell (x, y_i)\).\footnote{The second argument is fixed at \(y_i\) for each \(\phi _i\) as we noted before.} If these \(\phi _i\)'s are \(L\)-Lipschitz, the \hyperref[col:contraction-principle]{contraction principle} with \(\Theta = \{ (f(x_1), \dots , f(x_n)) \} _{f\in \mathscr{F} } \subseteq \mathbb{R} ^n \) gives
 \[
 	\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \ell (f(x_i), y_i) \right]
 	\leq L\cdot \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i f(x_i) \right]
@@ -64,8 +66,8 @@ where \(\ell (f(x_i), y_i) = \phi _i(f(x_i))\).
 	Square loss is Lipschitz if \(\mathscr{F} \) is uniformly bounded and \(\mathscr{Y} \) is also uniformly bounded.
 \end{eg}
 
-\subsection{Constrained Least Square}
-Now, we consider the generalization of \hyperref[prb:smooth-LS]{smooth constrained least square} with well specified case.
+\section{Constrained Least Square}
+Now, we consider the generalization of \hyperref[prb:smooth-LS]{smooth constrained least square} in the \hyperref[def:well-specified]{well specified} case.
 
 \begin{problem}[Constrained least square]\label{prb:constrained-LS}
 Given a function class \(\mathscr{F} \) on \(\chi \), let \(x_1, \dots , x_n \in \chi \) and \(y_i = f^{\ast} (x_i) + \epsilon _i\) where \(\epsilon _1, \dots , \epsilon _n \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2) \)\footnote{This is known as \emph{Gaussian sequence model}.} and assume that \(f^{\ast} \in \mathscr{F} \). Then, the \emph{constrained least square} aims to estimate \(f^{\ast} \) via

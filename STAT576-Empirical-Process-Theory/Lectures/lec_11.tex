@@ -53,7 +53,7 @@ Inspired by the above example, one can also define the \hyperref[def:Gaussian-wi
 \begin{definition}[Gaussian width]\label{def:Gaussian-width}
 	Let \(g_i \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\). Then the \emph{Gaussian width} of a set \(A \subseteq \mathbb{R} ^n\) is defined as
 	\[
-		\GW\nolimits_n(A) = \mathbb{E}_{}\left[\sup _{a\in A} \sum_{i=1}^{n} \frac{1}{n} g_i a_i \right].
+		\GW_n(A) = \mathbb{E}_{}\left[\sup _{a\in A} \sum_{i=1}^{n} \frac{1}{n} g_i a_i \right].
 	\]
 \end{definition}
 
@@ -66,7 +66,7 @@ This means that the \hyperref[eg:Rademacher-process]{Rademacher process} can be 
 \begin{theorem}[Gaussian width v.s.\ Rademacher width]
 	For any \(n \geq 1\) and any set \(T \subseteq \mathbb{R} ^n\),
 	\[
-		R_n(T) \leq \GW\nolimits_n(T) \leq \sqrt{\log n} R_n(T).
+		R_n(T) \leq \GW_n(T) \leq \sqrt{\log n} R_n(T).
 	\]
 \end{theorem}
 
@@ -97,7 +97,7 @@ Let's look at some examples of (unnormalized) \hyperref[def:Rademacher-width]{Ra
 These are all simple sets. For an arbitrary set however, we need more general tools in order to compute the \hyperref[def:Rademacher-width]{Rademacher width}. Firstly, recall the following.
 
 \begin{definition}[Diameter]\label{def:diameter}
-	The \emph{diameter} of \((T, d)\) is defined as \(\mathop{\mathrm{Diam}}(T) = \sup _{t, t^{\prime} \in T} d(t, t^{\prime} )\).
+	The \emph{diameter} of \((T, d)\) is defined as \(\diam(T) = \sup _{t, t^{\prime} \in T} d(t, t^{\prime} )\).
 \end{definition}
 
 \subsection{Single Scale Bound for Expected Supremum of Sub-Gaussian Process}
@@ -107,7 +107,7 @@ We're going to see the most sophisticated tools in this course. We first see a p
 	Let \(\{ X_t \} _{t\in T}\) be a centered \hyperref[def:sub-Gaussian-process]{sub-Gaussian process} on \((T, d)\) w.r.t.\ \(d\). Then
 	\[
 		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
-		\leq \inf _{\epsilon > 0} \left( \mathbb{E}_{}\left[\sup _{\substack{t, t^{\prime} \in T\colon \\ d(t, t^{\prime} ) \leq \epsilon }} X_t - X_{t^{\prime} } \right] + \mathop{\mathrm{Diam}}(T) \sqrt{2 \log N(T, d, \epsilon )} \right) .
+		\leq \inf _{\epsilon > 0} \left( \mathbb{E}_{}\left[\sup _{\substack{t, t^{\prime} \in T\colon \\ d(t, t^{\prime} ) \leq \epsilon }} X_t - X_{t^{\prime} } \right] + \diam(T) \sqrt{2 \log N(T, d, \epsilon )} \right) .
 	\]
 \end{lemma}
 \begin{proof}
@@ -116,16 +116,16 @@ We're going to see the most sophisticated tools in this course. We first see a p
 		\mathbb{E}_{}\left[\sup _{t\in T} X_t - X_{t_0} \right]
 		\leq \mathbb{E}_{}\left[\sup _{t\in T} X_t - X_{\pi (t)} \right] + \mathbb{E}_{}\left[\sup _{t\in T} X_{\pi (t)} - X_{t_0} \right]
 	\]
-	Observe that \(X_{\pi (t)} - X_{t_0} \sim \Subg(\mathop{\mathrm{Diam}}^2(T) )\), then the second term is a finite maximum such that
+	Observe that \(X_{\pi (t)} - X_{t_0} \sim \Subg(\diam^2(T) )\), then the second term is a finite maximum such that
 	\[
 		\mathbb{E}_{}\left[\sup _{t\in T} X_{\pi (t)} - X_{t_0} \right]
-		\leq \sqrt{2 \mathop{\mathrm{Diam}}\nolimits^2(T) \log N(T, d, \epsilon )}
-		= \mathop{\mathrm{Diam}}(T) \sqrt{2 \log N(T, d, \epsilon )}
+		\leq \sqrt{2 \diam^2(T) \log N(T, d, \epsilon )}
+		= \diam(T) \sqrt{2 \log N(T, d, \epsilon )}
 	\]
 	from \autoref{lma:sub-Gaussian-finite-maximum}. By rewriting the first term, we have
 	\[
 		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
-		\leq \inf _{\epsilon > 0} \left( \mathbb{E}_{}\left[\sup _{\substack{t, t^{\prime} \in T\colon \\ d(t, t^{\prime} ) \leq \epsilon }} X_t - X_{t^{\prime} } \right] + \mathop{\mathrm{Diam}}(T) \sqrt{2 \log N(T, d, \epsilon )} \right) .
+		\leq \inf _{\epsilon > 0} \left( \mathbb{E}_{}\left[\sup _{\substack{t, t^{\prime} \in T\colon \\ d(t, t^{\prime} ) \leq \epsilon }} X_t - X_{t^{\prime} } \right] + \diam(T) \sqrt{2 \log N(T, d, \epsilon )} \right) .
 	\]
 \end{proof}
 
@@ -152,7 +152,7 @@ Let's see some applications of \hyperref[lma:single-scale-bound]{single scale bo
 		We \hyperref[rmk:log-n-superfluous]{claimed} that \(\log n\) is superfluous.
 	\end{prev}
 
-	We still can't remove the \(\sqrt{\log n}\): from the \hyperref[lma:single-scale-bound]{single scale bound}, with \(\mathop{\mathrm{Diam}}(T) = \sqrt{n} \),
+	We still can't remove the \(\sqrt{\log n}\): from the \hyperref[lma:single-scale-bound]{single scale bound}, with \(\diam(T) = \sqrt{n} \),
 	\[
 		R_n(T) \leq \sqrt{n} \epsilon + \sqrt{n} \sqrt{\log N(T, \lVert \cdot \rVert _2, \epsilon )}.
 	\]

@@ -81,17 +81,17 @@ We see that the sum of entries is \(2^R\), and rows and columns sum up to \(1\).
 \begin{definition}[Stability]\label{def:stability}
 	The \emph{stability} of \(f\) given \(\rho \) is defined as
 	\[
-		\mathop{\mathrm{Stab}}_\rho (f) \coloneqq \left\langle f, T_\rho f \right\rangle = \mathbb{E}_{x \underset{\rho }{\sim } y}\left[f(x)f(y) \right].
+		\Stab_\rho (f) \coloneqq \left\langle f, T_\rho f \right\rangle = \mathbb{E}_{x \underset{\rho }{\sim } y}\left[f(x)f(y) \right].
 	\]
 \end{definition}
 
 \begin{remark}
-	If \(f\) is \(\pm 1\)-valued, then \(\mathop{\mathrm{Stab}}_\rho (f) = 2\Pr_{x \underset{\rho }{\sim }y }(f(x) = f(y)) -1 \). So if \(f(x) \approx f(y)\) for \(y\) being the neighbor of \(x\) (i.e., \(x \underset{\rho }{\sim }y \)), this quantity is stable and close to \(1\).
+	If \(f\) is \(\pm 1\)-valued, then \(\Stab_\rho (f) = 2\Pr_{x \underset{\rho }{\sim }y }(f(x) = f(y)) -1 \). So if \(f(x) \approx f(y)\) for \(y\) being the neighbor of \(x\) (i.e., \(x \underset{\rho }{\sim }y \)), this quantity is stable and close to \(1\).
 \end{remark}
 
-To study \(\mathop{\mathrm{Stab}}_\rho (f)\), consider \(S \subseteq [R]\) and \(\chi _S\), we have
+To study \(\Stab_\rho (f)\), consider \(S \subseteq [R]\) and \(\chi _S\), we have
 \[
-	\mathop{\mathrm{Stab}}_\rho (\chi _S)
+	\Stab_\rho (\chi _S)
 	= \mathbb{E}_{x \underset{\rho }{\sim }y }\left[x^S y^S \right]
 	= \prod_{i\in S} \mathbb{E}_{}\left[x_i y_i \right]
 	= \rho ^{\vert S \vert }
@@ -108,7 +108,7 @@ we have
 \]
 since \(T_\rho \chi _T = \rho ^{\vert T \vert }\cdot \chi _T\). So if \(f = \chi _i\) for some \(i\in [R]\), the cut value is equal to
 \[
-	\frac{1}{2} - \frac{1}{2} \mathop{\mathrm{Stab}}_\rho (f) = \frac{1}{2} - \frac{1}{2}\rho
+	\frac{1}{2} - \frac{1}{2} \Stab_\rho (f) = \frac{1}{2} - \frac{1}{2}\rho
 \]
 for \(\rho < 0\), so a dictator cuts indeed get good value.
 
@@ -127,21 +127,21 @@ Consider \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) as vo
 \begin{eg}[Majority]
 	We can take \(f(x)\) to be the majority vote, i.e.,
 	\[
-		f(x) = \mathop{\mathrm{Maj}}(x) \coloneqq \sgn(x_1 + \dots + x_R ).
+		f(x) = \Maj(x) \coloneqq \sgn(x_1 + \dots + x_R ).
 	\]
 \end{eg}
 
 \begin{eg}[Dictator]
 	We can also take \(f(x)\) to be following a dictator \(i\), i.e.,
 	\[
-		f(x) = \mathop{\mathrm{Dictator}}\nolimits_i(x) \coloneqq x_i.
+		f(x) = \operatorname{Dictator}_i(x) \coloneqq x_i.
 	\]
 \end{eg}
 
 \begin{definition}[Influence]\label{def:influence}
-	Given \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \), for an \(i\in [R]\), the \emph{influence} \(\mathop{\mathrm{Inf}}\nolimits_i(f)\) of \(i\) is defined as
+	Given \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \), for an \(i\in [R]\), the \emph{influence} \(\Inf_i(f)\) of \(i\) is defined as
 	\[
-		\mathop{\mathrm{Inf}}\nolimits_i(f)
+		\Inf_i(f)
 		\coloneqq \Pr_{x}(f(x) \neq f(x\oplus e_i))
 		= \sum_{S\ni i}\hat{f} (S)^2.
 	\]
@@ -149,51 +149,51 @@ Consider \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) as vo
 
 But one problem of \autoref{def:influence} is that the total \hyperref[def:influence]{influence} is not the same for all \(f\), since
 \[
-	\mathop{\mathrm{I}}(f)
-	\coloneqq \sum_{i\in [R]} \mathop{\mathrm{Inf}}\nolimits_i(f)
+	\operatorname{I}(f)
+	\coloneqq \sum_{i\in [R]} \Inf_i(f)
 	= \sum_{S \subseteq [R]} \hat{f} (S)^2 \vert S \vert .
 \]
 
 \begin{note}
-	Indeed, the total \hyperref[def:influence]{influence} can vary a lot, since \(\mathop{\mathrm{I}}(\chi _i) = 1\) while \(\mathop{\mathrm{I}} (\chi _{[R]})=\vert R \vert \).
+	Indeed, the total \hyperref[def:influence]{influence} can vary a lot, since \(\operatorname{I}(\chi _i) = 1\) while \(\operatorname{I} (\chi _{[R]})=\vert R \vert \).
 \end{note}
 
 To fix this issue, we define the so-called
 \begin{definition}[\(\delta \)-noisy influence]\label{def:noisy-influence}
-	Given \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) and \(\delta \in (0, 1)\), for an \(i\in [R]\), the \emph{\(\delta \)-noisy influence} \(\mathop{\mathrm{Inf}}_i^\delta (f)\) of \(i\) is defined as
+	Given \(f\colon \left\{ \pm 1 \right\} ^R \to \left\{ \pm 1 \right\} \) and \(\delta \in (0, 1)\), for an \(i\in [R]\), the \emph{\(\delta \)-noisy influence} \(\Inf_i^\delta (f)\) of \(i\) is defined as
 	\[
-		\mathop{\mathrm{Inf}}\nolimits_i^\delta (f)
+		\Inf_i^\delta (f)
 		\coloneqq \sum_{S\ni i}\hat{f} (S)^2 (1 - \delta )^{\vert S \vert - 1}.
 	\]
 \end{definition}
 
-In this case, the total \hyperref[def:noisy-influence]{\(\delta \)-noisy influence} \(\mathop{\mathrm{I}}^\delta (f)\) is given by
+In this case, the total \hyperref[def:noisy-influence]{\(\delta \)-noisy influence} \(\operatorname{I}^\delta (f)\) is given by
 \[
-	\mathop{\mathrm{I}}\nolimits^\delta (f) = \sum_{S \subseteq [R]} \hat{f} (S)^2 \vert S  (1 - \delta )\vert ^{\vert S \vert -1}.
+	\operatorname{I}^\delta (f) = \sum_{S \subseteq [R]} \hat{f} (S)^2 \vert S  (1 - \delta )\vert ^{\vert S \vert -1}.
 \]
 
 \begin{claim}
-	We have \(\mathop{\mathrm{I}}^\delta (f) \leq 1 / \delta \lVert f \rVert _2^2\).
+	We have \(\operatorname{I}^\delta (f) \leq 1 / \delta \lVert f \rVert _2^2\).
 \end{claim}
 \begin{explanation}
 	We simply maximize \(\vert S \vert (1 - \delta )^{\vert S \vert -1}\) for every \(S\), where we simply have \(1 / \delta \).
 \end{explanation}
 
-Now, consider the majority vote \(\mathop{\mathrm{Maj}}\colon \left\{ \pm 1 \right\} ^R \to \left[ \pm 1 \right] \), we have
+Now, consider the majority vote \(\Maj\colon \left\{ \pm 1 \right\} ^R \to \left[ \pm 1 \right] \), we have
 \[
-	\mathop{\mathrm{Inf}}\nolimits_i(\mathop{\mathrm{Maj}}) = \Theta (1 / \sqrt{R} ),\quad
-	\mathop{\mathrm{I}}(\mathop{\mathrm{Maj}}) = \Theta (\sqrt{R} );
+	\Inf_i(\Maj) = \Theta (1 / \sqrt{R} ),\quad
+	\operatorname{I}(\Maj) = \Theta (\sqrt{R} );
 \]
 while
 \[
-	\mathop{\mathrm{Inf}}\nolimits_i^\delta (\mathop{\mathrm{Maj}}) = \Theta (1),\quad
-	\mathop{\mathrm{I}}\nolimits^\delta (\mathop{\mathrm{Maj}}) = \Theta (1 / R).
+	\Inf_i^\delta (\Maj) = \Theta (1),\quad
+	\operatorname{I}^\delta (\Maj) = \Theta (1 / R).
 \]
 
-Now, we say that \(i\) is \emph{influential} if \(\mathop{\mathrm{Inf}}_i^\delta (f) \geq \Omega (1).\)
+Now, we say that \(i\) is \emph{influential} if \(\Inf_i^\delta (f) \geq \Omega (1).\)
 
 \begin{claim}
-	As \(R \to \infty \), \(\mathop{\mathrm{Stab}}_\rho (\mathop{\mathrm{Maj}}) \to 2 / \pi \cdot \arcsin \rho\).
+	As \(R \to \infty \), \(\Stab_\rho (\Maj) \to 2 / \pi \cdot \arcsin \rho\).
 \end{claim}
 \begin{explanation}
 	Firstly, let
@@ -204,10 +204,10 @@ Now, we say that \(i\) is \emph{influential} if \(\mathop{\mathrm{Inf}}_i^\delta
 	we have \(\mathbb{E}_{}\left[X \right] = \mathbb{E}_{}\left[Y \right] = 0\), \(\mathbb{E}_{}\left[X^2 \right] = \mathbb{E}_{}\left[Y^2 \right] = 1\) with \(\mathbb{E}_{}\left[XY \right] = \rho \), we have
 	\[
 		\begin{split}
-			\mathop{\mathrm{Stab}}\nolimits_\rho (\mathop{\mathrm{Maj}})
-			&= \mathbb{E}_{x \underset{\rho }{\sim } y}\left[ \sgn (x_1 + \dots + x_R ) \cdot \sgn (y_1 + \dots +y_R )\right]\\
-			&= \mathbb{E}_{X, Y}\left[\sgn (X) \sgn (Y) \right]\\
-			&\approx \mathbb{E}_{g, h}\left[\sgn (g)\sgn (h) \right]
+			\Stab_\rho (\Maj)
+			 & = \mathbb{E}_{x \underset{\rho }{\sim } y}\left[ \sgn (x_1 + \dots + x_R ) \cdot \sgn (y_1 + \dots +y_R )\right] \\
+			 & = \mathbb{E}_{X, Y}\left[\sgn (X) \sgn (Y) \right]                                                               \\
+			 & \approx \mathbb{E}_{g, h}\left[\sgn (g)\sgn (h) \right]
 		\end{split}
 	\]
 	where \(g, h \sim \mathcal{N} (0, 1)\) are \(\rho \)-correlated by \(2\)-dimensional central limit theorem. Notice that we interpret the term \(\rho \)-correlated as \(g=\left\langle a, t \right\rangle = t_1\), \(h=\left\langle b, t \right\rangle \) where we sample \(t \coloneqq (t_1, t_2)\sim \mathcal{N} (0, 1)^2\).\footnote{We implicitly rotate \(t_1\) to the \(x\)-axis from \(g=\left\langle a, t \right\rangle = t_1\).} In this case, we have the same geometric interpretation as in \autoref{lma:lec14-2}, we have
@@ -219,8 +219,8 @@ Now, we say that \(i\) is \emph{influential} if \(\mathop{\mathrm{Inf}}_i^\delta
 Finally, we need the following theorem, which is introduced in~\cite{KKMO04}, and confirmed in~\cite{MOO05} later.
 
 \begin{theorem}[Majority is the Stablest~\cite{MOO05, KKMO04}]\label{thm:MIST}
-	Given \(0 < \rho < 1\) and \(\epsilon > 0\), and \(f\colon \left\{ \pm 1 \right\} ^n \to [-1, 1]\) with \(\mathbb{E}_{}\left[f \right] = 0\). Suppose \(\mathop{\mathrm{Inf}}_i^{1 / \log (1 / \epsilon )}(f)\leq \epsilon \), then
+	Given \(0 < \rho < 1\) and \(\epsilon > 0\), and \(f\colon \left\{ \pm 1 \right\} ^n \to [-1, 1]\) with \(\mathbb{E}_{}\left[f \right] = 0\). Suppose \(\Inf_i^{1 / \log (1 / \epsilon )}(f)\leq \epsilon \), then
 	\[
-		\mathop{\mathrm{Stab}}\nolimits_\rho (f) \leq \left( \frac{2}{\pi } \right) \arcsin \rho + O\left( \frac{\log \log 1 / \epsilon }{\log 1 / \epsilon } \right).
+		\Stab_\rho (f) \leq \left( \frac{2}{\pi } \right) \arcsin \rho + O\left( \frac{\log \log 1 / \epsilon }{\log 1 / \epsilon } \right).
 	\]
 \end{theorem}

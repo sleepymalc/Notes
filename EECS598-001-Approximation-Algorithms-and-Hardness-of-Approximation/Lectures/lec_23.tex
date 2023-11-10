@@ -4,7 +4,7 @@ To do this, we consider creating a \emph{weighted} \hyperref[prb:max-3LIN]{3LIN}
 \begin{enumerate}[(a)]
 	\item Each equation has weight.
 	\item Weights sum to \(1\).
-	\item \(\mathop{\mathrm{obj}}(f) = \sum_{C_i \text{ is satisfied}} w(C_i)\).
+	\item \(\obj(f) = \sum_{C_i \text{ is satisfied}} w(C_i)\).
 \end{enumerate}
 In this way, we can interpret one instance as the probability distribution over equations. Rather than construct the equation directly, we can specify how we are going to sample equations via specifying a probability distribution!
 
@@ -30,45 +30,45 @@ To see why this is what we want, notice that if \(f = \chi _S\) for some \(S \su
 \[
 	f(x) f(y) f(z) = x^S y^S (x\cdot y)^S = 1,
 \]
-hence \(\mathop{\mathrm{obj}}(f) = 1\)! On the other hand, if \(f\) has \(k\) nonzero Fourier coefficients (i.e., \(f\) is far from any \(\chi _S\)) of value \(1 / \sqrt{k} \), then \(\mathop{\mathrm{obj}}(f) \approx 1 / 2\). This construction is known as BLR test~\cite{10.1145/100216.100225}.
+hence \(\obj(f) = 1\)! On the other hand, if \(f\) has \(k\) nonzero Fourier coefficients (i.e., \(f\) is far from any \(\chi _S\)) of value \(1 / \sqrt{k} \), then \(\obj(f) \approx 1 / 2\). This construction is known as BLR test~\cite{10.1145/100216.100225}.
 
 \begin{theorem}[\cite{10.1145/100216.100225}]\label{thm:BLR}
-	Under the construction, \(\mathop{\mathrm{obj}}(f) = 1 / 2 + 1 / 2 \cdot \sum_{S \subseteq [n]} \hat{f} (S)^3 \).
+	Under the construction, \(\obj(f) = 1 / 2 + 1 / 2 \cdot \sum_{S \subseteq [n]} \hat{f} (S)^3 \).
 \end{theorem}
 \begin{proof}
 	Observe that
 	\[
 		\begin{split}
-			\mathop{\mathrm{obj}}(f)
-			&= \mathbb{E}_{x, y}\left[\mathbbm{1}\left[ f(x)f(y)f(z) = 1 \right] \right]\\
-			&= \mathbb{E}_{x, y}\left[\frac{1}{2} + \frac{1}{2} f(x)f(y)f(z) = 1 \right]
+			\obj(f)
+			 & = \mathbb{E}_{x, y}\left[\mathbbm{1}\left[ f(x)f(y)f(z) = 1 \right] \right] \\
+			 & = \mathbb{E}_{x, y}\left[\frac{1}{2} + \frac{1}{2} f(x)f(y)f(z) = 1 \right]
 			= \frac{1}{2} + \frac{1}{2} \mathbb{E}_{x, y}\left[f(x)f(y)f(z) \right].
 		\end{split}
 	\]
 	Now, we decompose \(f(x), f(y), f(z)\) with respect to the Fourier basis, i.e., \(f(x) = \sum_{S} \hat{f} (s)\chi _S(x)\) we have
 	\[
 		\begin{split}
-			\mathop{\mathrm{obj}}(f)
-			&= \frac{1}{2} + \frac{1}{2} \mathbb{E}_{x, y}\left[\sum_{S, T, U \subseteq [n]} \hat{f} (S)\hat{f} (T)\hat{f} (U) \cdot \chi _S(x) \chi _T(y) \chi _U(z)\right]\\
-			&= \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S)\hat{f} (T)\hat{f} (U) \cdot \mathbb{E}_{x, y}\left[\chi _S(x) \chi _T(y) \chi _U(z)\right].
+			\obj(f)
+			 & = \frac{1}{2} + \frac{1}{2} \mathbb{E}_{x, y}\left[\sum_{S, T, U \subseteq [n]} \hat{f} (S)\hat{f} (T)\hat{f} (U) \cdot \chi _S(x) \chi _T(y) \chi _U(z)\right]  \\
+			 & = \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S)\hat{f} (T)\hat{f} (U) \cdot \mathbb{E}_{x, y}\left[\chi _S(x) \chi _T(y) \chi _U(z)\right].
 		\end{split}
 	\]
 	Since for fixed \(S, T, U\),
 	\[
 		\begin{split}
 			\mathbb{E}_{x, y}\left[\chi _S(x) \chi _T(y) \chi _U(z)\right]
-			&= \mathbb{E}_{x, y}\left[x^S\cdot y^T\cdot (x\cdot y)^U \right]\\
-			&= \mathbb{E}_{x, y}\left[x^{S \Delta U} y^{T;\Delta U} \right]\\
-			&= \mathbb{E}_{x}\left[x^{S \Delta U} \right] \mathbb{E}_{y}\left[y^{T \Delta U} \right]
+			 & = \mathbb{E}_{x, y}\left[x^S\cdot y^T\cdot (x\cdot y)^U \right]                         \\
+			 & = \mathbb{E}_{x, y}\left[x^{S \Delta U} y^{T;\Delta U} \right]                          \\
+			 & = \mathbb{E}_{x}\left[x^{S \Delta U} \right] \mathbb{E}_{y}\left[y^{T \Delta U} \right]
 			= \begin{dcases}
-				1, & \text{ if } S=U \text{ and } T=U ; \\
-				0, & \text{ otherwise} .
-			\end{dcases}
+				  1, & \text{ if } S=U \text{ and } T=U ; \\
+				  0, & \text{ otherwise} .
+			  \end{dcases}
 		\end{split}
 	\]
 	Hence,
 	\[
-		\mathop{\mathrm{obj}}(f)
+		\obj(f)
 		= \frac{1}{2} + \frac{1}{2} \sum_{S \subseteq [n]} \hat{f} (S)^3 .
 	\]
 \end{proof}
@@ -76,7 +76,7 @@ hence \(\mathop{\mathrm{obj}}(f) = 1\)! On the other hand, if \(f\) has \(k\) no
 We see that if we only require \(f\) to have high value when it is corresponding to \(\chi _S\), then we're done. But actually, what we want is when \(S\) is a singleton set, and hence we need more works.
 
 \subsection{Noisy BLR Test}
-In particular, we want to eliminate the case that when \(S = \varnothing \) and \([n]\), \(\mathop{\mathrm{obj}}(f) = 1\), i.e., we want to implement \hyperref[def:dictation]{dictation} test. This can be done via introducing noise. Firstly, consider the following new \hyperref[prb:max-3LIN]{3LIN} instances.
+In particular, we want to eliminate the case that when \(S = \varnothing \) and \([n]\), \(\obj(f) = 1\), i.e., we want to implement \hyperref[def:dictation]{dictation} test. This can be done via introducing noise. Firstly, consider the following new \hyperref[prb:max-3LIN]{3LIN} instances.
 
 \begin{itemize}
 	\item Variables: \(\left\{ \pm 1 \right\} ^n\) (hence, the assignment is a \hyperref[def:boolean-function]{boolean function} \(f\colon \left\{ \pm 1 \right\} ^n \to  \left\{ \pm 1 \right\} \)).
@@ -92,32 +92,32 @@ In particular, we want to eliminate the case that when \(S = \varnothing \) and 
 \end{itemize}
 
 \begin{remark}[Sanity check]
-	If \(f = \chi _\varnothing \), \(\mathop{\mathrm{obj}}(f) = 1/2\); if \(f = \chi _{[n]}\), \(\mathop{\mathrm{obj}}(f) \approx 1 / 2\).
+	If \(f = \chi _\varnothing \), \(\obj(f) = 1/2\); if \(f = \chi _{[n]}\), \(\obj(f) \approx 1 / 2\).
 \end{remark}
 \begin{explanation}
 	We see that
 	\begin{itemize}
-		\item If \(f = \chi _\varnothing \) (i.e., \(f(x) = 1\) for all \(x\)): \(\mathop{\mathrm{obj}}(f) = 1 / 2\).
-		\item If \(f = \chi _{[n]}\) (i.e., \(f(x) = x_1 x_2 \dots  x_n\)): \(\mathop{\mathrm{obj}}(f) = \mathbb{E}_{x, y, z, b}\left[1 / 2 + 1 / 2 f(x)f(y)f(z)b \right] \). Since
+		\item If \(f = \chi _\varnothing \) (i.e., \(f(x) = 1\) for all \(x\)): \(\obj(f) = 1 / 2\).
+		\item If \(f = \chi _{[n]}\) (i.e., \(f(x) = x_1 x_2 \dots  x_n\)): \(\obj(f) = \mathbb{E}_{x, y, z, b}\left[1 / 2 + 1 / 2 f(x)f(y)f(z)b \right] \). Since
 		      \[
 			      \begin{split}
 				      \mathbb{E}_{}\left[f(x) f(y) f(z) b \right]
-				      &= \frac{1}{2} \mathbb{E}_{}\left[f(x) f(y) f(z) b \mid b = 1 \right] + \frac{1}{2} \mathbb{E}_{}\left[f(x) f(y) f(z) b \mid b = -1 \right] \\
-				      &= \frac{1}{2} \prod_{i=1}^{n} \mathbb{E}_{}\left[x_i y_i z_i \mid b = 1 \right] - \frac{1}{2} \prod_{i=1}^{n} \mathbb{E}_{}\left[x_i y_i z_i \mid b = -1 \right] \\
-				      &= \frac{1}{2} (1 - 2 \epsilon )^n - \frac{1}{2} (-1 + 2\epsilon )^n\\
-				      &= \begin{dcases}
-					      0,                & \text{ if \(n\) is even}  ; \\
-					      (1-2\epsilon )^n, & \text{ if \(n\) is odd}.
-				      \end{dcases}
+				       & = \frac{1}{2} \mathbb{E}_{}\left[f(x) f(y) f(z) b \mid b = 1 \right] + \frac{1}{2} \mathbb{E}_{}\left[f(x) f(y) f(z) b \mid b = -1 \right]                       \\
+				       & = \frac{1}{2} \prod_{i=1}^{n} \mathbb{E}_{}\left[x_i y_i z_i \mid b = 1 \right] - \frac{1}{2} \prod_{i=1}^{n} \mathbb{E}_{}\left[x_i y_i z_i \mid b = -1 \right] \\
+				       & = \frac{1}{2} (1 - 2 \epsilon )^n - \frac{1}{2} (-1 + 2\epsilon )^n                                                                                              \\
+				       & = \begin{dcases}
+					           0,                & \text{ if \(n\) is even}  ; \\
+					           (1-2\epsilon )^n, & \text{ if \(n\) is odd}.
+				           \end{dcases}
 			      \end{split}
 		      \]
-		      So, if \(n \gg 1 / \epsilon \), then \((1 - 2 \epsilon )^n \leq e^{-2 \epsilon n} \approx 0\), i.e., \(\mathop{\mathrm{obj}}(f) \approx 1 / 2\).
+		      So, if \(n \gg 1 / \epsilon \), then \((1 - 2 \epsilon )^n \leq e^{-2 \epsilon n} \approx 0\), i.e., \(\obj(f) \approx 1 / 2\).
 	\end{itemize}
 \end{explanation}
 
 The above remark holds for a general \(f\), i.e., when \(f\) is far from \hyperref[def:dictation]{dictation}, the value will be less than \(1\) significantly. To see this, let \(f(x) = \sum_{S \subseteq [n]} \hat{f} (S)\chi _S\), recall that
 \[
-	\mathop{\mathrm{obj}}(f)
+	\obj(f)
 	= \mathbb{E}_{x, y, z, b}\left[\frac{1}{2} + \frac{1}{2} f(x) f(y) f(z) b \right]
 	= \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S) \hat{f} (T) \hat{f} (U) \mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) b \right],
 \]
@@ -162,14 +162,14 @@ And hence, we see that only \(\mathbb{E}_{}\left[x_i y_i z_i \right] \) is left,
 This suggests that
 \[
 	\begin{split}
-		\mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) \mid b=1 \right] &= \begin{dcases}
-			(1-2\epsilon )^{\vert S \vert }, & \text{ if } S=T=U ;  \\
-			0,                               & \text{ otherwise}  .
-		\end{dcases}\\
-		\mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) \mid b=-1 \right] &= \begin{dcases}
-			(-1+2\epsilon )^{\vert S \vert }, & \text{ if } S=T=U ;  \\
-			0,                                & \text{ otherwise}  .
-		\end{dcases}
+		\mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) \mid b=1 \right]  & = \begin{dcases}
+			                                                                          (1-2\epsilon )^{\vert S \vert }, & \text{ if } S=T=U ;  \\
+			                                                                          0,                               & \text{ otherwise}  .
+		                                                                          \end{dcases}  \\
+		\mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) \mid b=-1 \right] & = \begin{dcases}
+			                                                                          (-1+2\epsilon )^{\vert S \vert }, & \text{ if } S=T=U ;  \\
+			                                                                          0,                                & \text{ otherwise}  .
+		                                                                          \end{dcases}
 	\end{split}
 \]
 And hence,
@@ -182,22 +182,22 @@ And hence,
 implying that
 \[
 	\begin{split}
-		\mathop{\mathrm{obj}}(f)
-		&= \mathbb{E}_{x, y, z, b}\left[\frac{1}{2} + \frac{1}{2} f(x) f(y) f(z) b \right] \\
-		&= \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S) \hat{f} (T) \hat{f} (U) \mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) b \right] \\
-		&= \frac{1}{2} + \frac{1}{2} \sum_{\vert S \vert \text{ odd}} \hat{f} (S)^3 (1 - 2\epsilon )^{\vert S \vert }.
+		\obj(f)
+		 & = \mathbb{E}_{x, y, z, b}\left[\frac{1}{2} + \frac{1}{2} f(x) f(y) f(z) b \right]                                                                          \\
+		 & = \frac{1}{2} + \frac{1}{2} \sum_{S, T, U \subseteq [n]} \hat{f} (S) \hat{f} (T) \hat{f} (U) \mathbb{E}_{}\left[\chi _S(x) \chi _T(y) \chi _U(z) b \right] \\
+		 & = \frac{1}{2} + \frac{1}{2} \sum_{\vert S \vert \text{ odd}} \hat{f} (S)^3 (1 - 2\epsilon )^{\vert S \vert }.
 	\end{split}
 \]
-We then conclude that if \(f = \chi _i\), then \(\mathop{\mathrm{obj}}(f) = 1 - \epsilon \); and if \(f = \chi _S\),
+We then conclude that if \(f = \chi _i\), then \(\obj(f) = 1 - \epsilon \); and if \(f = \chi _S\),
 \[
-	\mathop{\mathrm{obj}}(f) = \begin{dcases}
+	\obj(f) = \begin{dcases}
 		\frac{1}{2} + \frac{1}{2} (1-2\epsilon )^{\vert S \vert }, & \text{ if \(\vert S \vert \) is odd};  \\
 		\frac{1}{2},                                               & \text{ if \(\vert S \vert \) is even}.
 	\end{dcases}
 \]
 So \(f\) has \(1 / \epsilon ^2\) Fourier coefficients of \(\epsilon \), leading to
 \[
-	\mathop{\mathrm{obj}}(f) \leq \frac{1}{2} + \frac{1}{2}\frac{1}{\epsilon ^2} \epsilon ^3 = \frac{1}{2} + \frac{\epsilon}{2}.
+	\obj(f) \leq \frac{1}{2} + \frac{1}{2}\frac{1}{\epsilon ^2} \epsilon ^3 = \frac{1}{2} + \frac{\epsilon}{2}.
 \]
 Although this is nice and is what we want, but to do the full \hyperref[def:reduction]{reduction} from \hyperref[prb:label-cover]{label cover} to \hyperref[prb:max-3LIN]{3LIN}, we will need a lot more work.
 

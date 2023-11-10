@@ -11,7 +11,7 @@ The idea is to iteratively improve the current solution. We first see the algori
 	\BlankLine
 
 	\(Q^\prime \gets \) arbitrary \(k\) centers in \(Q\)\;
-	\While(\label{algo:k-median-local-search-while}){\(\exists Q^{\prime\prime}\) s.t. \(\left\vert Q^{\prime\prime} \right\vert = k \) and \(\mathop{\mathrm{cost}}(Q^{\prime\prime}) < \mathop{\mathrm{cost}}(Q^\prime )\) and \(\left\vert Q^\prime \triangle Q^{\prime\prime} \right\vert \leq w\)\footnote{The symmetric difference \(A \triangle B\) is defined as \(A \triangle B \coloneqq (A \setminus B) \cup (B\setminus A)\).}}{
+	\While(\label{algo:k-median-local-search-while}){\(\exists Q^{\prime\prime}\) s.t. \(\left\vert Q^{\prime\prime} \right\vert = k \) and \(\cost(Q^{\prime\prime}) < \cost(Q^\prime )\) and \(\left\vert Q^\prime \triangle Q^{\prime\prime} \right\vert \leq w\)\footnote{The symmetric difference \(A \triangle B\) is defined as \(A \triangle B \coloneqq (A \setminus B) \cup (B\setminus A)\).}}{
 		\(Q^\prime \gets Q^{\prime\prime}\)\;
 	}
 	\Return{\(Q^\prime \)}\;
@@ -20,15 +20,15 @@ The idea is to iteratively improve the current solution. We first see the algori
 \begin{remark}[Runtime]
 	In \autoref{algo:k-median-local-search-while}, each iteration in \autoref{algo:k-median-local-search} takes \((n+m)^{O(w)}\) time for \(n \coloneqq \left\vert P \right\vert \) and \(m \coloneqq \left\vert Q \right\vert \). But we have no control of how many iterations \autoref{algo:k-median-local-search} might take since we might decrease the cost by a little each time hence we might fall into exponentially many updates. To solve this, we can ask for
 	\[
-		\mathop{\mathrm{cost}}(Q^{\prime\prime}) < \mathcolor{red}{(1 - \epsilon )}\mathop{\mathrm{cost}}(Q^\prime )
+		\cost(Q^{\prime\prime}) < \mathcolor{red}{(1 - \epsilon )}\cost(Q^\prime )
 	\]
 	instead to make sure we decrease a reasonable amount each time, which guarantees that we can bound the number of iterations by
 	\[
-		\log_\frac{1}{1-\epsilon } \left( \frac{\mathop{\mathrm{cost}}(\text{starting } Q^\prime )}{\OPT} \right).
+		\log_\frac{1}{1-\epsilon } \left( \frac{\cost(\text{starting } Q^\prime )}{\OPT} \right).
 	\]
 \end{remark}
 
-To do the analysis, first note that for any solution \(Q^\prime \) output from \autoref{algo:k-median-local-search}, we have that there exists no \(Q^{\prime\prime}\) such that \(\left\vert Q^\prime \triangle Q^{\prime\prime} \right\vert \leq w\), \(\left\vert Q^{\prime\prime} \right\vert = k\) and \(\mathop{\mathrm{cost}}(Q^{\prime\prime}) < \mathop{\mathrm{cost}}(Q^\prime )\).
+To do the analysis, first note that for any solution \(Q^\prime \) output from \autoref{algo:k-median-local-search}, we have that there exists no \(Q^{\prime\prime}\) such that \(\left\vert Q^\prime \triangle Q^{\prime\prime} \right\vert \leq w\), \(\left\vert Q^{\prime\prime} \right\vert = k\) and \(\cost(Q^{\prime\prime}) < \cost(Q^\prime )\).
 
 \begin{note}[Local optimum]
 	We say this \(Q^\prime \) is a \emph{local optimum}.
@@ -41,14 +41,14 @@ Let \(Q^{\ast} \subseteq Q\) be the optimal solution, and without loss of genera
 \end{notation}
 
 \begin{note}
-	From local optimality of \(Q^\prime \), for any \hyperref[not:swap]{swap} \(S\), \(\mathop{\mathrm{cost}}(Q^\prime ) \leq \mathop{\mathrm{cost}}(Q^\prime \triangle S)\).
+	From local optimality of \(Q^\prime \), for any \hyperref[not:swap]{swap} \(S\), \(\cost(Q^\prime ) \leq \cost(Q^\prime \triangle S)\).
 \end{note}
 
-Now, consider constructing \hyperref[not:swap]{swaps} \(S_1, \dots, S_t\) with weights \(p_1, \dots , p_t \in \mathbb{R} ^+\) such that \(\mathop{\mathrm{cost}}(Q^\prime ) \leq \mathop{\mathrm{cost}}(Q^\prime \triangle S_i)\) for all \(i\), we have
+Now, consider constructing \hyperref[not:swap]{swaps} \(S_1, \dots, S_t\) with weights \(p_1, \dots , p_t \in \mathbb{R} ^+\) such that \(\cost(Q^\prime ) \leq \cost(Q^\prime \triangle S_i)\) for all \(i\), we have
 \begin{equation}\label{eq:lec8}
-	\sum_{i=1} ^t p_i \cdot (\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(Q^\prime \triangle S_i)) \leq 0.
+	\sum_{i=1} ^t p_i \cdot (\cost(Q^\prime ) - \cost(Q^\prime \triangle S_i)) \leq 0.
 \end{equation}
-Our goal is to show that \autoref{eq:lec8} implies \(\mathop{\mathrm{cost}}(Q^\prime ) \leq \alpha\cdot \mathop{\mathrm{cost}}(Q^{\ast} )\) for some \(\alpha \in \mathbb{R} ^+\). To do this, we require the set of \hyperref[not:swap]{swaps} to have the following properties.
+Our goal is to show that \autoref{eq:lec8} implies \(\cost(Q^\prime ) \leq \alpha\cdot \cost(Q^{\ast} )\) for some \(\alpha \in \mathbb{R} ^+\). To do this, we require the set of \hyperref[not:swap]{swaps} to have the following properties.
 
 \begin{enumerate}[(a)]
 	\item For all \(j\in Q^{\ast} \), \(\sum_{S_i \ni j}p_i = 1 \), and let \(p^\prime \coloneqq \max _{j\in Q^\prime }\sum_{S_i\ni j}p_i\).
@@ -97,22 +97,22 @@ With \autoref{lma:lec8}, we're ready to prove the following.
 \begin{proof}
 	Fix \(i\in P\), we analyze how it contributes to the left-hand side of \autoref{eq:lec8}. Let \(j^\prime \in Q^\prime \) and \(j^{\ast} \in Q^{\ast} \) be facilities closest to \(i\), and \(d_i^\prime \coloneqq d(i, j^\prime )\), \(d_i^{\ast} = d(i, j^{\ast} )\), then for every \(S_{\ell}\), we have
 	\begin{enumerate}[(a)]
-		\item \(S_{\ell }\ni j^{\ast} \). Then contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - d_i^{\ast}\).\footnote{\(i\) can go to \(j^{\ast} \).}
+		\item \(S_{\ell }\ni j^{\ast} \). Then contribution of \(i\) to \(\cost(Q^\prime ) - \cost(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - d_i^{\ast}\).\footnote{\(i\) can go to \(j^{\ast} \).}
 		\item \(S_{\ell }\ni j^\prime\). By the second property, either
 		      \begin{itemize}
 			      \item \(\pi (j^{\ast} )\in S_{\ell } \): this implies \(j^{\ast}\in S_{\ell }\), which falls back to the first case.
-			      \item \(\pi (j^{\ast} )\notin S_{\ell } \): the contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - (2d_i^{\ast} + d_i^\prime ) = -2d_i^{\ast}\).\footnote{\(i\) can go to \(\pi (j^{\ast} )\).}
+			      \item \(\pi (j^{\ast} )\notin S_{\ell } \): the contribution of \(i\) to \(\cost(Q^\prime ) - \cost(S_{\ell }\triangle Q^\prime)\) is at least \(d_i^\prime - (2d_i^{\ast} + d_i^\prime ) = -2d_i^{\ast}\).\footnote{\(i\) can go to \(\pi (j^{\ast} )\).}
 		      \end{itemize}
-		\item Otherwise, contribution of \(i\) to \(\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)\) is at least \(0\).\footnote{\(i\) can stay with \(j^\prime \).}
+		\item Otherwise, contribution of \(i\) to \(\cost(Q^\prime ) - \cost(S_{\ell }\triangle Q^\prime)\) is at least \(0\).\footnote{\(i\) can stay with \(j^\prime \).}
 	\end{enumerate}
 
 	In all, we see that the first case has total weight \(1\) from the first property, while (b)\(-\)(a) has total weight \(\leq p^\prime \), hence \autoref{eq:lec8} implies
 	\[
-		\sum_{i\in P} \left[ (d_i^\prime - d_i^{\ast} )\cdot 1 - (2d_i^{\ast} )\cdot p^\prime \right] \leq \sum_{\ell =1} ^t p_{\ell } (\mathop{\mathrm{cost}}(Q^\prime ) - \mathop{\mathrm{cost}}(S_{\ell }\triangle Q^\prime)) \leq 0,
+		\sum_{i\in P} \left[ (d_i^\prime - d_i^{\ast} )\cdot 1 - (2d_i^{\ast} )\cdot p^\prime \right] \leq \sum_{\ell =1} ^t p_{\ell } (\cost(Q^\prime ) - \cost(S_{\ell }\triangle Q^\prime)) \leq 0,
 	\]
 	which is equivalent to say
 	\[
-		\mathop{\mathrm{cost}}(Q^\prime ) - (1 + 2p^\prime )\OPT \leq 0,
+		\cost(Q^\prime ) - (1 + 2p^\prime )\OPT \leq 0,
 	\]
 	so we get a \((1 + 2p^\prime )\)-approximation ratio. Furthermore, From \autoref{lma:lec8}, we have \(p^\prime = 1 + 2 / w\), hence we can achieve \(1 + 2(1 + 2 / w) = 3 + 4 / w\)-approximation ratio. Given \(\epsilon > 0\), by setting \(w \coloneqq 4/\epsilon \), we're done.
 \end{proof}

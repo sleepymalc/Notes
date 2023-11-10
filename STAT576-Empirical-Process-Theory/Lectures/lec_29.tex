@@ -1,0 +1,202 @@
+\lecture{29}{10 Nov.\ 9:00}{Penalized Estimators}
+\section{Penalized Least Square}
+Let \(y = \theta ^{\ast} + \epsilon \), then consider
+\[
+	\hat{\theta}_{\lambda , f} = \argmin_{\theta \in \mathbb{R} ^n} \frac{1}{2} \lVert y - \theta \rVert ^2 + \lambda f(\theta ),
+\]
+where \(f\colon \mathbb{R} ^n \to \mathbb{R} \) is a convex function and \(\lambda \) is a tuning parameter.
+
+\begin{eg}[\(L_1\)-norm]
+	\(f(\cdot) = \lVert \cdot \rVert ^1\), making \(\theta^{\ast} \) is sparse.
+\end{eg}
+
+\begin{eg}[Nuclear-norm]
+	If \(f\) is the nuclear-norm (for matrices), then \(\theta^{\ast} \) is low-rank.
+\end{eg}
+
+\begin{eg}[Fused Lasso]
+	If \(f(\theta ) = \sum_{i} \vert \theta _{i+1} - \theta _i \vert \), then \(\theta ^{\ast} \) is piecewise constant.
+\end{eg}
+
+\begin{eg}[Trend Filtering]
+	If \(f(\theta ) = \sum_{i} \vert \theta _{i+1} - 2 \theta _i + \theta _i\vert \), then \(\theta ^{\ast} \) is piecewise linear.
+\end{eg}
+
+The above are all \(L_1\)-type penalty.
+
+\begin{eg}[Ridge regression]
+	\(f(\theta ) = \lVert \theta \rVert _2^2 \).
+\end{eg}
+
+If \(f(\theta ) = \TV(\theta ) \), then the constrained least square estimator is
+\[
+	\hat{\theta} _v = \argmin_{\TV(\theta ) \leq v} \lVert y - \theta \rVert ^2,
+\]
+while the penalized least square estimator is
+\[
+	\hat{\theta} _{\lambda , \TV} = \argmin_{\theta \in \mathbb{R} ^n} \lVert y - \theta  \rVert ^2 + \lambda \TV(\theta ) .
+\]
+
+For any fixed \(y\), \(\hat{\theta} _{\lambda , \TV } = \hat{\theta} _v\), however, \(v\) depends on \(y\).
+
+\[
+	\lVert \hat{\theta} _v - \theta ^{\ast}  \rVert ^2 \neq \lVert \hat{\theta} _{\lambda , \TV } - \theta ^{\ast} \rVert ^2.
+\]
+
+Penalized versions more popular because of computational reasons. Now, fix \(\lambda \) and \(f\), and we now just write \(\hat{\theta} _{\lambda , f} = \hat{\theta} \). Then,
+\[
+	\hat{\theta} = \argmax_{\theta \in \mathbb{R} ^n} \left( \langle \epsilon , \theta - \theta ^{\ast}  \rangle - \frac{1}{2} \lVert \theta - \theta ^{\ast}  \rVert ^2 - \lambda f(\theta )  \right) .
+\]
+Correspondingly, let \(M(\theta ) = -\frac{1}{2} \lVert \theta - \theta ^{\ast}  \rVert ^2 \), making \(\theta ^{\ast} = \argmax_{\theta } M(\theta )\), and it satisfies the \hyperref[def:growth-condition]{growth condition} and \(d(\theta , \theta ^{\prime} ) = \lVert \theta - \theta ^{\prime} \rVert _2 \).
+
+\begin{remark}
+	We want \(\argmax_{\theta } M_n(\theta ) \to \argmax_{\theta } M(\theta )\), however we didn't have \(-\lambda f(\theta )\) in \(M(\theta )\).
+\end{remark}
+
+Then,
+\[
+	\sup _{\substack{\theta \in \mathbb{R} ^n \\ \lVert \theta - \theta ^{\ast}  \rVert \leq t }} (M_n - M)(\theta ) - (M_n - M)(\theta ^{\ast} )
+	= \langle \epsilon , \theta - \theta ^{\ast}  \rangle - \lambda f(\theta ) + \lambda f(\theta ^{\ast} ).
+\]
+
+\subsection{Convex Penalty}
+If \(f\) is convex, then we can linearize \(f\) by
+\[
+	f(\theta ) \geq f(\theta ^{\ast} ) + \langle s, \theta - \theta ^{\ast}  \rangle
+\]
+where \(s\) is the sub-gradient.\footnote{This is actually the definition of a sub-gradient of \(f\) at \(\theta ^{\ast} \), i.e., for any \(s\) satisfies the inequality is called a sub-gradient.} Hence,
+\[
+	\begin{split}
+		\sup _{\substack{\theta \in \mathbb{R} ^n                                         \\ \lVert \theta - \theta ^{\ast}  \rVert \leq t }} \langle \epsilon , \theta - \theta ^{\ast}  \rangle - \lambda f(\theta ) + \lambda f(\theta ^{\ast} )
+		 & \leq \sup _{\substack{\theta \in \mathbb{R} ^n                                 \\ \lVert \theta - \theta ^{\ast}  \rVert \leq t }} \langle \epsilon , \theta - \theta ^{\ast}  \rangle - \lambda \langle s, \theta - \theta ^{\ast}  \rangle \\
+		 & = \sup _{\substack{\theta \in \mathbb{R} ^n                                    \\ \lVert \theta - \theta ^{\ast}  \rVert \leq t }} \langle \epsilon - \lambda s, \theta - \theta ^{\ast}  \rangle \\
+		 & \leq \lVert \epsilon - \lambda s \rVert \lVert \theta - \theta ^{\ast}  \rVert \\
+		 & \leq t \lVert \epsilon - \lambda s \rVert .
+	\end{split}
+\]
+This is true for any sub-gradient of \(f\) at \(\theta ^{\ast} \), denoted this set as \(\partial f(\theta ^{\ast} )\), Hence,
+\[
+	\sup _{\substack{\theta \in \mathbb{R} ^n \\ \lVert \theta - \theta ^{\ast}  \rVert \leq t }} (M_n - M)(\theta ) - (M_n - M)(\theta ^{\ast} )
+	\leq t \cdot \inf _{s\in \partial f(\theta ^{\ast} )} \lVert \epsilon - \lambda s \rVert
+	= t \cdot \dist(\epsilon , \lambda \cdot \partial f(\theta ^{\ast} )) .
+\]
+Let
+\[
+	\phi _n(t) \coloneqq t \cdot \mathbb{E}_{}\left[\dist(\epsilon , \lambda \cdot \partial f(\theta ^{\ast} ))  \right] ,
+\]
+then \(\phi _n(ct) = c^\alpha \phi _n(t)\) for \(\alpha = 1\). We then consider \(\phi _n(t) \approx t^2\), which gives
+\[
+	\delta _n = \mathbb{E}_{}\left[\dist(\epsilon , \lambda \partial f(\theta ^{\ast} ))  \right] ,
+\]
+with \(\lVert \hat{\theta} - \theta ^{\ast}  \rVert = O_p(\delta _n)\). Actually, the following holds.
+
+\begin{lemma}[Oymak-Hassibi]
+	We have \(\lVert \hat{\theta} - \theta ^{\ast} \rVert \leq \dist(\epsilon , \lambda \partial f(\theta ^{\ast} )) \).
+\end{lemma}
+\begin{proof}
+	Let
+	\[
+		g(\theta ) = \frac{1}{2} \lVert y - \theta  \rVert ^2 + \lambda f(\theta ).
+	\]
+	Then \(\hat{\theta} \) minimizes \(g\) if and only if \(0\in \partial g(\hat{\theta} )\), or equivalently,
+	\[
+		0 \in \hat{\theta} - y + \lambda \partial f(\hat{\theta} ).
+	\]
+	This implies \(y - \hat{\theta} \in \lambda \cdot \partial f(\hat{\theta} )\).
+
+	\begin{claim}
+		If \(f\colon \mathbb{R} ^n \to \mathbb{R} \) is convex, then for any \(\theta _1, \theta _2 \in \mathbb{R} ^n\), \(s_1 \in \partial f(\theta _1)\), \(s_2 \in \partial f(\theta _2)\),
+		\[
+			\langle \theta _1 - \theta _2, s_1 - s_2 \rangle \geq 0.
+		\]
+	\end{claim}
+	\begin{explanation}
+		Since
+		\[
+			f(\theta _1) \geq f(\theta _2) + \langle s_2, \theta _1 - \theta _2 \rangle ,\quad
+			f(\theta _2) \geq f(\theta _1) + \langle s_1, \theta _2 - \theta _1 \rangle .
+		\]
+		Adding them together we get the result.
+	\end{explanation}
+
+	Hence, for any \(s\in \partial f(\theta ^{\ast} )\), \(\langle y - \hat{\theta} - \lambda s , \hat{\theta} - \theta ^{\ast} \rangle \geq 0\). By writing \(y = \theta ^{\ast} + \epsilon \), we finally get
+	\[
+		\langle \epsilon - \lambda s, \hat{\theta} - \theta ^{\ast}  \rangle \geq \lVert \hat{\theta} - \theta ^{\ast} \rVert ^2
+		\geq \lVert \epsilon - \lambda s \rVert \lVert \hat{\theta} - \theta ^{\ast} \rVert.
+	\]
+\end{proof}
+
+\begin{remark}
+	This bound is good if \(\partial f(\theta ^{\ast} )\) is large, i.e., this is useful when \(f\) is not differentiable since in this case \(\partial f(\theta ^{\ast} )\) can be large.
+\end{remark}
+
+Let's see an application to sparse means. Let \(y = \theta ^{\ast} + \epsilon \) where \(\theta ^{\ast} \) is \(k\)-sparse. Then, consider
+\[
+	\hat{\theta} = \argmin_{\theta \in \mathbb{R} ^n} \frac{1}{2} \lVert y - \theta \rVert ^2 + \lambda \lVert \theta  \rVert _1,
+\]
+which has a closed-form. But let's see how can our technique helps us. First, we see that
+\[
+	\partial f(\theta ^{\ast} ) = \left\{ v \colon v_i = \begin{dcases}
+		1,       & \text{ if } \theta ^{\ast} _i > 0 ; \\
+		-1,      & \text{ if } \theta ^{\ast} _i < 0 ; \\
+		[-1, 1], & \text{ if } \theta ^{\ast} _i = 0.
+	\end{dcases} \right\}.
+\]
+Then,
+\[
+	\lVert \hat{\theta} - \theta ^{\ast}  \rVert ^2
+	\leq \dist^2(\epsilon , \lambda \partial f(\theta ^{\ast} ))
+	= \sum_{i \colon \theta ^{\ast} _i \neq 0} \left( \epsilon _i - \lambda \sgn (\theta ^{\ast} _i) \right) ^2 + \sum_{i \colon \theta ^{\ast} _i = 0} \left( \epsilon _i - P_\lambda (\epsilon _i) \right) ^2,
+\]
+where \(P_\lambda (\epsilon )\) is the projection of \(\epsilon \) to \([-\lambda , \lambda ]\). Hence,
+\[
+	\operatorname{Soft}_\lambda (\epsilon )
+	\coloneqq  \epsilon - P_\lambda (\epsilon )
+	= \begin{dcases}
+		\epsilon - \lambda , & \text{ if } \epsilon > \lambda  ;                \\
+		0 ,                  & \text{ if } \epsilon \in [-\lambda , \lambda ] ; \\
+		\epsilon + \lambda , & \text{ if } \epsilon < \lambda .
+	\end{dcases}.
+\]
+With \(k = \lVert \theta ^{\ast} \rVert _0\), we therefore have
+\[
+	\sum_{i \colon \theta ^{\ast} _i \neq 0} \left( \epsilon _i - \lambda \sgn (\theta ^{\ast} _i) \right) ^2 + \sum_{i \colon \theta ^{\ast} _i = 0} \left( \epsilon _i - P_\lambda (\epsilon _i) \right) ^2
+	\leq k (1 + \lambda ^2) + (n - k) \cdot \mathbb{E}_{}\left[\left( \operatorname{Soft}_\lambda (z)  \right) ^2 \right].
+\]
+
+\begin{note}
+	\[
+		\mathbb{E}_{}\left[ \left( \operatorname{soft}_\lambda (z)  \right) ^2 \right]
+		\leq \frac{2 e^{-\lambda ^2 / 2}}{ \lambda \sqrt{2\pi } }.
+	\]
+\end{note}
+
+Hence, our final bound becomes
+\[
+	k(1 + \lambda ^2) + (n-k) \sqrt{\frac{2}{\pi }} \frac{e^{-\lambda ^2 / 2}}{\lambda }.
+\]
+Now, take \(\lambda = \sqrt{2 \log n / k} \), then the bound becomes
+\[
+	k \left( 1 + 2 \log \frac{n}{k} \right) + \sqrt{\frac{2}{\pi }} \frac{(n-k) \frac{k}{n}}{\log \frac{n}{k}}
+	= 2 k \log \frac{n}{k} (1 + o(1))
+\]
+w.r.t.\ \(k / n \to 0\).
+
+\begin{remark}
+	If we choose \(\lambda = \sqrt{2 \log n / k} \), then \(2k \log n / k\) is optimal, even the constant \(2\).
+\end{remark}
+
+Finally, we note that
+\[
+	\mathbb{E}_{}\left[\frac{1}{n} \lVert \hat{\theta} - \theta ^{\ast} \rVert ^2 \right]
+	\leq 2 \frac{k}{n} \log \frac{n}{k} (1 + o(1)).
+\]
+But setting \(\lambda \) would need some knowledge of \(k\) beforehand. In this case, we just set \(\lambda = \sqrt{2 \log n} \).
+
+\begin{remark}
+	General phenomenon: \(\ell _1\) penalities can obtain ``fast parametric rates'' up to log factor when the true signal is .
+\end{remark}
+
+\begin{remark}
+	This technique of bounding distant to the sub-gradient has been applied to show fast rates such that nuclear-norm penalization (Oymak-Hassibi), or TV penalty and filtering.
+\end{remark}

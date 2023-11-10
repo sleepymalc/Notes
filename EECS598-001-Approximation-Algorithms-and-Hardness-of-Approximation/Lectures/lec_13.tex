@@ -18,7 +18,7 @@ But observe that \(O\) depends entirely on the choice of \(T\), and hence our go
 \end{enumerate}
 If this is the case, we see that
 \[
-	\mathbb{E}\left[ \text{cost of \hyperref[prb:STSP]{TSP} \hyperref[def:tour]{tour}} \right] \leq \left( \frac{3}{2} - \delta  \right) \cdot \OPT_{\mathrm{LP}},
+	\mathbb{E}\left[ \text{cost of \hyperref[prb:STSP]{TSP} \hyperref[def:tour]{tour}} \right] \leq \left( \frac{3}{2} - \delta  \right) \cdot \OPT_{\LP},
 \]
 which breaks the \(3 / 2\) barrier for \hyperref[prb:STSP]{symmetric TSP}.
 
@@ -162,9 +162,9 @@ since the original two probability bounds' events are disjoint, so only one will
 \begin{equation}\label{eq:lec13-1}
 	\begin{split}
 		\mathbb{E}_{}\left[d_u \cdot d_v \right]
-		&= \mathbb{E}_{}\left[d_u \cdot d_v \mid d_v = 1 \right] \Pr(d_v = 1) + \mathbb{E}_{}\left[d_u \cdot d_v \mid d_v \geq 2 \right] \Pr(d_v \geq 2)\\
-		&\geq \Pr(d_v = 1) +  \mathbb{E}_{}\left[3\cdot d_v \mid d_v \geq 2 \right] \Pr(d_v \geq 2) - O(\delta )\\
-		&\geq 5 - O(\delta ),
+		 & = \mathbb{E}_{}\left[d_u \cdot d_v \mid d_v = 1 \right] \Pr(d_v = 1) + \mathbb{E}_{}\left[d_u \cdot d_v \mid d_v \geq 2 \right] \Pr(d_v \geq 2) \\
+		 & \geq \Pr(d_v = 1) +  \mathbb{E}_{}\left[3\cdot d_v \mid d_v \geq 2 \right] \Pr(d_v \geq 2) - O(\delta )                                         \\
+		 & \geq 5 - O(\delta ),
 	\end{split}
 \end{equation}
 where in the first inequality, in the first term, we drop \(\mathbb{E}_{}\left[d_u\cdot d_v \mid d_v = 1\right]\) naively since this is always greater than \(1\), and for the second term, we almost have \(d_u \geq 3\) given \(d_v \geq 2\) from the following intuition.
@@ -188,11 +188,11 @@ Consider calculating \(\mathbb{E}_{}\left[d_u \cdot d_v \right] \) as follows,
 \begin{equation}\label{eq:lec13-2}
 	\begin{split}
 		\mathbb{E}_{}\left[d_u \cdot d_v \right]
-		&= \mathbb{E}_{}\left[\left( e + \sum_{i} f_i \right) \left( e + \sum_{i} g_i \right)  \right] \\
-		&= \mathbb{E}_{}\left[e^{2} \right] + \sum_{i} \left( \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[f_i \right] + \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[g_i \right]   \right) + \sum_{ij} \mathbb{E}_{}\left[f_i \right] \mathbb{E}_{}\left[g_j \right]\\
-		&= \mathbb{E}_{}\left[e \right] + \sum_{i} \left( \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[f_i \right] + \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[g_i \right]   \right) + \sum_{ij} \mathbb{E}_{}\left[f_i \right] \mathbb{E}_{}\left[g_j \right] \\
-		&\leq \epsilon + \mathbb{E}_{}\left[ d_u \right] \mathbb{E}_{}\left[d_v \right] \\
-		&\leq 4 + \epsilon,
+		 & = \mathbb{E}_{}\left[\left( e + \sum_{i} f_i \right) \left( e + \sum_{i} g_i \right)  \right]                                                                                                                                                                      \\
+		 & = \mathbb{E}_{}\left[e^{2} \right] + \sum_{i} \left( \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[f_i \right] + \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[g_i \right]   \right) + \sum_{ij} \mathbb{E}_{}\left[f_i \right] \mathbb{E}_{}\left[g_j \right] \\
+		 & = \mathbb{E}_{}\left[e \right] + \sum_{i} \left( \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[f_i \right] + \mathbb{E}_{}\left[e \right] \mathbb{E}_{}\left[g_i \right]   \right) + \sum_{ij} \mathbb{E}_{}\left[f_i \right] \mathbb{E}_{}\left[g_j \right]     \\
+		 & \leq \epsilon + \mathbb{E}_{}\left[ d_u \right] \mathbb{E}_{}\left[d_v \right]                                                                                                                                                                                     \\
+		 & \leq 4 + \epsilon,
 	\end{split}
 \end{equation}
 where we use the assumption that \(x_e \leq \epsilon \). We see that \autoref{eq:lec13-1} and \autoref{eq:lec13-2} gives us a contradiction.
@@ -230,18 +230,18 @@ To see the complexity about the general cases, we now state the \hyperref[def:sp
 Turns out that there are lots of distributions are \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh}, and it's indeed a very good choice in our case since it satisfies  all \hyperref[subsub:log-concavity]{log-concavity}, \hyperref[subsub:conditioning]{conditioning property}, \hyperref[subsub:stochastic-dominance]{stochastic dominance property}, and also \hyperref[subsub:negative-correlation]{negative correlation}.
 
 \subsubsection{Max-Entropy Distribution}
-Nevertheless, among all \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh distributions}, we want to choose a most random one. This suggests we look into the notion of entropy. Denote \(\mathrm{ST}\) be the set of all \hyperref[def:spanning-tree]{spanning trees}, consider the following \emph{maximum entropy LP}:
+Nevertheless, among all \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh distributions}, we want to choose a most random one. This suggests we look into the notion of entropy. Denote \(\ST\) be the set of all \hyperref[def:spanning-tree]{spanning trees}, consider the following \emph{maximum entropy LP}:
 \begin{equation}\label{eq:max-entropy}
 	\begin{aligned}
-		\max~ & \sum_{T\in \mathrm{ST}} \mu (T) \log \frac{1}{\mu (T)}                            \\
-		      & \sum_{T\in \mathrm{ST} } \mu (T) = 1                                              \\
-		      & \sum_{T \ni e} \mu (T) = x_e                           & \forall e\in \mathcal{E} \\
+		\max~ & \sum_{T\in \ST} \mu (T) \log \frac{1}{\mu (T)}                            \\
+		      & \sum_{T\in \ST } \mu (T) = 1                                              \\
+		      & \sum_{T \ni e} \mu (T) = x_e                   & \forall e\in \mathcal{E} \\
 		      & \mu \geq 0.
 	\end{aligned} \iff
 	\begin{aligned}
-		\min~ & \sum_{T\in \mathrm{ST}} \mu (T) \log \mu (T)                            \\
-		      & \sum_{T\in \mathrm{ST} } \mu (T) = 1                                    \\
-		      & \sum_{T \ni e} \mu (T) = x_e                 & \forall e\in \mathcal{E} \\
+		\min~ & \sum_{T\in \ST} \mu (T) \log \mu (T)                            \\
+		      & \sum_{T\in \ST } \mu (T) = 1                                    \\
+		      & \sum_{T \ni e} \mu (T) = x_e         & \forall e\in \mathcal{E} \\
 		      & \mu \geq 0.
 	\end{aligned}
 \end{equation}
@@ -251,7 +251,7 @@ Solving this induces the following.
 	The optimal solution \(\mu \) for the \hyperref[eq:max-entropy]{maximum entropy LP} is the \emph{max-entropy distribution}.
 \end{definition}
 
-Observe that the \hyperref[eq:max-entropy]{maximum entropy LP} has exponentially many variables, but at least this is a convex program since \(x\log x\) is a convex function, and we can indeed approximately solve it in polynomial time with only polynomially many \(T\in \mathrm{ST} \) has non-zero probability, i.e., the size of the support of \(\mu\) is in polynomial.
+Observe that the \hyperref[eq:max-entropy]{maximum entropy LP} has exponentially many variables, but at least this is a convex program since \(x\log x\) is a convex function, and we can indeed approximately solve it in polynomial time with only polynomially many \(T\in \ST \) has non-zero probability, i.e., the size of the support of \(\mu\) is in polynomial.
 
 \subsubsection{\(\lambda \)-Uniform Distribution}
 Finally, we have the following.
@@ -260,7 +260,7 @@ Finally, we have the following.
 \end{definition}
 
 \begin{note}[Uniform distribution]
-	When \(\lambda _e = 1\) for all \(e\in \mathcal{E} \), then we just have a uniform distribution over \(\mathrm{ST}\).
+	When \(\lambda _e = 1\) for all \(e\in \mathcal{E} \), then we just have a uniform distribution over \(\ST\).
 \end{note}
 
 Now, we're going to see how these three distributions relate to each other. A technical lemma is the following.
@@ -275,7 +275,7 @@ Now, we're going to see how these three distributions relate to each other. A te
 More interestingly, we have the following.
 
 \begin{theorem}[\href{https://en.wikipedia.org/wiki/Kirchhoff's_theorem}{Matrix tree theorem}]\label{thm:lec13}
-	A \hyperref[def:lambda-uniform]{\(\lambda \)-uniform distribution} \(\mu \) for \(\mathrm{ST} \), then the induced \(p\) is \hyperref[def:real-stable]{real-stable}, i.e., \(\mu \) is \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh}.
+	A \hyperref[def:lambda-uniform]{\(\lambda \)-uniform distribution} \(\mu \) for \(\ST \), then the induced \(p\) is \hyperref[def:real-stable]{real-stable}, i.e., \(\mu \) is \hyperref[def:strongly-Rayleigh-distribution]{strongly Rayleigh}.
 \end{theorem}
 
 Combining \autoref{prop:lec13} and \autoref{thm:lec13}, we have the following.

@@ -38,11 +38,11 @@ Now, we try to proof \autoref{thm:converse-Lagrangian-dual}, which is the \emph{
 	Recall that
 	\[
 		\begin{split}
-			v(\hat{y})&\coloneqq \max_{y\geq \vec{0}}\ v(y) \\
-			&= \max_{y\geq \vec{0}} \Bigg\{y^{\top}h + \underbrace{\min_{x}\ \left\{(c^{\top} - y^{\top}E)x\colon Ax = b, x\geq \vec{0}\right\}}_{\text{just a linear program}}\Bigg\}\\
-			&= \max_{y\geq \vec{0}}\ \left\{y^{\top}h + \max_{\Pi}\ \left\{\Pi^{\top}b\colon \Pi^{\top}A\leq c^{\top} - y^{\top}E\right\}\right\}\\
-			&= \max_{y\geq \vec{0}, \Pi}\ \left\{y^{\top}h + \Pi^{\top}b\colon \Pi^{\top}A + y^{\top}E\leq c^{\top}\right\}\\
-			&= z.
+			v(\hat{y}) & \coloneqq \max_{y\geq \vec{0}}\ v(y)                                                                                                                                      \\
+			           & = \max_{y\geq \vec{0}} \Bigg\{y^{\top}h + \underbrace{\min_{x}\ \left\{(c^{\top} - y^{\top}E)x\colon Ax = b, x\geq \vec{0}\right\}}_{\text{just a linear program}}\Bigg\} \\
+			           & = \max_{y\geq \vec{0}}\ \left\{y^{\top}h + \max_{\Pi}\ \left\{\Pi^{\top}b\colon \Pi^{\top}A\leq c^{\top} - y^{\top}E\right\}\right\}                                      \\
+			           & = \max_{y\geq \vec{0}, \Pi}\ \left\{y^{\top}h + \Pi^{\top}b\colon \Pi^{\top}A + y^{\top}E\leq c^{\top}\right\}                                                            \\
+			           & = z.
 		\end{split}
 	\]
 	The last equality is derived from the fact that it's just the \hyperref[def:dual]{dual} of the \(Q\).
@@ -70,10 +70,10 @@ One may want to use some calculus technique to solve for such maximizing problem
 	We see that since
 	\[
 		\begin{split}
-			v(\hat{y})+(\hat{y} - \widetilde{y})\hat{\gamma}&=v(\hat{y})+(\hat{y} - \widetilde{y})(h - E \hat{x})\\
-			&= \hat{y}^{\top}h + (c^{\top} - \hat{y}^{\top}E)\hat{x} + (\widetilde{y} - \hat{y})^{\top}(h - E \hat{x})\\
-			&= \widetilde{y}^{\top}h + (c^{\top} - \widetilde{y}^{\top} E)\hat{x}\\
-			&\geq v(\widetilde{y}).
+			v(\hat{y})+(\hat{y} - \widetilde{y})\hat{\gamma} & =v(\hat{y})+(\hat{y} - \widetilde{y})(h - E \hat{x})                                                      \\
+			                                                 & = \hat{y}^{\top}h + (c^{\top} - \hat{y}^{\top}E)\hat{x} + (\widetilde{y} - \hat{y})^{\top}(h - E \hat{x}) \\
+			                                                 & = \widetilde{y}^{\top}h + (c^{\top} - \widetilde{y}^{\top} E)\hat{x}                                      \\
+			                                                 & \geq v(\widetilde{y}).
 		\end{split}
 	\]
 	The last inequality follows from the fact that \(\hat{x}\) is only \hyperref[def:optimal-solution]{optimal} for \(L_{\hat{y}}\), not \(L_{\widetilde{y}}\). \(\hat{x}\) may just be \hyperref[def:feasible-solution]{feasible} for \(L_{\hat{y}}\).
@@ -107,9 +107,9 @@ With this \autoref{thm:lec19-1} about \hyperref[def:subgradient]{subgradient}, w
 
 	Initialize a random \(\mathbb{R} ^m\) vector \(\hat{y}^{\top}\geq \vec{0}\)\;
 	\For(){\(k = 1, \dots K\)}{
-	Solve \(L_{\hat{y}^k}\) to get \(\hat{x}^k\)\;
-	\(\hat{\gamma}^k \gets h - E \hat{x}^k\)\;
-	\(\hat{y}^{k+1} \gets \mathrm{Proj}_{\mathbb{R}^m_+}(\hat{y}^k + \lambda_{k}\hat{\gamma}^k) \)\;\label{algo:projected-subgradient-optimization-algorithm:line5}
+		Solve \(L_{\hat{y}^k}\) to get \(\hat{x}^k\)\;
+		\(\hat{\gamma}^k \gets h - E \hat{x}^k\)\;
+		\(\hat{y}^{k+1} \gets \Proj_{\mathbb{R}^m_+}(\hat{y}^k + \lambda_{k}\hat{\gamma}^k) \)\;\label{algo:projected-subgradient-optimization-algorithm:line5}
 	}
 	\Return{\(v(\hat{y} ^{K})\)}\;
 \end{algorithm}
@@ -117,7 +117,7 @@ With this \autoref{thm:lec19-1} about \hyperref[def:subgradient]{subgradient}, w
 \begin{remark}
 	There are a few remarks we want to make.
 	\begin{itemize}
-		\item The projection \(\mathrm{Proj}_{\mathbb{R}^m_+}\) is just used to set any negative entries equal to \(0\).
+		\item The projection \(\Proj_{\mathbb{R}^m_+}\) is just used to set any negative entries equal to \(0\).
 		\item The key is in the \autoref{algo:projected-subgradient-optimization-algorithm:line5}. We want to choose \(\lambda_{k}>0\) and satisfying something, which will make this algorithm converges.
 		      \begin{itemize}
 			      \item \textbf{Harmonic step size}: Define the step size as \(\lambda_{k}\coloneqq \frac{1}{k}\), which will converge in theory, but it is slow. Notice that this choice of step size is \emph{independent} of the current value of the subgradient.

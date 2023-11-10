@@ -3,18 +3,18 @@
 We focus on the problem in the form of
 \[
 	\begin{aligned}
-		\max~                             & y^{\top}b                                  \\
-		                                  & y^{\top}A\leq c^{\top}                     \\
-		(\mathrm{D}_{\mathfrak{X} })\quad & y_{i}\text{ integer for }i = 1, \dots , m.
+		\max~                        & y^{\top}b                                  \\
+		                             & y^{\top}A\leq c^{\top}                     \\
+		(\Dual_{\mathfrak{X} })\quad & y_{i}\text{ integer for }i = 1, \dots , m.
 	\end{aligned}
 \]
 \begin{note}
-	Compare to \autoref{subsec:branch-and-bound}, now we require all \(y_{i}\) be integer, namely \(\mathcal{I} = \{1, \dots , m\}\) if we refer to the used notation. Further, we also let \((\mathrm{P})\) be
+	Compare to \autoref{subsec:branch-and-bound}, now we require all \(y_{i}\) be integer, namely \(\mathcal{I} = \{1, \dots , m\}\) if we refer to the used notation. Further, we also let \((\Primal)\) be
 	\[
 		\begin{aligned}
-			\min~             & c^{\top}x \\
-			                  & Ax = b    \\
-			(\mathrm{P})\quad & x\geq 0.
+			\min~          & c^{\top}x \\
+			               & Ax = b    \\
+			(\Primal)\quad & x\geq 0.
 		\end{aligned}
 	\]
 \end{note}
@@ -23,7 +23,7 @@ We focus on the problem in the form of
 	We assume that the data \(A, c\) are all integer.
 \end{remark}
 
-Now, we choose \(w\in \mathbb{R}^n\), \(w\geq 0\). Then the constraint in \((\mathrm{D}_{\mathfrak{X}})\) becomes
+Now, we choose \(w\in \mathbb{R}^n\), \(w\geq 0\). Then the constraint in \((\Dual_{\mathfrak{X}})\) becomes
 \[
 	y^{\top}(Aw) \leq c^{\top}w.
 \]
@@ -66,17 +66,17 @@ for all integer solutions of \(y^{\top} A \leq c^{\top} \).
 	To get a \hyperref[def:Chvatal-Gomory-cut]{Chvátal-Gomory cut}, we need to choose \(w\in \mathbb{Z} ^n\), and we would like to develop a concrete algorithmic scheme for generating \hyperref[def:Chvatal-Gomory-cut]{Chvátal-Gomory cuts}. We'll do this via \hyperref[def:basic-solution]{basic solutions}.
 \end{remark}
 
-We now solve \((\mathrm{P})\) and get an \hyperref[def:optimal-solution]{optimal} \hyperref[def:basis]{basis} \(\beta\). Consider the associated \hyperref[def:dual-basic-solution]{dual basic solution}
+We now solve \((\Primal)\) and get an \hyperref[def:optimal-solution]{optimal} \hyperref[def:basis]{basis} \(\beta\). Consider the associated \hyperref[def:dual-basic-solution]{dual basic solution}
 \[
 	\overline{y}^{\top}\coloneqq c_{\beta}^{\top}A^{-1}_{\beta}
 \]
-for the continuous relaxation of \((\mathrm{D}_{\mathfrak{X}})\).
+for the continuous relaxation of \((\Dual_{\mathfrak{X}})\).
 
-Notice that if \(\overline{y}\in\mathbb{Z}^m\), then \(\overline{y}\) solves \((\mathrm{D}_{\mathfrak{X}})\). Otherwise, suppose \(\overline{y}_{i}\notin \mathbb{Z}\), then let
+Notice that if \(\overline{y}\in\mathbb{Z}^m\), then \(\overline{y}\) solves \((\Dual_{\mathfrak{X}})\). Otherwise, suppose \(\overline{y}_{i}\notin \mathbb{Z}\), then let
 \[
 	\widetilde{b}\coloneqq e_{i} + A_{\beta}r\in\mathbb{Z}^m,
 \]
-where \(r\in\mathbb{Z}^m\), our goal is to derive a valid \hyperref[def:Chvatal-Gomory-cut]{cut} for \((\mathrm{D}_{\mathfrak{X}})\) that is violated by \(\overline{y} \).
+where \(r\in\mathbb{Z}^m\), our goal is to derive a valid \hyperref[def:Chvatal-Gomory-cut]{cut} for \((\Dual_{\mathfrak{X}})\) that is violated by \(\overline{y} \).
 
 \begin{theorem}\label{thm:lec24-1}
 	\(\overline{y}^{\top}\widetilde{b}\notin \mathbb{Z}\), and so
@@ -108,7 +108,7 @@ where \(r\in\mathbb{Z}^m\), our goal is to derive a valid \hyperref[def:Chvatal-
 	indeed cuts off \(\overline{y} \).
 \end{proof}
 
-We now need to show that the inequality \(y^{\top}\widetilde{b}\leq \lfloor \overline{y}^{\top}\widetilde{b} \rfloor\) is valid for \((\mathrm{D}_{\mathfrak{X}})\). Let \(H\coloneqq A^{-1}_{\beta}\), then \(H_{\cdot i} = A^{-1}_{\beta}e_{i}\). Further, we let \(w\coloneqq H_{\cdot i}+r\). Since we need \(w\geq \vec{0}\), we can always choose \(r\in \mathbb{Z}^m\) so that \(w\geq \vec{0}\). Specifically, we choose
+We now need to show that the inequality \(y^{\top}\widetilde{b}\leq \lfloor \overline{y}^{\top}\widetilde{b} \rfloor\) is valid for \((\Dual_{\mathfrak{X}})\). Let \(H\coloneqq A^{-1}_{\beta}\), then \(H_{\cdot i} = A^{-1}_{\beta}e_{i}\). Further, we let \(w\coloneqq H_{\cdot i}+r\). Since we need \(w\geq \vec{0}\), we can always choose \(r\in \mathbb{Z}^m\) so that \(w\geq \vec{0}\). Specifically, we choose
 \[
 	r_k \geq -\left\lfloor h_{ki} \right\rfloor
 \]
@@ -119,7 +119,7 @@ for \(k = 1, \dots , m\). Then, we have the following theorem.
 	\[
 		y^{\top} \widetilde{b} \leq \lfloor \overline{y} ^{\top} \widetilde{b} \rfloor
 	\]
-	is valid for \((\mathrm{D}_{\mathfrak{X}})\).
+	is valid for \((\Dual_{\mathfrak{X}})\).
 \end{theorem}
 \begin{proof}
 	Because \(y^{\top}A\leq c^{\top}\), we have \(y^{\top}A_{\beta}\leq c_{\beta}^{\top}\). Then we have
@@ -139,15 +139,15 @@ for \(k = 1, \dots , m\). Then, we have the following theorem.
 		y^{\top}\underbrace{\left(e_{i}+A_{\beta}r\right)}_{\widetilde{b} } \leq \overline{y}^{\top} \underbrace{\left(e_{i}+A_{\beta}r\right)}_{\widetilde{b}}
 	\]
 	since \(\overline{y}^{\top} = c_{\beta}^{\top}A^{-1}_{\beta}\). Then, since \(\widetilde{b} \in \mathbb{Z} ^m\) and \(y\) is constrained to be
-	in \(\mathbb{Z} ^m\) for \((\mathrm{D}_{\mathfrak{X}})\), we see
+	in \(\mathbb{Z} ^m\) for \((\Dual_{\mathfrak{X}})\), we see
 	\[
 		y^{\top}\widetilde{b}\leq \lfloor \overline{y}^{\top}\widetilde{b} \rfloor.
 	\]
 \end{proof}
 
-Now, given any non-integer \hyperref[def:dual-basic-solution]{basic dual solution} \(\overline{y}\), we produce a valid inequality for \((\mathrm{D}_{\mathfrak{X}})\) from \autoref{thm:lec24-1} that cuts it off.
+Now, given any non-integer \hyperref[def:dual-basic-solution]{basic dual solution} \(\overline{y}\), we produce a valid inequality for \((\Dual_{\mathfrak{X}})\) from \autoref{thm:lec24-1} that cuts it off.
 \begin{note}
-	This \hyperref[def:Chvatal-Gomory-cut]{cut} for \((\mathrm{D}_{\mathfrak{X}})\) is used as a column for \((\mathrm{P})\): the column is \(\widetilde{b} \) with objective coefficient \(\lfloor \overline{y} ^{\top} \widetilde{b} \rfloor\). Taking \(\beta\) to be an \hyperref[def:optimal-solution]{optimal} \hyperref[def:basis]{basis} for \((\mathrm{P})\), the new variable corresponding to this column is the unique variable eligible to enter the \hyperref[def:basis]{basis} in the context of the \hyperref[algo:simplex-algorithm]{simplex algorithm} applied to \((\mathrm{P})\) since the \hyperref[def:reduced-cost]{reduced cost} is precisely
+	This \hyperref[def:Chvatal-Gomory-cut]{cut} for \((\Dual_{\mathfrak{X}})\) is used as a column for \((\Primal)\): the column is \(\widetilde{b} \) with objective coefficient \(\lfloor \overline{y} ^{\top} \widetilde{b} \rfloor\). Taking \(\beta\) to be an \hyperref[def:optimal-solution]{optimal} \hyperref[def:basis]{basis} for \((\Primal)\), the new variable corresponding to this column is the unique variable eligible to enter the \hyperref[def:basis]{basis} in the context of the \hyperref[algo:simplex-algorithm]{simplex algorithm} applied to \((\Primal)\) since the \hyperref[def:reduced-cost]{reduced cost} is precisely
 	\[
 		\lfloor \overline{y} ^{\top} \widetilde{b} \rfloor-\overline{y} ^{\top} \widetilde{b} < 0.
 	\]
@@ -157,7 +157,7 @@ Now, given any non-integer \hyperref[def:dual-basic-solution]{basic dual solutio
 		A_{\beta}w = A_{\beta}\left(A^{-1}_{\beta}e_{i}+r\right) = e_{i}+A_{\beta}r \in \mathbb{Z}^m.
 	\]
 
-	We can then repeatedly add new \hyperref[def:Chvatal-Gomory-cut]{cuts}.\footnote{Though we do our computations as column generation with respect to \((\mathrm{P})\).}
+	We can then repeatedly add new \hyperref[def:Chvatal-Gomory-cut]{cuts}.\footnote{Though we do our computations as column generation with respect to \((\Primal)\).}
 \end{note}
 
 We note that there is clearly a lot of flexibility in how to choose \(r\). The next (last!) theorem show that it's always best to choose a minimal \(r\in \mathbb{Z} ^m\)  satisfying \(r_k \geq -\left\lfloor h_{ki} \right\rfloor\) for all \(k = 1, \dots  , m\).
@@ -174,7 +174,7 @@ We note that there is clearly a lot of flexibility in how to choose \(r\). The n
 	\[
 		y_{i} \leq \lfloor \overline{y} _{i} \rfloor + (c^{\top} _\beta - y^{\top} A_\beta )r.
 	\]
-	Noting that \(c^{\top} _\beta - y^{\top} A_\beta \geq \vec{0} \) for all \(y\) that are feasible for the continuous relaxation of \((\mathrm{D}_{\mathfrak{X}})\), we see that the strongest inequality is obtained by choosing \(r\in\mathbb{Z} ^m\) to be minimal.
+	Noting that \(c^{\top} _\beta - y^{\top} A_\beta \geq \vec{0} \) for all \(y\) that are feasible for the continuous relaxation of \((\Dual_{\mathfrak{X}})\), we see that the strongest inequality is obtained by choosing \(r\in\mathbb{Z} ^m\) to be minimal.
 \end{proof}
 
 Revisiting the \hyperref[eg:branch-and-bound]{example}. Now we see that the cutting plane algorithm will need at least \(2k\) steps for such a triangle with height \(k\), since it can only cut off one point at a time.
@@ -198,13 +198,13 @@ Revisiting the \hyperref[eg:branch-and-bound]{example}. Now we see that the cutt
 \end{eg}
 
 \begin{remark}[Pure v.s. Mixed]
-	We only consider pure integer programming under the Gomory cutting plane scheme here, for mixed case, please refer to \cite{Linear-Opt}.
+	We only consider pure integer programming under the Gomory cutting plane scheme here, for mixed case, please refer to~\cite{Linear-Opt}.
 \end{remark}
 
 \begin{remark}[Finite termination]
 	To prove that Gomory cutting plane scheme is finitely terminating is rather technical in either pure or mixed case.\footnote{Though it's done in essentially the same manner.}
 
-	We need to treat the \hyperref[def:objective-function]{objective function} value as an additional variable (numbered first), employ the \hyperref[algo:simplex-algorithm]{simplex algorithm} adapted to the \hyperref[def:perturbed-problem]{\(\epsilon \)-perturbed} problem, always choose the least-index \(i\in \mathcal{I} \) having \(\overline{y} _i \notin \mathbb{Z} \) and choose \(r\) via \autoref{thm:lec24-3}\footnote{Or another rule for mixed case, see \cite{Linear-Opt}} as appropriate to generate the \hyperref[def:Chvatal-Gomory-cut]{cuts}.
+	We need to treat the \hyperref[def:objective-function]{objective function} value as an additional variable (numbered first), employ the \hyperref[algo:simplex-algorithm]{simplex algorithm} adapted to the \hyperref[def:perturbed-problem]{\(\epsilon \)-perturbed} problem, always choose the least-index \(i\in \mathcal{I} \) having \(\overline{y} _i \notin \mathbb{Z} \) and choose \(r\) via \autoref{thm:lec24-3}\footnote{Or another rule for mixed case, see~\cite{Linear-Opt}} as appropriate to generate the \hyperref[def:Chvatal-Gomory-cut]{cuts}.
 \end{remark}
 
 \begin{remark}[Branch-and-Cut]

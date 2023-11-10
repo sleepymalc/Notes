@@ -6,12 +6,12 @@ Now, a big question is, how do we start with a \hyperref[def:basic-partition]{ba
 Consider the following problem.
 
 \begin{definition}[Phase one problem]\label{def:phase-one-problem}
-	Given the \hyperref[def:primal]{primal} \((\mathrm{P})\), the \emph{phase one problem} \((\Phi)\) is defined as follows.
+	Given the \hyperref[def:primal]{primal} \((\Primal)\), the \emph{phase one problem} \((\Phi)\) is defined as follows.
 	\[
 		\begin{aligned}
-			\min~             & c^{\top}x   \\
-			                  & Ax = b      \\
-			(\mathrm{P})\quad & x\geq  0 	.
+			\min~          & c^{\top}x   \\
+			               & Ax = b      \\
+			(\Primal)\quad & x\geq  0 	.
 		\end{aligned}\quad \begin{aligned}
 			\min~       & x_{n+1}                   \\
 			            & Ax + A_{n+1}x_{n+1} = b   \\
@@ -23,12 +23,12 @@ Consider the following problem.
 \begin{remark}
 	We see that
 	\begin{itemize}
-		\item If min value of \(x_{n+1}\) in \((\Phi)\) is 0, then we get a \hyperref[def:feasible-solution]{feasible solution} of \((\mathrm{P})\).
-		\item If min value of \(x_{n+1}\) in \((\Phi)\) is \(>0\), then there is no \hyperref[def:feasible-solution]{feasible solution} of \((\mathrm{P})\).
+		\item If min value of \(x_{n+1}\) in \((\Phi)\) is 0, then we get a \hyperref[def:feasible-solution]{feasible solution} of \((\Primal)\).
+		\item If min value of \(x_{n+1}\) in \((\Phi)\) is \(>0\), then there is no \hyperref[def:feasible-solution]{feasible solution} of \((\Primal)\).
 	\end{itemize}
 \end{remark}
 
-By solving \((\Phi)\), we will get a \hyperref[def:feasible-solution]{feasible solution} for \((\mathrm{P})\) or determine whether \((\mathrm{P})\) is solvable in the first place. But to solve the linear program \((\Phi)\), we're facing the same problem as \((\mathrm{P})\).
+By solving \((\Phi)\), we will get a \hyperref[def:feasible-solution]{feasible solution} for \((\Primal)\) or determine whether \((\Primal)\) is solvable in the first place. But to solve the linear program \((\Phi)\), we're facing the same problem as \((\Primal)\).
 
 \begin{problem}\label{prob:phase-one-problem}
 How do we get an initial \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Phi)\)?
@@ -36,7 +36,7 @@ How do we get an initial \hyperref[def:basic-solution]{basic} \hyperref[def:feas
 \begin{answer}
 	In this case, we know how to get a \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Phi)\).
 	\begin{enumerate}[(a)]
-		\item Start with a \hyperref[def:basic-solution]{basic solution} of \((\mathrm{P})\), \(\tilde{\beta}, \tilde{\eta}\) is the \hyperref[def:basic-partition]{basic partition}.
+		\item Start with a \hyperref[def:basic-solution]{basic solution} of \((\Primal)\), \(\tilde{\beta}, \tilde{\eta}\) is the \hyperref[def:basic-partition]{basic partition}.
 		\item If \(\overline{x}_{\tilde{\beta}}\) is \hyperref[def:feasible-solution]{feasible} then we just use \(\tilde{\beta}\) and \(\tilde{\eta}\) for \(\beta\) and \(\eta\).
 		\item Otherwise, set \(A_{n+1} = -A^{-1}_{\beta}\vec{1}\). If \(\eta_j = n+1\)
 		      \[
@@ -80,7 +80,7 @@ How do we get an initial \hyperref[def:basic-solution]{basic} \hyperref[def:feas
 \end{remark}
 
 \subsection{Perturbed Problem}
-Though we now know how to get \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\mathrm{P})\) to start our \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, we have one more problem.
+Though we now know how to get \hyperref[def:basic-solution]{basic} \hyperref[def:feasible-solution]{feasible solution} for \((\Primal)\) to start our \hyperref[algo:worry-free-simplex-algorithm]{worry-free simplex algorithm}, we have one more problem.
 
 \begin{problem}[Degenerate problem]\label{prob:degenerate-problem}
 What if \(\lambda = 0\), i.e. \(x_{\beta _{i} } = 0\) for some \(i\)?
@@ -100,9 +100,9 @@ In this case, we'll need the so-called \hyperref[conj:non-degeneracy-hypothesis]
 	\[
 		\begin{split}
 			\vec{x}_{\beta_i} > 0 \text{ for all \(i\) at every iteration}
-			\implies &\overline{\lambda} \neq 0\\
-			\implies &\text{ objective value decrease at each iteration.}\\
-			\implies &\text{ \autoref{algo:worry-free-simplex-algorithm} must terminate}
+			\implies & \overline{\lambda} \neq 0                                          \\
+			\implies & \text{ objective value decrease at each iteration.}                \\
+			\implies & \text{ \autoref{algo:worry-free-simplex-algorithm} must terminate}
 		\end{split}
 	\]
 	because there are only finitely many \hyperref[def:basis]{bases}.
@@ -173,8 +173,8 @@ Which suggest the following definitions.
 	Given
 	\[
 		\begin{split}
-			p(\epsilon) &= p_0 + p_1\epsilon + p_2 \epsilon^2 + \cdots + p_{m}\epsilon^m	\\
-			q(\epsilon) &= q_0 + q_1\epsilon + q_2 \epsilon^2 + \cdots + q_{m}\epsilon^m	\\
+			p(\epsilon) & = p_0 + p_1\epsilon + p_2 \epsilon^2 + \cdots + p_{m}\epsilon^m \\
+			q(\epsilon) & = q_0 + q_1\epsilon + q_2 \epsilon^2 + \cdots + q_{m}\epsilon^m \\
 		\end{split}
 	\]
 	with \(K_p\) and \(K_q\). Then \(K_{p+q}\) depends on \(K_p\) and \(K_q\). We then see that if \(p(\epsilon) - q(\epsilon) \geq 0\), then
@@ -230,14 +230,14 @@ Which suggest the following definitions.
 		\[
 			\begin{split}
 				i^{\text{th}} \text{ element of }A^{-1}_{\tilde{\beta}}A_{\beta}\begin{pmatrix}
-					\epsilon   \\
-					\epsilon^2 \\
-					\epsilon^3 \\
-					\vdots     \\
-					\epsilon^m \\
-				\end{pmatrix} = 0
-				&\implies \left< i^{\text{th}} \text{ row of } A^{-1}_{\tilde{\beta}}A_{\beta},\ \vec{\epsilon} \right> = 0\\
-				&\implies i^{\text{th}} \text{ row of } A^{-1}_{\tilde{\beta}}A_{\beta} = \vec{0}\ \conta
+					                                                                \epsilon   \\
+					                                                                \epsilon^2 \\
+					                                                                \epsilon^3 \\
+					                                                                \vdots     \\
+					                                                                \epsilon^m \\
+				                                                                \end{pmatrix} = 0
+				 & \implies \left< i^{\text{th}} \text{ row of } A^{-1}_{\tilde{\beta}}A_{\beta},\ \vec{\epsilon} \right> = 0 \\
+				 & \implies i^{\text{th}} \text{ row of } A^{-1}_{\tilde{\beta}}A_{\beta} = \vec{0}\ \conta
 			\end{split}
 		\]
 		because \(A^{-1}_{\tilde{\beta}}A_{\beta}\) is invertible where \(A^{-1}_{\beta}A_{\tilde{\beta}}\) is its inverse.

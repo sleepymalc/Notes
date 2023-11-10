@@ -52,7 +52,7 @@ Now, just like in the basic page rank cases, we have
 for scaled page rank update equation.
 
 \begin{intuition}
-	Compare to basic page rank, scaled page rank can be thought as follows. When a \hyperref[def:random-walker]{random walker} at location \(i\), we toss a biased coin with \(\Pr(\{\mathrm{H} \}) = s\). If we get heads, then we follow the \hyperref[def:simple-random-walk]{simple random walk rule}. Otherwise, if we get tails, we pick any node on the network at random as the next destination.
+	Compare to basic page rank, scaled page rank can be thought as follows. When a \hyperref[def:random-walker]{random walker} at location \(i\), we toss a biased coin with \(\Pr(\{\Head \}) = s\). If we get heads, then we follow the \hyperref[def:simple-random-walk]{simple random walk rule}. Otherwise, if we get tails, we pick any node on the network at random as the next destination.
 \end{intuition}
 
 \section{Personalized Page Rank via Markov Chain}
@@ -135,8 +135,8 @@ We now introduce the first simulation-based algorithm to estimate page rank. The
 	\(\arrival(v)\gets 1\)\;
 	\;
 	\For(){\(i = 1, \dots, T\)}{
-	\(\result\gets\)\toss{\(s\)}\Comment*[r]{Toss a biased coin with \(\Pr(\{\mathrm{H} \}) = s\), \(\Pr(\{\mathrm{T} \}) = 1 - s\)}
-	\uIf(\Comment*[f]{If heads}){\(\result = \mathrm{H}\)}{
+	\(\result\gets\)\toss{\(s\)}\Comment*[r]{Toss a biased coin with \(\Pr(\{\Head \}) = s\), \(\Pr(\{\Tail \}) = 1 - s\)}
+	\uIf(\Comment*[f]{If heads}){\(\result = \Head\)}{
 	\lIf(\Comment*[f]{Go to \(v\)'s neighbor randomly}){\(d_i^{\text{out}}\neq 0\)}{\(v\gets\) \random{\(N_i^{\text{out}}\)}}
 	}\Else(\Comment*[f]{If tails}){
 		\(v\gets \)\random{\(\mathcal{V}\)}\Comment*[r]{reset to a uniformly random node}
@@ -152,23 +152,23 @@ We now introduce the first simulation-based algorithm to estimate page rank. The
 We can describe \hyperref[algo:random-walk-algorithm]{random walk} as a \hyperref[def:Markov-chain]{Markov chain}. Consider \(\left\{ X_n \right\}_{n\geq 0}\) where \(X_n\) is the location of the \hyperref[def:random-walker]{random walker} at time \(n\). We see that
 \[
 	\begin{split}
-		X_0 &\sim \mathrm{uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert\})\\
-		X_1 &=\begin{dcases}
-			\mathrm{uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert \}), & \text{ with probability }1 - s; \\
-			\mathrm{NextHop}(x_0),                                                   & \text{ with probability }s,     \\
-		\end{dcases}\\
-		&\vdots\\
-		X_t &=\begin{dcases}
-			\mathrm{uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert\}), & \text{ with probability }1 - s; \\
-			\mathrm{NextHop}(x_{t-1}),                                              & \text{ with probability }s      \\
-		\end{dcases}
+		X_0 & \sim \operatorname{Uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert\})                                 \\
+		X_1 & =\begin{dcases}
+			       \operatorname{Uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert \}), & \text{ with probability }1 - s; \\
+			       \operatorname{NextHop}(x_0),                                                   & \text{ with probability }s,     \\
+		       \end{dcases} \\
+		    & \vdots                                                                                                            \\
+		X_t & =\begin{dcases}
+			       \operatorname{Uniform}(\{1, 2, \dots , \left\vert \mathcal{V} \right\vert\}), & \text{ with probability }1 - s; \\
+			       \operatorname{NextHop}(x_{t-1}),                                              & \text{ with probability }s      \\
+		       \end{dcases}
 	\end{split}
 \]
-with \(\mathrm{NextHop}(\cdot)\) being
+with \(\operatorname{NextHop}(\cdot)\) being
 \[
-	\mathrm{NextHop}(i)=\begin{dcases}
-		\mathrm{uniform}(\{N^{\text{out}}_i\}), & \text{ if }d^{\text{out}}_i > 0; \\
-		i,                                      & \text{ if }d^{\text{out}}_i = 0.
+	\operatorname{NextHop}(i)=\begin{dcases}
+		\operatorname{Uniform}(\{N^{\text{out}}_i\}), & \text{ if }d^{\text{out}}_i > 0; \\
+		i,                                            & \text{ if }d^{\text{out}}_i = 0.
 	\end{dcases}
 \]
 \begin{note}
@@ -204,7 +204,7 @@ in \(T\) to ensure the speed of convergence.
 \begin{problem}[Biased]
 The estimator is a \textbf{biased} estimator. Recall that this estimator is unbiased if
 \[
-	\mathrm{E}\left[ \hat{\pi}_{v}^{\top}(s) \right] = \pi_v(s);
+	\mathbb{E}\left[ \hat{\pi}_{v}^{\top}(s) \right] = \pi_v(s);
 \]
 and if it is biased,
 \[
@@ -212,7 +212,7 @@ and if it is biased,
 \]
 We see that \(\hat{\pi}^{\top}_v(s)\) is indeed biased since
 \[
-	\mathrm{E}\left[\hat{\pi}^{\top}_v(s)\right] = \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbb{E}\left[\mathbbm{1}_{\{X_n = v\}} \right]
+	\mathbb{E}\left[\hat{\pi}^{\top}_v(s)\right] = \frac{1}{T}\sum\limits_{n=0}^{T-1} \mathbb{E}\left[\mathbbm{1}_{\{X_n = v\}} \right]
 	= \frac{1}{T}\sum\limits_{n=0}^{T-1} \Pr(X_n = v)
 	= \frac{1}{T}\sum\limits_{n=0}^{T-1} (\mu_0 P^n)_v\underset{T\to \infty }{\to }\pi_v(s),
 \]
@@ -312,7 +312,7 @@ Denote those \(K\) \hyperref[def:random-variable]{random variables} \(\tau\) as 
 \]
 This is an unbiased estimator since
 \[
-	\mathrm{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \Pr(X_{\tau_k} = v) = \pi_v(s).
+	\mathbb{E}\left[\mathbbm{1}_{\{X_{\tau_k}=v\}}\right] = \Pr(X_{\tau_k} = v) = \pi_v(s).
 \]
 Also, the variance can be derived as
 \[
@@ -334,14 +334,14 @@ Also, the variance can be derived as
 	We note that the empirical mean is unbiased while the empirical variance is biased. Let \(X_1, X_2, \dots  ,X_N\) are \hyperref[def:i.i.d.]{i.i.d.} with mean \(\mu\) and variance \(\sigma^2\).
 	\begin{itemize}
 		\item\(\hat{\mu}_N\) is the empirical mean which is defined as
-		\[
-			\hat{\mu}_N \coloneqq  \frac{1}{N}\sum\limits_{i=1}^{N} X_i
-		\]
-		with
-		\[
-			\mathbb{E}\left[\hat{\mu}_N \right] = \frac{1}{N}\sum\limits_{i=1}^{N} \mathbb{E}\left[X_i \right] = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
-		\]
-		which implies this is an unbiased estimator.
+		      \[
+			      \hat{\mu}_N \coloneqq  \frac{1}{N}\sum\limits_{i=1}^{N} X_i
+		      \]
+		      with
+		      \[
+			      \mathbb{E}\left[\hat{\mu}_N \right] = \frac{1}{N}\sum\limits_{i=1}^{N} \mathbb{E}\left[X_i \right] = \frac{1}{N}\sum\limits_{i=1}^{N} \mu = \mu,
+		      \]
+		      which implies this is an unbiased estimator.
 		\item Denote \(\hat{\Var}(N)\) as the empirical variance estimator. It's defined as
 		      \[
 			      \hat{\Var}(N) \coloneqq \frac{1}{N}\sum\limits_{i=1}^{N} (X_i - \hat{\mu}_N)^2.

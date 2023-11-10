@@ -2,7 +2,7 @@
 It's now a good timing to introduce an application of what we have been discussing, namely the \hyperref[prob:cutting-stock-problem]{cutting-stock problem}. We'll see that it naturally utilize the idea of column generation. It's an integer programming problem, though contrarily, it can be nicely approximated by \textbf{rounding down}.
 
 \begin{problem}[Cutting-stock problem]\label{prob:cutting-stock-problem}
-Consider we have rolls of paper of width \(W\), with the demand widths being \(w_1, w_2, \dots , w_m < W\) and demands being \((\mathrm{D})\), which is usually pretty big. The goal is to use as few stock rolls as possible.
+Consider we have rolls of paper of width \(W\), with the demand widths being \(w_1, w_2, \dots , w_m < W\) and demands being \((\Dual)\), which is usually pretty big. The goal is to use as few stock rolls as possible.
 \end{problem}
 \begin{answer}
 	One may try to define
@@ -25,7 +25,7 @@ Consider we have rolls of paper of width \(W\), with the demand widths being \(w
 			 & \mathbb{N}\ni a_{i}\geq 0 \text{ for }i = 1, \dots , m.
 		\end{aligned}
 	\]
-	Moreover, denotes \((\mathrm{D})\) as
+	Moreover, denotes \((\Dual)\) as
 	\[
 		d\coloneqq \begin{pmatrix}
 			d_1    \\
@@ -37,9 +37,9 @@ Consider we have rolls of paper of width \(W\), with the demand widths being \(w
 	then we formulate the cutting-stock problem as
 	\[
 		\begin{aligned}
-			z\coloneqq \min~    & \sum\limits_{j} x_{j}                  \\
-			                    & \sum\limits_{j} A_{\cdot j}x_{j}\geq d \\
-			(\mathrm{CSP})\quad & x_{j}\geq 0 \text{ integer for all }j,
+			z\coloneqq \min~ & \sum\limits_{j} x_{j}                  \\
+			                 & \sum\limits_{j} A_{\cdot j}x_{j}\geq d \\
+			(\CSP)\quad      & x_{j}\geq 0 \text{ integer for all }j,
 		\end{aligned}
 	\]
 	where
@@ -52,7 +52,7 @@ Consider we have rolls of paper of width \(W\), with the demand widths being \(w
 		\end{pmatrix}.
 	\]
 
-	Turning \(\mathrm{CSP}\) into a \hyperref[def:standard-form]{standard form} problem and \textbf{drop} the integer constraint, we have
+	Turning \(\CSP\) into a \hyperref[def:standard-form]{standard form} problem and \textbf{drop} the integer constraint, we have
 	\[
 		\begin{aligned}
 			\min~                           & \sum\limits_{j} x_{j}                                                        \\
@@ -62,13 +62,13 @@ Consider we have rolls of paper of width \(W\), with the demand widths being \(w
 	\]
 
 	\begin{note}
-		\(\mathrm{\underline{CSP}}\) gives a lower bound on \(\mathrm{CSP}\). Moreover, the constraint of \(x_{j}\in\mathbb{N}\)
+		\(\mathrm{\underline{CSP}}\) gives a lower bound on \(\CSP\). Moreover, the constraint of \(x_{j}\in\mathbb{N}\)
 		is now gone.
 	\end{note}
 
 	We now want to solve \(\mathrm{\underline{CSP}}\) exactly to get \hyperref[def:optimal-solution]{optimum} \(\overline{x}, \overline{t}\) with value \(\underline{z} = \sum\limits_{i=1}^{m} \overline{x}_{i}\).
 
-	Firstly, if we round up \(\overline{x}\) to \(\left\lceil \overline{x} \right\rceil \), then it is \hyperref[def:feasible-solution]{feasible} for \(\mathrm{CSP}\). We immediately see
+	Firstly, if we round up \(\overline{x}\) to \(\left\lceil \overline{x} \right\rceil \), then it is \hyperref[def:feasible-solution]{feasible} for \(\CSP\). We immediately see
 	\[
 		\sum\limits_{i=1}^{m} \overline{x}_{i} = \underline{z} \leq z \leq \sum\limits_{i=1}^{m} \left\lceil \overline{x}_{i} \right\rceil.
 	\]
@@ -116,11 +116,11 @@ Consider we have rolls of paper of width \(W\), with the demand widths being \(w
 		      This is known as the \emph{\href{https://en.wikipedia.org/wiki/Knapsack_problem}{Knapsack problem}}. Now, let \(f(S)\) being the \hyperref[def:optimal-solution]{optimal} value for knapsack of capacity \(S\) such that \(S = 0, 1, \dots , W\). We see that
 		      \[
 			      \begin{split}
-				      f(0) &= 0\\
-				      &\vdots\\
-				      f(S) &= \max_{i\colon w_{i}\leq S}\left\{ \overline{y}_{i} + f(S - w_{i})\right\}\\
-				      &\vdots\\
-				      f(W) &= \text{ solution}.\\
+				      f(0) & = 0                                                                         \\
+				           & \vdots                                                                      \\
+				      f(S) & = \max_{i\colon w_{i}\leq S}\left\{ \overline{y}_{i} + f(S - w_{i})\right\} \\
+				           & \vdots                                                                      \\
+				      f(W) & = \text{ solution}.                                                         \\
 			      \end{split}
 		      \]
 		      The running time is \(\Theta(Wm)\).\footnote{Note that we assume \(W\) and \(w_{i}\) to be integers.}
@@ -128,11 +128,11 @@ Consider we have rolls of paper of width \(W\), with the demand widths being \(w
 		      Notice that the above only gives \(f(W)\), which is the objective value, but without information for variables. We can retrieve the information by keeping tracking of the argument of maximum in each step, namely we record
 		      \[
 			      \begin{split}
-				      i^{\ast}_{0 }\to f(0) &= 0\\
-				      &\vdots\\
-				      i^{\ast}_S \to f(S) &= \max_{i\colon w_{i}\leq S}\left\{ \overline{y}_{i} + f(S - w_{i})\right\}\\
-				      &\vdots\\
-				      i^{\ast}_W \to f(W) &= \text{ solution}.\\
+				      i^{\ast}_{0 }\to f(0) & = 0                                                                         \\
+				                            & \vdots                                                                      \\
+				      i^{\ast}_S \to f(S)   & = \max_{i\colon w_{i}\leq S}\left\{ \overline{y}_{i} + f(S - w_{i})\right\} \\
+				                            & \vdots                                                                      \\
+				      i^{\ast}_W \to f(W)   & = \text{ solution}.                                                         \\
 			      \end{split}
 		      \]
 		      Then we simply \emph{back-track} every \(i^{\ast}\) from \(i^{\ast}_W\), and then the next one is simply \(i^{\ast}_{W - w_{i^{\ast}_W}}\), and so on.

@@ -11,9 +11,9 @@
 For a \hyperref[def:standard-form]{standard form} problem
 \[
 	\begin{aligned}
-		\min~             & c^{\top}x \\
-		                  & Ax = b    \\
-		(\mathrm{P})\quad & x\geq 0,
+		\min~          & c^{\top}x \\
+		               & Ax = b    \\
+		(\Primal)\quad & x\geq 0,
 	\end{aligned}
 \]
 we can instead consider an equivalent problem formulated as
@@ -91,21 +91,21 @@ A simplicial cone is rather simple, the graph below is informative enough.
 \end{figure}
 
 \section{The Simplex Algorithm}
-Now, given a \hyperref[def:standard-form]{standard form} problem \((\mathrm{P})\):
+Now, given a \hyperref[def:standard-form]{standard form} problem \((\Primal)\):
 \[
 	\begin{aligned}
-		\min~             & c^{\top}x \\
-		                  & Ax = b    \\
-		(\mathrm{P})\quad & x\geq 0,
+		\min~          & c^{\top}x \\
+		               & Ax = b    \\
+		(\Primal)\quad & x\geq 0,
 	\end{aligned}
 \]
-we can then solve \((\mathrm{P})\) in a mathematical rigorous and complete way.
+we can then solve \((\Primal)\) in a mathematical rigorous and complete way.
 
 \begin{algorithm}[H]\label{algo:simplex-algorithm}
 	\DontPrintSemicolon
 	\caption{Simplex Algorithm}
-	\KwData{\hyperref[def:standard-form]{standard form} LP \((\mathrm{P})\)}
-	\KwResult{\hyperref[def:optimal-solution]{optimal solutions} \(\overline{x}, \overline{y}\), or report \((\mathrm{P})\) is unbounded/infeasible}
+	\KwData{\hyperref[def:standard-form]{standard form} LP \((\Primal)\)}
+	\KwResult{\hyperref[def:optimal-solution]{optimal solutions} \(\overline{x}, \overline{y}\), or report \((\Primal)\) is unbounded/infeasible}
 	\SetKwData{result}{result}
 	\BlankLine
 	\SetKwFunction{WFSimplex}{\hyperref[algo:worry-free-simplex-algorithm]{WorryFreeSimplexAlgorithm}}
@@ -114,13 +114,13 @@ we can then solve \((\mathrm{P})\) in a mathematical rigorous and complete way.
 	\(\beta \gets \) \hyperref[prob:phase-one-problem]{basic feasible solution for \((\Phi_{\epsilon })\)}\;
 	\result \(\gets\) \WFSimplex{\((\Phi _\epsilon )\), \(\beta\)}\footnote{Adapted to \hyperref[def:perturbed-problem]{algebraically perturbed problems}, and always giving preference to \(x_{n+1}\) for leaving the \hyperref[def:basis]{basis} whenever it's eligible to leave for the unperturbed problem.}\;
 	\uIf{\result is unbounded}{
-		\Return{\((\mathrm{P})\) has no solution}
+		\Return{\((\Primal)\) has no solution}
 	}
 	\Else{
-		\(\beta\gets\result\)\Comment*[f]{Retrieve the feasible basis for \((\mathrm{P})\)}
+		\(\beta\gets\result\)\Comment*[f]{Retrieve the feasible basis for \((\Primal)\)}
 	}
 	\;
-	\((P_{\epsilon} )\gets\) \hyperref[def:perturbed-problem]{algebraic perturbation} to \((\mathrm{P})\)\;
+	\((P_{\epsilon} )\gets\) \hyperref[def:perturbed-problem]{algebraic perturbation} to \((\Primal)\)\;
 	\Return{\WFSimplex{\((P_{\epsilon} )\), \(\beta\)}\footnote{Again, adapted to \hyperref[def:perturbed-problem]{algebraically perturbed problems}.}}
 \end{algorithm}
 
@@ -128,19 +128,19 @@ we can then solve \((\mathrm{P})\) in a mathematical rigorous and complete way.
 Consider the \hyperref[def:standard-form]{standard problem} and its \hyperref[def:dual]{dual}
 \[
 	\begin{aligned}
-		\min~             & c^{\top}x \\
-		                  & Ax = b    \\
-		(\mathrm{P})\quad & x\geq  0,
+		\min~          & c^{\top}x \\
+		               & Ax = b    \\
+		(\Primal)\quad & x\geq  0,
 	\end{aligned}\quad \begin{aligned}
-		\max ~            & y^{\top}b               \\
-		                  & y^{\top}A\leq c^{\top}. \\
-		(\mathrm{D})\quad &
+		\max ~       & y^{\top}b               \\
+		             & y^{\top}A\leq c^{\top}. \\
+		(\Dual)\quad &
 	\end{aligned}
 \]
 
 \section{The Strong Duality Theorem}
 \begin{prev}
-	The \hyperref[thm:weak-duality]{weak duality theorem} states that if \(\hat{x}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{P})\), and \(\hat{y}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{D})\), then
+	The \hyperref[thm:weak-duality]{weak duality theorem} states that if \(\hat{x}\) is \hyperref[def:feasible-solution]{feasible} for \((\Primal)\), and \(\hat{y}\) is \hyperref[def:feasible-solution]{feasible} for \((\Dual)\), then
 	\[
 		c^{\top} \hat{x} \geq  \hat{y}^{\top} b.
 	\]
@@ -148,25 +148,25 @@ Consider the \hyperref[def:standard-form]{standard problem} and its \hyperref[de
 \end{prev}
 
 \begin{prev}
-	The \hyperref[thm:weak-optimal-basis-theorem]{weak optimal basis theorem} states that if we have a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\), and we also have \(\overline{x}_{\beta}\geq \vec{0}\)(\(\overline{x}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{P})\)) and \(\overline{c}_{\eta} \geq \vec{0}\)(\(\overline{y}\) is \hyperref[def:feasible-solution]{feasible} for \((\mathrm{D})\)), then \(\overline{x}\) and \(\overline{y}\) are both \hyperref[def:optimal-solution]{optimal}.
+	The \hyperref[thm:weak-optimal-basis-theorem]{weak optimal basis theorem} states that if we have a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\), and we also have \(\overline{x}_{\beta}\geq \vec{0}\)(\(\overline{x}\) is \hyperref[def:feasible-solution]{feasible} for \((\Primal)\)) and \(\overline{c}_{\eta} \geq \vec{0}\)(\(\overline{y}\) is \hyperref[def:feasible-solution]{feasible} for \((\Dual)\)), then \(\overline{x}\) and \(\overline{y}\) are both \hyperref[def:optimal-solution]{optimal}.
 \end{prev}
 
 Now, we have so-called \hyperref[thm:strong-optimal-basis]{strong optimal basis theorem}.
 
 \begin{theorem}[Strong optimal basis theorem]\label{thm:strong-optimal-basis}
-	If \((\mathrm{P})\) has a \hyperref[def:feasible-solution]{feasible solution}, and if \((\mathrm{P})\) is not unbounded, then there exist a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\) such that \(\overline{x}\) and \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}, and
+	If \((\Primal)\) has a \hyperref[def:feasible-solution]{feasible solution}, and if \((\Primal)\) is not unbounded, then there exist a \hyperref[def:basic-partition]{basic partition} \(\beta, \eta\) such that \(\overline{x}\) and \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}, and
 	\[
 		c^{\top} \overline{x} = \overline{y}^{\top} b.
 	\]
 \end{theorem}
 \begin{proof}
-	Since if \((\mathrm{P})\) has a \hyperref[def:feasible-solution]{feasible solution} and is not unbounded, we can just run the \hyperref[algo:simplex-algorithm]{simplex algorithm}, which will terminate with a basis \(\beta\) such that the associated \hyperref[def:basic-solution]{basic solution} \(\overline{x}\) and the associated \hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}.
+	Since if \((\Primal)\) has a \hyperref[def:feasible-solution]{feasible solution} and is not unbounded, we can just run the \hyperref[algo:simplex-algorithm]{simplex algorithm}, which will terminate with a basis \(\beta\) such that the associated \hyperref[def:basic-solution]{basic solution} \(\overline{x}\) and the associated \hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}\) are \hyperref[def:optimal-solution]{optimal}.
 \end{proof}
 
 We see that this leads to another similar result.
 
 \begin{theorem}[Strong duality theorem]\label{thm:strong-duality}
-	If \((\mathrm{P})\) has a \hyperref[def:feasible-solution]{feasible solution} and \((\mathrm{P})\) is not unbounded, then there exist \hyperref[def:optimal-solution]{optimal solutions} \(\hat{x}\) and \(\hat{y}\) with
+	If \((\Primal)\) has a \hyperref[def:feasible-solution]{feasible solution} and \((\Primal)\) is not unbounded, then there exist \hyperref[def:optimal-solution]{optimal solutions} \(\hat{x}\) and \(\hat{y}\) with
 	\[
 		c^{\top} \hat{x} = \hat{y}^{\top} b.
 	\]
@@ -180,7 +180,7 @@ We see that this leads to another similar result.
 	\centering
 	\begin{tabular}{c|c|c|c|c}
 		\toprule
-		\hyperref[algo:simplex-algorithm]{\emph{Simplex Algorithm}}                                                         & \((\mathrm{P}) \backslash (\mathrm{D})\)                                                                                 & \begin{tabular}{@{}c@{}}\hyperref[def:optimal-solution]{optimal}\\\hyperref[def:optimal-solution]{solution}\end{tabular} & infeasible  & unbounded   \\
+		\hyperref[algo:simplex-algorithm]{\emph{Simplex Algorithm}}                                                         & \((\Primal) \backslash (\Dual)\)                                                                                         & \begin{tabular}{@{}c@{}}\hyperref[def:optimal-solution]{optimal}\\\hyperref[def:optimal-solution]{solution}\end{tabular} & infeasible  & unbounded   \\
 		\midrule
 		\(\overline{c}_{\eta}\geq \vec{0}\implies\) Stop                                                                    & \begin{tabular}{@{}c@{}}\hyperref[def:optimal-solution]{optimal}\\\hyperref[def:optimal-solution]{solution}\end{tabular} & \(\surd \)                                                                                                               & \(\times \) & \(\times \) \\
 		\midrule
@@ -189,6 +189,6 @@ We see that this leads to another similar result.
 		\(\overline{A}_{\eta_{j}}\leq \vec{0}\implies\) Stop                                                                & unbounded                                                                                                                & \(\times \)                                                                                                              & \(\surd \)  & \(\times \) \\
 		\bottomrule
 	\end{tabular}
-	\caption{Comparison between \((\mathrm{P})\) and \((\mathrm{D})\)}
+	\caption{Comparison between \((\Primal)\) and \((\Dual)\)}
 	\label{tab:label}
 \end{table}

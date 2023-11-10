@@ -147,7 +147,7 @@ Now, from \autoref{lma:lec14-1}, we see that \(X \succeq 0 \iff X = V V^{\top} \
 		      & X \succeq 0
 	\end{aligned}
 \end{equation}
-where we let \(X_{ij} = \left\langle u_i, u_j \right\rangle \). Since this is a relaxation for \hyperref[prb:max-cut]{max cut}, we know that \(\OPT_{\mathrm{SDP} } \geq \OPT\).
+where we let \(X_{ij} = \left\langle u_i, u_j \right\rangle \). Since this is a relaxation for \hyperref[prb:max-cut]{max cut}, we know that \(\OPT_{\SDP } \geq \OPT\).
 
 Just like how we do LP relaxation, we first solve \autoref{eq:max-cut} to get \(X\), and round the solution back to get \(\pm 1\) values for \(x_i\) to obtain a feasible solution for \hyperref[prb:max-cut]{max cut}. A naive rounding algorithm is the following.
 
@@ -177,21 +177,21 @@ On the other hand, the expected contribution from \((i, j)\) to \autoref{algo:ma
 Now, the only thing we need to do is to find the ratio between \(P_{ij} \) and \(S_{ij} \). And indeed, this ratio is proved by Goemans-Williamson~\cite{goemans1995improved}.
 
 \begin{notation}[c]\label{not:GW}
-	The \emph{Goemans-Williamson constant} \(\alpha _{\mathrm{GW} }\) is defined as
+	The \emph{Goemans-Williamson constant} \(\alpha _{\GW }\) is defined as
 	\[
-		\alpha _{\mathrm{GW} }\coloneqq \frac{2}{\pi }\min _{0 \leq \theta \leq \pi }\frac{\theta }{1 - \cos \theta }.
+		\alpha _{\GW }\coloneqq \frac{2}{\pi }\min _{0 \leq \theta \leq \pi }\frac{\theta }{1 - \cos \theta }.
 	\]
 \end{notation}
 
 \begin{remark}
-	\(\alpha _{\mathrm{GW} }\approx 0.878\dots \). Moreover, we can instead write \(\alpha _\mathrm{GW} \) as
+	\(\alpha _{\GW }\approx 0.878\dots \). Moreover, we can instead write \(\alpha _\GW \) as
 	\[
-		\alpha _{\mathrm{GW} } = \frac{2}{\pi }\min _{-1\leq \alpha \leq 1} \frac{\arccos(a)}{1 - a}.
+		\alpha _{\GW } = \frac{2}{\pi }\min _{-1\leq \alpha \leq 1} \frac{\arccos(a)}{1 - a}.
 	\]
 \end{remark}
 
 \begin{lemma}\label{lma:lec14-2}
-	For all \((i, j)\in \mathcal{E} \), \(P_{ij} \geq \alpha _{\mathrm{GW} } \cdot S_{ij} \).
+	For all \((i, j)\in \mathcal{E} \), \(P_{ij} \geq \alpha _{\GW } \cdot S_{ij} \).
 \end{lemma}
 \begin{proof}
 	This can be seen from the following picture.
@@ -202,18 +202,18 @@ Now, the only thing we need to do is to find the ratio between \(P_{ij} \) and \
 
 	Now, since \(P_{ij} = 2\theta / 2\pi = \theta / \pi\), and recall that \(S_{ij} = (1 - \left\langle u_i, u_j \right\rangle) / 2 \), so the worst configuration producing the smallest ratio between \(P_{ij} \) and \(S_{ij} \) is
 	\[
-		\frac{P_{ij}}{S_{ij} } \geq \min _{a\in [-1, 1]} \frac{\arccos(a) / \pi }{(1-a) / 2} = \alpha _\mathrm{GW},
+		\frac{P_{ij}}{S_{ij} } \geq \min _{a\in [-1, 1]} \frac{\arccos(a) / \pi }{(1-a) / 2} = \alpha _\GW,
 	\]
 	where \(a \coloneqq \left\langle u_i, u_j \right\rangle\). This proves the result.
 \end{proof}
 
 \begin{theorem}[\cite{goemans1995improved}]\label{thm:max-cut}
-	\autoref{algo:max-cut-randomized-rounding} is an \(\alpha _\mathrm{GW}\)-approximation algorithm in expectation.
+	\autoref{algo:max-cut-randomized-rounding} is an \(\alpha _\GW\)-approximation algorithm in expectation.
 \end{theorem}
 \begin{proof}
 	Given \(S\) outputted from \autoref{algo:max-cut-randomized-rounding}, we see that
 	\[
-		\frac{\mathbb{E}_{}\left[\left\vert S \right\vert \right] }{\OPT_{\mathrm{SDP} }} = \frac{\sum_{(i, j)\in \mathcal{E} } P_{ij} }{\sum_{(i, j)\in \mathcal{E} } S_{ij} } \geq \alpha _{\mathrm{GW} }
+		\frac{\mathbb{E}_{}\left[\left\vert S \right\vert \right] }{\OPT_{\SDP }} = \frac{\sum_{(i, j)\in \mathcal{E} } P_{ij} }{\sum_{(i, j)\in \mathcal{E} } S_{ij} } \geq \alpha _{\GW }
 	\]
 	from \autoref{lma:lec14-2}, which proves the result.
 \end{proof}

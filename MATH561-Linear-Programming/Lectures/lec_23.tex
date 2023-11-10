@@ -12,159 +12,159 @@ We first dive into \hyperref[eg:branch-and-bound]{branch and bound algorithm} as
 We now focus on the following integer programming,
 \[
 	\begin{aligned}
-		\max~                            & y^{\top}b(\eqqcolon z)                                              \\
-		                                 & y^{\top}A\leq c^{\top}                                              \\
-		(\mathrm{D}_{\mathcal{I} })\quad & y\in\mathbb{R}^m(y_{i}\in\mathbb{Z} \text{ for } i\in \mathcal{I}),
+		\max~                       & y^{\top}b(\eqqcolon z)                                              \\
+		                            & y^{\top}A\leq c^{\top}                                              \\
+		(\Dual_{\mathcal{I} })\quad & y\in\mathbb{R}^m(y_{i}\in\mathbb{Z} \text{ for } i\in \mathcal{I}),
 	\end{aligned}
 \]
 where \(\mathcal{I} \subseteq \{1, 2, \dots , m\}\). By taking the \hyperref[def:dual]{dual}, we have
 \[
 	\begin{aligned}
-		\min~             & c^{\top}x \\
-		                  & Ax = b    \\
-		(\mathrm{P})\quad & x\geq 0.
+		\min~          & c^{\top}x \\
+		               & Ax = b    \\
+		(\Primal)\quad & x\geq 0.
 	\end{aligned}
 \]
 
 We'll see that the branch and bound algorithm maintains the following:
 \begin{itemize}
-	\item \(\mathcal{L} \): A list \(\mathcal{L} \) of \emph{subproblems} that have the form of \((\mathrm{D}_{\mathcal{I}^\prime})\) where \(\mathcal{I} ^\prime \subset \mathcal{I}\)
-	\item \(\mathrm{LB} \): The current best lower bound on \(z\) such that \(\mathrm{LB}\leq z \).
-	\item \(\overline{y}_{\mathrm{LB}}\): The \(\overline{y}\) corresponds to \(\mathrm{LB}\).
+	\item \(\mathcal{L} \): A list \(\mathcal{L} \) of \emph{subproblems} that have the form of \((\Dual_{\mathcal{I}^\prime})\) where \(\mathcal{I} ^\prime \subset \mathcal{I}\)
+	\item \(\LB \): The current best lower bound on \(z\) such that \(\LB\leq z \).
+	\item \(\overline{y}_{\LB}\): The \(\overline{y}\) corresponds to \(\LB\).
 \end{itemize}
 
 \begin{note}
-	\(\mathrm{LB} \) is the objective value of the best \hyperref[def:feasible-solution]{feasible solution} to the original problem seen so far. And we'll set
+	\(\LB \) is the objective value of the best \hyperref[def:feasible-solution]{feasible solution} to the original problem seen so far. And we'll set
 	\[
-		\mathrm{LB} \coloneqq  -\infty
+		\LB \coloneqq  -\infty
 	\]
 	if there is no known \hyperref[def:feasible-solution]{feasible solution}.
 \end{note}
 \begin{remark}
-	The key property of \(\mathcal{L} \) is that if there is a \hyperref[def:feasible-solution]{feasible solution} to the original problem that is better than \(\mathrm{LB} \), it should be \hyperref[def:feasible-solution]{feasible} for some sub-problems on \(\mathcal{L} \). Initially, we have
+	The key property of \(\mathcal{L} \) is that if there is a \hyperref[def:feasible-solution]{feasible solution} to the original problem that is better than \(\LB \), it should be \hyperref[def:feasible-solution]{feasible} for some sub-problems on \(\mathcal{L} \). Initially, we have
 	\[
-		\mathcal{L} \coloneqq \left\{\mathrm{D} _{\mathcal{I}^\prime }\right\}.
+		\mathcal{L} \coloneqq \left\{\Dual _{\mathcal{I}^\prime }\right\}.
 	\]
 	And we stop if
 	\[
 		\mathcal{L} = \varnothing,
 	\]
-	since this implies \(z = \mathrm{LB} \).
+	since this implies \(z = \LB \).
 \end{remark}
 
-The general procedure is to take some problem \((\widetilde{\mathrm{D}}_{\mathcal{I}^\prime })\) from \(\mathcal{L}\) and remove it, and then solve its continuous relaxation \((\widetilde{\mathrm{D}})\) and proceed. Rigorously, we have the following pseudocode.
+The general procedure is to take some problem \((\widetilde{\Dual}_{\mathcal{I}^\prime })\) from \(\mathcal{L}\) and remove it, and then solve its continuous relaxation \((\widetilde{\Dual})\) and proceed. Rigorously, we have the following pseudocode.
 
 \begin{algorithm}[H]\label{algo:branch-and-bound-algorithm}
 	\DontPrintSemicolon
 	\caption{Branch and Bound Algorithm}
 	\SetKwData{result}{result}
-	\KwData{(Mixed) Integer programming \((\mathrm{D}_{\mathcal{I} } )\) with \emph{feasible} \((\mathrm{P})\)\footnote{This makes sure that the \hyperref[def:feasible-region]{feasible region} of the continuous relaxation \((\widetilde{\mathrm{D}})\) of any \((\widetilde{\mathrm{D}} _{\mathcal{I} ^\prime })\) is a bounded set, so we can guarantee finite termination.}}
-	\KwResult{\hyperref[def:optimal-solution]{optimal solution} \(\overline{y}\) and \hyperref[def:optimal-solution]{optimal} value, or report \((\mathrm{D}_{\mathcal{I} } )\) is infeasible}
+	\KwData{(Mixed) Integer programming \((\Dual_{\mathcal{I} } )\) with \emph{feasible} \((\Primal)\)\footnote{This makes sure that the \hyperref[def:feasible-region]{feasible region} of the continuous relaxation \((\widetilde{\Dual})\) of any \((\widetilde{\Dual} _{\mathcal{I} ^\prime })\) is a bounded set, so we can guarantee finite termination.}}
+	\KwResult{\hyperref[def:optimal-solution]{optimal solution} \(\overline{y}\) and \hyperref[def:optimal-solution]{optimal} value, or report \((\Dual_{\mathcal{I} } )\) is infeasible}
 
 	\SetKwFunction{help}{SolveContRelax}
 
 	\BlankLine
-	\(\mathcal{L} \gets \{\mathrm{D} _{\mathcal{I}^\prime } \colon \mathcal{I}^\prime  \subseteq \mathcal{I}  \}\)\;
-	\(\mathrm{LB} \gets -\infty \)\;
-	\(\overline{y} _{\mathrm{LB}}\gets\) random vector\;
+	\(\mathcal{L} \gets \{\Dual _{\mathcal{I}^\prime } \colon \mathcal{I}^\prime  \subseteq \mathcal{I}  \}\)\;
+	\(\LB \gets -\infty \)\;
+	\(\overline{y} _{\LB}\gets\) random vector\;
 	\;
 	\While{\(\mathcal{L} \neq \varnothing \)}{
-	\(\mathrm{D}_{\mathcal{I}^\prime} \gets \) an element in \(\mathcal{L} \)\Comment*[r]{See \autoref{subsec:node-selection}}
-	\(\mathcal{L} \gets \mathcal{L} \setminus \{\mathrm{D}_{\mathcal{I} ^\prime }\}\)\;
-	\(\result\gets\)\help{\(\mathrm{D} _{\mathcal{I}^\prime }\)}\;\label{algo:branch-and-bound-algorithm:line8}
+	\(\Dual_{\mathcal{I}^\prime} \gets \) an element in \(\mathcal{L} \)\Comment*[r]{See \autoref{subsec:node-selection}}
+	\(\mathcal{L} \gets \mathcal{L} \setminus \{\Dual_{\mathcal{I} ^\prime }\}\)\;
+	\(\result\gets\)\help{\(\Dual _{\mathcal{I}^\prime }\)}\;\label{algo:branch-and-bound-algorithm:line8}
 	\If{\(\result\) is not infeasible}{
 	\(\overline{y} \gets \result\)\Comment*[r]{Retrieve \hyperref[def:basic-solution]{basic} \hyperref[def:optimal-solution]{optimal solution}}
-	\If{\(\overline{y} ^{\top} b > \mathrm{LB}\)}{
-	\uIf(\Comment*[f]{\(\overline{y}\) solves \(\mathrm{D} _\mathcal{I}\)}){\(\overline{y} _{i} ^{\top} \in \mathbb{Z} \) for \(i\in \mathcal{I}\)}{
-		\(\mathrm{LB}\gets \overline{y} ^{\top} b \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal} value}
-		\(\overline{y} _\mathrm{LB} \gets \overline{y} \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal solution}}
-	}\Else(\Comment*[f]{\(\overline{y}\) doesn't solve \(\mathrm{D}_\mathcal{I}\), \(\overline{y} _{i} ^{\top} \notin \mathbb{Z} \) for some \(i\in \mathcal{I}\)}){
+	\If{\(\overline{y} ^{\top} b > \LB\)}{
+	\uIf(\Comment*[f]{\(\overline{y}\) solves \(\Dual _\mathcal{I}\)}){\(\overline{y} _{i} ^{\top} \in \mathbb{Z} \) for \(i\in \mathcal{I}\)}{
+		\(\LB\gets \overline{y} ^{\top} b \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal} value}
+		\(\overline{y} _\LB \gets \overline{y} \)\Comment*[r]{Record \hyperref[def:optimal-solution]{optimal solution}}
+	}\Else(\Comment*[f]{\(\overline{y}\) doesn't solve \(\Dual_\mathcal{I}\), \(\overline{y} _{i} ^{\top} \notin \mathbb{Z} \) for some \(i\in \mathcal{I}\)}){
 	\(i^{\ast} \gets\) an \(i\in \mathcal{I} \) such that \(\overline{y} _{i} \notin \mathbb{Z} \)\label{algo:branch-and-bound-algorithm:line16}\Comment*[r]{See \autoref{subsec:branching-variable-selection}}
-	\(\mathrm{D} ^\text{u}_{\mathcal{I} ^\prime }\gets \mathrm{D}_{\mathcal{I}^\prime } \) with \(y_{i^{\ast} }\geq \left\lceil \overline{y}_{i^{\ast} } \right\rceil\)\Comment*[r]{\hyperref[rmk:up-branch]{Up branch}}
-	\(\mathrm{D}^\text{d}_{\mathcal{I} ^\prime }\gets \mathrm{D}_{\mathcal{I}^\prime } \) with \(y_{i^{\ast} }\leq \left\lfloor \overline{y}_{i^{\ast} } \right\rfloor\)\footnote{To match the form, we use \(-y_{i}\leq -\left\lceil \overline{y}_{i}\right\rceil\).}\Comment*[r]{\hyperref[rmk:down-branch]{Down branch}}
-	\(\mathcal{L} \gets \mathcal{L} \cup \{\mathrm{D}^\text{u}_{\mathcal{I} ^\prime }, \mathrm{D}^\text{d}_{\mathcal{I} ^\prime }\}\)\;
+	\(\Dual ^\text{u}_{\mathcal{I} ^\prime }\gets \Dual_{\mathcal{I}^\prime } \) with \(y_{i^{\ast} }\geq \left\lceil \overline{y}_{i^{\ast} } \right\rceil\)\Comment*[r]{\hyperref[rmk:up-branch]{Up branch}}
+	\(\Dual^\text{d}_{\mathcal{I} ^\prime }\gets \Dual_{\mathcal{I}^\prime } \) with \(y_{i^{\ast} }\leq \left\lfloor \overline{y}_{i^{\ast} } \right\rfloor\)\footnote{To match the form, we use \(-y_{i}\leq -\left\lceil \overline{y}_{i}\right\rceil\).}\Comment*[r]{\hyperref[rmk:down-branch]{Down branch}}
+	\(\mathcal{L} \gets \mathcal{L} \cup \{\Dual^\text{u}_{\mathcal{I} ^\prime }, \Dual^\text{d}_{\mathcal{I} ^\prime }\}\)\;
 	}
 	}
 	}
 	}
 	\;
-	\uIf(){\(\mathrm{LB} = -\infty\) }{
+	\uIf(){\(\LB = -\infty\) }{
 		\Return{infeasible}\;
 	}\Else{
-		\Return{\(\overline{y} _\mathrm{LB} \), \(\mathrm{LB}\)}\;
+		\Return{\(\overline{y} _\LB \), \(\LB\)}\;
 	}
 \end{algorithm}
 
 \begin{remark}[Finite termination]
-	We see that there are only finitely many (though exponential) \(\mathrm{D}_{\mathcal{I} ^\prime}\) can be added into \(\mathcal{L} \), hence \hyperref[algo:branch-and-bound-algorithm]{branch and bound algorithm} is finitely terminating.
+	We see that there are only finitely many (though exponential) \(\Dual_{\mathcal{I} ^\prime}\) can be added into \(\mathcal{L} \), hence \hyperref[algo:branch-and-bound-algorithm]{branch and bound algorithm} is finitely terminating.
 \end{remark}
 
-Because the above algorithm maintains the key invariant for \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, i.e., every \hyperref[def:feasible-solution]{feasible solution} of \((\mathrm{D}_{\mathcal{I} } )\) with greater objective value than \(\mathrm{LB}\) is \hyperref[def:feasible-solution]{feasible} for a problem on the list \(\mathcal{L} \) we have the following result.
+Because the above algorithm maintains the key invariant for \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, i.e., every \hyperref[def:feasible-solution]{feasible solution} of \((\Dual_{\mathcal{I} } )\) with greater objective value than \(\LB\) is \hyperref[def:feasible-solution]{feasible} for a problem on the list \(\mathcal{L} \) we have the following result.
 \begin{theorem}\label{thm:lec23-1}
-	Suppose that \((\mathrm{P})\) is feasible. Then at termination of \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, we have \(\mathrm{LB}=-\infty\) if \((\widetilde{\mathrm{D}} _\mathcal{I})\) is infeasible, or with \(\overline{y} _{\mathrm{LB}}\) being an \hyperref[def:optimal-solution]{optimal solution} of \((\mathrm{D}_{\mathcal{I} } )\).
+	Suppose that \((\Primal)\) is feasible. Then at termination of \hyperref[algo:branch-and-bound-algorithm]{branch and bound}, we have \(\LB=-\infty\) if \((\widetilde{\Dual} _\mathcal{I})\) is infeasible, or with \(\overline{y} _{\LB}\) being an \hyperref[def:optimal-solution]{optimal solution} of \((\Dual_{\mathcal{I} } )\).
 \end{theorem}
 
 \begin{remark}[Detail of the algorithm]
 	We make some remarks on \hyperref[algo:branch-and-bound-algorithm]{branch and bound algorithm}.
 	\begin{itemize}
-		\item When calling \autoref{algo:branch-and-bound-algorithm:line8}, we first obtain the continuous relaxation \((\widetilde{\mathrm{D}})\) of \((\mathrm{D}_{\mathcal{I} ^\prime })\) and its \hyperref[def:primal]{primal} \((\widetilde{\mathrm{P}} )\) as follows.
+		\item When calling \autoref{algo:branch-and-bound-algorithm:line8}, we first obtain the continuous relaxation \((\widetilde{\Dual})\) of \((\Dual_{\mathcal{I} ^\prime })\) and its \hyperref[def:primal]{primal} \((\widetilde{\Primal} )\) as follows.
 		      \[
 			      \begin{alignedat}{5}
-				      \max ~&y^{\top}b\qquad\qquad	&&\min~		&&c^{\top}x\\
-				      &y^{\top}A\leq c^{\top} 		&&			&&Ax = b\\
-				      (\widetilde{\mathrm{D}})\quad	& 				&&(\widetilde{\mathrm{P}})\quad	&&x\geq  0
+				      \max ~                   & y^{\top}b\qquad\qquad  &  & \min~                      &  & c^{\top}x \\
+				                               & y^{\top}A\leq c^{\top} &  &                            &  & Ax = b    \\
+				      (\widetilde{\Dual})\quad &                        &  & (\widetilde{\Primal})\quad &  & x\geq  0
 			      \end{alignedat}.
 		      \]
-		      Then what we're really doing is solving \((\widetilde{\mathrm{P}})\) instead of \((\widetilde{\mathrm{D}} )\) by \hyperref[algo:simplex-algorithm]{simplex algorithm} and get an \hyperref[def:optimal-solution]{optimal} basis \(\beta\), and this give us an \hyperref[def:optimal-solution]{optimal} \hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}^{\top}\coloneqq c^{\top}_{\beta}A^{-1} _{\beta}\).
-		\item When calling \autoref{algo:branch-and-bound-algorithm:line16}, after choosing \(i^{\ast} \), adding a constraint to \((\mathrm{D}_{\mathcal{I} ^\prime })\) effectively adds a variable to the corresponding continuous relaxation \((\widetilde{\mathrm{D}})\), hence adds a variable to the \hyperref[def:standard-form]{standard form} problem \((\widetilde{\mathrm{P}} )\). So, a \hyperref[def:basis]{basis} for \((\widetilde{\mathrm{P}})\) remains \hyperref[def:feasible-solution]{feasible} after we introduce such a variable.
+		      Then what we're really doing is solving \((\widetilde{\Primal})\) instead of \((\widetilde{\Dual} )\) by \hyperref[algo:simplex-algorithm]{simplex algorithm} and get an \hyperref[def:optimal-solution]{optimal} basis \(\beta\), and this give us an \hyperref[def:optimal-solution]{optimal} \hyperref[def:dual-basic-solution]{dual solution} \(\overline{y}^{\top}\coloneqq c^{\top}_{\beta}A^{-1} _{\beta}\).
+		\item When calling \autoref{algo:branch-and-bound-algorithm:line16}, after choosing \(i^{\ast} \), adding a constraint to \((\Dual_{\mathcal{I} ^\prime })\) effectively adds a variable to the corresponding continuous relaxation \((\widetilde{\Dual})\), hence adds a variable to the \hyperref[def:standard-form]{standard form} problem \((\widetilde{\Primal} )\). So, a \hyperref[def:basis]{basis} for \((\widetilde{\Primal})\) remains \hyperref[def:feasible-solution]{feasible} after we introduce such a variable.
 		      \begin{itemize}
-			      \item\label{rmk:down-branch} Down branch: The constraint \(y_{i^{\ast}} \leq \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor\) dualize to a new variable \(x_{\text{down}}\) in \((\widetilde{\mathrm{P}})\), which has a new column \(A_{\text{down}}\coloneqq e_{i^{\ast}}\) and a cost coefficient \(c_{\text{down}}\coloneqq \left\lfloor \overline{y} _{i^{\ast}}\right\rfloor \).
-			      \[
-				      \begin{alignedat}{5}
-					      \max ~	&y^{\top}b\qquad\qquad				&&\min~	&&c^{\top}x+\left\lfloor \overline{y}_{i^{\ast}} \right\rfloor x_{\text{down}}\\
-					      &y^{\top}A\leq c^{\top} 				&&		&&Ax + e_{i^{\ast}}x_{\text{down}} = b\\
-					      (\widetilde{\mathrm{D}})\quad& y_{i^{\ast}}\leq \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor	&&(\widetilde{\mathrm{P}})\quad&&x\geq 0, x_{\text{down}}\geq 0.
-				      \end{alignedat}
-			      \]
-			      The \hyperref[def:reduced-cost]{reduced cost} of \(x_{\text{down}}\) is
-			      \[
-				      \overline{c}_{\text{down}}=c_{\text{down}}-\overline{y}^{\top}A_{\text{down}} = \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor - \overline{y}^{\top}e_{i^{\ast}} = \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor - \overline{y}_{i^{\ast}} < 0
-			      \]
-			      since \(\overline{y} _{i^{\ast} }\) is not an integer. Hence, \(x_{\text{down}}\) is eligible to enter the \hyperref[def:basis]{basis}.
-			      \item\label{rmk:up-branch} Up branch: Similarly, we have a new variable \(x_{\text{up}}\) in \((\widetilde{\mathrm{P}})\) for the new constraint \(y_{i^{\ast}} \geq \left\lceil \overline{y} _{i^{\ast}} \right\rceil \).
-			      \[
-				      \begin{alignedat}{5}
-					      \max ~	&y^{\top}b\qquad\qquad				&&\min~	&& c^{\top}x - \left\lceil \overline{y}_{i^{\ast}} \right\rceil x_{\text{up}}\\
-					      &y^{\top}A\leq c^{\top} 				&&		&&Ax - e_{i^{\ast}} x_{\text{up}}= b                                      \\
-					      (\widetilde{\mathrm{D}})\quad& y_{i^{\ast}} \geq \left\lceil \overline{y} _{i^{\ast}} \right\rceil	&&(\widetilde{\mathrm{P}})\quad&&x\geq 0, x_{\text{up}}\geq 0.
-				      \end{alignedat}
-			      \]
+			      \item\label{rmk:down-branch} Down branch: The constraint \(y_{i^{\ast}} \leq \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor\) dualize to a new variable \(x_{\text{down}}\) in \((\widetilde{\Primal})\), which has a new column \(A_{\text{down}}\coloneqq e_{i^{\ast}}\) and a cost coefficient \(c_{\text{down}}\coloneqq \left\lfloor \overline{y} _{i^{\ast}}\right\rfloor \).
+			            \[
+				            \begin{alignedat}{5}
+					            \max ~                   & y^{\top}b\qquad\qquad                                               &  & \min~                      &  & c^{\top}x+\left\lfloor \overline{y}_{i^{\ast}} \right\rfloor x_{\text{down}} \\
+					                                     & y^{\top}A\leq c^{\top}                                              &  &                            &  & Ax + e_{i^{\ast}}x_{\text{down}} = b                                         \\
+					            (\widetilde{\Dual})\quad & y_{i^{\ast}}\leq \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor &  & (\widetilde{\Primal})\quad &  & x\geq 0, x_{\text{down}}\geq 0.
+				            \end{alignedat}
+			            \]
+			            The \hyperref[def:reduced-cost]{reduced cost} of \(x_{\text{down}}\) is
+			            \[
+				            \overline{c}_{\text{down}}=c_{\text{down}}-\overline{y}^{\top}A_{\text{down}} = \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor - \overline{y}^{\top}e_{i^{\ast}} = \left\lfloor \overline{y}_{i^{\ast}} \right\rfloor - \overline{y}_{i^{\ast}} < 0
+			            \]
+			            since \(\overline{y} _{i^{\ast} }\) is not an integer. Hence, \(x_{\text{down}}\) is eligible to enter the \hyperref[def:basis]{basis}.
+			      \item\label{rmk:up-branch} Up branch: Similarly, we have a new variable \(x_{\text{up}}\) in \((\widetilde{\Primal})\) for the new constraint \(y_{i^{\ast}} \geq \left\lceil \overline{y} _{i^{\ast}} \right\rceil \).
+			            \[
+				            \begin{alignedat}{5}
+					            \max ~                   & y^{\top}b\qquad\qquad                                               &  & \min~                      &  & c^{\top}x - \left\lceil \overline{y}_{i^{\ast}} \right\rceil x_{\text{up}} \\
+					                                     & y^{\top}A\leq c^{\top}                                              &  &                            &  & Ax - e_{i^{\ast}} x_{\text{up}}= b                                         \\
+					            (\widetilde{\Dual})\quad & y_{i^{\ast}} \geq \left\lceil \overline{y} _{i^{\ast}} \right\rceil &  & (\widetilde{\Primal})\quad &  & x\geq 0, x_{\text{up}}\geq 0.
+				            \end{alignedat}
+			            \]
 
-			      The \hyperref[def:reduced-cost]{reduced cost} of \(x_{\text{up}}\) is
-			      \[
-				      -\left\lceil \overline{y}_{i^{\ast}} \right\rceil - \overline{y}^{\top}(-e_{i^{\ast}}) = \overline{y}_{i^{\ast}} - \left\lceil \overline{y}_{i^{\ast}} \right\rceil < 0,
-			      \]
-			      since \(\overline{y} _{i^{\ast} }\) is not an integer. Hence, \(x_{\text{up}}\) is eligible to enter the \hyperref[def:basis]{basis}.
+			            The \hyperref[def:reduced-cost]{reduced cost} of \(x_{\text{up}}\) is
+			            \[
+				            -\left\lceil \overline{y}_{i^{\ast}} \right\rceil - \overline{y}^{\top}(-e_{i^{\ast}}) = \overline{y}_{i^{\ast}} - \left\lceil \overline{y}_{i^{\ast}} \right\rceil < 0,
+			            \]
+			            since \(\overline{y} _{i^{\ast} }\) is not an integer. Hence, \(x_{\text{up}}\) is eligible to enter the \hyperref[def:basis]{basis}.
 		      \end{itemize}
 	\end{itemize}
 \end{remark}
 
-\begin{remark}[Partially solving \(\widetilde{\mathrm{P}}\)]
-	In practice, when solving \((\widetilde{\mathrm{P}})\) (induced from any \((\mathrm{D}_{\mathcal{I} ^\prime})\)) via \hyperref[algo:simplex-algorithm]{simplex algorithm}, we are generating a sequence of \emph{decreasing objective values} of \((\widetilde{\mathrm{P}})\), each one of which is an upper-bound on the \hyperref[def:optimal-solution]{optimal} value of its parent, and it's also a \emph{potential new \(\mathrm{LB}\)}. We see that when the \hyperref[def:optimal-solution]{optimal} value of \((\widetilde{\mathrm{P}})\) \(\leq \mathrm{LB}\), we terminate immediately since solving this \((\widetilde{\mathrm{P}})\) will not improve \(\mathrm{LB}\).
+\begin{remark}[Partially solving \(\widetilde{\Primal}\)]
+	In practice, when solving \((\widetilde{\Primal})\) (induced from any \((\Dual_{\mathcal{I} ^\prime})\)) via \hyperref[algo:simplex-algorithm]{simplex algorithm}, we are generating a sequence of \emph{decreasing objective values} of \((\widetilde{\Primal})\), each one of which is an upper-bound on the \hyperref[def:optimal-solution]{optimal} value of its parent, and it's also a \emph{potential new \(\LB\)}. We see that when the \hyperref[def:optimal-solution]{optimal} value of \((\widetilde{\Primal})\) \(\leq \LB\), we terminate immediately since solving this \((\widetilde{\Primal})\) will not improve \(\LB\).
 \end{remark}
 
 \subsection{Global Upper Bound}
 Since in practice, there are many errors in the data, so we may just want to solve it approximately, which means we only want to get a global upper bound. Conceptually,
 \[
-	\mathrm{UB} \coloneqq \max\left\{\mathrm{LB}, \max\left\{\text{\(\mathrm{LP}\) relaxation values for all problems on \(\mathcal{L}\) }\right\}\right\}
+	\UB \coloneqq \max\left\{\LB, \max\left\{\text{\(\mathrm{LP}\) relaxation values for all problems on \(\mathcal{L}\) }\right\}\right\}
 \]
 To calculate the set in the \(\max\), whenever children are created, solve their LP relaxation upon insertion into list. And we stop if
 \[
-	\mathrm{UB} - \mathrm{LB} < \text{absolute tolerance}.
+	\UB - \LB < \text{absolute tolerance}.
 \]
 
 \begin{remark}
-	Apparently, we see that we can do this by reordering the algorithm. But for the \hyperref[algo:branch-and-bound-algorithm]{original algorithm}, we don't care about \(\mathrm{UB}\).
+	Apparently, we see that we can do this by reordering the algorithm. But for the \hyperref[algo:branch-and-bound-algorithm]{original algorithm}, we don't care about \(\UB\).
 \end{remark}
 
 \subsection{Node Selection}\label{subsec:node-selection}
@@ -172,8 +172,8 @@ Node Selection means which problem to select from \(\mathcal{L} \) to process. T
 
 \begin{enumerate}
 	\item FIFO (First In First Out) \(\cong\) \href{https://en.wikipedia.org/wiki/Breadth-first_search}{Breadth First Search} (BFS). New problems go at the end of the list, select from the front. We see that this strategy will \textbf{maximize memory usage}.
-	\item LIFO (Last In First Out) \(\cong\) \href{https://en.wikipedia.org/wiki/Depth-first_search}{Depth First Search} (DFS). New problems go to the first of the list, select from the front. We see that this strategy will \textbf{increase \(\mathrm{LB}\) quickly}.
-	\item Best Bound. Need the LP upper bound for all problems on the list. We see that this strategy will \textbf{decrease \(\mathrm{UB}\) quickly}.
+	\item LIFO (Last In First Out) \(\cong\) \href{https://en.wikipedia.org/wiki/Depth-first_search}{Depth First Search} (DFS). New problems go to the first of the list, select from the front. We see that this strategy will \textbf{increase \(\LB\) quickly}.
+	\item Best Bound. Need the LP upper bound for all problems on the list. We see that this strategy will \textbf{decrease \(\UB\) quickly}.
 \end{enumerate}
 
 \begin{remark}

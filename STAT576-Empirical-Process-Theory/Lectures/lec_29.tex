@@ -1,4 +1,4 @@
-\lecture{29}{10 Nov.\ 9:00}{Penalized Estimators}
+\lecture{29}{10 Nov.\ 9:00}{Convex Penalized Estimators}
 \section{Penalized Least Square}
 Now, instead of constraining \(\mathscr{F} \) in the \hyperref[prb:constrained-LS]{constrained least square}, we may start by considering \(\mathscr{F} = \mathbb{R} ^n\) (i.e., no constraint) but use a different objective to ``penalize'' some estimators, or equivalently, to favor a particular class of estimators. Specifically, consider the following problem.
 
@@ -216,7 +216,24 @@ for \(Z \sim \mathcal{N} (0, 1)\).
 	\]
 \end{claim}
 \begin{explanation}
-
+	By a direct calculation, we have
+	\[
+		\begin{split}
+			\mathbb{E}_{}\left[ (\operatorname{Soft}_\lambda (Z) ) ^2 \right]
+			 & = \int_{-\infty}^{\infty} ( \operatorname{Soft}_\lambda (z) ) ^2 \phi (z) \,\mathrm{d}z                                                                                                          \\
+			 & = 2 \int_{0}^{\infty} ( \operatorname{Soft}_\lambda (z) ) ^2 \phi (z) \,\mathrm{d}z                                                                                                              \\
+			 & = 2 \int_{\lambda}^{\infty} (z - \lambda )^2 \phi (z) \,\mathrm{d}z                                                                                                                              \\
+			 & = 2 \left[ \int_{\lambda }^{\infty} z^2 \phi (z) \,\mathrm{d}z - 2\lambda \int_{\lambda }^{\infty} z \phi (z) \,\mathrm{d}z + \lambda ^2 \int_{\lambda }^{\infty} \phi (z) \,\mathrm{d}z \right] \\
+			 & = 2 (1 + \lambda ^2) (1 - \Phi (\lambda )) - 2 \lambda \phi (\lambda ).
+		\end{split}
+	\]
+	From the \hyperref[lma:Gaussian-tail-bound]{Gaussian tail bound}, \(1 - \Phi (\lambda ) \leq \phi (\lambda ) / \lambda \) for any \(\lambda > 0\), hence
+	\[
+		\mathbb{E}_{}\left[(\operatorname{Soft}_\lambda (Z) ) ^2 \right]
+		\leq 2 (1 + \lambda ^2) \frac{\phi (\lambda )}{\lambda } - 2 \lambda \phi (\lambda )
+		= 2 \frac{\phi (\lambda )}{\lambda }
+		= \frac{2 \exp (-\lambda ^2 / 2)}{\lambda \sqrt{2\pi } }.
+	\]
 \end{explanation}
 
 Hence, our final bound becomes

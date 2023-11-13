@@ -1,0 +1,192 @@
+\lecture{30}{13 Nov.\ 9:00}{Union of Subspaces}
+\subsection{Union of Subspaces}
+As our last section about fixed design non-parametric regression, we're going to look at one more example of \hyperref[prb:penalized-LS]{penalized least square}. Specifically, we consider the setup where \(\theta \) comes from a union of subspaces of \(\mathbb{R} ^n\), and penalize the solution \(\theta \) by the dimension of the subspace it lies in.
+
+\begin{intuition}
+	In fact, it's like a combination of \hyperref[prb:constrained-LS]{constrained least square} and \hyperref[prb:penalized-LS]{penalized least square}.
+\end{intuition}
+
+We first need a lemma before stating the general result in this section.
+
+\begin{lemma}\label{lma:union-of-subspace}
+	For any subspace \(S \subseteq \mathbb{R} ^n\) with \(Z \sim \mathcal{N} (0, \sigma ^2 I_n)\), with probability \(\geq 1 - e^{-t / 2}\),
+	\[
+		\sup _{\theta \in S} \left\langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast} \rVert } \right\rangle ^2 \leq 2 \dim (S) + 4(1+t).
+	\]
+\end{lemma}
+\begin{proof}
+	Consider two cases.
+	\begin{itemize}
+		\item \(\theta ^{\ast} \in S\): The supremum becomes \(\sup _{\theta \in S} \langle Z, \frac{\theta }{\lVert \theta  \rVert } \rangle ^2
+		      = \sup _{\theta \in S} \vert \Proj_S Z \vert ^2\), where \(\vert \Proj_S Z \vert ^2 \sim \chi ^2_{\dim (S)}\), which follows a \(\SubExp\)-tail. By the standard concentration result, we're done.
+		\item \(\theta ^{\ast} \notin S\): Denote \(\Proj_S(\theta ) \eqqcolon P_S(\theta )\), then
+		      \[
+			      \begin{split}
+				      \left\langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast} \rVert } \right\rangle
+				       & = \left\langle Z, \frac{\theta - P_S \theta ^{\ast} - (I - P_S) \theta ^{\ast} }{\lVert \theta - P_S \theta ^{\ast} - (I - P_S) \theta ^{\ast}  \rVert } \right\rangle                                                                                                                                                        \\
+				       & = \underbrace{\left\langle Z, \frac{\theta - P_S \theta ^{\ast} }{\lVert \theta - P_S \theta ^{\ast} - (I - P_S) \theta ^{\ast} \rVert } \right\rangle }_{T_1} + \underbrace{\left\langle Z, \frac{(I - P_S ) \theta ^{\ast} }{\lVert \theta - P_S \theta ^{\ast} - (I - P_S) \theta ^{\ast}  \rVert } \right\rangle }_{T_2},
+			      \end{split}
+		      \]
+		      which implies \(\langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast} \rVert } \rangle ^2 = T_2^2 + T_2^2\).\footnote{Since if \(a\in S\), \(b\in S^{\perp} \), we have \(\lVert a + b \rVert ^2 = \lVert a \rVert ^2 + \lVert b \rVert ^2\) and \(\lVert a + b \rVert \geq \lVert a \rVert \).} Hence, it suffices to bound \(\sup _{\theta \in S} T_1\) and \(\sup _{\theta \in S} T_2\), respectively. For \(T_1\), we have
+		      \[
+			      \sup _{\theta \in S} T_1
+			      = \sup _{\theta \in S} \left\langle Z, \frac{\theta - P_S \theta ^{\ast} }{\lVert \theta - P_S \theta ^{\ast} - (I - P_S) \theta ^{\ast} \rVert } \right\rangle
+			      \leq \sup _{\theta \in S \colon \lVert \theta \rVert \leq 1} \langle Z, \theta  \rangle
+			      = \lVert P_S Z \rVert
+			      \geq \sqrt{\dim (S)} + t
+		      \]
+		      with probability \(\leq C e^{-Ct}\). For \(T_2\), let \(S^{\prime} \) denote the \(1\)-dimensional subspace spanned by \((I - P_S)\theta ^{\ast} \), then
+		      \[
+			      \sup _{\theta \in S} T_2
+			      = \sup _{\theta \in S^{\prime} \colon \lVert \theta \rVert \leq 1} \langle Z, \theta  \rangle
+			      = \lVert P_{S^{\prime} } Z \rVert
+			      > 1 + t
+		      \]
+		      with probability \(\leq C e^{-Ct}\). Combining these two upper-bounds, we're done.
+	\end{itemize}
+\end{proof}
+
+Now, let \(y = \theta ^{\ast} + \epsilon \) where \(\epsilon _i \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, \sigma ^2)\), i.e., the \hyperref[not:sequence-model]{sequence model}. Then we have the following.
+
+\begin{theorem}\label{thm:union-of-subspace}
+	Let \(\mathcal{S} \) be a finite collection of subspaces of \(\mathbb{R} ^n\) and \(\theta ^{\ast} \in \bigcup_{S \in \mathcal{S} } S \). Define
+	\[
+		\hat{\theta} = \argmin_{\theta \in \bigcup_{S \in \mathcal{S} } S } \lVert y - \theta  \rVert  ^2 + \lambda k(\theta )
+	\]
+	where \(k(\theta ) = \min \{ \dim (S) \colon \theta \in S, S\in \mathcal{S}  \} \). If \(\vert \{ S \in \mathcal{S} \colon \dim (S) = k \} \vert \leq n^{ck}\) for all \(k = 0, , \dots , n\) and \(\lambda > c \sigma ^2 \log n\) for some constant \(c\), then with high probability,
+	\[
+		\frac{1}{n} \lVert \hat{\theta} - \theta ^{\ast}  \rVert ^2 \leq \frac{c \lambda k(\theta ^{\ast} )}{n}.
+	\]
+\end{theorem}
+\begin{proof}
+	Since \(\lVert y - \hat{\theta} \rVert ^2 + \lambda k(\hat{\theta} ) \leq \lVert y - \theta ^{\ast} \rVert ^2 + \lambda k(\theta ^{\ast} )\), we have
+	\begin{align*}
+		\lVert \hat{\theta} - \theta ^{\ast}  \rVert ^2
+		 & \leq 2 \langle \sigma Z, \hat{\theta} - \theta ^{\ast}  \rangle - \lambda k(\hat{\theta} ) + \lambda k(\theta ^{\ast} )                                                                                                                           \\
+		\shortintertext{assume \(\sigma ^2 = 1\) for simplicity,}
+		 & \leq 2 \left\langle Z, \frac{\hat{\theta} - \theta ^{\ast} }{\lVert \hat{\theta} - \theta ^{\ast}  \rVert } \right\rangle \cdot \lVert \hat{\theta} - \theta ^{\ast}  \rVert - \lambda k(\hat{\theta} ) + \lambda k(\theta ^{\ast} )              \\
+		 & \leq 2 \left\langle Z, \frac{\hat{\theta} - \theta ^{\ast} }{\lVert \hat{\theta} - \theta ^{\ast} \rVert } \right\rangle ^2 + \frac{1}{2} \lVert \hat{\theta} - \theta ^{\ast}  \rVert ^2 - \lambda k(\hat{\theta} ) + \lambda k(\theta ^{\ast} )
+	\end{align*}
+	since \(2ab \leq 2 a^2 + b^2 / 2\) where \(a = \langle Z, \frac{\hat{\theta} - \theta ^{\ast}}{\lVert \hat{\theta} - \theta ^{\ast} \rVert } \rangle \) and \(b = \lVert \hat{\theta} - \theta ^{\ast} \rVert \).\footnote{Here, we do not use \(2ab \leq a^2 + b^2\) since we really want \(c \lVert \hat{\theta} - \theta ^{\ast} \rVert ^2\) for some \(c < 1\), so we can proceed.} Hence,
+	\[
+		\frac{1}{2} \lVert \hat{\theta} - \theta ^{\ast}  \rVert ^2
+		\leq \underbrace{2 \left\langle Z, \frac{\hat{\theta} - \theta ^{\ast}}{\lVert \hat{\theta} - \theta ^{\ast} \rVert } \right\rangle ^2 - \lambda k(\hat{\theta} )}_{R} + \lambda k(\theta ^{\ast} ).
+	\]
+	We note that \(\lambda k(\theta ^{\ast} )\) is a good term, so our goal is to bound \(R\) now. Specifically,
+	\[
+		\begin{split}
+			R
+			 & \leq \max _{1 \leq k \leq n} \left\{ \max _{S \in \mathcal{S} \colon \dim (S) = k} \left\{ \sup _{\theta \in S} \left( 2 \left\langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast} \rVert } \right\rangle ^2 - \lambda k(\theta ) \right) \right\} \right\}         \\
+			 & = \max _{1 \leq k \leq n} \underbrace{\left\{ \max _{S \in \mathcal{S} \colon \dim (S) = k} \left\{ \sup _{\theta \in S} \left( 2 \left\langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast} \rVert } \right\rangle ^2 - \lambda k \right)  \right\} \right\}}_{E_k}
+		\end{split}
+	\]
+	since in the supremum, \(\theta \in S\) with \(\dim (S) = k\), \(k(\theta ) = k\). From \autoref{lma:union-of-subspace},\footnote{Note that \( 2 \langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast}  \rVert } \rangle ^2 - \lambda k > t \iff 2 \langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast}  \rVert } \rangle ^2  > t + \lambda k \iff 2 \langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast}  \rVert } \rangle ^2 - 2k > t + (\lambda - 2) k\).}
+	\[
+		\mathbb{P} \left(  \sup _{\theta \in S} \left( \left\langle Z, \frac{\theta - \theta ^{\ast} }{\lVert \theta - \theta ^{\ast} \rVert } \right\rangle ^2 - \lambda k \right) > t \right)
+		\lesssim e^{-(\lambda - 2)k} e^{-t},
+	\]
+	with union bounds over \(\{ S\in \mathcal{S} \colon \dim (S) = k \} \) (with size \(\leq n^{ck}\)) gives
+	\[
+		\mathbb{P} (E_k > t)
+		\lesssim n^{ck} e^{- \lambda k} e^{-t}
+		= e^{ck \log n - \lambda k - t}
+		\leq e^{-ck\log n - t}.
+	\]
+	By choosing \(\lambda > 2c \log n\), we further have
+	\[
+		\mathbb{P} (R > t)
+		= \mathbb{P} \left( \max _{1 \leq k \leq n} E_k > t \right)
+		\leq \sum_{k=1}^{n} e^{-ck \log n} e^{-t}
+		\leq c e^{-t}.
+	\]
+	In fact, the inequality holds as long as \(\lambda > c \log n\). Consequently,
+	\[
+		\mathbb{P} \left( \frac{1}{2} \lVert \hat{\theta} - \theta ^{\ast} \rVert ^2 > \lambda k(\theta ^{\ast} ) + t \right) \leq c e^{-t}.
+	\]
+	Finally, by treating \(c\) as a universal constant that may vary yields the result.
+\end{proof}
+
+\begin{notation}[Oracle rate]\label{not:oracle-rate}
+	The \(c \lambda k(\theta ^{\ast} ) / n\) in the result of \autoref{thm:union-of-subspace} is called the \emph{oracle rate}.
+\end{notation}
+
+\begin{remark}
+	If \(S \ni \theta ^{\ast} \) is known, then we just do a projection on the subspace \(S\), which gives a bound on the mean square error as \(\leq k(\theta ^{\ast} ) / n\).
+\end{remark}
+
+\begin{intuition}
+	Hence, \(\lambda \approx \log n\) is like a ``search cost'' we need to pay.
+\end{intuition}
+
+\begin{eg}[High dimensional linear regression]
+	Let \(X \in \mathbb{R} ^{n \times p}\) to be the design matrix with \(p > n\), and the subspaces are indexed by \(S \subseteq [p]\). For each \(S\), the corresponding subspace is
+	\[
+		\mathcal{C} (X_S) = \{ X_S \beta \colon \beta \in \mathbb{R} ^{\vert S \vert } \},
+	\]
+	i.e., the column space. Assume that \(\bigcup_{S \subseteq [p]} \mathcal{C} (X_S) = \mathcal{C} (X) = \mathbb{R} ^n\), then \(k(\theta ) = \min \{ \lVert \beta \rVert _0 \colon X \beta = \theta \} \). Denote \(\theta ^{\ast} = X \beta ^{\ast} \), the corresponding estimator is \(\hat{\theta} = X \hat{\beta} \), where
+	\[
+		\hat{\beta} = \argmin_{\beta \in \mathbb{R} ^p} \lVert y - X \beta \rVert ^2 + \lambda \lVert \beta \rVert _0,
+	\]
+	i.e., the \emph{BIC estimator}. In this case, without any assumptions on \(X\), the \hyperref[not:oracle-rate]{oracle rate} is
+	\[
+		\frac{1}{n} \lVert X \hat{\beta} - X \beta ^{\ast} \rVert ^2 \leq c \sigma ^2 \lVert \beta ^{\ast} \rVert _0 \frac{\log n \log p}{n}.
+	\]
+\end{eg}
+\begin{explanation}
+	To use \autoref{thm:union-of-subspace}, we first bound \(\vert \{ S \in \mathcal{S} \colon \dim (S) = k \}  \vert \). We have
+	\[
+		\#\text{subspaces with dimension \(k\)}
+		\leq \binom{p}{k}
+		= n^{\log \binom{p}{k}}
+		\leq n^{c k \log p}.
+	\]
+	Hence, by choosing \(\lambda > c \sigma ^2 \log n\), with \(\dim (\beta ^{\ast} ) \leq \lVert \beta ^{\ast} \rVert _0\), we have the result.
+\end{explanation}
+
+\begin{eg}[Piecewise costant 1D signal]
+	Let \(\pi \) be an interval partition of \([n]\), and let
+	\[
+		S_\pi = \{ \theta \in \mathbb{R} ^n \colon \theta \text{ piecewise constant on } \pi \},
+	\]
+	then \(\dim (S_\pi ) = \# \text{blocks of \(\pi \)} \eqqcolon \vert \pi \vert \). Hence, \(k(\theta ) = \min \{ \vert \pi \vert \colon \theta \in S_\pi \} = \#\text{pieces of \(\theta \)}\). Then
+	\[
+		\hat{\theta}
+		= \argmin_{\theta \in \mathbb{R} ^n} \lVert y - \theta  \rVert ^2 + \lambda k(\theta )
+		= \argmin_{\pi \in \mathcal{P} } \lVert y - \Proj_\pi y \rVert ^2 + \lambda \vert \pi \vert,
+	\]
+	where \(\mathcal{P} \) is the set of all interval partitions of \([n]\). This is a discrete optimization problem and can be computed by dynamic programming in \(O(n^3)\) time. In particular, the \hyperref[not:oracle-rate]{oracle rate} is
+	\[
+		\frac{1}{n} \lVert \hat{\theta} - \theta ^{\ast}  \rVert ^2
+		\leq \frac{c k(\theta ^{\ast} )}{n} \sigma ^2 \log n.
+	\]
+\end{eg}
+\begin{explanation}
+	By choosing \(\lambda > c \sigma ^2 \log n\), \(\hat{\theta} \), from \autoref{thm:union-of-subspace} with
+	\[
+		\vert \{ S \colon \dim (S) = k \} \vert
+		= \vert \{\pi \in \mathcal{P} \colon \vert \pi \vert = k \} \vert
+		\leq \vert \{\pi \in \mathcal{P} \colon \vert \pi \vert \leq k \} \vert
+		= \binom{n+k-1}{k-1}
+		\leq n^{ck}
+	\]
+	for some constant \(c\),\footnote{It's just the number of ways of putting \(k-1\) bars between \(n\) balls.} we're done.
+\end{explanation}
+
+\begin{eg}[Piecewise constant 2D signal on rectangle; decision tree]
+	Consider decision trees, which can be viewed as a rectangle partition of \([n] \times [n]\), partitioned hierarchically. Then, consider the set of all decision trees \(\mathcal{D} \), and for each rectangle partition \(\pi \in \mathcal{D} \), let
+	\[
+		S_\pi = \{ \theta \in \mathbb{R} ^{n \times n} \colon \theta \text{ is constant on every rectangle in } \pi \},
+	\]
+	hence \(k(\theta )= \min \{ \vert \pi \vert \colon \pi \in \mathcal{D} , \theta \text{ is constant on every rectangle of } \pi \} \). Correspondingly, let
+	\[
+		\hat{\theta} = \argmin_{\pi \in \mathcal{D} } \lVert y - \Proj_\pi y \rVert ^2 + \lambda \vert \pi \vert
+	\]
+	where \(\vert \pi  \vert \) is the number of cells of the corresponding decision tree. Surprisingly, \(\hat{\theta} \) can be computed in \(O(n^5)\) time using dynamic programming. In particular, the \hyperref[not:oracle-rate]{oracle rate} is again
+	\[
+		\frac{1}{n} \lVert \hat{\theta} - \theta ^{\ast}  \rVert ^2
+		\leq \frac{c k(\theta ^{\ast} )}{n} \sigma ^2 \log n.
+	\]
+\end{eg}
+\begin{explanation}
+	The number of subspaces with dimension \(k\) is upper-bounded by \(\binom{n}{k} \leq n^{4k}\), hence \autoref{thm:union-of-subspace} gives the desired result.
+\end{explanation}

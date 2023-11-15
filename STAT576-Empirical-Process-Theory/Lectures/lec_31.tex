@@ -1,12 +1,12 @@
 \chapter{Epilogue}
 \lecture{31}{14 Nov.\ 9:00}{Rademacher Complexity for Neural Networks}
-In the end of the course, we're going to discuss some caveats of our theory we have developed, and conclude with some modern application to neural networks.
+At the end of the course, we're going to discuss some caveats of the theory we have developed and conclude with some modern applications to neural networks.
 
 \section{Large Margin Theory for Classification}
 \subsection{Classification in Practice}
 Throughout the course, when talking about bounding the \hyperref[def:excess-risk]{excess risk} for \hyperref[prb:ERM]{empirical risk minimization} for classification,\footnote{Recall the \hyperref[eg:1D-classification-thresholds]{1D classification example}.} we consider the expected supremum of \hyperref[def:EP]{empirical process}, which in turns depends on either \(\VC(\mathscr{F} )\) or the \hyperref[def:Rademacher-complexity]{Rademacher complexity} \(R(\mathscr{F} )\) for some boolean function classes \(\mathscr{F} \).
 
-However, in practice, we actually consider real-valued function class \(\mathscr{F} \), and consider either the \hyperref[def:VC-dimension]{VC dimension} or the \hyperref[def:Rademacher-complexity]{Rademacher complexity} of \(\sgn (\mathscr{F} )\), making which boolean. The tricky part here is that it's very likely to have
+However, in practice, we consider real-valued function class \(\mathscr{F} \), and consider either the \hyperref[def:VC-dimension]{VC dimension} or the \hyperref[def:Rademacher-complexity]{Rademacher complexity} of \(\sgn (\mathscr{F} )\), making which boolean. The tricky part here is that it's very likely to have
 \[
 	R(\mathscr{F} ) < R(\sgn (\mathscr{F} )),
 \]
@@ -72,7 +72,7 @@ We see that the left-hand side is the test error of \(\sgn (\mathscr{F} )\), whi
 	\begin{enumerate}[(a)]
 		\item The test error is in terms of \(R_n(\mathscr{F} )\), not \(R_n(\sgn (\mathscr{F} ))\).
 		\item We paid a cost, i.e., the \hyperref[not:margin-error]{margin error}, instead of the usual training error, which is larger.
-		\item We need a version which holds for a grid of \(\gamma \), which can be done by a union bound argument.
+		\item We need a version that holds for a grid of \(\gamma \), which can be done by a union-bound argument.
 		\item It gives one explanation of why test error can get better even if the training error is \(0\), i.e., the predictor generalizes.
 	\end{enumerate}
 \end{note}
@@ -120,7 +120,7 @@ What we want is to look at the class of functions of neural networks with some c
 \[
 	\mathscr{F} = \{ f_\theta \colon \operatorname{comp}(\theta ) \leq B \}.
 \]
-The tricky part here is that there are so many ways to define complexity, and here, we're going to focus on norm-based constraint as we mentioned.
+The tricky part here is that there are so many ways to define complexity, and here, we're going to focus on norm-based constraints as we mentioned.
 
 \subsection{Norm-Based Constraint}
 Note that there are lots of invariants for \hyperref[def:MLP]{multi-layer perceptron}.
@@ -147,7 +147,7 @@ which now respects the scaling invariant. But again, this may not respect some o
 \end{definition}
 
 \begin{note}
-	It's convenient to write the weighted sum as an inner-product, i.e.,
+	It's convenient to write the weighted sum as an inner product, i.e.,
 	\[
 		\sum_{j=1}^{d_{i-1}} w_j \sigma (f_j(x)) \eqqcolon \left\langle w, (\sigma (f(x)))_j \right\rangle
 	\]
@@ -158,7 +158,7 @@ which now respects the scaling invariant. But again, this may not respect some o
 	\hyperref[def:MLP]{Multi-layer perceptron} can be \hyperref[def:recursive]{recursively constructed} with \(\mathscr{F} _1\) being linear.
 \end{eg}
 
-We see that by viewing \(w\) as the rows of some matrix \(W \in \mathbb{R} ^{d_i \times d_{i-1} }\) when constructing later layers, we recover \hyperref[def:MLP]{multi-layer perceptron}. And this suggests we put norm constraints on these \(w\). Turns out that in this case, we can consider the following norm, \(\lVert \cdot \rVert _{p, q}\), defined for a matrix \(A\), and by controlling this norm, we can obtain some non-trivial bound on \(\mathscr{F} _L\).
+We see that by viewing \(w\) as the rows of some matrix \(W \in \mathbb{R} ^{d_i \times d_{i-1} }\) when constructing later layers, we recover \hyperref[def:MLP]{multi-layer perceptron}. This suggests we put norm constraints on these \(w\). Turns out that in this case, we can consider the following norm, \(\lVert \cdot \rVert _{p, q}\), defined for a matrix \(A\), and by controlling this norm, we can obtain some non-trivial bound on \(\mathscr{F} _L\).
 
 \begin{definition}[\(\lVert \cdot \rVert _{p, q}\)]
 	For any matrix \(A\), the norm \(\lVert A \rVert _{p, q}\) is defined as
@@ -169,7 +169,7 @@ We see that by viewing \(w\) as the rows of some matrix \(W \in \mathbb{R} ^{d_i
 \end{definition}
 
 \begin{intuition}
-	Since \(w\) can be thought as the rows of some weight matrix \(W\), controlling the norm of which can be done by \(\lVert \cdot \rVert _{p, q}\) (with transpose).
+	Since \(w\) can be thought of as the rows of some weight matrix \(W\), controlling the norm of which can be done by \(\lVert \cdot \rVert _{p, q}\) (with transpose).
 \end{intuition}
 
 Following the intuition, we put norm restriction on \(w \in \mathbb{R} ^{d_{i-1}}\) in our \hyperref[def:recursive]{recursive construction} of \(\mathscr{F} _i\) for some \(B_i\in \mathbb{R} \).
@@ -181,7 +181,7 @@ Following the intuition, we put norm restriction on \(w \in \mathbb{R} ^{d_{i-1}
 	\]
 \end{definition}
 
-With this construction, we can then define the \hyperref[def:norm-MLP]{norm-constrained multi-layer perceptron}, starts from a linear function class as above. However, in this case, we should actually start from a norm-constrained linear function class instead.
+With this construction, we can then define the \hyperref[def:norm-MLP]{norm-constrained multi-layer perceptron}, starting from a linear function class as above. However, in this case, we should start from a norm-constrained linear function class instead.
 
 \begin{definition}[Norm-constrained multi-layer perceptron]\label{def:norm-MLP}
 	The \emph{norm-constrained multi-layer perceptron} \(f_\theta (x) \colon \mathbb{R} ^p \to \mathbb{R} \) is a function in \(\mathscr{F} _L\) which is \hyperref[def:norm-recursive]{recursively constructed with norm constraint} with the base function class being the norm-constrained linear function class
@@ -244,7 +244,7 @@ Consider the following.
 	due to the \hyperref[thm:contraction-principle]{contraction principle} and the fact that \(\sigma \) is \(1\)-Lipschitz.
 \end{proof}
 
-Now, by using \(\lVert \cdot \rVert _{1, \infty }\) as suggests above, we can obtain the following.
+Now, by using \(\lVert \cdot \rVert _{1, \infty }\) as suggested above, we can obtain the following.
 
 \begin{corollary}
 	If \(\mathscr{F} _L\) is the class of \hyperref[def:norm-MLP]{norm-constrained multi-layer perceptrons} with \(\lVert W_i ^{\top} \rVert _{1, \infty } \leq B_i\),
@@ -263,7 +263,7 @@ This exponential dependency on the number of layers might not always be tight.
 	\[
 		f(x) = \sigma (w_L \dots \sigma (w_2 \sigma (w_1 ^{\top} x)))
 	\]
-	where \(w_1 \in \mathbb{R} ^d\), and \(w_i \in \mathbb{R} \) for \(i \geq 1\).\footnote{So everything is a scalar after the first layer, making \(f\) ultra-thin (width \(1\)).} It's easy to see that the class of ultra-thin \hyperref[def:MLP]{multi-layer perceptron} is just the class of linear predictor \(f(x) = \sigma (w^{\top} x)\) for some \(w\in \mathbb{R} ^d\). If we would like to put norm constraint on the latter, then we have
+	where \(w_1 \in \mathbb{R} ^d\), and \(w_i \in \mathbb{R} \) for \(i \geq 1\).\footnote{So everything is a scalar after the first layer, making \(f\) ultra-thin (width \(1\)).} It's easy to see that the class of ultra-thin \hyperref[def:MLP]{multi-layer perceptron} is just the class of linear predictor \(f(x) = \sigma (w^{\top} x)\) for some \(w\in \mathbb{R} ^d\). If we would like to put norm constraints on the latter, then we have
 	\[
 		\mathscr{F} _{\text{linear} } = \{ \sigma (w^{\top} x) \colon \lVert w \rVert \leq B \} ;
 	\]
@@ -274,7 +274,7 @@ This exponential dependency on the number of layers might not always be tight.
 	Now it's easy to see that no matter how large \(L\) is, there will be no \(2^L\) in \(R(\mathscr{F} _{\text{linear} }) = R(\mathscr{F} _{\text{ultra-thin} })\) since the former is independent of \(L\) in the first place.
 \end{eg}
 
-Actually, a more sophisticated bound can be achieved by using the Frobenius norm.
+A more sophisticated bound can be achieved by using the Frobenius norm.
 
 \begin{theorem}[\cite{golowich2019sizeindependent}]
 	Let \(\mathscr{F} \) be the class of \hyperref[def:MLP]{multi-layer perceptron} with positive homogenous activation function \(\sigma\) and \(\lVert W_i \rVert _F \leq B_i\), then

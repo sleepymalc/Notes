@@ -1,16 +1,5 @@
 \lecture{9}{13 Sep.\ 9:00}{VC Dimension}
-Firstly, given \hyperref[def:VC-dimension]{VC dimension}, we can upper-bound the size of the discrimination.
-
-\begin{lemma}[Sauer-Shelah lemma]\label{lma:Sauer-Shelah}
-	Let \(\mathscr{F} \) be a boolean function class such that \(\VC(\mathscr{F}) = d\), then for every \(\{ x_1, \dots , x_n \} \subseteq \chi \) such that \(n \geq d\),
-	\[
-		\vert \mathscr{F} (x_1, \dots , x_n) \vert
-		\leq \binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{d}
-		\leq \left( \frac{en}{d} \right) ^d.
-	\]
-\end{lemma}
-
-To prove \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma}, we need \hyperref[lma:Pajor]{Pajor's lemma}.
+Given \hyperref[def:VC-dimension]{VC dimension}, we can upper-bound the size of the discrimination. We need \hyperref[lma:Pajor]{Pajor's lemma} first.
 
 \begin{lemma}[Pajor's lemma]\label{lma:Pajor}
 	Given a boolean function class \(\mathscr{F} \) on a finite set \(\Omega \), then
@@ -28,8 +17,11 @@ To prove \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma}, we need \hyperref[lma:
 		\mathscr{F} _0 = \{ f\in \mathscr{F} \colon f(x_0) = 0\} ,\quad
 		\mathscr{F} _1 = \{ f\in \mathscr{F} \colon f(x_0) = 1\} .
 	\]
-	We further define \(S_{\mathscr{F} ^{\prime} }\) as \(S_{\mathscr{F} ^{\prime} } = \{ S \subseteq \Omega ^{\prime} \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} ^{\prime} \}\) for any function class \(\mathscr{F} ^{\prime} \) defined on \(\Omega ^{\prime} \). Then, by induction hypothesis, \(\vert \mathscr{F} _i \vert \leq \vert S_{\mathscr{F} _i} \vert \), hence \(\vert \mathscr{F} \vert = \vert \mathscr{F} _0 \vert + \vert \mathscr{F} _1 \vert \leq \vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert\). Finally, we claim the following.
-
+	We further define \(S_{\mathscr{F} ^{\prime} }\) as \(S_{\mathscr{F} ^{\prime} } = \{ S \subseteq \Omega ^{\prime} \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} ^{\prime} \}\) for any function class \(\mathscr{F} ^{\prime} \) defined on \(\Omega ^{\prime} \). Then, by induction hypothesis, \(\vert \mathscr{F} _i \vert \leq \vert S_{\mathscr{F} _i} \vert \), hence
+	\[
+		\vert \mathscr{F} \vert = \vert \mathscr{F} _0 \vert + \vert \mathscr{F} _1 \vert \leq \vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert.
+	\]
+	Finally, we claim the following.
 	\begin{claim}
 		\(\vert S_{\mathscr{F} _0} \vert + \vert S_{\mathscr{F} _1} \vert \leq \vert S _{\mathscr{F} } \vert\).
 	\end{claim}
@@ -47,18 +39,27 @@ To prove \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma}, we need \hyperref[lma:
 
 We can then prove the \hyperref[lma:Sauer-Shelah]{Sauer-Shelah lemma}.
 
-\begin{proof}[Proof of \autoref{lma:Sauer-Shelah}]
+\begin{lemma}[Sauer-Shelah lemma]\label{lma:Sauer-Shelah}
+	Let \(\mathscr{F} \) be a boolean function class such that \(\VC(\mathscr{F}) = d\), then for every \(\{ x_1, \dots , x_n \} \subseteq \chi \) such that \(n \geq d\),
+	\[
+		\vert \mathscr{F} (x_1, \dots , x_n) \vert
+		\leq \binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{d}
+		\leq \left( \frac{en}{d} \right) ^d.
+	\]
+\end{lemma}
+\begin{proof}
 	Let \(\Omega \) be a set of size \(n\), then the number of subsets with size \(\leq d\) is \(\binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{d}\), hence by the definition of \hyperref[def:VC-dimension]{VC dimension},
 	\[
 		\vert \{ S \subseteq \Omega \colon S \text{ \hyperref[def:shatter]{shattered} by } \mathscr{F} \} \vert
 		\leq \binom{n}{0} + \binom{n}{1} + \dots + \binom{n}{d}.
 	\]
+	With the standard Stirling's estimation gives the result.
 \end{proof}
 
-Then, as our motivation suggests, the same proof of \autoref{prop:symmetrization} applies, giving the following.
+Then, as our motivation suggests, the same proof of \autoref{prop:symmetrization} applies, giving the bound on the \hyperref[def:Rademacher-complexity]{Rademacher complexity} in terms of the \hyperref[def:VC-dimension]{VC dimension}.
 
 \begin{proposition}\label{prop:lec9}
-	For any function class \(\mathscr{F} \), if \(n \geq \VC(\mathscr{F} ) \), for some constant \(c\),
+	For any boolean function class \(\mathscr{F} \), if \(n \geq \VC(\mathscr{F} ) \), for some constant \(c > 0\),
 	\[
 		R_n(\mathscr{F} ) \leq c \sqrt{\frac{\VC(\mathscr{F} ) }{n} \log \left( \frac{en}{\VC(\mathscr{F} ) } \right) }.
 	\]

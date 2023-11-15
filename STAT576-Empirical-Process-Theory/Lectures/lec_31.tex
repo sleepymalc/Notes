@@ -1,1 +1,284 @@
-\lecture{31}{14 Nov.\ 9:00}{}
+\chapter{Epilogue}
+\lecture{31}{14 Nov.\ 9:00}{Rademacher Complexity for Neural Networks}
+In the end of the course, we're going to discuss some caveats of our theory we have developed, and conclude with some modern application to neural networks.
+
+\section{Large Margin Theory for Classification}
+\subsection{Classification in Practice}
+Throughout the course, when talking about bounding the \hyperref[def:excess-risk]{excess risk} for \hyperref[prb:ERM]{empirical risk minimization} for classification,\footnote{Recall the \hyperref[eg:1D-classification-thresholds]{1D classification example}.} we consider the expected supremum of \hyperref[def:EP]{empirical process}, which in turns depends on either \(\VC(\mathscr{F} )\) or the \hyperref[def:Rademacher-complexity]{Rademacher complexity} \(R(\mathscr{F} )\) for some boolean function classes \(\mathscr{F} \).
+
+However, in practice, we actually consider real-valued function class \(\mathscr{F} \), and consider either the \hyperref[def:VC-dimension]{VC dimension} or the \hyperref[def:Rademacher-complexity]{Rademacher complexity} of \(\sgn (\mathscr{F} )\), making which boolean. The tricky part here is that it's very likely to have
+\[
+	R(\mathscr{F} ) < R(\sgn (\mathscr{F} )),
+\]
+which makes our developed bounds potentially loose.
+
+\begin{eg}
+	For \(\mathscr{F} = \{ x^{\top} \beta \colon \lVert \beta \rVert _2 \leq 1, \lVert x \rVert _2 \leq 1 \} \). In this case, we have \(R_n(\mathscr{F} ) \leq c / \sqrt{n} \) times some dimension-free rate using \hyperref[def:fat-shattering-dimension]{fat-shattering} argument (\autoref{thm:perceptron}). On the other hand, we have
+	\[
+		R_n(\sgn (\mathscr{F} )) \approx \sqrt{d / n} \approx \VC(\sgn (\mathscr{F} )).
+	\]
+\end{eg}
+
+\subsection{Large Margin Theorem}
+The goal is to get a bound on the \hyperref[def:excess-risk]{excess risk} for the binary classification problem in terms of \(R_n(\mathscr{F} )\), and not on \(R_n(\sgn (\mathscr{F} ))\). We start by fixing a margin parameter \(\gamma > 0\), and define
+\[
+	\phi (s) = \begin{dcases}
+		1,               & \text{ if } s \leq 0 ;        \\
+		1 - s / \gamma , & \text{ if } 0 < s < \gamma  ; \\
+		0 ,              & \text{ if } s \geq \gamma .
+	\end{dcases}
+\]
+Assume that we're considering a binary classification problem with labels being \(y \in \{ \pm 1 \} \) under the \hyperref[prb:ERM]{empirical risk minimization} setting. Then,
+\[
+	\mathbbm{1}_{y f(x) \leq 0}
+	\leq \phi (y f(x))
+	\leq \mathbbm{1}_{y f(x) \leq \gamma } .
+\]
+\begin{center}
+	\incfig{margin-plot}
+\end{center}
+
+By taking the expectation, we have
+\begin{align*}
+	\mathbb{E}_{}\left[\mathbbm{1}_{y f(x) \leq 0} \right] - \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{y_i f(x_i) \leq \gamma }
+	 & \leq \mathbb{E}_{}\left[\phi (y f(x)) \right] - \frac{1}{n} \sum_{i=1}^{n} \phi (y_i f(x_i))                                                                                                                             \\
+	 & \leq \sup _{f\in \mathscr{F} } \left[ \mathbb{E}_{}\left[\phi (y f(x)) \right] - \frac{1}{n} \sum_{i=1}^{n} \phi (y_i f(x_i)) \right]                                                                                    \\
+	\shortintertext{i.e., a supremum of an \hyperref[def:EP]{empirical process}, and by the \hyperref[thm:McDiarmid-inequality]{McDiarmid inequality},}
+	 & \leq \mathbb{E}_{}\left[ \sup _{f\in \mathscr{F} } \left[ \mathbb{E}_{}\left[\phi (y f(x)) \right] - \frac{1}{n} \sum_{i=1}^{n} \phi (y_i f(x_i)) \right] \right] + \frac{u}{\sqrt{n} }                                  \\
+	\shortintertext{with probability at least \(1 - e^{-2u^2}\) since \(\phi \) is bounded between \(0\) and \(1\), which is further bounded by}
+	 & \leq 2 \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \phi (y_i f(x_i))\right] + \frac{u}{\sqrt{n} } \tag*{\hyperref[lma:symmetrization]{symmetrization}}                           \\
+	 & \leq \frac{2}{\gamma } \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i (y_i f(x_i)) \right] + \frac{u}{\sqrt{n} } \tag*{\hyperref[thm:contraction-principle]{contraction principle}} \\
+	\shortintertext{since \(\phi \) is \(\frac{1}{\gamma }\)-Lipschitz, and finally,}
+	 & = \frac{2}{\gamma } \underbrace{\mathbb{E}_{}\left[\sup _{f\in \mathscr{F} } \frac{1}{n} \sum_{i=1}^{n} \epsilon _i f(x_i)\right]}_{R_n(\mathscr{F} )} + \frac{u}{\sqrt{n} }
+\end{align*}
+since \(y_i \epsilon _i\) is no difference from \(\epsilon _i\). After rearranging, we get the following.
+
+\begin{theorem}[Large margin theorem]\label{thm:large-margin}
+	Given any real function class \(\mathscr{F} \), for any predictor \(f \in \mathscr{F} \) of a binary classification problem with label being \(\{ \pm 1 \} \) in the \hyperref[prb:ERM]{empirical risk minimization} setting, with probability at least \(1 - e^{2u^2}\),
+	\[
+		\mathbb{E}_{}\left[\mathbbm{1}_{y f(x) \leq 0} \right]
+		\leq \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{y_i f(x_i) \leq \gamma } + \frac{2}{\gamma } R_n (\mathscr{F} ) + \frac{u}{\sqrt{n} }.
+	\]
+\end{theorem}
+
+\begin{notation}[Margin error]\label{not:margin-error}
+	The training \emph{margin error} of a predictor \(f\) is given by \(\frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{y_i f(x_i) \leq \gamma } \).
+\end{notation}
+
+We see that the left-hand side is the test error of \(\sgn (\mathscr{F} )\), while the right-hand side is the training \hyperref[not:margin-error]{margin error} plus the \hyperref[def:Rademacher-complexity]{Rademacher complexity}.
+
+\begin{note}
+	There are a couple of messages from the \hyperref[thm:large-margin]{large margin theorem}:
+	\begin{enumerate}[(a)]
+		\item The test error is in terms of \(R_n(\mathscr{F} )\), not \(R_n(\sgn (\mathscr{F} ))\).
+		\item We paid a cost, i.e., the \hyperref[not:margin-error]{margin error}, instead of the usual training error, which is larger.
+		\item We need a version which holds for a grid of \(\gamma \), which can be done by a union bound argument.
+		\item It gives one explanation of why test error can get better even if the training error is \(0\), i.e., the predictor generalizes.
+	\end{enumerate}
+\end{note}
+
+\begin{intuition}
+	The above suggests that we should minimize the sum between the \hyperref[not:margin-error]{margin error} and the \hyperref[def:Rademacher-complexity]{Rademacher complexity}, which is usually better from the usual bound.\footnote{I.e., the sum between a smaller training error plus an often larger \(R_n(\sgn (\mathscr{F} ))\).}
+\end{intuition}
+
+\section{Rademacher Complexity for Neural Networks}
+Recall the following.
+
+\begin{prev}
+	For linear functions, \autoref{thm:perceptron} tells us that norm constraints can help us to get a better bound on the \hyperref[def:Rademacher-complexity]{Rademacher complexity}.
+\end{prev}
+
+Such a bound is much less than the number of parameters, i.e., the dimension, and in fact, similar things happen for other function classes. We will see this for (classical) neural networks.
+
+\subsection{Multi-Layer Perceptron}
+Consider the following classical neural network called \hyperref[def:MLP]{multi-layer perceptron}.
+
+\begin{definition}[Multi-layer perceptron]\label{def:MLP}
+	Let \(\sigma \colon \mathbb{R} \to \mathbb{R} \) to be a non-linear activation function that is applied coordinate-wise, and let the weight be \(\theta = (W_1, \dots , W_L)\) for \(W_i \colon \mathbb{R} ^{d_{i-1} } \to \mathbb{R} ^{d_i}\)\footnote{Here, \(W_i\) can be thought as matrix in \(\mathbb{R} ^{d_i \times d_{i-1}}\), and the application is just matrix multiplication.} with \(d_0 \coloneqq d\) and \(d_L \coloneqq 1\). Then, the \emph{multi-layer perceptron} is defined as \(f\colon \mathbb{R} ^d \to \mathbb{R} \) such that for \(x\in \mathbb{R} ^d\),
+	\[
+		f_\theta (x) \coloneqq W_L \sigma (\dots \sigma (W_2 \sigma (W_1 x))).
+	\]
+\end{definition}
+
+\begin{note}
+	One might instead define \(f_\theta (x)\) by \(\sigma (W_L \sigma ( \dots \sigma (W_2 \sigma (W_1 x))))\), i.e., we apply an activation function at the end again.
+\end{note}
+
+Note that for the activation function \(\sigma \), we usually want it to be Lipschitz and positive homogeneity (\(\sigma (\alpha x) = \alpha \sigma (x)\) for \(\alpha \geq 0\)).
+
+\begin{note}
+	If \(\sigma \) is positive homogeneity, then it preserves the \(0\), i.e., \(\sigma (0) = 0\).
+\end{note}
+
+A popular choice of \(\sigma \) in machine learning is the following.
+
+\begin{eg}[ReLU]
+	The ReLU activation function is defined as \(\operatorname{ReLU}(x) = [x]_+ = \max (x, 0)\), which is \(1\)-Lipschitz, positive homogeneity.
+\end{eg}
+
+What we want is to look at the class of functions of neural networks with some complexity measure, say \(\operatorname{comp}(\cdot) \), i.e.,
+\[
+	\mathscr{F} = \{ f_\theta \colon \operatorname{comp}(\theta ) \leq B \}.
+\]
+The tricky part here is that there are so many ways to define complexity, and here, we're going to focus on norm-based constraint as we mentioned.
+
+\subsection{Norm-Based Constraint}
+Note that there are lots of invariants for \hyperref[def:MLP]{multi-layer perceptron}.
+
+\begin{eg}[Scaling]
+	If we scale one layer by some factor \(D > 0\), and divide the other layer by \(D\), \(f_\theta \) is unchanged if \(\sigma \) is positive homogeneity.
+\end{eg}
+
+Hence, for example, if we consider the Frobenius norm as the complexity measure, i.e.,
+\[
+	\operatorname{comp}(\theta ) \coloneqq \sum_{i=1}^{L} \lVert W_i \rVert _F,
+\]
+this won't capture the above scaling invariant. One potential fix could be using the product, i.e.,
+\[
+	\operatorname{comp}(\theta ) \coloneqq \prod_{i=1}^{L} \lVert w_i \rVert _F,
+\]
+which now respects the scaling invariant. But again, this may not respect some other notion of invariants. To see how to properly define our norm constraints, taking a recursive point of view when defining the \hyperref[def:MLP]{multi-layer perceptron} is helpful. Specifically, consider the following recursive definition.
+
+\begin{definition}[Recursive construction of \(\mathscr{F} _i\)]\label{def:recursive}
+	Given a base function class \(\mathscr{F} _1 = \{ f \colon \chi \to \mathbb{R} \} \) such that \(0 \in \mathscr{F} _1\), the \emph{recursive construction of \(\mathscr{F} _i\)} is that for all \(i > 1\), we define
+	\[
+		\mathscr{F} _i \coloneqq \left\{ \sum_{j=1}^{d_{i-1} } w_j \sigma (f_j(x)) \colon f_j \in \mathscr{F} _{i-1}, w \in \mathbb{R} ^{d_{i-1}} \right\}.
+	\]
+\end{definition}
+
+\begin{note}
+	It's convenient to write the weighted sum as an inner-product, i.e.,
+	\[
+		\sum_{j=1}^{d_{i-1}} w_j \sigma (f_j(x)) \eqqcolon \left\langle w, (\sigma (f(x)))_j \right\rangle
+	\]
+	where \((\sigma (f(x)))_j = (\sigma (f_1(x)), \sigma (f_2(x)), \dots , \sigma (f_{d_{i-1}}(x)))^{\top} \in \mathbb{R} ^{d_{i-1}}\).
+\end{note}
+
+\begin{eg}[Multi-layer perceptron]
+	\hyperref[def:MLP]{Multi-layer perceptron} can be \hyperref[def:recursive]{recursively constructed} with \(\mathscr{F} _1\) being linear.
+\end{eg}
+
+We see that by viewing \(w\) as the rows of some matrix \(W \in \mathbb{R} ^{d_i \times d_{i-1} }\) when constructing later layers, we recover \hyperref[def:MLP]{multi-layer perceptron}. And this suggests we put norm constraints on these \(w\). Turns out that in this case, we can consider the following norm, \(\lVert \cdot \rVert _{p, q}\), defined for a matrix \(A\), and by controlling this norm, we can obtain some non-trivial bound on \(\mathscr{F} _L\).
+
+\begin{definition}[\(\lVert \cdot \rVert _{p, q}\)]
+	For any matrix \(A\), the norm \(\lVert A \rVert _{p, q}\) is defined as
+	\begin{enumerate}[(a)]
+		\item first take the \(\ell _p\) norm of all columns of \(A\),
+		\item and take \(\ell _q\) norm of the \(\ell _p\) norms we obtained for each column.
+	\end{enumerate}
+\end{definition}
+
+\begin{intuition}
+	Since \(w\) can be thought as the rows of some weight matrix \(W\), controlling the norm of which can be done by \(\lVert \cdot \rVert _{p, q}\) (with transpose).
+\end{intuition}
+
+Following the intuition, we put norm restriction on \(w \in \mathbb{R} ^{d_{i-1}}\) in our \hyperref[def:recursive]{recursive construction} of \(\mathscr{F} _i\) for some \(B_i\in \mathbb{R} \).
+
+\begin{definition}[Recursive construction of \(\mathscr{F} _i\) with norm constraint]\label{def:norm-recursive}
+	The \emph{recursive construction of \(\mathscr{F} _i\) with norm constraint} \(B_i \in \mathbb{R} \) starts from a norm constrained base function class \(\mathscr{F} _1 = \{ f_w \colon \chi \to \mathbb{R} \colon \lVert w \rVert _1 \leq B_1 \} \)\footnote{For this definition to make sense, \(f\) is now parametrized by some weights vector \(w\).} with \(0 \in \mathscr{F} _1\), and for all \(i > 1\),
+	\[
+		\mathscr{F} _i \coloneqq \left\{ \sum_{j=1}^{d_{i-1} } w_j \sigma (f_j(x)) \colon f_j \in \mathscr{F} _{i-1}, w \in \mathbb{R} ^{d_{i-1}} , \lVert w \rVert _1 \leq B_i\right\}.
+	\]
+\end{definition}
+
+With this construction, we can then define the \hyperref[def:norm-MLP]{norm-constrained multi-layer perceptron}, starts from a linear function class as above. However, in this case, we should actually start from a norm-constrained linear function class instead.
+
+\begin{definition}[Norm-constrained multi-layer perceptron]\label{def:norm-MLP}
+	The \emph{norm-constrained multi-layer perceptron} \(f_\theta (x) \colon \mathbb{R} ^p \to \mathbb{R} \) is a function in \(\mathscr{F} _L\) which is \hyperref[def:norm-recursive]{recursively constructed with norm constraint} with the base function class being the norm-constrained linear function class
+	\[
+		\mathscr{F} _1 = \{ w^{\top} x \colon w \in \mathbb{R} ^d, \lVert w \rVert _1 \leq B_1 \}.
+	\]
+\end{definition}
+
+With such recursive construction and the norm constraints, we can then bound the \hyperref[def:Rademacher-complexity]{Rademacher complexity} recursively as well.
+
+\begin{intuition}\label{int:recursive}
+	The general idea is that for the base function class \(\mathscr{F} _1\), assume that \(\lVert x_i \rVert _\infty \leq 1\), then
+	\[
+		\begin{split}
+			R(\mathscr{F} _1)
+			 & = \mathbb{E}_{}\left[\sup _{\lVert w \rVert _1 \leq B_1} \frac{1}{n} \sum_{i=1}^{n} \epsilon _i \langle w, x_i \rangle  \right]             \\
+			 & =  \mathbb{E}_{}\left[\sup _{\lVert w \rVert _1 \leq B_1} \frac{1}{n} \left\langle w, \sum_{i=1}^{n} \epsilon _i x_i \right\rangle  \right]
+			\leq \frac{1}{n} \sup _{\lVert w \rVert _1 \leq B_1} \lVert w \rVert _1 \cdot \mathbb{E}_{}\left[\left\lVert \sum_{i=1}^{n} \epsilon _i x_i \right\rVert _\infty  \right]
+			\leq B_1 \sqrt{\frac{\log d}{n}} .
+		\end{split}
+	\]
+\end{intuition}
+
+Consider the following.
+
+\begin{lemma}\label{lma:recursive}
+	If \(\mathscr{F} _i\) is defined \hyperref[def:norm-recursive]{recursively with norm constraints} \(B_i\) from the base function class \(\mathscr{F} _1\) containing \(0\), and if \(\sigma \) is \(1\)-Lipschitz with \(\sigma (0) = 0\), then for \(x_1, \dots , x_n \overset{\text{i.i.d.}}{\sim } \mathbb{P} \),
+	\[
+		R(\mathscr{F} _i) \leq 2 B_i R(\mathscr{F} _{i-1}) .
+	\]
+\end{lemma}
+\begin{proof}
+	From the definition of \hyperref[def:Rademacher-complexity]{Rademacher complexity}, we have
+	\[
+		\begin{split}
+			R(\mathscr{F} _i)
+			 & = \mathbb{E}_{}\left[\sup _{\substack{\lVert w \rVert _1 \leq B_i                                                                                                                                                                  \\ f_j \in \mathscr{F} _{i-1}}} \frac{1}{n} \sum_{\ell = 1}^{n} \epsilon _{\ell } \left( \sum_{j=1}^{d_{i-1}} w_j \sigma (f_j(x_{\ell })) \right)  \right] \\
+			 & = \mathbb{E}_{}\left[\sup _{\substack{\lVert w \rVert _1 \leq B_i                                                                                                                                                                  \\ f_j \in \mathscr{F} _{i-1}}} \frac{1}{n} \sum_{j=1}^{d_{i-1}} w_j \cdot \sum_{\ell = 1}^{n} \epsilon _{\ell } \left(\sigma (f_j(x_{\ell })) \right)  \right]\\
+			 & \leq \sup _{\lVert w \rVert _1 \leq B_i} \lVert w \rVert _1 \cdot \mathbb{E}_{}\left[ \sup _{f_j \in \mathscr{F} _{i-1}} \frac{1}{n} \left\vert \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f_j(x_{\ell })) \right\vert  \right]
+			\leq B_i \cdot \mathbb{E}_{}\left[ \sup _{f\in \mathscr{F} _{i-1}} \frac{1}{n} \left\vert \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })) \right\vert \right].
+		\end{split}
+	\]
+	Now, since
+	\[
+		\sup _{f\in \mathscr{F} _{i-1}} \left\vert \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })) \right\vert
+		= \max \left( \sup _{f\in \mathscr{F} _{i-1}} \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })), \sup _{f\in \mathscr{F} _{i-1}} - \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })) \right),
+	\]
+	with the fact that \(0\in \mathscr{F} _1\) hence \(0\in \mathscr{F} _i\), we conclude that the above two terms are both \(\geq 0\),
+	\[
+		\mathbb{E}_{}\left[ \sup _{f\in \mathscr{F} _{i-1}} \frac{1}{n} \left\vert \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })) \right\vert \right]
+		\leq \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} _{i-1}} \frac{1}{n} \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })) \right] + \mathbb{E}_{}\left[-\sup _{f\in \mathscr{F} _{i-1}} \frac{1}{n} \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })) \right] .
+	\]
+	Since \(-1\) and \(\epsilon _{\ell }\) can be absorbed, we finally get
+	\[
+		R(\mathscr{F} _i)
+		\leq 2 B_i \cdot \mathbb{E}_{}\left[\sup _{f\in \mathscr{F} _{i-1}} \frac{1}{n} \sum_{\ell = 1}^{n} \epsilon _{\ell } \sigma (f(x_{\ell })) \right]
+		= 2 B_i R(\sigma \circ \mathscr{F} _{i-1})
+		\leq 2 B_i R(\mathscr{F} _{i-1}),
+	\]
+	due to the \hyperref[thm:contraction-principle]{contraction principle} and the fact that \(\sigma \) is \(1\)-Lipschitz.
+\end{proof}
+
+Now, by using \(\lVert \cdot \rVert _{1, \infty }\) as suggests above, we can obtain the following.
+
+\begin{corollary}
+	If \(\mathscr{F} _L\) is the class of \hyperref[def:norm-MLP]{norm-constrained multi-layer perceptrons} with \(\lVert W_i ^{\top} \rVert _{1, \infty } \leq B_i\),
+	\[
+		R(\mathscr{F} _L) \leq 2^L \prod _{i=1}^{L} B_i \sqrt{\frac{\log d}{n}} .
+	\]
+\end{corollary}
+\begin{proof}
+	By iteratively applying \autoref{lma:recursive} with the calculation from the \hyperref[int:recursive]{intuition} as a base case.
+\end{proof}
+
+This exponential dependency on the number of layers might not always be tight.
+
+\begin{eg}[Ultra-thin network]
+	Consider an ultra-thin \hyperref[def:MLP]{multi-layer perceptron} with \(\sigma = \operatorname{ReLU}\) defined as
+	\[
+		f(x) = \sigma (w_L \dots \sigma (w_2 \sigma (w_1 ^{\top} x)))
+	\]
+	where \(w_1 \in \mathbb{R} ^d\), and \(w_i \in \mathbb{R} \) for \(i \geq 1\).\footnote{So everything is a scalar after the first layer, making \(f\) ultra-thin (width \(1\)).} It's easy to see that the class of ultra-thin \hyperref[def:MLP]{multi-layer perceptron} is just the class of linear predictor \(f(x) = \sigma (w^{\top} x)\) for some \(w\in \mathbb{R} ^d\). If we would like to put norm constraint on the latter, then we have
+	\[
+		\mathscr{F} _{\text{linear} } = \{ \sigma (w^{\top} x) \colon \lVert w \rVert \leq B \} ;
+	\]
+	and equivalently, for the former,
+	\[
+		\mathscr{F} _{\text{ultra-thin} } = \left\{ \sigma (w_L \dots \sigma (w_2 \sigma (w_1 ^{\top} x))) \colon \lVert w_1 \rVert \cdot \prod _{j > 1} \vert w_j \vert \leq M \right\} .
+	\]
+	Now it's easy to see that no matter how large \(L\) is, there will be no \(2^L\) in \(R(\mathscr{F} _{\text{linear} }) = R(\mathscr{F} _{\text{ultra-thin} })\) since the former is independent of \(L\) in the first place.
+\end{eg}
+
+Actually, a more sophisticated bound can be achieved by using the Frobenius norm.
+
+\begin{theorem}[\cite{golowich2019sizeindependent}]
+	Let \(\mathscr{F} \) be the class of \hyperref[def:MLP]{multi-layer perceptron} with positive homogenous activation function \(\sigma\) and \(\lVert W_i \rVert _F \leq B_i\), then
+	\[
+		R(\mathscr{F} ) \leq \sqrt{\frac{L}{n}} \prod _{i=1}^{L} B_i \leq \frac{1}{n^{1 / 4}} \prod _{i=1}^{L} B_i .
+	\]
+\end{theorem}

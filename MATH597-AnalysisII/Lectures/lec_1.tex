@@ -1,23 +1,17 @@
 \chapter{Measure}\label{ch:Measure}
 \lecture{1}{05 Jan.\ 11:00}{\(\sigma\)-algebra}
+\section{\(\sigma\)-Algebra}
+\subsection{Motivated Examples}
 Before we start, we first see some examples.
 \begin{eg}[Finite power set]
 	Let \(X = \{a, b, c\}\). Then
 	\[
 		\mathcal{P}(X)\coloneqq \left\{\varnothing , \{a\}, \{b\}, \{c\}, \{a, b\}, \{a, c\}, \{b, c\}, \{a, b, c\}\right\},
 	\]
-	which is the \emph{power set} of \(X\). We see that
-	\[
-		\# X = n \implies \# \mathcal{P}(X) = 2^n
-	\]
-	for \(n< \infty\).
+	which is the \emph{power set} of \(X\). In general, if \(\vert X  \vert = n\) with \(n< \infty\), \(\vert \mathcal{P}(X) \vert = 2^n\).
 \end{eg}
 \begin{eg}[Infinite power set]
-	If \(n = \infty\), say \(X = \mathbb{N} \), then
-	\[
-		\mathcal{P} (\mathbb{N} )
-	\]
-	is an uncountable set while \(\mathbb{N}\) is a countable set. We can see this as follows. Consider
+	If \(n = \infty\), say \(X = \mathbb{N} \), then \(\mathcal{P} (\mathbb{N} )\) is an uncountable set while \(\mathbb{N}\) is a countable set. We can see this as follows. Consider
 	\[
 		\phi\colon \mathcal{P}(\mathbb{N}) \to \left[0, 1\right],\quad A\mapsto 0.a_1 a_2 a_3 \dots (\text{base }2),
 	\]
@@ -31,95 +25,91 @@ Before we start, we first see some examples.
 	and for example, \(A\) can be
 	\(A = \{2, 3, 6, \dots  \}\subseteq \mathbb{N}\). Note that \(\phi\) is surjective, hence we have
 	\[
-		\# \mathcal{P}(\mathbb{N} ) \geq \#\left[0, 1\right].
+		\vert \mathcal{P}(\mathbb{N} ) \vert \geq \vert [0, 1] \vert.
 	\]
-	But since \(\left[0, 1\right]\) is uncountable, so is \(\mathcal{P} (\mathbb{N} )\).
+	But since \([0, 1]\) is uncountable, so is \(\mathcal{P} (\mathbb{N} )\).
 \end{eg}
 
 We like to \emph{measure} the \emph{size} of subsets of \(X\). Hence, we are intriguing to define a map \(\mu\) such that
 \[
-	\mu\colon \mathcal{P}(X) \to \left[0, \infty\right].
+	\mu\colon \mathcal{P}(X) \to [0, \infty].
 \]
 \begin{eg}
-	Let \(X = \{0, 1, 2\}\). Then we want to define \(\mu\colon \mathcal{P}(X)\to \left[0, \infty\right] \), we can have
+	Let \(X = \{0, 1, 2\}\). Then we want to define \(\mu\colon \mathcal{P}(X)\to [0, \infty] \), we can have
 	\begin{itemize}
-		\item \(\mu(A) = \# A\). Then we have
+		\item \(\mu(A) = \vert A \vert\). Then we have
 		      \begin{itemize}
 			      \item \(\mu(\{0, 1\}) = 2\)
 			      \item \(\mu(\{0\}) = 1\)
 		      \end{itemize}
-		\item \(\mu(A) = \sum\limits_{i\in A} 2^i\). Then we have
+		\item \(\mu(A) = \sum_{i\in A} 2^i\). Then we have
 		      \begin{itemize}
 			      \item \(\mu(\{0, 1\}) = 2^0 + 2^1 = 3\)
 		      \end{itemize}
 	\end{itemize}
 \end{eg}
 \begin{eg}
-	Let \(X = \{0\}\cup \mathbb{N} \). Then we want to define \(\mu\colon \mathcal{P}(\mathbb{N} )\to \left[0, \infty\right] \), we can have
+	Let \(X = \{0\}\cup \mathbb{N} \). Then we want to define \(\mu\colon \mathcal{P}(\mathbb{N} )\to [0, \infty] \), we can have
 	\begin{itemize}
-		\item \(\mu(A) = \# A\). Then we have
+		\item \(\mu(A) = \vert A \vert\). Then we have
 		      \begin{itemize}
 			      \item \(\mu(\{2, 3, 4, 5, \dots  \}) = \infty = \mu(\{\text{even numbers} \})\)
 		      \end{itemize}
-		\item \(\mu(A) = e^{-1}\sum\limits_{i\in A}\frac{1}{i!}\). Then we have
+		\item \(\mu(A) = e^{-1}\sum_{i\in A}\frac{1}{i!}\). Then we have
 		      \begin{itemize}
 			      \item \(\mu(\{0, 2, 4, 6, \dots \}) = e^{-1} \left(1+\frac{1}{2!}+\frac{1}{3!}+\dots  \right)\)
 		      \end{itemize}
-		\item \(\mu(A) = \sum\limits_{i\in A} a_{i}\)
+		\item \(\mu(A) = \sum_{i\in A} a_{i}\)
 	\end{itemize}
 \end{eg}
 \begin{eg}
-	Let \(X = \mathbb{R} \). Then we want to define \(\mu\colon \mathcal{P}(\mathbb{R} )\to \left[0, \infty\right] \), we can have
+	Let \(X = \mathbb{R} \). Then we want to define \(\mu\colon \mathcal{P}(\mathbb{R} )\to [0, \infty] \), we can have
 	\begin{itemize}
-		\item \(\mu(A) = \# A\)
+		\item \(\mu(A) = \vert A \vert \)
 		\item \(\mu(\left(a, b\right)) = b-a\).
-		      \begin{problem}
-		      Can we extend this map to all of \(\mathcal{P}(\mathbb{R} )\)?
-		      \end{problem}
+		      \begin{problem*}
+			      Can we extend this map to all of \(\mathcal{P}(\mathbb{R} )\)?
+		      \end{problem*}
 		      \begin{answer}
 			      No!
 		      \end{answer}
 		\item \(\mu(\left(a, b\right)) = e^b - e^a\).
-		      \begin{problem}
-		      Can we extend this map to all of \(\mathcal{P}(\mathbb{R} )\)?
-		      \end{problem}
+		      \begin{problem*}
+			      Can we extend this map to all of \(\mathcal{P}(\mathbb{R} )\)?
+		      \end{problem*}
 		      \begin{answer}
 			      No!
 		      \end{answer}
 	\end{itemize}
 \end{eg}
 
-We immediately see the problems. To extend our native measure method into \(\mathbb{R} \) is hard and will cause something counter-intuitive!\footnote{\url{https://en.wikipedia.org/wiki/Banach-Tarski_paradox}}
-Hence, rather than define measurement on \emph{all} subsets in the power set of \(X\), we only focus on \emph{some} subsets. In other words, we
-want to define
+We immediately see the problems. To extend our native measure method into \(\mathbb{R} \) is hard and will cause something counter-intuitive!\footnote{E.g., \href{https://en.wikipedia.org/wiki/Banach-Tarski_paradox}{Banach-Tarski paradox}.} Hence, rather than define measurement on \emph{all} subsets in the power set of \(X\), we only focus on \emph{some} subsets. In other words, we want to define
 \[
-	\mu\colon \mathcal{P}(\mathbb{R} )\supset\mathcal{A} \to \left[0, \infty\right].
+	\mu\colon \mathcal{P}(\mathbb{R} )\supset\mathcal{A} \to [0, \infty].
 \]
 
-\section{\(\sigma\)-algebras}
-We start from the definition of the most fundamental element in measure theory.
+\subsection{\(\sigma \)-Algebra}
+Now, we start from the definition of the most fundamental element in measure theory.
 \begin{definition}[\(\sigma\)-algebra]\label{def:sigma-algebra}
 	Let \(X\) be a set. A collection \(\mathcal{A} \) of subsets of \(X\), i.e., \(\mathcal{A}\subset \mathcal{P} (X) \) is called a \emph{\(\sigma\)-algebra on \(X\)} if
 	\begin{itemize}
 		\item \(\varnothing \in \mathcal{A} \).
 		\item \(\mathcal{A} \) is closed under complements. i.e., if \(A\in \mathcal{A} \), \(A^c = X\setminus A\in \mathcal{A} \).
-		\item \(\mathcal{A} \) is closed under countable unions. i.e., if \(A_i\in \mathcal{A} \), then \(\bigcup\limits_{i=1}^{\infty} A_{i}\in \mathcal{A} \).
+		\item \(\mathcal{A} \) is closed under countable unions. i.e., if \(A_i\in \mathcal{A} \), then \(\bigcup_{i=1}^{\infty} A_{i}\in \mathcal{A} \).
 	\end{itemize}
 \end{definition}
 
 \begin{remark}
 	There are some easy properties we can immediately derive.
 	\begin{itemize}
-		\item \(X\in \mathcal{A} \) from \(X = X\setminus \underbrace{\varnothing}_{\in \mathcal{A}} \) and \(\mathcal{A}\) is closed under complement.
-		\item \(\bigcap\limits_{i=1}^{\infty} A_{i} = \left(\bigcup\limits_{i=1}^{\infty} A_{i}^{c} \right)^c\), namely \(\mathcal{A} \) is \underline{closed under countable intersections}.
+		\item \(X\in \mathcal{A} \) from \(X = X\setminus \varnothing \) and \(\mathcal{A}\) is closed under complement.\footnote{Recall that \(\varnothing \in \mathcal{A} \).}
+		\item \(\bigcap_{i=1}^{\infty} A_{i} = \left(\bigcup_{i=1}^{\infty} A_{i}^{c} \right)^c\), namely \(\mathcal{A} \) is \underline{closed under countable intersections}.
 		\item \(A_1\cup A_2 \cup \dots \cup A_n = A_1\cup A_2 \cup \dots \cup A_n \cup \varnothing \cup \varnothing \cup\dots\), hence \(\mathcal{A} \) is closed under finite unions and intersections.
 	\end{itemize}
 \end{remark}
 
 \begin{note}
-	The \hyperref[def:sigma-algebra]{definition of \(\sigma\)-algebra} should remind us the definition of topological basis, and this is indeed the case.
-	We can consider a topological space and put some structure on the \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} \(\mathcal{A} \),
-	which gives us the following.
+	The \hyperref[def:sigma-algebra]{definition of \(\sigma\)-algebra} should remind us the definition of topological basis, and this is indeed the case. We can consider a topological space and put some structure on the \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} \(\mathcal{A} \), which gives us the following.
 \end{note}
 
 \begin{definition}[Borel set]\label{def:Borel-set}

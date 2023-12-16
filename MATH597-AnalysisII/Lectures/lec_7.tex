@@ -1,50 +1,52 @@
 \lecture{7}{21 Jan.\ 11:00}{Borel Measures}
 \section{Borel Measures on \(\mathbb{R}\)}
 \begin{prev}
-	Recall that when we say something is \textbf{Borel}, we assume some sort of topological structure on the underlying space implicitly.
-	In our context, we're considering the usual topology on \(\mathbb{R}^n \) specifically. We'll focus on one dimensional case
-	for now.
+	Recall that when we say something is \textbf{Borel}, we assume some sort of topological structure on the underlying space implicitly. In our context, we're considering the usual topology on \(\mathbb{R}^n \) specifically. We'll focus on one dimensional case for now.
 \end{prev}
 
 \begin{definition}[Distribution function]\label{def:distribution-function}
-	An \underline{increasing}\footnote{Here, increasing means \(F(x)\leq F(y)\) for \(x<y\).} function
-	\[
-		F\colon \mathbb{R} \to \mathbb{R}
-	\]
-	and \underline{right-continuous}. \(F\) is then a \emph{distribution function}.
+	If \(F\colon \mathbb{R} \to \mathbb{R}\) is increasing\footnote{I.e., \(F(x)\leq F(y)\) for \(x<y\).} and right-continuous, then it's a \emph{distribution function}.
 \end{definition}
 
-\begin{eg}
-	Here are some examples of right-continuous functions.
-	\begin{enumerate}[(a)]
-		\item \(F(x) = x\).
-		\item \(F(x) = e^x\).
-		\item \(F(x) = \begin{dcases}
-			      1, & \text{ if } x\geq 0; \\
-			      0, & \text{ if } x < 0.
-		      \end{dcases}\)
-		\item \label{eg:lec7-4} Let \(\mathbb{Q} \coloneqq \{r_1, r_2, \dots  \}\). Define
-		      \(
-		      F_n(x) = \begin{dcases}
-			      1, & \text{ if } x\geq r_n; \\
-			      0, & \text{ if } x < r_n,
-		      \end{dcases}
-		      \) and \( F(x) \coloneqq \sum_{n=1}^{\infty} \frac{F_n(x)}{2^n}\).
+Here are some examples of right-continuous functions.
 
-		      Then \(F\) is a distribution function (hence right-continuous). This is shown in \autoref{lma:lec7-eg:4-is-distribution-function}.
-	\end{enumerate}
+\begin{eg}
+	\(F(x) = x\).
 \end{eg}
+
+\begin{eg}
+	\(F(x) = e^x\).
+\end{eg}
+
+\begin{eg}
+	\(F(x) = \begin{dcases}
+		1, & \text{ if } x\geq 0; \\
+		0, & \text{ if } x < 0.
+	\end{dcases}\)
+\end{eg}
+
+\begin{eg}\label{eg:lec7-4}
+	Let \(\mathbb{Q} \coloneqq \{r_1, r_2, \dots  \}\). Define
+	\[
+		F_n(x) = \begin{dcases}
+			1, & \text{ if } x\geq r_n; \\
+			0, & \text{ if } x < r_n;
+		\end{dcases},\quad
+		F(x) \coloneqq \sum_{n=1}^{\infty} \frac{F_n(x)}{2^n}.
+	\]
+	Then \(F\) is a \hyperref[def:distribution-function]{distribution function} (hence right-continuous). This is shown in \autoref{lma:lec7-eg:4-is-distribution-function}.
+\end{eg}
+
 \begin{note}
-	If \(F\) is increasing, and
+	If \(F\) is increasing, then
 	\[
 		F(\infty )\coloneqq \lim_{x \nearrow \infty} F(x),\quad F(-\infty ) \coloneqq \lim_{x \searrow \infty} F(x)
 	\]
-	exist in \([-\infty , \infty ]\).
-
-	In probability theory, cumulative distribution function (CDF) is a distribution function with \(F(\infty ) = 1\), \(F(-\infty ) = 0\).\footnote{There are \underline{distributions}~\cite{folland1999real} Ch9., but these are different from distribution functions.}
+	exist in \([-\infty , \infty ]\). In probability theory, cumulative distribution function (CDF) is a \hyperref[def:distribution-function]{distribution function} with \(F(\infty ) = 1\), \(F(-\infty ) = 0\).\footnote{There are \emph{distributions}~\cite[\defaultS 9]{folland1999real}, but these are different from \hyperref[def:distribution-function]{distribution functions}.}
 \end{note}
 
 Now, we see a new definition which is essential to our discussion.
+
 \begin{definition}[Borel mesaure]\label{def:Borel-measure}
 	A \emph{Borel measure} is any \hyperref[def:measure]{measure} \(\mu\) defined on the \hyperref[def:sigma-algebra]{\(\sigma\)-algebra} of \hyperref[def:Borel-set]{Borel sets}.
 \end{definition}
@@ -52,18 +54,15 @@ Now, we see a new definition which is essential to our discussion.
 Since we're now considering a topological space, hence it's reasonable to define the following because we have the concept of compact set now.
 
 \begin{definition}[Locally finite]\label{def:locally-finite}
-	Let \(X\) be a Hausdorff topological space, \(\mu\) on \((X, \mathcal{B} (X))\) is called \emph{locally finite} if \(\mu (K)<\infty \)
-	for every compact set \(K\subset X\).
+	Let \(X\) be a Hausdorff topological space, \(\mu\) on \((X, \mathcal{B} (X))\) is called \emph{locally finite} if \(\mu (K)<\infty \) for every compact set \(K\subset X\).
 \end{definition}
 
 \begin{note}
-	Some authors will require a \hyperref[def:Borel-measure]{Borel measure} equipped with the \hyperref[def:locally-finite]{locally finite} property.
-	But formally, this is not so common.
+	Some authors will require a \hyperref[def:Borel-measure]{Borel measure} equipped with the \hyperref[def:locally-finite]{locally finite} property. But formally, this is not so common.
 \end{note}
 
 \begin{lemma}
-	Let \(\mu \) be a \hyperref[def:locally-finite]{locally finite} \hyperref[def:Borel-measure]{Borel measure} on
-	\(\mathbb{R} \), then
+	Let \(\mu \) be a \hyperref[def:locally-finite]{locally finite} \hyperref[def:Borel-measure]{Borel measure} on \(\mathbb{R} \), then
 	\[
 		F_{\mu }(x) = \begin{dcases}
 			\mu \left((0, x]\right),  & \text{ if } x > 0 \\
@@ -107,8 +106,7 @@ Since we're now considering a topological space, hence it's reasonable to define
 		\[
 			F_\mu(x) = \mu ((0, x]) = \mu ((0, x^+])
 		\]
-		from the fact that a measure is right-continuous.\footnote{Actually, a measure is always continuous.} Now, if \(x\leq 0\),
-		the same argument follows since multiplying \(-1\) will not change the fact that a \hyperref[def:measure]{measure} is continuous.
+		from the fact that a measure is right-continuous.\footnote{Actually, a measure is always continuous.} Now, if \(x\leq 0\), the same argument follows since multiplying \(-1\) will not change the fact that a \hyperref[def:measure]{measure} is continuous.
 	\end{explanation}
 \end{proof}
 
@@ -117,12 +115,10 @@ Since we're now considering a topological space, hence it's reasonable to define
 \end{definition}
 
 \begin{lemma}
-	Let \(\mathcal{H} \) be the collection of \underline{finite disjoint} unions of \hyperref[def:half-intervals]{half-intervals}. Then, \(\mathcal{H} \)
-	is an \hyperref[def:algebra]{algebra} on \(\mathbb{R} \).
+	Let \(\mathcal{H} \) be the collection of \underline{finite disjoint} unions of \hyperref[def:half-intervals]{half-intervals}. Then, \(\mathcal{H} \) is an \hyperref[def:algebra]{algebra} on \(\mathbb{R} \).
 \end{lemma}
 \begin{proof}
-	We observe that \(\varnothing \in \mathcal{H} \) and \(\mathcal{H} \) is closed under finite unions is obvious, hence
-	we only need to show that \(\mathcal{H} \) is closed under complements.
+	We observe that \(\varnothing \in \mathcal{H} \) and \(\mathcal{H} \) is closed under finite unions is obvious, hence we only need to show that \(\mathcal{H} \) is closed under complements.
 	\begin{claim}
 		\(\mathcal{H} \) is closed under complements.
 	\end{claim}
@@ -139,8 +135,7 @@ Since we're now considering a topological space, hence it's reasonable to define
 \end{proof}
 
 \begin{proposition}[Distribution function defines a pre-measure]
-	Let \(F\colon \mathbb{R}\to \mathbb{R}  \) be a \hyperref[def:distribution-function]{distribution function}. For a
-	\hyperref[def:half-intervals]{half interval} \(I\), define
+	Let \(F\colon \mathbb{R}\to \mathbb{R}  \) be a \hyperref[def:distribution-function]{distribution function}. For a \hyperref[def:half-intervals]{half interval} \(I\), define
 	\[
 		\ell(I) \coloneqq \ell_F(I) = \begin{dcases}
 			0,                        & \text{ if } I = \varnothing;         \\
@@ -154,26 +149,18 @@ Since we're now considering a topological space, hence it's reasonable to define
 	\[
 		\mu _0(A) = \sum_{k=1}^{N} \ell (I_{k}) \text{ if }A = \bigcup_{k=1}^{N} I_{k},
 	\]
-	where \(A\) is a finite \underline{disjoint} union of \hyperref[def:half-intervals]{half intervals} \(I_1, \dots , I_{N} \).
-	Then, \(\mu _0\) is a \hyperref[def:pre-measure]{pre-measure} on \(\mathcal{H}\).
+	where \(A\) is a finite \underline{disjoint} union of \hyperref[def:half-intervals]{half intervals} \(I_1, \dots , I_{N} \). Then, \(\mu _0\) is a \hyperref[def:pre-measure]{pre-measure} on \(\mathcal{H}\).
 \end{proposition}
 \begin{proof}
-	Firstly, we note that \(\mu _0\) is well-defined. And also, \(\mu _0\) satisfies \hyperref[def:pre-measure-null-empty-set]{null empty set} and
-	\hyperref[def:pre-measure-finite-additivity]{Finite additivity} properties clearly. The only nontrivial part needs a proof is the
-	\hyperref[def:pre-measure-countable-additivity-within-the-algebra]{Countable additivity within \(\mathcal{H}\)} properties.
-	To show that \hyperref[def:pre-measure-countable-additivity-within-the-algebra]{Countable additivity within \(\mathcal{H}\)} holds, we proceed as follows.
+	Firstly, we note that \(\mu _0\) is well-defined. And also, \(\mu _0\) satisfies \hyperref[def:pre-measure-null-empty-set]{null empty set} and \hyperref[def:pre-measure-finite-additivity]{Finite additivity} properties clearly. The only nontrivial part needs a proof is the \hyperref[def:pre-measure-countable-additivity-within-the-algebra]{Countable additivity within \(\mathcal{H}\)} properties. To show that \hyperref[def:pre-measure-countable-additivity-within-the-algebra]{Countable additivity within \(\mathcal{H}\)} holds, we proceed as follows.
 
-	Suppose \(A\in \mathcal{H} \) where \(A = \bigcup_{i=1}^{\infty} A_{i}\) is a countable
-	disjoint union. It is enough to consider the case that \(A = I\), \(A_{k} = I_{k}\) are all
-	half-intervals.
+	Suppose \(A\in \mathcal{H} \) where \(A = \bigcup_{i=1}^{\infty} A_{i}\) is a countable disjoint union. It is enough to consider the case that \(A = I\), \(A_{k} = I_{k}\) are all \hyperref[def:half-intervals]{half-intervals}.
 	\begin{remark}
-		Since \(\mathcal{H}\) is only a collection of \emph{finite} disjoint \hyperref[def:half-intervals]{half intervals}, hence
-		after considering \(A = I\), we can apply the same argument iteratively and stop in finite steps. Formally, we can consider \(H\in \mathcal{H} \),
-		\(H = \bigcup_{i=1}^{\infty} A^{i}\), where \(A^i\) being a \hyperref[def:half-intervals]{half interval}. Then by the above argument, we have \(A^i = I^i\) and so on.
+		Since \(\mathcal{H}\) is only a collection of \emph{finite} disjoint \hyperref[def:half-intervals]{half intervals}, hence after considering \(A = I\), we can apply the same argument iteratively and stop in finite steps. Formally, we can consider \(H\in \mathcal{H} \), \(H = \bigcup_{i=1}^{\infty} A^{i}\), where \(A^i\) being a \hyperref[def:half-intervals]{half interval}. Then by the above argument, we have \(A^i = I^i\) and so on.
 	\end{remark}
 
-	Focus on the case \(I = (a, b]\). Let \((a, b] = \bigcup_{n=1}^{\infty} (a_{n}, b_{n}]\),
-	which is a disjoint union. Then we only need to check \(F(b) - F(a) = \sum_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n})\right)\).
+	Focus on the case \(I = (a, b]\). Let \((a, b] = \bigcup_{n=1}^{\infty} (a_{n}, b_{n}]\), which is a disjoint union. Then we only need to check \(F(b) - F(a) = \sum_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n})\right)\).
+
 	\begin{claim}
 		\(F(b) - F(a) \geq \sum_{n=1}^{\infty} (F(b_{n} ) - F(a_{n} ))\).
 	\end{claim}
@@ -184,34 +171,29 @@ Since we're now considering a topological space, hence it's reasonable to define
 		\]
 		By letting \(N \to \infty\), we have \(F(b) - F(a) \geq \sum_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n})\right)\).
 	\end{explanation}
+
 	\begin{claim}
 		\(F(b) - F(a) \leq \sum_{n=1}^{\infty} (F(b_{n} ) - F(a_{n} ))\).
 	\end{claim}
 	\begin{explanation}
-		Fix \(\epsilon >0\). Since \(F\) is right-continuous, \(\exists a ^\prime > a\) such that \(F(a ^\prime ) - F(a) <\epsilon\).
-		For each \(n\in\mathbb{N} \), \(\exists b_{n} ^\prime > b_{n}\) such that
+		Fix \(\epsilon >0\). Since \(F\) is right-continuous, \(\exists a ^\prime > a\) such that \(F(a ^\prime ) - F(a) <\epsilon\). For each \(n\in\mathbb{N} \), \(\exists b_{n} ^\prime > b_{n}\) such that
 		\[
 			F(b_{n} ^\prime ) - F(b_{n})<\frac{\epsilon }{2^n}.
 		\]
-		Then, we have \([a ^\prime , b] \subset \bigcup_{n=1}^{\infty} (a_{n}, b_{n} ^\prime )\), hence
-		\(\underset{ N\in\mathbb{N}}{\exists}\ [a ^\prime , b]\subset \bigcup_{n=1}^{N} (a_{n}, b_{n} ^\prime )\),
-		which is only finitely many unions now.
 		\begin{remark}
-			This essentially follows from the fact that open sets are closed under countable unions, hence the equality will not hold, even after taking the limit.
+			It's again the \(\epsilon /2^n\) trick we saw before!
 		\end{remark}
-
-		In this case, we have
+		Then, we have \([a ^\prime , b] \subset \bigcup_{n=1}^{\infty} (a_{n}, b_{n} ^\prime )\), hence \(\underset{ N\in\mathbb{N}}{\exists}\ [a ^\prime , b]\subset \bigcup_{n=1}^{N} (a_{n}, b_{n} ^\prime )\), which is only finitely many unions now.\footnote{This essentially follows from the fact that open sets are closed under countable unions, hence the equality will not hold, even after taking the limit.} In this case, we have
 		\[
 			F(b) - F(a ^\prime ) \leq \sum_{n=1}^{N} F(b_{n} ^\prime ) - F(a_{n}).
 		\]
-
-
 		Finally, we see that
 		\[
 			\begin{split}
-				F(b) - F(a) & \leq F(b) - F(a ^\prime )+\epsilon                                                           \\
-				            & \leq \sum_{n=1}^{\infty} \left(F(b_{n} ^\prime ) - F(a_{n})\right) + \epsilon                \\
-				            & \leq \sum_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n}) + \frac{\epsilon }{2^n}\right) + \epsilon
+				F(b) - F(a)
+				 & \leq F(b) - F(a ^\prime )+\epsilon                                                           \\
+				 & \leq \sum_{n=1}^{\infty} \left(F(b_{n} ^\prime ) - F(a_{n})\right) + \epsilon                \\
+				 & \leq \sum_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n}) + \frac{\epsilon }{2^n}\right) + \epsilon
 				= \sum_{n=1}^{\infty} \left(F(b_{n}) - F(a_{n})\right) + 2\epsilon
 			\end{split}
 		\]
@@ -219,9 +201,6 @@ Since we're now considering a topological space, hence it's reasonable to define
 		\[
 			F(b) - F(a) \leq \sum_{n=1}^{\infty} (F(b_{n}) - F(a_{n})).
 		\]
-		\begin{remark}
-			It's again the \(\epsilon /2^n\) trick we saw before!
-		\end{remark}
 	\end{explanation}
 
 	Combine these two inequalities, we have

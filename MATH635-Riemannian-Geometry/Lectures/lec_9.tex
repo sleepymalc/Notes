@@ -1,14 +1,36 @@
 \lecture{9}{2 Feb.\ 13:00}{Tensors and Connections}
 \subsection{Tensor Fields}
-We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in a brute-fore way\footnote{See \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields} for another view point.} by first introducing \hyperref[def:tensor]{tensors}.
+We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in a brute-fore way\footnote{See \autoref{section:C-infty-module-viewpoint-of-tensor-fields} for another view point.} by following a similar path of how we define \hyperref[def:vector-field*]{vector field}, i.e., we first define some \hyperref[def:bundle]{bundle} called \hyperref[def:tensor-bundle]{tensor bundle}, and then the \hyperref[def:tensor-field]{tensor field} is just a smooth \hyperref[def:section]{section} of which. But first, it might be beneficial to see how does a \hyperref[def:tensor]{tensor} look like.
 
 \begin{definition}[Tensor]\label{def:tensor}
-	Let \(V\) be a vector space of dimension \(m < \infty \), and the dual space \(V^{\ast}\). Then the vector space of the \emph{\(r\)-times contravariant and \(s\)-times covariant tensors over \(V\)}, denoted as \(T_s^r(V) \), is the \hyperref[def:vector-field]{vector field} defined as
+	Let \(V\) be a vector space of dimension \(m < \infty \), and the dual space \(V^{\ast}\). The vector space of the \emph{\(r\)-times contravariant and \(s\)-times covariant tensors over \(V\)}, denoted as \(T_s^r(V) \), is defined as
 	\[
 		T_s^r(V) = \{ T\colon \underbrace{V^{\ast} \times \dots \times V^{\ast} }_{r} \times \underbrace{V\times \dots \times V}_{s} \to \mathbb{R} \}
-		= \underbrace{V \otimes \dots \otimes V}_{r} \otimes \underbrace{V^{\ast} \otimes \dots \otimes V^{\ast} }_{s}.
+		= (V^{\ast})^{\otimes r} \otimes V^{\otimes s} .
 	\]
 \end{definition}
+
+\begin{intuition}
+	Just as \hyperref[def:vector-field]{vector field}, we're trying to assign a vector on every point \(p\in \mathcal{M} \). Here, we're trying to assign a \hyperref[def:tensor]{tensor} on every point \(p\in \mathcal{M} \), which is just an element in \((V_p ^{\ast} )^{\otimes r} \otimes V_p^{\otimes s}\).
+\end{intuition}
+
+As one might imagine, since a \hyperref[def:tensor]{tensor} is an element in \((V_p ^{\ast} )^{\otimes r} \otimes V_p^{\otimes s}\), the corresponding \hyperref[def:tensor-bundle]{tensor bundle} is defined as follows.
+
+\begin{definition}[Tensor bundle]\label{def:tensor-bundle}
+	A \emph{\((r, s)\)-tensor bundle} \(T^r_s \mathcal{M} = \bigcup_{p\in \mathcal{M} }T^r_s(T_p \mathcal{M} ) = T^r_s (T \mathcal{M} )\) on \(\mathcal{M} \) is a \hyperref[def:bundle]{fiber bundle} where the \hyperref[def:fiber]{fiber} is the tensor product of \(s\) \hyperref[def:tangent-space]{tangent spaces} and \(r\) \hyperref[def:cotangent-space]{cotangent spaces}.
+\end{definition}
+
+\begin{remark}
+	It's clear that one can also define \hyperref[def:tensor-bundle]{tensor bundle} in terms of a general \hyperref[def:vector-bundle]{vector bundle} \(V\) on \(\mathcal{M} \) instead of the \hyperref[def:tangent-bundle]{tangent bundle} \(T \mathcal{M} \) specifically.
+\end{remark}
+
+So in a \hyperref[def:tensor-bundle]{tensor bundle}, the \hyperref[def:fiber]{fiber} is a vector space and the \hyperref[def:tensor-bundle]{tensor bundle} is a special kind of \hyperref[def:vector-bundle]{vector bundle}.\footnote{There are \hyperref[def:vector-bundle]{vector bundles} which are not \hyperref[def:tensor-bundle]{tensor bundles}.} Finally, the \hyperref[def:tensor-field]{tensor field} is defined as follows.
+
+\begin{definition}[Tensor field]\label{def:tensor-field}
+	A \emph{\((r, s)\)-tensor field} is a \hyperref[def:section]{section} of a \hyperref[def:tensor-bundle]{\((r, s)\)-tensor bundle}.
+\end{definition}
+
+A convenient notation is the following.
 
 \begin{notation}
 	Let \(\mathcal{M} ^n \) be a \hyperref[def:smooth-manifold]{smooth manifold} and \(\pi \colon E \to \mathcal{M} \) a \hyperref[def:vector-bundle]{smooth vector bundle}, then the set of \hyperref[def:section]{sections} is denoted as
@@ -17,8 +39,14 @@ We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in
 	\]
 \end{notation}
 
+Then, we see the following.
+
 \begin{eg}
 	Consider the \hyperref[def:vector-bundle]{vector bundle} \((T\mathcal{M} , \pi , \mathcal{M} )\), then \(\Gamma (T\mathcal{M} ) \coloneqq \left\{ \text{\hyperref[def:vector-field]{vector fields} on } \mathcal{M} \right\} \).
+\end{eg}
+
+\begin{eg}
+	A \hyperref[def:tensor-field]{\((r, s)\)-tensor field} on \(\mathcal{M} \) is then equivalently defined as an element in \(\Gamma (T_s^r \mathcal{M} )\).
 \end{eg}
 
 \begin{notation}
@@ -28,12 +56,6 @@ We can introduce the notion of ``\hyperref[def:tensor-field]{tensor fields}'' in
 \begin{eg}
 	\(\Gamma (\Lambda _s \mathcal{M} ) \coloneqq \left\{ \text{\(s\)-forms on } \mathcal{M} \right\} \) with \(\Lambda _s \mathcal{M} = \Lambda ^s\left( \bigcup_{p\in \mathcal{M} } T^{\ast} _p \mathcal{M} \right) \).
 \end{eg}
-
-Then, we have the following.
-
-\begin{definition}[Tensor field]\label{def:tensor-field}
-	The \emph{\((r, s)\)-tensor fields} on \(\mathcal{M} \) is defined as elements in \(\Gamma (T_s^r \mathcal{M} )\) with \(T_s^r \mathcal{M} = \bigcup_{p\in \mathcal{M} }T^r_s(T_p \mathcal{M} )\).
-\end{definition}
 
 \begin{eg}
 	A \hyperref[def:Riemannian-metric]{Riemannian metric} \(g\) on \(\mathcal{M} \) is a \hyperref[def:tensor-field]{\((0, 2)\)-tensor field}, i.e., \(g\in \Gamma (T_2^0 (\mathcal{M} ))\) for all \(p \in \mathcal{M} \).
@@ -46,11 +68,7 @@ Then, we have the following.
 	It's in fact unnecessary to have such a general \autoref{def:tensor-field} on a \hyperref[def:Riemannian-manifold]{Riemannian manifold}.
 \end{note}
 \begin{explanation}
-	Since given a \hyperref[def:Riemannian-metric]{Riemannian metric} \(g\), it associates to each \(X\in \Gamma (T \mathcal{M} )\) a unique \(\omega \in \Gamma (T ^{\ast}\mathcal{M}) \) given by
-	\[
-		\omega (Y) = g(X, Y)
-	\]
-	for all \(X, Y\in \Gamma (T \mathcal{M} )\).
+	Since given a \hyperref[def:Riemannian-metric]{Riemannian metric} \(g\), it associates to each \(X\in \Gamma (T \mathcal{M} )\) a unique \(\omega \in \Gamma (T ^{\ast}\mathcal{M}) \) given by \(\omega (Y) = g(X, Y)\) for all \(X, Y\in \Gamma (T \mathcal{M} )\).
 \end{explanation}
 
 \section{Other Metrics}
@@ -65,7 +83,7 @@ Finally, we conclude this chapter by introducing some other metrics a \hyperref[
 \end{definition}
 
 \begin{note}
-	A \hyperref[def:pseudo-Riemannian-metric]{pseudo Riemannian metric} is actually a \hyperref[def:Riemannian-metric]{Riemannian metric} if it's positive definite at every \(p\in \mathcal{M} \).
+	A \hyperref[def:pseudo-Riemannian-metric]{pseudo Riemannian metric} is a \hyperref[def:Riemannian-metric]{Riemannian metric} if it's positive definite at every \(p\in \mathcal{M} \).
 \end{note}
 
 \begin{definition}[Lorentzian metric]\label{def:Lorentzian-metric}
@@ -92,11 +110,10 @@ An equivalent definition is the following.
 \end{eg}
 
 \chapter{Connections and Curvatures}
-So far, we saw that a \hyperref[def:vector-field]{vector field} \(X\) can be used to provide a directional derivative since it gives us a \hyperref[def:tangent-vector]{tangent vector} at each point smoothly. Now, we will introduce a new symbol \(\nabla \) where we let
+So far, we saw that a \hyperref[def:vector-field]{vector field} \(X\) can be used to provide a directional derivative since it gives us a \hyperref[def:tangent-vector]{tangent vector} at each point smoothly. Now, we will introduce a new symbol \(\nabla \) where for \(f\in C^{\infty} (\mathcal{M} )\),
 \[
-	\nabla _X f\coloneqq Xf
+	\nabla _X f\coloneqq Xf.
 \]
-for \(f\in C^{\infty} (\mathcal{M} )\).
 
 \begin{problem*}
 	Does this notation overkill? We already know that \(Xf = (\mathrm{d} f)(X)\)!
@@ -122,7 +139,7 @@ We first formulate a \emph{wish list} of properties which the \(\nabla _X\) shou
 	\begin{enumerate}[(a)]
 		\item \(\nabla _{fX+gY}Z = f \nabla _X Z + g \nabla _Y Z\);
 		\item \(\nabla _X (Y+Z) = \nabla _X Y + \nabla _X Z\);
-		      \item\label{def:linear-connection-c} \(\nabla _X fY = f \nabla _X Y + X(f)Y\);
+		\item\label{def:linear-connection-c} \(\nabla _X fY = f \nabla _X Y + X(f)Y\);
 	\end{enumerate}
 	for all \hyperref[def:vector-field]{vector fields} \(X, Y, Z\in \Gamma (T \mathcal{M} )\) and \(f, g\in C^{\infty} (\mathcal{M} )\).
 \end{definition}
@@ -151,19 +168,25 @@ Now, we see that \(\nabla _{\partial / \partial x_i} \frac{\partial }{\partial x
 in terms of the basis with a new set of coefficients \(\Gamma \).
 
 \begin{notation}[Connection coefficient]\label{not:connection-coefficient}
-	The coefficients \(\Gamma ^k_{ij}\) is called the \emph{connection coefficients}.\footnote{It's tempting to say that the \hyperref[not:connection-coefficient]{connection coefficients} are the same as \hyperref[not:Christoffel-symbol]{Christoffel symbols} since we're using the same symbols. Indeed, they are! For a deeper understanding, see \autoref{section:Christoffel-symbols}.}
+	The coefficients \(\Gamma ^k_{ij}\) is called the \emph{connection coefficients}.
 \end{notation}
+
+\begin{intuition}
+	\(\Gamma \) are the \emph{corrections} to an ordinary derivative on a ``curved'' \hyperref[def:smooth-manifold]{manifold} w.r.t.\ \(\nabla \).
+\end{intuition}
+
+It's tempting to say that the \hyperref[not:connection-coefficient]{connection coefficients} are the same as \hyperref[not:Christoffel-symbol]{Christoffel symbols} since we're using the same symbols. Indeed, they are the same if \(\nabla \) is chosen to be the \hyperref[def:Levi-Civita-connection]{Levi-Civita connection}.\footnote{As we will soon see, it means the \hyperref[def:torsion-free]{torsion free} and \hyperref[def:Riemannian]{Riemannian} \hyperref[def:linear-connection]{connection}. See \href{https://profoundphysics.com/christoffel-symbols-a-complete-guide-with-examples/?utm_content=ezff}{this} for a more detailed explanation.}
 
 \begin{note}
 	It's clear that \(\Gamma ^k_{ij}\) are differentiable and \hyperref[def:coordinate-chart]{charts}-dependent and hence \(\nabla \) is local.
 \end{note}
 
-Finally, we have
+Finally, in a particular domain \(U\), we have
 \[
 	\nabla _X Y = \left( X^i Y^j \Gamma ^k_{ij} + X(Y^k) \right) \frac{\partial }{\partial x_k}
 	\implies (\nabla _X Y)^k = X(Y^k) + \Gamma ^k_{ij} X^i Y^j,
 \]
-meaning that we have \((\dim \mathcal{M} )^3\) many \(\Gamma\)'s (freedom) when choosing \(\Gamma ^k_{ij}\) with \autoref{def:linear-connection}.\footnote{This is for a particular domain \(U\).}
+meaning that we have \((\dim \mathcal{M} )^3\) many \(\Gamma\)'s (freedom) when choosing \(\Gamma ^k_{ij}\) with \autoref{def:linear-connection}.
 
 \begin{remark}
 	One might ask what about other \hyperref[def:tensor-field]{tensor fields}? Fortunately, the same set of \(\Gamma \)'s fix the action of \(\nabla \) on any \hyperref[def:tensor-field]{tensor fields}.
@@ -184,14 +207,13 @@ meaning that we have \((\dim \mathcal{M} )^3\) many \(\Gamma\)'s (freedom) when 
 				+ \mathrm{d} x^i \underbrace{\left( \nabla _{\frac{\partial }{\partial x^j}} \frac{\partial }{\partial x^k} \right)}_{\Gamma ^\ell _{jk} \frac{\partial }{\partial x^{\ell } }}
 			\end{dcases}}
 	\]
-	leading to
+	and since \(\mathrm{d} x^i \frac{\partial }{\partial x^{\ell } } = \delta ^i_{\ell }\), the above leads to
 	\[
 		\left( \nabla _{\frac{\partial }{\partial x^j} } \mathrm{d} x^i\right) \frac{\partial }{\partial x^k}
 		= - \mathrm{d} x^i \left( \Gamma ^\ell _{jk} \frac{\partial }{\partial x^{\ell } } \right)
 		\implies \left( \nabla _{\frac{\partial }{\partial x^j} } \mathrm{d} x^i\right)_k
-		= - \Gamma ^i _{jk}
+		= - \Gamma ^i _{jk}.
 	\]
-	since \(\mathrm{d} x^i \frac{\partial }{\partial x^{\ell } } = \delta ^i_{\ell }\).
 \end{explanation}
 
 In summary, we have
@@ -217,14 +239,14 @@ The basic insight is that, after choosing a particular \hyperref[def:linear-conn
 \end{notation}
 
 \begin{remark}
-	\(T\) is actually \(C^{\infty} \)-linear in each entry,\footnote{See \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields}.} hence a \hyperref[def:tensor-field]{tensor field}.
+	\(T\) is actually \(C^{\infty} \)-linear in each entry,\footnote{See \autoref{section:C-infty-module-viewpoint-of-tensor-fields}.} hence a \hyperref[def:tensor-field]{tensor field}.
 \end{remark}
 \begin{explanation}
 	Since \(T(f\cdot \omega , X, Y) = f\cdot \omega \left( \dots \right) = f T(\omega , X, Y)\) and \(T(\omega + \psi , X, Y) = \dots = T(\omega , X, Y) + T(\psi , X, Y)\), and also
 	\[
 		\begin{split}
-			T(\omega , fX, Y) &= \omega \left( \nabla _{fX} Y - \nabla _Y(fX) - [fX, Y] \right) \\
-			&= \omega (f \nabla _X Y - (Yf) X - f \nabla _Y X - f[X, Y] + (Yf)X)
+			T(\omega , fX, Y) & = \omega \left( \nabla _{fX} Y - \nabla _Y(fX) - [fX, Y] \right)    \\
+			                  & = \omega (f \nabla _X Y - (Yf) X - f \nabla _Y X - f[X, Y] + (Yf)X)
 			= f\cdot T(\omega , X, Y)
 		\end{split}
 	\]
@@ -256,7 +278,7 @@ In a \hyperref[def:coordinate-chart]{chart},
 hence if \(T = 0\), we can interchange the lower two indexes of \(\Gamma ^k _{ij}\), i.e., \(\Gamma ^k _{ij} = \Gamma ^k _{ji}\).
 
 \begin{definition}[Riemannian]\label{def:Riemannian}
-	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection} and \(g\) be a \hyperref[def:Riemannian-metric]{Riemannian metric} on \(\mathcal{M} \). Then \(\nabla \) is \emph{Riemannian} (or \emph{metric}) if for all \(X, Y, Z\in \Gamma (T\mathcal{M} )\),\footnote{We view \(g(X, Y)\in C^{\infty} (\mathcal{M} )\) as suggested by \autoref{subsection:C-infty-module-viewpoint-of-tensor-fields}.}
+	Let \(\nabla \) be a \hyperref[def:linear-connection]{linear connection} and \(g\) be a \hyperref[def:Riemannian-metric]{Riemannian metric} on \(\mathcal{M} \). Then \(\nabla \) is \emph{Riemannian} (or \emph{metric}) if for all \(X, Y, Z\in \Gamma (T\mathcal{M} )\),\footnote{We view \(g(X, Y)\in C^{\infty} (\mathcal{M} )\) as suggested by \autoref{section:C-infty-module-viewpoint-of-tensor-fields}.}
 	\[
 		Z(g(X, Y)) = g(\nabla _{Z} X, Y) + g(X, \nabla _{Z} Y).
 	\]

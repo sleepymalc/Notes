@@ -1,0 +1,875 @@
+\chapter{Missing Proofs}
+In this chapter, we provide some missing proofs we omit in lectures, but solved in homework.
+
+\section{Concentration Inequalities}
+\subsection{Hoeffding's Inequality}
+We start by providing the equivalent conditions of a random variable being \hyperref[def:sub-Gaussian]{sub-Gaussian}.
+
+\begin{lemma}[Equivalent conditions (\autoref{lma:sub-Gaussian})]\label{pf-lma:sub-Gaussian}
+	Given a random variable \(X\) with \(\mathbb{E}_{}\left[X \right] =0\), the following are equivalent for absolute constants \(c_1, \dots , c_5 > 0\).
+	\begin{enumerate}[(a)]
+		\item\label{pf-lma:sub-Gaussian-a} \(\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{c_1^2 \lambda ^2}\) for all \(\lambda \in \mathbb{R} \).
+		\item\label{pf-lma:sub-Gaussian-b} \(\mathbb{P} (\vert X \vert \geq t) \leq 2 e^{- t^2 / c_2^2}\).
+		\item\label{pf-lma:sub-Gaussian-c} \(\left( \mathbb{E}_{}\left[\vert X \vert ^p \right] \right) ^{1 / p} \leq c_3 \sqrt{p}  \).
+		\item\label{pf-lma:sub-Gaussian-d} For all \(\lambda \) such that \(\vert \lambda  \vert \leq 1 / c_4 \), \(\mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{c_4^2 \lambda ^2} \).
+		\item\label{pf-lma:sub-Gaussian-e} For some \(c_5 < \infty \), \(\mathbb{E}_{}\left[e^{X^2 / c_5^2}  \right] \leq 2\).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	We show that \autoref{pf-lma:sub-Gaussian-a} \(\implies \) \autoref{pf-lma:sub-Gaussian-b} \(\implies \) \autoref{pf-lma:sub-Gaussian-c} \(\implies \) \autoref{pf-lma:sub-Gaussian-d} \(\implies \) \autoref{pf-lma:sub-Gaussian-e} \(\implies \) \autoref{pf-lma:sub-Gaussian-a}.
+	\begin{itemize}
+		\item \autoref{pf-lma:sub-Gaussian-a} \(\implies \) \autoref{pf-lma:sub-Gaussian-b}: This is already shown in \autoref{lma:sub-Gaussian}.
+		\item \autoref{pf-lma:sub-Gaussian-b} \(\implies \) \autoref{pf-lma:sub-Gaussian-c}: Assume \(\mathbb{P} (\vert X \vert \geq t) \leq 2 \exp (-t^2 / c_2^2)\). We first observe that we can write
+		      \[
+			      \mathbb{E}_{}\left[\vert X \vert ^p \right] = \int_{0}^{\infty} p t^{p-1} \mathbb{P} (\vert X \vert > t) \,\mathrm{d}t
+		      \]
+		      since by working backwards, we have
+		      \[
+			      \begin{split}
+				      \int_{0}^{\infty} p t^{p-1} \mathbb{P} (\vert X \vert \geq t) \,\mathrm{d}t
+				       & = \int_{0}^{\infty} p t^{p-1} \left( \int \mathbbm{1}_{t \leq \vert X \vert } \,\mathrm{d} \mathbb{P} \right)  \,\mathrm{d}t \\
+				       & = \iint_{0}^{\infty} p t^{p-1} \mathbbm{1}_{t \leq \vert X \vert } \,\mathrm{d}t \,\mathrm{d} \mathbb{P}                     \\
+				       & = \iint_{0}^{\vert X \vert } p t^{p-1} \,\mathrm{d}t \,\mathrm{d} \mathbb{P}                                                 \\
+				       & = \int \vert X \vert ^p \,\mathrm{d} \mathbb{P}
+				      = \mathbb{E}_{}\left[\vert X \vert ^p \right],
+			      \end{split}
+		      \]
+		      where the interchanging of the order of integration is given by Tonally's theorem. With this, we see that
+		      \begin{align*}
+			      \mathbb{E}_{}\left[\vert X \vert ^p \right]
+			       & = \int_{0}^{\infty} p t^{p-1} \mathbb{P} (\vert X \vert \geq t) \,\mathrm{d}t                        \\
+			       & \leq \int_{0}^{\infty} p t^{p-1} 2\cdot e^{-t^2 / c^2_2} \,\mathrm{d}t                               \\
+			       & = p\cdot c_2^p \int_{0}^{\infty} u^{\frac{p}{2} - 1} e^{-u} \,\mathrm{d}u \tag*{\(u = t^2 / c_2^2\)} \\
+			       & = p\cdot c^p_2 \cdot \Gamma (p / 2),
+		      \end{align*}
+		      This implies \((\mathbb{E}_{}\left[\vert X \vert ^p \right] )^{1 / p} \leq (p c_2^p\cdot \Gamma (p / 2)) ^{1 / p}\). Using the Stirling's formula \(\Gamma (x) \leq x^x\), we have
+		      \[
+			      (\mathbb{E}_{}\left[\vert X \vert ^p \right] )^{1 / p}
+			      \leq \left( p\cdot c_2^p \Gamma \left( \frac{p}{2} \right)  \right) ^{1 / p}
+			      \leq \left( p\cdot c_2^p \left( \frac{p}{2} \right) ^{p / 2} \right) ^{1 / p}
+			      \leq \frac{e^{1 / e} c_2}{\sqrt{2}} \sqrt{p}
+			      \eqqcolon c_3 \sqrt{p}
+		      \]
+		      where we use the fact that \(\max x^{1 / x} = e^{1 / e}\).
+		\item \autoref{pf-lma:sub-Gaussian-c} \(\implies \) \autoref{pf-lma:sub-Gaussian-d}: Assume \((\mathbb{E}_{}\left[\vert X \vert ^p \right] )^{1 / p} \leq c_3 \sqrt{p} \). Then from the fact that both sides are non-negative and \(p \geq 1\), we can safely raise both sides to power of \(p\) and get
+		      \[
+			      \mathbb{E}_{}\left[\vert X \vert ^p \right] \leq c_3^p p^{p / 2}.
+		      \]
+
+		      From \(e^x = 1 + \sum_{p=1}^{\infty } x^p / p! \), for all \(\vert \lambda \vert \leq 1 / c_4\) for some \(c_4 > 0\), we have
+		      \begin{align*}
+			      \mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right]
+			       & = \mathbb{E}_{}\left[1 + \sum_{p=1}^{\infty} \frac{(\lambda ^2 X^2)^p}{p!} \right]                            \\
+			       & = 1 + \sum_{p=1}^{\infty} \frac{\lambda ^{2p}}{p!}\mathbb{E}_{}\left[ X^{2p} \right]                          \\
+			       & \leq 1 + \sum_{p=1}^{\infty} \frac{(c_3^2 \cdot \lambda ^2 )^p }{p!} \cdot (2p)^{p}                           \\
+			       & = 1 + \sum_{p=1}^{\infty} (2 c_3^2 \lambda ^2 )^p \cdot \frac{p^p}{p!}                                        \\
+			       & \leq 1 + \sum_{p=1}^{\infty} (2 c_3^2 \lambda ^2 )^p \frac{p^p}{(p / e)^p} \tag*{since \(p! \geq (p / e)^p\)} \\
+			       & = \sum_{p=0}^{\infty} (2e c_3^2 \lambda ^2 )^p                                                                \\
+			       & = \frac{1}{1 - 2e c_3^2 \lambda ^2 }
+		      \end{align*}
+		      if \(2e \lambda ^2 c_3^2 < 1 \iff \vert \lambda \vert < \frac{1}{\sqrt{2e} c_3}\). Recall that \(1 / (1 - x) \leq e^{2x}\) for \(x\in [0, 1 / 2]\), we further have
+		      \[
+			      \mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{4e c_3^2 \lambda ^2 }
+		      \]
+		      for all \(\vert \lambda \vert \leq \min ( \frac{1}{\sqrt{2e} c_3} , \frac{1}{2 c_3 \sqrt{e} }) = \frac{1}{2 c_3 \sqrt{e} }\),\footnote{We omit the fact that we require a strict \(<\) in the first case.} i.e., by letting \(c_4 \coloneqq 2 c_3 \sqrt{e} \),
+		      \[
+			      \mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{c_4^2 \lambda ^2}
+		      \]
+		      as desired.
+		\item \autoref{pf-lma:sub-Gaussian-d} \(\implies \) \autoref{pf-lma:sub-Gaussian-e}: Assume that for all \(\lambda \) such that \(\vert \lambda  \vert \leq 1 / c_4\), we have \(\mathbb{E}_{}\left[e^{\lambda ^2 X^2} \right] \leq e^{c_4^2 \lambda ^2}\). Then, by choosing \(c_5 < \infty \) such that \(1 / c_5^2 \leq 1 / c_4^2\) (i.e., \(\lambda ^2 \coloneqq 1 / c_5^2\)),
+		      \[
+			      \mathbb{E}_{}\left[e^{X^2 / c_5^2} \right]
+			      \leq e^{c_4^2 / c_5^2} \leq 2
+		      \]
+		      for large enough \(c_5^2\).\footnote{Which corresponds to small enough \(\vert \lambda \vert = 1 / c_5\) hence the conditions are consistent.}
+		\item \autoref{pf-lma:sub-Gaussian-e} \(\implies \) \autoref{pf-lma:sub-Gaussian-a}: Assume that \(\mathbb{E}_{}\left[e^{X^2 / c_5^2} \right] \leq 2\) for some \(c_5 < \infty \). Then for all \(\lambda \in \mathbb{R} \),
+		      \begin{align*}
+			      \mathbb{E}_{}\left[e^{\lambda X} \right]
+			       & = 1 + \mathbb{E}_{}\left[\sum_{p=2}^{\infty} \frac{(\lambda X)^p}{p!} \right] \tag*{since \(\mathbb{E}_{}\left[X \right] = 0\)}                                                                                                                                                                          \\
+			       & \leq 1 + \frac{\lambda ^2}{2} \mathbb{E}_{}\left[ X^2 \sum_{p=2}^{\infty} \frac{\vert \lambda X \vert ^{p-2}}{(p-2)!} \right] \tag*{extract \(\frac{\lambda ^2 X^2}{2}\), holds since \(p \geq 2\)}                                                                                                      \\
+			       & = 1 + \frac{\lambda ^2}{2} \mathbb{E}_{}\left[X^2 e^{\vert \lambda X \vert } \right]                                                                                                                                                                                                                     \\
+			       & \leq 1 + \frac{\lambda ^2}{2} \mathbb{E}_{}\left[X^2 \exp \left( \frac{\lambda ^2 c_5^2}{2} + \frac{X^2}{2 c_5^2} \right) \right]                                                                                                                                   \tag*{\(ab \leq a^2 / 2 + b^2 / 2\)} \\
+			       & = 1 + \frac{\lambda ^2}{2} \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)\cdot \mathbb{E}_{}\left[X^2 \exp \left( \frac{X^2}{2c_5^2} \right)\right]                                                                                                                                                \\
+			       & = 1 + \frac{\lambda ^2}{2} \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)\cdot 2c_5^2 \cdot \mathbb{E}_{}\left[\frac{X^2}{2c_5^2}\exp \left( \frac{X^2}{2c_5^2} \right)\right]                                                                                                                     \\
+			       & \leq 1 + \lambda ^2 c_5^2 \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right) \cdot \mathbb{E}_{}\left[e^{X^2 / c_5^2 } \right] \tag*{since \(X^2 / 2c_5^2 \leq e^{X^2 / 2c_5^2}\)}                                                                                                                     \\
+			       & \leq 1 + 2 \lambda ^2 c_5^2 \cdot \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)                                                                                                                                                                                                                         \\
+			       & \leq \left( 1 + 2 \lambda ^2 c_5^2 \right) \exp \left( \frac{\lambda ^2 c_5^2}{2} \right)                                                                                                                                                                                                                \\
+			       & \leq \exp \left( 2\lambda ^2 c_5^2 + \frac{\lambda ^2 c_5^2}{2} \right) \tag*{\(1+x \leq e^x\)}                                                                                                                                                                                                          \\
+			       & = \exp \left( \frac{5 c_5^2}{2} \lambda ^2 \right).
+		      \end{align*}
+		      By letting \(c_1^2 \coloneqq 5c_5^2 / 2\), we recover \(\mathbb{E}_{}\left[e^{\lambda X} \right] \leq e^{c_1^2 \lambda ^2}\) for all \(\lambda \in \mathbb{R} \).
+	\end{itemize}
+\end{proof}
+
+\begin{note}
+	It's possible to assume \(c_1, \dots , c_5 = 1\), which significantly simplify the proof.
+\end{note}
+
+Before proving \autoref{lma:bounded-rv-is-sub-Gaussian} with the correct constant, we need a small lemma.
+
+\begin{lemma}\label{lma:variance-bound}
+	For any bounded random variable \(Z\in [a, b]\),
+	\[
+		\Var_{}\left[Z \right] \leq \frac{(b-a)^2}{4}.
+	\]
+\end{lemma}
+\begin{proof}
+	Since
+	\[
+		\Var_{}\left[Z \right]
+		= \Var_{}\left[Z - \frac{a+b}{2} \right]
+		\leq \mathbb{E}_{}\left[\left( Z - \frac{a+b}{2} \right) ^2 \right]
+		\leq \frac{(b-a)^2}{4}.
+	\]
+\end{proof}
+
+We can then see the correct proof.
+
+\begin{lemma}[\autoref{lma:bounded-rv-is-sub-Gaussian}]\label{pf-lma:bounded-rv-is-sub-Gaussian}
+	Given \(X\in [a, b]\) such that \(\mathbb{E}_{}\left[X \right] = 0\). Then
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \exp (\lambda ^2 \frac{(b-a)^2}{8})
+	\]
+	for all \(\lambda \in \mathbb{R} \), i.e., \(X\in \Subg((b-a)^2 / 4) \).
+\end{lemma}
+\begin{proof}
+	We first define \(\psi (\lambda ) = \ln \mathbb{E}_{}\left[e^{\lambda X} \right] \), and compute
+	\[
+		\psi ^{\prime} (\lambda ) = \frac{\mathbb{E}_{}\left[X e^{\lambda X} \right] }{\mathbb{E}_{}\left[e^{\lambda X} \right] },\quad
+		\psi ^{\prime\prime} (\lambda ) = \frac{\mathbb{E}_{}\left[X^2 e^{\lambda X} \right] }{\mathbb{E}_{}\left[e^{\lambda X} \right] } - \left( \frac{\mathbb{E}_{}\left[X e^{\lambda X} \right] }{\mathbb{E}_{}\left[e^{\lambda X} \right] } \right) ^2.
+	\]
+	Now, observe that \(\psi ^{\prime\prime} \) is the variance under the law of \(X\) re-weighted by \(\frac{e^{\lambda X}}{\mathbb{E}_{}\left[e^{\lambda X} \right] }\), i.e., by a change of measure, consider a new distribution \(\mathbb{P} _\lambda \) (w.r.t.\ the original distribution \(\mathbb{P} \) of \(X\)) as
+	\[
+		\,\mathrm{d} \mathbb{P} _\lambda (x) \coloneqq \frac{e^{\lambda X}}{\mathbb{E}_{\mathbb{P} }\left[e^{\lambda X} \right] }\,\mathrm{d} \mathbb{P} (x),
+	\]
+	then
+	\begin{align*}
+		\psi ^{\prime} (\lambda )
+		 & = \frac{\mathbb{E}_{\mathbb{P} }\left[X e^{\lambda X} \right] }{\mathbb{E}_{\mathbb{P} }\left[e^{\lambda X} \right] }
+		= \int \frac{x e^{\lambda x}}{\mathbb{E}_{\mathbb{P} }\left[ e^{\lambda X}\right] } \,\mathrm{d} \mathbb{P} (x)
+		= \mathbb{E}_{\mathbb{P} _\lambda }\left[ X \right]                                                                                                                                                                                                                   \\
+		\shortintertext{and}
+		\psi ^{\prime\prime} (\lambda )
+		 & = \frac{\mathbb{E}_{\mathbb{P} }\left[ X^2 e^{\lambda X} \right] }{\mathbb{E}_{\mathbb{P} }\left[ e^{\lambda X} \right] } - \left( \frac{\mathbb{E}_{\mathbb{P} }\left[ X e^{\lambda X} \right] }{\mathbb{E}_{\mathbb{P} }\left[ e^{\lambda X}\right] } \right) ^2
+		= \mathbb{E}_{\mathbb{P} _\lambda }\left[ X^2 \right] - \mathbb{E}_{\mathbb{P} _\lambda }\left[ X \right] ^2
+		= \Var_{\mathbb{P} _\lambda }\left[X \right] .
+	\end{align*}
+	From \autoref{lma:variance-bound}, since \(X\) under the new distribution \(\mathbb{P} _\lambda \) is still bounded between \(a\) and \(b\),
+	\[
+		\psi ^{\prime\prime} (\lambda ) = \Var_{\mathbb{P} _\lambda }\left[X \right] \leq \frac{(b-a)^2}{4}.
+	\]
+	Then by Taylor's theorem, there exists some \(\widetilde{\lambda} \in [0, \lambda ]\) such that
+	\[
+		\psi (\lambda )
+		= \psi (0) + \psi ^{\prime} (0) \lambda + \frac{1}{2} \psi ^{\prime\prime} (\widetilde{\lambda} )\lambda ^{2}
+		= \frac{1}{2} \psi ^{\prime\prime} (\widetilde{\lambda} )\lambda ^{2}
+	\]
+	since \(\psi (0) = \psi ^{\prime} (0) = 0\). By bounding \(\psi ^{\prime\prime} (\widetilde{\lambda} )\lambda ^{2} / 2\), we finally have
+	\[
+		\ln \mathbb{E}_{}\left[e^{\lambda X} \right] = \psi (\lambda ) \leq \frac{1}{2}\cdot \frac{(b-a)^{2} }{4}\lambda ^{2} = \lambda ^{2} \frac{(b-a)^2}{8},
+	\]
+	or equivalently,
+	\[
+		\mathbb{E}_{}\left[e^{\lambda X} \right] \leq \exp \left( \lambda ^2 \frac{(b-a)^2}{8} \right) .
+	\]
+\end{proof}
+
+\begin{remark}
+	Comparing the proof given in \autoref{lma:bounded-rv-is-sub-Gaussian}, we see that the correct proof is actually easier.
+\end{remark}
+
+We now prove \autoref{lma:sub-Gaussian-finite-maximum}.
+
+\begin{lemma}\label{pf-lma:sub-Gaussian-finite-maximum}
+	Let \(X_1, \dots , X_n \sim \Subg(\sigma _i^{2} ) \), not necessary independent. Then for some absolute constant \(c > 0\),
+	\[
+		\mathbb{E}_{}\left[\max _i \vert X_i \vert \right] \leq c \sqrt{\log n} \max _{1 \leq i \leq n} \sigma _i.
+	\]
+\end{lemma}
+\begin{proof}
+	We see that for any \(\lambda > 0\),
+	\begin{align*}
+		\mathbb{E}_{}\left[\max _{i\in [n]} X_i\right]
+		 & = \frac{1}{\lambda} \mathbb{E}_{}\left[\ln \exp \left( \lambda \max _{i\in [n]} X_i \right)  \right]                               \\
+		 & \leq \frac{1}{\lambda} \ln \mathbb{E}_{}\left[\exp \left( \lambda \max _{i\in [n]} X_i \right)  \right] \tag*{Jensen's inequality} \\
+		 & = \frac{1}{\lambda} \ln \mathbb{E}_{}\left[\max _{i\in [n]} e^{sX_i} \right]                                                       \\
+		 & \leq \frac{1}{\lambda} \ln \mathbb{E}_{}\left[\sum_{i=1}^{n} e^{\lambda X_i} \right]                                               \\
+		 & \leq \frac{1}{\lambda} \ln \sum_{i=1}^{n} \exp \left( \frac{\sigma _i^2 \lambda ^2}{2} \right)                                     \\
+		 & \leq \frac{1}{\lambda } \ln \left( n\cdot \exp \left( \frac{\lambda^2\cdot \max _i \sigma _i^2}{2} \right) \right)                 \\
+		 & = \frac{\ln n}{\lambda } + \frac{\lambda \max _i \sigma _i^2}{2}.
+	\end{align*}
+	Now, take \(\lambda = \sqrt{2 \ln n / \max _i \sigma_i^2 } \), we have
+	\[
+		\mathbb{E}_{}\left[\max _{i\in [n]} X_i \right]
+		\leq \sqrt{\frac{\ln n \cdot \max _i \sigma _i^2}{2}} + \frac{\sqrt{2 \ln n \cdot \max _i \sigma _i^2} }{2}
+		= \sqrt{2} \cdot \sqrt{\ln n} \cdot \max _i \sigma _i.
+	\]
+	Finally, apply this result to \(\{ Z_i \} _{i\in [2n]}\) such that \(Z_i = X_i\) and \(Z_{i+n} = -X_i\) for \(i\in [n]\), then
+	\[
+		\mathbb{E}_{}\left[\max _{i\in [n]} \vert X_i \vert \right]
+		= \mathbb{E}_{}\left[\max _{i\in [2n]} Z_i \right]
+		\leq \sqrt{2}\cdot \sqrt{\ln 2n} \cdot \max _i \sigma _i ,
+	\]
+	which is the desired result by setting \(c \coloneqq \sqrt{2 \ln 2n} / \sqrt{\ln n}\).
+\end{proof}
+
+\subsection{Bounded Difference Concentration Inequality}
+As mentioned, in the lecture, we did not prove \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality} in fact. To properly prove it, we will need the tool of \hyperref[def:martingale-decomposition]{martingale decomposition} and \hyperref[thm:Azuma-Hoeffding-inequality]{Azuma-Hoeffding inequality}. We start by proving the latter. Consider first the following definition.
+
+\begin{definition}[Martingale difference sequence]\label{def:martingale-difference-sequence}
+	A \emph{martingale difference sequence} is a sequence of random variables \(\Delta _1, \dots \) such that \(\mathbb{E}_{}\left[\Delta _i \mid \Delta _{i-1} \right] = 0\) for all \(i\).
+\end{definition}
+
+\begin{theorem}[Azuma-Hoeffding inequality]\label{thm:Azuma-Hoeffding-inequality}
+	Suppose \(\mathcal{F} _0, \mathcal{F} _1, \dots , \mathcal{F} _n \) are increasing \(\sigma \)-fields, and let \(X_i \in \mathcal{F} _i\) measurable and \(\mathbb{E}_{}\left[X_i \mid \mathcal{F} _{i-1} \right] = 0\) almost surely for all \(i=1, \dots , n\), i.e., \(X_1, X_2, \dots , X_n\) is a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. Suppose also that \(\vert X_i \vert \leq c_i\) almost surely for all \(i = 1, \dots , n\). Then, the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} holds for this \hyperref[def:martingale-difference-sequence]{martingale difference sequence}, i.e.,
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right) \leq \exp(- \frac{t^2}{2 \sum_{i} c_i^2}),
+	\]
+	and the same bound holds for the left tail.
+\end{theorem}
+\begin{proof}
+	First, by \hyperref[lma:MGF-trick]{MGF trick}, we have that for any \(\lambda >0\),
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right)
+		\leq \frac{\mathbb{E}_{}\left[\exp (\lambda \sum_{i} X_i) \right] }{\exp (\lambda t)}.
+	\]
+	Note that since \(\vert X_i \vert \leq c_i\), we have \(X_i \in [- c_i, c_i]\). Now,
+	\begin{align*}
+		\mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n} X_i) \right]
+		 & = \mathbb{E}_{}\left[\mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^n X_i ) \middle| \mathcal{F} _{n-1} \right]  \right]                  \\
+		\shortintertext{since \(\exp (\lambda \sum_{i=1}^{n-1} X_i )\) is \(\mathcal{F} _{n-1}\)-measurable,}
+		 & = \mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n-1} X_i) \mathbb{E}_{}\left[\exp (\lambda X_n) \mid \mathcal{F} _{n-1} \right] \right] \\
+		\shortintertext{from \autoref{lma:bounded-rv-is-sub-Gaussian} and \(\vert X_i \vert \leq c_i\), \(\mathbb{E}_{}\left[\exp (\lambda X_n) \mid \mathcal{F} _{n-1} \right] \leq \exp (\lambda ^2 (2c_n)^2 / 8) = \exp (\lambda ^2 c_n^2 / 2)\),}
+		 & \leq \exp \left( \frac{\lambda ^2 c_n^2}{2} \right) \mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n-1} X_i) \right].
+	\end{align*}
+	We see that this can be repeatedly apply to the last \(X_i\) and get
+	\[
+		\mathbb{E}_{}\left[\exp (\lambda \sum_{i=1}^{n} X_i) \right]
+		\leq \exp \left( \frac{\lambda ^2}{2}\sum_{i=1}^{n} c_i^2 \right),
+	\]
+	i.e., \(\sum_{i} X_i\in \operatorname{Subg}(\sum_{i} c_i^2) \). From (one-sided) \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality},
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right)
+		\leq \exp \left( \frac{-t^2}{2 \sum_{i} c_i^2} \right).
+	\]
+\end{proof}
+
+The above is actually a special symmetric version since we have a two-sided bound for \(X_i\), i.e., we assume \(\vert X_i \vert \leq c_i\). However, if the known bound is asymmetric, e.g., \(a_i \leq X_i \leq b_i\), to use \hyperref[thm:Azuma-Hoeffding-inequality]{Azuma-Hoeffding inequality}, one would need to choose \(c_i = \max (\vert a_i \vert , \vert b_i \vert )\), which might not be optimal. A slight change can be made as follows.
+
+\begin{corollary}[General Azuma-Hoeffding inequality]\label{col:general-Azuma-Hoeffding-inequality}
+	Suppose \(\mathcal{F} _0, \mathcal{F} _1, \dots , \mathcal{F} _n \) are increasing \(\sigma \)-fields, and let \(X_i \in \mathcal{F} _i\) measurable and \(\mathbb{E}_{}\left[X_i \mid \mathcal{F} _{i-1} \right] = 0\) almost surely for all \(i=1, \dots , n\), i.e., \(X_1, X_2, \dots , X_n\) is a \hyperref[def:martingale-difference-sequence]{martingale difference sequence}. Suppose also that \(A_i \leq X_i \leq B_i\) almost surely for all \(i = 1, \dots , n\) such that \(B_i - A_i \leq c_i\) almost surely. Then, the \hyperref[thm:Hoeffding-inequality]{Hoeffding's inequality} holds for this \hyperref[def:martingale-difference-sequence]{martingale difference sequence}, i.e.,
+	\[
+		\mathbb{P} \left( \sum_{i=1}^{n} X_i \geq t \right) \leq \exp(- \frac{2 t^2}{\sum_{i} c_i^2}),
+	\]
+	and the same bound holds for the left tail.
+\end{corollary}
+
+Then, we introduce the tool of \hyperref[def:martingale-decomposition]{martingale decomposition}.
+
+\begin{definition}[Martingale decomposition]\label{def:martingale-decomposition}
+	Let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \mathbb{P}\) on \(\chi \). Let \(f \colon \chi ^n \to \mathbb{R} \) satisfying the \hyperref[def:bounded-difference-property]{bounded-difference property} with parameters \(c_1, \dots , c_n\). Then the \emph{martingale decomposition} of \(f\) is defined as
+	\[
+		\begin{split}
+			f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f(X_1, \dots , X_n) \right]
+			 & = Y_n - Y_0                                                   \\
+			 & = (Y_n - Y_{n-1}) + (Y_{n-1} - Y_{n-2}) + \dots + (Y_1 - Y_0) \\
+			 & \eqqcolon \Delta _n + \Delta _{n-1} + \dots + \Delta _1,
+		\end{split}
+	\]
+	where \(Y_i = \mathbb{E}_{}\left[f(X_1, \dots , X_n) \mid X_1, \dots , X_i \right] \) and \(\Delta _i \coloneqq Y_i - Y_{i-1}\).
+\end{definition}
+
+\begin{note}
+	For any integrable random variable \(Y\), \(Y_i = \mathbb{E}_{}\left[Y \mid X_1, \dots , X_i \right] \) form a \hyperref[def:martingale-difference-sequence]{martingale difference sequence} if centered, i.e., \(\Delta _i = Y_i - Y_{i-1}\).
+\end{note}
+
+Then, we can show the \hyperref[thm:McDiarmid-inequality]{McDiarmid's inequality}.
+
+\begin{theorem}[McDiarmid's inequality (\autoref{thm:McDiarmid-inequality})]\label{pf-thm:McDiarmid-inequality}
+	Let \(X_1, \dots , X_n\) be i.i.d.\ random variables on \(\chi \), and let \(f\colon \chi ^n \to \mathbb{R} \) satisfying the \hyperref[def:bounded-difference-property]{bounded difference property} with parameters \(c_1, \dots , c_n\). Then for any \(t > 0\),
+	\[
+		\mathbb{P} (f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f (X_1, \dots , X_n)\right] \geq t) \leq \exp \left( \frac{-2t^2}{\sum_{i} c_i^2} \right).
+	\]
+	The same bound holds for the left tail.
+\end{theorem}
+\begin{proof}
+	Consider the \hyperref[def:martingale-decomposition]{martingale decomposition} of \(f\) such that \(f(X_1, \dots , X_n) - \mathbb{E}_{}\left[f(X_1, \dots , X_n) \right] = \sum_{i=1}^{n} \Delta _{i}\). Denote \(X = (X_1, \dots , X_n)\), and recall that
+	\[
+		h_i(x)
+		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_{i-1} \right]
+		= \mathbb{E}_{}\left[f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n) \right],
+	\]
+	and
+	\[
+		Y_i
+		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_i \right]
+		= \mathbb{E}_{}\left[f(x_1, \dots , x_i, X_{i+1}, \dots , X_n) \right].
+	\]
+	Now, define random variables
+	\[
+		A_i \coloneqq \inf _{x\in \chi } h_i(x) - Y_{i-1} ,\quad
+		B_i \coloneqq \sup _{x\in \chi } h_i(x) - Y_{i-1} .
+	\]
+	It's obvious that \(B_i \geq A_i\) almost everywhere for all \(i = 1, \dots , n\). Moreover, we have
+	\[
+		\Delta _i - A_i
+		= (Y_i - Y_{i-1}) - (\inf _{x\in \chi } h_i(x) - Y_{i-1} )
+		= Y_i - \inf _{x\in \chi } h_i(x) \geq 0
+	\]
+	almost everywhere, and similarly \(\Delta _i - B_i \leq 0\), hence \(A_i \leq \Delta _i \leq B_i\). Observe that
+	\begin{align*}
+		B_i - A_i
+		 & = \sup _{x\in \chi } h_i(x) - \inf _{y\in \chi } h_i(y)                                                                                                                            \\
+		 & = \sup _{x, y\in \chi } h_i(x) - h_i(y)                                                                                                                                            \\
+		 & = \sup _{x, y\in \chi } \mathbb{E}_{}\left[f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n ) - f(x_1, \dots , x_{i-1}, y, X_{i+1}, \dots , X_n)\right]                             \\
+		 & \leq \mathbb{E}_{}\left[\sup _{x, y\in \chi } \left\vert f(x_1, \dots , x_{i-1}, x, X_{i+1}, \dots , X_n ) - f(x_1, \dots , x_{i-1}, y, X_{i+1}, \dots , X_n) \right\vert  \right] \\
+		 & \leq c_i.
+	\end{align*}
+	Then, by applying the \hyperref[col:general-Azuma-Hoeffding-inequality]{general Azuma-Hoeffding inequality} to \(\sum_{i=1}^{n} \Delta _i\), we have
+	\[
+		\mathbb{P} (f(X) - \mathbb{E}_{}\left[f(X) \right] \geq t )
+		= \mathbb{P} \left( \sum_{i=1}^{n} \Delta _i \geq t \right)
+		\leq \exp \left( \frac{-2t^2}{\sum_{i} c_i^2} \right).
+	\]
+\end{proof}
+
+Finally, we provide a proof for the \hyperref[thm:Efron-Stein-inequality]{Efron-Stein inequality}.
+
+\begin{theorem}[Efron-Stein inequality (\autoref{thm:Efron-Stein-inequality})]\label{pf-thm:Efron-Stein-inequality}
+	Let \(X_1, \dots , X_n\) be independent random variables, and \(X_1^{\prime} , \dots , X_n^{\prime} \) be i.i.d.\ copies of \(X_i\)'s. Then
+	\[
+		\Var_{}\left[f(X) \right] \leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}_{}\left[\big(f(X) - f(X^{[i]}) \big)^2 \right].
+	\]
+\end{theorem}
+\begin{proof}
+	Denote \(X = (X_1, \dots , X_n)\), \(X^{\prime} = (X_1^{\prime} , \dots , X_n^{\prime} )\), \(X_{[i:j]} = (X_i, \dots , X_j)\), and
+	\[
+		\mathbb{E}_{i}\left[f(X) \right]
+		= \mathbb{E}_{}\left[f(X) \mid X_1, \dots , X_{i-1}, X_{i+1}, \dots , X_n \right]
+		= \mathbb{E}_{}\left[f(X) \mid X_{[1:i-1]}, X_{[i+1:n]} \right] .
+	\]
+	Define \(\Delta _i\) as \(\Delta _i = Y_i - Y_{i-1} \) where \(Y_i\) is defined the same as in \hyperref[def:martingale-decomposition]{martingale decomposition}. Hence, \(f(X) - \mathbb{E}_{}\left[f(X) \right] = \sum_{i=1}^{n} \Delta _i\). Now, observe that
+	\[
+		\Var_{}\left[f(X) \right]
+		= \mathbb{E}_{}\left[(f(X) - \mathbb{E}_{}\left[f(X) \right] )^2 \right]
+		= \mathbb{E}_{}\left[\left( \sum_{i=1}^{n} \Delta _i \right) ^2 \right]
+		= \mathbb{E}_{}\left[\sum_{i=1}^{n} \Delta _i ^2 \right] + 2 \mathbb{E}_{}\left[\sum_{i > j} \Delta _i \Delta _j \right] .
+	\]
+
+	Since \(\mathbb{E}_{}\left[XY \right] = \mathbb{E}_{}\left[\mathbb{E}_{}\left[XY \mid Y \right] \right] = \mathbb{E}_{}\left[Y \mathbb{E}_{}\left[X \mid Y \right] \right] \), \(\mathbb{E}_{}\left[\Delta _j \Delta _i \right] = \mathbb{E}_{}\left[\Delta _i \mathbb{E}_{}\left[\Delta _j \mid X_{[1:i]} \right] \right] \). But since for \(i > j\), \(\mathbb{E}_{}\left[\Delta _j \mid X_{[1:i]} \right] = 0\), we have
+	\[
+		\Var_{}\left[f(X) \right] = \mathbb{E}_{}\left[\sum_{i=1}^{n} \Delta _i^2 \right] = \sum_{i=1}^{n} \mathbb{E}_{}\left[\Delta _i^2 \right] .
+	\]
+	Now, expand everything,
+	\[
+		\begin{split}
+			\Var_{}\left[f(X) \right]
+			 & = \sum_{i=1}^{n} \mathbb{E}_{}\left[\Delta _i^2 \right]                                                                                                                                                                    \\
+			 & = \sum_{i=1}^{n} \mathbb{E}_{X_{[1:i]}}\left[\big( \mathbb{E}_{X_{[i+1:n]}}\left[f(X) \mid X_{[1:i]} \right] - \mathbb{E}_{X_{[i:n]}}\left[f(X) \mid X_{[1:i-1]} \right] \big)^2 \right]                                   \\
+			 & = \sum_{i=1}^{n} \mathbb{E}_{X_{[1:i]}}\left[ \big( \mathbb{E}_{X_{[i+1:n]}}\left[f(X) \mid X_{[1:i]} \right] - \mathbb{E}_{X_{[i+1:n]}}\left[ \mathbb{E}_{X_i}\left[f(X) \mid X_{[1:i-1]} \right] \right] \big)^2 \right] \\
+			 & \leq \sum_{i=1}^{n} \mathbb{E}_{X_{[1:i]}, X_{[i+1:n]}}\left[\big( f(X) - \mathbb{E}_{X_i}\left[f(X) \mid X_{[1:i-1]}, X_{[i+1:n]} \right] \big)^2 \right]
+		\end{split}
+	\]
+	where the last line follows from Jensen's inequality with the fact that \(x^2\) is convex. Using our notation, we write
+	\[
+		\Var_{}\left[f(X) \right] \leq \sum_{i=1}^{n} \mathbb{E}_{}\left[\big(f(X) - \mathbb{E}_{i}\left[f(X) \right] \big)^2\right] .
+	\]
+
+	Finally, note that for two i.i.d.\ samples \(x, y \overset{\text{i.i.d.} }{\sim } \mathbb{P} \),
+	\[
+		\mathbb{E}_{}\left[(x-y)^2 \right] = \mathbb{E}_{}\left[x^2 + y^2 - 2xy \right] = 2 \mathbb{E}_{}\left[x^2 \right] - 2(\mathbb{E}_{}\left[x \right] )^2
+		\implies \Var_{}\left[x \right] = \mathbb{E}_{}\left[\frac{1}{2}(x-y)^2 \right].
+	\]
+	This implies that
+	\[
+		\mathbb{E}_{i}\left[\big(f(X) - \mathbb{E}_{i}\left[f(X) \right] \big)^2 \right]
+		= \frac{1}{2} \mathbb{E}_{i}\left[(f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n))^2 \right] ,
+	\]
+	thus we have the final inequality
+	\[
+		\Var_{}\left[f(X) \right]
+		\leq \frac{1}{2}\sum_{i=1}^{n} \mathbb{E}_{}\left[\big( f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n) \big)^2 \right].
+	\]
+\end{proof}
+
+\begin{remark}
+	Equivalently, one can write the bound of \hyperref[thm:Efron-Stein-inequality]{Efron-Stein inequality} as\footnote{Where \((x)_+\) means \(\max (0, x)\), so we're avoiding double-counting.}
+	\[
+		\Var_{}\left[f(X) \right]
+		\leq \sum_{i=1}^{n} \mathbb{E}_{}\left[\big( f(X) - f(X_1, \dots , X_i^{\prime} , \dots , X_n) \big)_+^2 \right].
+	\]
+\end{remark}
+
+We have an additional corollary for \hyperref[thm:Efron-Stein-inequality]{Efron-Stein inequality}.
+
+\begin{corollary}
+	Let \(X_1, \dots , X_n\) be independent random variables. If the function \(f\) satisfies the \hyperref[def:bounded-difference-property]{bounded-difference property} with parameters \(c_1, \dots , c_n\), then
+	\[
+		\Var_{}\left[f(X_1, \dots , X_n) \right] \leq \frac{1}{4} \sum_{i=1}^{n} c_i^2.
+	\]
+\end{corollary}
+\begin{proof}
+	From \autoref{lma:variance-bound},
+	\[
+		\mathbb{E}_{}\left[\big(f(X) - \mathbb{E}_{i}\left[f(X) \right] \big)^2\right]
+		= \Var_{i}\left[f(X) \right]
+		\leq \frac{c_i^2}{4},
+	\]
+	hence \(\Var_{}\left[f(X) \right] \leq \frac{1}{4}\sum_{i=1}^{n} c_i^2\).
+\end{proof}
+
+\section{Expected Supremum of Empirical Process}
+\subsection{Metric Entropy Method}
+We first show the proof of \autoref{thm:metric-entropy}. Recall the following.
+
+\begin{prev}
+	Let \(d(f, g) = \sup _{x\in [0, 1]} \vert f(x) - g(x) \vert \), then \((\mathcal{S} _\alpha , d)\) is a \hyperref[def:pseudo-metric]{pseudo-metric} space.
+\end{prev}
+
+The proof is rather long, and we first state and prove some general facts about functions in \(\mathcal{S} _\alpha \). First, recall the \hyperref[thm:Taylor]{Taylor's theorem}.
+\begin{theorem}[Taylor's theorem]\label{thm:Taylor}
+	Let \(k \geq 1\) be an integer and let \(f\colon \mathbb{R} \to \mathbb{R} \) be \(k\) times differentiable at the point \(a\in \mathbb{R} \). Then there exists some real number \(\xi \in (a, x)\) such that
+	\[
+		f(x) = \sum_{i=0}^{k-1} \frac{(x-a)^i}{i!} f^{(i)}(x) + \frac{f^{(k)}(\xi )}{k!} (x-a)^k.
+	\]
+\end{theorem}
+
+\begin{lemma}\label{lma:Holder-smooth-1}
+	For every \(f\in \mathcal{S} _\alpha \) and \(x, x+h \in (0, 1)\),
+	\[
+		f(x+h) = \sum_{k=0}^{\beta } \frac{h^k}{k!} f^{(k)}(x) + R_f(x, h)
+	\]
+	where the remainder term \(R_f(x, h)\) satisfies \(\vert R_f (x, h) \vert \leq \vert h \vert ^\alpha / \beta !\).
+\end{lemma}
+\begin{proof}
+	By directly applying \hyperref[thm:Taylor]{Taylor's theorem} in our case, we see that
+	\[
+		f(x+h) = \sum_{k=0}^{\beta -1} \frac{h^k}{k!}f^{(k)}(x) + \frac{f^{(\beta )}(\xi )}{\beta !} h^\beta
+	\]
+	for some \(\xi\) between \(x\) and \(x+h\). We can then rewrite this as
+	\[
+		f(x+h) = \sum_{k=0}^{\beta } \frac{h^k}{k!}f^{(k)}(x) + \underbrace{\frac{h^\beta (f^{(\beta )}(\xi ) - f^{(\beta )}(x+h) )}{\beta !}}_{\coloneqq R_f(x, h)}.
+	\]
+	To show that \(\vert R_f(x, h) \vert \leq \vert h \vert ^\alpha / \beta !\), we see that
+	\[
+		\vert R_f(x, h) \vert
+		= \frac{\vert h \vert ^\beta }{\beta !} \vert f^{(\beta )}(\xi ) - f^{(\beta )}(x+h) \vert
+		\leq \frac{\vert h \vert ^\beta }{\beta !}\cdot \vert x+h - \xi \vert ^{\alpha - \beta }
+		\leq \frac{\vert h \vert ^\beta }{\beta !}\cdot \vert h \vert ^{\alpha - \beta }
+		= \frac{\vert h \vert ^\alpha }{\beta !}.
+	\]
+\end{proof}
+
+\begin{lemma}\label{lma:Holder-smooth-2}
+	For every \(f\in \mathcal{S} _\alpha \) and \(0 \leq i \leq \beta \), the derivative \(g = f^{(i)}\) belongs to \(\mathcal{S} _{\alpha - i}\) and hence
+	\[
+		f^{(i)} (x + h) = \sum_{k=0}^{\beta - i} \frac{h^k}{k!}f^{(i+k)}(x) + R_{f^{(i)}}(x, h)
+	\]
+	with \(\vert R_{f^{(i)}} (x, h) \vert \leq \vert h \vert ^{\alpha - i} / (\beta - i)!\) whenever \(x, x+h\in (0, 1)\).
+\end{lemma}
+\begin{proof}
+	For \(f\in \mathcal{S} _\alpha \) and \(0 \leq i \leq \beta \), we know that \(g = f^{(i)}\) satisfies
+	\begin{itemize}
+		\item \(g\) is \((\beta - i)\)-times differentiable, and hence it is continuous on \([0, 1]\) (if \(i < \beta \));\footnote{When \(i = \beta \), \(g\in \mathcal{S} _0\) obviously.}
+		\item \(\vert g^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta - i\);
+		\item \(\vert g^{(\beta - i)} (x) - g^{(\beta - i)}(y)\vert \leq \vert x - y \vert ^{(\alpha - i) - (\beta - i)}\) for all \(x, y\in [0, 1]\).
+	\end{itemize}
+	Hence, \(g \in \mathcal{S} _{\alpha - i}\). Then from \autoref{lma:Holder-smooth-1}, we have
+	\[
+		f^{(i)}(x+h) = g(x+h)
+		= \sum_{k=0}^{\beta - i}\frac{h^k}{k!} g^{(k)}(x) + R_g(x, h)
+		= \sum_{k=0}^{\beta - i} \frac{h^k}{k!} f^{(i+k)}(x) + R_{f^{(i)}}(x, h)
+	\]
+	where \(\vert R_{f^{(i)}} (x, h)\vert = \vert R_g(x, h) \vert \leq \vert h \vert ^{\alpha - i} / (\beta - i)!\).
+\end{proof}
+
+\begin{lemma}\label{lma:Holder-smooth-3}
+	Fix \(\epsilon  > 0\) and \(x \in (0, 1)\). Suppose that two functions \(f\) and \(g\) in \(\mathcal{S} _{\alpha }\) satisfy
+	\[
+		\vert f^{(k)} (x) - g^{(k)} (x) \vert \leq \epsilon ^{1 - k / \alpha }
+	\]
+	for all \(k = 0, 1, \dots , \beta \). Then for every \(h\in \mathbb{R} \) such that \(\vert h \vert \leq \epsilon ^{1 / \alpha }\) and \(x + h \in (0, 1)\),
+	\[
+		\vert f(x+h) - g(x+h) \vert \leq C(\alpha ) \epsilon
+	\]
+	where \(C(\alpha ) = \sum_{k=0}^{\beta } 1 / k! + 2 / \beta !\).
+\end{lemma}
+\begin{proof}
+	Given a fixed \(\epsilon > 0\), we know that for every \(h\in \mathbb{R} \) with \(\vert h \vert \leq \epsilon ^{1 / \alpha }\) and \(x, x + h \in (0, 1)\),
+	\[
+		\begin{split}
+			\vert f(x+h) - g(x+h) \vert
+			 & = \left\vert \left( \sum_{k=0}^{\beta } \frac{h^k}{k!}f^{(k)}(x) + R_f(x, h) \right) - \left( \sum_{k=0}^{\beta } \frac{h^k}{k!}g^{(k)}(x) + R_g(x, h) \right) \right\vert                                                                \\
+			 & \leq \left\vert \sum_{k=0}^{\beta } \frac{h^k}{k!}(f^{(k)}(x) - g^{(k)}(x)) \right\vert + \vert R_f(x, h) - R_g(x, h) \vert                                                                                                               \\
+			 & \leq \left\vert \sum_{k=0}^{\beta } \frac{h^k}{k!} \epsilon ^{1 - (k / \alpha )} \right\vert + \vert R_f(x, h) - R_g(x, h) \vert                                                                                                          \\
+			 & \leq \sum_{k=0}^{\beta } \frac{\vert h \vert ^k}{k!} \epsilon ^{1 - (k / \alpha )} + \left\vert R_f(x, h) - \frac{\vert h \vert ^\alpha }{\beta !} \right\vert + \left\vert R_g(x, h) - \frac{\vert h \vert ^\alpha }{\beta !}\right\vert \\
+			 & \leq \sum_{k=0}^{\beta } \frac{\vert h \vert ^k}{k!} \epsilon ^{1 - (k / \alpha )} + 2 \frac{\vert h \vert ^\alpha }{\beta !}                                                                                                             \\
+			 & \leq \sum_{k=0}^{\beta } \frac{\epsilon ^{k / \alpha }}{k!} \epsilon ^{1 - (k / \alpha )} + 2 \frac{\epsilon }{\beta !}                                                                                                                   \\
+			 & = \sum_{k=0}^{\beta } \frac{1}{k!} \epsilon + 2 \frac{\epsilon}{\beta !}
+			\eqqcolon C(\alpha ) \epsilon
+		\end{split}
+	\]
+	for \(C(\alpha ) = \sum_{k=0}^{\beta } 1 / k! + 2 / \beta! \).
+\end{proof}
+
+\begin{theorem}[\autoref{thm:metric-entropy}]\label{pf-thm:metric-entropy}
+	There exists constants \(c_1, c_2 > 0\) only depend on \(\alpha \) such that for all \(\epsilon > 0\),
+	\[
+		\exp \left( c_2 \epsilon ^{-1 / \alpha } \right)
+		\leq M(\mathcal{S} _\alpha , d, \epsilon )
+		\leq \exp \left( c_1 \epsilon ^{-1 / \alpha } \right) .
+	\]
+\end{theorem}
+\begin{proof}
+	We start by showing the upper-bound. In the rest of the proof, let \(C(\alpha )\) be a generic constant depending only on \(\alpha \), so it might be distinct from \(C(\alpha )\) defined above.
+
+	\begin{claim}\label{clm:metric-entropy-a}
+		Let \(x_1 < \dots < x_s\) be a maximal \(\epsilon ^{1 / \alpha }\) separated set in \((0, 1)\).\footnote{In the usual Euclidean metric on \(\mathbb{R} \).} For each \(f_0 \in \mathcal{S} _\alpha \), consider the following subset of \(\mathcal{S} _\alpha \)
+		\[
+			\mathcal{G} (f_0) \coloneqq \left\{ f\in \mathcal{S} _\alpha \colon \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - k / \alpha }} \right\rfloor = \left\lfloor \frac{f_0^{(k)}(x_i)}{\epsilon ^{1 - k / \alpha }} \right\rfloor \text{ for all \(1 \leq i \leq s\) and \(0 \leq k \leq \beta \) } \right\}.
+		\]
+		Then the number of distinct sets \(\mathcal{G} (f_0)\) as \(f_0\) ranges over \(\mathcal{S} _\alpha \) is an upper-bound on \(N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon )\), and hence \(N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon )\) is bounded from above by the cardinality of the set \(I\) defined as
+		\[
+			I \coloneqq \left\{ \left( \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - k / \alpha }} \right\rfloor,i = 1, \dots , s \text{ and } k = 0, \dots , \beta  \right) \colon f\in \mathcal{S} _\alpha  \right\}.
+		\]
+	\end{claim}
+	\begin{explanation}
+		Let \(N\) be a minimal \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net} of \((\mathcal{S} _\alpha , d )\) such that \(\vert N \vert = N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon)\). We want to show that \(\vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha } \vert \geq N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon )\). It suffices to show that the set of representatives \(R\), one from each \(\mathcal{G} (f)\), forms a \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net}. If this is the case, then \(\vert R \vert \geq \vert N \vert \) by the minimality of \(N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\). For two representative \(f \neq g \in R\) picked from \(\mathcal{G} (f) \neq \mathcal{G} (g)\), respectively, there exists \(1 \leq i \leq s\) and \(0 \leq k \leq \beta \) such that \(\left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \neq \left\lfloor \frac{g^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor\). Choosing the closest \(g\) w.r.t.\ \(f\) in terms of the difference, i.e., \(\left\vert \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor - \left\lfloor \frac{g^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \right\vert \geq 1\). Observe that the difference is actually attainable by \(1\) as \(g\) can range over the entire \(\mathcal{S} _\alpha \), hence, there exists a \(g\) such that \(\vert f^{(k)}(x_i) - g^{(k)}(x_i) \vert \leq \epsilon ^{1 - (k / \alpha )}\). Then from \autoref{lma:Holder-smooth-3}, for \(x \in [x_i - \epsilon ^{1 / \alpha }, x_i + \epsilon ^{1 / \alpha }]\), \(\vert f(x) - g(x) \vert \leq C(\alpha )\epsilon\). Since this holds for every \(x_i\) (which is separated by \(\epsilon ^{1 / \alpha }\) exactly), this bounds extends for all \(x\in (0, 1)\), i.e., \(d (f, g) = \sup _{0 < x < 1} \vert f(x) - g(x) \vert \leq C(\alpha )\epsilon\), hence \(R\) is a \hyperref[def:eps-net]{\(C(\alpha )\epsilon \)-net}, implying \(\vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha } \vert \geq N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\).
+
+		It's now easy to see that \(N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon ) \leq \vert I \vert \) as for every \(\mathcal{G} (f)\), there exists a one-to-one corresponding element in \(I\) defined exactly by \(\left( \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \right) _{\substack{i = 1, \dots , s \\ k = 0, \dots , \beta }}\), hence \(\vert I \vert = \vert \{ \mathcal{G} (f) \}_{f\in \mathcal{S} _\alpha }\vert \geq N(\mathcal{S} _\alpha , d , C(\alpha )\epsilon)\).
+	\end{explanation}
+
+	\begin{claim}\label{clm:metric-entropy-b}
+		The number of possible vectors \((\lfloor f^{(k)} (x_1) / \epsilon ^{1 - k / \alpha } \rfloor, k = 0, \dots , \beta )\) as \(f\) ranges over \(\mathcal{S} _\alpha \) is bounded from above by \(C(\alpha ) \epsilon ^{-\beta - 1}\).
+	\end{claim}
+	\begin{explanation}
+		We first note that as \(f\in \mathcal{S} _\alpha \), \(\vert f^{(k)} (x_1) \vert \leq 1\) for all \(k = 0, \dots , \beta \), hence for a fixed \(k\), the number of possible vale of \(\left\lfloor \frac{f^{(k)}(x_1)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor\) among different \(f\in \mathcal{S} _\alpha \) is bounded above by \(2\cdot \epsilon ^{- (1 - (k / \alpha ))} = 2 \epsilon ^{k / \alpha - 1}\). Hence, the number of possible vectors is upper-bounded by
+		\[
+			\prod _{k = 0}^{\beta } 2 \epsilon ^{k / \alpha - 1}
+			= 2^{\beta +1} \cdot \epsilon ^{\sum_{k=0}^{\beta } (k / \alpha - 1)}
+			= 2^{\beta +1} \epsilon ^{\frac{\beta ^2 + \beta }{2\alpha }} \cdot \epsilon^{- (\beta + 1)}
+			\leq 2^{\beta +1} \epsilon^{- \beta - 1}
+		\]
+		as \(\epsilon ^{\frac{\beta ^2 + \beta }{2\alpha }} \leq 1\).\footnote{This is easy to see when \(\alpha > 1\), \(\frac{\beta ^2 + \beta }{2\alpha }> 0\), \(\ln \epsilon^{\frac{\beta ^2 + \beta }{2\alpha }} \leq 0 \implies \ln \epsilon \leq 0\), which is true sine \(\epsilon \in (0, 1)\). When \(\alpha \in (0, 1)\), \(\beta = 0\), the inequality still holds.} By setting \(2^{\beta + 1} = C(\alpha )\), we have \(\leq C(\alpha )\epsilon ^{-\beta -1}\).
+	\end{explanation}
+
+	\begin{claim}\label{clm:metric-entropy-c}
+		Fix \(f\in \mathcal{S} _\alpha \), and let \(A_k \coloneqq \left\lfloor \frac{f^{(k)}(x_1)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor\) for \(k = 0, \dots , \beta \). Then for all \(i = 0, \dots , \beta \),
+		\[
+			\left\vert f^{(i)} (x_2) - \sum_{k=0}^{\beta -i} \frac{(x_2 - x_1)^k}{k!} A_{i+k} \epsilon ^{1 - (i + k) / \alpha } \right\vert \leq C(\alpha ) \epsilon ^{1 - i / \alpha }.
+		\]
+	\end{claim}
+	\begin{explanation}
+		Fix \(f\in \mathcal{S} _\alpha \), and let \(A_k \coloneqq \left\lfloor \frac{f^{(k)}(x_1)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor\) for \(k = 0, \dots , \beta \). From \autoref{lma:Holder-smooth-2}, for all \(i=0, \dots , \beta \),
+		\[
+			f^{(i)}(x_2) = \sum_{k=0}^{\beta - i} \frac{(x_2 - x_1)^k}{k!}f^{(i+k)}(x_1) + R_{f^{(i)}}(x_1, x_2 - x_1)
+		\]
+		with \(\vert R_{f^{(i)}} (x_1, x_2 - x_1)\vert \leq \vert x_2 - x_1 \vert ^{\alpha - i} / (\beta - i)!\). Rearranging, with
+		\[
+			f^{(i)}(x_2) - \sum_{k=0}^{\beta - i} \frac{(x_2 - x_1)^k}{k!}f^{(i+k)}(x_1) = R_{f^{(i)}}(x_1, x_2 - x_1),
+		\]
+		we then have \footnote{In the problem statement, a factor of \(\epsilon ^{1 - (i + k) / \alpha }\) is missing.}
+		\begin{align*}
+			 & \left\vert f^{(i)}(x_2) - \sum_{k=0}^{\beta -i} \frac{(x_2 - x_1)^k}{k!} \epsilon ^{1 - (i + k) / \alpha } \cdot A_{i + k} \right\vert                                                                                                                                                                                   \\
+			 & = \left\vert f^{(i)}(x_2) - \sum_{k=0}^{\beta -i} \frac{(x_2 - x_1)^k}{k!} \epsilon ^{1 - (i + k) / \alpha } \cdot \left\lfloor \frac{f^{(i + k)}(x_1)}{\epsilon ^{1 - (i + k) / \alpha }} \right\rfloor \right\vert                                                                                                     \\
+			 & \leq \left\vert f^{(i)}(x_2) - \sum_{k=0}^{\beta - i} \frac{(x_2 - x_1)^k}{k!}f^{(i+k)}(x_1) \right\vert \tag*{(\(= R_{f^{(i)}} (x_1, x_2 - x_1)\))}                                                                                                                                                                     \\
+			 & \qquad\qquad + \left\vert \sum_{k=0}^{\beta - i} \frac{(x_2 - x_1)^k}{k!}f^{(i+k)}(x_1) - \sum_{k=0}^{\beta -i} \frac{(x_2 - x_1)^k}{k!} \epsilon ^{1 - (i + k) / \alpha } \cdot \left\lfloor \frac{f^{(i + k)}(x_1)}{\epsilon ^{1 - (i + k) / \alpha }} \right\rfloor \right\vert                                       \\
+			 & \leq \frac{(x_2 - x_1)^{\alpha - i}}{(\beta - i)!} + \sum_{k=0}^{\beta - i} \frac{(x_2 - x_1)^k}{k!} \left\vert \epsilon ^{1 - (i+k) / \alpha } \left\lfloor \frac{f^{(i+k)}(x_1)}{\epsilon ^{1 - (i + k) / \alpha }} \right\rfloor - f^{(i+k)}(x_1) \right\vert                                                         \\
+			 & \leq \frac{\epsilon ^{1 - i / \alpha}}{(\beta - i)!} + \sum_{k=0}^{\beta - i} \frac{\epsilon ^{k / \alpha }}{k!} \epsilon ^{1 - (i + k) / \alpha } \left\vert \left\lfloor \frac{f^{(i+k)}(x_1)}{\epsilon ^{1 - (i + k) / \alpha }} \right\rfloor - \frac{f^{(i+k)}(x_1)}{\epsilon ^{1 - (i + k) / \alpha }} \right\vert \\
+			 & \leq \frac{\epsilon ^{1 - i / \alpha}}{(\beta - i)!} + \sum_{k=0}^{\beta - i} \frac{\epsilon ^{1 - i / \alpha }}{k!}                                                                                                                                                                                                     \\
+			 & \leq \frac{\epsilon ^{1 - i / \alpha}}{(\beta - i)!} + \epsilon ^{1 - i / \alpha } e \tag*{\(e = \sum_{k} 1 / k!\)}                                                                                                                                                                                                      \\
+			 & \eqqcolon C(\alpha ) \epsilon ^{1 - i / \alpha }.
+		\end{align*}
+	\end{explanation}
+
+	\begin{claim}\label{clm:metric-entropy-d}
+		If a function \(f\in \mathcal{S} _\alpha \) is constrained such that \(\lfloor f^{(k)} (x_1) / \epsilon ^{1 - k / \alpha }\rfloor = A_k\) for \(k = 0, \dots , \beta \) for some integers \(A_k\), \(k = 0, \dots , \beta \), the number of possible values of \(\lfloor f^{(k)} (x_2) / \epsilon ^{1 - k / \alpha }\rfloor = A_k\) for \(k = 0, \dots , \beta \) is at most a constant \(C(\alpha )\) depending only on \(\alpha \). The same conclusion holds if \(x_1\) and \(x_2\) are replaced by \(x_j\) and \(x_{j+1}\) for every \(1 \leq j \leq s-1\).
+	\end{claim}
+	\begin{explanation}
+		Consider a function \(f\in \mathcal{S} _\alpha \) with constraints at \(x_1\) such that \(\left\lfloor \frac{f^{(k)}(x_1)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor = A_k\) for some integers \(A_k\), \(k = 0, \dots , \beta \). To bound the number of possible values of \(\left\lfloor \frac{f^{(k)}(x_2)}{\epsilon ^{1 - k / \alpha }} \right\rfloor\) for \(k = 0, \dots , \beta \), note that by relabelling the \hyperref[clm:metric-entropy-c]{previous claim}, for all \(k = 0, \dots , \beta \), we have
+		\[
+			\left\vert f^{(k)}(x_2) - \sum_{\ell =0}^{\beta - k} \frac{(x_2 - x_1)^{\ell } }{\ell !} \epsilon ^{1 - (k + \ell ) / \alpha } A_{k + \ell } \right\vert
+			\leq C(\alpha ) \epsilon ^{1 - (k / \alpha )},
+		\]
+		hence
+		\[
+			\left\vert \frac{f^{(k)}(x_2)}{\epsilon ^{1 - k / \alpha }} - \sum_{\ell = 0}^{\beta - k} \frac{(x_2 - x_1)^{\ell } }{\ell !} \epsilon ^{1 - (k + \ell ) / \alpha } \frac{A_{k + \ell }}{\epsilon ^{1 - (k / \alpha )}} \right\vert
+			\leq C(\alpha )\\
+			\iff \left\vert \frac{f^{(k)}(x_2)}{\epsilon ^{1 - k / \alpha }} - \sum_{\ell = 0}^{\beta - k} \frac{A_{k + \ell }}{\ell !} \right\vert
+			\leq C(\alpha )
+		\]
+		since \((x_2 - x_1)^{\ell } = \epsilon ^{\ell / \alpha }\).
+
+		This implies that for a fixed \(k\), with the fact that \(A_{k+\ell }\)'s are all fixed, \(\sum_{\ell } A_{k + \ell } / \ell !\) is fixed as well, i.e., the possible values of \(f^{(k)}(x_2) / \epsilon ^{1 - k / \alpha }\) spreads among an interval with width \(2C(\alpha )\) centered at \(\sum_{\ell } A_{k + \ell } / \ell !\). In all, up to some constants, the number of possible values of \(\left\lfloor \frac{f^{(k)}(x_2)}{\epsilon ^{1 - k / \alpha }} \right\rfloor\) for \(k = 0, \dots , \beta \) is at most a constant \(C(\alpha )\) depending only on \(\alpha \). Finally, for general \(j\), as \(x_{j+1} - x_j = \epsilon ^{1 / \alpha }\) for \(1 \leq j \leq s-2\), and \(\leq \epsilon ^{1 / \alpha }\) when \(j = s-1\), we see that the inequalities all hold, hence the same conclusion can be reached for all \((x_j, x_{j+1})\) for \(1 \leq j \leq s-1\).
+	\end{explanation}
+
+	We can finally show the upper-bound.
+	\begin{claim}\label{clm:metric-entropy-e}
+		We have
+		\[
+			\vert I \vert \leq \left( \frac{1}{\epsilon } \right) ^{\beta + 1} (C(\alpha ))^s \leq \exp(C(\alpha ) \epsilon ^{-1 / \alpha }).
+		\]
+	\end{claim}
+	\begin{explanation}
+		Observe that \(\vert I \vert \) can be bounded by first consider \(\left\lfloor \frac{f^{(k)}(x_1)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor\), which has \(C(\alpha )\epsilon ^{-\beta -1}\) possibilities from \hyperref[clm:metric-entropy-b]{the previous claim} (for every \(k\) and \(f\in \mathcal{S} _\alpha \)). Then for every consecutive \(x_{i+1} \), it introduces \(C(\alpha )\) more possibilities for the tuple
+		\[
+			\left( \left\lfloor \frac{f^{(k)}(x_i)}{\epsilon ^{1 - (k / \alpha )}} \right\rfloor \right)_{\substack{i = 1, \dots , s \\ k = 0, \dots , \beta }}	,
+		\]
+		hence in total,
+		\[
+			\vert I \vert
+			\leq C(\alpha ) \epsilon ^{- \beta - 1} \cdot C(\alpha )^{s-1}
+			= \left( \frac{1}{\epsilon } \right) ^{\beta + 1} (C(\alpha ))^s
+		\]
+		We further see that since \(s \approx \epsilon ^{-1 / \alpha }\) and \(\ln 1 / \epsilon \leq C (1 / \epsilon )^{1 / \alpha }\) for some constant \(C\),
+		\[
+			\ln \vert I \vert
+			\leq (\beta + 1) \ln 1 / \epsilon + s \ln C(\alpha )
+			\leq C(\alpha ) \cdot (1 / \epsilon )^{1 / \alpha } + \epsilon ^{-1 / \alpha } \ln C(\alpha )
+			\leq C(\alpha )\epsilon ^{-1 / \alpha }.
+		\]
+		Hence, in all, we have
+		\[
+			\vert I \vert \leq \exp \left( C(\alpha ) \epsilon ^{- 1 / \alpha } \right) .
+		\]
+	\end{explanation}
+	In all, from the \hyperref[clm:metric-entropy-a]{first claim}, \(N(\mathcal{S} _\alpha , d, C(\alpha )\epsilon ) \leq \vert I \vert \leq \exp (C(\alpha )\epsilon ^{-1 / \alpha })\) as desired, hence
+	\[
+		M(\mathcal{S} _\alpha , d, \epsilon ) \leq \exp(c_1 \epsilon ^{-1 / \alpha })
+	\]
+	for some \(c_1\). As for the lower-bound, consider the following.\todo{Check}
+	\begin{claim}
+		There exists a function \(f_0 \colon \mathbb{R} \to \mathbb{R} \) such that
+		\begin{enumerate}[(a)]
+			\item \(f_0(x) = 0 \) for \(x \notin (0, 1)\);
+			\item \(f_0(x) > 0\) for \(x \in (0, 1)\);
+			\item \(f_0\) restricted to the interval \([0, 1]\) lies in \(\mathcal{S} _\alpha \).
+		\end{enumerate}
+	\end{claim}
+	\begin{explanation}
+		Consider the function
+		\[
+			f_0(x) = c\cdot e^{-1 / x} e^{-1 / (1 - x)} \cdot \mathbbm{1}_{0 < x < 1}
+		\]
+		where \(c>0\) is not determined yet. We see that
+		\begin{enumerate}[(a)]
+			\item for \(x \notin (0, 1)\), \(f_0(x) = 0\) as \(\mathbbm{1}_{0 < x < 1} = 0\) for \(x \notin (0, 1)\);
+			\item for \(x\in (0, 1)\), \(f_0(x)= c\cdot \exp (- (1 / x + 1 / (1 - x))) = c e^{\frac{1}{x (x - 1)}} > 0\) as \(\exp (\cdot) > 0\) always;
+			\item to show \(\at{f_0}{[0, 1]}{} = c e^{\frac{1}{x (x - 1)}} \in \mathcal{S} _\alpha \):
+			      \begin{itemize}
+				      \item \(f_0\) is continuous on \([0, 1]\): true since as \(x\) tends to singularities, e.g., \(x \to 0\) or \(x \to 1\), \(f_0(x) \to c\);
+				      \item \(f\) is \(\beta \)-times differentiable: true trivially;
+				      \item \(\vert f^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta \): we see that as \(f\) is smooth (only singularities are at the boundary, i.e., \(0\) and \(1\)), there is no \(k\) such that \(\vert f^{(k)} (x)\vert = \infty \) for \(x\in (0, 1)\), so by choosing an appropriate \(c\) to re-normalize, \(\vert f^{(k)} \vert \leq 1\) for all \(k\);
+				      \item \(\vert f^{(\beta )} (x) - f^{(\beta )} (y)\vert \leq \vert x - y \vert ^{\alpha - \beta }\) for all \(x, y \in [0, 1]\): as \(f_0\) is bounded on \([0, 1]\) (hence Lipschitz), \(\vert f^{\prime}  \vert \) is bounded as well, which in itself is Lipschitz, etc. By iteratively using this argument, \(f^{(\beta )}\) is Lipschitz as well.\footnote{Note that we need to rescale to make sure it satisfies the exact bound.}
+			      \end{itemize}
+		\end{enumerate}
+	\end{explanation}
+
+	\begin{claim}
+		Consider points \(0 < a_1 < b_1 < a_2 < b_2 < \dots < a_s < b_s < 1\) where \(b_i - a_i = \epsilon ^{1 / \alpha }\) and \(s \geq C(\alpha ) \epsilon ^{-1 / \alpha }\). For each \(i = 1, \dots , s\), define
+		\[
+			g_i(x) \coloneqq (b_i - a_i)^{\alpha } f_0 \left( \frac{t-a_i}{b_i - a_i} \right)
+		\]
+		where \(f_0\) is as in the previous claim. Then \(g_i \in \mathcal{S} _\alpha \) and that \(g_i\) is supported on \((a_i , b_i)\).
+	\end{claim}
+	\begin{explanation}
+		Firstly, \(g_i\) defined as
+		\[
+			g_i(x) \coloneqq (b_i - a_i)^\alpha f_0 \left( \frac{x-a_i}{b_i - a_i} \right)
+		\]
+		is clearly supported on \((a_i, b_i)\) since \(f_0\) has a support on \((0, 1)\) so \(f_0((x - a_i) / (b-i - a_i))\) has a support on \((a_i, b_i)\). Since now \(g_i(x)\) is a ``squeezed'' version of \(\at{f_0}{[0, 1]}{} \), the re-normalized factor \((b_i - a_i)^\alpha \) brings the height down to make it in \(\mathcal{S} _\alpha \). Specifically,
+		\begin{itemize}
+			\item \(g_i\) is clearly continuous;
+			\item \(g_i\) is still \(\beta \)-times differentiable;
+			\item \(\vert g_i^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta \): we see that
+			      \[
+				      g_i^{(k)} (x)
+				      = (b_i - a_i)^{\alpha - k} f_{0} ^{(k)}\left( \frac{x-a_i}{b_i - a_i} \right) ;
+			      \]
+			      and since \(\vert f^{(k)} \vert \leq 1\) and \((b_i - a_i)^{\alpha - k} \leq 1\) as well, \(\vert g_i^{(k)} \vert \leq 1\);
+			\item \(\vert g_i^{(\beta )}(x) - g_i^{(\beta )}(y) \vert \leq \vert x - y \vert ^{\alpha - \beta }\) for all \(x, y\in [0, 1]\): since \(f_0 \in \mathcal{S} _\alpha \),
+			      \[
+				      \begin{split}
+					      \vert g_i^{(\beta )}(x) - g_i^{(\beta )}(y) \vert
+					       & = (b_i - a_i)^{\alpha - \beta} \left\vert f_{0}^{(\beta )} \left( \frac{x-a_i}{b_i - a_i} \right) - f_{0}^{(\beta )} \left( \frac{y-a_i}{b_i - a_i} \right) \right\vert \\
+					       & \leq (b_i - a_i)^{\alpha - \beta } \cdot \left\vert \frac{x - y}{b_i - a_i} \right\vert ^{\alpha - \beta }                                                              \\
+					       & \leq \vert x - y \vert ^{\alpha -\beta }.
+				      \end{split}
+			      \]
+		\end{itemize}
+
+		Hence, \(g_i \in \mathcal{S} _\alpha \) as well.
+	\end{explanation}
+	\begin{claim}
+		For every \(\tau \in \{ 0, 1 \} ^s\), define \(u_{\tau } (x) \coloneqq \sum_{i=1}^{s} \tau _i g_i(x)\). Then \(u_ \tau \in \mathcal{S} _\alpha \) for every \(\tau \in \{ 0, 1 \} ^s\).
+	\end{claim}
+	\begin{explanation}
+		For every \(\tau \in \{ 0, 1 \} ^s\), consider \(u_{\tau } (x) = \sum_{i=1}^{s} \tau _i g_i(x)\). We see that
+		\begin{itemize}
+			\item \(u_{\tau } (x)\) is continuous: since \(g_i\)'s boundary coincides with \(f_0\)'s boundary, which has value \(0\), so concatenate them together is continuous;
+			\item \(u_{\tau } (x)\) is \(\beta \)-times differentiable: as \(f_0\) is symmetry around \(1 / 2\), \(g_i\) is now symmetry around \((b_i - a_i) / 2\); moreover, since the higher-order differentiation of \(f_0\) at the boundaries vanishes to \(0\), \(u_{\tau }(x) \) is actually \(\beta \)-times differentiable;
+			\item \(\vert u_{\tau } ^{(k)} \vert \leq 1\) for all \(k = 0, \dots , \beta \): since \(g_i^{(k)}\)'s have separate supports,
+			      \[
+				      \vert u_{\tau }^{(k)} \vert
+				      = \left\vert \sum_{i=1}^{s} \tau _i g_i^{(k)}(x) \right\vert
+				      \leq \max _i \vert g_i^{(k)}(x) \vert
+				      \leq 1;
+			      \]
+			\item \(\vert u_{\tau } ^{(\beta )}(x) - u_{\tau } ^{(\beta )}(y) \vert \leq \vert x - y \vert ^{\alpha - \beta }\): same reason as above.
+		\end{itemize}
+	\end{explanation}
+
+	\begin{claim}
+		For every \(\tau , \tau ^{\prime} \in \{ 0, 1 \}^s \) with \(\tau _j \neq \tau _j^{\prime} \) for some \(j\), \(d(u_{\tau } , u_{\tau} ^{\prime} ) \geq f_0(1 / 2) \epsilon \).
+	\end{claim}
+	\begin{explanation}
+		Consider two \(\tau , \tau ^{\prime} \in \{ 0, 1 \} ^s\) such that \(\tau _j \neq \tau ^{\prime} _j\) for some \(j\), we see that
+		\[
+			d (u_{\tau } , u_{\tau ^{\prime} })
+			= \sup _{0 < x < 1} \left\vert \sum_{i=1}^{s} \tau _i g_i (x) - \sum_{i=1}^{s} \tau ^{\prime} _i g_i (x) \right\vert
+			= \sup _{0 < x < 1} \left\vert \sum_{j\colon \tau _j \neq \tau ^{\prime} _j} g_j(x) \right\vert
+			= \sup _{a_j < x < b_j} \vert g_i(x) \vert
+		\]
+		for some specific \(j\) such that \(\tau _j \neq \tau _j ^{\prime} \).\footnote{This holds since \(g_i\)'s are disjoint.} Now, we have
+		\[
+			d (u_{\tau } , u_{\tau ^{\prime} })
+			= \sup _{a_j < x < b_j} \vert g_j (x) \vert
+			= \sup _{a_j < x < b_j} (b_j - a_j)^\alpha f_0 \left( \frac{x - a_j}{b_j - a_j} \right)
+			\geq \epsilon f_0(1 / 2)
+		\]
+		from \(b_j - a_j = \epsilon ^{1 / \alpha }\) and by choosing some arbitrary \((x - a_j) / (b_j - a_j)\) (in this case, we just choose \(1 / 2\)).
+	\end{explanation}
+	We conclude that the set \(\{ u_{\tau } \in \mathcal{S} _\alpha  \}_{\tau \in \{ 0, 1 \} ^s} \) is not an \hyperref[def:eps-net]{\(f_0(1 / 2) \epsilon \)-net}, i.e.,
+	\[
+		\left\vert \{ u_{\tau } \in \mathcal{S} _\alpha  \}_{\tau \in \{ 0, 1 \} ^s} \right\vert
+		\leq N(\mathcal{S} _\alpha , d , f(1 / 2) \epsilon).
+	\]
+	With the fact that
+	\[
+		\left\vert \{ u_{\tau } \in \mathcal{S} _\alpha  \}_{\tau \in \{ 0, 1 \} ^s} \right\vert
+		= 2^s
+		\geq 2\cdot C(\alpha )\epsilon ^{-1 / \alpha }
+		\eqqcolon C(\alpha )\epsilon ^{-1 / \alpha },
+	\]
+	we finally have
+	\[
+		C(\alpha )\epsilon ^{-1 / \alpha }
+		\leq \left\vert \{ u_{\tau } \in \mathcal{S} _\alpha  \}_{\tau \in \{ 0, 1 \} ^s} \right\vert
+		\leq N(\mathcal{S} _\alpha , d , f(1 / 2) \epsilon ).
+	\]
+\end{proof}
+
+We now provide some missing proofs for different forms of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound}.
+
+\begin{corollary}[High probability form (\autoref{col:Dudley-integral-entropy-bound-hp})]\label{pf-col:Dudley-integral-entropy-bound-hp}
+	The high probability bound version holds:
+	\[
+		\mathbb{P} \left(
+		\sup _{s, t\in T} \vert X_s - X_t \vert
+		\leq C \left( \int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon )}  \,\mathrm{d}\epsilon + u \diam(T) \right)
+		\right) \geq 1 - 2 e^{-u^2}.
+	\]
+\end{corollary}
+\begin{proof}
+	Adopting the same notation as in the proof of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound} for \(K_0\), \(K_1\), \(N_k\), and \(\pi _k(t)\). By writing
+	\[
+		\begin{split}
+			X_t - X_{t_0}
+			 & = X_{\pi _{K_1} (t)} - X_{\pi _{K_0} (t)}                                                                                   \\
+			 & = X_{\pi _{K_1}(t)} - X_{\pi _{K_1 - 1} (t)} + X_{\pi _{K_1 - 1} (t)} - \dots + X_{\pi _{K_0 + 1} (t)} - X_{\pi _{K_0} (t)} \\
+			 & = \sum_{k = K_0 + 1}^{K_1} X_{\pi _{k} (t)} - X_{\pi _{k - 1} (t)},
+		\end{split}
+	\]
+	which implies
+	\[
+		\sup _{t\in T} X_t - X_{t_0}
+		\leq \sum_{k = K_0 + 1}^{K_1} \sup _{t\in T} \left( X_{\pi _{k} (t)} - X_{\pi _{k - 1} (t)} \right).
+	\]
+	To prove a tail bound, we claim the following.
+
+	\begin{claim}
+		If \(\{ X_t \} _{t\in T}\) is \(\Subg(\sigma ^2)\), for all \(u \geq 0\),
+		\[
+			\Pr(\sup _{t\in T} X_t \geq \sqrt{2 \sigma ^2 \log \vert T \vert } + u ) \leq \exp(- \frac{u^2}{2\sigma ^2})
+		\]
+	\end{claim}
+	\begin{explanation}
+		From \hyperref[lma:MGF-trick]{Chernoff bound},
+		\[
+			\Pr(\sup _{t\in T} X_t \geq u)
+			= \Pr(\bigcup_{t\in T} \{ X_t \geq u \} )
+			\leq \sum_{t\in T} \Pr_{}(X_t \geq u)
+			\leq \vert T \vert e^{-u^2 / 2\sigma ^2}.
+		\]
+		Now, let \(u^{\prime} \coloneqq \sqrt{2 \sigma ^2 \log \vert T \vert } + u \), we obtain
+		\[
+			\Pr(\sup _{t\in T} X_t \geq u^{\prime} )
+			\leq \exp(\log \vert T \vert - \frac{2\sigma ^2 \log \vert T \vert + 2 \sqrt{2\sigma ^2 \log \vert T \vert } u + u^2}{2\sigma ^2})
+			\leq \exp(- \frac{u^2}{2\sigma ^2}).
+		\]
+	\end{explanation}
+
+	Then, since \(X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \sim \Subg(d^2(\pi _k(t), \pi _{k-1}(t)))\) with
+	\[
+		d(\pi _k(t), \pi _{k-1}(t))
+		\leq d(\pi _k(t), t) + d(t, \pi _{k-1}(t))
+		\leq 2^{-k} + 2^{-k+1}
+		\leq 3\cdot 2^{-k}
+	\]
+	from the above claim,
+	\[
+		\Pr(\sup _{t\in T} X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \geq 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z ) \leq e^{-z^2 / 2}
+	\]
+	by letting \(u = 3\cdot 2^{-k} z\). Now, we apply a union bound over \(k\) with \(z_k \coloneqq u + \sqrt{k - K_{0} } \), which yields
+	\begin{align*}
+		 & \Pr(\exists k \colon \sup _{t\in T} X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \geq 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z_k )            \\
+		 & \leq \sum_{k=K_0 + 1}^{K_1} \Pr(\sup _{t\in T} X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \geq 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z_k ) \\
+		 & \leq \sum_{k=K_0 + 1}^{K_1} e^{- z_k^2 / 2}                                                                                                                \\
+		 & = \sum_{k=K_0 + 1}^{K_1} \exp (- \frac{u^2 + 2x \sqrt{k - K_0} + (k - K_0)}{2})                                                                            \\
+		 & \leq e^{-u^2 / 2} \sum_{k = 1}^{\infty } e^{- k / 2}                                                                                                       \\
+		 & \leq 2 e^{-u^2 / 2} \tag*{\(\sum_{k} e^{- k / 2} = \frac{1}{e^{1 / 2} - 1} \approx 1.541\)}.
+	\end{align*}
+	This means that with probability at least \(1 - 2 e^{-u^2 / 2}\),
+	\[
+		\begin{split}
+			\sup _{t\in T} X_t - X_{t_0}
+			 & \leq \sum_{k=K_0 + 1}^{K_1} \sup _{t\in T} \left( X_{\pi _k(t)} - X_{\pi _{k-1}(t)} \right)                                                          \\
+			 & \leq \sum_{k=K_0 + 1}^{K_1} 6 \times 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-k} z_k                                                       \\
+			 & \leq 6 \sum_{k > K_0} 2^{-k} \sqrt{\log \vert N_k \vert } + 3 \times 2^{-K_0} \sum_{k > 0} 2^{-k} \sqrt{k} + 3 \times 2^{-K_0} \sum_{k > 0} 2^{-k} u \\
+			 & \leq C \left( \int_{0}^{\infty} \sqrt{\log N(T, d, \epsilon)}  \,\mathrm{d}\epsilon + u \diam(T) \right)
+		\end{split}
+	\]
+	since \(2^{-K_0} \leq 2 \diam(T) \) and
+	\[
+		2^{-K_0} \leq C 2^{- K_0 - 1} \sqrt{\log N(T, d, 2^{-K_0 - 1})} \leq C \sum_{k > K_0} 2^{-k} \sqrt{\log \vert N_k \vert } .
+	\]
+	Finally, observe that by considering the same bound for \(X_s - X_{t_0}\) and use triangle inequality, we obtain the desired result.
+\end{proof}
+
+\begin{corollary}[Finite resolution form (\autoref{col:Dudley-integral-entropy-bound-finite-resolution})]\label{pf-col:Dudley-integral-entropy-bound-finite-resolution}
+	The following generalizes the \hyperref[col:Dudley-integral-entropy-bound]{Dudley's integral entropy bound} in the sense that \(\delta > 0\):
+	\[
+		\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
+		\leq C  \left( \mathbb{E}_{}\left[ \sup _{\substack{t, t^{\prime} \in T \\ d(t, t^{\prime} ) \leq \delta }} X_t - X_{t^{\prime} } \right] + \int_{\delta }^{\infty} \sqrt{\log N(T, d, \epsilon )} \,\mathrm{d}\epsilon \right) .
+	\]
+\end{corollary}
+\begin{proof}
+	Again, we adopt the same notation as in the proof of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound} for \(K_0\), \(K_1\), \(N_k\), and \(\pi _k(t)\). Moreover, for any \(t, t^{\prime} \in T\), let \(N_{k_{\delta }}\) be a minimal \(\delta \)-net,\footnote{\(k_\delta \) is determined by \(\delta \); specifically, \(2^{-k_\delta } = \delta \).} then we have
+	\[
+		\begin{split}
+			X_t - X_{t^{\prime} }
+			 & = X_t - X_{\pi _{k_{\delta }}(t)} + X_{\pi _{k_{\delta }}(t)} - X_{\pi _{k_{\delta }}(t^{\prime} )} + X_{\pi _{k_{\delta }}(t^{\prime} )} - X_{t^{\prime} } \\
+			 & \leq 2 \sup _{\substack{t, t^{\prime} \in T \colon                                                                                                          \\ d(t, t^{\prime} ) \leq \delta }} \left( X_t - X_{t^{\prime} } \right) + \sup _{\hat{t} , \hat{t} ^{\prime} \in N_{k_\delta }} \left( X_{\hat{t} } - X_{\hat{t} ^{\prime} } \right).
+		\end{split}
+	\]
+	Hence, we have
+	\[
+		\begin{split}
+			\mathbb{E}_{}\left[\sup _{t\in T} X_t \right]
+			= \mathbb{E}_{}\left[\sup _{t\in T} X_t - X_{t^{\prime} } \right]
+			 & \leq \mathbb{E}_{}\left[\sup _{t, t^{\prime} } X_t - X_{t^{\prime} } \right] \\
+			 & \leq 2 \mathbb{E}_{}\left[ \sup _{\substack{t, t^{\prime} \in T \colon       \\ d(t, t^{\prime} ) \leq \delta }} \left( X_t - X_{t^{\prime} } \right) \right] + \mathbb{E}_{}\left[\sup _{\hat{t} , \hat{t} ^{\prime} \in N_{k_\delta }} \left( X_{\hat{t} } - X_{\hat{t} ^{\prime} } \right) \right].
+		\end{split}
+	\]
+	We can then handle the second term as in the proof of \hyperref[thm:Dudley-entropy-bound]{Dudley's entropy bound}, just that now we're summing over \(k\) from \(k_\delta + 1\), not \(K_0 + 1\). With the fact that when making the chaining sum into integral turns the lower limit into \(2^{-k_\delta } = \delta \), we're done.
+\end{proof}

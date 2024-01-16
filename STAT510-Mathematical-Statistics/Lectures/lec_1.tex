@@ -1,0 +1,50 @@
+\chapter{Introduction}
+\lecture{1}{16 Jan.\ 9:30}{Introduction to Large Sample Theory}
+Say we first collect \(n\) data points \(x_1, \dots , x_n \in \mathbb{R} ^d\), large sample theory concern with problem that when \(n \to \infty \). We may treat \(x_i\) as a realization of random vector \(X_i\) on a probability space \((\Omega , \mathscr{F} , \mathbb{P} )\). In this course, we will primarily consider the case that \(X_i\)'s are i.i.d., i.e., independent and identically distributed from a distribution function (CDF) \(F\) such that
+\[
+	X = (X^1, \dots , X^d) \sim F(x_1, \dots , x_d) \equiv \mathbb{P} (X^1 \leq x_1, \dots , X^d \leq x_d )
+\]
+for all \(x \in \mathbb{R} \). If we have access to \(F\), we can compute (PDF) \(\mathbb{P} (X \in A)\) for all (measurable) \(A \subseteq \mathbb{R} ^d\) of interest. If we know this, we know every thing about the population. Hence, the goal is to compute this by collecting data \(x_i\)'s, i.e., statistical inference problem.
+
+\section{Parametrized Approach}
+By postulate a family of CDFs \(\{ F_\theta , \theta \in \Theta \} \) where \(\Theta \) is often a subset of \(\mathbb{R} ^m\) for some \(m\) (generally \(\neq n\)), and select the member of this family that is the ``closet'' or the ``best fit'' to the truth, i.e., \(F\), based on the data. To emphasize that this depends on the data, we sometimes write the function we found as \(\hat{\theta} _n(x_1, \dots  , x_n)\) so that \(F_{\hat{\theta} _n(x_1, \dots , x_n)} \) is my proxy for \(F\).
+
+Now, assume that the family is initially given, the problem is then how to select \(\hat{\theta} _n\). Fisher suggested that we should look at the maximum likelihood estimator (MLE). The justification for MLE is not about finite \(n\), but really about the asymptotic behavior when \(n \to \infty \). Specifically, we have the following (informally).
+
+\begin{theorem}[Fisher]
+	If \(F \in \{ F_\theta \colon \theta \in \Theta \} \), i.e., if \(F = F_{\theta ^{\ast} }\) for some \(\theta ^{\ast} \in \Theta \), then under certain conditions, \(\hat{\theta} _n\) will be ``close'' to \(\theta ^{\ast} \) as \(n \to \infty \). Under some other conditions, we can say that \(\sqrt{n}  (\hat{\theta} _n - \theta )\) is approximately Gaussian with variance is the ``best possible'' in some sense.
+\end{theorem}
+
+On the other hand, in the misspecified case, i.e., \(F \notin \{ F_{\theta } , \theta \in \Theta \} \), we can still compute the MLE. Another justification for MLE is that even in this case, \(\hat{\theta} _n\) will still be ``close'' to \(\theta ^{\ast} \) such that \(F_{\theta ^{\ast} }\) is, in some sense, the ``closest'' to \(F\) among all possible \(F_\theta \).
+
+\section{Hypothesis Testing}
+We will also develop theory for hypothesis testing for some hypothesis we're interested in, e.g., whether the data we collect is really i.i.d., or whether our proposed family is reasonable enough.
+
+Say now \(X_i\)'s are scalar random variable with \(\mathbb{E}_{}\left[X \right] = \mu \), and we want to test the null hypothesis \(H_0 \colon \mu = 0\).
+
+\begin{eg}
+	Say we have a controlled group and a treatment group, and we observe \(Z_1, \dots , Z_n\), and \(Y_1, \dots , Y_n\), respectively, and compute \(X_i = Z_i - Y_i\) for all \(i\).
+\end{eg}
+
+Let \(s_n\) to be the sample standard derivation, then we can compute
+\[
+	T_n = \frac{\overline{X} _n}{s_n / \sqrt{n} } \sim t_{n-1}
+\]
+as long as \(X\) is Gaussian, i.e., the \(t\)-test for \(H_0\). What if \(X\) is not an Gaussian? We will show that even if \(X\) is not Gaussian, this result is ``approximately valid'' when \(n\) is ``large enough'' as long as \(\Var_{}\left[X \right] < \infty \).
+
+\section{Sample Size}
+When we say \(n\) is ``large enough'', it really depends on how fast the underlying distribution will approach Gaussian as \(n\) grows. Hence, if we can say more about the underlying population, we can say more about when does \(n\) is ``large enough''; otherwise the theory might be completely useless.
+
+What if now \(\Var_{}\left[X \right] \) doesn't exit?
+
+\begin{eg}[Heavy tail]
+	When the population has a heavy tail distribution, then second moment may not exit.
+\end{eg}
+
+We might reject \(H_0\) when \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \) is large... Note that under \(H_0\), \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \sim \operatorname{Bin}(n, 1/2) \). This test is valid even if expectation doesn't exist. We see that without saying anything about \(F\), this test is valid even for \(n = 3\) or \(5\). Now the question becomes how can we compare these different tests? This will also be addressed in this course.
+
+Consider \(R_{i, n} \) to be the rank of \(\vert X_i \vert \), then consider
+\[
+	\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} R_{i, n}.
+\]
+This is the so-called Wilcoxon's Rank-Sum test. As one can imagine, the closed form will be complicated; however, asymptotically, the above statics will follow Gaussian again, such that the rate of convergence doesn't depend on the underlying population.

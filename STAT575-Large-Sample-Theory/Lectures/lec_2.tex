@@ -1,0 +1,203 @@
+\lecture{2}{18 Jan.\ 9:30}{Modes of Convergence}
+\section{Different Modes of Convergence}
+Given a probability space \((\Omega , \mathscr{F} , \mathbb{P} )\), consider a sequence of \(d\)-dimensional random vectors \((X_n)\) and a random vector \(X\), i.e., \(X_n , X\colon \Omega \to \mathbb{R} ^d\). We now discuss different modes of convergence for \((X_n)\).
+
+\begin{definition}[Point-wise convergence]
+	\((X_n)\) \emph{point-wise converges} to \(X\), denoted as \(X_n \to X\), if \(X_n(\omega ) \to X(\omega )\) for all \(\omega \in \Omega \).
+\end{definition}
+
+\begin{prev}
+	From analysis, \(X_n(\omega ) \to X(\omega )\) if and only if for every \(\epsilon > 0\), there exists \(n_0(\omega ) \in \mathbb{N} \) such that for every \(n \geq n_0\), \(\lVert X_n(\omega ) - X(\omega ) \rVert _2 < \epsilon \).
+\end{prev}
+
+However, since we don't care about measure zero sets, we may instead consider the following.
+
+\begin{definition}[Almost-surely convergence]\label{def:almost-surely-convergence}
+	\((X_n)\) \emph{almost-surely converges} to \(X\), denoted as \(X_n \overset{\text{a.s.}}{\to } X\), if \(\mathbb{P} (X_n \to X) = 1\).
+\end{definition}
+
+In other words, \hyperref[def:almost-surely-convergence]{almost-surely convergence} means that \(X_n(\omega ) \to X(\omega )\) for all \(\omega \in \Omega \setminus N\) where \(\mathbb{P} (N) = 0\). However, this might still be too strong.
+
+\begin{definition}[Convergence in probability]\label{def:convergence-in-probability}
+	\((X_n)\) \emph{converges in probability} to \(X\), denoted as \(X_n \overset{p}{\to } X\), if for every \(\epsilon > 0\), \(\mathbb{P} (\lVert X_n - X \rVert > \epsilon ) \to 0\) as \(n \to \infty \).
+\end{definition}
+
+\begin{remark}
+	\(X_n \to X\) if and only if \(\lVert X_n - X \rVert \to 0\). The same also holds for \(\overset{p}{\to } \) and \(\overset{\text{a.s.} }{\to } \).
+\end{remark}
+
+A related notion is the following, where we now sum over \(n\).
+
+\begin{definition}[Converges completely]\label{def:convergence-completely}
+	\((X_n)\) \emph{converges completely} to \(X\), denoted as \(X_n \overset{\text{comp} }{\to } X\), if for every \(\epsilon > 0\), \(\sum_{n=1}^{\infty} \mathbb{P} (\lVert X_n - X \rVert > \epsilon ) < \infty \).
+\end{definition}
+
+Finally, we have the following.
+
+\begin{definition}[Converges in \(L^p\)]\label{def:convergence-in-Lp}
+	Let \(p > 0\), we say \(X_n \overset{L^p}{\to } X \) if \(\mathbb{E}_{}\left[\lVert X_n - X \rVert ^r \right] \to 0\) as \(n \to \infty \).
+\end{definition}
+
+\subsection{Connection Between Modes of Convergence}
+We have the following connections between different modes of convergence.
+
+% https://q.uiver.app/#q=WzAsNCxbMCwwLCJcXHRleHR7XFxoeXBlcnJlZltkZWY6Y29udmVyZ2VuY2UtY29tcGxldGVseV17Y29tcGxldGVseX19Il0sWzEsMCwiXFx0ZXh0e1xcaHlwZXJyZWZbZGVmOmFsbW9zdC1zdXJlbHktY29udmVyZ2VuY2Vde2FsbW9zdC1zdXJlbHl9fSJdLFsyLDAsIlxcdGV4dHtcXGh5cGVycmVmW2RlZjpjb252ZXJnZW5jZS1pbi1wcm9iYWJpbGl0eV17aW4gcHJvYmFiaWxpdHl9fSJdLFszLDAsIlxcdGV4dHtcXGh5cGVycmVmW2RlZjpjb252ZXJnZW5jZS1pbi1McF17aW4gXFwoTF5wXFwpfX0iXSxbMCwxLCIiLDAseyJsZXZlbCI6Mn1dLFsxLDIsIiIsMCx7ImxldmVsIjoyfV0sWzMsMiwiIiwwLHsibGV2ZWwiOjJ9XV0=
+\[
+	\begin{tikzcd}[ampersand replacement=\&]
+		{\text{\hyperref[def:convergence-completely]{completely}}} \& {\text{\hyperref[def:almost-surely-convergence]{almost-surely}}} \& {\text{\hyperref[def:convergence-in-probability]{in probability}}} \& {\text{\hyperref[def:convergence-in-Lp]{in \(L^p\)}}}
+		\arrow[Rightarrow, from=1-1, to=1-2]
+		\arrow[Rightarrow, from=1-2, to=1-3]
+		\arrow[Rightarrow, from=1-4, to=1-3]
+	\end{tikzcd}
+\]
+To show the above, the following characterization for \hyperref[def:almost-surely-convergence]{almost-cusrely convergence} is useful.
+
+\begin{proposition}\label{prop:almost-surely-convergence}
+	For a sequence of random vectors \((X_n)\) and a random vector \(X\), we have
+	\[
+		\begin{split}
+			X_n \overset{\text{a.s.} }{\to } X
+			 & \iff \mathbb{P} (\lVert X_k - X \rVert > \epsilon \text{ for some } k \geq n) \overset{n\to \infty }{\to }0 \\
+			 & \iff \mathbb{P} (\lVert X_n - X \rVert > \epsilon \text{ for infinitely many \(n\)'s} ) = 0                 \\
+			 & \iff \mathbb{P} (\limsup\nolimits_{n \to \infty} \lVert X_n - X \rVert > \epsilon ) = 0,
+		\end{split}
+	\]
+	where the above holds for every \(\epsilon > 0\).
+\end{proposition}
+
+From \autoref{prop:almost-surely-convergence}, it's clear that \(\overset{\text{a.s.} }{\to } \) implies \(\overset{p}{\to } \) since
+\[
+	\mathbb{P} (\lVert X_k - X \rVert > \epsilon \text{ for some \(k \geq n\) } )
+	\geq \mathbb{P} (\lVert X_n - X \rVert > \epsilon ),
+\]
+hence if the former goes to \(0\), so does the latter. On the other hand, \(\overset{\text{comp} }{\to } \) implies \(\overset{\text{a.s.} }{\to } \) follows from the third equivalence. Lastly, the \hyperref[def:convergence-in-Lp]{convergence in \(L^p\)} implies the \hyperref[def:convergence-in-probability]{convergence in probability} since
+\[
+	\mathbb{P} (\lVert X_n - X \rVert > \epsilon )
+	\leq \frac{1}{\epsilon ^p} \mathbb{E}_{}\left[\lVert X_n - X \rVert ^p \right]
+\]
+from Markov's inequality. However, the converse is not always true.
+
+\begin{theorem}[Dominated convergence theorem]\label{thm:DCT}
+	If \(X_n \overset{p}{\to } X\) and \(\lVert X_n - X \rVert \leq Z\) for all \(n \geq 1\) where \(\mathbb{E}_{}\left[\lVert Z \rVert ^p \right] < \infty \), then \(X_n \overset{L^p}{\to } X\).
+\end{theorem}
+
+\begin{theorem}[Scheffé's theorem]\label{thm:Scheffe}
+	If \(X_n \overset{p}{\to } X\) and \(\limsup_{n \to \infty} \mathbb{E}_{}\left[\lVert X_n \rVert ^p \right] \leq \mathbb{E}_{}\left[\lVert X \rVert ^p \right] < \infty \), then \(X_n \overset{L^p}{\to } X\).
+\end{theorem}
+
+\subsection{Applications to Statistics}
+Let \((X_n) \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is a distribution function. Say we're interested in some aspect of \(F\), for example, some parameter \(\theta = T(F) \in \mathbb{R} ^m\). By collecting data \(X_1, \dots , X_n\), we estimate \(\theta \) by computing an estimator \(\hat{\theta} _n\) of \(\theta \).\footnote{\(\hat{\theta} _n\) is a function of \(X_i\)'s.}
+
+\begin{definition}[Consistent]\label{def:consistent}
+	\(\hat{\theta} _n\) is \emph{consistent} of \(\theta \) if \(\hat{\theta} _n \overset{p}{\to } \theta \) as \(n \to \infty \).
+\end{definition}
+
+\begin{definition}[Strongly consistent]\label{def:strongly-consistent}
+	\(\hat{\theta} _n\) is \emph{strongly consistent} of \(\theta \) if \(\hat{\theta} _n \overset{\text{a.s.} }{\to } \theta \) as \(n \to \infty \).
+\end{definition}
+
+Let's first see the most well-known estimation problem, the mean estimation.
+
+\begin{eg}[Mean esimation]
+	Suppose \(d = 1\), and let \(X\) be non-negative. Say we're interested in \(\theta = \mathbb{E}_{}\left[X \right] \). It's standard that in this case, we can compute \(\mathbb{E}_{}\left[X \right] \) by
+	\[
+		\theta
+		= \mathbb{E}_{}\left[X \right]
+		= \int_{0}^{\infty} \mathbb{P} (X > t) \,\mathrm{d}t
+		= \int_{0}^{\infty} (1 - F(t)) \,\mathrm{d}t.
+	\]
+	On the other hand, if \(X\) has a PMF \(f\), then
+	\[
+		\mathbb{E}_{}\left[X \right]
+		= \sum_{x} x f(x)
+		= \sum_{x} x \Delta F(x),
+	\]
+	where \(f(x) = \Delta F(x) \equiv F(x) - F(x_-)\). And if \(X\) has a PDF \(f\), then
+	\[
+		\mathbb{E}_{}\left[X \right]
+		= \int_{0}^{\infty} x f(x) \,\mathrm{d}x
+		= \int_{0}^{\infty} x F(\mathrm{d}x)
+	\]
+	where \(F(\mathrm{d} x) \coloneqq f(x) \mathrm{d} x\) in a measure-theoretical sense.
+
+	Now, let \(\hat{\theta} _n\) to be the sample mean, i.e., \(\hat{\theta} _n = \overline{X} _n = \frac{1}{n} \sum_{i=1}^{n} X_i\). From the strong law of large number, \(\overline{X} _n \overset{\text{a.s.} }{\to } \mathbb{E}_{}\left[ X \right] \), which implies that \(\hat{\theta} _n\) is a \hyperref[def:strongly-consistent]{strongly consistent estimator} of \(\theta \).
+
+	On the other hand, if \(\Var_{}\left[X \right] < \infty \), then \(\overline{X} _n \overset{L^2}{\to } \mathbb{E}_{}\left[X \right] \), which further implies \(\overline{X} _n \overset{p}{\to } \mathbb{E}_{}\left[X \right] \), hence \(\hat{\theta} _n\) is \hyperref[def:consistent]{consistent}.\footnote{The latter is true even without \(\Var_{}\left[X \right] = \infty \) as we expect.}
+\end{eg}
+\begin{explanation}
+	We show the last statement. Since \(\Var_{}\left[X \right] < \infty \), then
+	\[
+		\frac{\Var_{}\left[X \right] }{n}
+		= \Var_{}\left[\overline{X} _n \right]
+		= \mathbb{E}_{}\left[ \left( \overline{X} - \mathbb{E}_{}\left[X \right]  \right) ^2 \right]
+		\to 0
+	\]
+	as \(n \to \infty \), which implies \(\overline{X} _n \overset{p}{\to } \mathbb{E}_{}\left[X \right] \).
+\end{explanation}
+
+Another interesting problem is the supremum estimation.
+
+\begin{eg}[Supremum estimation]
+	Suppose there is a \(\theta \in \mathbb{R} \) where distribution function \(F\) such that \(F(\theta - \epsilon ) < 1 = F(\theta )\) for all \(\epsilon > 0\). This means \(\theta = \sup_{\omega } X(\omega )\) since \(\mathbb{P} (X \leq \theta - \epsilon ) = F(\theta - \epsilon )\) and \(F(\theta ) = \mathbb{P} (X \leq \theta )\).\footnote{Such an distribution exists, for example, \(\mathcal{U} (0, \theta )\).} The natural estimator for \(\theta \) would be \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i \), and it's indeed \hyperref[def:strongly-consistent]{strongly consistent}.
+\end{eg}
+\begin{explanation}
+	We see that for any \(\epsilon > 0\),
+	\[
+		\begin{split}
+			\mathbb{P} (\vert \hat{\theta} _n - \theta \vert > \epsilon )
+			 & = \mathbb{P} (\hat{\theta} _n > \theta + \epsilon ) + \mathbb{P} (\hat{\theta} _n < \theta - \epsilon )                                                  \\
+			 & = \mathbb{P} \left( \bigcup_{i=1}^{n} \{ X_i > \theta + \epsilon \}  \right) + \mathbb{P} \left( \bigcap_{i=1}^{n} \{ X_i < \theta - \epsilon \} \right) \\
+			 & \leq \sum_{i=1}^{n} \underbrace{\mathbb{P} (X > \theta + \epsilon )}_{0} + \prod_{i=1}^{n} \mathbb{P} (X_i < \theta -\epsilon )
+			= \left( \mathbb{P} (X_1 < \theta - \epsilon ) \right) ^n
+			\leq \left( F(\theta - \epsilon ) \right) ^n \to 0
+		\end{split}
+	\]
+	as \(n \to \infty \) since \(F(\theta - \epsilon ) < 1\). This shows that \(\hat{\theta} _n\) is indeed \hyperref[def:consistent]{consistent}. Moreover, since \(\mathbb{P} (\vert \hat{\theta} _n - \theta \vert > \epsilon )\) decays exponentially, so this is absolutely summable, hence it's also \hyperref[def:strongly-consistent]{strongly consistency}.
+\end{explanation}
+
+Proving convergence of \(\hat{\theta} _n\) is useful, but this might not be enough.
+
+\begin{eg}
+	Consider any deterministic sequence \((a_n)\) in \(\mathbb{R} \) which converges to \(0\). Adding \(a_n\) to \(\hat{\theta} _n\) will not change the convergence of \(\hat{\theta} _n\). This shows that being \hyperref[def:consistent]{consistent} might not be enough in some cases.
+\end{eg}
+
+The above suggests that we should look at the \emph{distribution} of \(\hat{\theta} _n - \theta \) in order to say how does \(\hat{\theta} _n \to \theta \).
+
+\begin{eg}[Mean estimation for Gaussian]
+	Suppose \(X \sim \mathcal{N} (\theta , 1)\). Then \(\hat{\theta} _n = \overline{X} _n \sim \mathcal{N} (\theta , 1 / n)\), i.e., \(\sqrt{n} (\hat{\theta} _n - \theta ) \sim \mathcal{N} (0, 1)\). This implies that we can write down a confidence interval (CI) such that \(\hat{\theta} _n \pm 1.96 / \sqrt{n} \) with \(95\%\) CI for \(\hat{\theta} _n\).
+\end{eg}
+
+Doing this for other kind of estimators and \(F\) is not that straightforward and will be challenging.
+
+\begin{remark}
+	Let \((X_n)\) and \(X\) be \(d\)-dimensional random vectors, \(h \colon \mathbb{R} ^d \to \mathbb{R} ^m\), and \(c \in \mathbb{R} ^d\) constant.
+	\begin{enumerate}[(a)]
+		\item If \(X_n \to c\), then \(h(X_n) \to h(c)\) if \(h\) is continuous at \(c\).\footnote{This is an if and only if condition if this holds for any \(h\).}  This also holds for \(\overset{\text{a.s.} }{\to } \) and \(\overset{p}{\to } \).
+		\item If \(X_n \to X\), then \(h(X_n) \to h(X)\) if \(h\) is continuous. This also holds for \(\overset{\text{a.s.} }{\to } \) and \(\overset{p}{\to } \).
+	\end{enumerate}
+\end{remark}
+
+Let's see some examples.
+
+\begin{eg}
+	If \(d = 1\), and \(X_n \to \theta \neq 0\). Then \(1 / X_n \to 1 / \theta \) where
+	\[
+		h(x) = \begin{dcases}
+			\frac{1}{x}, & \text{ if } x \neq 0 ; \\
+			c,           & \text{ if } x = 0
+		\end{dcases}
+	\]
+	for any \(c \in \mathbb{R} \). The same holds for \(\overset{\text{a.s.} }{\to } \) and \(\overset{p}{\to } \).
+\end{eg}
+
+\begin{eg}
+	If \(X_n \to X\) and \(Y_n \to Y\), then \((X_n Y_n) \to (X, Y)\).\footnote{The converse is also true since projections are continuous.} The same holds for \(\overset{\text{a.s.} }{\to } \) and \(\overset{p}{\to } \).
+\end{eg}
+\begin{explanation}j
+	To show \(\lVert (X_n, Y_n) - (X, Y) \rVert \to 0\), we have
+	\[
+		\lVert (X_n, Y_n ) - (X, Y) \rVert
+		\leq \lVert X_n - X \rVert + \lVert Y_n - Y \rVert
+	\]
+	for all \(n \geq 1\).\footnote{This can be seen from \(\sqrt{x + y} \leq \sqrt{x} + \sqrt{y} \).} The latter two terms goes to \(0\) (in whatever sense) by assumption.
+\end{explanation}

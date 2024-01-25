@@ -1,0 +1,180 @@
+\lecture{3}{25 Jan.\ 9:30}{Weak Convergence and }
+\subsection{Weak Convergence}
+Again, consider working in a probability space \((\Omega , \mathscr{F} , \mathbb{P} )\).
+
+\begin{definition}[Total variation]\label{def:total-variation}
+	The \emph{total variation} distance between \(X\) and \(Y\) in \(\Omega \) is defined as
+	\[
+		\operatorname{TV}(X, Y) = \sup_{B \in \mathscr{F} } \left\vert \mathbb{P} (X \in B) - \mathbb{P} (Y \in B) \right\vert
+	\]
+\end{definition}
+
+Returning to our situation, consider a sequence or random variables \((X_n)\) and a random variable \(X\).
+
+\begin{remark}
+	If \(X_n\) has density \(f_n\) and \(X\) has density \(f\), then \(\operatorname{TV}(X_n, X) = \frac{1}{2} \int \vert f_n - f \vert \).
+\end{remark}
+
+\begin{definition}[Convergence in total variation]\label{def:convergence-in-total-variation}
+	\(X_n\) \emph{converges in total variation} to \(X\), denoted as \(X_n \overset{\operatorname{TV}}{\to } X\), if \(\operatorname{TV}(X_n, X) \to 0\) as \(n \to \infty \).
+\end{definition}
+
+\begin{remark}
+	If \(X_n\) has density \(f_n\) and \(X\) has density \(f\), \(f_n \to f\) implies \(X_n \overset{\operatorname{TV} }{\to } X\).
+\end{remark}
+
+\begin{note}
+	The above could make sense even if \(X_n\) was defined on different \((\Omega _n , \mathscr{F} _n, \mathbb{P} _n)\) for every \(n\).
+\end{note}
+
+Let's see some examples.
+
+\begin{eg}
+	Consider \(X_n \sim \operatorname{Bin}(n, p_n) \) such that \(n p_n \to \lambda \in \mathbb{R} \). As this happens,
+	\[
+		X_n \sim \operatorname{Bin}(n, p_n)
+		\overset{\operatorname{TV} }{\to } X \sim \operatorname{Pois}(\lambda ).
+	\]
+\end{eg}
+
+\begin{eg}
+	Let \(X_n \sim f_{\theta _n}\) where \(f_{\theta _n}(x) = f(x) e^{\theta x - \psi (\theta )}\) for some \(\theta \in \Theta \). If \(\theta _n \to \theta \), then \(X_n \overset{\operatorname{TV} }{\to } X \sim f_\theta \). For example, if \(X_n \sim \operatorname{Pois}(\theta _n) \) and \(\theta _n \to \theta \), then \(X_n \overset{\operatorname{TV} }{\to } X \sim \operatorname{Pois}(\theta ) \).
+\end{eg}
+
+However, \hyperref[def:convergence-in-total-variation]{convergence in total variation} might be too strong to work with.
+
+\begin{eg}
+	Let \(X_n \sim \mathcal{U} \{ 0, 1 / n, \dots , (n-1) / n \} \), which should be converging to \(X \sim \mathcal{U} (0, 1)\). However, this doesn't happen in total variation distance as we can take \(B\) to be \(\mathbb{Q} \).
+\end{eg}
+
+This suggests that we should look at something weaker.
+
+\begin{definition}[Weak convergence]\label{def:weak-convergence}
+	\(X_n \) \emph{converges weakly} to \(X\), denoted as \(X_n \overset{\text{w} }{\to } X\), if for all continuous and bounded \(g \colon \mathbb{R} ^d \to \mathbb{R} \), \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right]\).
+\end{definition}
+
+To see how is \hyperref[def:weak-convergence]{weak convergence} compared to \hyperref[def:convergence-in-total-variation]{convergence in total variation}, we revisit the above example.
+
+\begin{eg}
+	Let \(X_n \sim \mathcal{U} \{ 0, 1 / n, \dots , (n-1) / n \} \). which should be converging to \(X \sim \mathcal{U} (0, 1)\). We have
+	\[
+		\mathbb{E}_{}\left[g(X_n) \right]
+		= \sum_{k=0}^{n-1} g(k / n) \left( \frac{k+1}{n} - \frac{k}{n} \right)
+		\to \int_{0}^{1} g(x) \,\mathrm{d}x
+		= \mathbb{E}_{}\left[g(X) \right]
+	\]
+	as \(g\) is continues and bounded on \([0, 1]\), hence Riemann integrable.
+\end{eg}
+
+The following theorem characterizes \hyperref[def:weak-convergence]{weak convergence}.
+
+\begin{theorem}[Portmanteau theorem]\label{thm:Portmanteau}
+	The following are equivalent.
+	\begin{enumerate}[(a)]
+		\item\label{thm:Portmanteau-a} \(X_n \overset{\text{w} }{\to } X\).
+		\item\label{thm:Portmanteau-b} \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right] \) for all \(g \colon \mathbb{R} ^d \to \mathbb{R} \), Lipschitz and bounded.
+		\item\label{thm:Portmanteau-c} \(\mathbb{P} (X \in A) \leq \liminf_{n \to \infty} \mathbb{P} (X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) open.
+		\item\label{thm:Portmanteau-d} \(\mathbb{P} (X \in A) \geq \limsup_{n \to \infty} \mathbb{P} (X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) closed.
+		\item\label{thm:Portmanteau-e} \(\mathbb{P} (X_n \in A) \to \mathbb{P} (X \in A)\) for all \(A\) such that \(\mathbb{P} (X \in \partial A) = 0\).
+	\end{enumerate}
+\end{theorem}
+
+Before we prove \hyperref[thm:Portmanteau]{Portmanteau theorem}, we need some result from analysis. Specifically, although we might think of we're working in Euclidean spaces, all our discussion can be extended to metric spaces. Recall some results from metric spaces.
+
+\begin{claim}
+	Given a metric space \((S, \rho )\), \(\rho (\cdot, A)\) is Lipschitz for any \(A \subseteq S\), i.e., for any \(x, y\in S\),
+	\[
+		\vert \rho (x, A) - \rho (y, A)\vert \leq \rho (x, y).
+	\]
+\end{claim}
+\begin{explanation}
+	Since for any \(z\in S\), \(\rho (x, z) \leq \rho (x, y) + \rho (y, z)\), hence \(\rho (x, A) - \rho (y, A) \leq \rho (x, y)\) by taking the infimum over \(z \in A\). Interchanging \(x\) and \(y\) gives another inequality.
+\end{explanation}
+
+\begin{claim}
+	Given a metric space \((S, \rho )\), for any \(A \subseteq S\), \(x\in \overline{A} \iff \rho (x, A) = 0\).
+\end{claim}
+\begin{explanation}
+	If \(x\in \overline{A} \), there exists \((x_n)\) in \(A\) such that \(\rho (x_n, x) \to 0\). Then for any \(z\in A\), \(\rho (x, z) \leq \rho (x, x_n) + \rho (x_n, z)\), implying
+	\[
+		\rho (x, A) \leq \rho (x, x_n) + \rho (x_n, A) \to 0,
+	\]
+	hence \(\rho (x, A) = 0\). On the other hand, suppose \(\rho (x, A) = 0\). As \(\rho (x, A) = \inf _{y\in A} \rho (x, y)\), there exists \((y_n)\) in \(A\) such that \(\rho (x, y_n) \to \rho (x, A) = 0\), i.e., \(x\in \overline{A} \).
+\end{explanation}
+
+\begin{lemma}
+	Given a metric space \((S, \rho )\) and let \(A \subseteq S\) be a closed subset. Then there exists \(g_k \colon S \to \mathbb{R} \) decreasing in \(k\) which is bounded and Lipschitz such that \(g_k (x) \searrow \mathbbm{1}_{A}(x) \).
+\end{lemma}
+\begin{proof}
+	Since \(A\) is closed, \(A = \overline{A} \) and
+	\[
+		\mathbbm{1}_{A}(x) = \begin{dcases}
+			1, & \text{ if } x \in A \iff \rho (x, A) = 0 ;   \\
+			0, & \text{ if } x \notin A \iff \rho (x, A) > 0.
+		\end{dcases}
+	\]
+	Now, we let
+	\[
+		g_k (x) = \begin{dcases}
+			0,                  & \text{ if } \rho (x, A) > \frac{1}{k} ; \\
+			1 - k \rho (x, A) , & \text{ otherwise} ;
+		\end{dcases}
+		= 1 - \left( k \rho (x, A) \land 1 \right) .
+	\]
+	We see that
+	\begin{itemize}
+		\item if \(x\in A\): \(\mathbbm{1}_{A} (x) = 1\), and \(g_k(x) = 1\) since \(\rho (x, A) = 0\);
+		\item if \(x \notin A\): \(\mathbbm{1}_{A} (x) = 0\), and \(\rho (x, A) > 0\) since \(A\) closed, and \(g_k(x) = 0\) for all large enough \(k\).
+	\end{itemize}
+	Finally, it's clear that \(g_k(x)\) takes values in \([0, 1]\), and we now show it's Lipschitz. We have
+	\[
+		\vert g_k(x) - g_k(y) \vert
+		= \vert ( k \rho (x, A) \land 1 ) - ( k \rho (y, A) \land 1 ) \vert
+		\leq k \rho (x, y)
+	\]
+	for all \(x, y \in S\).
+\end{proof}
+
+Then we can prove the \hyperref[thm:Portmanteau]{Portmanteau theorem}.
+
+\begin{proof}[Proof of \autoref{thm:Portmanteau}]
+	\autoref{thm:Portmanteau-a} \(\implies \) \autoref{thm:Portmanteau-b} is clear. And note that \autoref{thm:Portmanteau-c} \(\iff \) \autoref{thm:Portmanteau-d} since the following.
+	\begin{claim}
+		\autoref{thm:Portmanteau-d} \(\implies \) \autoref{thm:Portmanteau-c}.
+	\end{claim}
+	\begin{explanation}
+		Since when \(A\) is open,
+		\[
+			\begin{split}
+				\mathbb{P} (X \in A)
+				 & = 1 - \mathbb{P} (X \in A^{c} )                                         \\
+				 & \leq 1 - \limsup_{n \to \infty} \mathbb{P} (X_n \in A^{c} )             \\
+				 & = 1 - \limsup_{n \to \infty} \left( 1 - \mathbb{P} (X_n \in A ) \right)
+				= \liminf_{n \to \infty} \mathbb{P} (X_n \in A).
+			\end{split}
+		\]
+	\end{explanation}
+	\autoref{thm:Portmanteau-c} \(\implies \) \autoref{thm:Portmanteau-d} is exactly the same, hence \autoref{thm:Portmanteau-c} \(\iff \) \autoref{thm:Portmanteau-d}. Next, we prove \autoref{thm:Portmanteau-b} \(\implies \) \autoref{thm:Portmanteau-d}.
+
+	\begin{claim}
+		\autoref{thm:Portmanteau-b} \(\implies \) \autoref{thm:Portmanteau-d}.
+	\end{claim}
+	\begin{explanation}
+		Assuming \(A\) is closed, then
+		\[
+			\mathbb{P} (X_n \in A)
+			= \mathbb{E}_{}\left[\mathbbm{1}_{A} (X_n) \right]
+			\leq \mathbb{E}_{}\left[g_k(X_n) \right]
+		\]
+		This is true for every \(k\) and \(n\) since \(g_k \geq \mathbbm{1}_{A} \). Take the limit as \(n \to \infty \), we have
+		\[
+			\limsup_{n \to \infty} \mathbb{P} (X_n \in A)
+			\leq \mathbb{E}_{}\left[g_k(X) \right]
+			\to \mathbb{E}_{}\left[\mathbbm{1}_{A} (X) \right]
+			= \mathbb{P} (X \in A)
+		\]
+		as \(k \to \infty \).
+	\end{explanation}
+
+	Hence, we now have \autoref{thm:Portmanteau-a} \(\implies \) \autoref{thm:Portmanteau-b} \(\implies \) \autoref{thm:Portmanteau-d} \(\iff \) \autoref{thm:Portmanteau-c}.
+\end{proof}

@@ -1,4 +1,4 @@
-\lecture{3}{25 Jan.\ 9:30}{Weak Convergence and }
+\lecture{3}{25 Jan.\ 9:30}{Weak Convergence Portmanteau theorem}
 \subsection{Weak Convergence}
 Again, consider working in a probability space \((\Omega , \mathscr{F} , \mathbb{P} )\).
 
@@ -50,20 +50,20 @@ However, \hyperref[def:convergence-in-total-variation]{convergence in total vari
 This suggests that we should look at something weaker.
 
 \begin{definition}[Weak convergence]\label{def:weak-convergence}
-	\(X_n \) \emph{converges weakly} to \(X\), denoted as \(X_n \overset{\text{w} }{\to } X\), if for all continuous and bounded \(g \colon \mathbb{R} ^d \to \mathbb{R} \), \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right]\).
+	\(X_n \) \emph{converges weakly} to \(X\), denoted as \(X_n \overset{\text{w} }{\to } X\), if for all bounded continuous \(g \colon \mathbb{R} ^d \to \mathbb{R} \), \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right]\).
 \end{definition}
 
 To see how is \hyperref[def:weak-convergence]{weak convergence} compared to \hyperref[def:convergence-in-total-variation]{convergence in total variation}, we revisit the above example.
 
 \begin{eg}
-	Let \(X_n \sim \mathcal{U} \{ 0, 1 / n, \dots , (n-1) / n \} \). which should be converging to \(X \sim \mathcal{U} (0, 1)\). We have
+	Let \(X_n \sim \mathcal{U} \{ 0, 1 / n, \dots , (n-1) / n \} \), which should be converging to \(X \sim \mathcal{U} (0, 1)\). We have
 	\[
 		\mathbb{E}_{}\left[g(X_n) \right]
 		= \sum_{k=0}^{n-1} g(k / n) \left( \frac{k+1}{n} - \frac{k}{n} \right)
 		\to \int_{0}^{1} g(x) \,\mathrm{d}x
 		= \mathbb{E}_{}\left[g(X) \right]
 	\]
-	as \(g\) is continues and bounded on \([0, 1]\), hence Riemann integrable.
+	as \(g\) is bounded and continuous on \([0, 1]\), hence Riemann integrable.
 \end{eg}
 
 The following theorem characterizes \hyperref[def:weak-convergence]{weak convergence}.
@@ -72,14 +72,14 @@ The following theorem characterizes \hyperref[def:weak-convergence]{weak converg
 	The following are equivalent.
 	\begin{enumerate}[(a)]
 		\item\label{thm:Portmanteau-a} \(X_n \overset{\text{w} }{\to } X\).
-		\item\label{thm:Portmanteau-b} \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right] \) for all \(g \colon \mathbb{R} ^d \to \mathbb{R} \), Lipschitz and bounded.
+		\item\label{thm:Portmanteau-b} \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right] \) for all bounded Lipschitz \(g \colon \mathbb{R} ^d \to \mathbb{R} \).
 		\item\label{thm:Portmanteau-c} \(\mathbb{P} (X \in A) \leq \liminf_{n \to \infty} \mathbb{P} (X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) open.
 		\item\label{thm:Portmanteau-d} \(\mathbb{P} (X \in A) \geq \limsup_{n \to \infty} \mathbb{P} (X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) closed.
 		\item\label{thm:Portmanteau-e} \(\mathbb{P} (X_n \in A) \to \mathbb{P} (X \in A)\) for all \(A\) such that \(\mathbb{P} (X \in \partial A) = 0\).
 	\end{enumerate}
 \end{theorem}
 
-Before we prove \hyperref[thm:Portmanteau]{Portmanteau theorem}, we need some result from analysis. Specifically, although we might think of we're working in Euclidean spaces, all our discussion can be extended to metric spaces. Recall some results from metric spaces.
+Before we prove \hyperref[thm:Portmanteau]{Portmanteau theorem}, we need some result from analysis. Specifically, although we might think of we're working in Euclidean spaces, all our discussion can be extended to metric spaces. Recall some results from metric spaces. Let's first recall some basic results for metric spaces.
 
 \begin{claim}
 	Given a metric space \((S, \rho )\), \(\rho (\cdot, A)\) is Lipschitz for any \(A \subseteq S\), i.e., for any \(x, y\in S\),
@@ -102,8 +102,10 @@ Before we prove \hyperref[thm:Portmanteau]{Portmanteau theorem}, we need some re
 	hence \(\rho (x, A) = 0\). On the other hand, suppose \(\rho (x, A) = 0\). As \(\rho (x, A) = \inf _{y\in A} \rho (x, y)\), there exists \((y_n)\) in \(A\) such that \(\rho (x, y_n) \to \rho (x, A) = 0\), i.e., \(x\in \overline{A} \).
 \end{explanation}
 
-\begin{lemma}
-	Given a metric space \((S, \rho )\) and let \(A \subseteq S\) be a closed subset. Then there exists \(g_k \colon S \to \mathbb{R} \) decreasing in \(k\) which is bounded and Lipschitz such that \(g_k (x) \searrow \mathbbm{1}_{A}(x) \).
+The crucial lemma we're going to use to prove \hyperref[thm:Portmanteau]{Portmanteau theorem} is the following.
+
+\begin{lemma}\label{lma:lec3}
+	Given a metric space \((S, \rho )\) and let \(A \subseteq S\) be a closed subset. Then there exists bounded Lipschitz \(g_k \colon S \to \mathbb{R} \), decreasing in \(k\) such that \(g_k (x) \searrow \mathbbm{1}_{A}(x) \).
 \end{lemma}
 \begin{proof}
 	Since \(A\) is closed, \(A = \overline{A} \) and
@@ -137,7 +139,7 @@ Before we prove \hyperref[thm:Portmanteau]{Portmanteau theorem}, we need some re
 
 Then we can prove the \hyperref[thm:Portmanteau]{Portmanteau theorem}.
 
-\begin{proof}[Proof of \autoref{thm:Portmanteau}]
+\begin{proof}[Proof of \autoref{thm:Portmanteau}]\let\qed\relax
 	\autoref{thm:Portmanteau-a} \(\implies \) \autoref{thm:Portmanteau-b} is clear. And note that \autoref{thm:Portmanteau-c} \(\iff \) \autoref{thm:Portmanteau-d} since the following.
 	\begin{claim}
 		\autoref{thm:Portmanteau-d} \(\implies \) \autoref{thm:Portmanteau-c}.
@@ -160,13 +162,13 @@ Then we can prove the \hyperref[thm:Portmanteau]{Portmanteau theorem}.
 		\autoref{thm:Portmanteau-b} \(\implies \) \autoref{thm:Portmanteau-d}.
 	\end{claim}
 	\begin{explanation}
-		Assuming \(A\) is closed, then
+		From \autoref{lma:lec3}, there exists bounded Lipschitz \(g_k \searrow \mathbbm{1}_{A} \) such that for all closed \(A\),
 		\[
 			\mathbb{P} (X_n \in A)
 			= \mathbb{E}_{}\left[\mathbbm{1}_{A} (X_n) \right]
-			\leq \mathbb{E}_{}\left[g_k(X_n) \right]
+			\leq \mathbb{E}_{}\left[g_k(X_n) \right].
 		\]
-		This is true for every \(k\) and \(n\) since \(g_k \geq \mathbbm{1}_{A} \). Take the limit as \(n \to \infty \), we have
+		This is true for every \(k\) and \(n\) since \(g_k \geq \mathbbm{1}_{A} \), and by taking the limit as \(n \to \infty \),
 		\[
 			\limsup_{n \to \infty} \mathbb{P} (X_n \in A)
 			\leq \mathbb{E}_{}\left[g_k(X) \right]
@@ -175,6 +177,5 @@ Then we can prove the \hyperref[thm:Portmanteau]{Portmanteau theorem}.
 		\]
 		as \(k \to \infty \).
 	\end{explanation}
-
-	Hence, we now have \autoref{thm:Portmanteau-a} \(\implies \) \autoref{thm:Portmanteau-b} \(\implies \) \autoref{thm:Portmanteau-d} \(\iff \) \autoref{thm:Portmanteau-c}.
+	\emph{The proof will be \hyperref[pf:thm:Portmanteau-cont]{continued}\dots}
 \end{proof}

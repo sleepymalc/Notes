@@ -1,5 +1,192 @@
-\lecture{4}{26 Jan.\ 9:30}{}
-Let's continue the proof of \hyperref[thm:Portmanteau]{Portmanteau theorem}.
+\lecture{4}{26 Jan.\ 9:30}{Continuous Mapping Theorem}
+Before continuing the proof of \hyperref[thm:Portmanteau]{Portmanteau theorem}, we need one additional tools.
+
+\begin{lemma}\label{lma:lec4}
+	If \(\{ A_i \} _{i\in I}\) are pairwise disjoint events, then \(\{ i \in I \colon \mathbb{P} (A_i) > 0 \} \) is countable.\footnote{Note that \(I\) can be uncountable.}
+\end{lemma}
+\begin{proof}
+	Since we can write
+	\[
+		\{ i \in I \colon \mathbb{P} (A_i) >0 \}
+		= \bigcup_{k=1}^{\infty} \left\{ i \in I \colon \mathbb{P} (A_i) \geq \frac{1}{k} \right\}
+		\eqqcolon \bigcup_{k=1}^{\infty} I_k,
+	\]
+	hence it suffices to show \(\vert I_k \vert < \infty \) for any \(k \geq 1\). Indeed, for any \(k\), \(\vert I_k \vert \leq k\). Suppose not. Then there exists a countable \(J_k \subseteq I_k\) such that \(\vert J_k \vert > k\), implying
+	\[
+		\mathbb{P} \left( \bigcup_{i\in J_k} A_i \right)
+		= \sum_{i\in J_k} \mathbb{P} (A_i)
+		\geq \frac{\vert J_k \vert }{k}
+		> 1,
+	\]
+	which is a contradiction.
+\end{proof}
+
+We now finish the proof of \hyperref[thm:Portmanteau]{Portmanteau theorem}.
+
 \begin{proof}[Proof of \autoref{thm:Portmanteau} (cont.)]\label{pf:thm:Portmanteau-cont}
-	We now have \autoref{thm:Portmanteau-a} \(\implies \) \autoref{thm:Portmanteau-b} \(\implies \) \autoref{thm:Portmanteau-d} \(\iff \) \autoref{thm:Portmanteau-c}.
+	We already proved \autoref{thm:Portmanteau-a} \(\implies \) \autoref{thm:Portmanteau-b} \(\implies \) \autoref{thm:Portmanteau-d} \(\iff \) \autoref{thm:Portmanteau-c}.
+
+	\begin{claim}
+		\autoref{thm:Portmanteau-c} \(+\) \autoref{thm:Portmanteau-d} \(\implies \) \autoref{thm:Portmanteau-e}.
+	\end{claim}
+	\begin{explanation}
+		We see that for any \(A\), \(A^o \subseteq A \subseteq \overline{A} \), and from  \autoref{thm:Portmanteau-c},
+		\[
+			\begin{split}
+				\mathbb{P} (X \in A^o)
+				 & \leq \liminf_{n \to \infty} \mathbb{P} (X_n \in A^o)
+				\leq \liminf_{n \to \infty} \mathbb{P} (X_n \in A)      \\
+				 & \leq \limsup_{n \to \infty} \mathbb{P} (X_n \in A)
+				\leq \limsup_{n \to \infty} \mathbb{P} (X_n \in \overline{A} )
+				\leq \mathbb{P} (X \in \overline{A} )
+			\end{split}
+		\]
+		where the last step follows from \autoref{thm:Portmanteau-d}. Finally, since
+		\[
+			\mathbb{P} (X \in \overline{A} ) - \mathbb{P} (X \in A^o)
+			= \mathbb{P} ( \{ X \in \overline{A} \} \setminus \{ X \in A^o \} )
+			= \mathbb{P} (X \in (\overline{A} \setminus A^o))
+			= \mathbb{P} (X \in \partial A),
+		\]
+		which is \(0\) by our assumption, i.e., inequalities above are all equalities. In particular, since
+		\[
+			\liminf_{n \to \infty} \mathbb{P} (X_n \in A)
+			\leq \lim_{n \to \infty} \mathbb{P} (X_n \in A)
+			\leq \limsup_{n \to \infty} \mathbb{P} (X_n \in A)
+		\]
+		and \(\mathbb{P} (X \in A^o) \leq \mathbb{P} (X \in A) \leq \mathbb{P} (X \in \overline{A} ) \), \(\mathbb{P} (X \in A) = \lim_{n \to \infty} \mathbb{P} (X_n \in A)\).
+	\end{explanation}
+
+	Finally, we prove the following.
+
+	\begin{claim}
+		\autoref{thm:Portmanteau-e} \(\implies \) \autoref{thm:Portmanteau-a}.
+	\end{claim}
+	\begin{explanation}
+		For every \(g \colon \mathbb{R} ^d \to \mathbb{R} \) bounded and continuous, we want to show \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right] \). Suppose \(g \geq 0\),\footnote{Otherwise, we consider \(g = g^+ - g^-\) where \(g^+ = \max (g, 0)\) and \(g^- = \max (-g, 0)\), and everything follows.} and let \(K \geq g(x)\) for every \(x \in \mathbb{R} ^d\) (which exists since \(g\) is bounded), then
+		\[
+			\mathbb{E}_{}\left[g(X_n) \right]
+			= \int_{0}^{K} \mathbb{P} (g(X_n) > t) \,\mathrm{d}t , \quad
+			\mathbb{E}_{}\left[g(X) \right]
+			= \int_{0}^{K} \mathbb{P} (g(X) > t) \,\mathrm{d}t,
+		\]
+		so we just need to prove the convergence of the above two integrals. From bounded convergence theorem, it suffices to show that for almost every \(t \in [0, K]\),
+		\[
+			\mathbb{P} (g(X_n) > t) \to \mathbb{P} (g(X) > t).
+		\]
+		Observe that \(\mathbb{P} (g(X_n) > t) = \mathbb{P} (X_n \in \{ g > t \} )\) and \(\mathbb{P} (g(X) > t) = \mathbb{P} (X \in \{ g > t \} )\), so from \autoref{thm:Portmanteau-e} with \(A\coloneqq \{ g > t \} \), it suffices to show \(\mathbb{P} (X \in \partial \{ g > t \} ) = 0\) for almost all \(t\). Firstly,
+		\[
+			\mathbb{P} (X \in \partial \{ g > t \} )
+			= \mathbb{P} (X \in \overline{\{ g > t \} } \setminus \{ g > t \}^o )
+			= \mathbb{P} (X \in \overline{\{ g \geq t \} } \setminus \{ g > t \} )
+			= \mathbb{P} (g(X) = t ).
+		\]
+		Moreover, consider the events \(\{ g(X) = t \} _{t \in [0, K]}\), which are pairwise disjoint, hence \autoref{lma:lec4} implies \(\mathbb{P} (g(X) = t) = 0\) for all but countably many \(t\)'s, exactly what we want to show.
+	\end{explanation}
+	This finishes the proof.
+\end{proof}
+
+\subsection{Continuous Mapping Theorem}
+A common scenario is that given a nice function \(h\) (in terms of continuity), if \(X_n \overset{\text{w} }{\to } X\), we want to know when will \(h(X_n) \overset{\text{w} }{\to } h(X)\). To develop the theorem of this, we need some more facts about metric spaces.
+
+\begin{prev}
+	Given two metric spaces \((S, \rho )\), \((S^{\prime} , \rho ^{\prime} )\), \(g\colon S \to S^{\prime} \) is continuous if \(x_n \overset{\rho }{\to } x\) implies \(g(x_n) \overset{\rho ^{\prime} }{\to } g(x)\), or for open \(A \subseteq S^{\prime} \), \(g^{-1} (A) \subseteq S\) is open.
+\end{prev}
+
+\begin{notation}
+	We sometimes write \(g ^{-1} (A) \eqqcolon \{ g \in A \} \).
+\end{notation}
+
+It's clear that the following holds.
+
+\begin{note}
+	If \(g \colon S \to S^{\prime} \) is continuous and \(A \subseteq S^{\prime} \) is closed, then \(\overline{\{ g \in A \} } = \{ g \in \overline{A} \}\).
+\end{note}
+
+However, when \(g\) is not continuous and \(A\) is not closed, the situation is a bit more complicated. But at least we can first look at the set where \(g\) is continuous.
+
+\begin{notation}[Continuous set]
+	For any \(g \colon S \to S^{\prime} \), we denote the \emph{continuous set} as \(C_g \coloneqq \{ x \in S \colon \text{\(g\) is continuous at \(x\)} \} \).
+\end{notation}
+
+Then we have the following.
+
+\begin{proposition}\label{prop:lec4}
+	Given \(g\colon S \to S^{\prime} \) between metric spaces and \(A \subseteq S^{\prime} \),
+	\[
+		C_g \cap \overline{\{ g\in A \} }
+		\subseteq \{ g \in \overline{A}  \}.
+	\]
+\end{proposition}
+\begin{proof}
+	Let \(x \in C_g \cap \overline{\{ g\in A \} }\). Since \(x\in \overline{\{ g\in A \} }\), there exists \((x_n) \in \{ g\in A \} \) such that \(x_n \overset{\rho }{\to } x\). Moreover, \(x\in C_g\) implies \(g\) is continuous at \(x\), hence \(g(x_n) \overset{\rho ^{\prime} }{\to } g(x)\), i.e., \(g(x) \in \overline{A} \).
+\end{proof}
+
+This allows us to prove the following theorem, which answers our main question in this section.
+
+\begin{theorem}[Continuous mapping theorem]\label{thm:continuous-mapping}
+	Consider \(X_n \overset{\text{w} }{\to } X\) and \(h \colon \mathbb{R} ^d \to \mathbb{R} ^m\). If \(\mathbb{P} (X \in C_h) = 1\), then \(h(X_n) \overset{\text{w} }{\to } h(X)\).
+\end{theorem}
+\begin{proof}
+	Let \(A \subseteq \mathbb{R} ^m\) be a closed set. Then from \hyperref[thm:Portmanteau]{Portmanteau theorem} \autoref{thm:Portmanteau-d}, we need to show
+	\[
+		\limsup_{n \to \infty} \mathbb{P} (h(X_n) \in A)
+		\leq \mathbb{P} (h(X) \in A).
+	\]
+	Since \(\limsup_{n \to \infty} \mathbb{P} (h(X_n) \in A) = \limsup_{n \to \infty} \mathbb{P} (X_n \in \{ h \in A \} )\), implying
+	\[
+		\limsup_{n \to \infty} \mathbb{P} (h(X_n) \in A)
+		\leq \limsup_{n \to \infty} \mathbb{P} (X_n \in \overline{\{ h \in A \}} )
+		\leq \mathbb{P} (X \in \overline{\{ h \in A \} }),
+	\]
+	where the last inequality follows again from \hyperref[thm:Portmanteau]{Portmanteau theorem} \autoref{thm:Portmanteau-d} since \(\overline{\{ h \in A \} }\) is clearly closed and \(X_n \overset{\text{w} }{\to } X\). Finally, as \(\mathbb{P} (X \in C_h) = 1\),
+	\[
+		\mathbb{P} (X \in \overline{\{ h \in A \} })
+		= \mathbb{P} (X \in \overline{\{ h \in A \} } \cap C_h)
+		\leq \mathbb{P} (X \in \{ h \in \overline{A} \} )
+	\]
+	from \autoref{prop:lec4}, i.e.,
+	\[
+		\limsup_{n \to \infty} \mathbb{P} (h(X_n) \in A)
+		\leq \mathbb{P} (X \in \{ h \in \overline{A} \} )
+		= \mathbb{P} (X \in \{ h \in A \} )
+		= \mathbb{P} (h(X) \in A)
+	\]
+	since \(A\) is closed, hence we're done.
+\end{proof}
+
+\begin{eg}
+	Let \(d = 1\) and \(X_n \overset{\text{w} }{\to } X\) where \(X\) is continuous. Then \(1 / X_n \overset{\text{w} }{\to } 1 / X\) and \(X_n^2 \overset{\text{w} }{\to } X^2\).
+\end{eg}
+\begin{explanation}
+	For the case of \(X^2 \overset{\text{w} }{\to } X^2\), \hyperref[thm:continuous-mapping]{continuous mapping theorem} clearly applies with \(h(x) = x^2\). For the first case, consider
+	\[
+		h(x) = \begin{dcases}
+			\frac{1}{x}, & \text{ if } x \neq 0 ; \\
+			0,           & \text{ if } x = 0 .
+		\end{dcases}
+	\]
+	This means \(C_h = \mathbb{R} \setminus \{ 0 \} \). Then, we just need to show \(\mathbb{P} (X \in C_h) = 1 \) and apply \hyperref[thm:continuous-mapping]{continuous mapping theorem}. Observe that this is the same as asking \(\mathbb{P} (X = 0) = 0\), which is true when \(X\) is continuous.\footnote{Even if \(X\) is not continuous, as long as this is true we can conclude the same thing.}
+\end{explanation}
+
+Finally, another characterization of \hyperref[def:weak-convergence]{weak convergence} is the following.
+
+\begin{theorem}[Converging together]\label{thm:converging-together}
+	Let \(X_n \overset{\text{w} }{\to } X\), and if \(Y_n\) on the same probability space as \(X_n\) such that \(\lVert X_n - Y_n \rVert \overset{p}{\to } 0\), i.e., for all \(\epsilon > 0\), \(\mathbb{P} (\lVert X_n - Y_n \rVert > \epsilon ) \to 0\) as \(n \to \infty\). Then, \(Y_n \overset{\text{w} }{\to } X\).
+\end{theorem}
+
+We first see some applications.
+
+\begin{corollary}
+	If \(Y_n \overset{p}{\to } X\), then \(Y_n \overset{\text{w} }{\to } X\). The converse holds as long as \(\mathbb{P} (X = c) = 1\) for some constant \(c\).
+\end{corollary}
+\begin{proof}
+	We see that by considering \(X_n = X\) for all \(n\), \autoref{thm:converging-together} gives that if \(Y_n \overset{p}{\to } X\), \(Y_n \overset{\text{w} }{\to } X\).
+
+	Conversely, if \(Y_n \overset{\text{w} }{\to } c\), then consider any \(\epsilon > 0\) and an open ball \(B(c, \epsilon )\),
+	\[
+		\underbrace{\mathbb{P} (c \in B(c, \epsilon ))}_{1}
+		\leq \liminf_{n \to \infty} \mathbb{P} (Y_n \in B(c, \epsilon )),
+	\]
+	implying \(\mathbb{P} (Y_n \in B(c, \epsilon )) \to 1\), i.e., \(\mathbb{P} (\lVert Y_n - c \rVert < \epsilon ) \to 1\).
 \end{proof}

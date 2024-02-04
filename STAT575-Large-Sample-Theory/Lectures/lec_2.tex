@@ -7,13 +7,13 @@ Given a probability space \((\Omega , \mathscr{F} , \mathbb{P} )\), consider a s
 	\((X_n)\) \emph{point-wise converges} to \(X\), denoted as \(X_n \to X\), if \(X_n(\omega ) \to X(\omega )\) for all \(\omega \in \Omega \).\footnote{I.e., for every \(\epsilon > 0\), there exists \(n_0(\omega ) \in \mathbb{N} \) such that for every \(n \geq n_0\), \(\lVert X_n(\omega ) - X(\omega ) \rVert _2 < \epsilon \).}
 \end{definition}
 
-However, since we don't care about measure zero sets, we may instead consider the following.
+Since we don't care about measure zero sets, we may instead consider the following.
 
 \begin{definition}[Almost-surely converge]\label{def:almost-surely-converge}
-	\((X_n)\) \emph{almost-surely converges} to \(X\), denoted as \(X_n \overset{\text{a.s.}}{\to } X\), if \(\mathbb{P} (X_n \to X) = 1\).
+	\((X_n)\) \emph{almost-surely converges} to \(X\), denoted as \(X_n \overset{\text{a.s.}}{\to } X\), if \(\mathbb{P} (X_n \to X) = 1\).\footnote{I.e., \(X_n(\omega ) \to X(\omega )\) for all \(\omega \in \Omega \setminus N\) where \(\mathbb{P} (N) = 0\).}
 \end{definition}
 
-In other words, \hyperref[def:almost-surely-converge]{almost-surely convergence} means that \(X_n(\omega ) \to X(\omega )\) for all \(\omega \in \Omega \setminus N\) where \(\mathbb{P} (N) = 0\). However, this might still be too strong.
+However, this might still be too strong.
 
 \begin{definition}[Converge in probability]\label{def:converge-in-probability}
 	\((X_n)\) \emph{converges in probability} to \(X\), denoted as \(X_n \overset{p}{\to } X\), if for every \(\epsilon > 0\), \(\mathbb{P} (\lVert X_n - X \rVert > \epsilon ) \to 0\) as \(n \to \infty \).
@@ -83,7 +83,7 @@ from Markov's inequality. However, the converse is not always true.
 \end{theorem}
 
 \subsection{Applications to Statistics}
-Let \((X_n) \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is a distribution function. Say we're interested in some aspect of \(F\), for example, some parameter \(\theta = T(F) \in \mathbb{R} ^m\). By collecting data \(X_1, \dots , X_n\), we estimate \(\theta \) by computing an estimator \(\hat{\theta} _n\) of \(\theta \).\footnote{\(\hat{\theta} _n\) is a function of \(X_i\)'s.}
+Let \((X_n) \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is a distribution function. Say we're interested in some aspect of \(F\), for example, some parameter \(\theta = T(F) \in \mathbb{R} ^m\). By collecting data \(X_1, \dots , X_n\), we estimate \(\theta \) by computing an estimator \(\hat{\theta} _n\) of \(\theta \).\footnote{\(\hat{\theta} _n\) is a function of \(X_i\)'s.} There are some properties we might want for \(\hat{\theta} _n\).
 
 \begin{definition}[Consistent]\label{def:consistent}
 	\(\hat{\theta} _n\) is \emph{consistent} of \(\theta \) if \(\hat{\theta} _n \overset{p}{\to } \theta \) as \(n \to \infty \).
@@ -92,6 +92,14 @@ Let \((X_n) \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is a distribution fu
 \begin{definition}[Strongly consistent]\label{def:strongly-consistent}
 	\(\hat{\theta} _n\) is \emph{strongly consistent} of \(\theta \) if \(\hat{\theta} _n \overset{\text{a.s.} }{\to } \theta \) as \(n \to \infty \).
 \end{definition}
+
+\begin{definition}[Converge in mean squared error]\label{def:converge-in-MSE}
+	\(\hat{\theta} _n \) converges to \(\theta \) \emph{in mean squared error} if \(\hat{\theta} _n \overset{L^2}{\to } \theta \).
+\end{definition}
+
+\begin{remark}
+	When \(d = 1\), \(\mathbb{E}_{}[(\hat{\theta} _n - \theta ) ^2 ] = \Var_{}[\hat{\theta} _n ] + (\mathbb{E}_{}[\hat{\theta} _n - \theta ] )^2 \). Therefore, \(\hat{\theta} _n \) \hyperref[def:converge-in-MSE]{converges in mean squared error} to \(\theta \) if and only if \(\mathbb{E}_{}[\hat{\theta} _n ] \to \theta \) and \(\Var_{}[\hat{\theta} _n ] \to 0\).
+\end{remark}
 
 Let's first see the most well-known estimation problem, the mean estimation.
 
@@ -103,13 +111,7 @@ Let's first see the most well-known estimation problem, the mean estimation.
 		= \int_{0}^{\infty} \mathbb{P} (X > t) \,\mathrm{d}t
 		= \int_{0}^{\infty} (1 - F(t)) \,\mathrm{d}t.
 	\]
-	On the other hand, if \(X\) has a PMF \(f\), then
-	\[
-		\mathbb{E}_{}\left[X \right]
-		= \sum_{x} x f(x)
-		= \sum_{x} x \Delta F(x),
-	\]
-	where \(f(x) = \Delta F(x) \equiv F(x) - F(x^-)\). And if \(X\) has a PDF \(f\), then
+	If \(X\) has a PMF \(f\), then \(\mathbb{E}_{}\left[X \right] = \sum_{x} x f(x) = \sum_{x} x \Delta F(x)\) where \(f(x) = \Delta F(x) \equiv F(x) - F(x^-)\); if \(X\) has a PDF \(f\), then
 	\[
 		\mathbb{E}_{}\left[X \right]
 		= \int_{0}^{\infty} x f(x) \,\mathrm{d}x
@@ -135,7 +137,7 @@ Let's first see the most well-known estimation problem, the mean estimation.
 Another interesting problem is the supremum estimation.
 
 \begin{eg}[Supremum estimation]
-	Suppose there is a \(\theta \in \mathbb{R} \) where distribution function \(F\) such that \(F(\theta - \epsilon ) < 1 = F(\theta )\) for all \(\epsilon > 0\). This means \(\theta = \sup_{\omega } X(\omega )\) since \(\mathbb{P} (X \leq \theta - \epsilon ) = F(\theta - \epsilon )\) and \(F(\theta ) = \mathbb{P} (X \leq \theta )\).\footnote{Such an distribution exists, for example, \(\mathcal{U} (0, \theta )\).} The natural estimator for \(\theta \) would be \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i \), and it's indeed \hyperref[def:strongly-consistent]{strongly consistent}.
+	Suppose there is a \(\theta \in \mathbb{R} \) where distribution function \(F\) such that \(F(\theta - \epsilon ) < 1 = F(\theta )\) for all \(\epsilon > 0\), i.e., \(\theta = \sup_{\omega } X(\omega )\) since \(\mathbb{P} (X \leq \theta - \epsilon ) = F(\theta - \epsilon )\) and \(F(\theta ) = \mathbb{P} (X \leq \theta )\).\footnote{Such a distribution exists, for example, \(\mathcal{U} (0, \theta )\).} Then \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i \) is indeed a \hyperref[def:strongly-consistent]{strongly consistent} estimator of \(\theta \).
 \end{eg}
 \begin{explanation}
 	We see that for any \(\epsilon > 0\),
@@ -155,7 +157,7 @@ Another interesting problem is the supremum estimation.
 Proving convergence of \(\hat{\theta} _n\) is useful, but this might not be enough.
 
 \begin{eg}
-	Consider any deterministic sequence \((a_n)\) in \(\mathbb{R} \) which converges to \(0\). Adding \(a_n\) to \(\hat{\theta} _n\) will not change the convergence of \(\hat{\theta} _n\). This shows that being \hyperref[def:consistent]{consistent} might not be enough in some cases.
+	Consider any deterministic sequence \((a_n)\) in \(\mathbb{R} \) which converges to \(0\). Adding \(a_n\) to \(\hat{\theta} _n\) will not change the convergence of \(\hat{\theta} _n\).
 \end{eg}
 
 The above suggests that we should look at the \emph{distribution} of \(\hat{\theta} _n - \theta \) in order to say how does \(\hat{\theta} _n \to \theta \).
@@ -191,10 +193,5 @@ Let's see some examples.
 	If \(X_n \to X\) and \(Y_n \to Y\), then \((X_n Y_n) \to (X, Y)\).\footnote{The converse is also true since projections are continuous.} The same holds for \(\overset{\text{a.s.} }{\to } \) and \(\overset{p}{\to } \).
 \end{eg}
 \begin{explanation}
-	To show \(\lVert (X_n, Y_n) - (X, Y) \rVert \to 0\), we have
-	\[
-		\lVert (X_n, Y_n ) - (X, Y) \rVert
-		\leq \lVert X_n - X \rVert + \lVert Y_n - Y \rVert
-	\]
-	for all \(n \geq 1\).\footnote{This can be seen from \(\sqrt{x + y} \leq \sqrt{x} + \sqrt{y} \).} The latter two terms goes to \(0\) (in whatever sense) by assumption.
+	\(\lVert (X_n, Y_n) - (X, Y) \rVert \to 0\) since \(\lVert (X_n, Y_n ) - (X, Y) \rVert \leq \lVert X_n - X \rVert + \lVert Y_n - Y \rVert\) for all \(n \geq 1\).\footnote{This can be seen from \(\sqrt{x + y} \leq \sqrt{x} + \sqrt{y} \).} The latter two terms goes to \(0\) (in whatever sense) by assumption.
 \end{explanation}

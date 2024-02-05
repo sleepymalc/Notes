@@ -103,33 +103,24 @@ same for \(F_X\). So this reduces to the form we're familiar with, i.e., \(\math
 
 There are more classical results that are worth mentioning.
 
-\begin{remark}[De Moivre]
+\begin{remark}[De Moivre central limit theorem]
 	Let \(X_n \sim \operatorname{Bin}(n, p) \), then for every \(t \in \mathbb{R} \), as \(n \to \infty \),
 	\[
 		\mathbb{P} \left( \frac{X_n - np}{\sqrt{np (1 - p)} } \leq t \right)
-		\to \frac{1}{\sqrt{2\pi } } \int_{-\infty}^{\infty} e^{- u^2 / 2} \,\mathrm{d}u
-		\eqqcolon \phi (u)
-		= \mathbb{P} (Z \leq t)
-	\]
-	where \(Z \sim \mathcal{N} (0, 1)\).
-\end{remark}
-
-\begin{remark}[Polya's theorem]
-	If \(F_X\) is continuous, \(X_n \overset{D}{\to } X\) is equivalent as
-	\[
-		\sup _{t\in \mathbb{R} ^d} \left\vert F_{X_n} (t) - F_X(t) \right\vert \to 0.
+		\to \frac{1}{\sqrt{2\pi } } \int_{-\infty}^{t} e^{- u^2 / 2} \,\mathrm{d}u
+		= \Phi (t).
 	\]
 \end{remark}
 
-\begin{remark}
-	Let \(X_n\) and \(X\) be in \(\mathbb{Z} \). Let \(f_n\) and \(f\) be their corresponding PMF's, then
+\begin{proposition}
+	Let \(X_n\) and \(X\) be in \(\mathbb{Z} \) such that \(f_n\) and \(f\) are their corresponding PMF's, then
 	\[
 		f_n \to f
 		\iff X_n \overset{\operatorname{TV} }{\to } X
 		\iff X_n \overset{D}{\to } X.
 	\]
-\end{remark}
-\begin{explanation}
+\end{proposition}
+\begin{proof}
 	The forward implications are clear, so we just need to show \(X_n \overset{D}{\to } X \) implies \(f_n \to f\). Since for every \(t \in \mathbb{Z} \), since \(X_n\) and \(X\) are discrete in \(\mathbb{Z} \),
 	\[
 		f_n(t) = \mathbb{P} (X_n = t)
@@ -148,7 +139,7 @@ There are more classical results that are worth mentioning.
 		= f(t).
 	\]
 	As this holds for every \(t\in \mathbb{Z} \), we're done.
-\end{explanation}
+\end{proof}
 
 Now, the problem one might have is the following.
 
@@ -159,17 +150,22 @@ Now, the problem one might have is the following.
 	Consider for \(d = 1\) with \(X = c \in \mathbb{R} \), i.e., \(F_X\) is the step function at \(c\). To show \(X_n \overset{D}{\to } c\), we don't have to show \(\mathbb{P} (X_n \leq c) \to \mathbb{P} (X \leq c) = 1\). Otherwise, if we need to show this for all \(t\), in particular, \(c\), \(X_n = c + 1 / n\) would not satisfy this.
 \end{answer}
 
+If \(X_n \overset{d}{\to } X\) and \(X\) is continuous, then \(F_{X_n}\) converges to \(F_X\) not only point-wise, but uniformly.
+
+\begin{remark}[Polya's theorem]
+	If \(F_X\) is continuous, \(X_n \overset{D}{\to } X\) is equivalent as
+	\[
+		\sup _{t\in \mathbb{R} ^d} \left\vert F_{X_n} (t) - F_X(t) \right\vert \to 0.
+	\]
+\end{remark}
+
 Now we have seen various remarks and clarifications about \hyperref[def:converge-in-distribution]{convergence in distribution}, the upshot is that, it is actually just a renaming of \hyperref[def:weak-convergence]{weak convergence} in \(\mathbb{R} ^d\)!
 
 \begin{theorem}\label{thm:weak-convergence-is-convergence-in-distribution}
 	Given \(X_n\) and \(X\) in \(\mathbb{R} ^d\), then \(X_n \overset{\text{w} }{\to } X\) if and only if \(X_n \overset{D}{\to } X\).
 \end{theorem}
 \begin{proof}\let\qed\relax
-	We prove for the case of \(d = 1\), then it's easy to see the same holds for \(d \geq 1\). For the forward direction, we want to show that for all \(t \in C_{F_X}\),
-	\[
-		\mathbb{P} (X_n \leq t) \to \mathbb{P} (X \leq t).
-	\]
-	Note that \(\mathbb{P} (X \leq t) = \mathbb{P} (X \in (-\infty , t])\) and \(\mathbb{P} (X_n \leq t) = \mathbb{P} (X_n \in (-\infty , t])\), hence, from \hyperref[thm:Portmanteau]{Portmanteau theorem} \autoref{thm:Portmanteau-e} with \(A = (-\infty , t]\), \(X_n \overset{\text{w} }{\to } X\) is equivalently as saying \(\mathbb{P} (X_n \leq t) \to \mathbb{P} (X \leq t)\) if
+	We prove for the case of \(d = 1\), then it's easy to see the same holds for \(d \geq 1\). For the forward direction, we want to show that for all \(t \in C_{F_X}\), \(\mathbb{P} (X_n \leq t) \to \mathbb{P} (X \leq t)\). Note that \(\mathbb{P} (X \leq t) = \mathbb{P} (X \in (-\infty , t])\) and \(\mathbb{P} (X_n \leq t) = \mathbb{P} (X_n \in (-\infty , t])\), hence, from \hyperref[thm:Portmanteau]{Portmanteau theorem} \autoref{thm:Portmanteau-e} with \(A = (-\infty , t]\), \(X_n \overset{\text{w} }{\to } X\) is equivalently as saying \(\mathbb{P} (X_n \leq t) \to \mathbb{P} (X \leq t)\) if
 	\[
 		\mathbb{P} (X \in \partial (-\infty , t])
 		= \mathbb{P} (X \in \{ t \} )

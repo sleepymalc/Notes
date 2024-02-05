@@ -183,13 +183,20 @@ Let's see one important application. Consider an estimator \(T_n\) of \(\theta \
 This allows us to compute the rate of convergence and the limiting distribution. But what can we say when we care about \(g(T_n)\) for a function \(g\)?
 
 \begin{theorem}[Delta method]\label{thm:delta-method}
-	Let \((T_n)\) be \(d\)-dimensional random vectors with a deterministic sequence \(b_n \to \infty \) such that \(b_n (T_n - \theta ) \overset{D}{\to } Y\). If \(g \colon \mathbb{R} ^d \to \mathbb{R} ^m\) is differentiable at \(\theta \), then
+	Let \((T_n)\) be random vectors in \(\mathbb{R} ^d\) and a deterministic sequence \(b_n \to \infty \) such that \(b_n (T_n - \theta ) \overset{D}{\to } Y\), then \(T_n \overset{p}{\to } \theta \). Moreover, if \(g \colon \mathbb{R} ^d \to \mathbb{R} ^m\) is differentiable at \(\theta \),
 	\[
-		\lVert b_n (g(T_n) - g(\theta )) - \nabla g(\theta ) b_n(T_n - \theta ) \rVert \overset{p}{\to } 0.
+		b_n (g(T_n) - g(\theta )) \overset{D}{\to } \nabla g(\theta ) Y.
 	\]
 \end{theorem}
 \begin{proof}
-	Since \(g\) is differentiable at \(\theta \), as \(x \to \theta \),
+	We first observe that \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\) since \(b_n(T_n - \theta ) \overset{D}{\to } Y\), with \hyperref[thm:continuous-mapping]{continuous mapping theorem} and the fact that \(\lVert \cdot \rVert \) is continuous, \(\lVert b_n (T_n - \theta ) \rVert \overset{p}{\to } \lVert Y \rVert \), so \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\) by \autoref{prop:convergence-in-distirbution-bounded-in-probability}. With this, as \(b_n \to \infty \),
+	\[
+		\lVert T_n - \theta \rVert
+		= \frac{1}{b_n} \lVert b_n (T_n - \theta ) \rVert
+		= o(1) O_p(1)
+		\overset{p}{\to } 0,
+	\]
+	i.e., \(T_n \overset{p}{\to } \theta \). For the second claim, since \(g\) is differentiable at \(\theta \), as \(x \to \theta \),
 	\[
 		\frac{g(x) - g(\theta ) - \nabla g(\theta ) (x - \theta )}{\lVert x - \theta \rVert } \to 0.
 	\]
@@ -211,18 +218,16 @@ This allows us to compute the rate of convergence and the limiting distribution.
 		\left\lVert b_n \left( g(T_n) - g(\theta ) \right)  - \nabla g(\theta ) b_n (T_n - \theta ) \right\rVert
 		= \lVert h(T_n) \rVert \lVert  b_n (T_n - \theta ) \rVert.
 	\]
-	We want to show that the right-hand sides goes to \(0\) \hyperref[def:converge-in-probability]{in probability}. Observe that it's enough to show \(\lVert h(T_n) \rVert = o_p(1)\) and \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\). Indeed:
-	\begin{itemize}
-		\item \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\): Since \(b_n(T_n - \theta ) \overset{D}{\to } Y\), with \hyperref[thm:continuous-mapping]{continuous mapping theorem} and the fact that \(\lVert \cdot \rVert \) is continuous, \(\lVert b_n (T_n - \theta ) \rVert \overset{D}{\to } \lVert Y \rVert \), so \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\) by \autoref{prop:convergence-in-distirbution-bounded-in-probability}.
-		\item \(\lVert h(T_n) \rVert = o_p(1)\): since \(b_n \to \infty \),
-		      \[
-			      \lVert T_n - \theta \rVert
-			      = \frac{1}{b_n} \lVert b_n (T_n - \theta ) \rVert
-			      \overset{p}{\to } 0,
-		      \]
-		      i.e., \(T_n \overset{p}{\to } \theta \). This implies \(h(T_n) \overset{p}{\to } h(\theta )\) again by \hyperref[thm:continuous-mapping]{continuous mapping theorem} with \(h\) being continuous at \(\theta \). This further implies \(\lVert h(T_n) \rVert \overset{p}{\to } 0\) as we desired.\footnote{This involves \hyperref[thm:continuous-mapping]{continuous mapping theorem} and \autoref{col:weak-probability-constant} since \(h(\theta ) = 0\), a constant (so does its norm).}
-	\end{itemize}
-	Combining the above, we prove the result.
+	We observe the following.
+
+	\begin{claim}
+		It suffices to show that the right-hand sides goes to \(0\) \hyperref[def:converge-in-probability]{in probability}.
+	\end{claim}
+	\begin{explanation}
+		Indeed, since it will imply that \(b_n(g(T_n) - g(\theta ))\) has the same weak limit as \(\nabla g(\theta ) b_n (T_n - \theta )\) from \autoref{thm:converging-together}, i.e., \(\nabla g(\theta ) Y\) from our assumption with \hyperref[thm:continuous-mapping]{continuous mapping theorem}.
+	\end{explanation}
+
+	It's enough to show \(\lVert h(T_n) \rVert = o_p(1)\) since we know that \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\). Since \(T_n \overset{p}{\to } \theta \), \(h(T_n) \overset{p}{\to } h(\theta )\) again by \hyperref[thm:continuous-mapping]{continuous mapping theorem} with \(h\) being continuous at \(\theta \). This further implies \(\lVert h(T_n) \rVert \overset{p}{\to } 0\) as we desired.\footnote{This involves \hyperref[thm:continuous-mapping]{continuous mapping theorem} and \autoref{col:weak-probability-constant} since \(h(\theta ) = 0\), a constant (so does its norm).} Combining the above, we prove the result.
 \end{proof}
 
 Hence, we see that the answer to our original question is rather simple: as \(b_n(T_n - \theta ) \overset{D}{\to } Y\),

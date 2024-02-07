@@ -1,5 +1,5 @@
 \lecture{6}{2 Feb.\ 17:30}{Stochastic Boundedness and Delta Theorem}
-Before we finish the proof of \autoref{thm:weak-convergence-is-convergence-in-distribution}, we need recall one important characterization of \(\liminf\).
+Before we finish the proof of \autoref{thm:weak-convergence-is-convergence-in-distribution}, we recall one important characterization of \(\liminf\).
 
 \begin{prev}
 	Given two real sequence \(x_n\) and \(y_n\),
@@ -20,12 +20,12 @@ We can then finish the proof of \autoref{thm:weak-convergence-is-convergence-in-
 
 	\begin{align*}
 		\mathbb{P} (X \in A)
-		 & = \sum_{k=1}^{\infty} \mathbb{P} (X \in (a_k, b_k))                                                              \\
-		 & \leq \sum_{k=1}^{\infty} \liminf_{n \to \infty} \mathbb{P} (X_n \in (a_k, b_k)) \tag*{assume true for intervals} \\
+		 & = \sum_{k=1}^{\infty} \mathbb{P} (X \in (a_k, b_k))                                                                        \\
+		 & \leq \sum_{k=1}^{\infty} \liminf_{n \to \infty} \mathbb{P} (X_n \in (a_k, b_k)) \tag*{assume true for each \((a_k, b_k)\)} \\
 		 & \leq \liminf_{n \to \infty} \sum_{k=1}^{\infty} \mathbb{P} (X_n \in (a_k, b_k))
 		= \liminf_{n \to \infty} \mathbb{P} (X_n \in A),
 	\end{align*}
-	where the last inequality follows from induction on \(\liminf_{n \to \infty} (x_n + y_n) \geq \liminf_{n \to \infty} x_n + \liminf_{n \to \infty} y_n\). Now, we show that \(\mathbb{P} (X \in A) \leq \liminf_{n \to \infty} \mathbb{P} (X_n \in A)\) when \(A = (a, b)\).
+	where the last inequality follows from an induction on \(\liminf_{n \to \infty} (x_n + y_n) \geq \liminf_{n \to \infty} x_n + \liminf_{n \to \infty} y_n\). Now, we show that \(\mathbb{P} (X \in A) \leq \liminf_{n \to \infty} \mathbb{P} (X_n \in A)\) when \(A = (a, b)\).
 
 	\begin{claim}
 		\(\mathbb{P} (X \in (a, b)) \leq \liminf_{n \to \infty} \mathbb{P} (X_n \in (a, b))\).
@@ -64,8 +64,8 @@ We can then finish the proof of \autoref{thm:weak-convergence-is-convergence-in-
 	as long as \(0 \in C_{F_{X - t}}\), i.e., \(\mathbb{P} (X - t = 0) = \mathbb{P} (X = t) = 0\), which is just \(t \in C_{F_X}\) as we assumed.
 \end{proof}
 
-\subsection{Stochatsic Boundedness}
-So far we have been talking about the notion of convergence, now we switch the gear a bit and consider boundedness. In this section, let \((X_i)_{i \in I}\) be a family of \(d\)-dimensional random vectors with the index set \(I\), which can be either finite or infinite.
+\subsection{Stochastic Boundedness}
+So far we have been talking about the notion of convergence, now we switch the gear a bit and consider boundedness. In this section, let \((X_i)_{i \in I}\) be a family of \(d\)-dimensional random vectors defined on probability spaces \((\Omega _i, \mathscr{F} _i, \mathbb{P} _i)\), with the non-empty index set \(I\), which can be either finite or infinite.
 
 \begin{definition}[Bounded in probability]\label{def:bounded-in-probability}
 	\((X_i)_{i \in I}\) is said to be \emph{bounded in probability} if for every \(\epsilon > 0\), there exists an \(M > 0\) such that for every \(i \in I\),
@@ -91,17 +91,21 @@ In other words, for every \(\epsilon > 0\), there exists an \(M > 0\) such that 
 	When \(I\) is finite, \((X_i)_{i \in I}\) is also trivially \hyperref[def:bounded-in-probability]{bounded in probability}. On the other hand, when \(I\) is infinite, by considering \(X_n = n\) (deterministic), which is not \hyperref[def:bounded-in-probability]{bounded in probability} anymore.
 \end{remark}
 
-\begin{remark}
+We now provide some sufficient conditions for being \hyperref[def:bounded-in-probability]{bounded in probability}.
+
+\begin{proposition}
 	If \((X_i)_{i \in I}\) is bounded in \(L^p\) for some \(p > 0\), i.e., \(\sup _{i \in I} \mathbb{E}_{}\left[\lVert X_i \rVert ^p \right] < \infty \), then \((X_i)_{i \in I}\) is \hyperref[def:bounded-in-probability]{bounded in probability}.
-\end{remark}
-\begin{explanation}
-	Since for any \(\epsilon > 0\), from Markov's inequality,
+\end{proposition}
+\begin{proof}
+	Denote \(K \coloneqq \sup _{i \in I} \mathbb{E}_{}\left[\lVert X_i \rVert ^p \right] < \infty\). Since for any \(\epsilon > 0\), from Markov's inequality,
 	\[
 		\mathbb{P} (\lVert X_i \rVert > M)
-		\leq \frac{\mathbb{E}_{}\left[\lVert X_i \rVert ^p \right] }{M^p},
+		\leq \frac{\mathbb{E}_{}\left[\lVert X_i \rVert ^p \right] }{M^p}
+		\leq \frac{K}{M^p}
+		\eqqcolon \epsilon
 	\]
-	which can be made less than \(\epsilon \) since \(\sup _{i \in I} \mathbb{E}_{}\left[\lVert X_i \rVert ^p \right] < \infty \), for \(M\) large enough it'll be satisfied.
-\end{explanation}
+	for \(M \coloneqq \sqrt[p]{K / \epsilon } \). Hence, we're done.
+\end{proof}
 
 We now establish some relation between convergence and boundedness. Recall the following fact in elementary analysis.
 
@@ -121,19 +125,25 @@ In our context, we might expect something like ``if \(X_n \overset{p}{\to } X \)
 		> \mathbb{P} (\lVert X \rVert \geq M)
 		= \mathbb{P} (X \in B^{c} (0, M))
 		\geq \limsup_{n \to \infty} \mathbb{P} (X_n \in B^{c} (0, M))
-		= \limsup_{n \to \infty} \mathbb{P} (\lVert X_n \rVert > M).
+		= \limsup_{n \to \infty} \mathbb{P} (\lVert X_n \rVert \geq M).
 	\]
 	In other words,
 	\[
-		\liminf_{n \to \infty} \mathbb{P} (\lVert X_n \rVert \leq M) > 1 - \epsilon,
+		\liminf_{n \to \infty} \mathbb{P} (\lVert X_n \rVert < M) > 1 - \epsilon,
 	\]
-	i.e., there exists an \(n_0\) such that for every \(n \geq n_0\), \(\mathbb{P} (\lVert X_n \rVert \leq M) \geq 1 - \epsilon \). As for those \(n < n_0\), we can also find \(M^{\prime} > 0\) such that \(\mathbb{P} (\lVert X_n \rVert \leq M^{\prime} ) > 1 - \epsilon \) for every \(n < n_0\). Finally, by considering \(M^{\prime\prime} \coloneqq \max (M, M^{\prime} )\), we have \(\mathbb{P} (\lVert X_n \rVert \leq M^{\prime\prime} ) > 1 - \epsilon \), i.e., \(\mathbb{P} (\lVert X_n \rVert > M) < \epsilon \) as desired.
+	i.e., there exists an \(n_0\) such that for every \(n \geq n_0\), \(\mathbb{P} (\lVert X_n \rVert < M) \geq 1 - \epsilon \). As for those \(n < n_0\), since \(\{ X_n \colon n < n_0 \} \) is a finite family, we can find \(M^{\prime} > 0\) such that \(\mathbb{P} (\lVert X_n \rVert < M^{\prime} ) > 1 - \epsilon \) for every \(n < n_0\). Finally, by considering \(M^{\prime\prime} \coloneqq \max (M, M^{\prime} )\), we have \(\mathbb{P} (\lVert X_n \rVert < M^{\prime\prime} ) > 1 - \epsilon \), i.e., \(\mathbb{P} (\lVert X_n \rVert \geq M^{\prime\prime} ) < \epsilon \) as desired.
 \end{proof}
 
-There is a kind of converse theorem holds called \href{https://en.wikipedia.org/wiki/Prokhorov's_theorem}{Prokhorov's theorem}, but we won't prove it here. Another useful characterization that generalizes our intuition in \(\mathbb{R} \) is the following.
+There is a kind of converse theorem holds called \href{https://en.wikipedia.org/wiki/Prokhorov's_theorem}{Prokhorov's theorem}, but we won't prove it here. We now see another useful characterization that generalizes our intuition in \(\mathbb{R} \). Recall the following.
 
-\begin{proposition}
-	When \(d = 1\), if \(X_n \overset{p}{\to } 0\) and \(Y_n\) is \hyperref[def:bounded-in-probability]{bounded in probability}, then \(X_n Y_n \overset{p}{\to } 0\).
+\begin{prev}
+	In \(\mathbb{R} \), if \(a_n \to 0\) and \(b_n\) is bounded, \(a_n b_n \to 0\).
+\end{prev}
+
+The generalization is the following.
+
+\begin{proposition}\label{prop:lec6}
+	Let \(d = 1\) such that \(X_n\) and \(Y_n\) are defined on the same probability space. If \(X_n \overset{p}{\to } 0\) and \(Y_n\) is \hyperref[def:bounded-in-probability]{bounded in probability}, then \(X_n Y_n \overset{p}{\to } 0\).
 \end{proposition}
 \begin{proof}
 	Fix an \(\epsilon > 0\). We want to show that \(\mathbb{P} (\vert X_n Y_n \vert > \epsilon ) \to 0\). This is because
@@ -153,53 +163,45 @@ There is a kind of converse theorem holds called \href{https://en.wikipedia.org/
 	We see that the second term always goes to \(0\), while the first term can always be upper-bounded by \(\epsilon \). Hence, by letting \(\epsilon \to 0\), we're done.
 \end{proof}
 
-The analogy to the case in \(\mathbb{R} \) is the following.
-
-\begin{intuition}
-	In \(\mathbb{R} \), if \(a_n \to 0\) and \(b_n\) is bounded, \(a_n b_n \to 0\).
-\end{intuition}
-
 We often write the following.
 
 \begin{notation}
 	We write \(X_n = o_p(1)\) for \(X_n \overset{p}{\to } 0\), and \(X_n = O_p(1)\) when \((X_n)\) is \hyperref[def:bounded-in-probability]{bounded in probability}.
 \end{notation}
 
-Let's see one important application. Consider an estimator \(T_n\) of \(\theta \), and a deterministic sequence \(b_n\) which goes to \(\infty \). In this case, we often have
+Let's see one important application which combines the above. Consider an estimator \(T_n\) of \(\theta \), and a deterministic sequence \(b_n\) which goes to \(\infty \). In this case, we often have
 \[
 	b_n (T_n - \theta ) \overset{D}{\to } Y.
 \]
 
 \begin{eg}
-	When \(X_n \sim \operatorname{Bin}(n, p) \), then
+	When \(X_n \sim \operatorname{Bin}(n, p) \), then for \(b_n = \sqrt{n / p (1 - p)} \to \infty \), \(T_n = X_n / n\), and \(\theta = p\), we have
 	\[
 		\frac{X_n - n p}{\sqrt{n p (1 - p)} }
 		= \sqrt{\frac{n}{p (1 - p)}} \left( \frac{X_n}{n} - p \right)
-		\to Y \sim \mathcal{N} (0, 1)
+		= b_n (T_n - \theta )
+		\to Y \sim \mathcal{N} (0, 1).
 	\]
 \end{eg}
 
 This allows us to compute the rate of convergence and the limiting distribution. But what can we say when we care about \(g(T_n)\) for a function \(g\)?
 
 \begin{theorem}[Delta method]\label{thm:delta-method}
-	Let \((T_n)\) be random vectors in \(\mathbb{R} ^d\) and a deterministic sequence \(b_n \to \infty \) such that \(b_n (T_n - \theta ) \overset{D}{\to } Y\), then \(T_n \overset{p}{\to } \theta \). Moreover, if \(g \colon \mathbb{R} ^d \to \mathbb{R} ^m\) is differentiable at \(\theta \),
-	\[
-		b_n (g(T_n) - g(\theta )) \overset{D}{\to } \nabla g(\theta ) Y.
-	\]
+	Let \(\theta \in \mathbb{R} ^d\), \((T_n)\) and \(Y\) be random vectors in \(\mathbb{R} ^d\), and \(b_n \to \infty \) be a positive deterministic sequence. If \(b_n (T_n - \theta ) \overset{D}{\to } Y\), then \(T_n \overset{p}{\to } \theta \). Moreover, if \(g \colon \mathbb{R} ^d \to \mathbb{R} ^m\) is differentiable at \(\theta \), \(b_n (g(T_n) - g(\theta )) \overset{D}{\to } \nabla g(\theta ) Y\).
 \end{theorem}
 \begin{proof}
-	We first observe that \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\) since \(b_n(T_n - \theta ) \overset{D}{\to } Y\), with \hyperref[thm:continuous-mapping]{continuous mapping theorem} and the fact that \(\lVert \cdot \rVert \) is continuous, \(\lVert b_n (T_n - \theta ) \rVert \overset{p}{\to } \lVert Y \rVert \), so \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\) by \autoref{prop:convergence-in-distirbution-bounded-in-probability}. With this, as \(b_n \to \infty \),
+	We first observe that \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\) since \(b_n(T_n - \theta ) \overset{D}{\to } Y\), with \hyperref[thm:continuous-mapping]{continuous mapping theorem} and the fact that \(\lVert \cdot \rVert \) is continuous, \(\lVert b_n (T_n - \theta ) \rVert \overset{p}{\to } \lVert Y \rVert \), so \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\) by \autoref{prop:convergence-in-distirbution-bounded-in-probability}. With this, as \(b_n \to \infty \), \(T_n \overset{p}{\to } \theta \) since
 	\[
 		\lVert T_n - \theta \rVert
 		= \frac{1}{b_n} \lVert b_n (T_n - \theta ) \rVert
 		= o(1) O_p(1)
-		\overset{p}{\to } 0,
+		\overset{p}{\to } 0
 	\]
-	i.e., \(T_n \overset{p}{\to } \theta \). For the second claim, since \(g\) is differentiable at \(\theta \), as \(x \to \theta \),
+	as \(o(1) O_p(1) = o_p(1)\) from \autoref{prop:lec6}. For the second claim, since \(g\) is differentiable at \(\theta \),
 	\[
-		\frac{g(x) - g(\theta ) - \nabla g(\theta ) (x - \theta )}{\lVert x - \theta \rVert } \to 0.
+		\frac{g(x) - g(\theta ) - \nabla g(\theta ) (x - \theta )}{\lVert x - \theta \rVert } \to 0
 	\]
-	Let \(r(x) \coloneqq g(x) - g(\theta ) - \nabla g(\theta ) (x - \theta )\) to be the remainder, and consider
+	when \(x \to \theta \). Let \(r(x) \coloneqq g(x) - g(\theta ) - \nabla g(\theta ) (x - \theta )\) for \(x \in \mathbb{R} ^d\) be the remainder, and consider
 	\[
 		h(x) = \begin{dcases}
 			0,                                       & \text{ if } x = \theta  ;   \\
@@ -223,10 +225,10 @@ This allows us to compute the rate of convergence and the limiting distribution.
 		It suffices to show that the right-hand sides goes to \(0\) \hyperref[def:converge-in-probability]{in probability}.
 	\end{claim}
 	\begin{explanation}
-		Indeed, since it will imply that \(b_n(g(T_n) - g(\theta ))\) has the same weak limit as \(\nabla g(\theta ) b_n (T_n - \theta )\) from \autoref{thm:converging-together}, i.e., \(\nabla g(\theta ) Y\) from our assumption with \hyperref[thm:continuous-mapping]{continuous mapping theorem}.
+		Since it implies that \(b_n(g(T_n) - g(\theta ))\) has the same weak limit as \(\nabla g(\theta ) b_n (T_n - \theta )\) from \autoref{thm:converging-together}, i.e., \(\nabla g(\theta ) Y\) from our assumption with \hyperref[thm:continuous-mapping]{continuous mapping theorem}.
 	\end{explanation}
 
-	It's enough to show \(\lVert h(T_n) \rVert = o_p(1)\) since we know that \(\lVert b_n (T_n - \theta ) \rVert \in O_p(1)\). Since \(T_n \overset{p}{\to } \theta \), \(h(T_n) \overset{p}{\to } h(\theta )\) again by \hyperref[thm:continuous-mapping]{continuous mapping theorem} with \(h\) being continuous at \(\theta \). This further implies \(\lVert h(T_n) \rVert \overset{p}{\to } 0\) as we desired.\footnote{This involves \hyperref[thm:continuous-mapping]{continuous mapping theorem} and \autoref{col:weak-probability-constant} since \(h(\theta ) = 0\), a constant (so does its norm).} Combining the above, we prove the result.
+	It's enough to show \(\lVert h(T_n) \rVert = o_p(1)\) since we know that \(\lVert b_n (T_n - \theta ) \rVert = O_p(1)\) and \(o_p(1) O_p(1) = o_p(1)\) from \autoref{prop:lec6}. Indeed, as \(T_n \overset{p}{\to } \theta \), \(h(T_n) \overset{p}{\to } h(\theta )\) again by \hyperref[thm:continuous-mapping]{continuous mapping theorem} with \(h\) being continuous at \(\theta \). This further implies \(\lVert h(T_n) \rVert \overset{p}{\to } 0\) as we desired.\footnote{This involves \hyperref[thm:continuous-mapping]{continuous mapping theorem} and \autoref{col:weak-probability-constant} since \(h(\theta ) = 0\), a constant (so does its norm).} Combining the above, the result follows.
 \end{proof}
 
 Hence, we see that the answer to our original question is rather simple: as \(b_n(T_n - \theta ) \overset{D}{\to } Y\),

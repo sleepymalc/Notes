@@ -1,1 +1,158 @@
-\lecture{8}{8 Feb.\ 9:30}{}
+\lecture{8}{8 Feb.\ 9:30}{Characteristic Functions}
+We see other similar theorems apart from \autoref{thm:lec7}.
+
+\begin{theorem}\label{thm:lec8}
+	If \(X_n \overset{\text{w} }{\to } X\) and \(X_n \overset{\text{w} }{\to } Y\), then \(X \overset{D}{=} Y\). More generally, if \(X_n \overset{\text{w} }{\to } X\) and \(Y_n \overset{\text{w} }{\to } Y\), with \(X_n \overset{D}{=} Y_n\) for all \(n \geq 1\), \(X \overset{D}{=} Y\).
+\end{theorem}
+\begin{proof}
+	We have for every \(n \geq 1\), \(\mathbb{E}_{}[g(X_n)] = \mathbb{E}_{}[g(Y_n)] \) for all \(g \colon \mathbb{R} ^d \to \mathbb{R} \). If \(g\) is bounded and continuous, \(\mathbb{E}_{}[g(X_n)] \to \mathbb{E}_{}[g(X)] \) and \(\mathbb{E}_{}[g(Y_n)] \to \mathbb{E}_{}[g(Y)] \). To show that \(X \overset{D}{=} Y\), we want to show \(F_X = F_Y\), or \(\mathbb{P} (X \in B) = \mathbb{P} (Y \in B)\) for all \(B \in \mathscr{F} = \mathcal{B} (\mathbb{R} ^d)\). In fact, it's enough to show this for closed \(B\). With \autoref{lma:lec3}, there exists \((g_k) \searrow \mathbbm{1}_{B} \) for closed \(B\) and bounded, Lipschitz \(g_k\), i.e.,
+	\[
+		\begin{split}
+			\mathbb{E}_{}[\mathbbm{1}_{B} (X)]
+			= \lim_{k \to \infty} \mathbb{E}_{}[g_k(X)]
+			 & = \lim_{k \to \infty} \lim_{n \to \infty} \mathbb{E}_{}[g_k(X_n)] \\
+			 & = \lim_{k \to \infty} \lim_{n \to \infty} \mathbb{E}_{}[g_k(Y_n)]
+			= \lim_{k \to \infty} \mathbb{E}_{}[g_k(Y)]
+			= \mathbb{E}_{}[\mathbbm{1}_{B} (Y)],
+		\end{split}
+	\]
+	where the third equality follows from the fact that \(X_n \overset{D}{=} Y_n \).
+\end{proof}
+
+One question is that, if we don't have things like \hyperref[def:converge-weakly]{weak convergent} but just some moment information (i.e., when \(g(x) = x^k\) when computing \(\mathbb{E}_{}[g(X)] \)), can we conclude the same thing?
+
+\begin{problem*}
+	If \(\mathbb{E}_{}[X^k] = \mathbb{E}_{}[Y^k] < \infty \) for all \(k \geq 1\), does \(X \overset{D}{=} Y\)?
+\end{problem*}
+\begin{answer}
+	Not in general.
+\end{answer}
+
+On the other hand, it actually suffices to show only for \(g(x) = \cos (t\cdot x)\) or \(\sin (t\cdot x)\) for \(t, x\in \mathbb{R} ^d\). This leads to the so-called \hyperref[def:characteristic-function]{characteristic functions}.
+
+\begin{definition}[Characteristic function]\label{def:characteristic-function}
+	The \emph{characteristic function} of \(X\) is defined as \(\phi _X \colon \mathbb{R} ^d \to \mathbb{C} \) where \(t\in \mathbb{R} ^d\) such that
+	\[
+		\phi _X(t) = \mathbb{E}_{}[\cos (t \cdot X)] + i \mathbb{E}_{}[\sin (t \cdot X)] = \mathbb{E}_{}[e^{i (t \cdot X)}] .
+	\]
+\end{definition}
+
+\begin{notation}
+	We will now drop the inner product, i.e., write \(t\cdot X \eqqcolon t X\).
+\end{notation}
+
+If we write out explicitly, we have
+\[
+	\phi _X(t)
+	= \mathbb{E}_{}[e^{i t X}]
+	= \int_{}^{} e^{i t x} f_X(x)\,\mathrm{d}x
+	= \int_{}^{} e^{i t x} F_X(\mathrm{d} x).
+\]
+
+\begin{remark}
+	\hyperref[def:characteristic-function]{Characteristic functions} are bounded.
+\end{remark}
+\begin{explanation}
+	Since
+	\[
+		\vert \phi _X(t) \vert
+		= \sqrt{\left( \mathbb{E}_{}[\cos (t X)] \right)^2 + \left( \mathbb{E}_{}[\sin (t X)] \right)^2 }
+		\leq \sqrt{\mathbb{E}_{}[\cos ^2(t X)] + \mathbb{E}_{}[\sin ^2(t X)] }
+		= 1.
+	\]
+\end{explanation}
+
+\begin{remark}
+	If \(X\) and \(Y\) are independent, \(\phi _{X + Y}(t) = \phi _X(t) \cdot \phi _Y(t)\).
+\end{remark}
+
+We make one more remark for future reference.
+
+\begin{remark}\label{rmk:lec8}
+	If \(X, Y\) are discrete, \(f_{X + Y} (x) = \sum_{y} f_Y(x - y) f_X(y)\). More generally, if \(X, Y\) have PDFs,
+	\[
+		f_{X + Y}(x) = \int f_Y(x - y) f_X(y) \,\mathrm{d} y = \int f_Y(x - y) F_X(\mathrm{d} y) .
+	\]
+	Furthermore, even if \(X\) doesn't have PDF, as long as \(Y\) does, the above still holds.
+\end{remark}
+
+Now we can prove the following.
+
+\begin{theorem}[Uniqueness]\label{thm:uniqueness}
+	If \(\phi _X(t) = \phi _Y(t)\) for all \(t\in \mathbb{R} ^d\), then \(X\overset{D}{=} Y\). The converse is trivial.
+\end{theorem}
+\begin{proof}
+	Consider \(d = 1\). Observe that if we can write \(F_X\) in terms of only \(\phi _X\), then \(\phi _X = \phi _Y\) implies \(F_X = F_Y\). To do this, consider the following.
+
+	\begin{claim}
+		For \(Z, Z^{\prime} \sim \mathcal{N} (0, 1)\) (independent of \(X\) and \(Y\)), if one can write \(F_{X + \sigma Z}\) for all \(\sigma > 0\) in terms of only \(\phi _X\), \(\phi _X = \phi _Y\) implies \(X \overset{D}{=} Y\).
+	\end{claim}
+	\begin{explanation}
+		Fix some \(\sigma > 0\). In this case, if we can write \(F_{X + \sigma Z}\) in terms of only \(\phi _X\), \(\phi _X = \phi _Y\) implies \(F_{X + \sigma Z} = F_{Y + \sigma Z^{\prime} }\). This implies \(X + \sigma Z \overset{D}{=} Y + \sigma Z^{\prime} \). Now, for \(\sigma = 1 / k\), \(k \in \mathbb{N} \),
+		\[
+			X + \frac{1}{k} Z \overset{D}{=} Y + \frac{1}{k} Z^{\prime} .
+		\]
+		With \autoref{col:Slutsky}, since \(Z / k \overset{p}{\to } 0\) (and also \(Z^{\prime} / k \overset{p}{\to } 0\)), we have \(X + Z / k \overset{D}{\to } X\) and \(Y + Z^{\prime} / k \overset{D}{\to } Y\), which implies \(X \overset{D}{=} Y\) from \autoref{thm:lec8}.
+	\end{explanation}
+
+	Hence, our goal now is to write \(F_{X + \sigma Z}\) in terms of \(\phi _X\). Firstly, for all \(t\in \mathbb{R} \),
+	\begin{equation}\label{eq:thm:uniqueness}
+		\phi _Z(t)
+		= \int e^{i t z} F_Z(\mathrm{d} z)
+		= \int e^{i t z} f_Z(z) \,\mathrm{d} z
+		= \int e^{i t z} \frac{1}{\sqrt{2\pi } } e^{-z^2 / 2} \,\mathrm{d} z
+		= e^{-t^2 / 2}.
+	\end{equation}
+	Now, we compute \(F_{X + \sigma Z}(t)\): for any bounded \(g\colon \mathbb{R} \to \mathbb{R} _+\),
+	\begin{align*}
+		\mathbb{E}_{}[g(X + \alpha Z)]
+		 & = \int g(x) F_{X + \sigma Z}(\mathrm{d} x)                                                                                                                                  \\
+		 & = \int g(x) f_{X + \sigma Z}(x) \,\mathrm{d} x                                                                                                                              \\
+		 & = \int g(x) \int \frac{1}{\sigma \sqrt{2 \pi } } e^{- (x-y)^2 / 2\sigma ^2} F_X(\mathrm{d} y) \,\mathrm{d} x ,                                                              \\
+		\shortintertext{where we use the fact that \(F_{X + \sigma Z}\) indeed has a PDF from the \hyperref[rmk:lec8]{remark}. By replacing \(e^{-(x-y)^2 / 2\sigma ^2}\) from \autoref{eq:thm:uniqueness} with \(t = (x - y) / \sigma \),}
+		 & = \int g(x) \int \frac{1}{\sigma \sqrt{2\pi } } \int e^{i \frac{y - x}{\sigma } z} \frac{1}{\sqrt{2\pi } }  e^{- z^2 / 2} \,\mathrm{d} z F_X(\mathrm{d} y) \,\mathrm{d} x . \\
+		 & =\frac{1}{2\pi } \int g(x) \int e^{i (y - x) u} e^{- \sigma ^2 u^2 / 2} \,\mathrm{d} u F_X(\mathrm{d} y) \,\mathrm{d} x , \tag*{\(z / \sigma \eqqcolon u\)}                 \\
+		\shortintertext{interchanging the order of integrals with \href{https://en.wikipedia.org/wiki/Fubini's_theorem}{Fubini's theorem} (integrands are absolute integrable),}
+		 & = \frac{1}{2\pi } \int g(x) \int e^{-i x u - \sigma ^2 u^2 / 2} \underbrace{\int e^{i y u} F_X(\mathrm{d} y)}_{\phi _X(u)} \,\mathrm{d} u \,\mathrm{d} x .
+	\end{align*}
+	We see that \(F_{X + \sigma Z} (\mathrm{d} x)\) indeed can be written in terms of \(\phi _X\) (in the distribution sense) with no other dependencies, hence we're done.
+\end{proof}
+
+One immediate consequence of the \hyperref[thm:uniqueness]{uniqueness theorem} is that it's enough to have the \hyperref[def:characteristic-function]{characteristic functions} converging to some function (not necessarily a \hyperref[def:characteristic-function]{characteristic functions} of some \(X\)) for us to conclude that the subsequences of \((X_n)\) have the same weak limit. To do this, we need to prove \hyperref[thm:Prokhorov]{Prokhorov's theorem}.
+
+\begin{theorem}[Prokhorov's theorem]\label{thm:Prokhorov}
+	If \((X_n) = O_p(1)\), then there exists a \hyperref[def:converge-weakly]{weakly convergent} subsequence of \((X_n)\).
+\end{theorem}
+\begin{proof}[Proof sketch]
+	Based on \href{https://en.wikipedia.org/wiki/Helly%27s_selection_theorem}{Helly's selection theorem}, \(F_{X_n}(t) \to F(t)\) for all \(t \in C_F\), there exists an increasing \(F\), right continuous, \(F(+\infty ) \leq 1\) and \(F(-\infty ) \geq 0\) (called the \emph{defective CDF}). Consider \(d = 1\), we show that this \(F\) is indeed a CDF when \(X_n = O_p(1)\).
+
+	Fix \(\epsilon > 0\), then there exists \(M_{\epsilon } > 0\) in \(C_F\) such that
+	\[
+		F_{X_n}(M_{\epsilon } )
+		=\mathbb{P} (X_n \leq M_{\epsilon } )
+		\geq \mathbb{P} (\vert X_n \vert \leq M_{\epsilon } )
+		\geq 1 - \epsilon
+	\]
+	for all \(n \geq 1\). Since \(M_{\epsilon } \in C_F\), \(F_{X_n}(M_{\epsilon } ) \to F(M_{\epsilon } )\). We then see that for all \(\epsilon > 0\), there exists \(M_{\epsilon } > 0 \) such that \(F(+\infty ) \geq F(M_{\epsilon } ) \geq 1 - \epsilon \). As \(\epsilon \to 0\), \(F(+\infty ) = 1\). Similarly, \(F(-\infty ) = 0\).
+\end{proof}
+
+We now state the theorem.
+
+\begin{theorem}
+	\(\phi _{X_n}(t) \to \phi _X(t)\) for all \(t \in \mathbb{R} ^d\), then \(X_n \overset{D}{\to } X\).
+\end{theorem}
+
+In fact, one can prove a generalized version of this as follows.
+
+\begin{theorem}
+	If \(\phi _{X_n}(t) \to \phi (t)\) for all \(t \in \mathbb{R} ^d\), then all \hyperref[def:converge-weakly]{weakly convergent} subsequences of \((X_n)\) have the same weak limit. Furthermore, if also \(\phi \) is continuous at \(0\), then there exists \(X\) such that \(\phi = \phi _X\)  and \(X_n \overset{D}{\to } X\).
+\end{theorem}
+\begin{proof}
+	Let's start with the first claim. Suppose \(Y_n \overset{\text{w} }{\to } Y\) and \(Z_n \overset{\text{w} }{\to } Z\) are two subsequences of \(X_n\) such that \(Y \neq Z\). But since \(\phi _{Y_n}(t) \to \phi _Y(t)\) and \(\phi _{Z_n}(t) \to \phi _Z(t)\), with the fact that \((\phi _{Y_n}(t))\) and \((\phi _{Z_n}(t))\) are subsequences of \((\phi _{X_n}(t))\) for every \(t\), as \(\phi _{X_n}(t) \to \phi (t)\), both subsequences need to converge to the same limit, i.e.,
+	\[
+		\phi _Y(t) = \phi (t) = \phi _Z(t)
+	\]
+	for all \(t \in \mathbb{R} ^d\). From the \hyperref[thm:uniqueness]{uniqueness theorem}, \(Y \overset{D}{=} Z\).
+
+	For the second part, we need \hyperref[thm:Prokhorov]{Prokhorov's theorem}. Explicitly, we prove that if \(\phi \) is continuous at \(0\), \((X_n) = O_p(1)\). Then with \hyperref[thm:Prokhorov]{Prokhorov's theorem}, we're done.
+\end{proof}

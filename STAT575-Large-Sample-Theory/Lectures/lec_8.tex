@@ -69,11 +69,11 @@ If we write out explicitly, we have
 We make one more remark for future reference.
 
 \begin{remark}\label{rmk:lec8}
-	If \(X, Y\) are discrete, \(f_{X + Y} (x) = \sum_{y} f_Y(x - y) f_X(y)\). More generally, if \(X, Y\) have PDFs,
+	If \(X, Y\) are discrete, \(f_{X + Y} (x) = \sum_{y} f_Y(x - y) f_X(y)\). More generally, if \(X, Y\) have pdfs,
 	\[
 		f_{X + Y}(x) = \int f_Y(x - y) f_X(y) \,\mathrm{d} y = \int f_Y(x - y) F_X(\mathrm{d} y) .
 	\]
-	Furthermore, even if \(X\) doesn't have PDF, as long as \(Y\) does, the above still holds.
+	Furthermore, even if \(X\) doesn't have pdf, as long as \(Y\) does, the above still holds.
 \end{remark}
 
 Now we can prove the following.
@@ -103,32 +103,31 @@ Now we can prove the following.
 		= \int e^{i t z} \frac{1}{\sqrt{2\pi } } e^{-z^2 / 2} \,\mathrm{d} z
 		= e^{-t^2 / 2}.
 	\end{equation}
-	Now, we compute \(F_{X + \sigma Z}(t)\): for any bounded \(g\colon \mathbb{R} \to \mathbb{R} _+\),
+	Now, consider \(f_{X + \sigma Z}(x)\) instead, which exists since \(Z\) has a pdf from the \hyperref[rmk:lec8]{remark}. We see that
 	\begin{align*}
-		\mathbb{E}_{}[g(X + \alpha Z)]
-		 & = \int g(x) F_{X + \sigma Z}(\mathrm{d} x)                                                                                                                                  \\
-		 & = \int g(x) \int f_{\sigma Z}(x-y) F_{X}(\mathrm{d} y) \tag*{from \hyperref[rmk:lec8]{remark}}                                                                              \\
-		 & = \int g(x) \int \frac{1}{\sigma \sqrt{2 \pi } } e^{- (x-y)^2 / 2\sigma ^2} F_X(\mathrm{d} y) \,\mathrm{d} x ,                                                              \\
+		f_{X + \sigma Z}(x)
+		 & = \int f_{\sigma Z}(x-y) F_{X}(\mathrm{d} y) \tag*{}                                                                                                              \\
+		 & = \int \frac{1}{\sigma \sqrt{2 \pi } } e^{- (x-y)^2 / 2\sigma ^2} F_X(\mathrm{d} y) \,\mathrm{d} x ,                                                              \\
 		\shortintertext{by replacing \(e^{-(x-y)^2 / 2\sigma ^2}\) from \autoref{eq:thm:characteristic-function-uniqueness} with \(t = (x - y) / \sigma \),}
-		 & = \int g(x) \int \frac{1}{\sigma \sqrt{2\pi } } \int e^{i \frac{y - x}{\sigma } z} \frac{1}{\sqrt{2\pi } }  e^{- z^2 / 2} \,\mathrm{d} z F_X(\mathrm{d} y) \,\mathrm{d} x . \\
-		 & =\frac{1}{2\pi } \int g(x) \int e^{i (y - x) u} e^{- \sigma ^2 u^2 / 2} \,\mathrm{d} u F_X(\mathrm{d} y) \,\mathrm{d} x , \tag*{\(z / \sigma \eqqcolon u\)}                 \\
-		\shortintertext{interchanging the order of integrals with \href{https://en.wikipedia.org/wiki/Fubini's_theorem}{Fubini's theorem} (integrands are absolute integrable),}
-		 & = \frac{1}{2\pi } \int g(x) \int e^{-i x u - \sigma ^2 u^2 / 2} \underbrace{\int e^{i y u} F_X(\mathrm{d} y)}_{\phi _X(u)} \,\mathrm{d} u \,\mathrm{d} x .
+		 & = \int \frac{1}{\sigma \sqrt{2\pi } } \int e^{i \frac{y - x}{\sigma } z} \frac{1}{\sqrt{2\pi } }  e^{- z^2 / 2} \,\mathrm{d} z F_X(\mathrm{d} y) \,\mathrm{d} x . \\
+		 & =\frac{1}{2\pi } \int e^{i (y - x) u} e^{- \sigma ^2 u^2 / 2} \,\mathrm{d} u F_X(\mathrm{d} y) \,\mathrm{d} x , \tag*{\(z / \sigma \eqqcolon u\)}                 \\
+		 & = \frac{1}{2\pi } \int e^{-i x u - \sigma ^2 u^2 / 2} \underbrace{\int e^{i y u} F_X(\mathrm{d} y)}_{\phi _X(u)} \,\mathrm{d} u \,\mathrm{d} x ,
 	\end{align*}
-	We see that \(F_{X + \sigma Z} (\mathrm{d} x)\) indeed can be written in terms of \(\phi _X\) (in the distribution sense) with no other dependencies, hence we're done.
+	We see that above calculation also implies that \(F_{X + \sigma Z} (\mathrm{d} x)\) can be written in terms of \(\phi _X\) where with no other dependencies, hence we're done.
 \end{proof}
 
 \begin{note}
 	Now showing \(X \overset{D}{=} Y\) reduces to calculus.
 \end{note}
 
+\subsection{Continuity Theorem}
 One immediate consequence of the \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem} is that it's enough to have the \hyperref[def:characteristic-function]{characteristic functions} converging to some function (not necessarily a \hyperref[def:characteristic-function]{characteristic functions} of some \(X\)) for us to conclude that the subsequences of \((X_n)\) have the same weak limit. To do this, we need to prove \hyperref[thm:Prokhorov]{Prokhorov's theorem}.
 
 \begin{theorem}[Prokhorov's theorem]\label{thm:Prokhorov}
 	If \((X_n) = O_p(1)\), then there exists a \hyperref[def:converge-weakly]{weakly convergent} subsequence of \((X_n)\).
 \end{theorem}
 \begin{proof}%[Proof sketch]
-	Based on \href{https://en.wikipedia.org/wiki/Helly%27s_selection_theorem}{Helly's selection theorem}, \(F_{X_n}(t) \to F(t)\) for all \(t \in C_F\), there exists an increasing \(F\), right continuous, \(F(+\infty ) \leq 1\) and \(F(-\infty ) \geq 0\) (called the \emph{defective CDF}). Consider \(d = 1\), we show that this \(F\) is indeed a CDF when \(X_n = O_p(1)\).
+	Based on \href{https://en.wikipedia.org/wiki/Helly%27s_selection_theorem}{Helly's selection theorem}, \(F_{X_n}(t) \to F(t)\) for all \(t \in C_F\), there exists an increasing \(F\), right continuous, \(F(+\infty ) \leq 1\) and \(F(-\infty ) \geq 0\) (called the \emph{defective cdf}). Consider \(d = 1\), we show that this \(F\) is indeed a cdf when \(X_n = O_p(1)\).
 
 	Fix \(\epsilon > 0\), then there exists \(M_{\epsilon } > 0\) in \(C_F\) such that
 	\[
@@ -142,13 +141,7 @@ One immediate consequence of the \hyperref[thm:characteristic-function-uniquenes
 
 We now state the theorem.
 
-\begin{theorem}
-	If \(\phi _{X_n}(t) \to \phi _X(t)\) for all \(t \in \mathbb{R} ^d\), then \(X_n \overset{D}{\to } X\).
-\end{theorem}
-
-In fact, one can prove a generalized version of this as follows.
-
-\begin{theorem}\label{thm:characteristic-function-weak-convergence}
+\begin{theorem}[Lévy-Cramer continuity theorem]\label{thm:Levy-Cramer-continuity}
 	If \(\phi _{X_n}(t) \to \phi (t)\) for all \(t \in \mathbb{R} ^d\), then all \hyperref[def:converge-weakly]{weakly convergent} subsequences of \((X_n)\) have the same weak limit. Furthermore, if also \(\phi \) is continuous at \(0\), then there exists \(X\) such that \(\phi = \phi _X\)  and \(X_n \overset{D}{\to } X\).
 \end{theorem}
 \begin{proof}\let\qed\relax
@@ -165,5 +158,5 @@ In fact, one can prove a generalized version of this as follows.
 	\begin{explanation}
 		Since if we can show \((X_n) = O_p(1)\) from our assumption, \hyperref[thm:Prokhorov]{Prokhorov's theorem} implies there exists a \hyperref[def:converge-weakly]{weakly convergent} subsequence of \((X_n)\). With the first claim, we can find the weak limit \(X\).
 	\end{explanation}
-	\emph{The proof will be \hyperref[pf:thm:characteristic-function-weak-convergence]{continued}\dots}
+	\emph{The proof will be \hyperref[pf:thm:Levy-Cramer-continuity]{continued}\dots}
 \end{proof}

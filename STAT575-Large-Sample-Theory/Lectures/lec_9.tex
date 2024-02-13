@@ -1,6 +1,184 @@
-\lecture{9}{13 Feb.\ 9:30}{}
-We now finish the proof of \autoref{thm:characteristic-function-weak-convergence}.
+\lecture{9}{13 Feb.\ 9:30}{Proof of Lévy-Cramer Continuity Theorem}
+We now finish the proof of \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer continuity theorem}.
 
-\begin{proof}[Proof of \autoref{thm:characteristic-function-weak-convergence} (cont.)]\label{pf:thm:characteristic-function-weak-convergence}
+\begin{proof}[Proof of \autoref{thm:Levy-Cramer-continuity} (cont.)]\label{pf:thm:Levy-Cramer-continuity}
+	Fix \(\epsilon > 0\). Then there exists \(\delta > 0\) such that for all \(\vert t \vert < \delta \),
+	\[
+		\vert \phi (t) - \phi (0) \vert
+		= \vert \phi (t) - 1 \vert
+		< \frac{\epsilon }{2}
+	\]
+	since for any \(n \geq 1\), \(\phi _{X_n}(0) = 1\), so is \(\phi (0)\). Hence, we have
+	\[
+		\frac{\epsilon }{2}
+		= \frac{1}{2\delta } \int_{-\delta }^{\delta } \frac{\epsilon }{2} \,\mathrm{d}t
+		\geq \frac{1}{2\delta } \int_{-\delta }^{\delta } \vert \phi (t) - t \vert  \,\mathrm{d}t .
+	\]
+	We claim that we can find an \(n_0 \in \mathbb{N} \) such that for every \(n \geq n_0\), \(\mathbb{P} (\vert X_n \vert \geq 2 / \delta ) < 2 \epsilon \). If this is the case, then we can handle the \(n < n_0\) case easily as usual. To bound \(\vert X_n \vert \) with \(\phi _{X_n}\), firstly, for all \(x\), \(\vert \sin x \vert \leq \vert x \vert \). This bound is good only when \(x\) is close to \(0\). If it's not the case, then we can use \(\vert \sin x / x \vert \leq 1 / \vert x \vert \leq 1 / 2\) if \(\vert x \vert \geq 2\). Hence, in general, for \(x \neq 0\),
+	\[
+		\frac{\sin x}{x}
+		\leq \left\vert \frac{\sin x}{x} \right\vert
+		\leq \frac{1}{2} \cdot \mathbbm{1}_{\vert x \vert \geq 2} + 1 \cdot \mathbbm{1}_{\vert x \vert < 2}
+		= 1 - \frac{1}{2} \mathbbm{1}_{\vert x \vert \geq 2}
+		\implies \mathbbm{1}_{\vert x \vert \geq 2}
+		\leq 2 \left( 1 - \frac{\sin x}{x} \right).
+	\]
+	as \(\mathbbm{1}_{\vert x \vert < 2} = 1 - \mathbbm{1}_{\vert x \vert \geq 2} \). Plug in \(\delta x\), we have
+	\[
+		\mathbbm{1}_{\vert \delta x \vert \geq 2}
+		\leq 2 \left( 1 - \frac{\sin (\delta x)}{\delta x} \right)
+		= \frac{1}{\delta } \left( 2\delta - 2 \frac{\sin (\delta x)}{x} \right)
+		= \frac{1}{\delta } \int_{-\delta }^{\delta } 1 - \cos (tx) \,\mathrm{d}t
+	\]
+	Finally, by replacing \(x\) by \(X_n\) and take the expectation on the both sides, we have
+	\[
+		\mathbb{P} (\vert \delta X_n \vert \geq 2)
+		\leq \frac{1}{\delta } \int_{-\delta }^{\delta } \left( 1 - \mathbb{E}_{}[\cos (t X_n)] \right) \,\mathrm{d}t
+		= \frac{1}{\delta } \int_{-\delta }^{\delta } \Re (1 - \phi _{X_n}(t)) \,\mathrm{d}t
+		\leq \frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t,
+	\]
+	where we pass the limit inside the integral since \(\cos (t X_n)\) is bounded. Now, as \(\phi _{X_n}(t) \to \phi (t)\) for all \(t\), we have \(\vert 1 - \phi _{X_n}(t) \vert \to \vert 1 - \phi (t) \vert \), hence
+	\[
+		\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t
+		\to \frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi (t) \vert  \,\mathrm{d}t
+		< \epsilon
+	\]
+	from our assumption. Putting everything together, we see that
+	\[
+		\mathbb{P} (\vert \delta X_n \vert \geq 2)
+		= \mathbb{P} (\vert X_n \vert \geq 2 / \delta )
+		\leq \frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t
+		\leq 2 \epsilon ,
+	\]
+	for all \(n \geq n_0\) for some \(n_0\).\footnote{By choosing \(n_0\) large enough such that \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t\) is \(\epsilon \)-close to \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi (t) \vert  \,\mathrm{d}t < \epsilon \).}
+\end{proof}
 
+In fact, another strategy of proving \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer continuity theorem} is to directly calculate the pdf of \(X\), given \(\phi _X\). It's follows from the proof of \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, where we only obtain a pdf for \(X + \sigma Z\) there.
+
+\begin{remark}[Computing \(\mathbb{E}_{}\lbrack g (X) \rbrack \) from \(\phi _X\)]
+	For \(X\) with \hyperref[def:characteristic-function]{characteristic function} \(\phi _X\), if \(\mathbb{P} (X \in C_g) = 1\), \(g\) has a bounded support, and \(\int _\mathbb{R} \vert \phi _X(t) \vert \,\mathrm{d} t < \infty \), then
+	\[
+		\mathbb{E}_{}[g(X)]
+		= \frac{1}{2\pi } \int g(x) \int e^{-iux} \phi _X(u) \,\mathrm{d} u \,\mathrm{d} x .
+	\]
+\end{remark}
+\begin{explanation}
+	Since \(g\colon \mathbb{R} \to \mathbb{R} \) has bounded support,
+	\begin{align*}
+		\mathbb{E}_{}[g(X + \sigma Z)]
+		 & = \frac{1}{2\pi } \int g(x) \int e^{i (y - x) u} e^{- \sigma ^2 u^2 / 2} \,\mathrm{d} u F_X(\mathrm{d} y) \,\mathrm{d} x , \tag*{\(z / \sigma \eqqcolon u\)} \\
+		 & = \frac{1}{2\pi } \int g(x) \int e^{-i x u - \sigma ^2 u^2 / 2} \underbrace{\int e^{i y u} F_X(\mathrm{d} y)}_{\phi _X(u)} \,\mathrm{d} u \,\mathrm{d} x ,
+	\end{align*}
+	where we interchange the order of integrals with \href{https://en.wikipedia.org/wiki/Fubini's_theorem}{Fubini's theorem} when integrands are absolute integrable, which holds exactly when \(g\) has bounded support. In the \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, we let \(\sigma \to 0\) such that \(X+ \sigma Z \overset{D}{\to } X\), which implies \(g(X + \sigma Z) \overset{D}{\to } g(X)\) when \(\mathbb{P} (X \in C_g) = 1\). Our goal now is to conclude that \(\mathbb{E}_{}[g(X + \sigma Z)] \to \mathbb{E}_{}[g(X)] \) by passing the limit \(\sigma \to 0\) inside the integral:
+	\[
+		\lim_{\sigma \searrow 0} \mathbb{E}_{}[g(X + \sigma Z)]
+		= \lim_{\sigma \searrow 0} \frac{1}{2\pi } \iint g(x) e^{-i x u - \sigma ^2 u^2 / 2} \phi _X(u) \,\mathrm{d} u \,\mathrm{d} x .
+	\]
+	To do so, one might want to apply \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{dominated convergence theorem}, i.e., we need to check
+	\[
+		\iint \sup _{\sigma > 0} \left\vert g(x) e^{-i x u - \sigma ^2 u^2 / 2} \phi _X (u) \right\vert \,\mathrm{d} u \,\mathrm{d} x < \infty .
+	\]
+	The left-hand side is less than
+	\[
+		\int _\mathbb{R} \vert g(x) \vert \int _\mathbb{R} \vert \phi _X(u) \vert \,\mathrm{d} u \,\mathrm{d} x ,
+	\]
+	which is finite when \(\int \vert \phi _X(u) \vert \,\mathrm{d} u < \infty \), which is what we assume.
+\end{explanation}
+
+The above implies the following.
+
+\begin{theorem}\label{thm:pdf-characteristic-function}
+	If \(\int _\mathbb{R} \vert \phi _X(t) \vert < \infty \), then \(X\) has a pdf
+	\[
+		f_X(x) = \frac{1}{2\pi } \int _\mathbb{R} e^{-iux} \phi _X(u) \,\mathrm{d} x
+	\]
+\end{theorem}
+
+\begin{eg}
+	Let \(g(x) = \mathbbm{1}_{(a, b)} (x) \) where \(a, b \in C_{F_X}\), which implies \(\mathbb{P} (X \in C_g) = 1\) (and trivially \(g\) has a bounded support). Hence, for any \(X\) such that \(\int \vert \phi _X(t) \vert \,\mathrm{d} t\),
+	\[
+		\mathbb{E}_{}[g(X)]
+		= \mathbb{P} (X \in (a, b))
+		= F_X(b) - F_X(a)
+		= \int_{a}^{b} \frac{1}{2\pi } \int e^{-iux} \phi _X(u) \,\mathrm{d}u \,\mathrm{d} x
+	\]
+	for all \(a, b\in C_{F_X}\), hence
+	\[
+		F_X(b)
+		= \frac{1}{2\pi } \int_{-\infty }^{b} \int e^{-iux} \phi _X(u) \,\mathrm{d}u \,\mathrm{d} x
+	\]
+\end{eg}
+
+\begin{corollary}
+	If \(X_n \sim f_{X_n}\) and \(X \sim f_X\), \(\int _\mathbb{R} \vert \phi _{X_n}(t) - \phi _X (t) \vert \,\mathrm{d} t \to 0\), then \(X_n \overset{\operatorname{TV} }{\to } X\).
+\end{corollary}
+\begin{proof}
+	It suffices to prove that \(\vert f_{X_n}(x) - f_X(x) \vert \to 0\). We see that
+	\[
+		\vert f_{X_n}(x) - f(x) \vert
+		\leq \frac{1}{2\pi } \int _{\mathbb{R} } \vert e^{-iux} \vert \cdot \vert \phi _{X_n}(u) - \phi _X(u) \vert \,\mathrm{d} u,
+	\]
+	with the assumption the right-hand side goes to \(0\).
+\end{proof}
+
+
+
+\begin{proposition}
+	\(\phi _X\) is uniformly continuous, i.e., as \(h \to 0\),
+	\[
+		\sup _t \left\vert \phi _X(t + h) - \phi _X(t) \right\vert \to 0.
+	\]
+\end{proposition}
+\begin{proof}
+	We see that
+	\[
+		\left\vert \phi _{X}(t + h) - \phi _X(t) \right\vert
+		= \left\vert \mathbb{E}_{}[e^{i(t + h)X}] - \mathbb{E}_{}[e^{itX}] \right\vert
+		\leq \mathbb{E}_{}\left[ \left\vert e^{itX} \right\vert \left\vert e^{ihX} - 1 \right\vert \right]
+		\leq \mathbb{E}_{}\left[ \left\vert e^{ihX} - 1 \right\vert \right],
+	\]
+	which goes to \(0\) as \(h \to 0\) from bounded convergence theorem.
+\end{proof}
+
+\begin{theorem}
+	If \(X \in L ^p\) for any \(p \in \mathbb{N} \), then the \(p\)-th derivative of \(\phi _X(t)\) is given by
+	\[
+		\phi _X^{(p)} (t) = \mathbb{E}_{}[(iX)^p e^{itX}]
+	\]
+	for every \(t\). In particular, \(\phi _X^{(p)}(0) = i^p \mathbb{E}_{}[X^p] \).
+\end{theorem}
+\begin{proof}
+	Let \(p = 1\). We see that it's enough to prove
+	\[
+		\lim_{h \to 0} \left\vert \frac{\phi _X(t + h) - \phi _X(t)}{h} - \mathbb{E}_{}\left[i X e^{itX}\right] \right\vert = 0
+	\]
+	Writing the \(\phi _X\) explicitly, by Jensen's inequality,
+	\[
+		\begin{split}
+			\left\vert \frac{\mathbb{E}_{}\left[e^{i(t + h) X}\right] - \mathbb{E}_{}\left[e^{itX}\right] - \mathbb{E}_{}\left[ihX e^{itX}\right] }{h} \right\vert
+			 & \leq \frac{\mathbb{E}_{}\left[\left\vert e^{i(t + h) X} - e^{itX} - ihX e^{itX} \right\vert \right] }{\vert h \vert }             \\
+			 & = \frac{\mathbb{E}_{}\left[\left\vert e^{i t X}  \right\vert \left\vert e^{i h X} - 1 - ihX \right\vert \right] }{\vert h \vert }
+			\leq \frac{\mathbb{E}_{}\left[\left\vert e^{i h X} - 1 - ihX \right\vert \right] }{\vert h \vert }
+		\end{split}
+	\]
+	Let \(G(h) = e^{ihX}\), then \(G^{\prime} (h) = iX e^{ihX}\), and the right-hand side is equal to
+	\[
+		\frac{\mathbb{E}_{}\left[\left\vert G(h) - G(0) - G^{\prime} (0) h \right\vert \right]}{\vert h \vert } .
+	\]
+	Since \(G\) is differentiable, \(G(h)-G(0) = \int_{0}^{h} G^{\prime} (y) \,\mathrm{d}y \), hence
+	\[
+		G(h) - G(0) - G^{\prime} (0) h
+		= \int_{0}^{h} G^{\prime} (y) - G^{\prime} (0) \,\mathrm{d}y
+		= h \int_{0}^{1} G^{\prime} (uh) - G^{\prime} (0) \,\mathrm{d}u
+		= h \int_{0}^{1} iX e^{iuhX} - iX \,\mathrm{d}u
+	\]
+	where we let \(y = u h\). Hence, we finally get
+	\[
+		\begin{split}
+			\mathbb{E}_{}\left[\sup _{h \neq 0} \frac{\left\vert e^{ihX} - 1 - ihX \right\vert }{\vert h \vert }\right]
+			 & \leq \mathbb{E}_{}\left[\sup _{h} \int_{0}^{1} \vert G^{\prime} (uh) - G^{\prime} (0) \vert \,\mathrm{d}u \right] \\
+			 & = \mathbb{E}_{}\left[\sup _{h} \int_{0}^{1} \vert iX e^{iuhX} - iX \vert \,\mathrm{d}u \right]
+			\leq \mathbb{E}_{}[\vert X \vert ] \sup _{h} \int_{0}^{1} \vert e^{ihuX} - 1 \vert \,\mathrm{d}u .
+		\end{split}
+	\]
 \end{proof}

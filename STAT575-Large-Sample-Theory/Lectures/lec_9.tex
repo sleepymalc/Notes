@@ -53,7 +53,11 @@ We now finish the proof of \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer co
 	for all \(n \geq n_0\) for some \(n_0\).\footnote{By choosing \(n_0\) large enough such that \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t\) is \(\epsilon \)-close to \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi (t) \vert  \,\mathrm{d}t < \epsilon \).}
 \end{proof}
 
-In fact, another strategy of proving \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer continuity theorem} is to directly calculate the pdf of \(X\), given \(\phi _X\). It's follows from the proof of \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, where we only obtain a pdf for \(X + \sigma Z\) there.
+On the other hand, another way to prove \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer continuity theorem} is to directly calculate the pdf of \(X\), given \(\phi _X\). It's follows the same vein of the proof of \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}.
+
+\begin{intuition}
+	In the proof of \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, we only obtain a pdf for \(X + \sigma Z\). Imposing constraints on \(\phi _X\) and calculate \(\mathbb{E}_{}[g(X)] \) in terms of \(\phi _X\) will tell us which condition should we add.
+\end{intuition}
 
 \begin{remark}[Computing \(\mathbb{E}_{}\lbrack g (X) \rbrack \) from \(\phi _X\)]
 	For \(X\) with \hyperref[def:characteristic-function]{characteristic function} \(\phi _X\), if \(\mathbb{P} (X \in C_g) = 1\), \(g\) has a bounded support, and \(\int _\mathbb{R} \vert \phi _X(t) \vert \,\mathrm{d} t < \infty \), then
@@ -90,9 +94,21 @@ The above implies the following.
 \begin{theorem}\label{thm:pdf-characteristic-function}
 	If \(\int _\mathbb{R} \vert \phi _X(t) \vert < \infty \), then \(X\) has a pdf
 	\[
-		f_X(x) = \frac{1}{2\pi } \int _\mathbb{R} e^{-iux} \phi _X(u) \,\mathrm{d} x
+		f_X(x) = \frac{1}{2\pi } \int _\mathbb{R} e^{-iux} \phi _X(u) \,\mathrm{d} u
 	\]
 \end{theorem}
+\begin{proof}
+	From the above calculation of \(\mathbb{E}_{}[g(X)] \) for \(g\) having a bounded support and \(\mathbb{P} (X \in C_g) = 1\), we see that we can pass the limit inside the integral
+	\[
+		\mathbb{E}_{}[g(X)]
+		= \frac{1}{2\pi } \int g(x) \int e^{-iux} \phi _X(u) \,\mathrm{d} u \,\mathrm{d} x
+	\]
+	if \(\int \vert \phi _X \vert < \infty \). However, this implies the density \(f_X\) exists since \(\mathbb{E}_{}[g(X)]
+	= \int g(x) f_X(x) \,\mathrm{d} x\), i.e.,
+	\[
+		f_X(x) = \frac{1}{2\pi } \int e^{-iux} \phi _X(u) \,\mathrm{d} u .
+	\]
+\end{proof}
 
 \begin{eg}
 	Let \(g(x) = \mathbbm{1}_{(a, b)} (x) \) where \(a, b \in C_{F_X}\), which implies \(\mathbb{P} (X \in C_g) = 1\) (and trivially \(g\) has a bounded support). Hence, for any \(X\) such that \(\int \vert \phi _X(t) \vert \,\mathrm{d} t\),

@@ -6,15 +6,15 @@ We now finish the proof of \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer co
 	\[
 		\vert \phi (t) - \phi (0) \vert
 		= \vert \phi (t) - 1 \vert
-		< \frac{\epsilon }{2}
+		< \frac{\epsilon }{4}
 	\]
 	since for any \(n \geq 1\), \(\phi _{X_n}(0) = 1\), so is \(\phi (0)\). Hence, we have
 	\[
 		\frac{\epsilon }{2}
-		= \frac{1}{2\delta } \int_{-\delta }^{\delta } \frac{\epsilon }{2} \,\mathrm{d}t
-		\geq \frac{1}{2\delta } \int_{-\delta }^{\delta } \vert \phi (t) - t \vert  \,\mathrm{d}t .
+		= \frac{1}{\delta } \int_{-\delta }^{\delta } \frac{\epsilon }{4} \,\mathrm{d}t
+		> \frac{1}{\delta } \int_{-\delta }^{\delta } \vert \phi (t) - 1 \vert \,\mathrm{d}t .
 	\]
-	We claim that we can find an \(n_0 \in \mathbb{N} \) such that for every \(n \geq n_0\), \(\mathbb{P} (\vert X_n \vert \geq 2 / \delta ) < 2 \epsilon \). If this is the case, then we can handle the \(n < n_0\) case easily as usual. To bound \(\vert X_n \vert \) with \(\phi _{X_n}\), firstly, for all \(x\), \(\vert \sin x \vert \leq \vert x \vert \). This bound is good only when \(x\) is close to \(0\). If it's not the case, then we can use \(\vert \sin x / x \vert \leq 1 / \vert x \vert \leq 1 / 2\) if \(\vert x \vert \geq 2\). Hence, in general, for \(x \neq 0\),
+	We claim that we can find an \(n_0 \in \mathbb{N} \) such that for every \(n \geq n_0\), \(\mathbb{P} (\vert X_n \vert \geq 2 / \delta ) < \epsilon \).\footnote{If this is the case, then we can handle the \(n < n_0\) case easily as usual by taking the maximum over all \(n < n_0\).} To bound \(\vert X_n \vert \) with \(\phi _{X_n}\), firstly, for all \(x\), \(\vert \sin x \vert \leq \vert x \vert \). This bound is good only when \(x\) is close to \(0\). If it's not the case, then we can use \(\vert \sin x / x \vert \leq 1 / \vert x \vert \leq 1 / 2\) if \(\vert x \vert \geq 2\). Hence, in general, for \(x \neq 0\),
 	\[
 		\frac{\sin x}{x}
 		\leq \left\vert \frac{\sin x}{x} \right\vert
@@ -23,124 +23,111 @@ We now finish the proof of \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer co
 		\implies \mathbbm{1}_{\vert x \vert \geq 2}
 		\leq 2 \left( 1 - \frac{\sin x}{x} \right).
 	\]
-	as \(\mathbbm{1}_{\vert x \vert < 2} = 1 - \mathbbm{1}_{\vert x \vert \geq 2} \). Plug in \(\delta x\), we have
+	as \(\mathbbm{1}_{\vert x \vert < 2} = 1 - \mathbbm{1}_{\vert x \vert \geq 2} \). Plug in \(\delta x\), for any \(x \neq 0\), we have
 	\[
 		\mathbbm{1}_{\vert \delta x \vert \geq 2}
 		\leq 2 \left( 1 - \frac{\sin (\delta x)}{\delta x} \right)
 		= \frac{1}{\delta } \left( 2\delta - 2 \frac{\sin (\delta x)}{x} \right)
-		= \frac{1}{\delta } \int_{-\delta }^{\delta } 1 - \cos (tx) \,\mathrm{d}t
+		= \frac{1}{\delta } \int_{-\delta }^{\delta } 1 - \cos (tx) \,\mathrm{d}t .
 	\]
-	Finally, by replacing \(x\) by \(X_n\) and take the expectation on the both sides, we have
+	Indeed, the above is true for all \(x \in \mathbb{R} \) by manually checking. Finally, by replacing \(x\) by \(X_n\) and take the expectation on the both sides,
 	\[
 		\mathbb{P} (\vert \delta X_n \vert \geq 2)
-		\leq \frac{1}{\delta } \int_{-\delta }^{\delta } \left( 1 - \mathbb{E}_{}[\cos (t X_n)] \right) \,\mathrm{d}t
+		\leq \frac{1}{\delta } \int_{-\delta }^{\delta } 1 - \mathbb{E}_{}[\cos (t X_n)] \,\mathrm{d}t
 		= \frac{1}{\delta } \int_{-\delta }^{\delta } \Re (1 - \phi _{X_n}(t)) \,\mathrm{d}t
 		\leq \frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t,
 	\]
-	where we pass the limit inside the integral since \(\cos (t X_n)\) is bounded. Now, as \(\phi _{X_n}(t) \to \phi (t)\) for all \(t\), we have \(\vert 1 - \phi _{X_n}(t) \vert \to \vert 1 - \phi (t) \vert \), hence
+	where we pass the expectation (i.e., limit) inside the integral from \href{https://en.wikipedia.org/wiki/Fubini's_theorem}{Fubini's theorem} since \(\cos (t X_n)\) is bounded. It remains to show that there is some \(\delta > 0\) such that the right-hand side is less than \(\epsilon \) for all \(n \geq n_0\). As \(\phi _{X_n}(t) \to \phi (t)\) for all \(t\), we have \(\vert 1 - \phi _{X_n}(t) \vert \to \vert 1 - \phi (t) \vert \) point-wise, hence by the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem},
 	\[
 		\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t
 		\to \frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi (t) \vert  \,\mathrm{d}t
-		< \epsilon
+		< \frac{\epsilon}{2}
 	\]
-	from our assumption. Putting everything together, we see that
+	from our assumption. Putting everything together, there is an \(n_0 \in \mathbb{N} \) such that for all \(n \geq n_0\),
 	\[
 		\mathbb{P} (\vert \delta X_n \vert \geq 2)
 		= \mathbb{P} (\vert X_n \vert \geq 2 / \delta )
 		\leq \frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t
-		\leq 2 \epsilon ,
+		< \frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi (t) \vert  \,\mathrm{d}t + \frac{\epsilon}{2}
+		< \epsilon ,
 	\]
-	for all \(n \geq n_0\) for some \(n_0\).\footnote{By choosing \(n_0\) large enough such that \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert  \,\mathrm{d}t\) is \(\epsilon \)-close to \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi (t) \vert  \,\mathrm{d}t < \epsilon \).}
+	where the second-last inequality follows from the point-wise convergence of \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi _{X_n}(t) \vert \,\mathrm{d}t\) to \(\frac{1}{\delta } \int_{-\delta }^{\delta } \vert 1 - \phi (t) \vert \,\mathrm{d}t\) being \(\epsilon / 2\)-close for \(n\) large enough, i.e., when \(n \geq n_0\) for some \(n_0\).
 \end{proof}
 
+\subsection{Inversion Theorem}
 On the other hand, another way to prove \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer continuity theorem} is to directly calculate the pdf of \(X\), given \(\phi _X\). It's follows the same vein of the proof of \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}.
 
 \begin{intuition}
 	In the proof of \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, we only obtain a pdf for \(X + \sigma Z\). Imposing constraints on \(\phi _X\) and calculate \(\mathbb{E}_{}[g(X)] \) in terms of \(\phi _X\) will tell us which condition should we add.
 \end{intuition}
 
-\begin{remark}[Computing \(\mathbb{E}_{}\lbrack g (X) \rbrack \) from \(\phi _X\)]
-	For \(X\) with \hyperref[def:characteristic-function]{characteristic function} \(\phi _X\), if \(\mathbb{P} (X \in C_g) = 1\), \(g\) has a bounded support, and \(\int _\mathbb{R} \vert \phi _X(t) \vert \,\mathrm{d} t < \infty \), then
-	\[
-		\mathbb{E}_{}[g(X)]
-		= \frac{1}{2\pi } \int g(x) \int e^{-iux} \phi _X(u) \,\mathrm{d} u \,\mathrm{d} x .
-	\]
-\end{remark}
-\begin{explanation}
-	Since \(g\colon \mathbb{R} \to \mathbb{R} \) has bounded support,
-	\begin{align*}
-		\mathbb{E}_{}[g(X + \sigma Z)]
-		 & = \frac{1}{2\pi } \int g(x) \int e^{i (y - x) u} e^{- \sigma ^2 u^2 / 2} \,\mathrm{d} u F_X(\mathrm{d} y) \,\mathrm{d} x , \tag*{\(z / \sigma \eqqcolon u\)} \\
-		 & = \frac{1}{2\pi } \int g(x) \int e^{-i x u - \sigma ^2 u^2 / 2} \underbrace{\int e^{i y u} F_X(\mathrm{d} y)}_{\phi _X(u)} \,\mathrm{d} u \,\mathrm{d} x ,
-	\end{align*}
-	where we interchange the order of integrals with \href{https://en.wikipedia.org/wiki/Fubini's_theorem}{Fubini's theorem} when integrands are absolute integrable, which holds exactly when \(g\) has bounded support. In the \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, we let \(\sigma \to 0\) such that \(X+ \sigma Z \overset{D}{\to } X\), which implies \(g(X + \sigma Z) \overset{D}{\to } g(X)\) when \(\mathbb{P} (X \in C_g) = 1\). Our goal now is to conclude that \(\mathbb{E}_{}[g(X + \sigma Z)] \to \mathbb{E}_{}[g(X)] \) by passing the limit \(\sigma \to 0\) inside the integral:
-	\[
-		\lim_{\sigma \searrow 0} \mathbb{E}_{}[g(X + \sigma Z)]
-		= \lim_{\sigma \searrow 0} \frac{1}{2\pi } \iint g(x) e^{-i x u - \sigma ^2 u^2 / 2} \phi _X(u) \,\mathrm{d} u \,\mathrm{d} x .
-	\]
-	To do so, one might want to apply \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{dominated convergence theorem}, i.e., we need to check
-	\[
-		\iint \sup _{\sigma > 0} \left\vert g(x) e^{-i x u - \sigma ^2 u^2 / 2} \phi _X (u) \right\vert \,\mathrm{d} u \,\mathrm{d} x < \infty .
-	\]
-	The left-hand side is less than
-	\[
-		\int _\mathbb{R} \vert g(x) \vert \int _\mathbb{R} \vert \phi _X(u) \vert \,\mathrm{d} u \,\mathrm{d} x ,
-	\]
-	which is finite when \(\int \vert \phi _X(u) \vert \,\mathrm{d} u < \infty \), which is what we assume.
-\end{explanation}
-
-The above implies the following.
-
-\begin{theorem}\label{thm:pdf-characteristic-function}
-	If \(\int _\mathbb{R} \vert \phi _X(t) \vert < \infty \), then \(X\) has a pdf
-	\[
-		f_X(x) = \frac{1}{2\pi } \int _\mathbb{R} e^{-iux} \phi _X(u) \,\mathrm{d} u
-	\]
+\begin{theorem}[Feller's inversion formula]\label{thm:Feller-inversion-formula}
+	Let \(X\) be a \(d\)-dimensional random vector with the \hyperref[def:characteristic-function]{characteristic function} \(\phi _X\).
+	\begin{enumerate}[(a)]
+		\item\label{thm:Feller-inversion-formula:a} If \(g\) has a bounded support and \(\mathbb{P} (X \in C_g) = 1\), then
+		      \[
+			      \mathbb{E}_{}[g(X)]
+			      = \lim_{\sigma \searrow 0} \frac{1}{2\pi } \iint g(x) e^{-iux - \sigma ^2 u^2 / 2} \,\mathrm{d} u \,\mathrm{d} x .
+		      \]
+		\item\label{thm:Feller-inversion-formula:b} For any \(a, b \in C_{F_X}\),
+		      \[
+			      F_X(b) - F_X(a)
+			      = \lim_{\sigma \searrow 0} \frac{1}{2\pi } \int_{a}^{b} \int e^{-iux - \sigma ^2 u^2 / 2} \phi _X(u) \,\mathrm{d}u \,\mathrm{d} x .
+		      \]
+		\item\label{thm:Feller-inversion-formula:c} If further, \(\phi _X\) is absolute integrable, then \(X\) has a pdf
+		      \[
+			      f_X(x) = \frac{1}{2\pi } \int _\mathbb{R} e^{-iux} \phi _X(u) \,\mathrm{d} u.
+		      \]
+	\end{enumerate}
 \end{theorem}
 \begin{proof}
-	From the above calculation of \(\mathbb{E}_{}[g(X)] \) for \(g\) having a bounded support and \(\mathbb{P} (X \in C_g) = 1\), we see that we can pass the limit inside the integral
-	\[
-		\mathbb{E}_{}[g(X)]
-		= \frac{1}{2\pi } \int g(x) \int e^{-iux} \phi _X(u) \,\mathrm{d} u \,\mathrm{d} x
-	\]
-	if \(\int \vert \phi _X \vert < \infty \). However, this implies the density \(f_X\) exists since \(\mathbb{E}_{}[g(X)]
-	= \int g(x) f_X(x) \,\mathrm{d} x\), i.e.,
-	\[
-		f_X(x) = \frac{1}{2\pi } \int e^{-iux} \phi _X(u) \,\mathrm{d} u .
-	\]
+	The proof is based on \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}.
+	\begin{enumerate}[(a)]
+		\item In the \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, \(\sigma \searrow 0\) such that \(X+ \sigma Z \overset{D}{\to } X\), which implies \(g(X + \sigma Z) \overset{D}{\to } g(X)\) when \(\mathbb{P} (X \in C_g) = 1\). Since now \(g\) is also bounded, by the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem},
+		      \[
+			      \mathbb{E}_{}[g(X)] = \lim_{\sigma \searrow 0} \mathbb{E}_{}[g(X + \sigma Z)].
+		      \]
+		      We now calculate \(\mathbb{E}_{}[g(X + \sigma Z)] \). Since \(g\colon \mathbb{R} \to \mathbb{R} \) has bounded support, the same calculation from the proof of \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem} gives
+		      \[
+			      \mathbb{E}_{}[g(X + \sigma Z)]
+			      = \lim_{\sigma \searrow 0} \frac{1}{2\pi } \int g(x) \int e^{-i x u - \sigma ^2 u^2 / 2} \phi _X(u) \,\mathrm{d} u \,\mathrm{d} x .
+		      \]
+		      It remains to change the order of integration, which is justified by \href{https://en.wikipedia.org/wiki/Fubini%27s_theorem#Fubini%E2%80%93Tonelli_theorem}{Tonelli's theorem} as \(\mathbb{E}_{}[\vert g(X + \sigma Z) \vert ] < \infty \) for all \(\sigma > 0\), hence we obtain the result for the first part.
+		\item Given \(a, b\in C_{F_X}\), consider \(g(x) = \mathbbm{1}_{(a, b)} (x) \), which implies \(\mathbb{P} (X \in C_g) = 1\) (and trivially \(g\) has a bounded support), hence the result above applies.
+		\item Finally, if \(\phi _X\) is absolute integrable, our goal now is to pass the limit \(\sigma \searrow 0\) inside the integral for \(F_X(b) - F_X(a)\) given \(a, b \in C_{F_X}\), i.e., to get
+		      \[
+			      F_X(b) - F_X(a)
+			      = \frac{1}{2\pi } \int_{a}^{b} \int \lim_{\sigma \searrow 0} e^{-iux - \sigma ^2 u^2 / 2} \phi _X(u) \,\mathrm{d}u \,\mathrm{d} x
+			      = \frac{1}{2\pi } \int_{a}^{b} \int e^{-iux} \phi _X(u) \,\mathrm{d}u \,\mathrm{d} x ,
+		      \]
+		      which will imply the result since a cdf is characterized by its values in \(C_{F_X}\), i.e., if  the above equality is true, it will be valid for all \(a, b \in \mathbb{R} \). To do so, \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{dominated convergence theorem} states that
+		      \[
+			      \int_{a}^{b} \int \sup _{\sigma > 0} \left\vert e^{-i x u - \sigma ^2 u^2 / 2} \phi _X (u) \right\vert \,\mathrm{d} u \,\mathrm{d} x < \infty
+		      \]
+		      is the right condition. We see that the left-hand side is less than
+		      \[
+			      \int_{a}^{b} \int _\mathbb{R} \vert \phi _X(u) \vert \sup _{\sigma > 0} \vert e^{- \sigma ^2 u^2 / 2} \vert \,\mathrm{d} u \,\mathrm{d} x
+			      \leq \int_{a}^{b} \int _\mathbb{R} \vert \phi _X(u) \vert \,\mathrm{d} u \,\mathrm{d} x
+		      \]
+		      which is finite since \(\int \vert \phi _X(u) \vert \,\mathrm{d} u < \infty \).
+	\end{enumerate}
 \end{proof}
 
-\begin{eg}
-	Let \(g(x) = \mathbbm{1}_{(a, b)} (x) \) where \(a, b \in C_{F_X}\), which implies \(\mathbb{P} (X \in C_g) = 1\) (and trivially \(g\) has a bounded support). Hence, for any \(X\) such that \(\int \vert \phi _X(t) \vert \,\mathrm{d} t\),
-	\[
-		\mathbb{E}_{}[g(X)]
-		= \mathbb{P} (X \in (a, b))
-		= F_X(b) - F_X(a)
-		= \int_{a}^{b} \frac{1}{2\pi } \int e^{-iux} \phi _X(u) \,\mathrm{d}u \,\mathrm{d} x
-	\]
-	for all \(a, b\in C_{F_X}\), hence
-	\[
-		F_X(b)
-		= \frac{1}{2\pi } \int_{-\infty }^{b} \int e^{-iux} \phi _X(u) \,\mathrm{d}u \,\mathrm{d} x
-	\]
-\end{eg}
-
 \begin{corollary}
-	If \(X_n \sim f_{X_n}\) and \(X \sim f_X\), \(\int _\mathbb{R} \vert \phi _{X_n}(t) - \phi _X (t) \vert \,\mathrm{d} t \to 0\), then \(X_n \overset{\operatorname{TV} }{\to } X\).
+	Given \(X_n\) and \(X\) such that \(\phi _X\) and \(\phi _{X_n}\) are integrable. If \(\phi _{X_n} \overset{L^1}{\to } \phi _X\),\footnote{I.e., \(\int _\mathbb{R} \vert \phi _{X_n}(t) - \phi _X (t) \vert \,\mathrm{d} t \to 0\).} then \(X_n \overset{\operatorname{TV} }{\to } X\).
 \end{corollary}
 \begin{proof}
-	It suffices to prove that \(\vert f_{X_n}(x) - f_X(x) \vert \to 0\). We see that
+	It suffices to prove that \(\vert f_{X_n}(x) - f_X(x) \vert \to 0\), where these pdfs exist due to \hyperref[thm:Feller-inversion-formula]{Feller's inversion formula} \autoref{thm:Feller-inversion-formula:c}. We see that
 	\[
 		\vert f_{X_n}(x) - f(x) \vert
 		\leq \frac{1}{2\pi } \int _{\mathbb{R} } \vert e^{-iux} \vert \cdot \vert \phi _{X_n}(u) - \phi _X(u) \vert \,\mathrm{d} u,
+		\leq \frac{1}{2\pi } \int _{\mathbb{R} } \vert \phi _{X_n}(u) - \phi _X(u) \vert \,\mathrm{d} u
 	\]
 	with the assumption the right-hand side goes to \(0\).
 \end{proof}
 
-
-
 \begin{proposition}
-	\(\phi _X\) is uniformly continuous, i.e., as \(h \to 0\),
+	For any random vector \(X\), \(\phi _X\) is uniformly continuous, i.e., as \(h \to 0\),
 	\[
 		\sup _t \left\vert \phi _X(t + h) - \phi _X(t) \right\vert \to 0.
 	\]
@@ -153,11 +140,11 @@ The above implies the following.
 		\leq \mathbb{E}_{}\left[ \left\vert e^{itX} \right\vert \left\vert e^{ihX} - 1 \right\vert \right]
 		\leq \mathbb{E}_{}\left[ \left\vert e^{ihX} - 1 \right\vert \right],
 	\]
-	which goes to \(0\) as \(h \to 0\) from bounded convergence theorem.
+	which goes to \(0\) as \(h \to 0\) from the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem}.
 \end{proof}
 
 \begin{theorem}
-	If \(X \in L ^p\) for any \(p \in \mathbb{N} \), then the \(p\)-th derivative of \(\phi _X(t)\) is given by
+	If \(X \in L ^p\) for any \(p \in \mathbb{N} \), then the \(p^{\text{th} }\) derivative of \(\phi _X(t)\) is given by
 	\[
 		\phi _X^{(p)} (t) = \mathbb{E}_{}[(iX)^p e^{itX}]
 	\]

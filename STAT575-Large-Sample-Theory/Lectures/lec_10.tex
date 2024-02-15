@@ -1,0 +1,199 @@
+\lecture{10}{15 Feb.\ 9:30}{Fundamental Theorems of Probability}
+\section{Fundamental Theorems of Probability}
+With the tools we developed, we now prove two of the fundamental theorems of probability, i.e., the \hyperref[thm:WLLN]{weak law of large number}, and also the \hyperref[thm:CLT]{central limit theorem}. We start by the first one.
+
+\begin{theorem}[Weak law of large number]\label{thm:WLLN}
+	Let \((X_n)\) be i.i.d.\ random vectors, and \(X\) be a random vector with \(\mathbb{E}_{}[\vert X \vert ] < \infty \). Then \(\overline{X} _n \overset{p}{\to } \mathbb{E}_{}[X] \).
+\end{theorem}
+\begin{proof}
+	Since \(c \coloneqq \mathbb{E}_{}[X] \) is a constant, it suffices to show that \(\phi _{\overline{X} _n}(t) \to \phi _{c} (t) = e^{itc}\) for all \(t\) from \autoref{col:weak-probability-constant}. Firstly, let \(\overline{X} _n = S_n / n\), we have
+	\[
+		\phi _{\overline{X} _n}(t)
+		= \mathbb{E}_{}[e^{it S_n / n}]
+		= \phi _{S_n}(t / n)
+		= \prod_{i=1}^{n} \phi _{X_i}(t / n)
+		\eqqcolon \left( \phi (t / n) \right) ^n
+	\]
+	where we let \(\phi _{X_i} \eqqcolon \phi \) since \((X_n)\) are i.i.d. From the fundamental theorem of calculus, with the fact that the first moment of \(X\) exists, \(\phi \) is differentiable such that
+	\[
+		\left( \phi (t / n) \right) ^n
+		= \left( 1 + \frac{t}{n} \int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u  \right) ^n .
+	\]
+	Since \((1 + a_n)^n \to e^c\) if \(n a_n \to c\), it remains to show that
+	\[
+		\int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u
+		\to ic.
+	\]
+	First, we see that if \(\phi ^{\prime} (t)\) is continuous at \(0\), as \(n \to \infty \)
+	\[
+		\phi ^{\prime} (u t / n) \to \phi ^{\prime} (0) = i \mathbb{E}_{}[X] = ic.
+	\]
+	With the fact that \(\sup _t \vert \phi ^{\prime} (t) \vert \leq \mathbb{E}_{}[\vert X \vert ] \), the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem} implies that the limit can be passed inside the integral, i.e.,
+	\[
+		\int_{0}^{1} \phi ^{\prime} (ut / n) \,\mathrm{d}u
+		\to \int_{0}^{1} ic \,\mathrm{d}u
+		= ic.
+	\]
+\end{proof}
+
+\begin{remark}
+	We don't need to assume finite first moment since assuming \(\phi \) is differentiable at \(0\) such that \(\phi ^{\prime} (0) = ic\) is enough.
+\end{remark}
+
+In terms of the distributional result, we need higher-order moments. In particular, if the second moment exists, then we can generalize we have done as in the proof of \autoref{thm:characteristic-function-derivative}.
+
+\begin{prev}
+	If \(g\) is differentiable, then
+	\[
+		g(x)
+		= g(0) + g^{\prime} (0) x + x \int_{0}^{1} g^{\prime} (ux) - g^{\prime} (0) \,\mathrm{d}u .
+	\]
+\end{prev}
+
+\begin{note}\label{note:lec10}
+	If \(g\) is twice-differentiable,
+	\begin{align*}
+		g(x)
+		 & = g(0) + g^{\prime} (0) x + x \int_{0}^{1} \int_{0}^{ux} g^{\prime\prime} (y) \,\mathrm{d}y \,\mathrm{d} u                                                              \\
+		 & = g(0) + g^{\prime} (0) x + x \int_{0}^{1} \int_{0}^{1} g^{\prime\prime} (xuv) ux \,\mathrm{d}v \,\mathrm{d} u  \tag*{\(y = ux v\), \(\mathrm{d} y = ux \mathrm{d} v\)} \\
+		 & =  g(0) + g^{\prime} (0) x + x^2 \int_{0}^{1} \int_{0}^{1} g^{\prime\prime} (xuv) u \,\mathrm{d}v \,\mathrm{d} u.
+	\end{align*}
+\end{note}
+
+We now state the theorem.
+
+\begin{theorem}[Central limit theorem]\label{thm:CLT}
+	Let \((X_n)\) be i.i.d.\ random vectors, and \(X\) be a random vector with \(\mathbb{E}_{}[X_i] \eqqcolon \mu \), \(\Var_{}[X_i] \eqqcolon \sigma ^2 < \infty \) for all \(1 \leq i \leq n\). Then
+	\[
+		\frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} } \overset{D}{\to } \mathcal{N} (0, 1).
+	\]
+\end{theorem}
+\begin{proof}
+	Without loss of generality, let \(\mu = 0\), \(\sigma = 1\). Since \(\frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} } = \frac{S_n - n \mu }{\sigma \sqrt{n} }\), it's enough to show that \(\phi _{S_n / \sqrt{n} }(t) \to e^{-t^2 / 2}\) for any \(t \in \mathbb{R} \) from \hyperref[thm:Levy-Cramer-continuity]{Lévy-Cramer continuity theorem} and \autoref{eq:normal-characteristic}. Firstly,
+	\[
+		\phi _{S_n / \sqrt{n} } (t)
+		= \mathbb{E}_{}[e^{i t S_n / \sqrt{n} }]
+		= \phi _{S_n} (t / \sqrt{n} )
+		= \left( \phi (t / \sqrt{n} ) \right) ^n
+	\]
+	where we let \(\phi _{X_n} \eqqcolon \phi \) since \((X_n)\) are i.i.d. By applying the above \hyperref[note:lec10]{note}, we further have
+	\[
+		\begin{split}
+			\left( \phi (t / \sqrt{n} ) \right) ^n
+			 & = \left( \phi (0) + \phi ^{\prime} (0) \frac{t}{\sqrt{n} } + \frac{t^2}{n} \int_{0}^{1} \int_{0}^{1} u \phi ^{\prime\prime} (u v t / \sqrt{n} ) \,\mathrm{d}u  \,\mathrm{d}v  \right) ^n \\
+			 & = \left( 1 + \frac{t^2}{n}\int_{0}^{1} \int_{0}^{1} u \phi ^{\prime\prime} (u v t / \sqrt{n} ) \,\mathrm{d}u  \,\mathrm{d}v \right) ^n
+		\end{split}
+	\]
+	since \(\phi (0) = 1\) and \(\phi ^{\prime} (0) = i \mu = 0\). It remains to show that the double integral converges to \(- 1 / 2\) since it'll imply \((\phi (t / \sqrt{n} ))^n \to e^{-t^2 / 2}\). We see that as \(n \to \infty \), the integrand
+	\[
+		u \phi ^{\prime\prime} (u v t / \sqrt{n} )
+		\to u \phi ^{\prime\prime} (0)
+		= u (i^2 \mathbb{E}_{}[X^2])
+		= - u (\Var_{}[X] + (\mathbb{E}_{}[X] )^2 )
+		= - u (1 + 0)
+		= -u.
+	\]
+	Hence, from the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem},
+	\[
+		\int_{0}^{1} \int_{0}^{1} u \phi ^{\prime\prime} (u t / \sqrt{n} ) \,\mathrm{d}u \,\mathrm{d}v
+		\to \int_{0}^{1} \int_{0}^{1} -u \,\mathrm{d}u \,\mathrm{d}v
+		= -\frac{1}{2},
+	\]
+	which shows the result.
+\end{proof}
+
+\begin{remark}
+	From the \hyperref[thm:CLT]{central limit theorem}, we can indeed deduce the \hyperref[thm:WLLN]{weak law of large number}. But since the former requires more conditions, hence \hyperref[thm:WLLN]{weak law of large number} still has its own merit.
+\end{remark}
+
+Let's see some applications.
+
+\subsection{\(t\)-Statistic}
+Let \(X_1, \dots , X_n\) be i.i.d.\ samples such that \(\mathbb{E}_{}[X_i] = \mu \), \(\Var_{}[X_i] = \sigma ^2\). If, also, \(X_i\)'s are Gaussian, then
+\[
+	\overline{X} _n \sim \mathcal{N} (\mu , \sigma ^2 / n)
+	\iff \frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} } \sim \mathcal{N} (0, 1).
+\]
+Furthermore, for all \(n \geq 2\), since we don't know \(\sigma \), if we replace it by the sample standard deviation \(\hat{\sigma} _n\), the above is further equivalent to
+\[
+	T_n \coloneqq \frac{\overline{X} _n - \mu }{\hat{\sigma} _n / \sqrt{n} } \sim t_{n-1} \overset{\operatorname{TV}}{\to } \mathcal{N} (0, 1)
+\]
+as \(n \to \infty \).
+
+\begin{problem*}
+	What if \(X_i\)'s are not Gaussian?
+\end{problem*}
+\begin{answer}
+	We see that if \(\hat{\sigma} _n ^2 \overset{p}{\to } \sigma ^2\),
+	\[
+		T_n
+		= \frac{\sigma }{\hat{\sigma} _n} \frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} }
+		\to \mathcal{N} (0, 1)
+	\]
+	since the second part goes to \(\mathcal{N} (0, 1)\) \hyperref[def:converge-in-distribution]{in distribution} from \hyperref[thm:CLT]{central limit theorem}, and \hyperref[thm:Slutsky]{Slutsky's theorem} gives the result. In particular,
+	\[
+		\frac{n-1}{n} \hat{\sigma} _n^2
+		= \frac{1}{n} \sum_{i=1}^{n} \left( X_i - \overline{X} _n\right) ^2
+		= \frac{1}{n} \sum_{i=1}^{n} \left( Y_i - \overline{Y} _n\right) ^2
+		= \frac{1}{n} \sum_{i=1}^{n} Y_i^2 - (\overline{Y} _n)^2
+	\]
+	where \(Y_i \coloneqq X_i - \mu \) for all \(i\). By letting \(n \to \infty \), \((n-1) / n \to 1\), \(\frac{1}{n} \sum_{i=1}^{n} Y_i^2 \overset{p}{\to } \mathbb{E}_{}[Y^2] = \Var_{}[X] = \sigma ^2\),\footnote{We need to check whether the first moment exists.} and finally \((\overline{Y} _n)^2 \overset{p}{\to } (\mathbb{E}_{}[Y])^2 = 0\), both from \hyperref[thm:WLLN]{weak law of large number}. Hence, \(\hat{\sigma} _n^2 \overset{p}{\to } \sigma ^2\).
+\end{answer}
+
+Again, let \(X_1, \dots , X_n\) be i.i.d.\ Gaussian random samples. Then
+\[
+	(n-1) \frac{\hat{\sigma} _n^2}{\sigma ^2}
+	\overset{D}{=} \sum_{i=1}^{n-1} Z_i^2
+\]
+where \((Z_{n-1}) \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\). Firstly, since \(\mathbb{E}_{}[Z_i^2] = \Var_{}[Z_i] + (\mathbb{E}_{}[Z_i] )^2 = 1\), and \(\Var_{}[Z_i^2] = \mathbb{E}_{}[Z_i^4] - (\mathbb{E}_{}[Z_i^2] )^2 = 3 - 1 = 2\). Standardizing,
+\[
+	\frac{(n-1) \frac{\hat{\sigma} _n^2}{\sigma ^2} - (n - 1)}{\sqrt{2 (n-1)} }
+	\overset{D}{=} \frac{\sum_{i=1}^{n-1} Z_i^2 - (n-1)}{\sqrt{2 (n-1)} }
+	\overset{D}{\to } \mathcal{N} (0, 1),
+\]
+i.e., as \(n \to \infty \),
+\[
+	\sqrt{n-1} \left( \frac{\hat{\sigma} _n^2}{\sigma ^2} - 1 \right)  \overset{D}{\to } \mathcal{N} (0, 2)
+	\iff \sqrt{n} \left( \frac{\hat{\sigma} _n^2}{\sigma ^2} - 1 \right)  \overset{D}{\to } \mathcal{N} (0, 2)
+	\iff \sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \overset{D}{\to } \mathcal{N} (0, 2 \sigma ^4).
+\]
+Now, we again ask the following.
+
+\begin{problem*}
+	What if \(X_i\)'s are not Gaussian?
+\end{problem*}
+\begin{answer}
+	We see that from the same calculation as above, with \(Y_i \coloneqq X_i - \mu \),
+	\[
+		\begin{split}
+			         & \hat{\sigma} _n^2 - \frac{\hat{\sigma} _n^2}{n} = \frac{1}{n} \sum_{i=1}^{n} Y_i^2 - \overline{Y} _n^2                                                                                    \\
+			\implies & \hat{\sigma} _n^2 - \sigma ^2 - \frac{\hat{\sigma} _n^2}{n} = \frac{1}{n} \sum_{i=1}^{n} (Y_i^2 - \sigma ^2)- \overline{Y} _n^2                                                           \\
+			\implies & \sqrt{n}(\hat{\sigma } _n^2 - \sigma ^2) - \frac{\hat{\sigma} _n^2}{\sqrt{n} } = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^2 - \sigma ^2) - \frac{(\sqrt{n} \overline{Y} _n)^2}{\sqrt{n} }.
+		\end{split}
+	\]
+	As \(n \to \infty \), \(\hat{\sigma} _n^2 / \sqrt{n} \overset{p}{\to } 0\), and from \hyperref[thm:CLT]{central limit theorem}, if \(\mathbb{E}_{}[X^4] < \infty \),
+	\[
+		\frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^2 - \sigma ^2)
+		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^2 - \mathbb{E}_{}[Y_i^2] )
+		\overset{D}{\to } \mathcal{N} (0, \Var_{}[Y_i^2] ),
+	\]
+	and finally,
+	\[
+		\frac{(\sqrt{n} \overline{Y} _n) ^2}{\sqrt{n} }
+		= o(1) O_p(1)
+		= o_p(1).
+	\]
+	Hence, as long as \(\mathbb{E}_{}[X^4] < \infty \), then
+	\[
+		\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2)
+		\overset{D}{\to } \mathcal{N} (0, \Var_{}[Y_i^2] ).
+	\]
+	We see that
+	\[
+		\Var_{}[Y^2]
+		= \mathbb{E}_{}[(X - \mu )^4]  - \left( \mathbb{E}_{}[(X-\mu )^2] \right) ^2
+		= \sigma ^4 \mathbb{E}_{}\left[\left( \frac{X-\mu }{\sigma } \right) ^4 \right] - \sigma ^4
+		= \sigma ^4 \left( \mathbb{E}_{}\left[\left( \frac{X-\mu }{\sigma } \right) ^4 \right] - 1 \right),
+	\]
+	hence we need the \emph{Kyrtosis} of \(X\), i.e., \(\mathbb{E}_{}[( (X-\mu ) / \sigma )^4] \) is \(3\), then we have what we derived before. Let \(Z = (X-\mu ) / \sigma \). Then we need \(\mathbb{E}_{}[Z^4] \geq \left( \mathbb{E}_{}[Z^2] \right) ^2 \geq 1\), hence the above makes sense when the equality doesn't hold. We see that the equality holds when \(Z^2 = 1\), i.e., \(Z \in \{ \pm 1 \} \).
+\end{answer}

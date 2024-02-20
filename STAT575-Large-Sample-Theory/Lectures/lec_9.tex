@@ -129,20 +129,20 @@ On the other hand, another way to prove \hyperref[thm:Levy-Cramer-continuity]{LÃ
 Finally, we see the following characterizations of \(\phi _X\). The first one is that it's uniformly continuous.
 
 \begin{proposition}\label{prop:characteristic-function-uniformly-continuous}
-	For any random vector \(X\), \(\phi _X\) is uniformly continuous, i.e., as \(h \to 0\),
+	For any random vector \(X\), \(\phi _X\) is uniformly continuous, i.e.,
 	\[
-		\sup _t \left\vert \phi _X(t + h) - \phi _X(t) \right\vert \to 0.
+		\lim_{h \to 0} \sup _t \left\vert \phi _X(t + h) - \phi _X(t) \right\vert = 0.
 	\]
 \end{proposition}
 \begin{proof}
-	We see that
+	We see that for any \(h\),
 	\[
 		\left\vert \phi _{X}(t + h) - \phi _X(t) \right\vert
 		= \left\vert \mathbb{E}_{}[e^{i(t + h)X}] - \mathbb{E}_{}[e^{itX}] \right\vert
 		\leq \mathbb{E}_{}\left[ \left\vert e^{itX} \right\vert \left\vert e^{ihX} - 1 \right\vert \right]
 		\leq \mathbb{E}_{}\left[ \left\vert e^{ihX} - 1 \right\vert \right],
 	\]
-	which goes to \(0\) as \(h \to 0\) from the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem}.
+	which goes to \(0\) as \(h \to 0\) since \(\vert e^{ihX} - 1\vert \leq 2\) with \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem}.
 \end{proof}
 
 The next theorem gives us a way to calculate the derivatives of \(\phi _X\).
@@ -155,11 +155,11 @@ The next theorem gives us a way to calculate the derivatives of \(\phi _X\).
 	for every \(t\). In particular, \(\phi _X^{(p)}(0) = i^p \mathbb{E}_{}[X^p] \).
 \end{theorem}
 \begin{proof}
-	Let \(p = 1\). We see that it's enough to prove
+	We prove the case \(p = 1\). We see that it's enough to prove
 	\[
 		\lim_{h \to 0} \left\vert \frac{\phi _X(t + h) - \phi _X(t)}{h} - \mathbb{E}_{}\left[i X e^{itX}\right] \right\vert = 0
 	\]
-	Writing the \(\phi _X\) explicitly, by Jensen's inequality,
+	Writing the \(\phi _X\) explicitly, by Jensen's inequality, for any \(h \neq 0\), the left-hand side is
 	\[
 		\begin{split}
 			\left\vert \frac{\mathbb{E}_{}\left[e^{i(t + h) X}\right] - \mathbb{E}_{}\left[e^{itX}\right] - \mathbb{E}_{}\left[ihX e^{itX}\right] }{h} \right\vert
@@ -179,15 +179,22 @@ The next theorem gives us a way to calculate the derivatives of \(\phi _X\).
 		= h \int_{0}^{1} G^{\prime} (uh) - G^{\prime} (0) \,\mathrm{d}u
 		= h \int_{0}^{1} iX e^{iuhX} - iX \,\mathrm{d}u
 	\]
-	where we let \(y = u h\). Hence, we finally get
+	where we let \(y = u h\). Plugging in, we have
 	\[
 		\begin{split}
-			\mathbb{E}_{}\left[\sup _{h \neq 0} \frac{\left\vert e^{ihX} - 1 - ihX \right\vert }{\vert h \vert }\right]
-			 & \leq \mathbb{E}_{}\left[\sup _{h} \int_{0}^{1} \vert G^{\prime} (uh) - G^{\prime} (0) \vert \,\mathrm{d}u \right] \\
-			 & = \mathbb{E}_{}\left[\sup _{h} \int_{0}^{1} \vert iX e^{iuhX} - iX \vert \,\mathrm{d}u \right]
-			\leq \mathbb{E}_{}[\vert X \vert ] \sup _{h} \int_{0}^{1} \vert e^{ihuX} - 1 \vert \,\mathrm{d}u .
+			\mathbb{E}_{}\left[\frac{\left\vert e^{ihX} - 1 - ihX \right\vert }{\vert h \vert }\right]
+			 & \leq \mathbb{E}_{}\left[\int_{0}^{1} \vert G^{\prime} (uh) - G^{\prime} (0) \vert \,\mathrm{d}u \right] \\
+			 & = \mathbb{E}_{}\left[\int_{0}^{1} \vert iX e^{iuhX} - iX \vert \,\mathrm{d}u \right]
+			\leq \mathbb{E}_{}\left[\vert X \vert \int_{0}^{1} \vert e^{iuhX} - 1 \vert \,\mathrm{d}u \right].
 		\end{split}
 	\]
+	Finally, taking the limit as \(h \to 0\), with the fact that \(\mathbb{E}_{}[\vert X \vert ] < \infty \) and \(\int_{0}^{1} \vert e^{i hu X} - 1 \vert \,\mathrm{d}u \leq 2\), we see that \(\vert X \vert \int_{0}^{1} \vert e^{ihuX} - 1 \vert \,\mathrm{d}u \leq 2 \vert X \vert \), and the latter is integrable since \(\mathbb{E}_{}[X] < \infty \), hence \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{dominated convergence theorem} applies, i.e., we can pass the limit into the expectation,
+	\[
+		\lim_{h \to 0} \mathbb{E}_{}\left[\vert X \vert \int_{0}^{1} \vert e^{ihuX} - 1 \vert \,\mathrm{d}u \right]
+		= \mathbb{E}_{}\left[\vert X \vert \lim_{h \to 0} \int_{0}^{1} \vert e^{ihuX} - 1 \vert \,\mathrm{d}u \right]
+		= 0
+	\]
+	since \(\lim_{h \to 0} \int_{0}^{1} \vert e^{iuhX} - 1\vert \,\mathrm{d}u = 0\), again from the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem}.
 \end{proof}
 
 \begin{remark}

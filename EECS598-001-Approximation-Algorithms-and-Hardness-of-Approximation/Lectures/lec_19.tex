@@ -1,5 +1,5 @@
 \chapter{Hardness of Approximation}
-\lecture{19}{7 Nov.\ 10:30}{Complexity theory for Approximation Algorithm}
+\lecture{19}{7 Nov.\ 10:30}{Complexity Theory for Approximation Algorithm}
 Recall how we define the \hyperref[def:combinatorial-optimization]{combinatorial optimization}.
 
 \begin{prev}
@@ -9,7 +9,7 @@ Recall how we define the \hyperref[def:combinatorial-optimization]{combinatorial
 Now, we're going to discuss the complexity of doing approximation problem. But since the classical complexity theory is under the context of decision problems, we now try to generalize it.
 
 \section{Approximation Complexity}
-In this section, we're going to consider maximization problems primarily. Since we now care about decision problem, so given a maximization \hyperref[def:combinatorial-optimization]{problem} \(P\) with goal being finding an objective in \(\mathbb{R} \), we have the following decision version.
+In this section, we'll consider \hyperref[def:combinatorial-optimization]{maximization problems} primarily, however, the same definition can be adapted to \hyperref[def:combinatorial-optimization]{minimization problems} naturally. First consider the decision problems: given a \hyperref[def:combinatorial-optimization]{maximization problem} \(P\) with goal being finding an objective in \(\mathbb{R} \), we have the following decision version.
 
 \begin{definition}[Decision-\(P\)]\label{def:decision-P}
 	Given a \hyperref[def:combinatorial-optimization]{maximization problem} \(P\), the \emph{decision-\(P\)} is the decision version of \(P\), where given an input \(I\in \mathcal{I} \), \(c\in \mathbb{R} ^+\), finds an algorithm which output \(\True\) if \(\OPT_I \geq c\), \(\False\) otherwise.
@@ -21,11 +21,16 @@ And we have the following characterization of \(P\) and \hyperref[def:decision-P
 	A \hyperref[def:combinatorial-optimization]{maximization problem} \(P\) is \(\NP\) if \hyperref[def:decision-P]{decision-\(P\)} is \(\NP\).
 \end{definition}
 
-Apparently, this is not enough since what we care is the approximation version, and hence we have the following generalization.
+\subsection{The Gap Problem}
+Adapting this to the approximation version, we have the following generalization.
 
-\begin{definition}[\(\alpha \)-Gap]\label{def:Gap}
-	Given a \hyperref[def:combinatorial-optimization]{maximization problem} \(P\) with \(\alpha < 1\), the \emph{\(\alpha \)-Gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{I} \) and \(c\in \mathbb{R} ^+\), finds an algorithm which outputs \(\True\) if \(\OPT_I \geq c\), \(\False\) if \(\OPT_I < \alpha c\), and anything else (don't care) otherwise.
+\begin{definition}[Gap]\label{def:Gap}
+	Given a \hyperref[def:combinatorial-optimization]{maximization problem} \(P\) with \(\alpha \leq 1\), the \emph{\(\alpha \)-Gap} \(P\) is the \hyperref[def:decision-P]{decision version} of \(\alpha\)-approximating \(P\), where given an input \(I\in \mathcal{I} \) and \(c\in \mathbb{R} ^+\), finds an algorithm which outputs \(\True\) if \(\OPT_I \geq c\), \(\False\) if \(\OPT_I < \alpha c\), and anything else (don't care) otherwise.
 \end{definition}
+
+\begin{intuition}
+	Since we allow some approximation, we don't care about the ``\hyperref[def:Gap]{gap}'', i.e., \(\OPT_I \in [\alpha c, c)\) .
+\end{intuition}
 
 Since we see that we may ignore some outputs, we divide the output into two different sets.
 
@@ -57,7 +62,7 @@ Again, we have the following characterization of \(P\) and \hyperref[def:Gap]{\(
 \end{definition}
 
 \subsection{Approximation Reduction}
-Finally, we briefly review the \hyperref[def:reduction]{reduction}.
+Finally, we briefly review the classical reduction for \hyperref[def:decision-P]{decision} problem.
 
 \begin{prev}[Reduction]
 	Given two problems \(P_1\), \(P_2\), a \emph{reduction} from \(P_1\) to \(P_2\) is a polynomial time algorithm \(R\) such that given an input \(I_1\in \mathcal{L}_1 \), output \(I_2\in \mathcal{L} _2\) satisfying both \hyperref[def:completeness]{completeness} and \hyperref[def:soundness]{soundness}.
@@ -83,15 +88,15 @@ The reason why we care about \hyperref[def:reduction]{reduction} is that given a
 	\Return{\Alg{\(I_2\)}}
 \end{algorithm}
 
-Similarly, since we care about approximation algorithm, we can define the approximation \hyperref[def:reduction]{reduction} from \hyperref[def:Gap]{\(\alpha \)-Gap} \(P_1\) to \hyperref[def:Gap]{\(\beta \)-Gap} \(P_2\).
+Similarly, since we care about approximation algorithm, we can define the approximation version of the reduction from \hyperref[def:Gap]{\(\alpha \)-Gap} \(P_1\) to \hyperref[def:Gap]{\(\beta \)-Gap} \(P_2\) as follows.
 
 \begin{definition}[Reduction]\label{def:reduction}
-	Given two problems \(P_1\), \(P_2\), a \emph{reduction} from \hyperref[def:Gap]{\(\alpha \)-Gap} \(P_1\) to \hyperref[def:Gap]{\(\beta \)-Gap} \(P_2\) is a polynomial time algorithm \(R\) such that given an input \(I_1\in \mathcal{L}_1 \) and \(c_1\), output \(I_2\in \mathcal{L} _2\) and \(c_2\) satisfying both \hyperref[def:completeness]{completeness} and \hyperref[def:soundness]{soundness}.
+	Given two \hyperref[def:combinatorial-optimization]{maximization problems} \(P_1\), \(P_2\), a \emph{reduction} from \hyperref[def:Gap]{\(\alpha \)-Gap} \(P_1\) to \hyperref[def:Gap]{\(\beta \)-Gap} \(P_2\) is a polynomial time algorithm \(R\) such that given an input \(I_1\in \mathcal{L}_1 \) and \(c_1\), output \(I_2\in \mathcal{L} _2\) and \(c_2\) satisfying both \hyperref[def:completeness]{completeness} and \hyperref[def:soundness]{soundness}.
 	\begin{definition}[Completeness]\label{def:completeness}
-		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{completeness} if it transforms an accepted input for \(P_1\) to an accepted input for \(P_2\), i.e., if \(\OPT_{I_1}\leq c_1\), then \(\OPT_{I_2}\leq c_2\).
+		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{completeness} if it transforms an accepted input for \(P_1\) to an accepted input for \(P_2\), i.e., if \(\OPT_{I_1} \geq c_1\), then \(\OPT_{I_2} \geq c_2\).
 	\end{definition}
 	\begin{definition}[Soundness]\label{def:soundness}
-		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{soundness} if it transforms a rejected input for \(P_1\) to a rejected input for \(P_2\), i.e., if \(\OPT_{I_1}> \alpha c_1\), then \(\OPT_{I_2}> \beta c_2\).
+		A \hyperref[def:reduction]{reduction} from \(P_1\) to \(P_2\) satisfies \emph{soundness} if it transforms a rejected input for \(P_1\) to a rejected input for \(P_2\), i.e., if \(\OPT_{I_1} < \alpha c_1\), then \(\OPT_{I_2} < \beta c_2\).
 	\end{definition}
 \end{definition}
 

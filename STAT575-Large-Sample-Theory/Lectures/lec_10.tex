@@ -19,25 +19,21 @@ With the tools we developed, we now prove two of the fundamental theorems of pro
 		\left( \phi (t / n) \right) ^n
 		= \left( 1 + \frac{t}{n} \int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u  \right) ^n .
 	\]
-	Since \((1 + a_n)^n \to e^c\) if \(n a_n \to c\), it remains to show that
-	\[
-		\int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u
-		\to ic.
-	\]
-	First, we see that if \(\phi ^{\prime} (t)\) is continuous at \(0\), as \(n \to \infty \)
+	Since \((1 + a_n)^n \to e^c\) if \(n a_n \to c\), it remains to show \(\int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u \to ic\). First, if \(\phi ^{\prime} (t)\) is continuous at \(0\), as \(n \to \infty \)
 	\[
 		\phi ^{\prime} (u t / n) \to \phi ^{\prime} (0) = i \mathbb{E}_{}[X] = ic.
 	\]
-	With the fact that \(\sup _t \vert \phi ^{\prime} (t) \vert \leq \mathbb{E}_{}[\vert X \vert ] \), the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem} implies that the limit can be passed inside the integral, i.e.,
+	With the fact that \(\sup _t \vert \phi ^{\prime} (t) \vert \leq \mathbb{E}_{}[\vert X \vert ] \), the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{bounded convergence theorem} implies
 	\[
 		\int_{0}^{1} \phi ^{\prime} (ut / n) \,\mathrm{d}u
 		\to \int_{0}^{1} ic \,\mathrm{d}u
-		= ic.
+		= ic
 	\]
+	since we can now pass the limit inside the integral.
 \end{proof}
 
 \begin{remark}
-	We don't need to assume finite first moment since assuming \(\phi \) is differentiable at \(0\) such that \(\phi ^{\prime} (0) = ic\) is enough.
+	Actually, we don't need to assume finite first moment since assuming \(\phi \) is differentiable at \(0\) such that \(\phi ^{\prime} (0) = ic\) is enough.
 \end{remark}
 
 In terms of the distributional result, we need higher-order moments. In particular, if the second moment exists, then we can generalize we have done as in the proof of \autoref{thm:characteristic-function-derivative}.
@@ -106,17 +102,21 @@ We now state the theorem.
 	From the \hyperref[thm:CLT]{central limit theorem}, we can indeed deduce the \hyperref[thm:WLLN]{weak law of large number}. But since the former requires more conditions, hence \hyperref[thm:WLLN]{weak law of large number} still has its own merit.
 \end{remark}
 
-\subsection{Inference for Mean}
-Let \(X, X_1, \dots , X_n\) be i.i.d.\ samples such that \(\mathbb{E}_{}[X] = \mu \), \(\Var_{}[X] = \sigma ^2\). If, also, \(X_i\)'s are Gaussian, then
+\subsection{Application to Inference}
+Firstly, let's consider some applications for mean estimation. Let \(X, X_1, \dots , X_n\) be i.i.d.\ samples such that \(\mathbb{E}_{}[X] = \mu \), \(\Var_{}[X] = \sigma ^2\). If, also, \(X_i\)'s are Gaussian, \(\overline{X} _n \sim \mathcal{N} (\mu , \sigma ^2 / n)\), i.e.,
 \[
-	\overline{X} _n \sim \mathcal{N} (\mu , \sigma ^2 / n)
-	\iff \frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} } \sim \mathcal{N} (0, 1).
+	\frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} } \sim \mathcal{N} (0, 1),
 \]
-Furthermore, for all \(n \geq 2\), since we don't know \(\sigma \), if we replace it by the sample standard deviation \(\hat{\sigma} _n\), the above is further equivalent to
+
+\begin{intuition}
+	We make the distribution independent of parameters to get a confidence interval.
+\end{intuition}
+
+However, the left-hand side is not an estimator now since it depends on \(\sigma \). If we replace it by the sample standard deviation \(\hat{\sigma} _n\), as \(n \to \infty \),
 \[
 	T_n \coloneqq \frac{\overline{X} _n - \mu }{\hat{\sigma} _n / \sqrt{n} } \sim t_{n-1} \overset{\operatorname{TV}}{\to } \mathcal{N} (0, 1)
 \]
-as \(n \to \infty \), where \(T_n\) is the \(t\)-statistic.
+where \(T_n\) is the \(t\)-statistic.
 
 \begin{problem*}
 	What if \(X_i\)'s are not Gaussian?
@@ -128,7 +128,7 @@ as \(n \to \infty \), where \(T_n\) is the \(t\)-statistic.
 		= \frac{\sigma }{\hat{\sigma} _n} \frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} }
 		\overset{D}{\to} \mathcal{N} (0, 1)
 	\]
-	due to \hyperref[col:Slutsky]{Slutsky's theorem}. In particular, by letting \(Y_i \coloneqq X_i - \mu \) for all \(i\) (and also \(Y = X - \mu \)),
+	due to \hyperref[col:Slutsky]{Slutsky's theorem}. Indeed, by letting \(Y_i \coloneqq X_i - \mu \) for all \(i\) (and also \(Y = X - \mu \)),
 	\[
 		\frac{n-1}{n} \hat{\sigma} _n^2
 		= \frac{1}{n} \sum_{i=1}^{n} \left( X_i - \overline{X} _n\right) ^2
@@ -138,8 +138,11 @@ as \(n \to \infty \), where \(T_n\) is the \(t\)-statistic.
 	As \(n \to \infty \), \((n-1) / n \to 1\), \(\frac{1}{n} \sum_{i=1}^{n} Y_i^2 \overset{p}{\to } \mathbb{E}_{}[Y^2] = \Var_{}[X] = \sigma ^2\),\footnote{We need to check whether the first moment exists.} and finally \((\overline{Y} _n)^2 \overset{p}{\to } (\mathbb{E}_{}[Y])^2 = 0\), both from \hyperref[thm:WLLN]{weak law of large number}. Hence, \(\hat{\sigma} _n^2 \overset{p}{\to } \sigma ^2\).
 \end{answer}
 
-\subsection{Inference for Variance}
-Again, let \(X, X_1, \dots , X_n\) be i.i.d.\ Gaussian random samples. Then
+\begin{remark}
+	For mean estimation, even if the data is not Gaussian, we're fine.
+\end{remark}
+
+Next, let's consider variance estimation. Again, let \(X, X_1, \dots , X_n\) be i.i.d.\ Gaussian random samples,
 \[
 	(n-1) \frac{\hat{\sigma} _n^2}{\sigma ^2}
 	\overset{D}{=} \sum_{i=1}^{n-1} Z_i^2
@@ -156,7 +159,7 @@ i.e., as \(n \to \infty \),
 	\iff \sqrt{n} \left( \frac{\hat{\sigma} _n^2}{\sigma ^2} - 1 \right)  \overset{D}{\to } \mathcal{N} (0, 2)
 	\iff \sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \overset{D}{\to } \mathcal{N} (0, 2 \sigma ^4).
 \]
-Now, we again ask the following.
+Let's postpone the problem of getting a confident interval, and first ask the following.
 
 \begin{problem*}
 	What if \(X_i\)'s are not Gaussian?
@@ -165,7 +168,7 @@ Now, we again ask the following.
 	We see that from the same calculation as above, with \(Y_i \coloneqq X_i - \mu \) (and also \(Y = X - \mu \)),
 	\[
 		\begin{split}
-			         & \hat{\sigma} _n^2 - \frac{\hat{\sigma} _n^2}{n} = \frac{1}{n} \sum_{i=1}^{n} Y_i^2 - \overline{Y} _n^2                                                                                    \\
+			\hat{\sigma} _n^2 - \frac{\hat{\sigma} _n^2}{n} = \frac{1}{n} \sum_{i=1}^{n} Y_i^2 - \overline{Y} _n^2
 			\implies & \hat{\sigma} _n^2 - \sigma ^2 - \frac{\hat{\sigma} _n^2}{n} = \frac{1}{n} \sum_{i=1}^{n} (Y_i^2 - \sigma ^2)- \overline{Y} _n^2                                                           \\
 			\implies & \sqrt{n}(\hat{\sigma } _n^2 - \sigma ^2) - \frac{\hat{\sigma} _n^2}{\sqrt{n} } = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^2 - \sigma ^2) - \frac{(\sqrt{n} \overline{Y} _n)^2}{\sqrt{n} }.
 		\end{split}
@@ -200,15 +203,15 @@ Now, we again ask the following.
 We note the following.
 
 \begin{note}
-	Let \(Z = (X-\mu ) / \sigma \), then the above is meaningful if \(\mathbb{E}_{}[Z^4] > 1\) since otherwise the variance is \(0\). However, we see that from Jensen's inequality,
-	\[
-		\mathbb{E}_{}[Z^4] \geq \left( \mathbb{E}_{}[Z^2] \right) ^2 \geq 1,
-	\]
-	hence the above makes sense when the equality doesn't hold.
+	Let \(Z = (X-\mu ) / \sigma \), then the above is meaningful if \(\mathbb{E}_{}[Z^4] > 1\) since otherwise the variance is \(0\). However, from Jensen's inequality, \(\mathbb{E}_{}[Z^4] \geq \left( \mathbb{E}_{}[Z^2] \right) ^2 \geq 1\), hence the above makes sense when the equality doesn't hold.
 \end{note}
 
 \begin{eg}
 	The equality holds (i.e., \(\mathbb{E}_{}[Z^4] = 1\)) when \(Z^2 = 1\), or \(Z \in \{ \pm 1 \} \). Hence, the above might happen for \(Z\) being binary.
 \end{eg}
 
-The takeaway is that, if the Kurtosis of \(X\) is different from the normal, then the distribution of \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2)\) is different. Moreover, we note that if we don't know the Kurtosis of \(X\), we can't say anything about the confident interval.
+The takeaway is that if the Kurtosis of \(X\) is different from the normal, then the distribution of \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2)\) is different. Moreover, we see that we can't quite do the same trick as before by making the distribution free from parameters to get a confident interval.
+
+\begin{note}
+	If we don't know the Kurtosis of \(X\), we can't say anything about the confident interval.
+\end{note}

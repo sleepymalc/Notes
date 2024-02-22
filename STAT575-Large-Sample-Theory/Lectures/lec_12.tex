@@ -1,1 +1,239 @@
-\lecture{12}{22 Feb.\ 9:30}{}
+\lecture{12}{22 Feb.\ 9:30}{Asymptotic Joint Distribution by Multivariate CLT}
+\begin{proof}
+	Set \(\mu = 0\), and it suffices to show that for any \(t \in \mathbb{R} ^d\),
+	\[
+		t \cdot \left( \frac{1}{\sqrt{n} } \sum_{i=1}^{n} X_i \right)
+		\overset{D}{\to} t \cdot Z
+		\sim \mathcal{N} (0, t ^{\top} \Sigma t)
+	\]
+	where \(Z \sim \mathcal{N} (0, \Sigma )\). We see that from the \hyperref[thm:CLT]{univariate central limit theorem}, the left-hand side is
+	\[
+		\frac{1}{\sqrt{n} } \sum_{i=1}^{n} t \cdot X_i
+		\overset{D}{\to} \mathcal{N} (0, \Var_{}[t\cdot X_i] ),
+	\]
+	and since \(\Var_{}[t \cdot X] = t^{\top} \Var_{}[X_i] t = t ^{\top} \Sigma t = \Var_{}[t \cdot Z] \), hence we're done.
+\end{proof}
+
+\subsection{Testing Normality with General Moments}
+With \hyperref[thm:multivariate-CLT]{multivariate central limit theorem}, we can continue on the problem of computing the asymptotic distribution of \(\widetilde{M} _k \coloneqq M_k / \hat{\sigma} _n^k\) for general \(k\). Recall the setup, where we let \((X_n)\) and \(X\) be i.i.d.\ random variable, \(Y_i = X_i - \mu \) (and \(Y = X - \mu \)), \(\sigma ^2 = \Var_{}[X] \), \(\mu _k = \mathbb{E}_{}[Y^k] \), and \(\widetilde{\mu} _k = \mu _k / \sigma ^k\). Let's start with \(k = 1\), i.e., compute the asymptotic law of \(\overline{X} _n / \hat{\sigma} _n\).
+
+\begin{prev}
+	We have proved that
+	\begin{itemize}
+		\item \(\sqrt{n} (\overline{X} _n - \mu ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\) from \(\sqrt{n} (\overline{X} _n - \mu ) = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} Y_i\);
+		\item \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \overset{D}{\to} \mathcal{N} (0, \mu _4 - \sigma ^4) \) from \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^2 - \sigma ^2) + o_p(1)\).\footnote{Assuming that \(\mu _4 - \sigma ^4 > 1\).}
+	\end{itemize}
+\end{prev}
+
+We see that we have \(\overline{X} _n\) and \(\hat{\sigma} _n^2\), not \(\hat{\sigma} _n\). But this is fine since we can
+\begin{enumerate}
+	\item compute the joint distribution of \(\overline{X} _n\) and \(\hat{\sigma} _n^2\);
+	\item apply the \hyperref[thm:delta-method]{delta method} with \(g(\overline{X} _n , \hat{\sigma} _ n^2) \coloneqq \overline{X} _n / \hat{\sigma} _n\) to get the distribution of \(\overline{X} _n / \hat{\sigma} _n\).
+\end{enumerate}
+Specifically, from the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem} and above result we proved,
+\[
+	\sqrt{n} \left( \begin{pmatrix}
+			\overline{X} _n   \\
+			\hat{\sigma} _n^2 \\
+		\end{pmatrix} - \begin{pmatrix}
+			\mu       \\
+			\sigma ^2 \\
+		\end{pmatrix} \right)
+	= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \begin{pmatrix}
+		Y_i               \\
+		Y_i^2 - \sigma ^2 \\
+	\end{pmatrix} + o_p(1)
+	\overset{D}{\to} \mathcal{N} \left( \begin{pmatrix}
+		0 \\
+		0 \\
+	\end{pmatrix}, \Var_{}\left[\begin{pmatrix}
+			Y   \\
+			Y^2 \\
+		\end{pmatrix} \right] \right),
+\]
+such that
+\[
+	\Var_{}\left[\begin{pmatrix}
+			Y   \\
+			Y^2 \\
+		\end{pmatrix} \right]
+	= \begin{pmatrix}
+		\Var_{}[Y]      & \Cov_{}[Y, Y^2] \\
+		\Cov_{}[Y, Y^2] & \Var_{}[Y^2]    \\
+	\end{pmatrix}
+	= \begin{pmatrix}
+		\sigma ^2 & \mu _3             \\
+		\mu _3    & \mu _4 - \sigma ^4 \\
+	\end{pmatrix}.
+\]
+Let's leave the application of the \hyperref[thm:delta-method]{delta method} to the general \(k\).
+
+\begin{intuition}
+	The actual characterization of \(\overline{X} _n\) and \(\hat{\sigma} _n^2\) right before applying \hyperref[thm:CLT]{central limit theorem} is much more useful than the final asymptotic distributions.
+\end{intuition}
+
+Next, we compute the asymptotic law of \(\widetilde{M} _k = M_k / \hat{\sigma} _k\), where we have already proven the following.
+
+\begin{prev}
+	\(\sqrt{n} (M_k - \mu _k) \to \mathcal{N} (0, \Var_{}[Y^k - k \mu _{k-1} Y] )\) from
+	\[
+		\sqrt{n} (M_k - \mu _k)
+		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^k - \mu _k - k \mu _{k-1} Y_i) + o_p(1).
+	\]
+\end{prev}
+
+Then as above, we again use the result for \(\hat{\sigma} _n^2\) and get
+\[
+	\begin{split}
+		Y \coloneqq \sqrt{n} \left( \begin{pmatrix}
+				                            \hat{\sigma} _n^2 \\
+				                            M_k               \\
+			                            \end{pmatrix} - \begin{pmatrix}
+				                                            \sigma ^2 \\
+				                                            \mu _k    \\
+			                                            \end{pmatrix} \right)
+		= \frac{1}{\sqrt{n} } & \sum_{i=1}^{n}  \begin{pmatrix}
+			                                        Y_i - \sigma ^2                   \\
+			                                        Y_i^k - \mu _k - k \mu _{k-1} Y_i \\
+		                                        \end{pmatrix} + o_p(1)                                                                                                     \\
+		                      & \overset{D}{\to} \mathcal{N} \left( \begin{pmatrix}
+				                                                            0 \\
+				                                                            0 \\
+			                                                            \end{pmatrix} , \begin{pmatrix}
+				                                                                            \Var_{}[Y^2]                        & \Cov_{}[Y^2 , Y^k - k \mu _{k-1} Y] \\
+				                                                                            \Cov_{}[Y^2 , Y^k - k \mu _{k-1} Y] & \Var_{}[Y^k - k \mu _{k-1} Y]       \\
+			                                                                            \end{pmatrix} \right).
+	\end{split}
+\]
+This ``\(Y\)'' will be used in the \hyperref[thm:delta-method]{delta method} later.\footnote{This is not exact since \(Y\) should be the random vector corresponding the asymptotic distribution on the right-hand side. But this is fine in the end.}
+
+\begin{remark}
+	If \(\mu _{\ell } = 0\) for all odd \(\ell \), then \(M_k\) and \(\hat{\sigma} _n^2\) are ``asymptotically independent''. This is why we get a simplification for odd case.
+\end{remark}
+\begin{explanation}
+	Since then \(\Cov_{}[Y^2 , Y^k - k \mu _{k-1} Y] = 0\) for odd \(k\).
+\end{explanation}
+
+Now, since we're using \(\hat{\sigma} _n^2\) but not \(\hat{\sigma} _n^k\), we need to use \hyperref[thm:delta-method]{delta method} by considering
+\[
+	\widetilde{M} _k
+	= \frac{M_k}{\hat{\sigma} _n^k}
+	\eqqcolon g(\hat{\sigma} _n^2, M_k)
+\]
+where \(g(x, y) = y / x^{k / 2}\) for \(x > 0\), \(y \in \mathbb{R} \). We see that
+\[
+	\nabla g(\sigma ^2, \mu _k)
+	= \begin{pmatrix}
+		-\frac{k}{2} \mu _k \sigma ^{-k - 2} & \sigma ^{-k} \\
+	\end{pmatrix}
+	= \begin{pmatrix}
+		-\frac{k}{2} \widetilde{\mu} _k \sigma ^{-2} & \sigma ^{-k} \\
+	\end{pmatrix}
+\]
+since \(\widetilde{\mu} _k = \mu _k / \sigma ^k\) and
+\begin{itemize}
+	\item \(\partial g / \partial x = - k y x^{-k / 2 - 1} / 2\).
+	\item \(\partial g / \partial y = x^{-k / 2}\).
+\end{itemize}
+From \hyperref[thm:delta-method]{delta method}, with \(\widetilde{\mu} _k = g(\sigma ^2, \mu _k)\), we get \(\sqrt{n} (g(\hat{\sigma} _n^2, M_k) - g(\sigma ^2, \mu _k)) \overset{D}{\to } \nabla g Y\), or equivalently,
+\[
+	\begin{split}
+		\sqrt{n} (\widetilde{M} _k - \widetilde{\mu} _k)
+		 & = \nabla g(\sigma ^2, \mu _k) \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \begin{pmatrix}
+			                                                                    Y_i^2 - \sigma ^2                 \\
+			                                                                    Y_i^k - \mu _k - k \mu _{k-1} Y_i \\
+		                                                                    \end{pmatrix} + o_p(1)                                                                                             \\
+		 & = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \left( -\frac{k}{2} \widetilde{\mu} _k \frac{1}{\sigma ^2} (Y_i^2 - \sigma ^2) + \frac{1}{\sigma ^k} (Y_i^k - \mu _k - k \mu _{k-1} Y_i) \right) + o_p(1) \\
+		 & = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \left( -\frac{k}{2} \widetilde{\mu} _k (Z_i^2 - 1) + (Z_i^k - \widetilde{\mu} _k - k \widetilde{\mu} _{k-1} Z_i ) \right) + o_p(1)
+		\overset{D}{\to} \mathcal{N} (0, \theta_k)
+	\end{split}
+\]
+by letting \(Z_i \coloneqq (X_i - \mu) / \sigma = Y_i / \sigma \) and
+\[
+	\theta _k
+	\coloneqq \Var_{}\left[-\frac{k}{2} \widetilde{\mu} _k (Z^2 - 1) + (Z^k - \widetilde{\mu} _k - k \widetilde{\mu} _{k-1} Z ) \right],
+\]
+which is independent of parameters since under \(H_0\), \(Z \sim \mathcal{N} (0, 1)\).
+
+\begin{note}
+	It's more convenient to use \hyperref[thm:delta-method]{delta method} in this way, i.e., not use the actual \(Y\) corresponding to the distribution, but use the term in the limiting sequence with \(o_p(1)\). Compared to the last time, we do this for odd \(k\), and only get the asymptotic distribution, not this explicit decomposition.
+\end{note}
+
+Now, with this explicit formula, we now see one example.
+
+\begin{eg}
+	Consider using both \(\widetilde{M} _3\) and \(\widetilde{M} _4\) to test \(H_0\colon X \sim \mathcal{N} \). We see that under \(H_0\),
+	\[
+		\left( \sqrt{\frac{n}{\theta _3}} \widetilde{M} _3 \right) ^2 + \left( \sqrt{\frac{n}{\theta _4}} (\widetilde{M} _4 - \mu _4) \right) ^2
+		\overset{D}{\to} \chi _2^2 .
+	\]
+\end{eg}
+\begin{explanation}
+	One can write down \(\sqrt{n} (\widetilde{M} _\ell , \widetilde{\mu} _\ell )\) for even \(\ell \), and also \(\sqrt{n} (\widetilde{M} _k - \widetilde{\mu} _k)\) for odd \(k\), and see that the covariance indeed is \(0\), hence independent, so they add up to \(\chi _2^2\).
+\end{explanation}
+
+\subsection{Asymptotic Relative Efficiency}
+Assume \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \operatorname{Pois}(\theta ) \). To estimate \(\theta \), as \(\theta = \mathbb{E}_{}[X] = \Var_{}[X] \), two natural estimators are \(\overline{X} _n\) and \(\hat{\sigma} _n^2\). To compare them, we see that
+\begin{itemize}
+	\item \(\sqrt{n} (\overline{X} _n - \theta ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\);
+	\item \(\sqrt{n} (\hat{\sigma} _n^2 - \theta ) \overset{D}{\to} \mathcal{N} (0, \mu _4 - \sigma ^4)\).
+\end{itemize}
+As \(\sigma ^2 = \theta \) and \(\mu _4 = 3 \theta ^2 + \theta \), we see that \(\overline{X} _n\) is better since its variance is smaller.
+
+\begin{problem*}
+	But by how much?
+\end{problem*}
+\begin{answer}
+	We can consider how many data we need such that we get a similar precision. Consider
+	\[
+		\sqrt{n} (T_n^i - \theta )
+		\overset{D}{\to} \mathcal{N} (0, \sigma _i^2(\theta ))
+	\]
+	for two statistics \(T_i\), \(i = 1, 2\). This implies
+	\[
+		\mathbb{P} \left( \theta \in T_n^i \pm Z_{\alpha / 2} \frac{\sigma _i(\theta )}{\sqrt{n} } \right) \cong 1 - \alpha .
+	\]
+	Let \(I_n^{(i)} \coloneqq T_n^i \pm Z_{\alpha / 2} \sigma _i(\theta ) / \sqrt{n} \), and let \(n_i\) be the value of \(n\) such that \(\vert I_n^{(i)} \vert = \gamma \),
+	\[
+		\gamma = 2 Z_{\alpha / 2} \frac{\sigma _i(\theta )}{\sqrt{n_i} }
+		\implies n_i = \left( \frac{2 Z_{\alpha / 2}}{\gamma } \sigma _i(\theta ) \right)^2 ,
+	\]
+	i.e., \(n_1 / n_2 = \sigma _1(\theta )^2 / \sigma _2(\theta )^2\), which we called the \emph{asymptotic relative efficiency} \(\operatorname{ARE}(T^1, T^2) \).
+\end{answer}
+
+Now, we consider \(\overline{X} _n\) as the estimator of \(\theta \). We have \(\sqrt{n} (\overline{X} _n - \theta ) \overset{D}{\to} \sqrt{\theta } \mathcal{N} (0, 1) = \mathcal{N} (0, \theta )\).
+
+\begin{note}
+	As the asymptotic distribution depends on \(\theta \), we don't directly get a confidence interval.
+\end{note}
+
+To get around this, we first write
+\[
+	\sqrt{n} (\overline{X} _n - \theta )
+	\overset{D}{\to} \sqrt{\theta } Z \sim \mathcal{N} (0, \theta )
+\]
+for \(Z \sim \mathcal{N} (0, 1)\). Then, instead of writing this as
+\[
+	\frac{\sqrt{n} }{\sqrt{\theta } } (\overline{X} _n - \theta ) \overset{D}{\to} Z
+\]
+and replace \(\sqrt{\theta } \) on by some estimator, observe that from \hyperref[thm:delta-method]{delta method} with some \(g\),
+\[
+	\sqrt{n} (g(\overline{X} _n) - g(\theta )) \overset{D}{\to} g^{\prime} (\theta ) \sqrt{\theta } Z
+\]
+Suppose \(g^{\prime} (\theta ) \sqrt{\theta } = c \) is some constant for every \(\theta > 0\), our goal is also achieved, i.e.,
+\[
+	\frac{\sqrt{n}}{c} (g(\overline{X} _n) - g(\theta )) \overset{D}{\to} \mathcal{N} (0, 1).
+\]
+
+\begin{claim}
+	There exists \(g\) such that \(c = 1 / 2\).
+\end{claim}
+\begin{explanation}
+	Since for \(g^{\prime} (\theta ) = \frac{1}{2 \sqrt{\theta } }\), we have \(g(\theta ) = \sqrt{\theta } \).
+\end{explanation}
+
+Then, the asymptotic confidence interval for \(g(\theta )\) is just
+\[
+	\left( g(\overline{X} _n) - Z_{\alpha / 2} \frac{c}{\sqrt{n} } , g(\overline{X} _n) + Z_{\alpha / 2} \frac{c}{\sqrt{n} } \right),
+\]
+and apply \(g^{-1} \) to get back \(\theta \). In this case, \(g^{-1} (u) = u^2\). This is the so-called \emph{variance stabilizing transformation}.

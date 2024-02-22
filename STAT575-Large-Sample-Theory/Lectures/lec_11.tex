@@ -1,10 +1,5 @@
-\lecture{11}{20 Feb.\ 9:30}{More on Inference For Variance}
-Let's try to generalize what we have done. Let \(Y \coloneqq X - \mu = X - \mathbb{E}_{}[X] \) (and also \(Y_i = X_i - \mu \) as usual), \(\mu _k \coloneqq \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[(X - \mu )^k] \) for all \(k \geq 2\), and finally
-\[
-	\widetilde{\mu} _k
-	= \frac{\mu _k}{\sigma ^k}
-	= \mathbb{E}_{}\left[ \frac{(X-\mu )^k}{\sigma ^k} \right] .
-\]
+\lecture{11}{20 Feb.\ 9:30}{Confidence Interval of Inference for Variance}
+Let's try to generalize what we have done. Let \(Y \coloneqq X - \mu = X - \mathbb{E}_{}[X] \) (and also \(Y_i = X_i - \mu \) as usual), \(\mu _k \coloneqq \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[(X - \mu )^k] \) for all \(k \geq 2\), and finally \(\widetilde{\mu} _k = \mu _k / \sigma ^k = \mathbb{E}_{}\left[ (X-\mu )^k / \sigma ^k \right] \).
 
 \begin{prev}
 	In this notation, we proved \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \to \mathcal{N} (0, (\widetilde{\mu} _4 - 1)\sigma ^4) \), or equivalently,
@@ -12,21 +7,22 @@ Let's try to generalize what we have done. Let \(Y \coloneqq X - \mu = X - \math
 		\frac{\sqrt{n} }{\sqrt{\widetilde{\mu} _4 - 1} } \left( \frac{\hat{\sigma} _n^2}{\sigma ^2} - 1 \right) \to \mathcal{N} (0, 1).
 	\]
 \end{prev}
-As hinted before, we ask the following.
+
+As hinted before, we now address the issue of independence of parameters one the left-hand side. Since we know how to estimate \(\sigma \) (i.e., by \(\hat{\sigma} _n\)) \hyperref[def:consistent]{consistently}, it reduces to estimating \(\mu _k\), so we ask the following.
 
 \begin{problem*}
 	How to estimate \(\widetilde{\mu} _4\), or more generally, how to estimate \(\widetilde{\mu} _k\) \hyperref[def:consistent]{consistently}?
 \end{problem*}
 
-As we already know how to estimate \(\sigma \) (i.e., by \(\hat{\sigma} _n\)) \hyperref[def:consistent]{consistently}, it reduces to estimating \(\mu _k\). Consider the \emph{\(k^{\text{th} }\) sample centered moment}
+Consider the \emph{\(k^{\text{th} }\) sample centered moment}
 \[
 	M_k
 	\coloneqq \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^k .
 \]
 
-\begin{note}
+\begin{intuition}
 	If we know \(\mu \), then \(\frac{1}{n} \sum_{i=1}^{n} (X_i - \mu )^k \overset{p}{\to} \mu _k\) by the \hyperref[thm:WLLN]{weak law of large number}.
-\end{note}
+\end{intuition}
 
 However, since we don't know \(\mu \), we need to use \(\overline{X} _n\). But this still yields a \hyperref[def:consistent]{consistent} estimator.
 
@@ -86,12 +82,24 @@ Observe that \(Y_i^k - \mu _k - k \mu _{k-1} Y_i\)'s are i.i.d., the whole thing
 \]
 since \(\mathbb{E}_{}[Y] = 0\), \(\Var_{}[Y] = \sigma ^2\), and \(\Cov_{}[Y, Y^k] = \mathbb{E}_{}[Y \cdot Y^k] - \mathbb{E}_{}[Y] \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[Y^{k+1}] = \mu _{k+1}\).
 
-\subsection{Testing Normality}
-Let \(H_0 \colon X \sim \mathcal{N} (\mu , \sigma ^2)\) for some \(\mu , \sigma ^2\). Since Gaussian is symmetric, this implies that \(\mu _k = 0\) (and hence \(\widetilde{\mu} _k = 0\)) for all odd \(k\).
+\begin{remark}
+	We didn't give a confidence interval for estimating \(\sigma ^2\), which requires we to obtain the joint distribution of \(\hat{\sigma} _n^2\) and \(M_k\).
+\end{remark}
+
+\subsection{Testing Normality with Odd Moments}
+Instead of giving a confidence interval for \(\hat{\sigma} _n^2\), let's consider using two distributional results for \(M_k\) and \(\hat{\sigma} _n^2\) and apply it to the problem of testing normality, i.e., let \(H_0 \colon X \sim \mathcal{N} (\mu , \sigma ^2)\) for some \(\mu , \sigma ^2\).
 
 \begin{intuition}
-	With \autoref{prop:sample-centered-moment-consistent}, the idea is that to reject \(H_0\) if \(\vert M_k \vert \) (or \(\vert M_k / \hat{\sigma} ^k \vert \)) is ``large''.
+	With \autoref{prop:sample-centered-moment-consistent}, the idea is that to reject \(H_0\) if \(\vert M_k \vert \) is ``large''.
 \end{intuition}
+
+However, it turns out that considering \(\vert M_k / \hat{\sigma} _n^k \vert \) is more appropriate. Hence, we again need to compute the joint of \(M_k\) and \(\hat{\sigma} _n^k\), so we won't miss anything indeed. Anyway, now the problem is the following.
+
+\begin{problem*}
+	What is the asymptotic distribution of \( M_k / \hat{\sigma} _n^k \)?
+\end{problem*}
+
+First observe that since Gaussian is symmetric, \(\mu _k = 0\) (and hence \(\widetilde{\mu} _k = 0\)) for all odd \(k\). It turns out that this property allows us to bypass the joint if we focus on odd \(k\).
 
 \begin{prev}
 	Previously we have \(\sqrt{n} (M_k - \mu _k) \overset{D}{\to} \mathcal{N} (0, \Var_{}\left[Y^k - k \mu _{k-1} Y\right] )\).
@@ -104,7 +112,7 @@ Formally, suppose \(k\) is odd, and \(X \sim \mathcal{N} (\mu , \sigma ^2)\), th
 \]
 By \hyperref[col:Slutsky]{Slutsky's theorem}, \(\sqrt{n} M_k / \hat{\sigma} ^k\) also \hyperref[def:converge-in-distribution]{converges} to this normal. Now, in particular, if \(k = 3\), we have
 \[
-	\sqrt{n} \frac{M_3}{\hat{\sigma} ^3}
+	\sqrt{n} \frac{M_3}{\hat{\sigma} _n^3}
 	\overset{D}{\to} \mathcal{N} (0, \sigma ^{-6} \Var_{}[Y^3 - 3 \sigma ^2 Y] )
 	= \mathcal{N} (0, \sigma ^{-6} \left( \Var_{}[Y^3] + 9 \sigma ^4 \sigma ^2 - 6 \sigma ^2 \mathbb{E}_{}[Y^4] \right) )
 \]
@@ -123,11 +131,15 @@ Hence, by plugging \(\Var_{}[Y^3] = \mu _{2 \times 3} = \mu _6\), the variance o
 \]
 i.e.,
 \[
-	\sqrt{\frac{n}{6}} \frac{M_3}{\hat{\sigma} _3}
+	\sqrt{\frac{n}{6}} \frac{M_3}{\hat{\sigma} _n^3}
 	\overset{D}{\to} \mathcal{N} (0, 1).
 \]
 
-For even \(k\), we really need to work with \(\vert M_k / \hat{\sigma} _k \vert \). Since we know the asymptotic distribution of both \(M_k\) and \(\hat{\sigma} _k\), the joint can be considered by \(g(M_k , \hat{\sigma} _2) = \vert M_k / \hat{\sigma} ^k \vert \) with the \hyperref[thm:delta-method]{delta method}.
+\begin{remark}
+	We get the asymptotic distribution of \(M_k / \hat{\sigma} _n^k\) without computing the joint of \(M_k\) and \(\hat{\sigma} _n^k\).
+\end{remark}
+
+For even \(k\), we really need to work out the joint. Since we know the asymptotic distribution of both \(M_k\) and \(\hat{\sigma} _k\), the joint with can be obtained by \(g(M_k , \hat{\sigma} _2) = \vert M_k / \hat{\sigma} ^k \vert \) with the \hyperref[thm:delta-method]{delta method}, with the multivariate version of \autoref{thm:CLT} since we now have two quantities.
 
 \subsection{Multivariate Central Limit Theorem}
 Our next goal is to prove the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem}, i.e., the high dimensional generalization of \autoref{thm:CLT}. We first need the following tool.
@@ -153,7 +165,7 @@ Our next goal is to prove the \hyperref[thm:multivariate-CLT]{multivariate centr
 \end{remark}
 
 \begin{theorem}[Multivariate central limit theorem]\label{thm:multivariate-CLT}
-	Let \((X_n)\) be i.i.d. random vectors in \(\mathbb{R} ^d\) with \(\mathbb{E}_{}[X_i] = \mu \), \(\Var_{}[X_i] = \Sigma \) for all \(1 \leq i \leq n\). Then
+	Let \((X_n)\) be i.i.d.\ random vectors in \(\mathbb{R} ^d\) with \(\mathbb{E}_{}[X_i] = \mu \in \mathbb{R} ^d\), \(\Var_{}[X_i] = \Sigma \in \mathbb{R} ^{d \times d}\) for all \(1 \leq i \leq n\). Then
 	\[
 		\frac{1}{\sqrt{n} } \sum_{i=1}^{n} (X_i - \mu )
 		\overset{D}{\to} \mathcal{N} (0, \Sigma ).

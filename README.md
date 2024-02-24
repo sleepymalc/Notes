@@ -12,7 +12,7 @@
 
 This repo contains all $\LaTeX$ source codes of the lecture notes I took in university. A more readable version can be found [here](https://www.pbb.wtf/posts/Notes).
 
-The [`header.tex`](https://github.com/sleepymalc/LaTeX-Template/blob/main/Note/header.tex) can be found in [LaTeX Template](https://github.com/sleepymalc/LaTeX-Template), together with a simple, but complete [demo](https://github.com/sleepymalc/LaTeX-Template/blob/main/Notes/master.pdf).
+The [`header.tex`](https://github.com/sleepymalc/LaTeX-Template/blob/main/Note/header.tex) can be found in [LaTeX Template](https://github.com/sleepymalc/LaTeX-Template), together with a simple, but complete [demo](https://github.com/sleepymalc/LaTeX-Template/blob/main/Note/master.pdf).
 
 > **You need to include this header to compile any of my notes!** The particular compile environment should not be that relevant since the packages this environment depends on are quite straightforward and minimal, hence a simple *pdflatex* should do the job. As for Inkscape figures, please look into [VSCode-LaTeX-Inkscape](https://github.com/sleepymalc/VSCode-LaTeX-Inkscape) for detailed configuration.
 

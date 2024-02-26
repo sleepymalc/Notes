@@ -1,31 +1,34 @@
-\lecture{11}{20 Feb.\ 9:30}{Normality and Sample Standardized Central Moments}
-Following the intuition, let's try to generalize what we have done and find such \hyperref[def:consistent]{consistent} estimators. Let \(Y \coloneqq X - \mu = X - \mathbb{E}_{}[X] \) (and also \(Y_i = X_i - \mu \) as usual), \(\mu _k \coloneqq \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[(X - \mu )^k] \) for all \(k \geq 2\), and finally \(\widetilde{\mu} _k = \mu _k / \sigma ^k = \mathbb{E}_{}\left[ (X-\mu )^k / \sigma ^k \right] \).
+\lecture{11}{20 Feb.\ 9:30}{Sample Standardized Central Moments}
+Following the intuition, let's find such \hyperref[def:consistent]{consistent} estimators. Let \(Y \coloneqq X - \mu = X - \mathbb{E}_{}[X] \) (and also \(Y_i = X_i - \mu \) as usual), \(\mu _k \coloneqq \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[(X - \mu )^k] \) for all \(k \geq 2\), and finally \(\widetilde{\mu} _k = \mu _k / \sigma ^k = \mathbb{E}_{}\left[ (X-\mu )^k / \sigma ^k \right] \).
 
 \begin{prev}
-	In this notation, we proved \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \to \mathcal{N} (0, (\widetilde{\mu} _4 - 1)\sigma ^4) \), or equivalently,
+	In this notation, \autoref{prop:inference-variance} gives \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \to \mathcal{N} (0, (\widetilde{\mu} _4 - 1)\sigma ^4) \), i.e.,
 	\[
 		\frac{\sqrt{n} }{\sqrt{\widetilde{\mu} _4 - 1} } \left( \frac{\hat{\sigma} _n^2}{\sigma ^2} - 1 \right) \to \mathcal{N} (0, 1).
 	\]
 \end{prev}
 
-As hinted before, we now address the issue of independence of parameters one the left-hand side. Since we know how to estimate \(\sigma \) (i.e., by \(\hat{\sigma} _n\)) \hyperref[def:consistent]{consistently}, it reduces to estimating \(\mu _k\), so we ask the following.
+The task is then the following.
 
 \begin{problem*}
 	How to estimate \(\widetilde{\mu} _4\), or more generally, how to estimate \(\widetilde{\mu} _k\) \hyperref[def:consistent]{consistently}?
 \end{problem*}
+\begin{answer}
+	Consider the \emph{\(k^{\text{th} }\) sample central moment}
+	\[
+		M_k
+		\coloneqq \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^k .
+	\]
+	Let's also define the \emph{\(k^{\text{th} }\) sample standardized central moment} as \(\widetilde{M} _k \coloneqq M_k / \hat{\sigma} _n^k\).
+\end{answer}
 
-Consider the \emph{\(k^{\text{th} }\) sample central moment}
-\[
-	M_k
-	\coloneqq \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^k .
-\]
-Let's also define the \emph{\(k^{\text{th} }\) sample standardized central moment} as \(\widetilde{M} _k \coloneqq M_k / \hat{\sigma} _n^k\).
+The above essentially comes from the following fact.
 
 \begin{intuition}
-	If we know \(\mu \), then \(\frac{1}{n} \sum_{i=1}^{n} (X_i - \mu )^k \overset{p}{\to} \mu _k\) by the \hyperref[thm:WLLN]{weak law of large number}.
+	If we know \(\mu \), then \(\frac{1}{n} \sum_{i=1}^{n} (X_i - \mu )^k \overset{p}{\to} \mu _k\) by the \hyperref[thm:WLLN]{weak law of large number}. However, since we don't know \(\mu \), we need to use \(\overline{X} _n\).
 \end{intuition}
 
-However, since we don't know \(\mu \), we need to use \(\overline{X} _n\). But this still yields a \hyperref[def:consistent]{consistent} estimator.
+We now show that this still yields a \hyperref[def:consistent]{consistent} estimator.
 
 \begin{proposition}\label{prop:sample-central-moment-consistent}
 	If \(X \in L^k\) for \(k > 2\), then \(M_k \overset{p}{\to} \mathbb{E}_{}[Y^k] = \mu _k\). Same for \(\widetilde{M} _k\) and \(\widetilde{\mu} _k\).
@@ -48,8 +51,17 @@ However, since we don't know \(\mu \), we need to use \(\overline{X} _n\). But t
 	By the \hyperref[thm:WLLN]{weak law of large number}, \(\overline{Y^k} \overset{p}{\to} \mathbb{E}_{}[Y^k] = \mu _k\) and \((-\overline{Y} )^{k-\ell } \overset{p}{\to} 0\) since \(-\overline{Y} \overset{p}{\to} 0\) with \hyperref[thm:continuous-mapping]{continuous mapping theorem}, hence \(M_k \overset{p}{\to} \mu _k\) by \hyperref[col:Slutsky]{Slutsky's theorem}. The \hyperref[def:consistent]{consistency} of \(\hat{\sigma} _n\) implies \(\widetilde{M} _k \overset{p}{\to} \widetilde{\mu} _k\) clearly.
 \end{proof}
 
+\autoref{prop:sample-central-moment-consistent} implies the following.
+
+\begin{corollary}\label{col:inference-variance-CI}
+	If the \hyperref[def:Kurtosis]{Kurtosis} of \(X\) exists and is not equal to \(1\), then an asymptotically valid \(100 (1 - \alpha )\%\) confidence interval for \(\sigma ^2\) is
+	\[
+		\frac{\hat{\sigma} _n^2}{1 \pm Z_{\alpha / 2} \sqrt{(\widetilde{M} _4 - 1) / n} }.
+	\]
+\end{corollary}
+
 \subsection{Asymptotic Distribution of Sample Central Moments}
-Furthermore, we can also ask for the asymptotic distribution of \(M_k\), i.e., \(\sqrt{n} (M_k - \mu _k)\). Consider our notations used so far.
+Furthermore, as we will see, asking for the asymptotic distribution of \(M_k\), i.e., \(\sqrt{n} (M_k - \mu _k)\) is quite valuable, although the motivation is not so clear right now. Anyway, we have the following.
 
 \begin{theorem}\label{thm:asymptotic-distribution-sample-central-moment}
 	If \(X \in L^{2k}\) for some \(k > 2\), then
@@ -96,33 +108,35 @@ Furthermore, we can also ask for the asymptotic distribution of \(M_k\), i.e., \
 	since \(\Cov_{}[Y, Y^k] = \mathbb{E}_{}[Y \cdot Y^k] - \mathbb{E}_{}[Y] \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[Y^{k+1}] = \mu _{k+1}\) and \(\mu _{2k} < \infty \) from \(X \in L^{2k}\).
 \end{proof}
 
-Note that \autoref{thm:asymptotic-distribution-sample-central-moment} doesn't give a confidence interval for estimating \(\sigma ^2\), which requires we to obtain the joint distribution of \(\hat{\sigma} _n^2\) and \(M_k\), and we only have separated ones.
+\begin{note}
+	\autoref{thm:asymptotic-distribution-sample-central-moment} doesn't give the same result for \(\widetilde{M} _k = M_k / \hat{\sigma} _n^k\), which requires we to obtain the joint distribution of \(\hat{\sigma} _n^k\) and \(M_k\).
+\end{note}
+
+However, it turns out that when \(k\) is odd and the distribution is symmetric, \autoref{thm:asymptotic-distribution-sample-central-moment} does give an asymptotic distribution for \(\widetilde{M} _k\).
 
 \subsection{Testing Normality with Odd Moments}
-Instead of giving a confidence interval for \(\sigma ^2\), let's consider using two distributional results for \(M_k\) and \(\hat{\sigma} _n^2\) and apply it to the problem of testing normality, i.e., let \(H_0 \colon X \sim \mathcal{N} (\mu , \sigma ^2)\) for some \(\mu , \sigma ^2\).
+To motivate whey we want to have an asymptotic distribution for \(\widetilde{M} _k\), consider the problem of testing normality, i.e., let \(H_0 \colon X \sim \mathcal{N} (\mu , \sigma ^2)\) for some \(\mu , \sigma ^2\).
 
 \begin{intuition}
-	With \autoref{prop:sample-central-moment-consistent}, the idea is that to reject \(H_0\) if \(\vert M_k \vert \) is ``large''.
+	With \autoref{prop:sample-central-moment-consistent}, the idea is that to reject \(H_0\) if \(\vert \widetilde{M} _k \vert = \vert M_k / \hat{\sigma} _n^k \vert \) is ``large''.
 \end{intuition}
 
-It turns out that considering \(\vert \widetilde{M} _k \vert = \vert M_k / \hat{\sigma} _n^k \vert \) is more appropriate. Hence, we still need to compute the joint of \(M_k\) and \(\hat{\sigma} _n^k\), so we won't miss anything indeed. Anyway, now the problem is the following.
-
-\begin{problem*}
-	What is the asymptotic distribution of \(\widetilde{M} _k = M_k / \hat{\sigma} _n^k \)?
-\end{problem*}
-
-First observe that since Gaussian is symmetric, \(\mu _k = 0\) (and hence \(\widetilde{\mu} _k = 0\)) for all odd \(k\). It turns out that this property allows us to bypass the joint if we focus on odd \(k\).
+In this regard, \autoref{thm:asymptotic-distribution-sample-central-moment} for \(M_k\) is not enough, we really need \(\widetilde{M} _k\).
 
 \begin{prev}
 	\autoref{thm:asymptotic-distribution-sample-central-moment} gives \(\sqrt{n} (M_k - \mu _k) \overset{D}{\to} \mathcal{N} (0, \Var_{}\left[Y^k - k \mu _{k-1} Y\right] ) = \mathcal{N} (0, v_k)\).
 \end{prev}
 
-Formally, suppose \(k\) is odd, and \(X \sim \mathcal{N} (\mu , \sigma ^2)\), then \(\mu _k = 0\), hence
+\begin{problem*}
+	What is the asymptotic distribution of \(\widetilde{M} _k = M_k / \hat{\sigma} _n^k \)?
+\end{problem*}
+
+First observe that if \(X_i\)'s are Gaussian, as Gaussian is symmetric, \(\mu _k = 0\) (and hence \(\widetilde{\mu} _k = 0\)) for all odd \(k\). It turns out that this property allows us to bypass the joint if we focus on odd \(k\). Formally, suppose \(k\) is odd, and \(X \sim \mathcal{N} (\mu , \sigma ^2)\), then \(\mu _k = 0\), hence
 \[
 	\sqrt{n} (M_k - \mu _k) \overset{D}{\to} \mathcal{N} (0, \Var_{}\left[Y^k - k \mu _{k-1} Y\right] )
 	\implies \sqrt{n} \frac{M_k}{\sigma ^k} \overset{D}{\to} \mathcal{N} (0, \sigma ^{-2k} \Var_{}\left[Y^k - k \mu _{k-1} Y\right] ).
 \]
-Then, by \hyperref[col:Slutsky]{Slutsky's theorem}, \(\sqrt{n} M_k / \hat{\sigma} _n^k\) also \hyperref[def:converge-in-distribution]{converges} to this normal. Let's write this as a corollary for \autoref{thm:asymptotic-distribution-sample-central-moment}.
+Then, by \hyperref[col:Slutsky]{Slutsky's theorem}, \(\sqrt{n} M_k / \hat{\sigma} _n^k\) also \hyperref[def:converge-in-distribution]{converges} to this normal. Since all we use is the fact that \(\mu _k = 0\) for odd \(k\) and \autoref{thm:asymptotic-distribution-sample-central-moment}, let's write this general result as a corollary.
 
 \begin{corollary}\label{col:asymptotic-distribution-odd-sample-central-moment}
 	If \(X \in L^{2k}\) for some odd \(k>2\) such that \(\mu _k = 0\) and \(v_k / \sigma ^k > 0\), then \(\sqrt{n} M_k / \hat{\sigma} _n^k \overset{D}{\to} \mathcal{N} (0, v_k / \sigma ^{2k})\).
@@ -162,7 +176,7 @@ Before we see one concrete example, note the following property when \(\mu _k = 
 	which provides the result.
 \end{explanation}
 
-For even \(k\), we really need to work out the joint. Since we know the asymptotic distribution of both \(M_k\) and \(\hat{\sigma} _k\), the joint with can be obtained by \(g(M_k , \hat{\sigma} _2) = \vert M_k / \hat{\sigma} ^k \vert \) with the \hyperref[thm:delta-method]{delta method}, with the multivariate version of \autoref{thm:CLT} since we now have two quantities.
+For even \(k\) or odd \(k\) but \(\mu _k \neq 0\), we really need to work out the joint. Since we know the asymptotic distribution of both \(M_k\) and \(\hat{\sigma} _n^2\), the joint can be obtained by the \hyperref[thm:delta-method]{delta method} with \(g(M_k , \hat{\sigma} _n^2) = \vert M_k / \hat{\sigma} ^k \vert \) and the ``multivariate'' version of \autoref{thm:CLT} since we now have two quantities.
 
 \subsection{Multivariate Central Limit Theorem}
 Our next goal is to prove the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem}, i.e., the high dimensional generalization of \autoref{thm:CLT}. We first need the following tool.

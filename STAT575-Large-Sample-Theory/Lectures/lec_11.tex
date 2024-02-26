@@ -1,5 +1,5 @@
-\lecture{11}{20 Feb.\ 9:30}{Testing Normality}
-Let's try to generalize what we have done. Let \(Y \coloneqq X - \mu = X - \mathbb{E}_{}[X] \) (and also \(Y_i = X_i - \mu \) as usual), \(\mu _k \coloneqq \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[(X - \mu )^k] \) for all \(k \geq 2\), and finally \(\widetilde{\mu} _k = \mu _k / \sigma ^k = \mathbb{E}_{}\left[ (X-\mu )^k / \sigma ^k \right] \).
+\lecture{11}{20 Feb.\ 9:30}{Normality and Sample Standardized Central Moments}
+Following the intuition, let's try to generalize what we have done and find such \hyperref[def:consistent]{consistent} estimators. Let \(Y \coloneqq X - \mu = X - \mathbb{E}_{}[X] \) (and also \(Y_i = X_i - \mu \) as usual), \(\mu _k \coloneqq \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[(X - \mu )^k] \) for all \(k \geq 2\), and finally \(\widetilde{\mu} _k = \mu _k / \sigma ^k = \mathbb{E}_{}\left[ (X-\mu )^k / \sigma ^k \right] \).
 
 \begin{prev}
 	In this notation, we proved \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \to \mathcal{N} (0, (\widetilde{\mu} _4 - 1)\sigma ^4) \), or equivalently,
@@ -14,11 +14,12 @@ As hinted before, we now address the issue of independence of parameters one the
 	How to estimate \(\widetilde{\mu} _4\), or more generally, how to estimate \(\widetilde{\mu} _k\) \hyperref[def:consistent]{consistently}?
 \end{problem*}
 
-Consider the \emph{\(k^{\text{th} }\) sample centered moment}
+Consider the \emph{\(k^{\text{th} }\) sample central moment}
 \[
 	M_k
 	\coloneqq \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^k .
 \]
+Let's also define the \emph{\(k^{\text{th} }\) sample standardized central moment} as \(\widetilde{M} _k \coloneqq M_k / \hat{\sigma} _n^k\).
 
 \begin{intuition}
 	If we know \(\mu \), then \(\frac{1}{n} \sum_{i=1}^{n} (X_i - \mu )^k \overset{p}{\to} \mu _k\) by the \hyperref[thm:WLLN]{weak law of large number}.
@@ -26,8 +27,8 @@ Consider the \emph{\(k^{\text{th} }\) sample centered moment}
 
 However, since we don't know \(\mu \), we need to use \(\overline{X} _n\). But this still yields a \hyperref[def:consistent]{consistent} estimator.
 
-\begin{proposition}\label{prop:sample-centered-moment-consistent}
-	If \(\mu _k < \infty \), \(M_k \overset{p}{\to} \mathbb{E}_{}[Y^k] = \mu _k\).
+\begin{proposition}\label{prop:sample-central-moment-consistent}
+	If \(X \in L^k\) for \(k > 2\), then \(M_k \overset{p}{\to} \mathbb{E}_{}[Y^k] = \mu _k\). Same for \(\widetilde{M} _k\) and \(\widetilde{\mu} _k\).
 \end{proposition}
 \begin{proof}
 	Let's denote \(\overline{X} _n \eqqcolon \overline{X} \) and \(\overline{Y} _n \eqqcolon \overline{Y} \). Then
@@ -44,100 +45,122 @@ However, since we don't know \(\mu \), we need to use \(\overline{X} _n\). But t
 		= \sum_{\ell =0}^{k} \binom{k}{\ell } (- \overline{Y} )^{k - \ell } \overline{Y^{\ell } }
 		= \overline{Y^k} + \sum_{\ell =0}^{k-1} \binom{k}{\ell } (-\overline{Y} )^{k-\ell }  \overline{Y^{\ell } }.
 	\]
-	By the \hyperref[thm:WLLN]{weak law of large number}, \(\overline{Y^k} \overset{p}{\to} \mathbb{E}_{}[Y^k] = \mu _k\) and \((-\overline{Y} )^{k-\ell } \overset{p}{\to} 0\) since \(-\overline{Y} \overset{p}{\to} 0\) with \hyperref[thm:continuous-mapping]{continuous mapping theorem}, hence \(M_k \overset{p}{\to} \mu _k\) by \hyperref[col:Slutsky]{Slutsky's theorem}.
+	By the \hyperref[thm:WLLN]{weak law of large number}, \(\overline{Y^k} \overset{p}{\to} \mathbb{E}_{}[Y^k] = \mu _k\) and \((-\overline{Y} )^{k-\ell } \overset{p}{\to} 0\) since \(-\overline{Y} \overset{p}{\to} 0\) with \hyperref[thm:continuous-mapping]{continuous mapping theorem}, hence \(M_k \overset{p}{\to} \mu _k\) by \hyperref[col:Slutsky]{Slutsky's theorem}. The \hyperref[def:consistent]{consistency} of \(\hat{\sigma} _n\) implies \(\widetilde{M} _k \overset{p}{\to} \widetilde{\mu} _k\) clearly.
 \end{proof}
 
-Furthermore, we can also ask for the asymptotic distribution of \(M_k\), i.e., \(\sqrt{n} (M_k - \mu _k)\). Firstly,
-\[
-	\sqrt{n} (M_k - \mu _k)
-	= \sqrt{n} (\overline{Y^k} - \mu _k ) + \sum_{\ell =0}^{k-1} \binom{k}{\ell } (- \overline{Y} )^{k-\ell } \overline{Y^{\ell } } \sqrt{n}
-	= \sqrt{n} (\overline{Y^k} - \mu _k ) + \sum_{\ell =0}^{k-1} \binom{k}{\ell } \frac{(- \overline{Y} \sqrt{n} )^{k-\ell }}{\sqrt{n} ^{k - \ell - 1}} \overline{Y^{\ell } }.
-\]
-We see that
-\begin{itemize}
-	\item \(\overline{Y} \sqrt{n} \) is asymptotically normal, hence is \hyperref[def:bounded-in-probability]{bounded in probability} from \autoref{prop:convergence-in-distirbution-bounded-in-probability};
-	\item \(\overline{Y^{\ell } } \overset{p}{\to} \mathbb{E}_{}[Y^{\ell } ] = O(1)\);
-	\item \(1 / \sqrt{n} ^{k - \ell - 1} = o(1)\) for \(\ell < k-1\).
-\end{itemize}
-Combining, every term in the summation is \(O(1) O_p(1) o(1) = o_p(1)\) except for \(\ell = k-1\). This means
-\begin{align*}
-	\sqrt{n} (M_k - \mu _k)
-	 & = \sqrt{n} (\overline{Y^k} - \mu _k) - \binom{k}{k-1} \overline{Y^{k-1}} \sqrt{n} \overline{Y} + \sum_{\ell =0}^{k-2} \binom{k}{\ell } o_p(1)               \\
-	 & = \sqrt{n} (\overline{Y^k} - \mu _k) - k \overline{Y^{k-1}} \sqrt{n} \overline{Y} + o_p(1)                                                                  \\
-	\shortintertext{The problem is that although \(\sqrt{n} \overline{Y} = O_p(1)\), \(\overline{Y^{k-1}} \) is not \(o_p(1)\). By replacing \(\overline{Y^{k-1} } \) by \(\overline{Y^{k-1}} - \mu _{k-1} + \mu _{k-1}\),}
-	 & = \sqrt{n} (\overline{Y^k} - \mu _k) - k \left( \overline{Y^{k-1}} - \mu _{k-1} \right) \sqrt{n} \overline{Y} - k \mu _{k-1} \sqrt{n} \overline{Y} + o_p(1) \\
-	 & = \sqrt{n} (\overline{Y^k} - \mu _k) - k \mu _{k-1} \sqrt{n} \overline{Y} + o_p(1)                                                                          \\
-	\shortintertext{since \(\overline{Y^{k-1}} - \mu _{k-1} \overset{p}{\to} 0\) from the \hyperref[thm:WLLN]{weak law of large number}, finally,}
-	 & =\sqrt{n} \left( \frac{1}{n} \sum_{i=1}^{n} (Y_i^k - \mu _k) \right)  - k \mu _{k-1} \frac{1}{n} \sqrt{n} \sum_{i=1}^{n} Y_i  + o_p(1)                      \\
-	 & = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \left( Y_i^k - \mu _k - k \mu _{k-1} Y_i \right) + o_p(1).
-\end{align*}
-Observe that \(Y_i^k - \mu _k - k \mu _{k-1} Y_i\)'s are i.i.d., the whole thing converges to \(\mathcal{N} (0, \Var_{}\left[Y^k - \mu _k - k \mu _k Y\right] )\) \hyperref[def:converge-in-distribution]{in distribution} by \hyperref[thm:CLT]{central limit theorem}, where the variance can be calculated as
-\[
-	\begin{split}
-		\Var_{}\left[Y^k - \mu _k - k \mu _{k-1} Y\right]
-		 & = \Var_{}\left[Y^k - k \mu _{k-1} Y\right]                                      \\
-		 & = \Var_{}[Y^k] + k^2 \mu _{k-1}^2 \Var_{}[Y] - 2 k \mu _{k-1} \Cov_{}[Y, Y^k]   \\
-		 & = \mu _{2k} - \mu _k^2 + k^2 \mu _{k-1}^2 \sigma ^2 - 2 k \mu _{k-1} \mu _{k+1}
-	\end{split}
-\]
-since \(\mathbb{E}_{}[Y] = 0\), \(\Var_{}[Y] = \sigma ^2\), and \(\Cov_{}[Y, Y^k] = \mathbb{E}_{}[Y \cdot Y^k] - \mathbb{E}_{}[Y] \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[Y^{k+1}] = \mu _{k+1}\).
+\subsection{Asymptotic Distribution of Sample Central Moments}
+Furthermore, we can also ask for the asymptotic distribution of \(M_k\), i.e., \(\sqrt{n} (M_k - \mu _k)\). Consider our notations used so far.
 
-\begin{remark}
-	We didn't give a confidence interval for estimating \(\sigma ^2\), which requires we to obtain the joint distribution of \(\hat{\sigma} _n^2\) and \(M_k\).
-\end{remark}
+\begin{theorem}\label{thm:asymptotic-distribution-sample-central-moment}
+	If \(X \in L^{2k}\) for some \(k > 2\), then
+	\[
+		\sqrt{n} (M_k - \mu _k)
+		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^k - \mu _k - k \mu _{k-1} Y_i) + o_p(1).
+	\]
+	Hence, if \(v_k \coloneqq \Var_{}[Y^k - k \mu _{k-1}Y] > 0\), then \(\sqrt{n} (M_k - \mu _k) \overset{D}{\to} \mathcal{N} (0, v_k)\).
+\end{theorem}
+\begin{proof}
+	Firstly,
+	\[
+		\sqrt{n} (M_k - \mu _k)
+		= \sqrt{n} (\overline{Y^k} - \mu _k ) + \sum_{\ell =0}^{k-1} \binom{k}{\ell } (- \overline{Y} )^{k-\ell } \overline{Y^{\ell } } \sqrt{n}
+		= \sqrt{n} (\overline{Y^k} - \mu _k ) + \sum_{\ell =0}^{k-1} \binom{k}{\ell } \frac{(- \overline{Y} \sqrt{n} )^{k-\ell }}{\sqrt{n} ^{k - \ell - 1}} \overline{Y^{\ell } }.
+	\]
+	We see that
+	\begin{itemize}
+		\item \(\overline{Y} \sqrt{n} \) is asymptotically normal, hence is \hyperref[def:bounded-in-probability]{bounded in probability} from \autoref{prop:convergence-in-distirbution-bounded-in-probability};
+		\item \(\overline{Y^{\ell } } \overset{p}{\to} \mathbb{E}_{}[Y^{\ell } ] = O(1)\);
+		\item \(1 / \sqrt{n} ^{k - \ell - 1} = o(1)\) for \(\ell < k-1\).
+	\end{itemize}
+	Combining, every term in the summation is \(O(1) O_p(1) o(1) = o_p(1)\) except for \(\ell = k-1\), hence
+	\begin{align*}
+		\sqrt{n} (M_k - \mu _k)
+		 & = \sqrt{n} (\overline{Y^k} - \mu _k) - \binom{k}{k-1} \overline{Y^{k-1}} \sqrt{n} \overline{Y} + \sum_{\ell =0}^{k-2} \binom{k}{\ell } o_p(1)               \\
+		 & = \sqrt{n} (\overline{Y^k} - \mu _k) - k \overline{Y^{k-1}} \sqrt{n} \overline{Y} + o_p(1)                                                                  \\
+		\shortintertext{While \(\sqrt{n} \overline{Y} = O_p(1)\), \(\overline{Y^{k-1}} \) is not \(o_p(1)\). By replacing \(\overline{Y^{k-1} } \) by \(\overline{Y^{k-1}} - \mu _{k-1} + \mu _{k-1}\),}
+		 & = \sqrt{n} (\overline{Y^k} - \mu _k) - k \left( \overline{Y^{k-1}} - \mu _{k-1} \right) \sqrt{n} \overline{Y} - k \mu _{k-1} \sqrt{n} \overline{Y} + o_p(1) \\
+		 & = \sqrt{n} (\overline{Y^k} - \mu _k) - k \mu _{k-1} \sqrt{n} \overline{Y} + o_p(1)                                                                          \\
+		\shortintertext{since \(\overline{Y^{k-1}} - \mu _{k-1} \overset{p}{\to} 0\) from the \hyperref[thm:WLLN]{weak law of large number}, finally,}
+		 & =\sqrt{n} \left( \frac{1}{n} \sum_{i=1}^{n} (Y_i^k - \mu _k) \right)  - k \mu _{k-1} \frac{1}{n} \sqrt{n} \sum_{i=1}^{n} Y_i  + o_p(1)                      \\
+		 & = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \left( Y_i^k - \mu _k - k \mu _{k-1} Y_i \right) + o_p(1).
+	\end{align*}
+	Observe that \(Y_i^k - \mu _k - k \mu _{k-1} Y_i\)'s are i.i.d., the whole thing converges to \(\mathcal{N} (0, \Var_{}\left[Y^k - \mu _k - k \mu _k Y\right] )\) \hyperref[def:converge-in-distribution]{in distribution} by \hyperref[thm:CLT]{central limit theorem}, where the variance can be further simplified as
+	\[
+		\begin{split}
+			\Var_{}\left[Y^k - \mu _k - k \mu _{k-1} Y\right]
+			 & = \Var_{}\left[Y^k - k \mu _{k-1} Y\right]                                      \\
+			 & = \Var_{}[Y^k] + k^2 \mu _{k-1}^2 \Var_{}[Y] - 2 k \mu _{k-1} \Cov_{}[Y, Y^k]   \\
+			 & = \mu _{2k} - \mu _k^2 + k^2 \mu _{k-1}^2 \sigma ^2 - 2 k \mu _{k-1} \mu _{k+1}
+		\end{split}
+	\]
+	since \(\Cov_{}[Y, Y^k] = \mathbb{E}_{}[Y \cdot Y^k] - \mathbb{E}_{}[Y] \mathbb{E}_{}[Y^k] = \mathbb{E}_{}[Y^{k+1}] = \mu _{k+1}\) and \(\mu _{2k} < \infty \) from \(X \in L^{2k}\).
+\end{proof}
+
+Note that \autoref{thm:asymptotic-distribution-sample-central-moment} doesn't give a confidence interval for estimating \(\sigma ^2\), which requires we to obtain the joint distribution of \(\hat{\sigma} _n^2\) and \(M_k\), and we only have separated ones.
 
 \subsection{Testing Normality with Odd Moments}
-Instead of giving a confidence interval for \(\hat{\sigma} _n^2\), let's consider using two distributional results for \(M_k\) and \(\hat{\sigma} _n^2\) and apply it to the problem of testing normality, i.e., let \(H_0 \colon X \sim \mathcal{N} (\mu , \sigma ^2)\) for some \(\mu , \sigma ^2\).
+Instead of giving a confidence interval for \(\sigma ^2\), let's consider using two distributional results for \(M_k\) and \(\hat{\sigma} _n^2\) and apply it to the problem of testing normality, i.e., let \(H_0 \colon X \sim \mathcal{N} (\mu , \sigma ^2)\) for some \(\mu , \sigma ^2\).
 
 \begin{intuition}
-	With \autoref{prop:sample-centered-moment-consistent}, the idea is that to reject \(H_0\) if \(\vert M_k \vert \) is ``large''.
+	With \autoref{prop:sample-central-moment-consistent}, the idea is that to reject \(H_0\) if \(\vert M_k \vert \) is ``large''.
 \end{intuition}
 
-However, it turns out that considering \(\vert M_k / \hat{\sigma} _n^k \vert \) is more appropriate. Hence, we again need to compute the joint of \(M_k\) and \(\hat{\sigma} _n^k\), so we won't miss anything indeed. Anyway, now the problem is the following.
+It turns out that considering \(\vert \widetilde{M} _k \vert = \vert M_k / \hat{\sigma} _n^k \vert \) is more appropriate. Hence, we still need to compute the joint of \(M_k\) and \(\hat{\sigma} _n^k\), so we won't miss anything indeed. Anyway, now the problem is the following.
 
 \begin{problem*}
-	What is the asymptotic distribution of \( M_k / \hat{\sigma} _n^k \)?
+	What is the asymptotic distribution of \(\widetilde{M} _k = M_k / \hat{\sigma} _n^k \)?
 \end{problem*}
 
 First observe that since Gaussian is symmetric, \(\mu _k = 0\) (and hence \(\widetilde{\mu} _k = 0\)) for all odd \(k\). It turns out that this property allows us to bypass the joint if we focus on odd \(k\).
 
 \begin{prev}
-	Previously we have \(\sqrt{n} (M_k - \mu _k) \overset{D}{\to} \mathcal{N} (0, \Var_{}\left[Y^k - k \mu _{k-1} Y\right] )\).
+	\autoref{thm:asymptotic-distribution-sample-central-moment} gives \(\sqrt{n} (M_k - \mu _k) \overset{D}{\to} \mathcal{N} (0, \Var_{}\left[Y^k - k \mu _{k-1} Y\right] ) = \mathcal{N} (0, v_k)\).
 \end{prev}
 
 Formally, suppose \(k\) is odd, and \(X \sim \mathcal{N} (\mu , \sigma ^2)\), then \(\mu _k = 0\), hence
 \[
 	\sqrt{n} (M_k - \mu _k) \overset{D}{\to} \mathcal{N} (0, \Var_{}\left[Y^k - k \mu _{k-1} Y\right] )
-	\implies \sqrt{n} \frac{M_k}{\sigma ^k} \overset{D}{\to} \mathcal{N} (0, \sigma ^{-2k} \Var_{}\left[Y^k - k \mu _{k-1} Y\right] )
+	\implies \sqrt{n} \frac{M_k}{\sigma ^k} \overset{D}{\to} \mathcal{N} (0, \sigma ^{-2k} \Var_{}\left[Y^k - k \mu _{k-1} Y\right] ).
 \]
-By \hyperref[col:Slutsky]{Slutsky's theorem}, \(\sqrt{n} M_k / \hat{\sigma} ^k\) also \hyperref[def:converge-in-distribution]{converges} to this normal. Now, in particular, if \(k = 3\), we have
-\[
-	\sqrt{n} \frac{M_3}{\hat{\sigma} _n^3}
-	\overset{D}{\to} \mathcal{N} (0, \sigma ^{-6} \Var_{}[Y^3 - 3 \sigma ^2 Y] )
-	= \mathcal{N} (0, \sigma ^{-6} \left( \Var_{}[Y^3] + 9 \sigma ^4 \sigma ^2 - 6 \sigma ^2 \mathbb{E}_{}[Y^4] \right) )
-\]
-where  \(\mu _2 = \sigma ^2\) and \(\Cov_{}\left[Y^3 , Y\right] = \mathbb{E}_{}[Y^4] - \mathbb{E}_{}[Y] \mathbb{E}_{}[Y^3] = \mathbb{E}_{}[Y^4] \). We note the following.
+Then, by \hyperref[col:Slutsky]{Slutsky's theorem}, \(\sqrt{n} M_k / \hat{\sigma} _n^k\) also \hyperref[def:converge-in-distribution]{converges} to this normal. Let's write this as a corollary for \autoref{thm:asymptotic-distribution-sample-central-moment}.
+
+\begin{corollary}\label{col:asymptotic-distribution-odd-sample-central-moment}
+	If \(X \in L^{2k}\) for some odd \(k>2\) such that \(\mu _k = 0\) and \(v_k / \sigma ^k > 0\), then \(\sqrt{n} M_k / \hat{\sigma} _n^k \overset{D}{\to} \mathcal{N} (0, v_k / \sigma ^{2k})\).
+\end{corollary}
+
+\begin{remark}
+	We get the asymptotic distribution of \(M_k / \hat{\sigma} _n^k\) without computing the joint of \(M_k\) and \(\hat{\sigma} _n^k\).
+\end{remark}
+
+Before we see one concrete example, note the following property when \(\mu _k = 0\) for odd \(k > 2\).
 
 \begin{note}
 	For odd \(k\), \(\Var_{}[Y^k] = \mathbb{E}_{}[Y^{2k} ] - (\mathbb{E}_{}[Y^k] )^2 = \mathbb{E}_{}[Y^{2k} ] = \mu _{2k}\) since \((\mathbb{E}_{}[Y^k] )^2 = \mu _k^2 = 0\).
 \end{note}
 
-Hence, by plugging \(\Var_{}[Y^3] = \mu _{2 \times 3} = \mu _6\), the variance of the normal is further equal to
-\[
-	\frac{\mu _6 + 9 \sigma ^6 - 6 \sigma ^2 \mu _4}{\sigma ^6}
-	= \widetilde{\mu} _6 + 9 - 6 \widetilde{\mu} _4
-	= 15 + 9 - 6 \times 3
-	= 6,
-\]
-i.e.,
-\[
-	\sqrt{\frac{n}{6}} \frac{M_3}{\hat{\sigma} _n^3}
-	\overset{D}{\to} \mathcal{N} (0, 1).
-\]
-
-\begin{remark}
-	We get the asymptotic distribution of \(M_k / \hat{\sigma} _n^k\) without computing the joint of \(M_k\) and \(\hat{\sigma} _n^k\).
-\end{remark}
+\begin{eg}
+	Consider \(k = 3\), under \(H_0 \colon X \sim \mathcal{N} (\mu , \sigma ^2)\),
+	\[
+		\sqrt{\frac{n}{6}} \frac{M_3}{\hat{\sigma} _n^3}
+		\overset{D}{\to} \mathcal{N} (0, 1).
+	\]
+\end{eg}
+\begin{explanation}
+	From \autoref{col:asymptotic-distribution-odd-sample-central-moment} and the symmetry of normal distribution,
+	\[
+		\sqrt{n} \frac{M_3}{\hat{\sigma} _n^3}
+		\overset{D}{\to} \mathcal{N} (0, \sigma ^{-6} \Var_{}[Y^3 - 3 \sigma ^2 Y] )
+		= \mathcal{N} (0, \sigma ^{-6} \left( \Var_{}[Y^3] + 9 \sigma ^4 \sigma ^2 - 6 \sigma ^2 \mathbb{E}_{}[Y^4] \right) )
+	\]
+	where  \(\mu _2 = \sigma ^2\) and \(\Cov_{}\left[Y^3 , Y\right] = \mathbb{E}_{}[Y^4] - \mathbb{E}_{}[Y] \mathbb{E}_{}[Y^3] = \mathbb{E}_{}[Y^4] \). Hence, by plugging \(\Var_{}[Y^3] = \mu _{2 \times 3} = \mu _6\), the variance of the normal is further equal to
+	\[
+		\frac{\mu _6 + 9 \sigma ^6 - 6 \sigma ^2 \mu _4}{\sigma ^6}
+		= \widetilde{\mu} _6 + 9 - 6 \widetilde{\mu} _4
+		= 15 + 9 - 6 \times 3
+		= 6,
+	\]
+	which provides the result.
+\end{explanation}
 
 For even \(k\), we really need to work out the joint. Since we know the asymptotic distribution of both \(M_k\) and \(\hat{\sigma} _k\), the joint with can be obtained by \(g(M_k , \hat{\sigma} _2) = \vert M_k / \hat{\sigma} ^k \vert \) with the \hyperref[thm:delta-method]{delta method}, with the multivariate version of \autoref{thm:CLT} since we now have two quantities.
 

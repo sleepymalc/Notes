@@ -103,7 +103,7 @@ This implies that for \(X \in L^{2k}\) for any \(k > 2\),
 				                                            \mu _k    \\
 			                                            \end{pmatrix} \right)
 		= \frac{1}{\sqrt{n} } & \sum_{i=1}^{n}  \begin{pmatrix}
-			                                        Y_i - \sigma ^2                   \\
+			                                        Y_i^2 - \sigma ^2                 \\
 			                                        Y_i^k - \mu _k - k \mu _{k-1} Y_i \\
 		                                        \end{pmatrix} + o_p(1)                                                                                                     \\
 		                      & \overset{D}{\to} \mathcal{N} \left( \begin{pmatrix}
@@ -183,13 +183,19 @@ With this explicit formula, we now see one example.
 \begin{eg}
 	Consider using both \(\widetilde{M} _3\) and \(\widetilde{M} _4\) to test \(H_0\colon X \sim \mathcal{N} \). We see that under \(H_0\),
 	\[
-		\left( \sqrt{\frac{n}{\widetilde{v} _3}} \widetilde{M} _3 \right) ^2 + \left( \sqrt{\frac{n}{\widetilde{v} _4}} (\widetilde{M} _4 - \mu _4) \right) ^2
+		\left( \sqrt{\frac{n}{\widetilde{v} _3}} \widetilde{M} _3 \right) ^2 + \left( \sqrt{\frac{n}{\widetilde{v} _4}} (\widetilde{M} _4 - \widetilde{\mu} _4) \right) ^2
 		\overset{D}{\to} \chi _2^2 .
 	\]
 \end{eg}
 \begin{explanation}
-	One can write down \(\sqrt{n} (\widetilde{M} _\ell , \widetilde{\mu} _\ell )\) for even \(\ell \), and also \(\sqrt{n} (\widetilde{M} _k - \widetilde{\mu} _k)\) for odd \(k\), and see that the covariance indeed is \(0\), hence independent, so they add up to \(\chi _2^2\).
+	One can write down \(\sqrt{n} (\widetilde{M} _\ell - \widetilde{\mu} _\ell )\) for even \(\ell \), and also \(\sqrt{n} (\widetilde{M} _k - \widetilde{\mu} _k)= \sqrt{n} \widetilde{M} _k\) for odd \(k\), and see that while they both converge to \(\mathcal{N} (0, 1)\), their covariance is \(0\), i.e., asymptotically independent, so the square of them add up to \(\chi _2^2\).
 \end{explanation}
+
+Generalizing the above example, for any \(X\) with \(k > 1\) odd and \(\ell > 2\) even, such that every odd central moments vanish with \(\widetilde{v} _k , \widetilde{v} _\ell < \infty \),
+\[
+	\frac{n}{\widetilde{v} _k} \widetilde{M} _k^2 + \frac{n}{\widetilde{v} _\ell }(\widetilde{M} _\ell - \widetilde{\mu} _\ell )^2 \overset{D}{\to} \chi _2^2
+\]
+from exactly the same argument.
 
 \subsection{Asymptotic Relative Efficiency}
 Assume \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \operatorname{Pois}(\theta ) \). To estimate \(\theta \), as \(\theta = \mathbb{E}_{}[X] = \Var_{}[X] \), two natural estimators are \(\overline{X} _n\) and \(\hat{\sigma} _n^2\). To compare them, we see that
@@ -197,30 +203,31 @@ Assume \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \operatorname{Pois}(\t
 	\item \(\sqrt{n} (\overline{X} _n - \theta ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\);
 	\item \(\sqrt{n} (\hat{\sigma} _n^2 - \theta ) \overset{D}{\to} \mathcal{N} (0, \mu _4 - \sigma ^4)\).
 \end{itemize}
-As \(\sigma ^2 = \theta \) and \(\mu _4 = 3 \theta ^2 + \theta \), we see that \(\overline{X} _n\) is better since its variance is smaller.
+As \(\sigma ^2 = \theta \) and \(\mu _4 = 3 \theta ^2 + \theta \), we see that \(\overline{X} _n\) is better since its variance is smaller. To further quantify how much better is it, we can ask how many data we need such that we get a similar precision. Consider
+\[
+	\sqrt{n} (T_n^i - \theta )
+	\overset{D}{\to} \mathcal{N} (0, \sigma _i^2(\theta ))
+\]
+for two statistics \(T_i\), \(i = 1, 2\). This implies
+\[
+	\mathbb{P} \left( \theta \in T_n^i \pm Z_{\alpha / 2} \frac{\sigma _i(\theta )}{\sqrt{n} } \right) \cong 1 - \alpha .
+\]
+Let \(I_n^{(i)} \coloneqq T_n^i \pm Z_{\alpha / 2} \sigma _i(\theta ) / \sqrt{n} \), and let \(n_i\) be the value of \(n\) such that \(\vert I_n^{(i)} \vert = \gamma \),
+\[
+	\gamma = 2 Z_{\alpha / 2} \frac{\sigma _i(\theta )}{\sqrt{n_i} }
+	\implies n_i = \left( \frac{2 Z_{\alpha / 2}}{\gamma } \sigma _i(\theta ) \right)^2 ,
+\]
+i.e., \(n_1 / n_2 = \sigma _1(\theta )^2 / \sigma _2(\theta )^2\). We called this the \hyperref[def:asymptotic-relative-efficiency]{asymptotic relative efficiency} \(\operatorname{ARE}(T^1, T^2) \).
 
-\begin{problem*}
-	But by how much?
-\end{problem*}
-\begin{answer}
-	We can consider how many data we need such that we get a similar precision. Consider
+\begin{definition}[Asymptotic relative efficiency]\label{def:asymptotic-relative-efficiency}
+	The \emph{asymptotic relative efficiency} between two statistics \(T^1_n\) and \(T^2_n\) for \(\theta \) such that \(\sqrt{n} (T_n^i - \theta ) \overset{D}{\to} \mathcal{N} (0, \sigma _i^2(\theta ))\) is defined as
 	\[
-		\sqrt{n} (T_n^i - \theta )
-		\overset{D}{\to} \mathcal{N} (0, \sigma _i^2(\theta ))
+		\operatorname{ARE}(T^1, T^2) = \frac{\sigma _1(\theta )^2}{\sigma _2(\theta )^2}.
 	\]
-	for two statistics \(T_i\), \(i = 1, 2\). This implies
-	\[
-		\mathbb{P} \left( \theta \in T_n^i \pm Z_{\alpha / 2} \frac{\sigma _i(\theta )}{\sqrt{n} } \right) \cong 1 - \alpha .
-	\]
-	Let \(I_n^{(i)} \coloneqq T_n^i \pm Z_{\alpha / 2} \sigma _i(\theta ) / \sqrt{n} \), and let \(n_i\) be the value of \(n\) such that \(\vert I_n^{(i)} \vert = \gamma \),
-	\[
-		\gamma = 2 Z_{\alpha / 2} \frac{\sigma _i(\theta )}{\sqrt{n_i} }
-		\implies n_i = \left( \frac{2 Z_{\alpha / 2}}{\gamma } \sigma _i(\theta ) \right)^2 ,
-	\]
-	i.e., \(n_1 / n_2 = \sigma _1(\theta )^2 / \sigma _2(\theta )^2\), which we called the \emph{asymptotic relative efficiency} \(\operatorname{ARE}(T^1, T^2) \).
-\end{answer}
+\end{definition}
 
-Now, we consider \(\overline{X} _n\) as the estimator of \(\theta \). We have \(\sqrt{n} (\overline{X} _n - \theta ) \overset{D}{\to} \sqrt{\theta } \mathcal{N} (0, 1) = \mathcal{N} (0, \theta )\).
+\subsection{Variance Stabilizing Transformation}
+Now, say we use \(\overline{X} _n\) as the estimator of \(\theta \). We have \(\sqrt{n} (\overline{X} _n - \theta ) \overset{D}{\to} \sqrt{\theta } \mathcal{N} (0, 1) = \mathcal{N} (0, \theta )\).
 
 \begin{note}
 	As the asymptotic distribution depends on \(\theta \), we don't directly get a confidence interval.
@@ -255,4 +262,8 @@ Then, the asymptotic confidence interval for \(g(\theta )\) with confidence leve
 \[
 	\left( g(\overline{X} _n) - Z_{\alpha / 2} \frac{c}{\sqrt{n} } , g(\overline{X} _n) + Z_{\alpha / 2} \frac{c}{\sqrt{n} } \right),
 \]
-and apply \(g^{-1} \) to get back \(\theta \). In this case, \(g^{-1} (u) = u^2\). This is the so-called \emph{variance stabilizing transformation}.
+and hence an asymptotic confidence interval for \(\theta \) with confidence level \(1 - \alpha \) is just
+\[
+	\left( g^{-1} \left( g(\overline{X} _n) - Z_{\alpha / 2} \frac{c}{\sqrt{n} } \right) , g^{-1} \left( g(\overline{X} _n) + Z_{\alpha / 2} \frac{c}{\sqrt{n} } \right) \right),
+\]
+In our case, \(g^{-1} (u) = u^2\). This is the so-called \emph{variance stabilizing transformation}, and can be easily generalized.

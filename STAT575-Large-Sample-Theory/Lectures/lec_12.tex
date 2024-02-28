@@ -21,7 +21,7 @@ With \hyperref[thm:multivariate-CLT]{multivariate central limit theorem}, we con
 	From \autoref{prop:inference-mean} and \autoref{prop:inference-variance},
 	\begin{itemize}
 		\item \(\sqrt{n} (\overline{X} _n - \mu ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\) from \(\sqrt{n} (\overline{X} _n - \mu ) = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} Y_i\), assuming \(X \in L^2\);
-		\item \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \overset{D}{\to} \mathcal{N} (0, \mu _4 - \sigma ^4) \) from \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^2 - \sigma ^2) + o_p(1)\), assuming that \(X \in L^4\) and \(\widetilde{\mu} _4 > 1\).
+		\item \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) \overset{D}{\to} \mathcal{N} (0, \mu _4 - \sigma ^4) \) from \(\sqrt{n} (\hat{\sigma} _n^2 - \sigma ^2) = \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^2 - \sigma ^2) + o_p(1)\), assuming \(X \in L^2\).\footnote{The former asymptotic distribution result needs the assumption of \(X \in L^4\) and \(\widetilde{\mu} _4 > 1\).}
 	\end{itemize}
 \end{prev}
 
@@ -33,7 +33,7 @@ We see that we have results for \(\overline{X} _n\) and \(\hat{\sigma} _n^2\), b
 Specifically, we have the following.
 
 \begin{proposition}\label{prop:joint-asymptotic-distribution-sample-mean-variance}
-	If \(X \in L^4\),
+	If \(X \in L^2\),
 	\[
 		\sqrt{n} \left( \begin{pmatrix}
 				\overline{X} _n   \\
@@ -45,16 +45,26 @@ Specifically, we have the following.
 		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \begin{pmatrix}
 			Y_i               \\
 			Y_i^2 - \sigma ^2 \\
-		\end{pmatrix} + o_p(1)
+		\end{pmatrix} + o_p(1).
+	\]
+	Moreover, if \(X \in L^4\) and \(\widetilde{\mu} _4 = \mu _4 - \sigma ^4 > 1\), then
+	\[
+		\sqrt{n} \left( \begin{pmatrix}
+				\overline{X} _n   \\
+				\hat{\sigma} _n^2 \\
+			\end{pmatrix} - \begin{pmatrix}
+				\mu       \\
+				\sigma ^2 \\
+			\end{pmatrix} \right)
 		\overset{D}{\to} \mathcal{N} \left( \begin{pmatrix}
 			0 \\
 			0 \\
 		\end{pmatrix}, \Var_{}\left[\begin{pmatrix}
 				Y   \\
 				Y^2 \\
-			\end{pmatrix} \right] \right),
+			\end{pmatrix} \right] \right)
 	\]
-	where the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem} can be applied when \(\widetilde{\mu} _4 = \mu _4 - \sigma ^4 > 1\) with
+	by the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem} with
 	\[
 		\Var_{}\left[\begin{pmatrix}
 				Y   \\
@@ -81,18 +91,18 @@ Let's leave the application of the \hyperref[thm:delta-method]{delta method} to 
 	The actual characterization of \(\overline{X} _n\) and \(\hat{\sigma} _n^2\) right before applying \hyperref[thm:CLT]{central limit theorem} is much more useful than the final asymptotic distributions.
 \end{note}
 
-Next, we compute the asymptotic law of \(\widetilde{M} _k = M_k / \hat{\sigma} _n^k\) for general \(k > 2\). Following a similar calculation, for \(\hat{\sigma} _n^k\), we can again use the result for \(\hat{\sigma} _n^2\), i.e., \autoref{prop:inference-variance}. However, for \(M_k\), recall the following.
+Next, we compute the asymptotic law of \(\widetilde{M} _k = M_k / \hat{\sigma} _n^k\) for general \(k > 2\). Following a similar calculation, for \(\hat{\sigma} _n^k\), we can again use the result for \(\hat{\sigma} _n^2\), i.e., \autoref{prop:inference-variance}.
 
 \begin{prev}
-	From \autoref{thm:asymptotic-distribution-sample-central-moment}, if \(X \in L^{2k}\),
+	From \autoref{thm:asymptotic-distribution-sample-central-moment}, if \(X \in L^{k}\),
 	\[
 		\sqrt{n} (M_k - \mu _k)
 		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} (Y_i^k - \mu _k - k \mu _{k-1} Y_i) + o_p(1),
 	\]
-	and \(\sqrt{n} (M_k - \mu _k) \to \mathcal{N} (0, \Var_{}[Y^k - k \mu _{k-1} Y] )\) if the variance is strictly positive.
+	and \(\sqrt{n} (M_k - \mu _k) \to \mathcal{N} (0, \Var_{}[Y^k - k \mu _{k-1} Y] )\) if \(X \in L^{2k}\) and the variance is strictly positive.
 \end{prev}
 
-This implies that for \(X \in L^{2k}\) for any \(k > 2\),
+This implies that for \(X \in L^{k}\) for any \(k > 2\),
 \[
 	\begin{split}
 		Y \coloneqq \sqrt{n} \left( \begin{pmatrix}
@@ -115,24 +125,21 @@ This implies that for \(X \in L^{2k}\) for any \(k > 2\),
 			                                                                            \end{pmatrix} \right)
 	\end{split}
 \]
-where the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem} can be applied exactly when \(\Var_{}[Y^k - k \mu _{k-1} Y] > 0\). This ``\(Y\)'' will be used in the \hyperref[thm:delta-method]{delta method} later.\footnote{This is not exact since \(Y\) should be the random vector corresponding the asymptotic distribution on the right-hand side. But this is fine in the end as we will soon see.}
+where the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem} can be applied when \(X \in L^{2k}\) and \(\Var_{}[Y^k - k \mu _{k-1} Y] > 0\). This ``\(Y\)'' will be used in the \hyperref[thm:delta-method]{delta method} later.\footnote{This is not exact since \(Y\) should be the random vector corresponding the asymptotic distribution on the right-hand side. But this is fine in the end as we will soon see.}
 
 \begin{remark}
-	In general \(k\), if \(\mu _{\ell } = 0\) for all odd \(\ell \), then \(M_k\) and \(\hat{\sigma} _n^2\) are again asymptotically independent. This is why we get a simplification for odd case in \autoref{col:asymptotic-distribution-odd-sample-central-moment}.
+	In general \(k\), if \(\mu _{\ell } = 0\) for all odd \(\ell \), then \(M_k\) and \(\hat{\sigma} _n^2\) are asymptotically independent. This is why we get a simplification for odd case in \autoref{col:asymptotic-distribution-odd-sample-central-moment}.
 \end{remark}
-\begin{explanation}
-	Since then \(\Cov_{}[Y^2 , Y^k - k \mu _{k-1} Y] = 0\) for odd \(k\).
-\end{explanation}
 
 Putting everything together formally, we have the following result for general \(k\).
 
 \begin{theorem}\label{thm:asymptotic-distribution-sample-standardized-central-moment}
-	Let \(X \in L^{2k}\) for some \(k > 2\). Then for \(Z = (X - \mu ) / \sigma = Y / \sigma \),
+	Let \(X \in L^{k}\) for some \(k > 2\). Then for \(Z = (X - \mu ) / \sigma = Y / \sigma \),
 	\[
 		\sqrt{n} (\widetilde{M} _k - \widetilde{\mu} _k)
 		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \left( -\frac{k}{2} \widetilde{\mu} _k (Z_i^2 - 1) + (Z_i^k - \widetilde{\mu} _k - k \widetilde{\mu} _{k-1} Z_i ) \right) + o_p(1).
 	\]
-	If \(\widetilde{v} _k \coloneqq \Var_{}\left[-\frac{k}{2} \widetilde{\mu} _k Z^2 + Z^k - k \widetilde{\mu} _{k-1} Z \right] > 0\), then \(\sqrt{n} (\widetilde{M} _k - \widetilde{\mu} _k) \overset{D}{\to} \mathcal{N} (0, \widetilde{v} _k)\).
+	Moreover, if \(X \in L^{2k}\) and \(\widetilde{v} _k \coloneqq \Var_{}\left[- \frac{k}{2} \widetilde{\mu} _k Z^2 + Z^k - k \widetilde{\mu} _{k-1} Z \right] > 0\), then \(\sqrt{n} (\widetilde{M} _k - \widetilde{\mu} _k) \overset{D}{\to} \mathcal{N} (0, \widetilde{v} _k)\).
 \end{theorem}
 \begin{proof}
 	Since \autoref{prop:inference-variance} is for \(\hat{\sigma} _n^2\) but not \(\hat{\sigma} _n^k\), we need to use \hyperref[thm:delta-method]{delta method} by considering

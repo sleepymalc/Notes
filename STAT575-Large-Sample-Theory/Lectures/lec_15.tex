@@ -1,0 +1,122 @@
+\lecture{15}{5 Mar.\ 9:30}{Inference for Cumulative Density Function}
+Surprisingly, we have a uniform result over \(t\).
+
+\begin{theorem}[Glivenko-Cantelli]\label{thm:Glivenko-Cantelli}
+	Given a CDF \(F\), \(\lVert \hat{F} _n - F \rVert _\infty \overset{\text{a.s.} }{\to} 0\) as \(n \to \infty \).
+\end{theorem}
+\begin{proof}
+	Fix some \(\epsilon > 0\), and let \(\epsilon > 2 / k\) for some \(k \in \mathbb{N} \). Then, for any \(t_1, \dots , t_{k-1}\), \(\hat{F} _n (t_j) \overset{\text{a.s.} }{\to } F(t_j)\) and \(\hat{F} _n(t_j^-) \overset{\text{a.s.} }{\to} F(t_j^-)\) for every \(1 \leq j \leq k-1\) from the strong law of large number. This means that there exists \(n_0\) such that for \(n \geq n_0\), for every \(\omega \notin N\) such that \(\mathbb{P} (N) = 0\),
+	\[
+		\vert \hat{F} _n(t_j, \omega ) - F(t_j, \omega ) \vert < \frac{1}{k} ,\text{ and }
+		\vert \hat{F} _n(t_j^-, \omega ) - F(t_j^-, \omega ) \vert < \frac{1}{k}.
+	\]
+	Now, let \(t_j = \inf \{ t \in \mathbb{R} \colon F(t) > j / k \}\) for \(1 \leq j \leq k-1\), and \(t_0 \coloneqq -\infty \), \(t_k = \infty \). Then for any \(t\), there exists a unique \(j\) such that \(t \in (t_{j-1}, t_j)\), and furthermore, for all \(n \geq n_0\),\todo{?}
+	\[
+		\hat{F} _n(t) - F(t)
+		\leq \hat{F} _n(t_j^-) - F(t_{j-1})
+		= \hat{F} _n(t_j^-) - F(t_j^-) + F(t_j^-) - F(t_{j-1})
+		\leq \frac{1}{k} + \frac{j}{k} - \frac{j-1}{k}
+		= \frac{2}{k}
+		< \epsilon
+	\]
+	Similarly, we can show \(\hat{F} _n(t) - F(t) > - \epsilon \), which completes the proof.
+\end{proof}
+
+\begin{prev}
+	\(Z_n(t) \coloneqq \sqrt{n} (F(t) - \hat{F} _n(t)) \overset{D}{\to} B_F(t) \coloneqq \mathcal{N} (0, F(t) (1 - F(t)))\), and for every \(t_1, \dots , t_m\),
+	\[
+		(Z_n(t_1), \dots , Z_n(t_m)) \overset{D}{\to} (B_F(t_1), \dots , B_F(t_m)) \sim \mathcal{N} (0, \Sigma _F(t_1, \dots , t_m)).
+	\]
+\end{prev}
+
+We will take for granted that \(Z_n \coloneqq (t \mapsto Z_n(t))_{n \geq 1} \overset{\text{w} }{\to} B_F \coloneqq \{ t \mapsto B(t) \} \).
+
+\begin{definition}[Brownian bridge]\label{def:Brownian-bridge}
+	A \emph{Brownian bridge} is \(B \coloneqq B_F\) when \(F(t) = t\), i.e., \(F \sim \mathcal{U} ([0, 1])\).
+\end{definition}
+
+If \(F \mapsto T(F) \in \mathbb{R} \) is continuous,\footnote{I.e., when \(\lVert G_n - F \rVert _\infty \to 0\), \(T(G_n) \to F(F)\).} from \hyperref[thm:continuous-mapping]{continuous mapping theorem}, \(T(Z_n) \overset{\text{w} }{\to} T(B_F)\), which follows from empirical process theory.
+
+\begin{eg}
+	For \(T(F) = \lVert F \rVert _\infty \), \(T(Z_n) \overset{\text{w} }{\to} T(B_F)\) implies \(\sqrt{n} \lVert F - \hat{F} _n \rVert _\infty \overset{\text{w} }{\to} \lVert B_F \rVert _\infty\). This allows us to do inference. Consider \(\alpha = \mathbb{P} (\lVert B_F \rVert _\infty \geq d_\alpha )\) for some \(d_\alpha \), then \(\mathbb{P} (\sqrt{n} \lVert F - \hat{F} _n \rVert _\infty \geq d_\alpha ) \to \alpha\), i.e.,
+	\[
+		\mathbb{P} \left(\forall t \colon - \frac{d_\alpha }{\sqrt{n} } \leq \hat{F} _n(t) - F(t) \leq \frac{d_\alpha }{\sqrt{n} } \right) \to 1 - \alpha .
+	\]
+\end{eg}
+
+\begin{eg}
+	For \(T(F) = \int F^2 \,\mathrm{d} F_0\) for some cdf \(F_0\). This is continuous since
+	\[
+		\begin{split}
+			\vert T(G_n) - T(F) \vert
+			 & = \left\vert \int F^2_n - F^2 \,\mathrm{d} F_0 \right\vert \\
+			 & \leq \int \vert G_n^2 - F^2 \vert \,\mathrm{d} F_0
+			\leq \lVert G_n - F \rVert _\infty \int \vert G_n + F \vert \,\mathrm{d} F_0
+			\leq 2 \lVert G_n - F \rVert _\infty
+		\end{split}
+	\]
+	since \(\lVert G_n - F \rVert _\infty = \sup _t \vert G_n(t) - F(t) \vert \). This gives
+	\[
+		n \int (\hat{F} _n - F)^2 \,\mathrm{d} F_0
+		\overset{\text{w} }{\to} \int B_F^2 \,\mathrm{d} F_0.
+	\]
+	Consider \(H_0 \colon F = F_0\), e.g., \(F_0 \sim \mathcal{N} (0, 1)\).
+	\begin{itemize}
+		\item \emph{Kolmogorov-Smirnv statistic}: Reject \(H_0\) when \(\sqrt{n} \lVert \hat{F} _n - F_0 \rVert _\infty \geq d_\alpha \).
+		\item \emph{Cramer-Von Mises statistic}: Reject \(H_0\) when \(n \int (\hat{F} _n - F_0)^2 \,\mathrm{d} F_0 \geq c_\alpha ^2\).
+	\end{itemize}
+\end{eg}
+
+\begin{proposition}
+	For any \(F \neq F_0\), \(\mathbb{P} _F(\text{reject} ) \to 1\) as \(n \to \infty \).
+\end{proposition}
+\begin{proof}
+	For any metric \(d\), we have
+	\[
+		\mathbb{P} _F (\sqrt{n} d(\hat{F} _n, F_0) \geq d_\alpha )
+		\geq \mathbb{P} _F(\sqrt{n} (d(\hat{F} _n, F) - d(F, F_0))\geq d_\alpha )
+		= \mathbb{P} _F(\sqrt{n} d(\hat{F} _n, F) \geq d_\alpha + \sqrt{n} d(F, F_0)).
+	\]
+	As \(F \neq F_0\), \(d(F, F_0) > 0\), so \(\sqrt{n} d(F, F_0) \to \infty \); on the other hand, since \(\sqrt{n} d(\hat{F} _n, F)\) converges to some limit, i.e., \hyperref[def:bounded-in-probability]{bounded in probability}, the right-hand side goes to \(1\).
+\end{proof}
+
+Under \(H_0 \colon F = F_0\),
+\[
+	C_n = n \int (\hat{F} _n - F_0)^2 \,\mathrm{d} F_0
+	\overset{H_0}{\to } \int B_F^2 \,\mathrm{d} F_0.
+\]
+However, if \(F \neq F_0\), what's the distribution now? Consider
+\[
+	h(F) \coloneqq \int (F - F_0)^2 \,\mathrm{d} F_0.
+\]
+Since \(h\) is continuous, \(h(\hat{F} _n) \to h(F) \). We see that
+\[
+	\sqrt{n} \left( h(\hat{F} _n) - h(F) \right)
+	\to \mathcal{N} (0, \ast)?
+\]
+In particular,
+\[
+	\sqrt{n} \left( h(\hat{F} _n) - h(F) \right)
+	= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} g(X_i) + o_p(1).
+\]
+Since
+\[
+	\begin{split}
+		h(\hat{F} _n)
+		 & = \int (\hat{F} _n - F_0)^2 \,\mathrm{d} F_0                                                                                                             \\
+		 & = \int (\hat{F} _n - F + F - F_0)^2 \,\mathrm{d} F_0                                                                                                     \\
+		 & = \int (\hat{F} _n - F)^2 \,\mathrm{d} F_0 + \underbrace{\int (F - F_0)^2 \,\mathrm{d} F_0}_{h(F)} + 2 \int (\hat{F} _n - F) (F - F_0) \,\mathrm{d} F_0.
+	\end{split}
+\]
+Hence,
+\[
+	\sqrt{n} \left( h(\hat{F} _n) - h(F) \right)
+	= \sqrt{n} \int (\hat{F} _n - F)^2 \,\mathrm{d} F_0 + \sqrt{n} \int (\hat{F} _n - F) (F - F_0) \,\mathrm{d} F_0.
+\]
+As \(n \int (\hat{F} _n - F)^2 \,\mathrm{d} F_0 \overset{\text{w} }{\to} \int B_F^2 \,\mathrm{d} F_0\),
+\[
+	\sqrt{n} \int (\hat{F} _n - F)^2 \,\mathrm{d} F_0
+	= \frac{n}{\sqrt{n} } \int (\hat{F} _n - F)^2 \,\mathrm{d} F_0
+	= \frac{O_p(1)}{\sqrt{n} }
+	= o_p(1).
+\]

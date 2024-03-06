@@ -1,4 +1,4 @@
-\chapter{Fundamental Theorems of Probability and Applications to Inference}
+\chapter{Fundamental Theorems of Probability}
 \lecture{10}{15 Feb.\ 9:30}{Law of Large Number and Central Limit Theorem}
 With the tools we developed, we can then prove the fundamental theorems of probability, i.e., the \hyperref[thm:WLLN]{weak law of large number} and the \hyperref[thm:CLT]{central limit theorem}. Then we see some applications to inferences.
 \section{Weak Law of Large Number}
@@ -21,7 +21,7 @@ The first result, \hyperref[thm:WLLN]{weak law of large number}, states that the
 		\left( \phi (t / n) \right) ^n
 		= \left( 1 + \frac{t}{n} \int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u  \right) ^n .
 	\]
-	Since \((1 + a_n)^n \to e^c\) if \(n a_n \to c\), it remains to show \(\int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u \to ic\). First, if \(\phi ^{\prime} (t)\) is continuous at \(0\), as \(n \to \infty \)
+	Since \((1 + a_n)^n \to e^c\) if \(n a_n \to c\), it remains to show \(\int_{0}^{1} \phi ^{\prime} (u t / n) \,\mathrm{d}u \to ic\). First, \(\phi ^{\prime} (t)\) is continuous at \(0\) from \autoref{col:characteristic-function-derivative-uniform-continuous},\footnote{We see that assuming \(\phi \) is differentiable at \(0\) such that \(\phi ^{\prime} (0) = ic\) is enough.} as \(n \to \infty \)
 	\[
 		\phi ^{\prime} (u t / n) \to \phi ^{\prime} (0) = i \mathbb{E}_{}[X] = ic.
 	\]
@@ -33,10 +33,6 @@ The first result, \hyperref[thm:WLLN]{weak law of large number}, states that the
 	\]
 	since we can now pass the limit inside the integral.
 \end{proof}
-
-\begin{remark}
-	We don't need to assume \(\mathbb{E}_{}[\vert X_i \vert ] < \infty \); instead, assuming \(\phi \) is differentiable at \(0\) such that \(\phi ^{\prime} (0) = ic\) is enough.
-\end{remark}
 
 Although we will not show, but the following stronger version of law of large number holds.
 
@@ -111,21 +107,24 @@ We now state the theorem.
 \end{remark}
 
 \section{Inference for Population Mean and Variance}
+We now apply what we proved to the problem of inferences.
+
 \subsection{Population Mean}
 Firstly, let's consider the applications for mean estimation. Let \(X, X_1, \dots , X_n\) be i.i.d.\ samples such that \(\mathbb{E}_{}[X] = \mu < \infty \), \(\Var_{}[X] = \sigma ^2\). If, also, \(X_i\)'s are Gaussian, \(\overline{X} _n \sim \mathcal{N} (\mu , \sigma ^2 / n)\), i.e.,
 \[
 	\frac{\overline{X} _n - \mu }{\sigma / \sqrt{n} } \sim \mathcal{N} (0, 1),
 \]
+In this case, a natural estimator of \(\mu \) is \(\overline{X} _n\), and we have the distribution of \(\overline{X} _n - \mu \), i.e., we know how our estimator perform in terms of distribution, which can in turn provides a confidence interval.
 
 \begin{intuition}
-	We make the distribution independent of parameters to get a confidence interval.
+	We want to make the distribution, specifically, its variance (denominator at the left-hand side) independent of parameters to get a corresponding confidence interval.
 \end{intuition}
 
-Since the left-hand side is not an estimator now since it depends on \(\sigma \). If we replace it by the sample standard deviation \(s_n\), as \(n \to \infty \),
+Right now, our confidence interval depends on \(\sigma \): consider replacing \(\sigma \) by the sample standard deviation \(s_n\), then
 \[
 	T_n \coloneqq \frac{\overline{X} _n - \mu }{s_n / \sqrt{n} } \sim t_{n-1} \overset{\operatorname{TV}}{\to } \mathcal{N} (0, 1)
 \]
-where \(T_n\) follows \(t\)-distribution with \(n-1\) degrees of freedom.
+as \(n \to \infty \), where \(T_n\) follows \(t\)-distribution with \(n-1\) degrees of freedom.
 
 \begin{notation}
 	We let \(s_n^2 \coloneqq \frac{1}{n-1} \sum_{i=1}^{n} (X_i - \overline{X} _n)^2\) and \(\hat{\sigma} _n^2 \coloneqq \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^2\).

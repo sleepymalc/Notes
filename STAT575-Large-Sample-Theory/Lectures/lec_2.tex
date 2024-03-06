@@ -83,7 +83,7 @@ from Markov's inequality. However, the converse is not always true.
 \end{theorem}
 
 \subsection{Consistent Estimator}
-Let \((X_n) \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is a distribution function. Say we're interested in some aspect of \(F\), for example, some parameter \(\theta = T(F) \in \mathbb{R} ^m\). By collecting data \(X_1, \dots , X_n\), we estimate \(\theta \) by computing an estimator \(\hat{\theta} _n\) of \(\theta \).\footnote{\(\hat{\theta} _n\) is a function of \(X_i\)'s.} There are some properties we might want for \(\hat{\theta} _n\).
+Let \((X_n) \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is a distribution function. Say we're interested in some aspect of \(F\), for example, some parameter \(\theta = T(F) \in \mathbb{R} ^m\). By collecting data \(X_1, \dots , X_n\), we estimate \(\theta \) by computing an estimator \(\hat{\theta} _n = \hat{\theta} _n(X_1, \dots , X_n)\) of \(\theta \). There are some properties we might want for \(\hat{\theta} _n\).
 
 \begin{definition}[Consistent]\label{def:consistent}
 	\(\hat{\theta} _n\) is \emph{consistent} of \(\theta \) if \(\hat{\theta} _n \overset{p}{\to } \theta \) as \(n \to \infty \).
@@ -119,7 +119,7 @@ Let's first see the most well-known estimation problem, the mean estimation.
 	\]
 	Now, let \(\hat{\theta} _n\) to be the sample mean, i.e., \(\hat{\theta} _n = \overline{X} _n = \frac{1}{n} \sum_{i=1}^{n} X_i\). From the strong law of large number, \(\overline{X} _n \overset{\text{a.s.} }{\to } \mathbb{E}_{}\left[ X \right] \), which implies that \(\hat{\theta} _n\) is a \hyperref[def:strongly-consistent]{strongly consistent estimator} of \(\theta \).
 
-	On the other hand, if \(\Var_{}\left[X \right] < \infty \), then \(\overline{X} _n \overset{L^2}{\to } \mathbb{E}_{}\left[X \right] \), which further implies \(\overline{X} _n \overset{p}{\to } \mathbb{E}_{}\left[X \right] \), hence \(\hat{\theta} _n\) is \hyperref[def:consistent]{consistent}.\footnote{The latter is true even without \(\Var_{}\left[X \right] = \infty \) as we expect.}
+	On the other hand, if \(\Var_{}\left[X \right] < \infty \), then \(\overline{X} _n \overset{L^2}{\to } \mathbb{E}_{}\left[X \right] \), which further implies \(\overline{X} _n \overset{p}{\to } \mathbb{E}_{}\left[X \right] \), hence \(\hat{\theta} _n\) is \hyperref[def:consistent]{consistent}.\footnote{The latter is true even when \(\Var_{}\left[X \right] = \infty \) as we expect.}
 \end{eg}
 \begin{explanation}
 	We show the last statement. Since \(\Var_{}\left[X \right] < \infty \), then
@@ -135,7 +135,7 @@ Let's first see the most well-known estimation problem, the mean estimation.
 Another interesting problem is the supremum estimation.
 
 \begin{eg}[Supremum estimation]
-	Suppose there is a \(\theta \in \mathbb{R} \) where distribution function \(F\) such that \(F(\theta - \epsilon ) < 1 = F(\theta )\) for all \(\epsilon > 0\), i.e., \(\theta = \sup_{\omega } X(\omega )\) since \(\mathbb{P} (X \leq \theta - \epsilon ) = F(\theta - \epsilon )\) and \(F(\theta ) = \mathbb{P} (X \leq \theta )\).\footnote{Such a distribution exists, for example, \(\mathcal{U} (0, \theta )\).} Then \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i \) is indeed a \hyperref[def:strongly-consistent]{strongly consistent} estimator of \(\theta \).
+	Suppose there is a \(\theta \in \mathbb{R} \) and a distribution function \(F\) such that \(F(\theta - \epsilon ) < 1 = F(\theta )\) for all \(\epsilon > 0\), i.e., \(\theta = \sup_{\omega } X(\omega )\) since \(\mathbb{P} (X \leq \theta - \epsilon ) = F(\theta - \epsilon )\) and \(F(\theta ) = \mathbb{P} (X \leq \theta )\).\footnote{Such a distribution exists, for example, \(\mathcal{U} (0, \theta )\).} Then \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i \) is indeed a \hyperref[def:strongly-consistent]{strongly consistent} estimator of \(\theta \).
 \end{eg}
 \begin{explanation}
 	We see that for any \(\epsilon > 0\),
@@ -144,7 +144,7 @@ Another interesting problem is the supremum estimation.
 			\mathbb{P} (\vert \hat{\theta} _n - \theta \vert > \epsilon )
 			 & = \mathbb{P} (\hat{\theta} _n > \theta + \epsilon ) + \mathbb{P} (\hat{\theta} _n < \theta - \epsilon )                                                  \\
 			 & = \mathbb{P} \left( \bigcup_{i=1}^{n} \{ X_i > \theta + \epsilon \}  \right) + \mathbb{P} \left( \bigcap_{i=1}^{n} \{ X_i < \theta - \epsilon \} \right) \\
-			 & \leq \sum_{i=1}^{n} \underbrace{\mathbb{P} (X > \theta + \epsilon )}_{0} + \prod_{i=1}^{n} \mathbb{P} (X_i < \theta -\epsilon )
+			 & \leq \sum_{i=1}^{n} \underbrace{\mathbb{P} (X_i > \theta + \epsilon )}_{0} + \prod_{i=1}^{n} \mathbb{P} (X_i < \theta -\epsilon )
 			= \left( \mathbb{P} (X_1 < \theta - \epsilon ) \right) ^n
 			\leq \left( F(\theta - \epsilon ) \right) ^n \to 0
 		\end{split}
@@ -161,7 +161,7 @@ Proving convergence of \(\hat{\theta} _n\) is useful, but this might not be enou
 The above suggests that we should look at the \emph{distribution} of \(\hat{\theta} _n - \theta \) in order to say how does \(\hat{\theta} _n \to \theta \).
 
 \begin{eg}[Mean estimation for Gaussian]
-	Suppose \(X \sim \mathcal{N} (\theta , 1)\). Then \(\hat{\theta} _n = \overline{X} _n \sim \mathcal{N} (\theta , 1 / n)\), i.e., \(\sqrt{n} (\hat{\theta} _n - \theta ) \sim \mathcal{N} (0, 1)\). This implies that we can write down a confidence interval (CI) such that \(\hat{\theta} _n \pm 1.96 / \sqrt{n} \) with \(95\%\) CI for \(\hat{\theta} _n\).
+	Suppose \(X \sim \mathcal{N} (\theta , 1)\). Then \(\hat{\theta} _n = \overline{X} _n \sim \mathcal{N} (\theta , 1 / n)\), i.e., \(\sqrt{n} (\hat{\theta} _n - \theta ) \sim \mathcal{N} (0, 1)\), i.e., we can write down a confidence interval such as \(\hat{\theta} _n \pm 1.96 / \sqrt{n} \) with \(95\%\) confidence level for \(\theta \).
 \end{eg}
 
 Doing this for other kind of estimators and \(F\) is not that straightforward and will be challenging.
@@ -191,5 +191,5 @@ Let's see some examples.
 	If \(X_n \to X\) and \(Y_n \to Y\), then \((X_n Y_n) \to (X, Y)\).\footnote{The converse is also true since projections are continuous.} The same holds for \(\overset{\text{a.s.} }{\to } \) and \(\overset{p}{\to } \).
 \end{eg}
 \begin{explanation}
-	\(\lVert (X_n, Y_n) - (X, Y) \rVert \to 0\) since \(\lVert (X_n, Y_n ) - (X, Y) \rVert \leq \lVert X_n - X \rVert + \lVert Y_n - Y \rVert\) for all \(n \geq 1\).\footnote{This can be seen from \(\sqrt{x + y} \leq \sqrt{x} + \sqrt{y} \).} The latter two terms goes to \(0\) (in whatever sense) by assumption.
+	\(\lVert (X_n, Y_n) - (X, Y) \rVert \to 0\) since \(\lVert (X_n, Y_n ) - (X, Y) \rVert \leq \lVert X_n - X \rVert + \lVert Y_n - Y \rVert\) for all \(n \geq 1\).\footnote{This can be seen from \(\sqrt{x + y} \leq \sqrt{x} + \sqrt{y} \).} The latter two terms go to \(0\) (in whatever sense) by assumption.
 \end{explanation}

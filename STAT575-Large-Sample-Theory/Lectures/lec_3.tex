@@ -1,32 +1,28 @@
 \lecture{3}{25 Jan.\ 9:30}{Weak Convergence Portmanteau Theorem}
 \section{Weak Convergence}
-All convergences we have discussed are in some senses ``point-wise'' but not ``distribution-wise'', and the latter is more powerful. Consider working with a probability space \((\Omega , \mathscr{F} , \mathbb{P} )\) and the following.
+The convergences we have seen are not ``distribution-wise'' since to evaluate \(\lVert X_n - X \rVert \), \(X_n\) and \(X\) need to be defined on the same probability space. If all we care about is distribution, consider probability spaces \((\Omega _n, \mathscr{F} _n, \mathbb{P} _n)\) (and \((\Omega , \mathscr{F} , \mathbb{P} )\)) for which \(X_n\) (and \(X\)) is defined on.
 
 \subsection{Convergence in Total Variation}
 \begin{definition}[Total variation]\label{def:total-variation}
-	The \emph{total variation} distance between \(X\) and \(Y\) in \(\Omega \) is defined as
+	The \emph{total variation} distance between \(X\) and \(Y\) on \(\Omega \) is defined as
 	\[
 		\operatorname{TV}(X, Y) = \sup_{B \in \mathscr{F} } \left\vert \mathbb{P} (X \in B) - \mathbb{P} (Y \in B) \right\vert
 	\]
 \end{definition}
 
-Returning to our situation, consider a sequence or random variables \((X_n)\) and a random variable \(X\).
-
-\begin{remark}
-	If \(X_n\) has density \(f_n\) and \(X\) has density \(f\), then \(\operatorname{TV}(X_n, X) = \frac{1}{2} \int \vert f_n - f \vert \).
-\end{remark}
+The above makes sense even if \(X\) and \(Y\) are defined on different probability spaces, e.g., in our situation, consider a sequence or random variables \((X_n)\) and a random variable \(X\).
 
 \begin{definition}[Converge in total variation]\label{def:converge-in-total-variation}
 	\((X_n)\) \emph{converges in total variation} to \(X\), denoted as \(X_n \overset{\operatorname{TV}}{\to } X\), if \(\operatorname{TV}(X_n, X) \to 0\) as \(n \to \infty \).
 \end{definition}
 
-\begin{remark}
-	If \(X_n\) and \(X\) have densities \(f_n\) and \(f\), \(f_n \to f\) implies \(X_n \overset{\operatorname{TV} }{\to } X\) from \hyperref[thm:Scheffe]{Scheffé's theorem}.
-\end{remark}
-
 \begin{note}
-	The above could make sense even if \(X_n\) is defined on different \((\Omega _n , \mathscr{F} _n, \mathbb{P} _n)\) for every \(n\).
+	Specifically, \(X_n \overset{\operatorname{TV}}{\to } X\) if \(\mathbb{P} _n(X_n \in B) \to \mathbb{P} (X \in B)\) for all \(B \in \mathcal{B} (\mathbb{R} ^d)\).
 \end{note}
+
+\begin{remark}
+	If \(X_n\) has density \(f_n\) and \(X\) has density \(f\), then \(\operatorname{TV}(X_n, X) = \frac{1}{2} \int \vert f_n - f \vert \), hence \(f_n \to f\) implies \(X_n \overset{\operatorname{TV} }{\to } X\) from \hyperref[thm:Scheffe]{Scheffé's theorem}.
+\end{remark}
 
 \begin{eg}
 	If \(X_n \sim \operatorname{Bin}(n, p_n) \) such that \(n p_n \to \lambda \in \mathbb{R} \), then \(X_n \sim \operatorname{Bin}(n, p_n) \overset{\operatorname{TV} }{\to } X \sim \operatorname{Pois}(\lambda )\).
@@ -46,7 +42,7 @@ However, \hyperref[def:converge-in-total-variation]{convergence in total variati
 This suggests that we should look at something weaker.
 
 \begin{definition}[Converge weakly]\label{def:converge-weakly}
-	\((X_n)\) \emph{converges weakly} to \(X\), denoted as \(X_n \overset{\text{w} }{\to } X\), if for all bounded continuous \(g \colon \mathbb{R} ^d \to \mathbb{R} \), \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right]\).
+	\((X_n)\) \emph{converges weakly} to \(X\), denoted as \(X_n \overset{\text{w} }{\to } X\), if for all bounded continuous \(g \colon \mathbb{R} ^d \to \mathbb{R} \), \(\mathbb{E}_{n}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right]\).
 \end{definition}
 
 To see how is \hyperref[def:converge-weakly]{weak convergence} compared to \hyperref[def:converge-in-total-variation]{convergence in total variation}, we revisit the above.
@@ -54,7 +50,7 @@ To see how is \hyperref[def:converge-weakly]{weak convergence} compared to \hype
 \begin{eg}
 	Let \(X_n \sim \mathcal{U} \{ 0, 1 / n, \dots , (n-1) / n \} \), which should be converging to \(X \sim \mathcal{U} (0, 1)\). We have
 	\[
-		\mathbb{E}_{}\left[g(X_n) \right]
+		\mathbb{E}_{n}\left[g(X_n) \right]
 		= \sum_{k=0}^{n-1} g(k / n) \left( \frac{k+1}{n} - \frac{k}{n} \right)
 		\to \int_{0}^{1} g(x) \,\mathrm{d}x
 		= \mathbb{E}_{}\left[g(X) \right]
@@ -69,10 +65,10 @@ The following is our main tool of proving \hyperref[def:converge-weakly]{weak co
 	The following are equivalent.
 	\begin{enumerate}[(a)]
 		\item\label{thm:Portmanteau-a} \(X_n \overset{\text{w} }{\to } X\).
-		\item\label{thm:Portmanteau-b} \(\mathbb{E}_{}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right] \) for all bounded Lipschitz \(g \colon \mathbb{R} ^d \to \mathbb{R} \).
-		\item\label{thm:Portmanteau-c} \(\mathbb{P} (X \in A) \leq \liminf_{n \to \infty} \mathbb{P} (X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) open.
-		\item\label{thm:Portmanteau-d} \(\mathbb{P} (X \in A) \geq \limsup_{n \to \infty} \mathbb{P} (X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) closed.
-		\item\label{thm:Portmanteau-e} \(\mathbb{P} (X_n \in A) \to \mathbb{P} (X \in A)\) for all \(A\) such that \(\mathbb{P} (X \in \partial A) = 0\).
+		\item\label{thm:Portmanteau-b} \(\mathbb{E}_{n}\left[g(X_n) \right] \to \mathbb{E}_{}\left[g(X) \right] \) for all bounded Lipschitz \(g \colon \mathbb{R} ^d \to \mathbb{R} \).
+		\item\label{thm:Portmanteau-c} \(\mathbb{P} (X \in A) \leq \liminf_{n \to \infty} \mathbb{P} _{n}(X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) open.
+		\item\label{thm:Portmanteau-d} \(\mathbb{P} (X \in A) \geq \limsup_{n \to \infty} \mathbb{P} _{n}(X _n \in A)\) for all \(A \subseteq \mathbb{R} ^d\) closed.
+		\item\label{thm:Portmanteau-e} \(\mathbb{P} _{n}(X_n \in A) \to \mathbb{P} (X \in A)\) for all \(A \in \mathscr{F} \) such that \(\mathbb{P} (X \in \partial A) = 0\).
 	\end{enumerate}
 \end{theorem}
 
@@ -146,9 +142,9 @@ Then we can prove the \hyperref[thm:Portmanteau]{Portmanteau theorem}.
 		\begin{align*}
 			\mathbb{P} (X \in A)
 			= 1 - \mathbb{P} (X \in A^{c} )
-			 & \leq 1 - \limsup_{n \to \infty} \mathbb{P} (X_n \in A^{c} )             \tag*{\autoref{thm:Portmanteau-d}} \\
-			 & = 1 - \limsup_{n \to \infty} \left( 1 - \mathbb{P} (X_n \in A ) \right)
-			= \liminf_{n \to \infty} \mathbb{P} (X_n \in A).
+			 & \leq 1 - \limsup_{n \to \infty} \mathbb{P} _{n}(X_n \in A^{c} )             \tag*{\autoref{thm:Portmanteau-d}} \\
+			 & = 1 - \limsup_{n \to \infty} \left( 1 - \mathbb{P} _{n}(X_n \in A ) \right)
+			= \liminf_{n \to \infty} \mathbb{P} _{n}(X_n \in A).
 		\end{align*}
 		\autoref{thm:Portmanteau-c} \(\implies \) \autoref{thm:Portmanteau-d} is exactly the same, hence \autoref{thm:Portmanteau-c} \(\iff \) \autoref{thm:Portmanteau-d}.
 	\end{explanation}
@@ -161,14 +157,14 @@ Then we can prove the \hyperref[thm:Portmanteau]{Portmanteau theorem}.
 	\begin{explanation}
 		From \autoref{lma:approximate-indicator}, there exists bounded Lipschitz \(g_k \searrow \mathbbm{1}_{A} \) such that for all closed \(A\),
 		\[
-			\mathbb{P} (X_n \in A)
-			= \mathbb{E}_{}\left[\mathbbm{1}_{A} (X_n) \right]
-			\leq \mathbb{E}_{}\left[g_k(X_n) \right].
+			\mathbb{P} _{n}(X_n \in A)
+			= \mathbb{E}_{n}\left[\mathbbm{1}_{A} (X_n) \right]
+			\leq \mathbb{E}_{n}\left[g_k(X_n) \right].
 		\]
 		This is true for every \(k\) and \(n\) since \(g_k \geq \mathbbm{1}_{A} \), and by taking the limit as \(n \to \infty \),
 		\[
-			\limsup_{n \to \infty} \mathbb{P} (X_n \in A)
-			\leq \limsup_{n \to \infty} \mathbb{E}_{}\left[g_k(X_n) \right]
+			\limsup_{n \to \infty} \mathbb{P} _{n}(X_n \in A)
+			\leq \limsup_{n \to \infty} \mathbb{E}_{n}\left[g_k(X_n) \right]
 			= \mathbb{E}_{}\left[g_k(X) \right]
 		\]
 		from our assumption \autoref{thm:Portmanteau-b}. Finally, as \(k \to \infty \), it goes to \(\mathbb{E}_{}\left[\mathbbm{1}_{A} (X) \right]

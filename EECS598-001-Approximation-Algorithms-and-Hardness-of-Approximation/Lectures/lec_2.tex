@@ -59,7 +59,6 @@ where \(A\in \mathbb{R} ^{n\times m}\) such that
 
 In this case, we see that the most natural way to get an integer solution from the fractional solution obtained from the relaxed LP is to \textbf{round} \(x\) to integral solution. This leads to the following \hyperref[algo:set-cover-LP-rounding]{algorithm}.
 
-\par
 \begin{algorithm}[H]\label{algo:set-cover-LP-rounding}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:set-cover]{Set cover} -- LP Rounding}
@@ -82,7 +81,7 @@ We now prove the correctness and \autoref{algo:set-cover-LP-rounding}'s approxim
 	\]
 \end{proof}
 
-\begin{theorem}\label{thm:lec2-1}
+\begin{theorem}\label{thm:set-cover-LP-rounding}
 	\autoref{algo:set-cover-LP-rounding} is \(d\)-approximation algorithm.
 \end{theorem}
 \begin{proof}
@@ -105,11 +104,10 @@ We now prove the correctness and \autoref{algo:set-cover-LP-rounding}'s approxim
 \end{definition}
 
 \begin{remark}
-	We see that the \hyperref[def:integrality-gap]{integrality gap} of \autoref{algo:set-cover-LP-rounding} is \(d\) from \autoref{thm:lec2-1}.
+	We see that the \hyperref[def:integrality-gap]{integrality gap} of \autoref{algo:set-cover-LP-rounding} is \(d\) from \autoref{thm:set-cover-LP-rounding}.
 \end{remark}
 
 \subsection{Randomized Linear Programming Rounding}
-
 And indeed, we can use a more natural way to do the rounding, i.e., respect to the \(x_i\) value.
 
 \begin{intuition}
@@ -117,7 +115,7 @@ And indeed, we can use a more natural way to do the rounding, i.e., respect to t
 \end{intuition}
 
 We see that algorithm first.
-\par
+
 \begin{algorithm}[H]\label{algo:set-cover-randomized-LP-rounding}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:set-cover]{Set cover} -- Randomized LP Rounding}
@@ -135,7 +133,7 @@ We see that algorithm first.
 
 Now, the question is, how is this \(\mathcal{S} ^\prime \)'s quality? In other words, fix \(e\in U\), what's \(\Pr(\text{\(e\) is covered})\)?
 
-\begin{lemma}
+\begin{lemma}\label{lma:set-cover-randomized-LP-covered-probability}
 	\(\Pr(\text{\(e\) is covered})\geq 1 - 1/e\approx 0.63\).
 \end{lemma}
 \begin{proof}
@@ -150,7 +148,6 @@ Now, the question is, how is this \(\mathcal{S} ^\prime \)'s quality? In other w
 
 A standard way to boost the correctness of a randomized algorithm is to run it multiple time, which leads to the following.
 
-\par
 \begin{algorithm}[H]\label{algo:set-cover-randomized-LP-rounding-multi-time}
 	\DontPrintSemicolon
 	\caption{\hyperref[prb:set-cover]{Set cover} -- Multi-time Randomized LP Rounding}
@@ -169,7 +166,7 @@ A standard way to boost the correctness of a randomized algorithm is to run it m
 	\Return{\(\mathcal{S} ^\prime \)}\;
 \end{algorithm}
 
-\begin{lemma}\label{lma:lec2-2}
+\begin{lemma}\label{lma:set-cover-randomized-LP-rounding-multi-time-success}
 	With \(\alpha = 2\ln n\), \(\mathcal{S} ^\prime\) returned from \autoref{algo:set-cover-randomized-LP-rounding-multi-time} is a \hyperref[def:covering]{covering} w.p.\ at least \(1 - \frac{1}{n}\).
 \end{lemma}
 \begin{proof}
@@ -182,22 +179,22 @@ A standard way to boost the correctness of a randomized algorithm is to run it m
 
 In other words, with \(\alpha = 2 \ln n\), \autoref{algo:set-cover-randomized-LP-rounding-multi-time} is correct with probability at least \(1 - 1 / n\).
 
-\begin{lemma}\label{lma:lec2-3}
+\begin{lemma}\label{lma:set-cover-randomized-LP-rounding-multi-time}
 	With \(\alpha = 2 \ln n\), \(\mathcal{S} ^\prime \) returned from \autoref{algo:set-cover-randomized-LP-rounding-multi-time} has an approximation ratio \(4 \ln n\) w.p.\ at least \(\frac{1}{2}\).\footnote{Note that \(\mathcal{S} ^\prime \) is not necessary a \hyperref[def:covering]{covering}.}
 \end{lemma}
 \begin{proof}
 	Since \(\mathbb{E} [w(\mathcal{S} ^\prime)] \leq \alpha \sum_{i}w_{i} x_{i} = \alpha \OPT_{\text{LP} }\), we have \(\Pr(w(\mathcal{S} ^\prime )\geq 2\cdot \alpha \OPT_{\text{LP} })\leq 1 / 2\) from Markov inequality. We see that w.p.\ \(\geq 1 / 2\), \(w(\mathcal{S} ^\prime )\leq 2\cdot 2\ln n\cdot \OPT_{\text{LP} } \leq 4 \ln n\OPT\).
 \end{proof}
 
-\begin{theorem}\label{thm:lec2-2}
+\begin{theorem}\label{thm:set-cover-randomized-LP-rounding-multi-time}
 	By running \autoref{algo:set-cover-randomized-LP-rounding-multi-time} many times, we get a \((4\ln n)\)-approximation algorithm with high probability.\footnote{Note that we still need to choose \(\mathcal{S}^\prime \).}
 \end{theorem}
 \begin{proof}
-	Together with \autoref{lma:lec2-2} and \autoref{lma:lec2-3} and using the union bound, the probability of \(\mathcal{S} ^\prime \) not being a \hyperref[def:covering]{covering} or with weight higher than \(4\ln n\OPT\) is at most \(\frac{1}{n} + \frac{1}{2}\), which is less than \(1\). Hence, by running \autoref{algo:set-cover-randomized-LP-rounding-multi-time} many times (independently), the failing possibility is exponential small.
+	Together with \autoref{lma:set-cover-randomized-LP-rounding-multi-time-success} and \autoref{lma:set-cover-randomized-LP-rounding-multi-time} and using the union bound, the probability of \(\mathcal{S} ^\prime \) not being a \hyperref[def:covering]{covering} or with weight higher than \(4\ln n\OPT\) is at most \(\frac{1}{n} + \frac{1}{2}\), which is less than \(1\). Hence, by running \autoref{algo:set-cover-randomized-LP-rounding-multi-time} many times (independently), the failing possibility is exponential small.
 \end{proof}
 
 \begin{note}
-	With \autoref{thm:lec2-2}, we still need to find a valid \hyperref[def:covering]{covering} with the lowest cost, where a valid \hyperref[def:covering]{covering} with low enough weight is guaranteed to exist with high probability. Note that this is still a polynomial time algorithm since we know that checking \(\mathcal{S} ^\prime \) is a \hyperref[def:covering]{covering} is just linear.
+	With \autoref{thm:set-cover-randomized-LP-rounding-multi-time}, we still need to find a valid \hyperref[def:covering]{covering} with the lowest cost, where a valid \hyperref[def:covering]{covering} with low enough weight is guaranteed to exist with high probability. Note that this is still a polynomial time algorithm since we know that checking \(\mathcal{S} ^\prime \) is a \hyperref[def:covering]{covering} is just linear.
 \end{note}
 
 \begin{remark}

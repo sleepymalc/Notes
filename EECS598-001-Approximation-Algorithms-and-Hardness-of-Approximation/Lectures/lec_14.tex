@@ -47,7 +47,7 @@ An equivalent characterization is given by the following.
 
 We see that there is a deeper connection between a \hyperref[def:PSD]{PSD} matrix and the form of \(V V^{\top} \) for some \(V\), which indeed form another equivalent characterization of \hyperref[def:PSD]{PSD} matrices.
 
-\begin{lemma}\label{lma:lec14-1}
+\begin{lemma}\label{lma:PSD}
 	A matrix \(X\) is \hyperref[def:PSD]{PSD} if and only if \(X = V V^{\top} \) for some \(V\in \mathbb{R} ^{n\times k}\).
 \end{lemma}
 \begin{proof}
@@ -130,16 +130,16 @@ Let \([n] \coloneqq \mathcal{V} \) given that \(n \coloneqq \left\vert \mathcal{
 	This is a quadratic programming.
 \end{remark}
 
-To solve this, we relax \(x_i\in \mathbb{R} \) to \(u_i\in \mathbb{R} ^n\), we have
+To solve this, we relax \(x_i\in \mathbb{R} \) to \(u_i\in \mathbb{R} ^k\), we have
 \[
 	\begin{aligned}
 		\max~ & \sum_{(i, j)\in \mathcal{E}} ( 1 - \left\langle u_i, u_j \right\rangle ) / 2                     \\
 		      & \left\lVert u_i\right\rVert _2 ^{2} = 1                                      & \forall i\in [n].
 	\end{aligned}
 \]
-Now, from \autoref{lma:lec14-1}, we see that \(X \succeq 0 \iff X = V V^{\top} \) for some \(V\). This suggests that the above relaxed programming is a \hyperref[def:SDP]{SDP} with \(V = \begin{bmatrix}
+Now, from \autoref{lma:PSD}, we see that \(X \succeq 0 \iff X = V V^{\top} \) for some \(V\). This suggests that the above relaxed programming is a \hyperref[def:SDP]{SDP} with \(V = \begin{bmatrix}
 	u_1 ^{\top} & u_2 ^{\top} & \dots & u_n ^{\top} \\
-\end{bmatrix}\) for \(u_i ^{\top} \in \mathbb{R} ^k\) such that
+\end{bmatrix}\) for \(u_i \in \mathbb{R} ^k\) such that
 \begin{equation}\label{eq:max-cut}
 	\begin{aligned}
 		\max~ & \sum_{(i, j)\in \mathcal{E}} ( 1 - X_{ij} ) / 2 & \forall i\in [n] \\
@@ -172,11 +172,11 @@ We see that given \((i, j)\in \mathcal{E} \), denote the contribution to the \hy
 \]
 On the other hand, the expected contribution from \((i, j)\) to \autoref{algo:max-cut-randomized-rounding}, denoted as \(P_{ij} \), is
 \[
-	P_{ij}\coloneqq  \Pr((i, j)\text{ is cut edge} ) = \Pr(i, j \text{ is separated by \(g\) } ).
+	P_{ij}\coloneqq  \Pr((i, j)\text{ is cut edge} ) = \Pr(i, j \text{ is separated by \(g\)} ).
 \]
 Now, the only thing we need to do is to find the ratio between \(P_{ij} \) and \(S_{ij} \). And indeed, this ratio is proved by Goemans-Williamson~\cite{goemans1995improved}.
 
-\begin{notation}[c]\label{not:GW}
+\begin{notation}[Goemans-Williamson constant]\label{not:GW}
 	The \emph{Goemans-Williamson constant} \(\alpha _{\GW }\) is defined as
 	\[
 		\alpha _{\GW }\coloneqq \frac{2}{\pi }\min _{0 \leq \theta \leq \pi }\frac{\theta }{1 - \cos \theta }.
@@ -190,7 +190,7 @@ Now, the only thing we need to do is to find the ratio between \(P_{ij} \) and \
 	\]
 \end{remark}
 
-\begin{lemma}\label{lma:lec14-2}
+\begin{lemma}\label{lma:max-cut}
 	For all \((i, j)\in \mathcal{E} \), \(P_{ij} \geq \alpha _{\GW } \cdot S_{ij} \).
 \end{lemma}
 \begin{proof}
@@ -215,5 +215,5 @@ Now, the only thing we need to do is to find the ratio between \(P_{ij} \) and \
 	\[
 		\frac{\mathbb{E}_{}\left[\left\vert S \right\vert \right] }{\OPT_{\SDP }} = \frac{\sum_{(i, j)\in \mathcal{E} } P_{ij} }{\sum_{(i, j)\in \mathcal{E} } S_{ij} } \geq \alpha _{\GW }
 	\]
-	from \autoref{lma:lec14-2}, which proves the result.
+	from \autoref{lma:max-cut}, which proves the result.
 \end{proof}

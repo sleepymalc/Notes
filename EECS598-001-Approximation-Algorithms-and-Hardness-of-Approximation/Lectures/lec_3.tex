@@ -1,6 +1,7 @@
 \lecture{3}{7 Sep.\ 10:30}{Covering-Packing Duality and Primal-Dual Method}
 \section{Covering-Packing Duality}
 We first define some useful notions.
+
 \begin{definition}[Strongly independent]\label{def:strongly-independent}
 	Given a set system \((U, \mathcal{S} )\), we say \(C\subseteq U\) is \emph{strongly independent} if there does not exist \(S\in \mathcal{S} \) such that \(\left\vert C \cap S \right\vert \geq 2\).
 \end{definition}
@@ -48,7 +49,6 @@ We now give another LP formulation for the unweighted \hyperref[prb:set-cover]{s
 \]
 
 Then our LP is defined as
-
 \[
 	\begin{alignedat}{5}
 		\min~    & \sum_{j=1}^{m} x_j\qquad\qquad &  & \max ~   &  & \sum_{i =1}^{n} y_i  \\
@@ -64,7 +64,7 @@ We see that if we restrict \(y_i\in \left\{ 0, 1 \right\} \), we see that the du
 And indeed, if we look at the weighted version, we have \(\sum_{i\colon e_i\in s_j} y_{i} \leq w(S_j)\).
 
 Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k-approx}, i.e., \(y_{e_i} \leq \frac{w(S_{j})}{k - i + 1}\). We see that the \(y_{e_i} \) are just the dual variables in our setup. Additionally, with the observation that we can do this for any set \(S = \left\{ e_1, \dots , e_k\right\} \in \mathcal{S}\), we have the following lemma.
-\begin{lemma}\label{lma:lec3-1}
+\begin{lemma}\label{lma:set-cover-greedy}
 	The variable \(y^\prime \coloneqq y/H_k\) is dual-feasible, i.e., it's feasible for \((D)\).
 \end{lemma}
 \begin{proof}
@@ -79,9 +79,9 @@ Now, recall the \hyperref[clm:set-cover-cost]{claim} in \autoref{thm:set-cover-k
 	and we're done.\footnote{Note that in the above derivation, \(i\) is kind of overloading, i.e., \(e_i\) corresponding to only some \(i\) (confusing, but it's how it is...).}
 \end{proof}
 
-With \autoref{lma:lec3-1}, we simply run \autoref{algo:set-cover-greedy} while maintaining \(y_e\) for every \(e\), and we're done.
+With \autoref{lma:set-cover-greedy}, we simply run \autoref{algo:set-cover-greedy} while maintaining \(y_e\) for every \(e\), and we're done.
 
-\begin{theorem}
+\begin{theorem}\label{thm:set-cover-greedy}
 	\autoref{algo:set-cover-greedy} is an \(H_k\)-approximation algorithm in the view of its dual.
 \end{theorem}
 \begin{proof}
@@ -98,7 +98,6 @@ With \autoref{lma:lec3-1}, we simply run \autoref{algo:set-cover-greedy} while m
 \end{remark}
 
 \section{Primal-Dual Method}
-
 We first see the general description of the so-called \emph{primal-dual method}.
 
 \begin{enumerate}
@@ -134,7 +133,7 @@ In terms of \hyperref[prb:set-cover]{set cover}, we have the following.
 	\autoref{algo:set-cover-PD} is correct and can be implemented efficiently.
 \end{remark}
 
-\begin{theorem}
+\begin{theorem}\label{thm:set-cover-PD}
 	\autoref{algo:set-cover-PD} is a \(d\)-approximation algorithm.
 \end{theorem}
 \begin{proof}

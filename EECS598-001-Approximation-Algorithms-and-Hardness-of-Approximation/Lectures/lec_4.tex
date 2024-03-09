@@ -1,6 +1,5 @@
 \lecture{4}{12 Sep.\ 10:30}{Feedback Vertex Set}
 \section{Feedback Vertex Set}
-
 Following the discussion on primal-dual method, we see another \hyperref[def:covering]{covering} problem.
 
 \subsection{Introduction}
@@ -34,7 +33,7 @@ Given a graph \(\mathcal{G} = (\mathcal{V} , \mathcal{E} )\) and a weight functi
 \end{note}
 
 Now, the goal in this section is to show the following.
-\begin{theorem}\label{thm:lec4-1}
+\begin{theorem}\label{thm:feedback-vertex-set}
 	There exists a \(4\)-approximation algorithm for \autoref{prb:feedback-vertex-set}.
 \end{theorem}
 
@@ -43,8 +42,8 @@ Now, the goal in this section is to show the following.
 \end{remark}
 
 We also have a hardness of \autoref{prb:feedback-vertex-set}.
-\begin{theorem}
-	Achieving \((2 - \epsilon )\)-approximation algorithm if \(\NP\)-hard for all \(\epsilon > 0\) assuming the unique games conjecture.
+\begin{theorem}\label{thm:feed-back-vertex-set-hardness}
+	Achieving \((2 - \epsilon )\)-approximation algorithm if \(\NP\)-hard for all \(\epsilon > 0\) assuming the \hyperref[conj:unique-game]{unique games conjecture}.
 \end{theorem}
 \begin{proof}
 	See Homework \(1\).
@@ -66,7 +65,6 @@ with the variables being \(\left\{ x_v \right\} _{v\in \mathcal{V} }\) such that
 \end{remark}
 
 \subsection{Density LP}
-
 A more sophisticated LP is the so-called \emph{density LP}, defined as
 \[
 	\begin{aligned}
@@ -106,7 +104,7 @@ Now, it's clear that by looking at \(\mathcal{S} = \left\{ S\subseteq \mathcal{V
 
 We first see why this LP models \autoref{prb:feedback-vertex-set}.
 
-\begin{lemma}\label{lma:lec4-1}
+\begin{lemma}\label{lma:feedback-vertex-set-1}
 	The integer version of density LP (denote as IP) is equivalent to \autoref{prb:feedback-vertex-set}.
 \end{lemma}
 \begin{proof}
@@ -127,7 +125,7 @@ Now we're ready to solve this LP via primal-dual method. Denote the dual variabl
 	For the density LP and its dual, the constraint is still exponentially many, and no one knows how to solve this. But the power of primal-dual method is that we don't really solve this, rather, we just maintain two sets of solutions for both primal and dual. Moreover, we can maintain the primal solution in integral, while the dual solution in fractional.
 \end{note}
 
-We now have the following algorithm.\par
+We now have the following algorithm.
 
 \begin{algorithm}[H]\label{algo:feedback-vertex-set-PD}
 	\DontPrintSemicolon
@@ -181,7 +179,7 @@ while the dual cost is \(\sum_{S\in \mathcal{S} }y_S b_S\).
 	This is where the primal-dual method is powerful. i.e., by switching the order of summation, if we have some ratio of \(\sum_{v\in F \cap S}(d_{v} ^S - 1)\) and \(b_S\) for every \(S\), we're done. On caveat is that since \(S\) is changing when running \autoref{algo:feedback-vertex-set-PD}, so the final solution \(F\) may not be good for this particular \(S\). We need to guarantee some ratio for this \(F\) \textbf{for all \(S\)}.\footnote{At least for \(S\) with positive \(y_S\).}
 \end{remark}
 
-\begin{lemma}\label{lma:lec4-2}
+\begin{lemma}\label{lma:feedback-vertex-set-2}
 	For all \(S\in \mathcal{S} \), if \(F\) is \emph{minimal} in \(S\),\footnote{i.e., in \(\mathcal{G} [S]\), no \(F^\prime \subsetneq F \cap S\) in \hyperref[prb:feedback-vertex-set]{feedback vertex set}.} then we have
 	\[
 		\sum_{v\in S \cap F}(d_{v} ^S - 1) \leq 4\cdot b_S = 4(\left\vert E(S) \right\vert - \left\vert S \right\vert + 1).
@@ -231,9 +229,9 @@ while the dual cost is \(\sum_{S\in \mathcal{S} }y_S b_S\).
 	where the last equality holds since for \(v\in A\), the summand is just \(2 / 2 - 1 = 0\). It's clear that since \(\forall v\in B\), \(d_v^S - 1 \leq 4 (d_{v} ^S / 2 - 1)\), rearranging this inequality gives the result.
 \end{proof}
 
-To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the result follows form \autoref{lma:lec4-1}. Hence, after obtaining \(F\), \autoref{algo:feedback-vertex-set-PD} further convert \(F\) into \(F^\prime \) and  try to obtain a minimal version of \(F\). Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}, and the minimality of \(F^\prime \) is guaranteed by the following lemma.
+To show \autoref{thm:feedback-vertex-set}, it's enough to have a minimal \(F\), then the result follows form \autoref{lma:feedback-vertex-set-1}. Hence, after obtaining \(F\), \autoref{algo:feedback-vertex-set-PD} further convert \(F\) into \(F^\prime \) and  try to obtain a minimal version of \(F\). Clearly, \(F^\prime \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set}, and the minimality of \(F^\prime \) is guaranteed by the following lemma.
 
-\begin{lemma}\label{lma:lec4-3}
+\begin{lemma}\label{lma:feedback-vertex-set-3}
 	\(F^\prime \) is minimal in every \(S_i\), where \(S_i\) is the corresponding \(S\) in \autoref{algo:feedback-vertex-set-PD} when \(v_i\) is deleted.
 \end{lemma}
 \begin{proof}
@@ -267,8 +265,8 @@ To show \autoref{thm:lec4-1}, it's enough to have a minimal \(F\), then the resu
 	This implies \(F^\prime \setminus \left\{ v_j \right\} \) is still a \hyperref[prb:feedback-vertex-set]{feedback vertex set} in \(\mathcal{G} \) when \(i = j\) in \autoref{algo:feedback-vertex-set-PD} since such a problematic cycle can't exist,\footnote{Explicitly, if this exists, then delete \(v_j\) will make \(F^\prime\) fail to intersect such a cycle.} which contradicts with the minimality of \(F^\prime\).
 \end{proof}
 
-Finally, we see that we can prove \autoref{thm:lec4-1}.
+Finally, we see that we can prove \autoref{thm:feedback-vertex-set}.
 
-\begin{proof}[Proof of \autoref{thm:lec4-1}]
-	Firstly, \autoref{algo:feedback-vertex-set-PD} gives a \(4\)-approximation of the density IP guaranteed by \autoref{lma:lec4-2} and \autoref{lma:lec4-3}. Finally, from \autoref{lma:lec4-1}, we see that \autoref{prb:feedback-vertex-set} and the density IP is equivalent, proving the theorem.
+\begin{proof}[Proof of \autoref{thm:feedback-vertex-set}]
+	Firstly, \autoref{algo:feedback-vertex-set-PD} gives a \(4\)-approximation of the density IP guaranteed by \autoref{lma:feedback-vertex-set-2} and \autoref{lma:feedback-vertex-set-3}. Finally, from \autoref{lma:feedback-vertex-set-1}, we see that \autoref{prb:feedback-vertex-set} and the density IP is equivalent, proving the theorem.
 \end{proof}

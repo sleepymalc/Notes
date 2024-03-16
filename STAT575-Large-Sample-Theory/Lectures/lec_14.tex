@@ -53,18 +53,18 @@ We now start the proof.
 				 & \leq \delta + \mathbb{P} (-M \leq W_n \leq M , \vert U_n - W_n \vert > \epsilon ).
 			\end{split}
 		\]
-		The second term is like the first observation, but now we have a larger interval \([-M, M]\) rather than some \([a, b]\) with \(b - a < \epsilon / 2\). To compensate this, consider pair-wise disjoint intervals \((a_i, b_i)\) for \(i \in I\) with \(\vert I \vert < \infty \) such that \(\bigcup_{i\in I} [a_i, b_i] \supseteq [-M, M]\),
+		The second term is like the first observation, but now we have a larger interval \([-M, M]\) rather than some \([a, b]\) with \(b - a < \epsilon / 2\). To compensate this, consider pair-wise disjoint intervals \((a_i, b_i)\) for \(i \in I\) with \(\vert I \vert < \infty \) such that \(b_i - a_i < \epsilon / 2\) for all \(i \in I\) and \(\bigcup_{i\in I} [a_i, b_i] \supseteq [-M, M]\),
 		\[
 			\mathbb{P} (-M \leq W_n \leq M , \vert U_n - W_n \vert > \epsilon )
 			\leq \sum_{i\in I} \mathbb{P} (a_i \leq W_n \leq b_i, \vert U_n - W_n \vert > \epsilon ).
 		\]
-		This with the first observation implies \(\limsup_{n \to \infty} \mathbb{P} (\vert U_n - W_n \vert ) \leq \delta\), and since \(\delta \) is arbitrary, letting \(\delta \to 0\), we're done.
+		Since \(I\) is finite, together with the first observation, implies \(\limsup_{n \to \infty} \mathbb{P} (\vert U_n - W_n \vert ) \leq \delta\). As \(\delta \) is arbitrary, letting \(\delta \to 0\) completes the proof.
 	\end{proof}
 
-	Clearly, \(U_n = O_p(1)\), so we can apply \autoref{lma:Bahadur-representation}. First, consider for every \(t \in \mathbb{R} \), \(Z_n(t) \coloneqq \sqrt{n} (F(t) - \hat{F} _n(t))\). We see that \(\mathbb{E}_{}[Z_n(t)] = 0\) and \(\Var_{}[Z_n(t)] = F(t) (1 - F(t))\), so \(Z_n(t) \overset{D}{\to} \mathcal{N} (0, F(t) (1 - F(t)))\) by \hyperref[thm:CLT]{central limit theorem}.
+	Clearly, \(U_n = O_p(1)\) since it \hyperref[def:converge-in-distribution]{converges in distribution}, so we can try to apply \autoref{lma:Bahadur-representation}. First, we study the numerator of \(U_n\), i.e., \(Z_n(t) \coloneqq \sqrt{n} (F(t) - \hat{F} _n(t))\). We have seen that \(\mathbb{E}_{}[Z_n(t)] = 0\) and \(\Var_{}[Z_n(t)] = F(t) (1 - F(t))\), and \(Z_n(t) \overset{D}{\to} \mathcal{N} (0, F(t) (1 - F(t)))\) by \hyperref[thm:CLT]{central limit theorem}.
 
-	\begin{claim}
-		\(\Var_{}[Z_n(t) - Z_n(s)] = \Var_{}[\mathbbm{1}_{X \leq t} - \mathbbm{1}_{X \leq s} ] \leq \vert F(t) - F(s) \vert \) for all \(s < t\).
+	\begin{claim}\label{clm:pf:Bahadur-representation}
+		For any \(t, s\in \mathbb{R} \), \(\Var_{}[Z_n(t) - Z_n(s)] = \mathbb{E}_{}[(Z_n(t) - Z_n(s))^2] \leq \vert F(t) - F(s) \vert \). Hence, if \(s_n \to s\) and \(F\) is continuous at \(s\), \(Z_n(s_n) - Z_n(s) \overset{L^2}{\to} 0\), hence \(Z_n(s_n) - Z_n(s) \overset{p}{\to} 0\).
 	\end{claim}
 	\begin{explanation}
 		Observe that \(\Var_{}[Z_n(t) - Z_n(s)] = \Var_{}[\mathbbm{1}_{X \leq t} - \mathbbm{1}_{X \leq s} ] \leq \mathbb{E}_{}[\left\vert \mathbbm{1}_{X \leq t} - \mathbbm{1}_{X \leq s} \right\vert ^2 ]\) where
@@ -75,35 +75,31 @@ We now start the proof.
 				0, & \text{ otherwise} .
 			\end{dcases}
 		\]
-		Hence,
+		Hence, as \(\left\vert \mathbbm{1}_{X \leq t} - \mathbbm{1}_{X \leq s} \right\vert = \left\vert \mathbbm{1}_{X \leq t} - \mathbbm{1}_{X \leq s} \right\vert^2\),
 		\[
 			\begin{split}
 				\mathbb{E}_{}[\left\vert \mathbbm{1}_{X \leq t} - \mathbbm{1}_{X \leq s} \right\vert ^2 ]
 				 & = \mathbb{P} (s < X \leq t) + \mathbb{P} (t < X \leq s) \\
 				 & = (F(t) - F(s))^+ + (F(s) - F(t))^+
-				= \vert F(t) - F(s) \vert.
+				= \vert F(t) - F(s) \vert,
 			\end{split}
 		\]
+		i.e., \(\left\vert \mathbbm{1}_{X \leq t} - \mathbbm{1}_{X \leq s} \right\vert \sim \operatorname{Ber}(\vert F(t) - F(s) \vert ) \).
 	\end{explanation}
-	Hence, if \(t_n \to t\) and \(F\) is continuous at \(t\), \(Z_n(t_n) - Z_n(t) \overset{L^2}{\to} 0\), hence \(Z_n(t_n) - Z_n(t) \overset{p}{\to} 0\). From \autoref{lma:Bahadur-representation}, it suffices to show \(\mathbb{P} (W_n \leq t, U_n \geq t + \epsilon ) \to 0\) and \(\mathbb{P} (U_n \leq t , W_n \geq t+\epsilon ) \to 0\) for every \(t \in \mathbb{R} \) and \(\epsilon > 0\). Let's show the first one only. Fix \(t\) and \(\epsilon \), then
-	\[
-		\begin{split}
-			W_n \leq t
-			 & \iff \sqrt{n} (\hat{\theta} _{p_n} - \theta _p) - \sqrt{n} \frac{p_n - p}{f(\theta _p)} \leq t                               \\
-			 & \iff \hat{\theta} _{p_n} \leq \theta _p + \frac{t}{\sqrt{n} } + \frac{p_n - p}{f(\theta _p)} \eqqcolon \theta _p + \delta _n
-			\iff \hat{\theta} _p = \hat{F} _n^{-1} (p_n) \leq \theta _p + \delta _n
-		\end{split}
-	\]
-	where \(\delta _n \coloneqq t / \sqrt{n} + (p_n - p) / f(\theta _p)\). From the property of \(\hat{F} _n ^{-1} \), \(p_n \leq \hat{F} _n(\theta _p + \delta _n)\), this is further equivalent to
-	\[
-		\sqrt{n} (p_n - F(\theta _p + \delta _n)) \leq \sqrt{n} (\hat{F} _n(\theta _p + \delta _n) - F(\theta _p + \delta _n)) = -Z_n(\theta _p + \delta _n),
-	\]
+	From \autoref{lma:Bahadur-representation}, it suffices to show \(\mathbb{P} (W_n \leq t, U_n \geq t + \epsilon ) \to 0\) and \(\mathbb{P} (U_n \leq t , W_n \geq t+\epsilon ) \to 0\) for every \(t \in \mathbb{R} \) and \(\epsilon > 0\). Let's show the first one only. Fix \(t \in \mathbb{R} \) and \(\epsilon > 0\), then
+	\begin{align*}
+		W_n \leq t
+		 & \iff \sqrt{n} (\hat{\theta} _{p_n} - \theta _p) - \sqrt{n} \frac{p_n - p}{f(\theta _p)} \leq t                                                                                                                                                        \\
+		 & \iff \hat{\theta} _{p_n} = \hat{F} _n ^{-1} (p_n) \leq \theta _p + \frac{t}{\sqrt{n} } + \frac{p_n - p}{f(\theta _p)} \eqqcolon \theta _p + \delta _n \tag*{\(\displaystyle \delta _n \coloneqq \frac{t}{\sqrt{n} } + \frac{p_n - p}{f(\theta _p)}\)} \\
+		\shortintertext{From the property of \(\hat{F} _n ^{-1} \), \(p_n \leq \hat{F} _n(\theta _p + \delta _n)\),}
+		 & \iff \sqrt{n} (p_n - F(\theta _p + \delta _n)) \leq \sqrt{n} (\hat{F} _n(\theta _p + \delta _n) - F(\theta _p + \delta _n)) = -Z_n(\theta _p + \delta _n),
+	\end{align*}
 	which can be written as
 	\[
 		Z_n(\theta _p + \delta _n) \leq \sqrt{n} (F(\theta _p + \delta _n) - p_n)
 		\iff  \frac{Z_n(\theta _p + \delta _n)}{f(\theta _p)} \leq \frac{\sqrt{n} (F(\theta _p + \delta _n) - p_n)}{f(\theta _p)} \eqqcolon t_n .
 	\]
-	Putting everything together, we have
+	Putting everything together, with \(U_n = Z_n(\theta _p) / f(\theta _p)\), we have
 	\[
 		\begin{split}
 			\mathbb{P} (W_n \leq t, U_n \geq t + \epsilon )
@@ -112,7 +108,11 @@ We now start the proof.
 			 & = \mathbb{P} \left( \frac{Z_n(\theta _p + \delta _n) - Z_n(\theta _p)}{f(\theta _p)} - (t_n - t) \leq -\epsilon \right) ,
 		\end{split}
 	\]
-	which goes to \(0\) as \(n \to \infty \) if \(t_n \to t\), since \(\delta _n \to 0\).
+	which goes to \(0\) as \(n \to \infty \) if \(t_n \to t\) since from the previous \hyperref[clm:pf:Bahadur-representation]{claim}:
+	\begin{itemize}
+		\item let \(s_n \coloneqq \theta _p + \delta _n\), \(s \coloneqq \theta _p\), with \(F\) being continuous at \(s\) and \(\delta _n \to 0\), \(Z_n(\theta _p + \delta _n) - Z_n(\theta _p) \overset{p}{\to} 0\);
+		\item if further, \(t_n \to t\), the left-hand side goes to \(0\), and the inequality tends to be vacuous.
+	\end{itemize}
 
 	\begin{claim}
 		Indeed, \(t_n \to t\).
@@ -127,27 +127,28 @@ We now start the proof.
 			\frac{F(\theta _p + \delta _n) - F(\theta _p)}{\delta _n} \to f(\theta _p)
 			\iff \frac{F(\theta _p + \delta _n) - F(\theta _p) - \delta _n f(\theta _p)}{\delta _n} \to 0,
 		\]
-		or just \(F(\theta _p + \delta _n) = F(\theta _p) + \delta _n f(\theta _p) + o(\delta _n)\). Since \(F(\theta _p) = p\) and \(\delta _n = t / \sqrt{n} + (p_n - p) / f(\theta _p)\),
+		i.e., \(F(\theta _p + \delta _n) = F(\theta _p) + \delta _n f(\theta _p) + o(\delta _n)\). Since \(F(\theta _p) = p\) and \(\delta _n = t / \sqrt{n} + (p_n - p) / f(\theta _p)\),
 		\[
 			F(\theta _p + \delta _n)
-			= p + \left( \frac{t}{\sqrt{n}  + \frac{p_n - p}{f(\theta _p)}} \right) f(\theta _p) + o(\delta _n)
-			= p + \frac{t}{\sqrt{n} } f(\theta _p) + p_n - p + o(\delta _n),
+			= p + \left( \frac{t}{\sqrt{n}} + \frac{p_n - p}{f(\theta _p)} \right) f(\theta _p) + o(\delta _n)
+			= p + \frac{t}{\sqrt{n} } f(\theta _p) + (p_n - p) + o(\delta _n).
 		\]
-		implying
+		Rearranging, with \(o(\delta _n) \cdot \sqrt{n} / f(\theta _p) = \sqrt{n} o(\delta _n) \) from \(f(\theta _p) > 0\), we have
 		\[
-			\frac{F(\theta _p + \delta _n) - p_n}{f(\theta _p) / \sqrt{n} }
-			= t + \sqrt{n} o(\delta _n)
-			= t + \sqrt{n} \delta _n o(1).
+			t_n
+			= \frac{F(\theta _p + \delta _n) - p_n}{f(\theta _p) / \sqrt{n} }
+			= t + \sqrt{n} o(\delta _n).
 		\]
-		Since
+		Finally, since \(o(\delta _n) = \delta _n o(1)\), with
 		\[
 			\sqrt{n} \delta _n
 			= \sqrt{n} \left( \frac{t}{\sqrt{n} } + \frac{p_n - p}{f(\theta _p)} \right)
 			= t + \frac{\sqrt{n} (p_n - p)}{f(\theta _p)}
 			= O(1)
 		\]
-		from our assumption, we're done.
+		from our assumption, we have \(\sqrt{n} o(\delta _n) = O(1) o(1) = o(1)\), hence \(t_n = t + o(1) \to t\).
 	\end{explanation}
+	The second claim \(\mathbb{P} (U_n \leq t, W_n \geq t+\epsilon ) \to 0\) can be proved similarly, hence we're done.
 \end{proof}
 
 \section{Inference for Distribution Function}

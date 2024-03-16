@@ -6,39 +6,49 @@ Let \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) for some distribut
 	Since \(F^{-1} (p)\) depends on \(F\), if we have an estimation of \(F\) itself, then we can have an estimation of \(F^{-1} (p)\).
 \end{intuition}
 
-Specifically, to estimate \(F\), consider the empirical cdf
+Specifically, to estimate \(F\), consider the empirical cdf \(\hat{F} _n(t)\) such that for all \(t \in \mathbb{R} \),
 \[
 	\hat{F} _n(t) = \frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{X_i \leq t}
 \]
-for all \(t \in \mathbb{R} \), and by \hyperref[thm:WLLN]{weak law of large number}, \(\hat{F} _n(t) \overset{p}{\to} \mathbb{P} (X \leq t) = F(t)\), i.e., for all \(\epsilon > 0\), \(\mathbb{P} (\vert \hat{F} _n(t) - F(t) \vert > \epsilon ) \to 0\). We note the following.
+Now, from \(\hat{F} _n(t)\), we estimate \(\theta _p = F^{-1} (p)\) by the \emph{\(p^{\text{th} }\)-sample quantile}
+\[
+	\hat{\theta} _p
+	\coloneqq \hat{F} _n ^{-1} (p)
+	\coloneqq \inf \{ t \in \mathbb{R} \colon \hat{F} _n(t) \geq p \}.
+\]
+
+\begin{remark}
+	If \(F\) is continuous, then apart from a null set we have
+	\[
+		\hat{\theta} _p
+		= \inf \left\{ X_{(i)} \colon \hat{F} _n(X_{(i)}) = i / n \geq p \right\}
+		= \inf \left\{ t \in \mathbb{R} \colon \sum_{i=1}^{n} \mathbbm{1}_{X_i \leq t} \geq \lceil np \rceil \right\}
+		= X_{(\lceil np \rceil )}.
+	\]
+\end{remark}
+\begin{explanation}
+	Since \(F\) is continuous, with probability \(1\) there are no ties among \(X_i\)'s, hence \(\hat{F} _n(t)\) has jumps of size \(1 / n\) at every order statistics \(X_{(i)}\). Finally, the ceiling can be taken since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i \geq t} \in \mathbb{N} \).
+\end{explanation}
+
+\subsection{Consistency}
+Firstly, \(\hat{F} _n\) is a \hyperref[def:consistent]{consistent} estimator of \(F\) since by \hyperref[thm:WLLN]{weak law of large number}, \(\hat{F} _n(t) \overset{p}{\to} \mathbb{P} (X \leq t) = F(t)\). In fact, the convergence is exponentially fast in \(n\) by observing the following.
 
 \begin{note}
 	By fixing \(t\), \(\mathbbm{1}_{X \leq t} \) is \(\operatorname{Ber}(F(t)) \), hence \(\sqrt{n} (\hat{F} _n(t) - F(t)) \overset{D}{\to} \mathcal{N} (0, F(t) (1 - F(t)))\).
 \end{note}
 
-\begin{note}
-	\href{https://en.wikipedia.org/wiki/Hoeffding%27s_inequality}{Hoeffding's inequality} implies that this sum of Bernoulli's converges exponentially fast.
-\end{note}
-
-Now, from \(\hat{F} _n(t)\), we estimate \(\theta _p = F^{-1} (p)\) by
+This implies that \(\hat{F} _n(t)\) is an average of i.i.d.\ Bernoulli random variables, hence \href{https://en.wikipedia.org/wiki/Hoeffding's_inequality}{Hoeffding's inequality} implies that the convergence is exponentially fast, i.e., for all \(n \in \mathbb{N} \), \(t\in \mathbb{R} \), and \(\epsilon > 0\),
 \[
-	\hat{\theta} _p
-	\coloneqq \hat{F} _n ^{-1} (p)
-	\coloneqq \inf \{ t \in \mathbb{R} \colon \hat{F} _n(t) \geq p \}
-	= \inf \left\{ t \in \mathbb{R} \colon \sum_{i=1}^{n} \mathbbm{1}_{X_i \leq t} \geq \lceil np \rceil \right\}
-	= X_{(\lceil np \rceil )}
+	\mathbb{P} (\vert \hat{F} _n(t) - F(t) \vert > \epsilon )
+	\leq 2 \exp (- n \epsilon ^2 / 2).
 \]
-since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i \geq t} \in \mathbb{N} \).
-
-\begin{notation}[Order statistic]
-	The \emph{order statistics} of \(X_i\)'s is defined as \(X_{(1)} \leq \dots \leq X_{(n)}\).
-\end{notation}
+We now show the \hyperref[def:consistent]{consistency} of \(\hat{\theta} _p\) when the corresponding \(\theta _p\) is unique. Recall the following.
 
 \begin{prev}
 	\(t \geq F^{-1} (p) \iff F(t) \geq p\) and \(t < F^{-1} (p) \iff F(t) < p\). This is also true for \(\hat{F} _n\).
 \end{prev}
 
-\begin{theorem}
+\begin{theorem}\label{thm:sample-quantile-consistency}
 	If \(F(\theta _p + \epsilon ) > F(\theta _p) \geq p\) for any \(\epsilon > 0\), then \(\hat{\theta} _p \overset{p}{\to} \theta _p\). More generally, if \(p_n \to p\), then \(\hat{\theta} _{p_n} \overset{p}{\to} \theta _p\).
 \end{theorem}
 \begin{proof}
@@ -47,7 +57,7 @@ since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i \geq t} \in \mathbb{N} \).
 		\mathbb{P} (\vert \hat{\theta} _{p_n} - \theta _p \vert > \epsilon )
 		= \mathbb{P} (\hat{\theta} _{p_n} > \theta _p + \epsilon ) + \mathbb{P} (\hat{\theta} _{p_n} < \theta _p - \epsilon ).
 	\]
-	For the first term, \(\hat{\theta} _{p_n} = \hat{F} _n^{-1} (p_n) > \theta + \epsilon \), hence \(p_n > \hat{F} _n(\theta _p + \epsilon )\), i.e.,
+	For the first term, \(\hat{\theta} _{p_n} = \hat{F} _n^{-1} (p_n) > \theta + \epsilon \), hence \(p_n > \hat{F} _n(\theta _p + \epsilon )\), which gives
 	\[
 		p_n - p + p  - F(\theta _p + \epsilon )
 		> \hat{F} _n(\theta _p + \epsilon ) - F(\theta _p + \epsilon ).
@@ -59,85 +69,136 @@ since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i \geq t} \in \mathbb{N} \).
 		< \frac{\delta}{2} - \delta
 		= -\frac{\delta}{2}
 	\]
-	for large enough \(n\) such that \(\vert p_n - p \vert < \delta / 2\). Hence, \(\vert \hat{F} _n(\theta _p + \epsilon ) - F(\theta _p + \epsilon ) \vert > \delta / 2\), i.e.,
+	for large enough \(n\) such that \(\vert p_n - p \vert < \delta / 2\), which implies \(\vert \hat{F} _n(\theta _p + \epsilon ) - F(\theta _p + \epsilon ) \vert > \delta / 2\), i.e.,
 	\[
 		\mathbb{P} (\hat{\theta} _{p_n} > \theta + \epsilon )
 		\leq \mathbb{P} (\vert \hat{F} _n(\theta _p + \epsilon ) - F(\theta _p + \epsilon ) \vert > \delta / 2),
 	\]
-	which goes to \(0\) as we have seen. The second term can be proved similarly.
+	which goes to \(0\) as \(n \to \infty \) from the \hyperref[def:consistent]{consistency} of \(\hat{F} _n\). The second term can be proved similarly.
 \end{proof}
 
+\begin{note}
+	The convergence in \autoref{thm:sample-quantile-consistency} is also exponentially fast in \(n\).
+\end{note}
+
 \subsection{Bahadur's Representation Theorem}
-If \(F\) is differentiable, we can actually say more in this situation.
+If \(F\) is differentiable, we can establish the asymptotic normality of \(\hat{\theta} _{p_n}\).
 
 \begin{theorem}[Bahadur's representation]\label{thm:Bahadur-representation}
-	If \(F^{\prime} (\theta _p) \coloneqq f(\theta _p) > 0\) and \(\sqrt{n} (p_n - p) = O(1)\), then
+	If \(F^{\prime} (\theta _p) \eqqcolon f(\theta _p) > 0\) and \(\sqrt{n} (p_n - p) = O(1)\), then
 	\[
 		\sqrt{n} (\hat{\theta} _{p_n} - \theta _p)
 		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \frac{p_n - \mathbbm{1}_{X_i \leq \theta _p}}{f(\theta _p)} + o_p(1).
 	\]
 \end{theorem}
 
-Let's postpone the \hyperref[pf:Bahadur-representation]{proof} and discuss its implication first. In the case of \(p_n \neq p\), \hyperref[thm:Bahadur-representation]{Bahadur's representation} shows
-\[
-	\sqrt{n} (\hat{\theta} _{p_n} - \theta _p)
-	= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \frac{p - \mathbbm{1}_{X_i \leq \theta _p} }{f(\theta _p)} + \frac{\sqrt{n} (p_n - p)}{f(\theta _p)} + o_p(1).
-\]
-We see that if \(\sqrt{n} (p_n - p) \to c\), then
-\[
-	\sqrt{n} (\hat{\theta} _{p_n} - \hat{\theta} _p)
-	= \sqrt{n} \left( (\hat{\theta} _{p_n} - \theta _p) - (\hat{\theta} _p - \theta _p) \right)
-	= \sqrt{n} \frac{p_n - p}{f(\theta _p)} + o_p(1)
-	\overset{p}{\to} \frac{c}{f(\theta _p)}.
-\]
-On the other hand, if \(\sqrt{n} (p_n - p) \to 0\), then
-\[
-	\sqrt{n} (\hat{\theta} _{p_n} - \theta _p)
-	\overset{D}{\to} \mathcal{N} \left( 0, \frac{F(\theta _p) (1 - F(\theta _p))}{f^2(\theta _p)} \right)
-	= \mathcal{N} \left( 0, \frac{p (1 - p)}{f^2(\theta _p)} \right) ,
-\]
-which gives an asymptotically valid \(100(1 - \alpha )\%\) confidence interval for \(\theta _p\) as
-\[
-	\hat{\theta} _{p_n} \pm Z_{\alpha / 2} \frac{\sqrt{p(1 - p)} }{\sqrt{n} f(\theta _p)}.
-\]
+Let's postpone the \hyperref[pf:Bahadur-representation]{proof} and discuss its implication first.
+
+\begin{corollary}\label{col:Bahadur-representation}
+	If \(F^{\prime} (\theta _p) \eqqcolon f(\theta _p) > 0\) and \(\sqrt{n} (p_n - p) \to c \in [0, \infty )\), then
+	\[
+		\sqrt{n} (\hat{\theta} _{p_n} - \theta _p) \overset{p}{\to} \frac{c}{f(\theta _p)}
+	\]
+	and
+	\[
+		\sqrt{n} (\hat{\theta} _{p_n} - \theta _p) \overset{D}{\to} \mathcal{N} \left( \frac{c}{f(\theta _p)} , \frac{p(1-p)}{f^2(\theta _p)} \right) .
+	\]
+\end{corollary}
+\begin{proof}
+	From \hyperref[thm:Bahadur-representation]{Bahadur's representation} shows
+	\[
+		\sqrt{n} (\hat{\theta} _{p_n} - \theta _p)
+		= \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \frac{p - \mathbbm{1}_{X_i \leq \theta _p} }{f(\theta _p)} + \frac{\sqrt{n} (p_n - p)}{f(\theta _p)} + o_p(1),
+	\]
+	implying the first claim. For the second claim, firstly, if \(\sqrt{n} (p_n - p) \to 0\), from \hyperref[thm:CLT]{central limit theorem},
+	\[
+		\sqrt{n} (\hat{\theta} _{p_n} - \theta _p)
+		\overset{D}{\to} \mathcal{N} \left( 0, \frac{F(\theta _p) (1 - F(\theta _p))}{f^2(\theta _p)} \right)
+		= \mathcal{N} \left( 0, \frac{p (1 - p)}{f^2(\theta _p)} \right) .
+	\]
+	Now for \(\sqrt{n} (p_n - p) \to c\), we first look at \(\hat{\theta} _{p_n}\) and \(\hat{\theta} _p\) instead, which gives
+	\[
+		\sqrt{n} (\hat{\theta} _{p_n} - \hat{\theta} _p)
+		= \sqrt{n} \left( (\hat{\theta} _{p_n} - \theta _p) - (\hat{\theta} _p - \theta _p) \right)
+		= \sqrt{n} \frac{p_n - p}{f(\theta _p)} + o_p(1)
+		\overset{p}{\to} \frac{c}{f(\theta _p)}.
+	\]
+	Moreover, from \hyperref[thm:CLT]{central limit theorem} and \hyperref[thm:Slutsky]{Slutsky's theorem},
+	\[
+		\sqrt{n} (\hat{\theta} _{p_n} - \theta _p)
+		= \sqrt{n} (\hat{\theta} _{p_n} - \hat{\theta} _p) + \sqrt{n} (\hat{\theta} _p - \theta _p)
+		\overset{D}{\to} \mathcal{N} \left( \frac{c}{f(\theta _p)} , \frac{p(1 - p)}{f^2(\theta _p)} \right),
+	\]
+	where the variance calculation is the same as the case of \(c = 0\) above.
+\end{proof}
 
 \begin{intuition}
 	This is expected since if the density is low, then we don't have many data to evaluate \(\theta _p\) in the first place, hence the precision will be low (large variance).
 \end{intuition}
 
-However, to implement this confidence interval, we need to estimate \(f(\theta _p)\) \hyperref[def:consistent]{consistently}. On the other hand, to avoid this, consider a sequence of intervals \((\hat{\theta} _{\ell _n}, \hat{\theta} _{u_n})\) for some \(\ell _n < p_n < u_n\) such that
+\subsection{Confidence Intervals}
+When \(c = 0\), \autoref{col:Bahadur-representation} gives an asymptotically valid \(100(1 - \alpha )\%\) confidence interval for \(\theta _p\) as
+\[
+	\hat{\theta} _{p_n} \pm Z_{\alpha / 2} \frac{\sqrt{p(1 - p)} }{\sqrt{n} f(\theta _p)}.
+\]
+However, to implement this confidence interval, we need to estimate \(f(\theta _p)\) \hyperref[def:consistent]{consistently}. To avoid this, consider a sequence of intervals \((\hat{\theta} _{\ell _n}, \hat{\theta} _{u_n})\) for some \(\ell _n < p_n < u_n\) such that
 \[
 	\hat{\theta} _{\ell _n}
-	\to \hat{\theta} _p - Z_{\alpha / 2} \frac{\sqrt{p (1 - p)} }{\sqrt{n} f(\theta _p)}
+	\overset{p}{\to} \hat{\theta} _p - Z_{\alpha / 2} \frac{\sqrt{p (1 - p)} }{\sqrt{n} f(\theta _p)}
 	\text{ and }
 	\hat{\theta} _{u_n}
-	\to \hat{\theta} _p + Z_{\alpha / 2} \frac{\sqrt{p (1 - p)} }{\sqrt{n} f(\theta _p)}.
+	\overset{p}{\to} \hat{\theta} _p + Z_{\alpha / 2} \frac{\sqrt{p (1 - p)} }{\sqrt{n} f(\theta _p)}.
 \]
-Consider \(\hat{\theta} _{\ell _n}\) first. It's equivalent to say
-\[
-	\sqrt{n} (\hat{\theta} _{\ell _n} - \hat{\theta} _p)
-	\to -Z_{\alpha / 2} \frac{\sqrt{p (1 - p)} }{f(\theta _p)},
-\]
-and if \(\sqrt{n} (\ell _n - p) \to c\), e.g., \(\ell _n = p + c / \sqrt{n} \), then
-\[
-	\sqrt{n} (\hat{\theta} _{\ell _n} - \hat{\theta} _p) \overset{p}{\to} \frac{c}{f(\theta _p)}.
-\]
-This suggests \(\ell _n = p - Z_{\alpha / 2} \sqrt{p (1 - p)} / \sqrt{n} \), and similarly, \(u_n = p + Z_{\alpha / 2} \sqrt{p (1 - p)} / \sqrt{n} \). Another implication is the following. Firstly, consider \(p = 1 / 2\), and in this case,
-\[
-	\sqrt{n} (\hat{\theta} _{1 / 2} - \theta _{1 / 2})
-	\overset{D}{\to} \mathcal{N} \left( 0, \frac{1}{4 f^2(\theta _{1 / 2})} \right) .
-\]
+This will also give us an asymptotically valid \(100(1 - \alpha )\%\) confidence interval for \(\theta _p\). The upshot is that, this is easy to construct without estimating \(f(\theta _p)\) explicitly.
+
+\begin{eg}
+	Consider \(\ell _n = p - Z_{\alpha / 2} \sqrt{p (1 - p)} / \sqrt{n} \), and similarly, \(u_n = p + Z_{\alpha / 2} \sqrt{p (1 - p)} / \sqrt{n} \).
+\end{eg}
+
+The above construction works due to the following.
+
+\begin{proposition}\label{prop:sample-quantile-confidence-interval}
+	Let \(c = Z_{\alpha / 2} \sqrt{p(1 - p)} \), and let \(\ell _n\) and \(u_n\) such that \(\sqrt{n} (\ell _n - p) \to -c\) and \(\sqrt{n} (u_n - p) \to c\). If \(F^{\prime} (\theta _p) \eqqcolon f(\theta _p) > 0\), then \(\mathbb{P} (\hat{\theta} _{\ell _n} \leq \theta _p \leq \hat{\theta} _{u_n}) \to 1 - \alpha \).
+\end{proposition}
+\begin{proof}
+	First, consider \(\ell _n\). Since \(\sqrt{n} (\ell _n - p) \to -c\), then \(\hat{\theta} _{\ell _n}\) defined above is guaranteed from \autoref{col:Bahadur-representation} since it's equivalent to
+	\[
+		\sqrt{n} (\hat{\theta} _{\ell _n} - \hat{\theta} _p)
+		\overset{p}{\to} \frac{-c}{f(\theta _p)}
+		= -Z_{\alpha / 2} \frac{\sqrt{p (1 - p)} }{f(\theta _p)}.
+	\]
+	The same holds for \(u_n\), hence we're done.
+\end{proof}
+
+\begin{remark}
+	We can construct \((\hat{\theta} _{\ell _n}, \hat{\theta} _{u_n})\) without assuming knowledge or having to estimate \(f(\theta _p)\).
+\end{remark}
+
+\subsection{Estimating the Center of a Distribution}
+Another implication is comparing the sample mean and the sample \hyperref[def:median]{median} as estimators of the center of a symmetric distribution.
 
 \begin{definition}[Median]\label{def:median}
 	When \(p = 1 / 2\), \(\theta _{1 / 2}\) is called the \emph{median}.
 \end{definition}
 
+Firstly, for \(p = 1 / 2\), if \(F^{\prime} (\theta _{1 / 2}) \eqqcolon f(\theta _{1 / 2}) > 0\), from \autoref{col:Bahadur-representation} we have
+\[
+	\sqrt{n} (\hat{\theta} _{1 / 2} - \theta _{1 / 2})
+	\overset{D}{\to} \mathcal{N} \left( 0, \frac{1}{4 f^2(\theta _{1 / 2})} \right) .
+\]
 Suppose further, \(\theta _{1 / 2} = \mu \) and \(\Var_{}[X] = \sigma ^2 < \infty \). Then both \(\hat{\theta} _{1 / 2}\) and \(\overline{X} _n\) are two possible estimators of \(\mu \), and in this case, we might want to look at the \hyperref[def:asymptotic-relative-efficiency]{asymptotic relative efficiency}. Specifically,
 \[
 	\operatorname{ARE}(\overline{X} _n , \hat{\theta} _{1 / 2})
 	= \frac{\sigma ^2}{\frac{1}{4 f^2(\theta _{1 / 2})}}
-	= 4 \sigma ^2 f^2(\mu ).
+	= 4 \sigma ^2 f^2(\theta _{1 / 2}).
 \]
+Let's summarize the above in the following.
+
+\begin{proposition}\label{prop:sample-quantile-ARE}
+	Suppose \(\mu = \mathbb{E}_{}[X] \) exists and \(\sigma ^2 = \Var_{}[X] < \infty \) such that \(\mu = \theta _{1 / 2}\). If \(F^{\prime} (\mu ) \eqqcolon f(\mu ) > 0\), then \(\operatorname{ARE}(\overline{X} , \hat{\theta} _{1 / 2}) = (2 \sigma f(\mu ))^2\).
+\end{proposition}
+
+The following two examples suggest that the sample \hyperref[def:median]{median} is asymptotically better than the sample mean when \(X\) has heavy tails.
 
 \begin{eg}
 	If \(X \sim \mathcal{N} (\mu , \sigma ^2)\), then \(\overline{X} \) is a better estimator of \(\mu \) than \(\hat{\theta} _{1 / 2}\).
@@ -164,12 +225,7 @@ Suppose further, \(\theta _{1 / 2} = \mu \) and \(\Var_{}[X] = \sigma ^2 < \inft
 	\]
 \end{explanation}
 
-One might want to consider \(c \overline{X} + (1 - c)\hat{\theta} _{1 / 2}\) for any \(c \in [0, 1]\). In this case, by \hyperref[thm:Bahadur-representation]{Bahadur's representation}, \hyperref[thm:delta-method]{delta method}, one can have
-\[
-	\sqrt{n} \left( (c \overline{X} + (1 - c)\hat{\theta} _{1 / 2}) - \mu \right)
-	\overset{D}{\to} \mathcal{N} (0, V)
-\]
-where
+One might want to consider \(c \overline{X} + (1 - c)\hat{\theta} _{1 / 2}\) for any \(c \in [0, 1]\). In this case, by \hyperref[thm:Bahadur-representation]{Bahadur's representation} and \hyperref[thm:delta-method]{delta method}, one can have \(\sqrt{n} \left( (c \overline{X} + (1 - c)\hat{\theta} _{1 / 2}) - \mu \right) \overset{D}{\to} \mathcal{N} (0, V)\) where
 \[
 	V = c^2 \Var_{}[X] + (1 - c)^2 \frac{1}{4 f^2(\mu )} + 2c(1 - c) \Cov_{}\left[X - \mu , \frac{1 / 2 - \mathbbm{1}_{X \leq \mu } }{f(\mu )}\right].
 \]

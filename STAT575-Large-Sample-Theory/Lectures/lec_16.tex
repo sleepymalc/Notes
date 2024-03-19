@@ -1,0 +1,269 @@
+\lecture{16}{19 Mar.\ 9:30}{Lindeberg Central Limit Theorem}
+\section{Lindeberg Central Limit Theorem}
+Now, we consider the case that when \((X_n)\) are only independent but not identically distributed with \(\Var_{}[X_i] < \infty \) for all \(i \geq 1\). I.e., we want to investigate \(S_n = X_1 + \dots + X_n\)'s asymptotic distribution.
+
+\subsection{Illustrative Examples Regarding Poisson Distribution}
+Let's first see some examples regarding Poisson distribution.
+
+\begin{eg}
+	If \(X_i \sim \operatorname{Pois}(1 / i^2) \) for all \(i \geq 1\), then
+	\[
+		S_n \sim \operatorname{Pois}\left( \sum_{i=1}^{n} \frac{1}{i^2} \right)
+		\overset{\operatorname{TV} }{\to} \operatorname{Pois}\left( \sum_{i=1}^{\infty} \frac{1}{i^2} \right)
+		= \operatorname{Pois}\left( \frac{\pi ^2}{6} \right) ,
+	\]
+	which does not go to normal as we expected since \(X_i\) are not identically distributed.
+\end{eg}
+
+On the other hand, something tricker can happen when \(X_i\) are ``seemingly'' identically distributed.
+
+\begin{eg}\label{eg:Poisson-CLT-fail}
+	Let \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } \operatorname{Pois}(1 / n) \) for every \(n \geq 1\). But since \(S_n \sim \operatorname{Pois}(1) \) for all \(n \geq 1\),
+	\[
+		\frac{S_n - \mathbb{E}_{}[S_n] }{\sqrt{\Var_{}[S_n] } }
+		\not \overset{D}{\to} \mathcal{N} (0, 1).
+	\]
+	This does not contradict to \hyperref[thm:CLT]{central limit theorem} since \(\operatorname{Pois}(1 / n) \) depends on \(n\).
+\end{eg}
+
+In general, for any \(n \geq 1\), let \(K_n \nearrow \infty \) be the number of independent random variables in the sequence \(X_{n1}, \dots , X_{n K_n}\) with \(\Var_{}[X_{nj}] < \infty \) for all \(1 \leq j \leq K_n\) and \(n\). Again, we define \(S_n = X_{n1} + \dots + X_{n K_n}\). In picture, we have something like
+\[
+	\begin{aligned}
+		 & n=1 \colon &  & X_{11} , \dots , X_{1 K_1};                 \\
+		 & n=2 \colon &  & X_{21}, X_{22} , \dots , X_{1 K_2};         \\
+		 & \vdots     &  &                                             \\
+		 & n \colon   &  & X_{n1} , X_{n2}, X_{n3}, \dots , X_{n K_n}.
+	\end{aligned}
+\]
+Note the following.
+
+\begin{remark}
+	For different \(n\), \((X_{nj})\) can be defined on different probability space.
+\end{remark}
+
+\begin{note}
+	As a special case, we previously have \(X_{nj} = X_j\) for all \(1 \leq j \leq n\), i.e., \(K_n = n\).
+\end{note}
+
+\subsection{Lindeberg Condition and Lindeberg Central Limit Theorem}
+The goal of this section is to establish the following.
+
+\begin{theorem}[Lindeberg central limit theorem]\label{thm:Lindeberg-CLT}
+	For every \(n \geq 1\), let \((X_{n K_n})\) be a sequence of independent variables with \(K_n \nearrow \infty \) and let \(Y_{nj} \coloneqq (X_{nj} - \mathbb{E}_{}[X_{nj}] ) / \sqrt{\Var_{}[S_n] } \) for every \(1 \leq j \leq K_n\). If the \hyperref[def:Lindeberg-condition]{Lindeberg condition} holds, then
+
+	\[
+		\frac{S_n - \mathbb{E}_{}[S_n] }{\sqrt{\Var_{}[S_n] } }
+		= \sum_{j=1}^{K_n} \frac{X_{nj} - \mathbb{E}_{}[X_{nj}] }{\sqrt{\Var_{}[S_n] } }
+		\eqqcolon \sum_{j=1}^{K_n} Y_{nj}
+		\overset{D}{\to} \mathcal{N} (0, 1)
+	\]
+\end{theorem}
+
+\begin{note}
+	In the above notation, for all \(n \geq 1\), \(\mathbb{E}_{}[Y_{nj}] = 0\) for all \(1 \leq j \leq K_n\) and \(\sum_{j=1}^{K_n} \Var_{}[Y_{nj}] = 1\).
+\end{note}
+
+We first explain the sufficient condition stated in the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. Firstly, a weaker but more intuitive notion one might consider is the following.
+
+\begin{definition}[Uniform asymptotic negligibility]\label{def:uniform-asymptotic-negligibility}
+	Given a (family of) sequence \((X_{n K_n})\), we say it satisfies the \emph{uniform asymptotic negligibility} (\emph{UAN}), if as \(n \to \infty \),
+	\[
+		\frac{\max _{1 \leq j \leq K_n} \Var_{}[X_{nj}] }{\Var_{}[S_n] } \to 0.
+	\]
+\end{definition}
+
+However, as we have seen in the \hyperref[eg:Poisson-CLT-fail]{second examples}, \hyperref[def:uniform-asymptotic-negligibility]{UAN} doesn't suffice for the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem} to hold since in this case, \(\max _{i \leq j \leq n} \Var_{}[X_{nj}] = 1 / n \to 0\), but we know that \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem} fail. Hence, we consider the following stronger notion.
+
+\begin{definition}[Lindeberg condition]\label{def:Lindeberg-condition}
+	Given a (family of) sequence \((X_{n K_n})\), let \(Y_{nj} \coloneqq (X_{nj} - \mathbb{E}_{}[X_{nj}] ) / \sqrt{\Var_{}[S_n] }\) for every \(1 \leq j \leq K_n\) and every \(n \geq 1\). Then we say \((X_{n K_n})\) satisfies the \emph{Lindeberg condition} if for every \(\epsilon > 0\), as \(n \to \infty \),
+	\[
+		\sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2 \cdot \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } ] \to 0.
+	\]
+\end{definition}
+
+Indeed, \hyperref[def:Lindeberg-condition]{Lindeberg condition} is stronger than \hyperref[def:uniform-asymptotic-negligibility]{uniform asymptotic negligibility}.
+
+\begin{proposition}\label{prop:Lindeberg-condition-implies-UAN}
+	The \hyperref[def:Lindeberg-condition]{Lindeberg condition} implies \hyperref[def:uniform-asymptotic-negligibility]{uniform asymptotic negligibility}.
+\end{proposition}
+\begin{proof}
+	We want to prove that \(\max _{1 \leq j \leq K_n} \Var_{}[Y_n] \to 0\) as \(n \to \infty \). Firstly, for any \(n\) and every \(1 \leq j \leq K_n\), by splitting up the expectation, for every \(\epsilon > 0\), we have \(\Var_{}[Y_{nj}] \leq \mathbb{E}_{}[Y_{nj}^2 \cdot \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } ] + \epsilon ^2\). Then with the \hyperref[def:Lindeberg-condition]{Lindeberg condition}, we have
+	\[
+		\max _{i \leq j \leq K_n} \Var_{}[Y_{nj}]
+		\leq \sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2 \cdot \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } ] + \epsilon ^2
+		\to \epsilon ^2,
+	\]
+	i.e., \(\limsup_{n \to \infty} \max _{1 \leq j \leq K_n} \Var_{}[Y_{nj}]  \leq \epsilon ^2\). By letting \(\epsilon \to 0\), we complete the proof.
+\end{proof}
+
+While the \hyperref[def:uniform-asymptotic-negligibility]{UAN} is insufficient, it's also not necessary.
+
+\begin{remark}
+	Let \((X_n)\) be a sequence of independent Gaussian variables with \(\Var_{}[X_i] = 1 / i^2\) for all \(i \geq 1\). Then indeed, \(S_n \sim \mathcal{N} \). However,
+	\[
+		\frac{\max _{1 \leq i \leq n} \Var_{}[X_i]}{\Var_{}[S_n]} = \frac{1}{\sum_{i=1}^{n} 1 / i^2} \to \frac{6}{\pi ^2} > 0 ,
+	\]
+	hence \hyperref[def:uniform-asymptotic-negligibility]{uniform asymptotic negligibility} does not hold.
+\end{remark}
+
+\begin{remark}
+	If the usual \hyperref[thm:CLT]{central limit theorem} holds with \hyperref[def:uniform-asymptotic-negligibility]{uniform asymptotic negligibility}, it will imply the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}.
+\end{remark}
+
+Now, to prove the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, we will need the following lemmas.
+
+\begin{lemma}\label{lma:Lindeberg-CLT-1}
+	For any \(w_1, \dots , w_n, z_1, \dots , z_n \in \mathbb{C} \) such that \(\vert w_i \vert , \vert z_i \vert \leq 1\) for all \(1 \leq i \leq n\), we have
+	\[
+		\left\vert \prod_{i=1}^{n} z_i - \prod_{i=1}^{n} w_i \right\vert
+		\leq \sum_{i=1}^{n} \vert w_i - z_i \vert .
+	\]
+\end{lemma}
+
+It turns out that the following uniform bounds are useful.
+
+\begin{lemma}\label{lma:Lindeberg-CLT-2}
+	For any \(x \in \mathbb{R} \), \(\vert e^{ix} - (1 + ix) \vert \leq x^2 / 2\) and \(\vert e^{ix} - 1 - ix - (ix)^2 / 2 \vert \leq x^2\).
+\end{lemma}
+\begin{proof}
+	Recall the specific form of \hyperref[note:lec10]{Taylor expansion} we used before, which gives
+	\[
+		e^{ix}
+		= 1 + ix + (ix)^2 \int_{0}^{1} \int_{0}^{1} e^{i u v x} u \,\mathrm{d}u  \,\mathrm{d}v
+		= 1 + ix + \frac{(ix)^2}{2} + (ix)^2 \int_{0}^{1} \int_{0}^{1} (e^{i u v x} - 1) u \,\mathrm{d}u  \,\mathrm{d}v,
+	\]
+	which gives both inequalities by bounding the two integrals differently.
+\end{proof}
+
+On the other hand, when \(\vert z \vert \) is small enough, we have the following tighter bounds.
+
+\begin{lemma}\label{lma:Lindeberg-CLT-3}
+	For any \(z \in \mathbb{C} \) such that \(\vert z \vert \leq \epsilon < 1\), \(\vert e^z - 1 - z - z^2 / 2 \vert \leq \vert z \vert ^3 / (1 - \epsilon )\).
+\end{lemma}
+\begin{proof}
+	Since
+	\[
+		\left\vert e^z - 1 - z - \frac{z^2}{2} \right\vert
+		\leq \left\vert \sum_{n=3}^{\infty} z^n \right\vert
+		\leq \vert z \vert ^3 \sum_{n=0}^{\infty} \vert z \vert ^n
+		= \vert z \vert ^3 \cdot \frac{1}{1 - \vert z \vert }
+		\leq \frac{\vert z \vert }{1 - \epsilon },
+	\]
+	where the series converges from the fact that \(\vert z \vert < 1\).
+\end{proof}
+
+\begin{lemma}\label{lma:Lindeberg-CLT-4}
+	For any \(z \in \mathbb{C} \) such that \(\vert z \vert < \delta / 2\) where \(\delta \in (0, 1)\), \(\vert e^{iz} - (1 + iz) \vert \leq \delta \vert z \vert \).
+\end{lemma}
+\begin{proof}
+	Since
+	\[
+		\vert e^{iz} - 1 - iz \vert
+		= \left\vert \sum_{n=2}^{\infty} \frac{(iz)^n}{n!} \right\vert
+		\leq \sum_{n=2}^{\infty} \vert z \vert ^n
+		= \vert z \vert ^2 \sum_{n=0}^{\infty} \vert z \vert ^n
+		= \frac{\vert z \vert ^2}{1 - \vert z \vert }
+		= \frac{\vert z \vert }{1 - \vert z \vert } \vert z \vert
+		< \frac{\delta / 2}{2 - \delta } \vert z \vert
+		\leq \delta \vert z \vert ,
+	\]
+	where the series converges from the fact that \(\vert z \vert < \delta / 2 < 1\).
+\end{proof}
+
+Finally, recall the following.
+
+\begin{prev}
+	From \autoref{eq:normal-characteristic}, for \(Z \sim \mathcal{N} (0, 1)\), \(\phi _Z(t) = e^{-t^2 / 2}\).
+\end{prev}
+
+We can now prove the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}.
+
+\begin{proof}[Proof of \autoref{thm:Lindeberg-CLT}]
+	Let \(\phi _{nj}(t) \coloneqq \mathbb{E}_{}[e^{it X_{nj}}] \) for \(t \in \mathbb{R} \). We want to show that
+	\[
+		\sum_{j=1}^{K_n} Y_{nj} \overset{D}{\to} \mathcal{N} (0, 1)
+		\iff \prod_{j=1}^{K_n} \phi _{nj}(t) \to e^{-t^2 / 2}
+	\]
+	for every \(t \in \mathbb{R} \) from the \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}. Fix \(t \in \mathbb{R} \), from triangle inequality, it suffices to show
+	\[
+		\left\vert \prod_{j=1}^{K_n} \phi _{nj}(t) - \prod_{j=1}^{K_n} e^{\phi _{nj}(t) - 1} \right\vert
+		+ \left\vert \prod_{j=1}^{K_n} e^{\phi _{nj}(t) - 1} - e^{-t^2 / 2} \right\vert
+		\to 0.
+	\]
+	Firstly, consider the first term, and recall what we have shown in the homework.
+
+	\begin{prev}
+		If \(\phi \) is a \hyperref[def:characteristic-function]{characteristic function}, so is \(e^{\lambda (\phi - 1)}\) for any \(\lambda > 0\).
+	\end{prev}
+
+	Hence, \(e^{\phi _{nj}(t) - 1}\) is a \hyperref[def:characteristic-function]{characteristic function}, so both \(\phi _{nj}(t)\) and \(e^{\phi _{nj}(t) - 1}\) are bounded by \(1\). This means we can apply \autoref{lma:Lindeberg-CLT-1} and get
+	\[
+		\left\vert \prod_{j=1}^{K_n} \phi _{nj}(t) - \prod_{j=1}^{K_n} e^{\phi _{nj}(t) - 1} \right\vert
+		\leq \sum_{j=1}^{K_n} \left\vert \phi _{nj}(t) - e^{\phi _{nj}(t) - 1} \right\vert
+		= \sum_{j=1}^{K_n} \left\vert e^{\phi _{nj}(t) - 1} - (\phi _{nj}(t) - 1) - 1 \right\vert.
+	\]
+	Let \(z_j \coloneqq \phi _{nj}(t) - 1\), then the above is just \(\sum_{j=1}^{K_n} \vert e^{z_j} - (z_j + 1) \vert \), suggesting \autoref{lma:Lindeberg-CLT-4}. Fixing some \(\delta \in (0, 1)\), we show that \(\max _{1 \leq j \leq K_n} \vert z_j \vert < \delta / 2\) for large enough \(n\).
+
+	\begin{claim}
+		For any \(\delta \in (0, 1)\), \(\max _{1 \leq j \leq K_n} \vert \phi _{nj}(t) - 1 \vert \leq \delta / 2\) for \(n\) large enough.
+	\end{claim}
+	\begin{explanation}
+		As \(\mathbb{E}_{}[Y_{nj}] = 0\) for all \(1 \leq j \leq K_n\), by using \autoref{lma:Lindeberg-CLT-2}, we have
+		\[
+			\begin{split}
+				\max _{1 \leq j \leq K_n} \vert \phi _{nj}(t) - 1 \vert
+				 & = \max _{1 \leq j \leq K_n} \left\vert \mathbb{E}_{}[e^{i t Y_{nj}} - 1 - i t Y_{nj}]  \right\vert                \\
+				 & \leq \max _{1 \leq j \leq K_n} \mathbb{E}_{}\left[\left\vert e^{it Y_{nj}} - (1 + i t Y_{nj}) \right\vert \right]
+				\leq \frac{t^2}{2} \max _{1 \leq j \leq K_n} \mathbb{E}_{}[Y_{nj}^2]
+			\end{split}
+		\]
+		From the \hyperref[def:Lindeberg-condition]{Lindeberg condition}, \(\max _{1 \leq j \leq K_n} \mathbb{E}_{}[Y_{nj}^2] \to 0\), hence we're done.
+	\end{explanation}
+
+	Hence, for any \(\delta \in (0, 1)\), when \(n\) is large enough, \autoref{lma:Lindeberg-CLT-4} and the above calculation gives,
+	\[
+		\left\vert \prod_{j=1}^{K_n} \phi _{nj}(t) - \prod_{j=1}^{K_n} e^{\phi _{nj}(t) - 1} \right\vert
+		\leq \delta \sum_{j=1}^{K_n} \vert \phi _{nj}(t) - 1 \vert
+		\leq \delta \cdot \frac{t^2}{2} \sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2]
+		= \frac{\delta t^2}{2}
+	\]
+	since \(\sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2] = \sum_{j=1}^{K_n} \Var_{}[Y_{nj}] = 1\). By letting \(n \to \infty \), and \(\delta \to 0\), we see that the first term indeed goes to \(0\) as \(n \to \infty \). As for the second term, it suffices to show that for every \(t \in \mathbb{R} \),
+	\[
+		\sum_{j=1}^{K_n} (\phi _{nj}(t) - 1) \to - \frac{t^2}{2}
+		\iff \sum_{j=1}^{K_n} (\phi _{nj}(t) - 1) + \frac{t^2}{2} \to 0
+		\iff \sum_{j=1}^{K_n} \left[ (\phi _{nj}(t) - 1) + \frac{t^2}{2} \Var_{}[Y_{nj}] \right] \to 0
+	\]
+	as \(\sum_{j=1}^{K_n} \Var_{}[Y_{nj}] = 1\). Since \(Y_{nj}\) is centered, we have \(\mathbb{E}_{}[Y_{nj}] = 0\) and \(\Var_{}[Y_{nj}] = \mathbb{E}_{}[Y_{nj}^2] \), hence
+	\[
+		\sum_{j=1}^{K_n} \left[ (\phi _{nj}(t) - 1) + \frac{t^2}{2} \Var_{}[Y_{nj}] \right]
+		= \sum_{j=1}^{K_n} \mathbb{E}_{}\left[e^{i t Y_{nj}} - 1 - i t Y_{nj} - \frac{(i t Y_n)^2}{2} \right].
+	\]
+	To bound this, we decompose it via the event \(\vert Y_{nj} \vert > \epsilon \) (for some \(\epsilon > 0\) to be determined later) as
+	\[
+		\sum_{j=1}^{K_n} \mathbb{E}_{}\left[\left( e^{i t Y_{nj}} - 1 - i t Y_{nj} - \frac{(i t Y_n)^2}{2} \right) \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } \right]
+		+ \sum_{j=1}^{K_n} \mathbb{E}_{}\left[\left( e^{i t Y_{nj}} - 1 - i t Y_{nj} - \frac{(i t Y_n)^2}{2} \right) \mathbbm{1}_{\vert Y_{nj} \vert \leq \epsilon } \right].
+	\]
+	We then see that
+	\begin{itemize}
+		\item from \autoref{lma:Lindeberg-CLT-2}, with \(x \coloneqq t Y_{nj}\), we can bound the first term as
+		      \[
+			      \sum_{j=1}^{K_n} \mathbb{E}_{}\left[\left( e^{i t Y_{nj}} - 1 - i t Y_{nj} - \frac{(i t Y_{nj})^2}{2} \right) \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } \right]
+			      \leq t^2 \sum_{j=1}^{K_n} \mathbb{E}_{}\left[Y_{nj}^2 \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } \right]
+			      \to 0
+		      \]
+		      as \(n\to \infty \) by the \hyperref[def:Lindeberg-condition]{Lindeberg condition};
+		\item from \autoref{lma:Lindeberg-CLT-3}, with \(z \coloneqq i t Y_{nj}\) such that \(\vert z \vert = \vert t Y_{nj} \vert \leq \vert t \vert \epsilon \) under the event. Let \(\epsilon \) be defined such that \(\vert t \vert \epsilon < 1\), then we can bound the second term by
+		      \[
+			      \frac{1}{1 - \epsilon } \sum_{j=1}^{K_n} \mathbb{E}_{}[\vert t Y_{nj} \vert ^3 \cdot \mathbbm{1}_{\vert Y_{nj} \vert \leq \epsilon } ]
+			      \leq \frac{\vert t \vert ^3}{1 - \epsilon } \epsilon \sum_{j=1}^{K_n} \mathbb{E}_{}[\vert Y_{nj} \vert ^2 \cdot \mathbbm{1}_{\vert Y_{nj} \vert \leq \epsilon } ]
+			      \leq \frac{\vert t \vert ^3}{1 - \epsilon } \epsilon \sum_{j=1}^{K_n} \mathbb{E}_{}[\vert Y_{nj} \vert ^2 ]
+			      = \frac{\vert t \vert ^3}{1 - \epsilon } \epsilon
+		      \]
+		      since again \(\sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2] = \sum_{j=1}^{K_n} \Var_{}[Y_{nj}] = 1\). By letting \(\epsilon \to 0\), \(\vert t \vert ^3 \epsilon / (1 - \epsilon ) \to 0\) as desired.
+	\end{itemize}
+	Hence, we see that both terms go to \(0\) when \(n \to \infty \), so the second term indeed go to \(0\)
+\end{proof}
+
+\begin{corollary}[Hajek-Sidak central limit theorem]\label{Hajek-Sidak-CLT}
+	If \(X_{ni} = c_{ni} X_i\) for all \(1 \leq i \leq n \eqqcolon K_n\) where \(X, (X_n)\) are i.i.d.\ with \(\mathbb{E}_{}[X] = \mu \) and \(\Var_{}[X] = \sigma ^2\). If \(\max _{1 \leq i \leq n} c_n^2 \ll \sum_{i=1}^{n} c_{ni}^2\), then the \hyperref[def:Lindeberg-condition]{Lindeberg condition} holds.
+\end{corollary}

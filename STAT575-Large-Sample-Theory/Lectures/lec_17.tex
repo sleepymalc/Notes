@@ -1,0 +1,173 @@
+\lecture{17}{21 Mar.\ 9:30}{Rank Test and Two-Sample Problem}
+\begin{proof}
+	Firstly, we see that \(\Var_{}[S_n] = \sum_{j=1}^{K_n} c_{nj}^2 \sigma ^2\), hence with our usual notation, we define
+	\[
+		Y_{nj}
+		\coloneqq \frac{c_{nj} (Z_j - \mu )}{\sqrt{\sum_{i=1}^{K_n} c_{ni}^2} \sigma }
+		\eqqcolon \frac{c_{nj}}{\sqrt{\sum_{i=1}^{K_n} c_{ni}^2} } W_j,
+	\]
+	where \(W_j \coloneqq (Z_j - \mu ) / \sigma \). Then, for any \(\epsilon > 0\), we can check that \hyperref[def:Lindeberg-condition]{Lindeberg condition} as
+	\begin{align*}
+		\sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2 \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } ]
+		 & = \sum_{j=1}^{K_n} \frac{c_{nj}^2}{\sum_{i=1}^{K_n} c_{ni}^2} \mathbb{E}_{}\left[ W_j^2 \mathbbm{1}_{\frac{\vert c_{nj} \vert }{\sqrt{\sum_{i=1}^{K_n} c_{ni}^2} } \vert W_j \vert > \epsilon } \right]                               \\
+		\shortintertext{since the only dependence of \(j\) in the expectation is \(\vert c_{nj} \vert \) in the indicator,}
+		 & \leq \sum_{j=1}^{K_n} \frac{c_{nj}^2}{\sum_{i=1}^{K_n} c_{ni}^2} \mathbb{E}_{}\left[ W_j^2 \mathbbm{1}_{ \max _{1 \leq k \leq K_n} \frac{\vert c_{nk} \vert }{\sqrt{\sum_{i=1}^{K_n} c_{ni}^2} } \vert W_k \vert > \epsilon } \right] \\
+		\shortintertext{which makes the term in the expectation i.i.d., so we can replace both \(W_j\) and \(W_k\) by \(W \coloneqq W_1\),}
+		 & = \sum_{j=1}^{K_n} \frac{c_{nj}^2}{\sum_{i=1}^{K_n} c_{ni}^2} \mathbb{E}_{}\left[ W^2 \mathbbm{1}_{ \max _{1 \leq k \leq K_n} \frac{\vert c_{nk} \vert }{\sqrt{\sum_{i=1}^{K_n} c_{ni}^2} } \vert W \vert > \epsilon } \right]        \\
+		 & = \mathbb{E}_{}\left[ W^2 \mathbbm{1}_{ \max _{1 \leq k \leq K_n} \frac{\vert c_{nk} \vert }{\sqrt{\sum_{i=1}^{K_n} c_{ni}^2} } \vert W \vert > \epsilon } \right] .
+	\end{align*}
+	Hence, it reduces to show \(\mathbb{E}_{}[ W^2 \mathbbm{1}_{\vert W \vert > x} ] \to 0\) as \(n \to \infty \) for \(x \coloneqq \epsilon \sqrt{\sum_{i=1}^{K_n} c_{ni}^2} / \max _{1 \leq k \leq K_n} \vert c_{nk} \vert \). From our assumption, for any \(\epsilon > 0\), \(x \to \infty \) as \(n \to \infty \), hence the expectation indeed goes to \(0\) as long as \(W\) has finite second moment, which is indeed the case by our assumption.
+\end{proof}
+
+We see that \hyperref[thm:Hajek-Sidak-CLT]{Hajek-Sidak central limit theorem} is very common in practice.
+
+\begin{intuition}
+	Often time for every \(n\), \(c_{ni} = c_n\), the same for every \(1 \leq i \leq K_n\). In this case, we may write \(X_{n i} = c_n \cdot X_{ni} / c_n \eqqcolon c_n Z_i\) such that \(Z_i \coloneqq X_{ni} / c_n\) is i.i.d.\ distributed, ready for checking the \hyperref[thm:Hajek-Sidak-CLT]{Hajek-Sidak condition}.
+\end{intuition}
+
+Let's see three examples.
+
+\begin{eg}[Uniform distribution]
+	For every \(n \geq 1\), let \((X_{n K_n}) \overset{\text{i.i.d.} }{\sim } \mathcal{U} (-c_n, c_n)\) for some \(c_n > 0\). Then we see that \(Z_i \coloneqq X_{n i} / c_n \sim \mathcal{U} (-1, 1)\) is now i.i.d.\ distributed.
+\end{eg}
+
+\begin{eg}[Rademacher distribution]
+	For every \(n \geq 1\), let \((X_{n K_n})\) be i.i.d.\ such that \(\mathbb{P} (X_{ni} / c_n = \pm 1) = 1 / 2\). Then \(Z_i \coloneqq X_{ni} / c_n\) is now i.i.d.\ distributed.
+\end{eg}
+
+\begin{eg}[Exponential distribution]
+	For every \(n \geq 1\), let \((X_{n K_n}) \overset{\text{i.i.d.} }{\sim } \operatorname{Exp}(1 / c_n) \) for some \(c_n > 0\), hence \(Z_i \coloneqq X_{ni} / c_n \sim \operatorname{Exp}(1) \) is now i.i.d.\ distributed.
+\end{eg}
+
+On the other hand, if we insist the same setup as in the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, it suffices to check a slightly higher moment rather than the truncated one used in the \hyperref[def:Lindeberg-condition]{Lindeberg condition}.
+
+\begin{corollary}[Lyopunov's central limit theorem]\label{thm:Lyopunov-CLT}
+	Consider the setup as in the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. If \(\sum_{j=1}^{K_n} \mathbb{E}_{}[\vert Y_{nj} \vert ^{2 + \delta }] \to 0\) for some \(\delta > 0\), then the \hyperref[def:Lindeberg-condition]{Lindeberg condition} holds.
+\end{corollary}
+\begin{proof}
+	Fix some \(\delta > 0\) such that the assumption holds. Then for any \(\epsilon > 0\), we have
+	\[
+		\sum_{j=1}^{K_n} \mathbb{E}_{}[\vert Y_{nj} \vert ^2 \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } ]
+		\leq \sum_{j=1}^{K_n} \mathbb{E}_{}\left[ \left( \frac{\vert Y_{nj} \vert }{\epsilon } \right) ^\delta \vert Y_{nj} \vert ^2 \mathbbm{1}_{\vert Y_{nj} \vert > \epsilon } \right]
+		\leq \sum_{j=1}^{K_n} \mathbb{E}_{}\left[ \left( \frac{\vert Y_{nj} \vert }{\epsilon } \right) ^\delta \vert Y_{nj} \vert ^2 \right]
+		\to 0
+	\]
+	by taking \(\epsilon ^{-\delta }\) out and then the result follows from the assumption.
+\end{proof}
+
+For bounded random variable, we have a simpler form.
+
+\begin{corollary}\label{col:Lyopunov-CLT}
+	Let \(\vert X_{ni} \vert \leq C_n\) for all \(1 \leq i \leq K_n\). Then if \(C_n / \sqrt{\Var_{}[S_n] } \to 0\), the \hyperref[def:Lindeberg-condition]{Lindeberg condition} holds. In particular, when \(C_n \eqqcolon C\), it suffices to check \(\Var_{}[S_n] \to \infty \).
+\end{corollary}
+\begin{proof}
+	We see that for every \(1 \leq j \leq K_n\),
+	\[
+		\vert Y_{nj} \vert
+		= \frac{\vert X_{nj} - \mathbb{E}_{}[X_{nj}] \vert }{\sqrt{\Var_{}[S_n] } }
+		\leq \frac{2 C_n}{\sqrt{\Var_{}[S_n] } }.
+	\]
+	In this case, for any \(\delta > 0\), recall that \(\sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2] = 1\), hence
+	\[
+		\sum_{j=1}^{K_n} \mathbb{E}_{}[\vert Y_{nj} \vert ^{2 + \delta }]
+		\leq \left( \frac{2C_n}{\sqrt{\Var_{}[S_n] } } \right) ^\delta \sum_{j=1}^{K_n} \mathbb{E}_{}[Y_{nj}^2]
+		= \left( \frac{2C_n}{\sqrt{\Var_{}[S_n] } } \right) ^\delta
+		\to 0,
+	\]
+	hence the \hyperref[thm:Lyopunov-CLT]{Lyopunov's condition} holds.
+\end{proof}
+
+\begin{eg}[Bernoulli distribution]\label{eg:Lyopunov-CLT}
+	For every \(n \geq 1\), let \(X_{ni} \sim \operatorname{Ber}(p_{ni}) \) for all \(1 \leq i \leq K_n\). Since \(X_{ni} \leq 1\), from \autoref{col:Lyopunov-CLT}, it suffices to check
+	\[
+		\Var_{}[S_n]
+		= \sum_{i=1}^{K_n} p_{ni} (1 - p_{ni}) \to \infty .
+	\]
+	\begin{itemize}
+		\item If \(p_{ni} = 1 / i\): then \(\Var_{}[S_n] = \sum_{i=1}^{K_n} 1 / i - \sum_{i=1}^{K_n} 1 / i^2 \to \infty \).
+		\item If \(p_{ni} = p_n\): then \(\Var_{}[S_n] = K_n p_n (1 - p_n)\). In particular, for \(p_n = 1 / n\) and \(K_n = n\),
+		      \[
+			      \Var_{}[S_n]
+			      = n \cdot \frac{1}{n} \cdot \frac{n-1}{n}
+			      \to 1
+			      \neq \infty .
+		      \]
+		      In general, if \(n p_n \to \lambda > 0\), then the sum \(S_n\) \hyperref[def:converge-in-distribution]{converges} to \(\operatorname{Pois}(\lambda ) \).
+	\end{itemize}
+\end{eg}
+
+\section{}\todo{Fill}
+Consider collect a sequence of data \(X_1, \dots , X_n\) and assume a distribution function \(F\) being continuous. We want to test whether \(X_i\)'s are i.i.d.\ from \(F\). Let the rank be
+\[
+	R_i = \sum_{j=1}^{i} \mathbbm{1}_{X_j < X_i}
+\]
+for all \(i \geq 1\). We see that
+\begin{itemize}
+	\item if \(R_i = i\), then \(X_i\) is the largest of \(X_1, \dots , X_i\);
+	\item if \(R_i = 1\), then \(X_i\) is the smallest of \(X_1, \dots , X_i\).
+\end{itemize}
+
+\begin{note}
+	We don't need to worry about the equality in the indicator since \(F\) is continuous.
+\end{note}
+
+\begin{theorem}\label{thm:rank}
+	Let \(X_1, X_2 , \dots \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous. Then the following hold.
+	\begin{enumerate}[(a)]
+		\item\label{thm:rank-a} \(R_1, R_2, \dots \) are independent and \(\mathbb{P} (R_i = r) = 1 / i\) for all \(1 \leq r \leq i\), i.e., \(R_i \sim \mathcal{U} (\{ 1, \dots , i \} )\).
+		\item\label{thm:rank-b} \(\sum_{i=1}^{n} (R_i - \mathbb{E}_{}[R_i] ) / \sqrt{\Var_{}[\sum_{i=1}^{n} R_i] } \overset{D}{\to} \mathcal{N} (0, 1)\).
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	For \autoref{thm:rank-a}, since \(X_i\)'s are i.i.d.\ and \(F\) it continues (hence no ties),
+	\[
+		\mathbb{P} (X_{\sigma (1)} < X_{\sigma (2)} < \dots < X_{\sigma (i)})
+		= \frac{1}{i!}
+	\]
+	for any permutation \(\sigma \) of \(\{ 1, \dots , i \} \). This implies \(\mathbb{P} (R_1 = r_1, \dots , R_i = r_i) = 1 / i!\), hence
+	\[
+		\mathbb{P} (R_i = r)
+		= \sum_{r_1, \dots , r_{i-1}} \mathbb{P} (R_1 = r_1 , \dots , R_{i-1} = r_{i-1} , R_i = r)
+		= (i - 1)! \cdot \frac{1}{i!}
+		= \frac{1}{i},
+	\]
+	which proves \autoref{thm:rank-a}. We now see that \autoref{thm:rank-b} is immediate from \autoref{thm:rank-a} since from \autoref{col:Lyopunov-CLT},
+	\[
+		\frac{n}{\sqrt{\Var_{}[S_n] }}
+		= \frac{n}{\sqrt{\sum_{i=1}^{n} \frac{i^2 - 1}{12}}}
+		= \frac{6 \sqrt{2} n}{\sqrt{n (2 n^{2} + 3 n - 5)}}
+		\to 0
+	\]
+	as \(n \to \infty \), proving the result.
+\end{proof}
+
+\begin{remark}
+	We may instead consider
+	\[
+		Z_i = \begin{dcases}
+			1, & \text{ if } R_i = i ; \\
+			0, & \text{ if } R_i < i .
+		\end{dcases}
+	\]
+	Hence, \(\mathbb{P} (Z_i = 1) = 1 / i\), i.e., \(Z_i \sim \operatorname{Ber}(1 / i) \). Then from the \hyperref[eg:Lyopunov-CLT]{previous example}, we can also get
+	\[
+		\frac{\sum_{i=1}^{n} Z_i - \mathbb{E}_{}[Z_i] }{\sqrt{\Var_{}[\sum_{i=1}^{n} Z_i] } }
+		\overset{D}{\to} \mathcal{N} (0, 1).
+	\]
+\end{remark}
+
+\subsection{Two-Sample Problem with Paired Observation}
+Say we want to test the effect of a treatment. Ideally, we have the testament group and the control group, and observe \((Y_1^{\text{T} }, Y_1^{\text{C} }), (Y_2^{\text{T} }, Y_2^{\text{C} }), \dots , (Y_n^{\text{T} }, Y_n^{\text{C} })\). We consider \(Z_i = Y_i^{\text{T} } - Y_i^{\text{C} }\) for all \(1 \leq i \leq n\).
+
+Usually, we assume \(Z_1 , \dots , Z_n\) are i.i.d.\ with mean \(\mu \) and finite variance. The null hypothesis is then \(H_0 \colon \mu = 0\). The \(t\)-test rejects \(H_0\) if
+\[
+	T_n
+	= \sqrt{n} \frac{\overline{Z} _n}{\hat{\sigma} _n}
+	= \frac{\sum_{i=1}^{n} Z_i}{\sqrt{n} \sqrt{\frac{1}{n} \sum_{i=1}^{n} Z_i^2 - \overline{Z} _n^2} }
+	> Z_{\alpha }.
+\]
+However, we know that in reality, \(Z_i\)'s are never i.i.d., but people still use the \(t\)-test. Why? This is because we usually give the treatment in a randomized way. In addition, we condition on the \(\vert Z_i \vert \) for all \(i \geq 1\). In this case,
+\[
+	H_0 \colon \mathbb{P} (Z_i = \pm \vert Z_i \vert ) \text{ for }  1 \leq i \leq n,
+\]
+i.e., \(\mathbb{P} (Z_i / \vert Z_i \vert = \pm 1) = 1 / 2\), i.e., \(Z_i\) are now i.i.d., and we can apply the \hyperref[thm:CLT]{central limit theorem}, we have \(\sum_{i=1}^{n} Z_i / \sqrt{\sum_{i=1}^{n} Z_i^2} \).

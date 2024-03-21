@@ -6,7 +6,7 @@ Now, we consider the case that when \((X_n)\) are only independent but not ident
 Let's first see some examples regarding Poisson distribution.
 
 \begin{eg}
-	If \(X_i \sim \operatorname{Pois}(1 / i^2) \) for all \(i \geq 1\), then
+	If \(X_i \sim \operatorname{Pois}(1 / i^2) \) for all \(i \geq 1\) and are independent to each other, then
 	\[
 		S_n \sim \operatorname{Pois}\left( \sum_{i=1}^{n} \frac{1}{i^2} \right)
 		\overset{\operatorname{TV} }{\to} \operatorname{Pois}\left( \sum_{i=1}^{\infty} \frac{1}{i^2} \right)
@@ -26,7 +26,7 @@ On the other hand, something tricker can happen when \(X_i\) are ``seemingly'' i
 	This does not contradict to \hyperref[thm:CLT]{central limit theorem} since \(\operatorname{Pois}(1 / n) \) depends on \(n\).
 \end{eg}
 
-In general, for any \(n \geq 1\), let \(K_n \nearrow \infty \) be the number of independent random variables in the sequence \(X_{n1}, \dots , X_{n K_n}\) with \(\Var_{}[X_{nj}] < \infty \) for all \(1 \leq j \leq K_n\) and \(n\). Again, we define \(S_n = X_{n1} + \dots + X_{n K_n}\). In picture, we have something like
+In general, for any \(n \geq 1\), let \(K_n \nearrow \infty \) be the number of independent random variables in the sequence \((X_{n K_n}) = X_{n1}, \dots , X_{n K_n}\) with \(\Var_{}[X_{nj}] < \infty \) for all \(1 \leq j \leq K_n\) and \(n\). Again, we define \(S_n = X_{n1} + \dots + X_{n K_n}\). In picture, we have something like (WRA)\todo{WRA?}
 \[
 	\begin{aligned}
 		 & n=1 \colon &  & X_{11} , \dots , X_{1 K_1};                 \\
@@ -38,14 +38,14 @@ In general, for any \(n \geq 1\), let \(K_n \nearrow \infty \) be the number of 
 Note the following.
 
 \begin{remark}
-	For different \(n\), \((X_{nj})\) can be defined on different probability space.
+	For different \(n\), \((X_{n K_n})\) can be defined on different probability space.
 \end{remark}
 
 \begin{note}
 	As a special case, we previously have \(X_{nj} = X_j\) for all \(1 \leq j \leq n\), i.e., \(K_n = n\).
 \end{note}
 
-\subsection{Lindeberg Condition and Lindeberg Central Limit Theorem}
+\subsection{Lindeberg Central Limit Theorem}
 The goal of this section is to establish the following.
 
 \begin{theorem}[Lindeberg central limit theorem]\label{thm:Lindeberg-CLT}
@@ -63,7 +63,7 @@ The goal of this section is to establish the following.
 	In the above notation, for all \(n \geq 1\), \(\mathbb{E}_{}[Y_{nj}] = 0\) for all \(1 \leq j \leq K_n\) and \(\sum_{j=1}^{K_n} \Var_{}[Y_{nj}] = 1\).
 \end{note}
 
-We first explain the sufficient condition stated in the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. Firstly, a weaker but more intuitive notion one might consider is the following.
+We first explain the sufficient condition stated in the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, i.e., the \hyperref[def:Lindeberg-condition]{Lindeberg condition}. Firstly, a weaker but more intuitive notion one might consider is the following.
 
 \begin{definition}[Uniform asymptotic negligibility]\label{def:uniform-asymptotic-negligibility}
 	Given a (family of) sequence \((X_{n K_n})\), we say it satisfies the \emph{uniform asymptotic negligibility} (\emph{UAN}), if as \(n \to \infty \),
@@ -110,7 +110,7 @@ While the \hyperref[def:uniform-asymptotic-negligibility]{UAN} is insufficient, 
 	If the usual \hyperref[thm:CLT]{central limit theorem} holds with \hyperref[def:uniform-asymptotic-negligibility]{uniform asymptotic negligibility}, it will imply the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}.
 \end{remark}
 
-Now, to prove the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, we will need the following lemmas.
+Now, to prove the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, we again turn to the \hyperref[def:characteristic-function]{characteristic function} and use the \hyperref[thm:characteristic-function-uniqueness]{uniqueness theorem}, as what we have done for the usual \hyperref[thm:CLT]{central limit theorem}. Since this turns the problem into calculus, we will need a series of lemmas that provide some bounds. Starting with the following.
 
 \begin{lemma}\label{lma:Lindeberg-CLT-1}
 	For any \(w_1, \dots , w_n, z_1, \dots , z_n \in \mathbb{C} \) such that \(\vert w_i \vert , \vert z_i \vert \leq 1\) for all \(1 \leq i \leq n\), we have
@@ -120,7 +120,7 @@ Now, to prove the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem},
 	\]
 \end{lemma}
 
-It turns out that the following uniform bounds are useful.
+It turns out that we will also need to bound \(e^{ix} - (1 + ix)\), i.e., the remainder of the second order Taylor expansion of \(e^{ix}\). Let's first see two uniform bounds for this.
 
 \begin{lemma}\label{lma:Lindeberg-CLT-2}
 	For any \(x \in \mathbb{R} \), \(\vert e^{ix} - (1 + ix) \vert \leq x^2 / 2\) and \(\vert e^{ix} - 1 - ix - (ix)^2 / 2 \vert \leq x^2\).
@@ -264,6 +264,9 @@ We can now prove the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theore
 	Hence, we see that both terms go to \(0\) when \(n \to \infty \), so the second term indeed go to \(0\)
 \end{proof}
 
-\begin{corollary}[Hajek-Sidak central limit theorem]\label{Hajek-Sidak-CLT}
-	If \(X_{ni} = c_{ni} X_i\) for all \(1 \leq i \leq n \eqqcolon K_n\) where \(X, (X_n)\) are i.i.d.\ with \(\mathbb{E}_{}[X] = \mu \) and \(\Var_{}[X] = \sigma ^2\). If \(\max _{1 \leq i \leq n} c_n^2 \ll \sum_{i=1}^{n} c_{ni}^2\), then the \hyperref[def:Lindeberg-condition]{Lindeberg condition} holds.
+\subsection{Sufficiency of Lindeberg Condition}
+To apply \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, checking the \hyperref[def:Lindeberg-condition]{Lindeberg condition} might not be the most efficient way. We now study several sufficient conditions for the \hyperref[def:Lindeberg-condition]{Lindeberg condition} to hold.
+
+\begin{corollary}[Hajek-Sidak central limit theorem]\label{thm:Hajek-Sidak-CLT}
+	If \(X_{ni} = c_{ni} Z_i\)\footnote{Note that in this notation, we implicitly assume that when \(n\) varies, only \(c_{ni}\) varies, but not \(Z_i\).} for all \(1 \leq i \leq K_n\) where \((Z_{K_n})\) are i.i.d.\ with \(\mathbb{E}_{}[Z_i] = \mu \) and \(\Var_{}[Z_i] = \sigma ^2\). If \(\max _{1 \leq i \leq K_n} c_{ni}^2 / \sum_{i=1}^{n} c_{ni}^2 \to 0\) as \(n \to \infty \), then the \hyperref[def:Lindeberg-condition]{Lindeberg condition} holds.
 \end{corollary}

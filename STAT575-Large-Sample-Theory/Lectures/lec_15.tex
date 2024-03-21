@@ -70,7 +70,11 @@ The conjecture is indeed correct, and it's an extension of \href{https://en.wiki
 	For any cdf \(F\), \(B_F(t)\) is just \(B\) index at \(F(t)\) for any \(t \in \mathbb{R} \), i.e., \(B_F(t) = B(F(t))\).
 \end{note}
 
-Taking this convergence as granted, i.e., \((Z_n) \coloneqq (t \mapsto Z_n(t))_{n \geq 1} \overset{\text{w} }{\to} B_F \coloneqq \{ t \mapsto B(t) \}_{t\in \mathbb{R} } \). One immediate consequence is the following.
+Taking this convergence as granted (and work with continuous \(F\)), we have
+\[
+	(Z_n) \coloneqq (t \mapsto Z_n(t))_{n \geq 1} \overset{\text{w} }{\to} B_F \coloneqq \{ t \mapsto B(t) \}_{t\in \mathbb{R} }.
+\]
+One immediate consequence is the following.
 
 \begin{proposition}\label{prop:Donsker-continuous-mapping-theorem}
 	If \(T \colon \mathcal{D} \to \mathbb{R} \) is continuous,\footnote{I.e., \(T(G_n) \to T(F)\) if \((G_n), F \in \mathcal{D} \) such that \(\lVert G_n - F \rVert _\infty \to 0\).} then \(T(Z_n) \overset{D}{\to} T(B_F)\).
@@ -79,20 +83,20 @@ Taking this convergence as granted, i.e., \((Z_n) \coloneqq (t \mapsto Z_n(t))_{
 	Since \(Z_n \overset{\text{w} }{\to} B_F\), \hyperref[thm:continuous-mapping]{continuous mapping theorem} proves the result.
 \end{proof}
 
-\subsection{Confidence Bands and Goodness of Fit Tests}
-One immediate application is the following.
+\subsection{Confidence Bands}
+One immediate application of \autoref{prop:Donsker-continuous-mapping-theorem} is the following.
 
-\begin{corollary}\label{col:Donsker-norm}
-	We have \(\sqrt{n} \lVert \hat{F} _n - F \rVert _\infty \overset{D}{\to} \lVert B_F \rVert _\infty \).
+\begin{corollary}\label{col:Donsker-Kolmogorov-Smirnov}
+	If \(F\) is continuous, then \(\sqrt{n} \lVert \hat{F} _n - F \rVert _\infty \overset{D}{\to} \lVert B_F \rVert _\infty \).
 \end{corollary}
 \begin{proof}
 	From \autoref{prop:Donsker-continuous-mapping-theorem}, we just note that \(\lVert \cdot \rVert _\infty \) is continuous since it's a norm.
 \end{proof}
 
-In particular, \autoref{col:Donsker-norm} allows us to do inference.
+In particular, \autoref{col:Donsker-Kolmogorov-Smirnov} allows us to do inference.
 
-\begin{eg}[Confidence bands]
-	Consider \(\alpha = \mathbb{P} (\lVert B_F \rVert _\infty \geq d_\alpha )\) for some \(d_\alpha \), then if \(F\) is continuous, \(\mathbb{P} (\sqrt{n} \lVert F - \hat{F} _n \rVert _\infty \geq d_\alpha ) \to \alpha\), i.e.,
+\begin{eg}[Confidence band]\label{eg:confidence-band-Kolmogorov-Smirnov}
+	For any \(\alpha \in (0, 1)\), let \(d_\alpha \) to be defined as \(\alpha \eqqcolon \mathbb{P} (\lVert B_F \rVert _\infty > d_\alpha )\), then if \(F\) is continuous, \(\mathbb{P} (\sqrt{n} \lVert F - \hat{F} _n \rVert _\infty \geq d_\alpha ) \to \alpha\), i.e.,
 	\[
 		\mathbb{P} \left(\forall t \in \mathbb{R} \colon \hat{F} _n(t) - \frac{d_\alpha }{\sqrt{n} } \leq F(t) \leq \hat{F} _n(t) + \frac{d_\alpha }{\sqrt{n} } \right) \to 1 - \alpha .
 	\]
@@ -100,8 +104,8 @@ In particular, \autoref{col:Donsker-norm} allows us to do inference.
 
 Another application of \autoref{prop:Donsker-continuous-mapping-theorem} is the following.
 
-\begin{corollary}\label{col:Donsker}
-	We have
+\begin{corollary}\label{col:Donsker-Cramer-von-Mises}
+	If \(F\) is continuous, then
 	\[
 		n \int _\mathbb{R} \left( \hat{F} _n(t) - F(t) \right) ^2 F(\mathrm{d} t)
 		\overset{D}{\to} \int _\mathbb{R} B_F^2(t) F(\mathrm{d} t).
@@ -121,23 +125,38 @@ Another application of \autoref{prop:Donsker-continuous-mapping-theorem} is the 
 	since \(\lVert G_n - G \rVert _\infty = \sup _t \vert G_n(t) - G(t) \vert \). As \(\lVert G_n - G \rVert _\infty \to 0\), we're done.
 \end{proof}
 
-Suppose \(F\) is continuous, then \autoref{col:Donsker-norm} and \autoref{col:Donsker} suggest we can test the null hypothesis \(H_0 \colon F = F_0\) using the \emph{Kolmogorov-Smirnov statistic}
-\[
-	K_n \coloneqq \lVert \hat{F} _n - F_0 \rVert _\infty ,
-\]
-and the \emph{Cramér-von Mises statistic}
-\[
-	C_n \coloneqq \int _\mathbb{R} \left( \hat{F} _n(t) - F_0(t) \right) ^2 F_0(\mathrm{d} t).
-\]
-Specifically, we
-\begin{itemize}
-	\item reject \(H_0\) when \(\sqrt{n} \lVert \hat{F} _n - F_0 \rVert _\infty = \sqrt{n} K_n \geq d_\alpha \), where \(d_\alpha \) is defined as \(\alpha = \mathbb{P} (\lVert B_F \rVert _\infty > d_\alpha )\);
-	\item reject \(H_0\) when \(n \int _\mathbb{R} (\hat{F} _n - F_0)^2 \,\mathrm{d} F_0 = n C_n \geq c_{\alpha }^2\), where \(c_\alpha \) is defined as \(\alpha = \mathbb{P} (\int_{0}^{1} B_F^2(t) \,\mathrm{d}t \geq c_\alpha ^2)\).
-\end{itemize}
-It's clear that under \(H_0\), the above two tests will reject with probability approaching \(\alpha \). On the other hand, we have the following.
+\begin{note}
+	We can also obtain a confidence band from \autoref{col:Donsker-Cramer-von-Mises} as in the \hyperref[eg:confidence-band-Kolmogorov-Smirnov]{previous example}.
+\end{note}
 
-\begin{proposition}\label{prop:Kolmogorov-Smirnov}
-	Suppose \(F\) is continuous. Consider the test \(H_0 \colon F = F_0\) using Kolmogorov-Smirnov statistic, then for any \(F \neq F_0\), \(\mathbb{P} _F(\text{reject} ) = \mathbb{P} (\lVert B_F \rVert _\infty \geq d_\alpha ) \to 1\) as \(n \to \infty \).
+\subsection{Goodness of Fit Tests}
+We now consider the problem of testing the null hypothesis \(H_0 \colon F = F_0\) given \(F_0\), i.e., the \emph{goodness of fit test}. Suppose \(F\) is continuous, then \autoref{col:Donsker-Kolmogorov-Smirnov} and \autoref{col:Donsker-Cramer-von-Mises} suggest we can test \(H_0\) using the following two statistics.
+
+\begin{eg}[Kolmogorov-Smirnov statistic]\label{eg:goodness-of-fit-Kolmogorov-Smirnov}
+	Consider the \emph{Kolmogorov-Smirnov statistic}
+	\[
+		K_n \coloneqq \lVert \hat{F} _n - F_0 \rVert _\infty.
+	\]
+	For any \(\alpha \in (0, 1)\), we reject \(H_0\) when \(\sqrt{n} K_n > d_\alpha \), where \(d_\alpha \) is defined as \(\alpha \eqqcolon \mathbb{P} (\lVert B_F \rVert _\infty > d_\alpha )\).
+\end{eg}
+
+\begin{eg}[Cramér-von Mises statistic]\label{eg:goodness-of-fit-Cramér-von-Mises}
+	Consider the \emph{Cramér-von Mises statistic}
+	\[
+		C_n \coloneqq \int _\mathbb{R} \left( \hat{F} _n(t) - F_0(t) \right) ^2 F_0(\mathrm{d} t).
+	\]
+	For any \(\alpha \in (0, 1)\), we reject \(H_0\) when \(n C_n > c_{\alpha }^2\), where \(c_\alpha \) is defined as \(\alpha \eqqcolon \mathbb{P} (\int_{0}^{1} B_F^2(t) \,\mathrm{d}t \geq c_\alpha ^2)\).
+\end{eg}
+In particular, \autoref{col:Donsker-Kolmogorov-Smirnov} and \autoref{col:Donsker-Cramer-von-Mises} shows the following.
+
+\begin{remark}
+	Under \(H_0\), the above two tests will only reject with probability approaching \(\alpha \).
+\end{remark}
+
+On the other hand, when \(F \neq F_0\), we will reject with probability approaching \(1\):
+
+\begin{proposition}\label{prop:goodness-of-fit-Kolmogorov-Smirnov}
+	Suppose \(F\) is continuous. Consider testing \(H_0 \colon F = F_0\) using the \hyperref[eg:goodness-of-fit-Kolmogorov-Smirnov]{Kolmogorov-Smirnov statistic}, then for any \(F \neq F_0\), \(\mathbb{P} _F(\text{reject} ) = \mathbb{P} (\sqrt{n} K_n > d_\alpha ) \to 1\) as \(n \to \infty \).
 \end{proposition}
 \begin{proof}
 	For any metric \(d\), we have
@@ -146,13 +165,19 @@ It's clear that under \(H_0\), the above two tests will reject with probability 
 		\geq \mathbb{P} _F(\sqrt{n} (d(\hat{F} _n, F) - d(F, F_0))\geq d_\alpha )
 		= \mathbb{P} _F(\sqrt{n} d(\hat{F} _n, F) \geq d_\alpha + \sqrt{n} d(F, F_0)).
 	\]
-	As \(F \neq F_0\), \(d(F, F_0) > 0\) is a fixed number, so \(\sqrt{n} d(F, F_0) \to \infty \); on the other hand, since \(\sqrt{n} \lVert \hat{F} _n, F  \rVert _\infty = O_p(1)\) \autoref{col:Donsker-norm} with \(d = \lVert \cdot \rVert _\infty \), the right-hand side goes to \(1\).
+	As \(F \neq F_0\), \(d(F, F_0) > 0\) is a fixed number, so \(\sqrt{n} d(F, F_0) \to \infty \). Hence, from \autoref{col:Donsker-Kolmogorov-Smirnov}, \(\sqrt{n} \lVert \hat{F} _n - F \rVert _\infty = O_p(1)\), with \(d(x, y) \coloneqq \lVert x - y \rVert _\infty \), the right-hand side goes to \(1\).
 \end{proof}
 
-The same result can be obtained for the case of using the Cramér-von Mises statistic as follows.
+The same result can be obtained when the \hyperref[eg:goodness-of-fit-Cramér-von-Mises]{Cramér-von Mises statistic} is used as follows.
+
+\begin{proposition}\label{prop:goodness-of-fit-Cramér-von-Mises}
+	Suppose \(F\) is continuous. Consider testing \(H_0 \colon F = F_0\) using the \hyperref[eg:goodness-of-fit-Cramér-von-Mises]{Cramér-von Mises statistic}, then for any \(F \neq F_0\), \(\mathbb{P} _F(\text{reject} ) = \mathbb{P} (n C_n > c_\alpha ^2) \to 1\) as \(n \to \infty \).
+\end{proposition}
+
+We omit the proof of \autoref{prop:goodness-of-fit-Cramér-von-Mises}, instead, we focus on a related result regarding the representation of \(C_n\). The proof of \autoref{prop:Cramér-von-Mises-representation} can be done similarly. First, recall the following.
 
 \begin{prev}
-	From \autoref{col:Donsker}, under \(H_0 \colon F = F_0\),
+	From \autoref{col:Donsker-Cramer-von-Mises}, under \(H_0 \colon F = F_0\),
 	\[
 		n C_n
 		= n \int _\mathbb{R} (\hat{F} _n - F_0)^2 \,\mathrm{d} F_0
@@ -166,7 +191,7 @@ However, if \(F \neq F_0\), what's the distribution now? Consider
 \]
 Since \(h\) is continuous, \(C_n = h(\hat{F} _n) \to h(F) \). As for a distributional result, we have the following.
 
-\begin{proposition}\label{prop:Cramer-von Mises}
+\begin{proposition}\label{prop:Cramér-von-Mises-representation}
 	There is a function \(g\) so that \(\mathbb{E}_{}[g(X)] = 0\) and
 	\[
 		\sqrt{n} \left( C_n - \int _\mathbb{R} (F - F_0)^2 \,\mathrm{d} F_0 \right)

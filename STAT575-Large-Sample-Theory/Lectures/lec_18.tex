@@ -1,169 +1,235 @@
-\lecture{18}{26 Mar.\ 9:30}{Two-Sample Problem and Wilcoxon Signed-Rank Test}
-As we have seen, we might just consider \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F \) where \(F\) is continuous, and we want to test \(H_0 \colon \mathbb{E}_{}[X] = 0\). If, also, \(\Var_{}[X] < \infty \), then we reject \(H_0\) if \(T_n \geq Z_\alpha \) where
-\[
-	T_n
-	\coloneqq \sqrt{n} \frac{\overline{X} _n - 0}{\hat{\sigma} _n}
-	= \frac{\sum_{i=1}^{n} X_i}{\sqrt{\sum_{i=1}^{n} (X_i - \overline{X} _n)^2} }.
-\]
-Since \(\Var_{}[X] < \infty \), \(T_n \overset{D}{\to} \mathcal{N} (0, 1)\) under \(H_0\).
-
-\begin{problem*}
-	What if \(\Var_{}[X] \) doesn't exist? Moreover, what if \(\mathbb{E}_{}[X] \) doesn't exist?
-\end{problem*}
-
-Another question is that since this is all asymptotic, and we might wonder what's the rate of convergence.
+\lecture{18}{26 Mar.\ 9:30}{Wilcoxon Signed-Rank Test}
+We will now focus on explaining the previous answer to the non i.i.d.\ problem. However, before we dive in, let's point out other potential problems. Firstly, since even for i.i.d.\ \(X_i\)'s, the results for \(T_n\) is asymptotic, and we might wonder what's the rate of convergence.
 
 \begin{problem*}
 	How fast does \(T_n \overset{D}{\to} \mathcal{N} (0, 1)\) under \(H_0\)?
 \end{problem*}
-\begin{answer}
-	Depends on \(F\).
-\end{answer}
+
+Clearly, the answer to this problem depends heavily on \(F\), so it's unlikely to get a universal answer. On the other hand, what if the underlying distribution has heavy tails?
 
 \begin{problem*}
-	What if \(X_1, \dots , X_n\) are not i.i.d.?
+	What if \(\Var_{}[X_i] \), or even \(\mathbb{E}_{}[X_i] \), doesn't exist?
+\end{problem*}
+
+It turns out that this is something we will solve along the way when we deal with the i.i.d.\ problem.
+
+\subsection{Wilcoxon Signed-Rank Test}
+We now see how to solve the non i.i.d.\ problem. Consider the following \(H_0\) such that for every \(1 \leq i \leq n\),
+\[
+	\mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert , 1 \leq j \leq n) = \frac{1}{2}.
+\]
+In other words, \(\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert , 1 \leq j \leq n) = 1 / 2\).
+
+\begin{intuition}
+	In practice, when doing inference, we usually implicitly condition on \(\vert X_j \vert \)'s too: for example, by doing inference on the selected ``design points'', we're essentially condition on those.
+\end{intuition}
+
+By writing \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)\) and treating \(\vert X_i \vert \)'s as constants, under \(H_0\),
+\[
+	\frac{\sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} X_i^2} }
+	\overset{D}{\to} \mathcal{N} (0, 1)
+\]
+by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use the left-hand side for out test as usual.
+
+\begin{problem*}
+	Is it possible to avoid using the information of \(\vert X_j \vert \)'s?
 \end{problem*}
 \begin{answer}
-	Consider the following \(H_0\) such that for every \(1 \leq i \leq n\),
-	\[
-		\mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert , 1 \leq j \leq n) = \frac{1}{2},
-	\]
-	i.e., \(\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert , 1 \leq j \leq n) = 1 / 2\). Hence, the inference conditionally on \(\vert X_j \vert \)'s. In this case, we have \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)\), and by treating \(\vert X_i \vert \)'s as constants, then by
-	\[
-		\frac{\sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} X_i^2} }
-		\overset{D}{\to} \mathcal{N} (0, 1)
-	\]
-	under \(H_0\) by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. Alternatively, reject if \(\sum_{i=1}^{n} \sgn (X_i) \) is large. We see that
+	Inspired by the above, we may reject \(H_0\) if \(\sum_{i=1}^{n} \sgn (X_i) \) is large. In particular, under \(H_0\),
 	\[
 		\sum_{i=1}^{n} \sgn (X_i)
 		= 2 \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} - n,
 	\]
-	where \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\). On the other hand,
+	where we know that \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\). We see that this is independent of \(F\), and we know its exact distribution, hence we can do the test with this. On the other hand, under \(H_0\),
 	\[
-		\frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1)
+		\frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1),
 	\]
-	under \(H_0\), so we can also reject when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \). Consider the rank \(R_i\) for \(1 \leq i \leq n\) is defined as
-	\[
-		R_i = \sum_{j=1}^{n} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert }.
-	\]
-	It's clear that \(R_i\)'s are now dependent.
-
-	\begin{prev}
-		This is different from the previous definition.
-	\end{prev}
-
-	\begin{intuition}
-		Replace \(\vert X_i \vert \) by \(R_i\).
-	\end{intuition}
-
-	Consider reject \(H_0\) if
-	\[
-		W_n = \sum_{i=1}^{n} R_i \sgn (X_i)
-	\]
-	is large. This is the so-called \emph{Wilcoxon signed-rank test}. To figure out the critical value, since we condition on \(\{ \vert X_j \vert \}_{j = 1}^n \), without loss of generality, \(R_i = i\) for every \(1 \leq i \leq n\).\footnote{This is doable since \(\vert X_j \vert \)'s are treated as constants.} In this case, \(W_n = \sum_{i=1}^{n} i \sgn (X_i)\). By the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem},
-	\[
-		\frac{\sum_{i=1}^{n} i \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} i^2} }
-		\overset{D}{\to} \mathcal{N} (0, 1)
-	\]
-	under \(H_0\). This is independent of \(F\).
+	so we can also reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
 \end{answer}
 
-Now, if the data is indeed i.i.d., consider \(H_0 \colon \sgn (X_i) = \epsilon _i\) where \(\epsilon _i\) is a Rademacher random variable, i.e., \(\mathbb{P} (X > 0) = \mathbb{P} (X < 0) = 1 / 2\). This doesn't even need the assumption that \(\mathbb{E}_{}[X] \) exists.
+However, since we're not using the information of \(\vert X_j \vert \) now, it's questionable that how powerful the above tests are. If we want to use \(\vert X_j \vert \)'s, consider the following.
 
-If we now have \(\Var_{}[X] < \infty \), then the Wilcoxon signed-rank test still makes sense. But since we're not conditioning on \(\vert X_j \vert \)'s we only have
+\begin{intuition}
+	Replace \(\vert X_i \vert \)'s by their ``rank'' information.
+\end{intuition}
+
+Consider the rank \(R_i\) for \(1 \leq i \leq n\)
+\[
+	R_i
+	\coloneqq \sum_{j=1}^{n} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert }.
+\]
+It's clear that \(R_i\)'s are dependent to each other.
+
+\begin{prev}
+	This is different from the previous definition \(R_i = \sum_{j=1}^{i} \mathbbm{1}_{X_j < X_i} \).
+\end{prev}
+
+Following the intuition, consider the so-called \emph{Wilcoxon signed-rank test}, which rejects \(H_0\) if
+\[
+	W_n = \sum_{i=1}^{n} R_i \sgn (X_i)
+\]
+is ``large.'' To figure out the critical value, since we condition on \(\{ \vert X_j \vert \}_{j = 1}^n \), without loss of generality, \(R_i = i\) for every \(1 \leq i \leq n\).\footnote{This is doable since \(\vert X_j \vert \)'s are treated as constants.} In this case, \(W_n = \sum_{i=1}^{n} i \sgn (X_i)\), hence under \(H_0\),
+\[
+	\frac{\sum_{i=1}^{n} i \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} i^2} }
+	\overset{D}{\to} \mathcal{N} (0, 1)
+\]
+by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use this to test \(H_0\).
+
+\begin{note}
+	This test statistic is again independent of \(F\) (under \(H_0\)).
+\end{note}
+
+Without conditioning on \(\vert X_j \vert \)'s, the above doesn't hold. However, a simple sign test can still be done.
+
+\begin{eg}[Sign test]
+	If the data is i.i.d., consider \(H_0 \colon \sgn (X_i) = \epsilon _i\) where \(\epsilon _i\) is a Rademacher random variable, i.e., \(\mathbb{P} (X > 0) = \mathbb{P} (X < 0) = 1 / 2\).
+\end{eg}
+
+Let's study this simple sign test. Observe that the above doesn't need \(\mathbb{E}_{}[X_i] \) to be finite. But if we further assume \(\Var_{}[X_i] < \infty \), then the Wilcoxon signed-rank test still makes sense. However, since we're not conditioning on \(\vert X_j \vert \)'s, we only have
 \[
 	W_n = \sum_{i=1}^{n} R_i \sgn (X_i).
 \]
-To understand this, consider \(W_n = W_n^+ - W_n^-\) where
-\[
-	W_n^+ = \sum_{i=1}^{n} R_i \mathbbm{1}_{X_i > 0} ,\text{ and }
-	W_n^- = \sum_{i=1}^{n} R_i \mathbbm{1}_{X_i < 0}.
-\]
-We see that
-\[
-	W_n^+
-	= \sum_{i=1}^{n} \left( \sum_{j=1}^{n} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert } \right) \mathbbm{1}_{X_i > 0}
-	= \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} + \sum_{\substack{1 \leq i, j \leq n \\ i \neq j}} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert , X_i > 0},
-\]
-hence
-\[
-	\begin{split}
-		W_n^+ - \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0}
-		 & = \sum_{i \neq j} \mathbbm{1}_{\vert X_j \vert \leq X_i}                                                      \\
-		 & = \sum_{i \neq j} \mathbbm{1}_{-X_i \leq X_j \leq X_i}                                                        \\
-		 & = \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} \mathbbm{1}_{X_j \leq X_i}                                   \\
-		 & = \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} - \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0, X_j > X_i},
-	\end{split}
-\]
-and hence
-\[
-	W_n^+ - \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0}
-	= \frac{1}{2} \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0}.
-\]
-Similarly,
-\[
-	W_n^- - \sum_{i=1}^{n} \mathbbm{1}_{X_i < 0}
-	= \frac{1}{2} \sum_{i \neq j} \mathbbm{1}_{X_i + X_j < 0} .
-\]
-Hence, by subtracting, since \(\mathbbm{1}_{X_i > 0} - \mathbbm{1}_{X_i < 0} = \sgn (X_i) \), we have
-\[
-	W_n - \sum_{i=1}^{n} \sgn (X_i)
-	= \frac{1}{2} \sum_{i \neq j} \left( \mathbbm{1}_{X_i + X_j \geq 0} - \mathbbm{1}_{X_i + X_j < 0} \right)
-	= \frac{1}{2} \sum_{i \neq j} \left( 2 \mathbbm{1}_{X_i + X_j \geq 0} - 1 \right)
-	= \sum_{i \neq j} \left( \mathbbm{1}_{X_i + X_j \geq 0} - \frac{1}{2} \right).
-\]
 
-\begin{notation}
-	Let \(h(x_1, x_2) \coloneqq \mathbbm{1}_{x_1 + x_2 \geq 0} \).
-\end{notation}
+\begin{proposition}\label{prop:Wilcoxon-signed-rank-test}
+	Let \(h(x_1, x_2) \coloneqq \mathbbm{1}_{x_1 + x_2 \geq 0}\). Then we have
+	\[
+		W_n - \sum_{i=1}^{n} \sgn (X_i)
+		= \sum_{i \neq j} \left( h(X_i , X_j) - \frac{1}{2} \right).
+	\]
+\end{proposition}
+\begin{proof}
+	Consider \(W_n \eqqcolon W_n^+ - W_n^-\) where
+	\[
+		W_n^+ = \sum_{i=1}^{n} R_i \mathbbm{1}_{X_i > 0} ,\text{ and }
+		W_n^- = \sum_{i=1}^{n} R_i \mathbbm{1}_{X_i < 0}.
+	\]
+	Some calculation gives the following.
 
-Hence,
+	\begin{claim}
+		\(W_n^+ - \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} = \frac{1}{2} \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0}\) and \(W_n^- - \sum_{i=1}^{n} \mathbbm{1}_{X_i < 0} = \frac{1}{2} \sum_{i \neq j} \mathbbm{1}_{X_i + X_j < 0}\).
+	\end{claim}
+	\begin{explanation}
+		Let's first focus on \(W_n^+\). We see that
+		\[
+			W_n^+
+			= \sum_{i=1}^{n} \left( \sum_{j=1}^{n} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert } \right) \mathbbm{1}_{X_i > 0}
+			= \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} + \sum_{\substack{1 \leq i, j \leq n \\ i \neq j}} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert , X_i > 0} ,
+		\]
+		Let's abbreviate the argument \(1 \leq i, j \leq n \colon i \neq j\) in the double summation by \(i \neq j\), we have
+		\[
+			\begin{split}
+				W_n^+ - \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0}
+				 & = \sum_{i \neq j} \mathbbm{1}_{\vert X_j \vert \leq X_i}                                       \\
+				 & = \sum_{i \neq j} \mathbbm{1}_{-X_i \leq X_j \leq X_i}                                         \\
+				 & = \underbrace{\sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} \mathbbm{1}_{X_j \leq X_i}}_{S_1}
+				= \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} - \underbrace{\sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} \mathbbm{1}_{X_j > X_i}}_{S_2},
+			\end{split}
+		\]
+		where the last equality can be justified by the fact that \(1 = \mathbbm{1}_{X_j \leq X_i} + \mathbbm{1}_{X_j > X_i} \). Observe that
+		\[
+			S_1
+			= \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} \mathbbm{1}_{X_j \leq X_i}
+			= \sum_{i \neq j} \mathbbm{1}_{X_j + X_i \geq 0} \mathbbm{1}_{X_i \leq X_j}
+			= \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} \mathbbm{1}_{X_j > X_i}
+			= S_2,
+		\]
+		as we assume that \(F\) is continuous. Hence, by letting \(S \coloneqq S_1 = S_2\), the above calculation gives
+		\[
+			W_n^+ - \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0}
+			= S
+			= \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} - S
+			\implies S
+			= W_n^+ - \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0}
+			= \frac{1}{2} \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0}.
+		\]
+		The results for \(W_n^-\) follows similarly.
+	\end{explanation}
+
+	By subtracting the above, since \(\mathbbm{1}_{X_i > 0} - \mathbbm{1}_{X_i < 0} = \sgn (X_i) \), we have
+	\[
+		W_n - \sum_{i=1}^{n} \sgn (X_i)
+		= \frac{1}{2} \sum_{i \neq j} \left( \mathbbm{1}_{X_i + X_j \geq 0} - \mathbbm{1}_{X_i + X_j < 0} \right)
+		= \frac{1}{2} \sum_{i \neq j} \left( 2 \mathbbm{1}_{X_i + X_j \geq 0} - 1 \right).
+	\]
+	Plugging the definition of \(h\) yields the result.
+\end{proof}
+
+Hence, from \autoref{prop:Wilcoxon-signed-rank-test}, we should first study \(\sum_{i \neq j} h(X_i, X_j)\). First, consider testing
 \[
-	W_n - \sum_{i=1}^{n} \sgn (X_i)
-	= \sum_{i \neq j} \left( h(X_i , X_j) - \frac{1}{2} \right).
+	H_0 \colon X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F \text{ where \(F\) is continuous such that } X \overset{D}{=} -X,
 \]
-To understand \(\sum_{i \neq j} h(X_i, X_j)\), let \(H_0 \colon X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous, such that \(\mathbb{P} (X \geq x) = \mathbb{P} (X \leq -x)\) for all \(x \in \mathbb{R} \), i.e., \(X \overset{D}{=} -X\). Observe that we don't need \(\mathbb{E}_{}[X] \) to exists. Under \(H_0\), we see that for \(i \neq j\),
-\[
-	\begin{split}
-		\mathbb{E}_{H_0}[h(X_i, X_j)]
-		= \mathbb{E}_{H_0}[h(X_1, X_2)]
-		 & = \mathbb{P} (X_1 + X_2 \geq 0)                             \\
-		 & = \mathbb{P} (X_1 \geq -X_2)                                \\
-		 & = \int _\mathbb{R} \mathbb{P} (X_1 \geq -x) F(\mathrm{d} x)
-		= \int _\mathbb{R} \mathbb{P} (X \leq x) F(\mathrm{d} x)
-		= \mathbb{E}_{}[F(X)]
-		= \frac{1}{2}
-	\end{split}
-\]
-since \(F\) is continuous, and \(F(X) \sim \mathcal{U} (0, 1)\) as we have shown in the homework. Hence,
+i.e., \(\mathbb{P} (X \geq x) = \mathbb{P} (X \leq -x)\) for all \(x \in \mathbb{R}\). Note that we're not assuming \(\mathbb{E}_{}[X_i] \) to exists.
+
+\begin{note}
+	Since \(X_i\)'s are i.i.d.\ under \(H_0\), \(h(X_i, X_j)\)'s are identically distributed under \(H_0\) for \(i \neq j\).
+\end{note}
+
+However, it's clear that \(h(X_i, X_j)\)'s are not independent. Anyway, recall what we're trying to study.
+
+\begin{prev}
+	From \autoref{prop:Wilcoxon-signed-rank-test}, under \(H_0\) (in particular, \(F\) being continuous),
+	\[
+		W_n - \sum_{i=1}^{n} \sgn (X_i)
+		= \sum_{i \neq j} \left( h(X_i , X_j) - \frac{1}{2} \right)
+	\]
+\end{prev}
+This is a sum of identically distributed random variables subtracting something.
+
+\begin{intuition}
+	It \(1 / 2\) is the expectation of \(h(X_i, X_j)\) for \(i \neq j\), we're getting close to the familiar form.
+\end{intuition}
+
+\begin{claim}
+	Indeed, under \(H_0\), \(\mathbb{E}_{}[h(X_i, X_j)] = 1 / 2\) for \(i \neq j\).
+\end{claim}
+\begin{explanation}
+	We see that
+	\[
+		\begin{split}
+			\mathbb{E}_{H_0}[h(X_i, X_j)]
+			= \mathbb{E}_{H_0}[h(X_1, X_2)]
+			 & = \mathbb{P} (X_1 + X_2 \geq 0)                             \\
+			 & = \mathbb{P} (X_1 \geq -X_2)                                \\
+			 & = \int _\mathbb{R} \mathbb{P} (X_1 \geq -x) F(\mathrm{d} x)
+			= \int _\mathbb{R} \mathbb{P} (X \leq x) F(\mathrm{d} x)
+			= \mathbb{E}_{}[F(X)]
+			= \frac{1}{2}
+		\end{split}
+	\]
+	since \(F\) is continuous, and \(F(X) \sim \mathcal{U} (0, 1)\) as we have shown in the homework.
+\end{explanation}
+
+Hence, under \(H_0\),
 \[
 	\sum_{i \neq j} \left( h(X_i, X_j) - \frac{1}{2} \right)
 	= 2 \sum_{i < j} \left( h(X_i, X_j) - \frac{1}{2} \right)
-	= 2 \sum_{i < j} \left( h(X_i, X_j) - \mathbb{E}_{}[h(X_i, X_j)] \right),
+	= 2 \sum_{i < j} \left( h(X_i, X_j) - \mathbb{E}_{}[h(X_i, X_j)] \right).
 \]
-and we know that under \(H_0\), \(h(X_i, X_j)\) are identically distributed but not independent. Overall,
+By rescaling by the number of terms in the summation, we're looking at
 \[
 	\frac{1}{\binom{n}{2}} \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
-	= \frac{2}{\binom{n}{2}} \sum_{i < j} \left( h(X_i, X_j) - \frac{1}{2} \right)
-	= 2 \left( U_n - \frac{1}{2} \right)
+	= \frac{2}{\binom{n}{2}} \sum_{i < j} \left( h(X_i, X_j) - \mathbb{E}_{}[h(X_i, X_j)] \right)
+	\eqqcolon 2 \left( U_n - \frac{1}{2} \right)
 \]
 where
 \[
 	U_n \coloneqq \frac{1}{\binom{n}{2}} \sum_{i < j} h(X_i, X_j).
 \]
-This is an \(U\)-statistic, where \(U\) stands for unbiased. Indeed, since \(\mathbb{E}_{}[h(X_1, X_2)] = \mathbb{P} (X_1 + X_2 \geq 0)\). We will show that by multiplying \(\sqrt{n} \) on the both sides, this \hyperref[def:converge-in-distribution]{converges} to a standard normal, i.e.,
+This is the so-called \emph{\(U\)-statistic}, where \(U\) stands for unbiased. Indeed, since \(\mathbb{E}_{}[h(X_1, X_2)] = \mathbb{P} (X_1 + X_2 \geq 0)\). We will show that by multiplying \(\sqrt{n} \) on the both sides, this \hyperref[def:converge-in-distribution]{converges} to a standard normal, i.e.,
 \[
 	\frac{\sqrt{n}}{\binom{n}{2}}  \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
 	= \sqrt{n} 2 \left( U_n - \frac{1}{2} \right)
 	\overset{D}{\to} \mathcal{N} (0, 1).
 \]
-Note that is we have this,
-\[
-	2 \frac{\sqrt{n} }{n(n-1)} \sum_{i=1}^{n} \sgn (X_i)
-	= \frac{2}{n-1} \left( \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \sgn (X_i) \right)
-	\overset{p}{\to} 0,
-\]
-hence we will get an asymptotic distribution for \(W_n\) exactly.
+
+\begin{note}
+	This asymptotic result will imply an asymptotic distribution for \(W_n\) exactly alone since
+	\[
+		2 \frac{\sqrt{n} }{n(n-1)} \sum_{i=1}^{n} \sgn (X_i)
+		= \frac{2}{n-1} \left( \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \sgn (X_i) \right)
+		\overset{p}{\to} 0.
+	\]
+\end{note}
 
 In general, to show
 \[

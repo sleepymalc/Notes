@@ -96,21 +96,21 @@ For bounded random variable, we have a simpler form.
 	\end{itemize}
 \end{eg}
 
-\section{}
-\subsection{}
-Consider collect a sequence of data \(X_1, \dots , X_n\) and assume a distribution function \(F\) being continuous. We want to test whether \(X_i\)'s are i.i.d.\ from \(F\). Let the rank be
+\section{The Two-Sample Problem}
+With this new tool in hand, i.e., the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, we now see some applications. Let's first see one illustrative example. Consider collecting a sequence of data \(X_1, \dots , X_n \sim F\) where \(F\) is continuous. We want to test whether \(X_i\)'s are i.i.d.\ from \(F\). To do this, consider that for all \(i \geq 1\), define the \emph{rank} to be
 \[
-	R_i = \sum_{j=1}^{i} \mathbbm{1}_{X_j < X_i}
+	R_i = \sum_{j=1}^{i} \mathbbm{1}_{X_j < X_i}.
 \]
-for all \(i \geq 1\). We see that
-\begin{itemize}
-	\item if \(R_i = i\), then \(X_i\) is the largest of \(X_1, \dots , X_i\);
-	\item if \(R_i = 1\), then \(X_i\) is the smallest of \(X_1, \dots , X_i\).
-\end{itemize}
+
+\begin{eg}
+	In particular, if \(R_i = i\) (\(R_i = 1\)), then \(X_i\) is the largest (smallest) of \(X_1, \dots , X_i\).
+\end{eg}
 
 \begin{note}
 	We don't need to worry about the equality in the indicator since \(F\) is continuous.
 \end{note}
+
+To see how this helps us to decide whether \(X_i\)'s are i.i.d., under this hypothesis, we have the following.
 
 \begin{theorem}\label{thm:rank}
 	Let \(X_1, X_2 , \dots \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous. Then the following hold.
@@ -143,32 +143,47 @@ for all \(i \geq 1\). We see that
 \end{proof}
 
 \begin{remark}
-	We may instead consider
-	\[
-		Z_i = \begin{dcases}
-			1, & \text{ if } R_i = i ; \\
-			0, & \text{ if } R_i < i .
-		\end{dcases}
-	\]
-	Hence, \(\mathbb{P} (Z_i = 1) = 1 / i\), i.e., \(Z_i \sim \operatorname{Ber}(1 / i) \). Then from the \hyperref[eg:Lyopunov-CLT]{previous example}, we can also get
+	Besides \(R_i\), we may instead consider \(Z_i = \mathbbm{1}_{R_i = i} \). Since \(R_i \leq i\), so \(\mathbb{P} (Z_i = 1) = 1 / i\), i.e., \(Z_i \sim \operatorname{Ber}(1 / i) \). Then from the \hyperref[eg:Lyopunov-CLT]{previous example}, we can also get
 	\[
 		\frac{\sum_{i=1}^{n} Z_i - \mathbb{E}_{}[Z_i] }{\sqrt{\Var_{}[\sum_{i=1}^{n} Z_i] } }
 		\overset{D}{\to} \mathcal{N} (0, 1).
 	\]
 \end{remark}
 
-\subsection{Two-Sample Problem with Paired Observation}
-Say we want to test the effect of a treatment. Ideally, we have the testament group and the control group, and observe \((Y_1^{\text{T} }, Y_1^{\text{C} }), (Y_2^{\text{T} }, Y_2^{\text{C} }), \dots , (Y_n^{\text{T} }, Y_n^{\text{C} })\). We consider \(Z_i = Y_i^{\text{T} } - Y_i^{\text{C} }\) for all \(1 \leq i \leq n\).
+This gives us some hints about how to deal with this kind of problems, i.e., we try to find some statistics that will follow certain distribution \emph{independent} of the underlying \(F\).
 
-Usually, we assume \(Z_1 , \dots , Z_n\) are i.i.d.\ with mean \(\mu \) and finite variance. The null hypothesis is then \(H_0 \colon \mu = 0\). The \(t\)-test rejects \(H_0\) if
+\subsection{Two-Sample Problem with Paired Observation}
+We now turn to the famous two-sample problem.
+
+\begin{problem}[Two-sample problem]\label{prb:two-sample}
+Given the data of two random samples obtained from a different given population. The \emph{two-sample problem} considers the task of determining whether the difference between these two populations is statistically significant.
+\end{problem}
+
+Let's see one classical example of a \hyperref[prb:two-sample]{two-sample problem}, i.e., treatment effect testing.
+
+\begin{eg}[Treatment effect]\label{eg:treatment-effect}
+	Consider the task of testing the effect of a treatment. Ideally, we have the treatment group and the control group (the two populations), and we observe \(Y_i^{\text{T} }\)'s from the treatment group, and \(Y_i^{\text{C} }\)'s from the control group. It's common to pair the data together and get \((Y_1^{\text{T} }, Y_1^{\text{C} }), (Y_2^{\text{T} }, Y_2^{\text{C} }), \dots , (Y_n^{\text{T} }, Y_n^{\text{C} })\).
+\end{eg}
+
+Let's focus on this \hyperref[eg:treatment-effect]{treatment effect testing problem} in this section. Let \(X_i \coloneqq Y_i^{\text{T} } - Y_i^{\text{C} }\) for all \(1 \leq i \leq n\). Usually, we assume \(X_1 , \dots , X_n\) are i.i.d.\ with mean \(\mu \) and finite variance, and the null hypothesis is \(H_0 \colon \mu = 0\). Since we assume \(X_i\)'s are i.i.d., we may use the \(t\)-test, i.e., we reject \(H_0\) if
 \[
 	T_n
-	= \sqrt{n} \frac{\overline{Z} _n}{\hat{\sigma} _n}
-	= \frac{\sum_{i=1}^{n} Z_i}{\sqrt{n} \sqrt{\frac{1}{n} \sum_{i=1}^{n} Z_i^2 - \overline{Z} _n^2} }
-	> Z_{\alpha }.
+	= \sqrt{n} \frac{\overline{X} _n}{\hat{\sigma} _n}
+	= \frac{\sum_{i=1}^{n} X_i}{\sqrt{n} \sqrt{\frac{1}{n} \sum_{i=1}^{n} X_i^2 - \overline{X} _n^2} }
+	= \frac{\sum_{i=1}^{n} X_i}{\sqrt{\sum_{i=1}^{n} (X_i - \overline{X} _n)^2} }
+	> Z_{\alpha }
 \]
-However, we know that in reality, \(Z_i\)'s are never i.i.d., but people still use the \(t\)-test. Why? This is because we usually give the treatment in a randomized way. In addition, we condition on the \(\vert Z_i \vert \) for all \(i \geq 1\). In this case,
-\[
-	H_0 \colon \mathbb{P} (Z_i = \pm \vert Z_i \vert ) \text{ for }  1 \leq i \leq n,
-\]
-i.e., \(\mathbb{P} (Z_i / \vert Z_i \vert = \pm 1) = 1 / 2\), i.e., \(Z_i\) are now i.i.d., and we can apply the \hyperref[thm:CLT]{central limit theorem}, we have \(\sum_{i=1}^{n} Z_i / \sqrt{\sum_{i=1}^{n} Z_i^2} \).
+for some \(\alpha > 0\). Since \(\Var_{}[X_i] < \infty \), \(T_n \overset{D}{\to} \mathcal{N} (0, 1)\) under \(H_0\).
+
+\begin{problem*}
+	In reality, \(X_i\)'s are never i.i.d., but people still use the \(t\)-test. Why?
+\end{problem*}
+\begin{answer}
+	This is because we usually give the treatment in a ``randomized'' way. In addition, we can ``condition'' on the observed data \(\vert X_i \vert \)'s.
+\end{answer}
+
+The above answer is pretty vague, which is intended. The key idea is the following:
+
+\begin{intuition}
+	In this case, we can design a hypothesis such that it only depends on statistics that are now i.i.d., and by applying the \hyperref[thm:CLT]{central limit theorem}, we will get something like \(\sum_{i=1}^{n} X_i / \sqrt{\sum_{i=1}^{n} X_i^2} \), pretty much like what we have in the \(t\)-test.
+\end{intuition}

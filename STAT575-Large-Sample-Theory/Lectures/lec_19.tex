@@ -81,28 +81,47 @@ Let's first see some examples of how to find \hyperref[def:projection]{projectio
 	\]
 	since \(\mathbb{E}_{}[Y^{\ast} ] = \mathbb{E}_{}[Y] \). Expanding the left-hand side, we have
 	\begin{align*}
-		 & \mathbb{E}_{}\left[(Y^{\ast} - \mathbb{E}_{}[Y^{\ast} ] ) \sum_{i=1}^{n} g_i(X_i)\right]                                                                                                                                     \\
-		 & = \mathbb{E}_{}\left[\left( \sum_{i=1}^{n} \mathbb{E}_{}[Y - \mathbb{E}_{}[Y] \mid X_i] \right) \sum_{j=1}^{n} g_j(X_j)\right]                                                                                               \\
-		 & = \sum_{i=1}^{n} \sum_{j=1}^{n} \mathbb{E}_{}\left[\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) \mid X_i] g_j(X_j) \right]                                                                                                          \\
-		\shortintertext{for \(i\neq j\), \(\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) \mid X_i ] \) is independent of \(g_j(X_j)\), hence}
-		 & = \sum_{i \neq j} \mathbb{E}_{}\left[\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) \mid X_i] \right] \mathbb{E}_{}[g_j(X_j) ] + \sum_{i=1}^{n} \mathbb{E}_{}\left[\mathbb{E}_{}[Y - \mathbb{E}_{}[Y] \mid X_i] \cdot g_i(X_i)\right] \\
-		\shortintertext{with \(\mathbb{E}_{}[\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) \mid X_i ] ]= \mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) ] = 0\),}
-		 & =  \sum_{i=1}^{n} \mathbb{E}_{}\left[\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y]) \cdot g_i(X_i) \mid X_i]\right]                                                                                                                    \\
+		\mathbb{E}_{}\left[(Y^{\ast} - \mathbb{E}_{}[Y^{\ast} ] ) \sum_{i=1}^{n} g_i(X_i)\right]
+		 & = \mathbb{E}_{}\left[\left( \sum_{i=1}^{n} \mathbb{E}_{}[Y - \mathbb{E}_{}[Y] \mid X_i] \right) \sum_{j=1}^{n} g_j(X_j)\right]                                                            \\
+		 & = \sum_{i=1}^{n} \sum_{j=1}^{n} \mathbb{E}_{}\left[\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) \mid X_i] g_j(X_j) \right]                                                                       \\
+		\shortintertext{observe that for \(i\neq j\), \(\mathbb{E}_{}[\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) \mid X_i ]] = \mathbb{E}_{}[Y - \mathbb{E}_{}[Y] ] \) is independent of \(g_j(X_j)\), hence}
+		 & = \sum_{i \neq j} \mathbb{E}_{}[(Y - \mathbb{E}_{}[Y] ) ] \mathbb{E}_{}[g_j(X_j) ] + \sum_{i=1}^{n} \mathbb{E}_{}\left[\mathbb{E}_{}[Y - \mathbb{E}_{}[Y] \mid X_i] \cdot g_i(X_i)\right] \\
+		 & =  \sum_{i=1}^{n} \mathbb{E}_{}\left[\mathbb{E}_{}[(Y - \mathbb{E}_{}[Y]) \cdot g_i(X_i) \mid X_i]\right]                                                                                 \\
 		 & = \mathbb{E}_{}\left[\sum_{i=1}^{n} (Y - \mathbb{E}_{}[Y] ) g_i(X_i) \right],
 	\end{align*}
 	where we again use the property of conditional expectation.
 \end{explanation}
 
 \subsection{Asymptotic Distribution of \(U\)-Statistic}
-The last example turns out to be flexible enough for our purpose. Specifically, consider \((X_n)\) a sequence of i.i.d.\ random vectors, and let \(\theta = \mathbb{E}_{}[h(X_1, \dots , X_m)] \) where \(h \colon \mathbb{R} ^m \to \mathbb{R} \) is permutation symmetric. In this case, a natural, unbiased estimator of \(\theta \) is
-\[
-	U_n
-	= \frac{1}{\binom{n}{m}} \sum_{\substack{i_1, \dots , i_m \\ \{ i_1, \dots , i_m \} \subseteq \{ 1, \dots , n \} }} h(X_{i_1}, \dots , X_{i_m}).
-\]
+The last example turns out to be flexible enough for our purpose. Specifically, consider \((X_n)\) a sequence of i.i.d.\ random vectors, and let \(\theta = \mathbb{E}_{}[h(X_1, \dots , X_m)] \) where \(h \colon \mathbb{R} ^m \to \mathbb{R} \) is permutation symmetric.
 
 \begin{notation}
 	Let \([n] \coloneqq \{ 1, 2, \dots , n \} \) for \(n \in \mathbb{N} \).
 \end{notation}
+
+In this case, a natural, unbiased estimator of \(\theta \) is
+\[
+	U_n
+	= \frac{1}{\binom{n}{m}} \sum_{\substack{i_1, \dots , i_m \\ \{ i_1, \dots , i_m \} \subseteq [n] }} h(X_{i_1}, \dots , X_{i_m}).
+\]
+We call such a statistic a \emph{\(U\)-statistic}.
+
+\begin{note}
+	Since \(h\) is permutation symmetric, the order of indices used in the argument doesn't matter.
+\end{note}
+
+\begin{eg}[Wilcoxon signed-rank statistic]
+	When studying the Wilcoxon signed-rank statistic \(W_n\), we see that \(\left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right) / \binom{n}{2} = 2U_n - 1\) where
+	\[
+		U_n = \frac{1}{\binom{n}{2}} \sum_{i < j} h(X_i, X_j).
+	\]
+\end{eg}
+
+\begin{note}
+	In the above, we see that \(i < j\) is the same as \(\{ i, j \} \subseteq [n] \). Indeed, one can assume \(i_1 < \dots < i_m\) without loss of generality.
+\end{note}
+
+
 
 Our goal is clear now: given the \hyperref[def:projection]{projection} \(U_n^{\ast} \) of \(U_n\) onto \(K_n = \{ \sum_{i=1}^{n} g_i(X_i) \} \), we want to show
 \[

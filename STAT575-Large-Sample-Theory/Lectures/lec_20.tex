@@ -1,0 +1,121 @@
+\lecture{20}{2 Apr.\ 9:30}{}
+\begin{remark}
+	\(U_n\) is a function of \(X_{(1)}, \dots , X_{(n)}\), i.e., the function of the order statistics, which is an REVUE since in this non-parametric formulation,\footnote{We didn't assume anything about \(F\) excepts for the continuity.} the order statistics is complete and sufficient.
+\end{remark}
+
+Now, we see that
+\[
+	J_{r, m}
+	= \Cov_{}[h(X_1, \dots , X_r, X_{r+1}, \dots , X_m), h(X_1, \dots , X_r, X_{m+1}, \dots , X_{2m-r})].
+\]
+Hence, overall, we have
+\[
+	\Var_{}[U_n]
+	= \frac{1}{\binom{n}{m}} \left( J_{0, m} + \sum_{r=1}^{m-1} \binom{m}{r} \binom{n-m}{m-r} J_{r, m} \right)
+	\sim \frac{\binom{m}{1} \binom{n-m}{m-1}}{\binom{n}{m}} J_{1, m}
+	\sim \frac{m^2}{n} J_{1, m}
+\]
+with some algebra. It remains to show that \(\Var_{}[\widetilde{h} (X)] = J_{1, m}\). Indeed,
+\[
+	\begin{split}
+		J_{1, m}
+		 & = \Cov_{}[(X_1, X_2, \dots , X_m), h(X_1, X_{m+1}, \dots , X_{2m-1})]                                                       \\
+		 & = \mathbb{E}_{}[(h(X_1, X_2, \dots , X_m) - \theta ) \cdot (h(X_1, X_{m+1}, \dots , X_{2m-1}) - \theta ) ]                  \\
+		 & = \int \mathbb{E}_{}[h(x, X_2, \dots , X_m) - \theta ] \cdot \mathbb{E}_{}[h(x, X_{m+1}, \dots , X_{2m-1})] F(\mathrm{d} x) \\
+		 & = \int (\widetilde{h} (x) - \theta ) (\widetilde{h} (x) - \theta ) F(\mathrm{d} x)                                          \\
+		 & = \mathbb{E}_{}[(\widetilde{h} (X) - \theta )^2]                                                                            \\
+		 & = \Var_{}[\widetilde{h} (X)] .
+	\end{split}
+\]
+
+\begin{eg}
+	Let \(\theta = \mathbb{E}_{}[h(X_1, X_2)] = \mathbb{P} (X_1 + X_2 > 0)\). Then, \(h(x) = \mathbb{P} (x + X > 0) = 1 - F(-x)\) with
+	\[
+		\Var_{}[\widetilde{h} (X)]
+		= \Var_{}[F(-X)]
+		> 0
+	\]
+	when \(X\) is not trivial. E.g., if \(H_0 \colon X \overset{D}{=} -X \) and \(X\) is continuous, under \(H_0\), \(\Var_{}[\widetilde{h} (X)] = \Var_{}[F(X)] = 1 / 12\) as \(F(X) \sim \mathcal{U} (0, 1)\) since \(F\) is assumed to be continuous. Moreover,
+	\[
+		\theta
+		= \mathbb{P} (X_1 > -X_2)
+		= \mathbb{E}_{}[\widetilde{h} (X)]
+		= \mathbb{E}_{}[1 - F(-X)]
+		= 1 - \frac{1}{2}
+		= \frac{1}{2}.
+	\]
+	Therefore, \(\sqrt{n} ( U_n - 1 / 2 ) \overset{D}{\to} \mathcal{N} ( 0, 2^2 / 12 ) = \mathcal{N} ( 0, 1 / 3 ) \).
+\end{eg}
+
+\begin{remark}
+	Recall that \(W_n = \sum_{k=1}^{n} \sgn (X_k) R_k\) and \autoref{eq:Wilcoxon-signed-rank-test}. Now, we conclude that
+	\[
+		\frac{\sqrt{n}}{n(n-1)} \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
+		= \sqrt{n} \left( U_n - \frac{1}{2} \right)
+		\overset{D}{\to} \mathcal{N} \left( 0, \frac{1}{3} \right).
+	\]
+	This implies that under \(H_0\), \(W_n / n^{3 / 2} \overset{D}{\to} \mathcal{N} (0, 1 / 3)\).
+\end{remark}
+
+\section{}
+Let \(H_0 \colon \theta = \theta _0\) and \(H_1 \colon \theta > \theta _0\), and say we want to reject \(H_0\) if \(T_n\) is large for some statistics \(T_n\).
+
+\begin{eg}
+	\(\theta = \mathbb{P} (X_1 + X_2 > 0)\).
+\end{eg}
+
+Assuming there exists \(\mu (\theta )\) such that when the true parameter is \(\theta \),
+\[
+	\frac{T_n - \mu (\theta )}{\sigma (\theta ) / \sqrt{n} }
+	\overset{D}{\to} \mathcal{N} (0, 1).
+\]
+
+\begin{note}
+	We will assume that \(\mu (\theta )\) is increasing.
+\end{note}
+
+Under this setup, we reject \(H_0\) if
+\[
+	T_n \geq \mu (\theta _0) + Z_\alpha \frac{\sigma (\theta _0)}{\sqrt{n} }.
+\]
+This gives that \(\mathbb{P} _{\theta _0}(\text{reject} ) \to \alpha \). However, we want to consider the power, i.e.,
+\[
+	\mathbb{P} _{\theta }(\text{reject} )
+	= \mathbb{P} _{\theta }\left( \frac{T_n - \mu (\theta )}{\sigma (\theta ) / \sqrt{n} } \geq \frac{\mu (\theta _0) - \mu (\theta )}{\sigma (\theta ) / \sqrt{n} } + Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta )} \right)
+	\overset{\theta > \theta _0}{\to } 1
+\]
+as \(n \to \infty \) since \(\mu (\theta _0) - \mu (\theta ) < 0\). Suppose we want \(\mathbb{P} _{\theta ^{\ast} }(\text{reject} ) = 1 - \beta \) for some \(\theta ^{\ast} \) with some \(n\), i.e.,
+\[
+	\frac{\mu (\theta ) - \mu (\theta _0)}{\sigma (\theta ) / \sqrt{n} } - Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta )}
+	= -Z_\beta
+	\iff \sqrt{n} \frac{\mu (\theta ) - \mu (\theta _0)}{\sigma (\theta )} = Z_\beta + \frac{\sigma (\theta _0)}{\sigma (\theta )} Z_\alpha.
+\]
+Let \(n^{\ast} \) be the \(n\) for the above is true when \(\theta = \theta ^{\ast} \).
+
+\begin{intuition}
+
+\end{intuition}
+
+Consider fixing \(\alpha \), \(\beta \), and \(\theta _0\). Let \(\theta _k\) be the \(\theta \) for which the above holds when \(n = k\). Let \((\theta _n)\) be the sequence defined in this way (hence \(\theta _n \to \theta _0\)), then the above becomes
+\[
+	\sqrt{n} \frac{\mu (\theta _n) - \mu (\theta _0)}{\sigma (\theta _n)} = Z_\beta + \frac{\sigma (\theta _0)}{\sigma (\theta _n)} Z_\alpha.
+\]
+Suppose \(\sigma \) is continuous at \(\theta _0\), and \(\mu \) is differentiable at \(\theta _0\). Then, since
+\[
+	\sqrt{n} (\mu (\theta _n) - \mu (\theta _0))
+	= \mu ^{\prime} (\theta _0) \sqrt{n} (\theta _n - \theta _0) + \sqrt{n} o(\theta _n - \theta _0),
+\]
+which gives
+\[
+	\sqrt{n} (\theta _n - \theta _0)
+	\to \frac{Z_\alpha + Z_\beta }{\mu ^{\prime} (\theta _0) / \sigma (\theta _0)}.
+\]
+Let \(n^{\ast} \) such that \(\theta _{n^{\ast} } = \theta ^{\ast} \). Then, we have
+\[
+	\sqrt{n^{\ast} }
+	\to \frac{Z_\alpha + Z_\beta }{\frac{\mu ^{\prime} (\theta _0)}{\sigma (\theta _0)} (\theta _{n^{\ast} } - \theta _0)}
+\]
+However, this analysis relies on the fact that when \(\sqrt{n} (\theta _n - \theta _0)\) converges, then
+\[
+	\frac{T_n - \mu (\theta _n)}{\sigma (\theta _n) / \sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1).
+\]

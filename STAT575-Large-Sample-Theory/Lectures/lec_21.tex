@@ -1,0 +1,207 @@
+\lecture{21}{4 Apr.\ 9:30}{Pitman (Local) Alternatives}
+Let's restate the setup: let \(\xi \geq 0\) such that \(\sqrt{n} (\theta _n - \theta _0) \to \xi \), and suppose there exists \(\mu (\theta )\) and \(\sigma (\theta )\) such that
+\[
+	\sqrt{n} \frac{T_n - \mu (\theta _n)}{\sigma (\theta _n)}
+	\overset{D}{\to} \mathcal{N} (0, 1),
+\]
+i.e.,
+\[
+	\mathbb{P} _{\theta _n} \left( \frac{T_n - \mu (\theta _n)}{\sigma (\theta _n) / \sqrt{n} } \leq x \right)
+	\to \Phi (x)
+\]
+for all \(x \in \mathbb{R} \). When \(\xi = 0\), then
+\[
+	\sqrt{n} \frac{T_n - \mu (\theta _0)}{\sigma (\theta _0)}
+	\overset{D}{\to} \mathcal{N} (0, 1),
+\]
+hence, we reject \(H_0\) if \(T_n > \mu (\theta _0) + \sigma (\theta _0) Z_\alpha / \sqrt{n} \).
+
+We see that
+\[
+	\mathbb{P} _{\theta _n} \left( T_n > \mu (\theta _0) + \frac{\sigma (\theta _0)}{\sqrt{n} } Z_\alpha \right)
+	= \mathbb{P} _{\theta _n} \left( \frac{T_n - \mu (\theta _n)}{\sigma (\theta _n) / \sqrt{n} } > \frac{\mu (\theta _0) - \mu (\theta _n)}{\sigma (\theta _n) / \sqrt{n} } + Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta _n)} \right).
+\]
+If \(\mu \) is differentiable at \(\theta _0\) and \(\sigma \) is continuous at \(\theta _0\), then as \(\sqrt{n} (\theta _n - \theta _0) \to z\), the above converges to
+\[
+	\Phi \left( - \frac{\mu ^{\prime} (\theta _0)}{\sigma (\theta _0)}z + Z_\alpha \right).
+\]
+Let \(\theta ^{\ast} \) to be defined as \(\mathbb{P} _{\theta ^{\ast} }(\text{reject} ) = 1 - \beta \) for some \(\beta > 0\). Fix some \(z > 0\), and denote \(n^{\ast} \) such that \(\theta _{n^{\ast} } = \theta ^{\ast} \) such that \(\sqrt{n^{\ast} } (\theta ^{\ast} - \theta _0) = z\), i.e., \(\theta ^{\ast} = \theta _0 + z / \sqrt{n^{\ast} } \). Then \(\mathbb{P} _{\theta ^{\ast} }(\text{reject} )\) will converge to
+\[
+	\Phi \left( - \frac{\mu ^{\prime} (\theta _0)}{\sigma (\theta _0)}z + Z_\alpha \right)
+	= 1 - \beta
+	\implies - \frac{\mu ^{\prime} (\theta _0)}{\sigma (\theta _0)}z + Z_\alpha
+	= - Z_\beta
+	\implies \sqrt{n^{\ast} }(\theta ^{\ast} - \theta _0) = \xi = \frac{Z_\alpha + Z_\beta }{\mu ^{\prime} (\theta _0) / \sigma (\theta _0)},
+\]
+and finally, solving w.r.t.\ \(\sqrt{n^{\ast} } \) gives
+\[
+	\sqrt{n^{\ast} }
+	= \frac{Z_\alpha + Z_\beta }{\frac{\mu ^{\prime} (\theta _0)}{\sigma (\theta _0)} (\theta ^{\ast} - \theta _0)}.
+\]
+If we have another statistics \(\widetilde{T} \) which has \(\widetilde{\mu} \), \(\widetilde{\sigma} \), and \(\widetilde{n} ^{\ast} \), we will have exactly the same analysis, leading to
+\[
+	\operatorname{ARE}(T, \widetilde{T} )
+	= \frac{n^{\ast} }{\widetilde{n} ^{\ast} }
+	= \left( \frac{\widetilde{\mu} ^{\prime} (\theta _0) / \widetilde{\sigma} (\theta _0)}{\mu ^{\prime} (\theta _0) / \sigma (\theta _0)} \right) ^2
+\]
+since \(\theta _0\), \(\theta _{\ast\ast} \), \(\alpha \), and \(\beta \) are all given.
+
+Going back to the symmetry problem, let \(\epsilon , \epsilon _1, \epsilon _2, \dots \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous and symmetric around \(0\), i.e., \(\epsilon \overset{D}{=} -\epsilon \). Furthermore, assuming \(X_{n1}, \dots , X_{nn} \overset{\text{i.i.d.} }{\sim } \theta _n + \epsilon _i\) such that \(\sqrt{n} (\theta _n - \theta _0) = \xi \) for some fixed \(\xi \geq 0\). We're interested in testing whether \(H_0 \colon X_{n1} \overset{D}{=} -X_{n1}\). In other words, \(H_0 \colon \theta _0 = 0\).
+
+\subsection{The Slope of Sign Test}
+Consider
+\[
+	\sum_{i=1}^{n} \mathbbm{1}_{X_{ni} > 0}
+	= \sum_{i=1}^{n} \mathbbm{1}_{\epsilon _i > - \theta _n}.
+\]
+The mean of \(\mathbbm{1}_{\epsilon _i > -\theta _n} \) is
+\[
+	\mathbb{P} (\epsilon > -\theta _n)
+	= \mathbb{P} (\epsilon \leq \theta _n)
+	= F(\theta _n)
+\]
+since \(\epsilon \) is symmetric and continuous. Hence, the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem} gives
+\[
+	\frac{\sum_{i=1}^{n} \left( \mathbbm{1}_{\epsilon _i  > -\theta _n} - F(\theta _n) \right) }{\sqrt{n} \sqrt{F(\theta _n) (1 - F(\theta _n))} }
+	= \sqrt{n} \frac{\frac{1}{n} \sum_{i=1}^{n} \mathbbm{1}_{\epsilon _i > -\theta _n} - F(\theta _n) }{\sqrt{F(\theta _n) (1 - F(\theta _n)) } }
+	\overset{D}{\to} \mathcal{N} (0, 1)
+\]
+by checking the \hyperref[col:Lyapunov-CLT]{Lyapunov condition}, in this case,
+\[
+	\Var_{}\left[\sum_{i=1}^{n} \mathbbm{1}_{\epsilon _i > -\theta _n} \right]
+	= n F(\theta _n) (1 - F(\theta _n))
+	\to n F(\theta _0) (1 - F(\theta _0))
+	\to \infty.
+\]
+In this case, \(\mu (\theta ) = F(\theta )\) and \(\sigma ^2(\theta ) = F(\theta )(1 - F(\theta ))\). If \(F\) is differentiable at \(0\) with \(F^{\prime} (0) \eqqcolon f(0)\), then \(\mu ^{\prime} (0) = f(0)\). Since \(\sigma ^2 (\theta )\) is continuous at \(0\), \(\sigma ^2(0) = F(0)(1 - F(0)) = 1 / 2 \cdot 1 / 2 = 1 / 4\) since \(F\) is symmetric, hence \(F(0) = 1 / 2\). The slope of the sign statistics is \(\mu ^{\prime} (0) / \sigma (0) = 2f(0)\).
+
+\subsection{\(T\)-Test}
+Suppose \(V(\epsilon ) = \sigma ^2 < \infty \). Consider \(T_n = \overline{X} _n / \hat{\sigma} _n\). Let
+\[
+	\hat{\sigma} _n^2
+	= \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^2
+	= \frac{1}{n} \sum_{i=1}^{n} (\epsilon _i - \overline{\epsilon} _n)^2
+\]
+and we also have
+\[
+	T_n
+	= \frac{\overline{X} _n}{\hat{\sigma} _n}
+	= \frac{\theta _n + \overline{\epsilon} _n}{\hat{\sigma} _n}
+	= \left( \frac{\theta _n}{\hat{\sigma} _n} - \frac{\theta _n}{\sigma } \right) + \left( \frac{\overline{\epsilon} _n}{\hat{\sigma} _n} + \frac{\theta _n}{\sigma } \right)
+	\implies
+	\sqrt{n} \left( T_n - \frac{\theta _n}{\sigma } \right)
+	= \sqrt{n} \theta _n \left( \frac{1}{\hat{\sigma} _n} - \frac{1}{\sigma } \right) + \sqrt{n} \frac{\overline{\epsilon} _n}{\hat{\sigma} _n}.
+\]
+As now \(\theta _0 = 0\) and \(\sqrt{n} (\theta _n - \theta _0) = \xi \), we have
+\begin{itemize}
+	\item \(\sqrt{n} \theta _n \to \xi \geq 0\)
+	\item \(1 / \hat{\sigma} _n - 1 / \sigma \overset{p}{\to} 0\)
+	\item \(\sqrt{n} \overline{\epsilon} _n \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\),
+\end{itemize}
+\[
+	\sqrt{n} \left( T_n - \frac{\theta _n}{\sigma } \right)
+	= \sqrt{n} \frac{T_n - \frac{\theta _n}{\sigma }}{1}
+	\overset{D}{\to} \mathcal{N} (0, 1).
+\]
+We see that
+\begin{itemize}
+	\item \(\mu (\theta ) = \theta / \sigma \), hence \(\mu ^{\prime} (\theta ) = 1 / \sigma \);
+	\item \(\sigma (\theta ) = 1\),
+\end{itemize}
+giving the slope as \(\mu ^{\prime} (0) / \sigma (0) = 1 / \sigma \). Hence,
+\[
+	\operatorname{ARE}(t, \mathrm{sign} )
+	= \left( 2 f(0) \sigma \right) ^2
+\]
+
+\begin{note}
+	We may recall that \(\operatorname{ARE}(\overline{X} _n , \hat{\theta} _{1 / 2}) = (2 f(0) \sigma )^2\) as well.
+\end{note}
+
+\begin{eg}[Gaussian]
+	If \(\epsilon \sim \mathcal{N} \), then \(f(x) = \frac{1}{\sigma \sqrt{2\pi } } e^{- x^2 / 2\sigma ^2}\), so \(f(0) = \frac{1}{\sigma \sqrt{2\pi } }\), hence
+	\[
+		\operatorname{ARE} = \left( \frac{2\sigma }{\sqrt{2\pi } \sigma } \right) ^2
+		= \frac{2}{\pi }.
+	\]
+\end{eg}
+
+\begin{eg}[Laplace]
+	If \(\epsilon \sim \operatorname{Laplace}(\mu , b) \) with \(\sigma ^2 = 2 b^2\), since \(f(x) = \frac{1}{2b} e^{- \frac{\vert x - \mu \vert }{b}} = \frac{1}{\sigma \sqrt{2} } e^{- \frac{\vert x - \mu \vert }{\sigma / \sqrt{2}}}\), hence \(f(\mu ) = 1 /\sqrt{2} \sigma \), i.e.,
+	\[
+		\operatorname{ARE}
+		= 4 \sigma ^2 \frac{1}{2 \sigma ^2}
+		= 2 > 1,
+	\]
+\end{eg}
+
+\begin{eg}[Uniform]
+	Since \(\Var_{}[\epsilon ] = \sigma ^2\), by considering \(\epsilon \sim \mathcal{U} (-c, c)\) for some \(c\), then
+	\[
+		\operatorname{ARE}
+		= \left( 2 \frac{1}{2c} \sigma \right)  ^2
+		= \frac{1}{3}
+	\]
+\end{eg}
+\begin{explanation}
+	Firstly, the \(c\) is
+	\[
+		\sigma ^2
+		= \frac{(2c)^2}{12}
+		= \frac{c^2}{3}
+		\implies c = \sqrt{3} \sigma ,
+	\]
+	so \(f(0) = 1 / 2c = 1 / 2 \sqrt{3} \sigma \).
+\end{explanation}
+
+\subsection{Wilcoxon Signed-Rank Test}
+Recall that
+\[
+	U_n
+	= \frac{2}{\binom{n}{2}} \sum_{\{ i, j \} \subseteq [n]} \mathbbm{1}_{X_i + X_j > 0}
+	= \frac{2}{\binom{n}{2}} \sum_{\{ i, j \} \subseteq [n]} \mathbbm{1}_{\epsilon _i + \epsilon _j > - 2 \theta _n}.
+\]
+Let \(h_n(x_1, x_2) = \mathbbm{1}_{x_1 + x_2 > - 2 \theta _n} \), then
+\[
+	\sqrt{n} \left( U_n - \mathbb{E}_{}[h_n(\epsilon _1, \epsilon _2)] \right)
+	= \frac{2}{\sqrt{n} } \sum_{k=1}^{n} \left( \widetilde{h} _n(X_k) - \mathbb{E}_{}[\widetilde{h} _n(X_k)] \right) + o_p(1)
+\]
+where
+\[
+	\widetilde{h} (x)
+	= \mathbb{E}_{}[h(x, \epsilon )] = \mathbb{P} (x + \epsilon )
+	= \mathbb{P} (x + \epsilon > - 2\theta _n)
+	= \mathbb{P} (\epsilon > -x - 2\theta _n)
+	= \mathbb{P} (\epsilon \leq x + 2 \theta _n)
+	= F(x + 2 \theta _n).
+\]
+Hence,
+\[
+	\sqrt{n} \left( \frac{U_n - \mathbb{E}_{}[h(\epsilon _1 , \epsilon _2)]}{\sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } } \right)
+	= \frac{2}{\sqrt{n} } \sum_{k=1}^{n} \frac{\widetilde{h} _n(\epsilon _k) - \mathbb{E}_{}[F(\epsilon + 2 \theta _n)] }{\sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } },
+\]
+and by checking the \hyperref[col:Lyapunov-CLT]{Lyapunov condition} (in particular, the variance diverges), we finally have
+\[
+	\sqrt{n} \frac{U_n - \mathbb{E}_{}[F(\epsilon + 2 \theta _n)] }{2 \sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } }
+	\overset{D}{\to} \mathcal{N} (0, 1).
+\]
+In this case,
+\begin{itemize}
+	\item \(\mu (\theta ) = \mathbb{E}_{}[F(\epsilon + 2 \theta )] \), which is just
+	      \[
+		      \mu (\theta ) = \int F(x + 2 \theta ) F(\mathrm{d} x)
+		      = \int F(x + 2 \theta ) f(x) \,\mathrm{d} x
+	      \]
+	      if we assume \(f\) exists, and if we further assume that we can interchange the derivative and the integral, we have
+	      \[
+		      \mu ^{\prime} (\theta )
+		      = \int 2 f(x + 2\theta ) f(x) \,\mathrm{d} x
+		      \implies \mu ^{\prime} (0) = 2 \int f^2(x) \,\mathrm{d} x .
+	      \]
+	\item \(\sigma ^2(\theta ) = 2 \Var_{}[F(\epsilon + 2 \theta )] \), hence \(\sigma ^2(0) = 2 \Var_{}[F(\epsilon )] = 1 / 6\).
+\end{itemize}
+Hence, the slope of the test is \(2 \cdot \sqrt{6} \cdot \int f^2(x) \,\mathrm{d} x\), giving that
+\[
+	\operatorname{ARE}(t, \text{Wilcxon} )
+	=
+\]

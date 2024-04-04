@@ -1,5 +1,22 @@
 \lecture{18}{26 Mar.\ 9:30}{Wilcoxon Signed-Rank Test}
-We will now focus on explaining the previous answer to the non i.i.d.\ problem. However, before we dive in, let's point out other potential problems. Firstly, since even for i.i.d.\ \(X_i\)'s, the results for \(T_n\) is asymptotic, and we might wonder what's the rate of convergence.
+To elaborate on the previous answer to the non i.i.d.\ problem, consider the following \(H_0\) such that for every \(1 \leq i \leq n\),
+\[
+	\mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert , 1 \leq j \leq n) = \frac{1}{2}.
+\]
+In other words, \(\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert , 1 \leq j \leq n) = 1 / 2\).
+
+\begin{intuition}
+	In practice, when doing inference, we usually implicitly condition on \(\vert X_j \vert \)'s too: by doing inference on the selected ``design points'', we're essentially condition on those.
+\end{intuition}
+
+Indeed, by writing \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)\) and treating \(\vert X_i \vert \)'s as constants, under \(H_0\),
+\begin{equation}\label{eq:two-sample}
+	\frac{\sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} X_i^2} }
+	\overset{D}{\to} \mathcal{N} (0, 1)
+\end{equation}
+by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use the left-hand side for out test as usual.
+
+However, if we don't want to condition on \(\lvert X_j \rvert 's\), we need to do more. Before we dive in to that, let's point out other potential problems. Firstly, since even for i.i.d.\ \(X_i\)'s, the results for \(T_n\) is asymptotic, and we might wonder what's the rate of convergence.
 
 \begin{problem*}
 	How fast does \(T_n \overset{D}{\to} \mathcal{N} (0, 1)\) under \(H_0\)?
@@ -13,47 +30,37 @@ Clearly, the answer to this problem depends heavily on \(F\), so it's unlikely t
 
 It turns out that this is something we will solve along the way when we deal with the i.i.d.\ problem.
 
+\subsection{Sign Test}
+Our first goal is to avoid using the information of \(\vert X_j \vert \)'s. Inspired by the above, consider the following.
+
+\begin{intuition}
+	We may reject \(H_0\) if \(\sum_{i=1}^{n} \sgn (X_i) \) is large, i.e., we simply discard all \(X_i\)'s in \autoref{eq:two-sample}.
+\end{intuition}
+
+In particular, under \(H_0\), the \emph{sign statistics} is defined as
+\[
+	\mathrm{sign} _n
+	\coloneqq \sum_{i=1}^{n} \sgn (X_i)
+	= 2 \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} - n,
+\]
+where we know that \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\). We see that this is independent of \(F\), and we know its exact distribution, hence we can do the test with this. On the other hand, under \(H_0\),
+\[
+	\frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1),
+\]
+so we can also reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
+
+\begin{note}
+	However, since we're not using the information of \(\vert X_j \vert \) now, it's questionable that how powerful the above tests are.
+\end{note}
+
 \subsection{Wilcoxon Signed-Rank Test}
-We now see how to solve the non i.i.d.\ problem. Consider the following \(H_0\) such that for every \(1 \leq i \leq n\),
-\[
-	\mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert , 1 \leq j \leq n) = \frac{1}{2}.
-\]
-In other words, \(\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert , 1 \leq j \leq n) = 1 / 2\).
+Indeed, we can utilize \(\vert X_j \vert \)'s with the following intuition.
 
 \begin{intuition}
-	In practice, when doing inference, we usually implicitly condition on \(\vert X_j \vert \)'s too: for example, by doing inference on the selected ``design points'', we're essentially condition on those.
+	Replace \(\vert X_i \vert \)'s in \autoref{eq:two-sample} by their ``rank'' information.
 \end{intuition}
 
-By writing \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)\) and treating \(\vert X_i \vert \)'s as constants, under \(H_0\),
-\[
-	\frac{\sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} X_i^2} }
-	\overset{D}{\to} \mathcal{N} (0, 1)
-\]
-by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use the left-hand side for out test as usual.
-
-\begin{problem*}
-	Is it possible to avoid using the information of \(\vert X_j \vert \)'s?
-\end{problem*}
-\begin{answer}
-	Inspired by the above, we may reject \(H_0\) if \(\sum_{i=1}^{n} \sgn (X_i) \) is large. In particular, under \(H_0\),
-	\[
-		\sum_{i=1}^{n} \sgn (X_i)
-		= 2 \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} - n,
-	\]
-	where we know that \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\). We see that this is independent of \(F\), and we know its exact distribution, hence we can do the test with this. On the other hand, under \(H_0\),
-	\[
-		\frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1),
-	\]
-	so we can also reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
-\end{answer}
-
-However, since we're not using the information of \(\vert X_j \vert \) now, it's questionable that how powerful the above tests are. If we want to use \(\vert X_j \vert \)'s, consider the following.
-
-\begin{intuition}
-	Replace \(\vert X_i \vert \)'s by their ``rank'' information.
-\end{intuition}
-
-Consider the rank \(R_i\) for \(1 \leq i \leq n\)
+In particular, consider the rank \(R_i\) for \(1 \leq i \leq n\)
 \[
 	R_i
 	\coloneqq \sum_{j=1}^{n} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert }.
@@ -218,7 +225,7 @@ where we define \(U_n\) for some permutation symmetric function \(h\)\footnote{I
 This is the so-called \emph{\(U\)-statistic}, where \(U\) stands for unbiased. We will show that by multiplying \(\sqrt{n} \) on the both sides, this \hyperref[def:converge-in-distribution]{converges} to a standard normal, i.e.,
 \begin{equation}\label{eq:Wilcoxon-signed-rank-test}
 	\frac{\sqrt{n}}{\binom{n}{2}}  \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
-	= \sqrt{n} 2 \left( U_n - \frac{1}{2} \right)
+	= 2 \sqrt{n} \left( U_n - \frac{1}{2} \right)
 	\overset{D}{\to} \mathcal{N} (0, 1).
 \end{equation}
 
@@ -242,9 +249,8 @@ In this section, we develop the asymptotic theory for \(U\)-statistics. Let's fi
 	\]
 \end{proposition}
 
-Hence, to show \((S_n - \mathbb{E}_{}[S_n] ) / \sqrt{\Var_{}[S_n] } \overset{D}{\to} Y\), we may find \((\widetilde{S} _n)\) such that \((\widetilde{S} _n - \mathbb{E}_{}[\widetilde{S} _n]) / \sqrt{\Var_{}[S_n] } \overset{D}{\to} Y\) and show
+Hence, to show \((S_n - \mathbb{E}_{}[S_n] ) / \sqrt{\Var_{}[S_n] } \overset{D}{\to} Y\), we may find \((\widetilde{S} _n)\) such that \((\widetilde{S} _n - \mathbb{E}_{}[\widetilde{S} _n]) / \sqrt{\Var_{}[S_n] } \overset{D}{\to} Y\) and with \autoref{prop:correlation-converging-together}, show
 \[
 	\left\vert \frac{S_n - \mathbb{E}_{}[S_n] }{\sqrt{\Var_{}[S_n] } } - \frac{\widetilde{S} _n - \mathbb{E}_{}[\widetilde{S} _n] }{\sqrt{\Var_{}[S_n] } }\right\vert
-	\overset{p}{\to} 0
+	\overset{p}{\to} 0.
 \]
-by \autoref{prop:correlation-converging-together}.

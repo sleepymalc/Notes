@@ -57,7 +57,7 @@ If we have another statistics \(\widetilde{T} \) which has \(\widetilde{\mu} \),
 Let compare the \(t\)-test, sign test, and Wilcoxon signed-rank test on the problem of testing symmetry.
 
 \begin{problem*}
-	Let \(\epsilon , \epsilon _1, \epsilon _2, \dots \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous and symmetric around \(0\), i.e., \(\epsilon \overset{D}{=} -\epsilon \). Furthermore, assuming \(X_{n1}, \dots , X_{nn} \overset{\text{i.i.d.} }{\sim } \theta _n + \epsilon _i\) such that \(\sqrt{n} (\theta _n - \theta _0) = \xi \) for some fixed \(\xi \geq 0\). We're interested in testing whether \(H_0 \colon X_{n1} \overset{D}{=} -X_{n1}\). In other words, \(H_0 \colon \theta _0 = 0\).
+	Let \(\epsilon , \epsilon _1, \dots, \epsilon _n \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous and symmetric around \(0\), i.e., \(\epsilon \overset{D}{=} -\epsilon \). Furthermore, assuming \(X_{n1}, \dots , X_{nn} \overset{\text{i.i.d.} }{\sim } \theta _n + \epsilon _i\) such that \(\sqrt{n} (\theta _n - \theta _0) = \xi \) for some fixed \(\xi \geq 0\). We're interested in testing whether \(H_0 \colon X_{n1} \overset{D}{=} -X_{n1}\). In other words, \(H_0 \colon \theta _0 = 0\).
 \end{problem*}
 
 \subsection{The Slope of Sign Test}
@@ -173,53 +173,66 @@ Let's see some actual example, where we can borrow from the previous calculation
 \end{explanation}
 
 \subsection{The Slope of Wilcoxon Signed-Rank Test}
-Recall that
+Recall what we have proved for Wilcoxon signed-rank test.
+
+\begin{prev}
+	When testing \(X \overset{D}{=} -X\), from \autoref{eq:Wilcoxon-signed-rank-test}, we have
+	\[
+		\frac{\sqrt{n}}{\binom{n}{2}}  \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
+		= 2 \sqrt{n} \left( U_n - \frac{1}{2} \right)
+		\overset{D}{\to} \mathcal{N} (0, 1)
+	\]
+	where \(U_n \coloneqq \frac{1}{\binom{n}{2}} \sum_{i < j} h(X_i, X_j)\) where \(h(x_1, x_2) = \mathbbm{1}_{x_1 + x_2 \geq 0} \).
+\end{prev}
+
+In our case, since \(X_i = \theta _n + \epsilon _i\), we have
 \[
 	U_n
-	= \frac{2}{\binom{n}{2}} \sum_{\{ i, j \} \subseteq [n]} \mathbbm{1}_{X_i + X_j > 0}
-	= \frac{2}{\binom{n}{2}} \sum_{\{ i, j \} \subseteq [n]} \mathbbm{1}_{\epsilon _i + \epsilon _j > - 2 \theta _n}.
+	= \frac{1}{\binom{n}{2}} \sum_{\{ i, j \} \subseteq [n]} \mathbbm{1}_{X_i + X_j > 0}
+	= \frac{1}{\binom{n}{2}} \sum_{\{ i, j \} \subseteq [n]} \mathbbm{1}_{\epsilon _i + \epsilon _j > - 2 \theta _n}.
 \]
-Let \(h_n(x_1, x_2) = \mathbbm{1}_{x_1 + x_2 > - 2 \theta _n} \), then
+Let \(h_n(\epsilon _1, \epsilon _2) = \mathbbm{1}_{\epsilon _1 + \epsilon _2 > - 2 \theta _n} \) (note that it depends on \(n\)), then from the theory of \(U\)-statistics,
 \[
-	\sqrt{n} \left( U_n - \mathbb{E}_{}[h_n(\epsilon _1, \epsilon _2)] \right)
-	= \frac{2}{\sqrt{n} } \sum_{k=1}^{n} \left( \widetilde{h} _n(X_k) - \mathbb{E}_{}[\widetilde{h} _n(X_k)] \right) + o_p(1)
+	U_n - \mathbb{E}_{}[h_n(\epsilon _1, \epsilon _2)]
+	= \frac{2}{n} \sum_{k=1}^{n} \left( \widetilde{h} _n(\epsilon _k) - \mathbb{E}_{}[\widetilde{h} _n(\epsilon _k)] \right) + o_p(1)
 \]
-where
+where the \(2\) comes from \(m\), i.e., the number of arguments in \(h\). Here, we have
 \[
-	\widetilde{h} (x)
-	= \mathbb{E}_{}[h(x, \epsilon )] = \mathbb{P} (x + \epsilon )
+	\widetilde{h} _n(x)
+	= \mathbb{E}_{}[h(x, \epsilon )]
 	= \mathbb{P} (x + \epsilon > - 2\theta _n)
 	= \mathbb{P} (\epsilon > -x - 2\theta _n)
 	= \mathbb{P} (\epsilon \leq x + 2 \theta _n)
-	= F(x + 2 \theta _n).
+	= F(x + 2 \theta _n),
 \]
-Hence,
+with \(\epsilon _i\)'s being i.i.d., by multiplying and dividing both sides by \(\sqrt{n} \) and \(\sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } \),
 \[
-	\sqrt{n} \left( \frac{U_n - \mathbb{E}_{}[h(\epsilon _1 , \epsilon _2)]}{\sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } } \right)
-	= \frac{2}{\sqrt{n} } \sum_{k=1}^{n} \frac{\widetilde{h} _n(\epsilon _k) - \mathbb{E}_{}[F(\epsilon + 2 \theta _n)] }{\sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } },
+	\sqrt{n} \frac{U_n - \mathbb{E}_{}[h(\epsilon _1 , \epsilon _2)]}{\sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } }
+	= \frac{2}{\sqrt{n} } \sum_{k=1}^{n} \frac{\widetilde{h} _n(\epsilon _k) - \mathbb{E}_{}[F(\epsilon + 2 \theta _n)] }{\sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } } + o_p(1).
 \]
-and by checking the \hyperref[col:Lyapunov-CLT]{Lyapunov condition} (in particular, the variance diverges), we finally have
+We finally see that by the usual \hyperref[thm:CLT]{central limit theorem}, as long as \(\Var_{}[F(\epsilon + 2 \theta _n)] > 0\), we have
 \[
 	\sqrt{n} \frac{U_n - \mathbb{E}_{}[F(\epsilon + 2 \theta _n)] }{2 \sqrt{\Var_{}[F(\epsilon + 2 \theta _n)] } }
 	\overset{D}{\to} \mathcal{N} (0, 1).
 \]
-In this case,
+We see that
 \begin{itemize}
-	\item \(\mu (\theta ) = \mathbb{E}_{}[F(\epsilon + 2 \theta )] \), which is just
+	\item \(\mu (\theta ) = \mathbb{E}_{}[F(\epsilon + 2 \theta )] \), if we assume \(f\) exists, it's just
 	      \[
 		      \mu (\theta ) = \int F(x + 2 \theta ) F(\mathrm{d} x)
-		      = \int F(x + 2 \theta ) f(x) \,\mathrm{d} x
+		      = \int F(x + 2 \theta ) f(x) \,\mathrm{d} x.
 	      \]
-	      if we assume \(f\) exists, and if we further assume that we can interchange the derivative and the integral, we have
+	      If we further assume that we can interchange the derivative and the integral, we have
 	      \[
 		      \mu ^{\prime} (\theta )
-		      = \int 2 f(x + 2\theta ) f(x) \,\mathrm{d} x
-		      \implies \mu ^{\prime} (0) = 2 \int f^2(x) \,\mathrm{d} x .
+		      = \int 2 f(x + 2\theta ) f(x) \,\mathrm{d} x,
 	      \]
-	\item \(\sigma ^2(\theta ) = 2 \Var_{}[F(\epsilon + 2 \theta )] \), hence \(\sigma ^2(0) = 2 \Var_{}[F(\epsilon )] = 1 / 6\).
+	      hence \(\mu ^{\prime} (0) = 2 \int f^2(x) \,\mathrm{d} x\).
+	\item \(\sigma (\theta ) = 2 \sqrt{\Var_{}[F(\epsilon + 2 \theta )] } \), hence \(\sigma (0) = 2 \sqrt{\Var_{}[F(\epsilon )]} = 2 \cdot \sqrt{1 / 12} = 1 / \sqrt{3}  \).
 \end{itemize}
-Hence, the slope of the test is \(2 \cdot \sqrt{6} \cdot \int f^2(x) \,\mathrm{d} x\), giving that
+Hence, the \hyperref[def:slope]{slope} of the Wilcoxon signed-rank test, or indeed, its corresponding \(U\)-statistics \(U_n\), is \(2 \sqrt{3} \cdot \int f^2(x) \,\mathrm{d} x\). We see that this gives us a way to compare \(U_n\) and \(\widetilde{T} _n\), i.e.,
 \[
-	\operatorname{ARE}(t, \text{Wilcxon} )
-	=
+	\operatorname{ARE}(\widetilde{T} _n, U_n)
+	= \frac{2 \sqrt{3} \int f^2(x)\,\mathrm{d} x}{1 / \sigma }
+	= 2\sqrt{3} \sigma \int f^2(x) \,\mathrm{d} x.
 \]

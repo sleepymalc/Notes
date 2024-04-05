@@ -1,15 +1,10 @@
 \lecture{20}{2 Apr.\ 9:30}{Comparing Different Tests for Symmetry}
-We make one remark before we continue the calculation of the covariance.
-\begin{remark}
-	\(U_n\) is a function of \(X_{(1)}, \dots , X_{(n)}\), i.e., the function of the order statistics, which is an UMVUE since in this non-parametric formulation,\footnote{Since we didn't assume anything about \(F\) excepts for the continuity.} the order statistics is complete and sufficient.
-\end{remark}
-
-Now, we see that
+Continuing on the calculation, we now need to calculate \(J_{r, m}\), which is
 \[
 	J_{r, m}
-	= \Cov_{}[h(X_1, \dots , X_r, X_{r+1}, \dots , X_m), h(X_1, \dots , X_r, X_{m+1}, \dots , X_{2m-r})].
+	= \Cov_{}[h(X_1, \dots , X_r, X_{r+1}, \dots , X_m), h(X_1, \dots , X_r, X_{m+1}, \dots , X_{2m-r})],
 \]
-Hence, overall, we have
+which implies
 \[
 	\Var_{}[U_n]
 	= \frac{1}{\binom{n}{m}} \left( J_{0, m} + \sum_{r=1}^{m-1} \binom{m}{r} \binom{n-m}{m-r} J_{r, m} \right)
@@ -58,71 +53,113 @@ with some algebra. It remains to show that \(\Var_{}[\widetilde{h} (X)] = J_{1, 
 	This implies that under \(H_0\), \(W_n / n^{3 / 2} \overset{D}{\to} \mathcal{N} (0, 1 / 3)\).
 \end{remark}
 
+We make one last remark before we move on to the next topic.
+
+\begin{remark}
+	\(U_n\) is a function of \(X_{(1)}, \dots , X_{(n)}\), i.e., the function of the order statistics, which is an UMVUE since in this non-parametric formulation,\footnote{Since we didn't assume anything about \(F\) excepts for the continuity.} the order statistics is complete and sufficient.
+\end{remark}
+
 \section{Asymptotic Relative Efficiency of Tests}
-We have seen that for the \hyperref[prb:two-sample]{two-sample problem}, we have three potential tests, i.e., \(t\)-statistics \(T_n\), sign statistics \(\mathrm{sign} _n\), and Wilcoxon signed-rank statistics \(W_n\). A natural question is the following.
+For the \hyperref[prb:two-sample]{two-sample problem}, we have three potential tests, i.e., \(t\)-statistic \(T_n = \sqrt{n} \overline{X} _n / \hat{\sigma} _n\), the sign test statistic \(\mathrm{sign} _n = \sum_{i=1}^{n} \sgn (X_i) / \sqrt{n}\), and the Wilcoxon signed-rank statistic \(W_n = \sum_{i=1}^{n} R_i \sgn (X_i)\). A natural question is the following.
 
 \begin{problem*}
-	How does \(T_n\), \(\mathrm{sign} _n\), and \(W_n\) compared in terms of their efficiency? In particular, can we have something similar for the estimator's efficiency we have developed, i.e., the \hyperref[def:asymptotic-relative-efficiency]{asymptotic relative efficiency}?
+	How does \(T_n\), \(\mathrm{sign} _n\), and \(W_n\) compared in terms of their efficiency? Can we say something similar for the estimator's efficiency we have developed, i.e., the \hyperref[def:asymptotic-relative-efficiency-estimator]{asymptotic relative efficiency}?
 \end{problem*}
 
-Let \(H_0 \colon \theta = \theta _0\) and \(H_1 \colon \theta > \theta _0\), and say we want to reject \(H_0\) if \(T_n\) is large for some statistics \(T_n\).
+To answer the above question, we'll look into their \emph{powers}. Consider an alternative hypothesis testing, where we have \(H_0 \colon \theta = \theta _0\) and \(H_1 \colon \theta > \theta _0\).
 
 \begin{eg}
-	\(\theta = \mathbb{P} (X_1 + X_2 > 0)\).
+	One example of \(\theta \) is \(\theta = \mathbb{P} (X_1 + X_2 > 0)\).
 \end{eg}
 
-Assuming there exists \(\mu (\theta )\) such that when the true parameter is \(\theta \),
+Let \(T_n\) now denote a generic statistic (not necessarily the \(t\)-statistic) such that there exists an increasing \(\mu (\theta )\) such that when the true parameter is \(\theta \),
 \[
 	\frac{T_n - \mu (\theta )}{\sigma (\theta ) / \sqrt{n} }
 	\overset{D}{\to} \mathcal{N} (0, 1).
 \]
+Then, we reject \(H_0\) whenever \(T_n\) is large.
 
-\begin{note}
-	We will assume that \(\mu (\theta )\) is increasing.
-\end{note}
+\begin{eg}
+	One can write all the \(t\)-statistic ``\(T_n\)'', the sign test statistic \(\mathrm{sign} _n\), and also the Wilcoxon signed rank statistic \(W_n\) in this form.
+\end{eg}
 
-Under this setup, we reject \(H_0\) if
+Specifically, under this setup, by treating the asymptotic normality as exact, we reject \(H_0\) if
 \[
 	T_n \geq \mu (\theta _0) + Z_\alpha \frac{\sigma (\theta _0)}{\sqrt{n} },
 \]
-which gives that \(\mathbb{P} _{\theta _0}(\text{reject} ) \to \alpha \). While we can always control the type-I error, but not the power. We see that
+which gives that \(\mathbb{P} _{\theta _0}(\text{reject} ) \to \alpha \) as we usually get.
+
+\begin{note}
+	It's easy to see that we can always control the type-I error.
+\end{note}
+
+Since we can always control \(\alpha \), the interesting question might be whether we can control the type-II error \(\beta \). We see that under \(H_1\),
 \[
 	\mathbb{P} _{\theta }(\text{reject} )
 	= \mathbb{P} _{\theta }\left( \frac{T_n - \mu (\theta )}{\sigma (\theta ) / \sqrt{n} } \geq \frac{\mu (\theta _0) - \mu (\theta )}{\sigma (\theta ) / \sqrt{n} } + Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta )} \right)
 	\overset{\theta > \theta _0}{\to } 1
 \]
-as \(n \to \infty \) since \(\mu (\theta _0) - \mu (\theta ) < 0\). Suppose we want \(\mathbb{P} _{\theta ^{\ast} }(\text{reject} ) = 1 - \beta \) for some \(\theta ^{\ast} \) with some \(n\), i.e.,
-\[
-	\frac{\mu (\theta ) - \mu (\theta _0)}{\sigma (\theta ) / \sqrt{n} } - Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta )}
-	= -Z_\beta
-	\iff \sqrt{n} \frac{\mu (\theta ) - \mu (\theta _0)}{\sigma (\theta )} = Z_\beta + \frac{\sigma (\theta _0)}{\sigma (\theta )} Z_\alpha.
-\]
-Let \(n^{\ast} \) be the \(n\) for the above is true when \(\theta = \theta ^{\ast} \).
+as \(n \to \infty \) since \(\mu (\theta _0) - \mu (\theta ) < 0\).
 
-\begin{intuition}
+\begin{remark}
+	The power always approaches \(1\), not very interesting.
+\end{remark}
 
-\end{intuition}
+Hence, we might turn our focus to some non-asymptotic results. One way to look at this problem is by fixing the type-I and type-II error, and see how many samples we need to achieve them.
 
-Consider fixing \(\alpha \), \(\beta \), and \(\theta _0\). Let \(\theta _k\) be the \(\theta \) for which the above holds when \(n = k\). Let \((\theta _n)\) be the sequence defined in this way (hence \(\theta _n \to \theta _0\)), then the above becomes
+\subsection{A Heuristic Approach}
+Given some fixed \(\alpha \), \(\beta \), and \(\theta _0\), suppose we want \(\mathbb{P} _{\theta ^{\ast} }(\text{reject} ) = 1 - \beta \) for some \(\theta ^{\ast} \) with some \(n\). From the above calculation with asymptotic normality we assume for \(T_n\), we have
 \[
-	\sqrt{n} \frac{\mu (\theta _n) - \mu (\theta _0)}{\sigma (\theta _n)} = Z_\beta + \frac{\sigma (\theta _0)}{\sigma (\theta _n)} Z_\alpha.
+	1 - \beta
+	= \mathbb{P} _{\theta ^{\ast} }\left( \frac{T_n - \mu (\theta ^{\ast} )}{\sigma (\theta ^{\ast} ) / \sqrt{n} } \geq \frac{\mu (\theta _0) - \mu (\theta ^{\ast} )}{\sigma (\theta ^{\ast} ) / \sqrt{n} } + Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta ^{\ast} )} \right)
+	\to 1 - \Phi \left( \frac{\mu (\theta _0) - \mu (\theta ^{\ast} )}{\sigma (\theta ^{\ast} ) / \sqrt{n} } + Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta ^{\ast} )} \right) ,
 \]
-Suppose \(\sigma \) is continuous at \(\theta _0\), and \(\mu \) is differentiable at \(\theta _0\). Then, since
+where the convergent is not rigorous since the right-hand side still depend on \(n\). Anyway, this leads to\footnote{Recall that \(Z_\alpha \) is defined for the right-tail.}
 \[
-	\sqrt{n} (\mu (\theta _n) - \mu (\theta _0))
-	= \mu ^{\prime} (\theta _0) \sqrt{n} (\theta _n - \theta _0) + \sqrt{n} o(\theta _n - \theta _0),
+	Z_{1 - \beta }
+	= - Z_{\beta }
+	= \frac{\mu (\theta _0) - \mu (\theta ^{\ast} )}{\sigma (\theta ^{\ast} ) / \sqrt{n} } + Z_\alpha \frac{\sigma (\theta _0)}{\sigma (\theta ^{\ast} )}
+	\implies \sqrt{n} \frac{\mu (\theta ^{\ast} ) - \mu (\theta _0)}{\sigma (\theta ^{\ast} )}
+	= Z_\beta + \frac{\sigma (\theta _0)}{\sigma (\theta ^{\ast} )} Z_\alpha .
 \]
-which gives
+Let \(\theta _i\) be the \(\theta ^{\ast} \) for which the above holds when \(n = i\), and denote the corresponding sequence as \((\theta _n)\).
+
+\begin{note}
+	Obviously we then have \(\theta _n \to \theta _0\) for \((\theta _n)\).
+\end{note}
+
+In this case, by replacing \(\theta ^{\ast} \) by \(\theta _n\) for every \(n \in \mathbb{N} \), we have
+\[
+	\sqrt{n} \frac{\mu (\theta _n) - \mu (\theta _0)}{\sigma (\theta _n)}
+	= Z_\beta + \frac{\sigma (\theta _0)}{\sigma (\theta _n)} Z_\alpha.
+\]
+If \(\sigma \) is continuous at \(\theta _0\), then as \(\sigma (\theta _n) \to \sigma (\theta _0)\), the right-hand side becomes \(Z_\alpha + Z_\beta \). If we further assume that \(\mu \) is differentiable at \(\theta _0\), with \(\sqrt{n} (\mu (\theta _n) - \mu (\theta _0)) = \mu ^{\prime} (\theta _0) \sqrt{n} (\theta _n - \theta _0) + \sqrt{n} \cdot o(\theta _n - \theta _0)\),
 \[
 	\sqrt{n} (\theta _n - \theta _0)
 	\to \frac{Z_\alpha + Z_\beta }{\mu ^{\prime} (\theta _0) / \sigma (\theta _0)}.
 \]
-Let \(n^{\ast} \) such that \(\theta _{n^{\ast} } = \theta ^{\ast} \). Then, we have
+Let \(n^{\ast} \) be the \(n\) such that \(\theta _{n^{\ast} } = \theta _n = \theta ^{\ast} \). Then, we have
 \[
 	\sqrt{n^{\ast} }
-	\to \frac{Z_\alpha + Z_\beta }{\frac{\mu ^{\prime} (\theta _0)}{\sigma (\theta _0)} (\theta _{n^{\ast} } - \theta _0)}
+	\to \frac{Z_\alpha + Z_\beta }{\frac{\mu ^{\prime} (\theta _0)}{\sigma (\theta _0)} (\theta _{n^{\ast} } - \theta _0)}.
 \]
-However, this analysis relies on the fact that when \(\sqrt{n} (\theta _n - \theta _0)\) converges, then
-\[
-	\frac{T_n - \mu (\theta _n)}{\sigma (\theta _n) / \sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1).
-\]
+
+\begin{note}
+	\(n^{\ast} \) only depends on \(\mu ^{\prime} (\theta _0) / \sigma (\theta _0)\).
+\end{note}
+\begin{explanation}
+	Since \(Z_\alpha + Z_\beta \) is fixed while \(\theta _{n^{\ast} } - \theta _0\) is assumed to be independent of the statistics also since we treat their asymptotic normality as exact, so \(\theta _{n^{\ast} }\) will be the same across different statistics.\todo{?}
+\end{explanation}
+
+\begin{definition}[Slope]\label{def:slope}
+	For any statistics \(T_n\) with \(\mu \) and \(\sigma \), its \emph{slope} is defined as  \(\mu ^{\prime} (\theta _0) / \sigma (\theta _0)\).
+\end{definition}
+
+We see that if the analysis can be made formal, then we can compare two statistics \(T_n\) and \(\widetilde{T} _n\) in terms of their required sample sizes to achieve \(\alpha \) and \(\beta \) for a fixed \(\theta _0\).
+
+\begin{remark}
+	This analysis relies on the fact that when \(\sqrt{n} (\theta _n - \theta _0)\) converges, then
+	\[
+		\frac{T_n - \mu (\theta _n)}{\sigma (\theta _n) / \sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1).
+	\]
+\end{remark}

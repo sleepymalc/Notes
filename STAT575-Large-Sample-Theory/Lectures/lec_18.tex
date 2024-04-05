@@ -1,22 +1,22 @@
 \lecture{18}{26 Mar.\ 9:30}{Wilcoxon Signed-Rank Test}
-To elaborate on the previous answer to the non i.i.d.\ problem, consider the following \(H_0\) such that for every \(1 \leq i \leq n\),
+By conditioning on \(\lvert X_j \rvert \)'s, we overcome the non i.i.d.\ problem: consider the following \(H_0\) such that
 \[
-	\mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert , 1 \leq j \leq n) = \frac{1}{2}.
+	\forall 1 \leq i \leq n \colon \mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert , 1 \leq j \leq n) = \frac{1}{2}.
 \]
-In other words, \(\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert , 1 \leq j \leq n) = 1 / 2\).
+In other words, \(\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert , 1 \leq j \leq n) = 1 / 2\). We see that \(\sgn (X_i)\)'s are now i.i.d.
 
 \begin{intuition}
 	In practice, when doing inference, we usually implicitly condition on \(\vert X_j \vert \)'s too: by doing inference on the selected ``design points'', we're essentially condition on those.
 \end{intuition}
 
-Indeed, by writing \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)\) and treating \(\vert X_i \vert \)'s as constants, under \(H_0\),
+Then, by writing \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)\) and treating \(\vert X_i \vert \)'s as constants, under \(H_0\),
 \begin{equation}\label{eq:two-sample}
 	\frac{\sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} X_i^2} }
 	\overset{D}{\to} \mathcal{N} (0, 1)
 \end{equation}
 by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use the left-hand side for out test as usual.
 
-However, if we don't want to condition on \(\lvert X_j \rvert 's\), we need to do more. Before we dive in to that, let's point out other potential problems. Firstly, since even for i.i.d.\ \(X_i\)'s, the results for \(T_n\) is asymptotic, and we might wonder what's the rate of convergence.
+Let's point out other potential problems: firstly, since even for i.i.d.\ \(X_i\)'s, the results for \(T_n\) is asymptotic, and we might wonder what's the rate of convergence.
 
 \begin{problem*}
 	How fast does \(T_n \overset{D}{\to} \mathcal{N} (0, 1)\) under \(H_0\)?
@@ -31,7 +31,7 @@ Clearly, the answer to this problem depends heavily on \(F\), so it's unlikely t
 It turns out that this is something we will solve along the way when we deal with the i.i.d.\ problem.
 
 \subsection{Sign Test}
-Our first goal is to avoid using the information of \(\vert X_j \vert \)'s. Inspired by the above, consider the following.
+Our first goal is to avoid conditioning on \(\vert X_j \vert \)'s. Inspired by the above, consider the following.
 
 \begin{intuition}
 	We may reject \(H_0\) if \(\sum_{i=1}^{n} \sgn (X_i) \) is large, i.e., we simply discard all \(X_i\)'s in \autoref{eq:two-sample}.
@@ -41,20 +41,28 @@ In particular, under \(H_0\), the \emph{sign statistics} is defined as
 \[
 	\mathrm{sign} _n
 	\coloneqq \sum_{i=1}^{n} \sgn (X_i)
-	= 2 \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} - n,
+	= 2 \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} - n .
 \]
-where we know that \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\). We see that this is independent of \(F\), and we know its exact distribution, hence we can do the test with this. On the other hand, under \(H_0\),
-\[
-	\frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} } \overset{D}{\to} \mathcal{N} (0, 1),
-\]
-so we can also reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
+We see that under \(H_0\), the distribution of \(\mathrm{sign} _n\) is independent of \(F\) since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\).
 
 \begin{note}
-	However, since we're not using the information of \(\vert X_j \vert \) now, it's questionable that how powerful the above tests are.
+	We can conduct the hypothesis test non-asymptotically.
 \end{note}
 
+On the other hand, under \(H_0\), we also have asymptotic normality, i.e.,
+\[
+	\frac{1}{\sqrt{n} } \mathrm{sign} _n
+	= \frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} }
+	\overset{D}{\to} \mathcal{N} (0, 1)
+\]
+from the usual \hyperref[thm:CLT]{central limit theorem}, so we can also reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
+
+\begin{problem*}
+	Since we're not using the information of \(\vert X_j \vert \) now, how powerful is it?
+\end{problem*}
+
 \subsection{Wilcoxon Signed-Rank Test}
-Indeed, we can utilize \(\vert X_j \vert \)'s with the following intuition.
+To address the above problem, let's again allow conditioning on \(\lvert X_j \rvert \)'s but design another test to get some sense. In this case, we can utilize \(\vert X_j \vert \)'s as follows.
 
 \begin{intuition}
 	Replace \(\vert X_i \vert \)'s in \autoref{eq:two-sample} by their ``rank'' information.
@@ -83,19 +91,16 @@ is ``large.'' To figure out the critical value, since we condition on \(\{ \vert
 by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use this to test \(H_0\).
 
 \begin{note}
-	This test statistic is again independent of \(F\) (under \(H_0\)).
+	Under \(H_0\), this test statistic is again independent of \(F\).
 \end{note}
 
-Without conditioning on \(\vert X_j \vert \)'s, the above doesn't hold. However, a simple sign test can still be done.
+Without conditioning on \(\vert X_j \vert \)'s, the above doesn't hold. However, some sign tests are still possible.
 
-\begin{eg}[Sign test]
-	If the data is i.i.d., consider \(H_0 \colon \sgn (X_i) = \epsilon _i\) where \(\epsilon _i\) is a Rademacher random variable, i.e., \(\mathbb{P} (X > 0) = \mathbb{P} (X < 0) = 1 / 2\).
+\begin{eg}[Yet another sign test]
+	To test whether the data is i.i.d., consider \(H_0 \colon \sgn (X_i) = \epsilon _i\) where \(\epsilon _i\) is a Rademacher random variable, i.e., \(\mathbb{P} (X > 0) = \mathbb{P} (X < 0) = 1 / 2\) if \(X\) is symmetric.
 \end{eg}
 
-Let's study this simple sign test. Observe that the above doesn't need \(\mathbb{E}_{}[X_i] \) to be finite. But if we further assume \(\Var_{}[X_i] < \infty \), then the Wilcoxon signed-rank test still makes sense. However, since we're not conditioning on \(\vert X_j \vert \)'s, we only have
-\[
-	W_n = \sum_{i=1}^{n} R_i \sgn (X_i).
-\]
+Indeed, while the above doesn't need \(\mathbb{E}_{}[X_i] < \infty \), but if we assume \(\Var_{}[X_i] < \infty \), then the Wilcoxon signed-rank test still work, just that now we have its original form, i.e., \(W_n = \sum_{i=1}^{n} R_i \sgn (X_i)\). Let's first see a useful characterization of \(W_n\) to get started.
 
 \begin{proposition}\label{prop:Wilcoxon-signed-rank-test}
 	Let \(h(x_1, x_2) \coloneqq \mathbbm{1}_{x_1 + x_2 \geq 0}\). Then we have
@@ -140,7 +145,7 @@ Let's study this simple sign test. Observe that the above doesn't need \(\mathbb
 			= \sum_{i \neq j} \mathbbm{1}_{X_i + X_j \geq 0} \mathbbm{1}_{X_j > X_i}
 			= S_2,
 		\]
-		as we assume that \(F\) is continuous. Hence, by letting \(S \coloneqq S_1 = S_2\), the above calculation gives
+		since \(F\) is continuous. Hence, by letting \(S \coloneqq S_1 = S_2\), the above calculation gives
 		\[
 			W_n^+ - \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0}
 			= S
@@ -183,30 +188,23 @@ However, it's clear that \(h(X_i, X_j)\)'s are not independent. Anyway, recall w
 This is a sum of identically distributed random variables subtracting something.
 
 \begin{intuition}
-	It \(1 / 2\) is the expectation of \(h(X_i, X_j)\) for \(i \neq j\), we're getting close to the familiar form.
+	If \(1 / 2\) is the expectation of \(h(X_i, X_j)\) for \(i \neq j\), we're getting close to the familiar form.
 \end{intuition}
 
-\begin{claim}
-	Indeed, under \(H_0\), \(\mathbb{E}_{}[h(X_i, X_j)] = 1 / 2\) for \(i \neq j\).
-\end{claim}
-\begin{explanation}
-	We see that
-	\[
-		\begin{split}
-			\mathbb{E}_{H_0}[h(X_i, X_j)]
-			= \mathbb{E}_{H_0}[h(X_1, X_2)]
-			 & = \mathbb{P} (X_1 + X_2 \geq 0)                             \\
-			 & = \mathbb{P} (X_1 \geq -X_2)                                \\
-			 & = \int _\mathbb{R} \mathbb{P} (X_1 \geq -x) F(\mathrm{d} x)
-			= \int _\mathbb{R} \mathbb{P} (X \leq x) F(\mathrm{d} x)
-			= \mathbb{E}_{}[F(X)]
-			= \frac{1}{2}
-		\end{split}
-	\]
-	since \(F\) is continuous, and \(F(X) \sim \mathcal{U} (0, 1)\) as we have shown in the homework.
-\end{explanation}
-
-Hence, under \(H_0\),
+Indeed, under \(H_0\), \(\mathbb{E}_{}[h(X_i, X_j)] = 1 / 2\) for \(i \neq j\) as
+\[
+	\begin{split}
+		\mathbb{E}_{H_0}[h(X_i, X_j)]
+		= \mathbb{E}_{H_0}[h(X_1, X_2)]
+		 & = \mathbb{P} (X_1 + X_2 \geq 0)                             \\
+		 & = \mathbb{P} (X_1 \geq -X_2)                                \\
+		 & = \int _\mathbb{R} \mathbb{P} (X_1 \geq -x) F(\mathrm{d} x)
+		= \int _\mathbb{R} \mathbb{P} (X \leq x) F(\mathrm{d} x)
+		= \mathbb{E}_{}[F(X)]
+		= \frac{1}{2}
+	\end{split}
+\]
+since \(F\) is continuous, and \(F(X) \sim \mathcal{U} (0, 1)\) as we have shown in the homework. Hence, under \(H_0\),
 \[
 	\sum_{i \neq j} \left( h(X_i, X_j) - \frac{1}{2} \right)
 	= 2 \sum_{i < j} \left( h(X_i, X_j) - \frac{1}{2} \right)

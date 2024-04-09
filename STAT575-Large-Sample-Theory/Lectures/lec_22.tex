@@ -1,0 +1,191 @@
+\lecture{22}{9 Apr.\ 9:30}{The Theory of Linear Rank Statistics}
+\section{Linear Rank Statistics}
+Consider \(X_1, \dots , X_N, \dots \overset{\text{i.i.d.} }{\sim } F\) such that \(F\) is continuous, and for \(1 \leq i \leq N\), let the \emph{rank} be
+\[
+	R_{Ni}
+	\coloneqq \sum_{j=1}^{N} \mathbbm{1}_{X_j \leq X_i},
+\]
+i.e., \(R_{Ni}\) is the rank of the \(i^{\text{th} }\) observation among the first \(N\).
+
+\begin{remark}
+	Clearly, as \(N\) varies, \(R_{Ni}\) is distributed differently. In particular, \(R_{Ni} \sim \mathcal{U} ([N])\) for all \(1 \leq i \leq N\), but they are not independent.
+\end{remark}
+
+\begin{remark}
+	On the other hand, since \(F\) is continuous, \(U_i \coloneqq F(X_i)\overset{\text{i.i.d.} }{\sim } \mathcal{U} (0, 1)\) for all \(i \geq 1\), and we have \(R_{Ni} = \sum_{j=1}^{N} \mathbbm{1}_{U_j \leq U_i} \) almost surely.
+\end{remark}
+
+\begin{eg}[Two-sample problem]
+	Consider two samples \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) and \(Y_1, \dots , Y_m \overset{\text{i.i.d.} }{\sim } G\), and we want to test whether \(H_0 \colon F = G\). Set \(X_{n+i} = Y_i\) for \(1 \leq i \leq m\), which gives
+	\[
+		X_1, \dots , X_n , X_{n+1} = Y_1, \dots , X_{n+m} = Y_m
+	\]
+	with \(N \coloneqq n + m\). Under \(H_0\), \(X_1, \dots , X_N \overset{\text{i.i.d.} }{\sim } F\).
+
+	Naively, we will reject \(H_0\) when \(\overline{Y} _m - \overline{X} _n\) is ``large'' (or ``small''). Equivalently, we may consider \(\sum_{i=1}^{m} Y_i - \sum_{i=1}^{n} X_i = \sum_{i=1}^{N} c_{Ni} X_i\) where
+	\[
+		c_{Ni}
+		= \begin{dcases}
+			1,  & \text{ if } n < 1 \leq N ;   \\
+			-1, & \text{ if } 1 \leq i \leq n.
+		\end{dcases}
+	\]
+	From our experience, one might replace \(X_i\) by \(R_{Ni}\), i.e., consider
+	\[
+		\sum_{i=1}^{N} c_{Ni} R_{Ni}
+		= \sum_{i=1}^{N} (2 \widetilde{c} _{Ni} - 1) R_{Ni}
+		= 2 \sum_{i=1}^{N} \widetilde{c} _{Ni} R_{Ni} - \sum_{i=1}^{N} R_{Ni}
+		= 2 \sum_{i=n+1}^{M} R_{Ni} - \frac{N(N+1)}{2}
+	\]
+	since \(\sum_{i=1}^{N} R_{Ni} = \sum_{i=1}^{N} i\), and we define
+	\[
+		\widetilde{c} _{Ni}
+		= \frac{c_{Ni} + 1}{2}
+		= \begin{dcases}
+			1, & \text{ if } n < i \leq N ;   \\
+			0, & \text{ if } 1 \leq i \leq n.
+		\end{dcases}
+	\]
+	Observe that \(\sum_{i=n+1}^{M} R_{Ni}\) is just a Wilcoxon two-sample rank statistics.
+\end{eg}
+
+In general, one might consider the so-called \emph{linear rank statistics} in the form of
+\[
+	\sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni}),
+\]
+where \(\alpha _N(i) \eqqcolon \alpha _{Ni}\) for \(1 \leq i \leq N\) and \(c_{N1}, \dots , c_{NN}\) are all constants.
+
+\begin{eg}[Median statistics]
+	We can also consider \(\sum_{i=n+1}^{M} \mathbbm{1}_{R_{Ni} \geq (N+1) / 2}\).
+\end{eg}
+
+\begin{eg}[Simple random sampling]
+	Given a finite population \(\{ x_1, \dots , x_N \} \), say we want to estimate the population average \((x_1 + \dots + x_N) / N\). To do this, we take a sample of size \(n\) and evaluate the sample mean
+	\[
+		\frac{1}{n} \sum_{i=1}^{N} x_i \mathbbm{1}_{\text{\(i^{\text{th} }\) population is in the sample} } .
+	\]
+	Consider a \emph{simple random sample}, i.e., all subset of size \(n\) from the population is equally likely to be selected. In this case, we observe that \((R_{N1}, \dots , R_{NN})\)  is equally likely to take any permutation of \([N]\). Hence, the above indicators can be defined as \(\mathbbm{1}_{R_{Ni} \leq n} \), which suggests \(\alpha _N(R_{Ni}) \coloneqq \mathbbm{1}_{R_{Ni} \leq n} \) in the above notation.
+\end{eg}
+
+\begin{notation}
+	We write \(R_{\sim N} \coloneqq (R_{N1}, \dots , R_{NN})\).
+\end{notation}
+
+All these examples motivates us to develop a general theory for the linear rank statistics in the form of \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni})\). It helps to compute the expectation and the variance of \(T_N\) to get some sense what it really is. Let's establish some common notations first.
+
+\begin{notation}
+	We write \(\overline{\alpha} _N\) and \(\overline{c} _N\) to be the population mean of \(\alpha _{Ni}\) and \(c_{Ni}\), i.e.,
+	\[
+		\overline{\alpha} _N \coloneqq \frac{1}{N} \sum_{i=1}^{N} \alpha _N(i), \text{ and }
+		\overline{c} _N \coloneqq \frac{1}{N} \sum_{i=1}^{N} c_{Ni}.
+	\]
+	Moreover, let \(\sigma _{N \alpha }^2\) and \(\sigma _{Nc}^2\) to be the population variance of \(\alpha _{Ni}\) and \(c_{Ni}\) respectively, i.e.,\footnote{Recall that for any individual \(R_{Ni}\), marginally they're identically distributed.}
+	\[
+		\sigma _{N \alpha }^2 = \frac{1}{N} \sum_{i=1}^{N} (\alpha _N(i) - \overline{\alpha} _N)^2, \text{ and }
+		\alpha _{N c}^2 = \frac{1}{N} \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N)^2.
+	\]
+\end{notation}
+
+\subsection{Expectation and Variance of Linear Rank Statistics}
+Let's first compute the expectation.
+
+\begin{claim}
+	\(\mathbb{E}_{}[T_N] = N \overline{\alpha} _N \overline{c} _N\).
+\end{claim}
+\begin{explanation}
+	Since marginally, \(R_{Ni}\)'s are just uniform over \([N]\), hence the expectation of \(T_N\) is
+	\[
+		\mathbb{E}_{}[T_N]
+		= \sum_{i=1}^{N} c_{Ni} \mathbb{E}_{}[\alpha _N(R_{Ni})]
+		= \sum_{i=1}^{N} c_{Ni} \mathbb{E}_{}[\alpha _N(R_{N1})]
+		= \sum_{i=1}^{N} c_{Ni} \sum_{j=1}^{N} \frac{\alpha _N(j)}{N}
+		\eqqcolon N \overline{\alpha} _N \overline{c} _N
+	\]
+	as \(\overline{\alpha} _N = \mathbb{E}_{}[\alpha _N(R_{N1})] = \frac{1}{N} \sum_{i=1}^{N} \alpha _{Ni}\) and \(\overline{c} _N = \frac{1}{N} \sum_{i=1}^{N} c_{Ni}\).
+\end{explanation}
+
+Computing the variance is a bit more challenging, but still doable.
+
+\begin{claim}
+	\(\Var_{}[T_N] = \frac{N^2}{N-1} \sigma _{Nc}^2 \sigma _{N \alpha }^2\).
+\end{claim}
+\begin{explanation}
+	Let's first center \(T_N\), which gives
+	\begin{align*}
+		T_N - \mathbb{E}_{}[T_N]
+		 & = \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni}) - \sum_{i=1}^{N} c_{Ni} \overline{\alpha} _N                                                                        \\
+		 & = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni}) + \overline{c} _N \sum_{i=1}^{N} \alpha _N(R_{Ni}) - \sum_{i=1}^{N} c_{Ni} \overline{\alpha} _N \\
+		\shortintertext{and with \(\sum_{i=1}^{N} \alpha _N(R_{Ni}) = \sum_{i=1}^{N} \alpha _N(i)\), the last two terms cancel out, and we have}
+		 & = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni}).
+	\end{align*}
+	Then, by the definition of variance,
+	\[
+		\begin{split}
+			\Var_{}[T_N]
+			 & = \Var_{}\left[\sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni})\right]                                                                                                               \\
+			 & = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N)^2 \Var_{}[\alpha _N(R_{Ni})] + \sum_{i \neq j} (c_{Ni} - \overline{c} _N)(c_{Nj} - \overline{c} _N) \Cov_{}[\alpha _N(R_{Ni}) , \alpha _N(R_{Nj})].
+		\end{split}
+	\]
+	The first sum is just \(N \sigma _{Nc}^2 \sigma _{N \alpha }^2\), so we focus on the second sum.
+
+	\begin{intuition}
+		For \(i \neq j\), \((R_{Ni}, R_{Nj})\) is equally likely to take any value in \(\{ (i, j) \colon 1 \leq i \neq j \leq N\}\).
+	\end{intuition}
+
+	Hence, we can replace \(\Cov_{}[\alpha _N(R_{Ni}), \alpha _N(R_{Nj})] \) by \(\Cov_{}[\alpha _N(R_{N1}), \alpha _N(R_{N2})]\), and focus only on \(\sum_{i \neq j} (c_{Ni} - \overline{c} _N)(c_{Nj}- \overline{c} _j)\). In particular, we have the following.
+
+	\begin{note}
+		For any sequence \((x_N)\), we have \(\sum_{i \neq j} (x_i - \overline{x} _N)(x_j - \overline{x} _N) = - \sum_{i=1}^{N} (x_i - \overline{x} _N)^2\).
+	\end{note}
+	\begin{explanation}
+		From the identity \(( \sum_{i=1}^{N} x_i ) ^2 = \sum_{i=1}^{N} x_i^2 + \sum_{i \neq j} x_i x_j \), hence
+		\[
+			0
+			= \left( \sum_{i=1}^{N} (x_i - \overline{x} _N) \right) ^2
+			= \sum_{i=1}^{N} (x_i - \overline{x} _N)^2 + \sum_{i \neq j} (x_i - \overline{x} _N)(x_j - \overline{x} _N).
+		\]
+		Rearranging the terms gives the equality.
+	\end{explanation}
+
+	Hence, we see that by using the above identity and the fact that the joint distribution of \(R_{N1}\) and \(R_{N2}\) is the uniform, with the definition of the covariance,
+	\begin{align*}
+		 & \sum_{i \neq j} (c_{Ni} - \overline{c} _N)(c_{Nj} - \overline{c} _N) \Cov_{}[\alpha _N(R_{Ni}) , \alpha _N(R_{Nj})]                                \\
+		 & = \Cov_{}[\alpha _N(R_{n1}), \alpha _N(R_{N2})] \cdot \sum_{i \neq j} (c_{Ni} - \overline{c} _N)(c_{Nj} - \overline{c} _N)                         \\
+		 & = \left[ \frac{1}{N(N-1)} \sum_{i \neq j} (\alpha _{Ni} - \overline{\alpha} _N) (\alpha _{Nj} - \overline{\alpha} _N) \right] (- N \sigma _{Nc}^2) \\
+		 & = \left[ - \frac{1}{N(N-1)} \sum_{i=1}^{N} (\alpha _{Ni} - \overline{\alpha} _N)^2 \right] (- N \sigma _{Nc}^2)
+		= \frac{N}{N-1} \sigma _{N \alpha }^2 \sigma _{Nc}^2 .
+	\end{align*}
+	Putting everything together, we have
+	\[
+		\Var_{}[T_N]
+		= N \sigma _{Nc}^2 \sigma _{N \alpha }^2 + \frac{N}{N-1} \sigma _{N \alpha }^2 \sigma _{Nc}^2
+		= \frac{N^2}{N-1}\sigma _{Nc}^2 \sigma _{N \alpha }^2,
+	\]
+	which gives the desired result.
+\end{explanation}
+
+With the above calculation, we now want to establish the asymptotic normality for the linear rank statistics. Specifically, we consider a special form of \(\alpha _N(i)\) given some \(\phi \colon [0, 1] \to \mathbb{R} \), i.e., for \(1 \leq i \leq N\),
+\[
+	\alpha _N(i) = \phi \left( \frac{i}{N+1} \right) .
+\]
+It might seem cryptic and mysterious at the first glance why we want to consider \(\alpha _N(i)\) in this form.
+
+\begin{intuition}
+	Consider order statistics \(U_{N(1)} \leq \dots \leq U_{N(N)}\) for the uniform \(U_i\)'s. Then, for \(1 \leq i \leq N\), \(\mathbb{E}_{}[U_{N(i)}] = i / (N+1)\), implying \(\alpha _N(i) = \phi (\mathbb{E}_{}[U_{N(i)}] )\).
+\end{intuition}
+
+\begin{eg}
+	The linear rank statistics we have seen so far can be written in the above form.
+\end{eg}
+
+To proceed, one might expect something like \(\phi (\mathbb{E}_{}[U_{N(i)}] ) \approx \mathbb{E}_{}[\phi (U_{N(i)})] \) to hold, and in fact, while both of them are of our interests, the latter is easier to analyze than \(\phi (\mathbb{E}_{}[U_{N(i)}] )\).
+
+\begin{intuition}
+	Indeed, \(\alpha _N(i) = \mathbb{E}_{}[\phi (U_{N(i)})]\) is more convenient since we will have
+	\[
+		T_N
+		= \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni})
+		= \sum_{i=1}^{N} c_{Ni} \mathbb{E}_{}[\phi (U_i) \mid R_{\sim N}] ,
+	\]
+	which is a conditional expectation. We can then apply the theory of \hyperref[def:projection]{projection}.
+\end{intuition}

@@ -37,19 +37,18 @@ Our first goal is to avoid conditioning on \(\vert X_j \vert \)'s. Inspired by t
 	We may reject \(H_0\) if \(\sum_{i=1}^{n} \sgn (X_i) \) is large, i.e., we simply discard all \(X_i\)'s in \autoref{eq:two-sample}.
 \end{intuition}
 
-In particular, under \(H_0\), the \emph{sign statistics} is defined as
-\[
-	\mathrm{sign} _n
-	\coloneqq \sum_{i=1}^{n} \sgn (X_i)
-	= 2 \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} - n .
-\]
-We see that under \(H_0\), the distribution of \(\mathrm{sign} _n\) is independent of \(F\) since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\).
+This motivates us to define the \hyperref[def:sign-statistic]{sign statistic}.
 
-\begin{note}
-	We can conduct the hypothesis test non-asymptotically.
-\end{note}
+\begin{definition}[Sign statistic]\label{def:sign-statistic}
+	Given a sample \(X_1, \dots , X_n\), the \emph{sign statistic} is defined as
+	\[
+		\mathrm{sign} _n
+		\coloneqq \sum_{i=1}^{n} \sgn (X_i)
+		= 2 \sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} - n .
+	\]
+\end{definition}
 
-On the other hand, under \(H_0\), we also have asymptotic normality, i.e.,
+Observe that under \(H_0\), the distribution of \(\mathrm{sign} _n\) is independent of \(F\) since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\), i.e., we can conduct the hypothesis test non-asymptotically. On the other hand, under \(H_0\), we also have asymptotic normality, i.e.,
 \[
 	\frac{1}{\sqrt{n} } \mathrm{sign} _n
 	= \frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} }
@@ -57,18 +56,14 @@ On the other hand, under \(H_0\), we also have asymptotic normality, i.e.,
 \]
 from the usual \hyperref[thm:CLT]{central limit theorem}, so we can also reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
 
-\begin{problem*}
-	Since we're not using the information of \(\vert X_j \vert \) now, how powerful is it?
-\end{problem*}
-
 \subsection{Wilcoxon Signed-Rank Test}
-To address the above problem, let's again allow conditioning on \(\lvert X_j \rvert \)'s but design another test to get some sense. In this case, we can utilize \(\vert X_j \vert \)'s as follows.
+The sign test with the \hyperref[def:sign-statistic]{sign statistic} \(\mathrm{sign} _n\) is simple, but since we're not using the information of \(\vert X_j \vert \) at all, it's questionable that how powerful it is. To address this, let's again allow conditioning on \(\lvert X_j \rvert \)'s but design another test to get some sense. In this case, we can utilize \(\vert X_j \vert \)'s as follows.
 
 \begin{intuition}
 	Replace \(\vert X_i \vert \)'s in \autoref{eq:two-sample} by their ``rank'' information.
 \end{intuition}
 
-In particular, consider the rank \(R_i\) for \(1 \leq i \leq n\)
+In particular, consider the \emph{rank} \(R_i\) for \(1 \leq i \leq n\)
 \[
 	R_i
 	\coloneqq \sum_{j=1}^{n} \mathbbm{1}_{\vert X_j \vert \leq \vert X_i \vert }.
@@ -79,11 +74,16 @@ It's clear that \(R_i\)'s are dependent to each other.
 	This is different from the previous definition \(R_i = \sum_{j=1}^{i} \mathbbm{1}_{X_j < X_i} \).
 \end{prev}
 
-Following the intuition, consider the so-called \emph{Wilcoxon signed-rank test}, which rejects \(H_0\) if
-\[
-	W_n = \sum_{i=1}^{n} R_i \sgn (X_i)
-\]
-is ``large.'' To figure out the critical value, since we condition on \(\{ \vert X_j \vert \}_{j = 1}^n \), without loss of generality, \(R_i = i\) for every \(1 \leq i \leq n\).\footnote{This is doable since \(\vert X_j \vert \)'s are treated as constants.} In this case, \(W_n = \sum_{i=1}^{n} i \sgn (X_i)\), hence under \(H_0\),
+Following the intuition, consider the so-called \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon signed-rank statistic}.
+
+\begin{definition}[Wilcoxon signed-rank test]\label{def:Wilcoxon-signed-rank-statistic}
+	Given a sample \(X_1, \dots , X_n\), the \emph{Wilcoxon signed-rank statistic} is defined as
+	\[
+		W_n = \sum_{i=1}^{n} R_i \sgn (X_i).
+	\]
+\end{definition}
+
+Then, the corresponding Wilcoxon signed-rank test is to reject \(H_0\) if \(W_n\) is ``large.'' To figure out the critical value, since we condition on \(\{ \vert X_j \vert \}_{j = 1}^n \), without loss of generality, \(R_i = i\) for every \(1 \leq i \leq n\).\footnote{This is doable since \(\vert X_j \vert \)'s are treated as constants.} In this case, \(W_n = \sum_{i=1}^{n} i \sgn (X_i)\), hence under \(H_0\),
 \[
 	\frac{\sum_{i=1}^{n} i \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} i^2} }
 	\overset{D}{\to} \mathcal{N} (0, 1)
@@ -220,7 +220,7 @@ where we define \(U_n\) for some permutation symmetric function \(h\)\footnote{I
 \[
 	U_n \coloneqq \frac{1}{\binom{n}{2}} \sum_{i < j} h(X_i, X_j).
 \]
-This is the so-called \emph{\(U\)-statistic}, where \(U\) stands for unbiased. We will show that by multiplying \(\sqrt{n} \) on the both sides, this \hyperref[def:converge-in-distribution]{converges} to a standard normal, i.e.,
+This is an \hyperref[def:U-statistic]{\(U\)-statistic}, where \(U\) stands for unbiased. We will formally define it later, and we will show that by multiplying \(\sqrt{n} \) on the both sides, this \hyperref[def:converge-in-distribution]{converges} to a standard normal, i.e.,
 \begin{equation}\label{eq:Wilcoxon-signed-rank-test}
 	\frac{\sqrt{n}}{\binom{n}{2}}  \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
 	= 2 \sqrt{n} \left( U_n - \frac{1}{2} \right)
@@ -237,7 +237,7 @@ This is the so-called \emph{\(U\)-statistic}, where \(U\) stands for unbiased. W
 \end{note}
 
 \section{\(U\)-Statistics}
-In this section, we develop the asymptotic theory for \(U\)-statistics. Let's first recall the following proposition we have shown in the homework.
+In this section, we develop the asymptotic theory for \hyperref[def:U-statistic]{\(U\)-statistics}. Let's first recall the following proposition we have shown in the homework.
 
 \begin{proposition}\label{prop:correlation-converging-together}
 	If \(\Var_{}[S_n] / \Var_{}[\widetilde{S} _n] \to 1\) and \(\Corr_{}(S_n, \widetilde{S} _n) \to 1\), then

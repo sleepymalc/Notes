@@ -1,1 +1,150 @@
-\lecture{23}{11 Apr.\ 9:30}{}
+\lecture{23}{11 Apr.\ 9:30}{Asymptotically Normality of Linear Rank Statistics}
+We will now work with \(\alpha _N(i) = \mathbb{E}_{}[\phi (U_{N(i)})] \). It'll be convenient to consider
+\[
+	T_N
+	= \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni}) + \overline{c} _N \sum_{i=1}^{N} \alpha _N(R_{Ni})
+	= \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni}) + N \overline{c} _N \overline{\alpha} _N,
+\]
+with the fact that \(\mathbb{E}_{}[T_N] = N \overline{c} _N \overline{\alpha} _N\), we see that
+\begin{align*}
+	T_N - \mathbb{E}_{}[T_N]
+	 & = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni})                         \\
+	\shortintertext{and since \(\alpha _N(R_{Ni}) = \mathbb{E}_{}[\phi (U_i) \mid R_{\sim N}]\), we further have}
+	 & = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \mathbb{E}_{}[\phi (U_i) \mid R_{\sim N}]
+	= \mathbb{E}_{}\left[\sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \phi (U_i) \mid R_{\sim N}\right]
+	\eqqcolon \mathbb{E}_{}[\widetilde{T} _N \mid R_{\sim N}]
+\end{align*}
+where we let \(\widetilde{T} _N \coloneqq \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \phi (U_i)\).
+
+\begin{remark}
+	We can easily have asymptotically normality for \(\widetilde{T} _N\).
+\end{remark}
+\begin{explanation}
+	We see that by the \hyperref[thm:Hajek-Sidak-CLT]{Hajek-Sidak central limit theorem}, if \(\phi (U_i)\)'s are i.i.d.\ such that
+	\[
+		0 < \mathbb{E}_{}[\phi ^2(U)] = \int_{0}^{1} \phi ^2(u) \,\mathrm{d}u < \infty, \text{ and }
+		\max _{1 \leq i \leq N} \frac{(c_{Ni} - \overline{c} _N)^2}{\sum_{j=1}^{N} (c_{Nj} - \overline{c} _N)^2} \to 0,
+	\]
+	then \(\widetilde{T} _N / \sqrt{\Var_{}[\widetilde{T} _N] } \overset{D}{\to} \mathcal{N} (0, 1)\) as \(\mathbb{E}_{}[\widetilde{T} _N] = 0 \).
+\end{explanation}
+
+We can then apply the \hyperref[def:projection]{projection} theory we have developed. In particular, to show \(T_N\) is asymptotically normal, from \autoref{col:projection}, it suffices to show that \(\Var_{}[T_N] / \Var_{}[\widetilde{T} _N] \to 1\) as \(n \to \infty \). Now,
+\begin{itemize}
+	\item \(\Var_{}[T_N] = \frac{N^2}{N-1} \sigma _{N \alpha }^2 \alpha _{Nc}^2\);
+	\item \(\Var_{}[\widetilde{T} _N] = N \sigma _{Nc}^2 \Var_{}[\phi (U_1)] \) since
+	      \[
+		      \Var_{}[\widetilde{T} _N]
+		      = \Var_{}[\phi (U_1)] \cdot \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N)^2
+		      = N \sigma _{Nc}^2 \Var_{}[\phi (U)] ,
+	      \]
+\end{itemize}
+so it suffices to show \(\sigma _{N \alpha }^2 = \Var_{}[\alpha _N(R_{N1})] \to \Var_{}[\phi (U_1)] \).
+
+\begin{note}
+	To show \(\Var_{}[X] \to \Var_{}[Y] \), it suffices to show \(X \overset{L^2}{\to} Y \) as this will imply convergence for both the first and second moments, hence the variance.
+\end{note}
+
+In particular, it reduces to show \(\alpha _N(R_{N1}) = \mathbb{E}_{}[\phi (U_1) \mid R_{\sim N}] \overset{L^2}{\to} \phi (U_1)\). Firstly, we write
+\[
+	\mathbb{E}_{}[\phi (U_1) \mid R_{\sim N}]
+	= \mathbb{E}_{}[\phi (U_1) \mid R_{\sim 1}, \dots , R_{\sim N}]
+\]
+as the condition on the right-hand side is equivalent to \(R_{\sim N}, U_2, \dots , U_N\), and \(U_1\) is independent of \(U_2, \dots , U_N\). From the theory of martingale, we have
+\[
+	\mathbb{E}_{}[\phi (U_1) \mid R_{\sim 1}, \dots , R_{\sim N}]
+	\overset{\text{a.s.}}{\to} \mathbb{E}_{}[\phi (U_1) \mid R_{\sim N}, N \geq 1] ,
+\]
+which is equal to \(\phi (U_1)\) if \(\phi (U_1)\) is a function of the conditions. Hence, it remains to show that \(U_1\) is a measurable function of \(\{ R_{\sim N} \}_{N \geq 1}\). This is proved the following.
+
+\begin{claim}\label{clm:lec23}
+	Knowing the first components of \(R_{\sim N}\) for every \(N\geq 1\), i.e., \(R_{N1}\), determines \(U_1\).
+\end{claim}
+\begin{explanation}
+	We observe that \(\mathbb{E}_{}[U_1 \mid R_{N1}] = R_{N1} / (N+1)\), i.e., the expectation of \(U_{(R_{N1})}\). Hence, by \autoref{col:projection}, we will have \(U_1 \overset{L^2}{\to} R_{N1} / (N+1)\) if and only if the ratio between the variances converges to \(1\). Indeed,
+	\[
+		\frac{\Var_{}[U_1] }{\Var_{}\left[\frac{R_{N1}}{N+1}\right] }
+		= \frac{1 / 12}{\frac{1}{(N+1)^2}\Var_{}[R_{N1}] }
+		= \frac{1 / 12}{\frac{1}{(N+1)^2} \frac{N^2 - 1}{12}}
+		= \frac{N+1}{N - 1}
+		\to 1
+	\]
+	since \(R_{N1} \sim \mathcal{U} ([N])\), hence we're done.
+\end{explanation}
+
+This concludes that for \(\alpha _N(i) = \mathbb{E}_{}[\phi (U_{N(i)})] \), \(T_N\) is asymptotically normal. To study the connection to \(\alpha _{Ni}^{\prime} = \phi (i / (N+1))\), consider writing
+\[
+	T_N = \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni}), \text{ and }
+	T_N^{\prime} = \sum_{i=1}^{N} c_{Ni} \alpha _N^{\prime} (R_{Ni}),
+\]
+and we know \(T_N\) is asymptotically normal. To show \(T_N^{\prime} \) is also asymptotically normal, i.e.,
+\[
+	\frac{T_N^{\prime} - \mathbb{E}_{}[T_N^{\prime} ] }{\sqrt{\Var_{}[T_N] } }
+	\overset{D}{\to} \mathcal{N} (0, 1).
+\]
+It suffices to show that
+\[
+	\frac{T_N - \mathbb{E}_{}[T_N] }{\sqrt{\Var_{}[T_N] } } - \frac{T_N^{\prime} - \mathbb{E}_{}[T_N^{\prime} ] }{\sqrt{\Var_{}[T_N] } }
+	= \frac{\Var_{}[T_N - T_N^{\prime} ] }{\Var_{}[T_N]}
+	\overset{L^2}{\to} 0.
+\]
+
+\begin{prev}
+	We have \(\Var_{}[T_N] = \frac{N^2}{N-1} \sigma _{Nc}^2 \sigma _{N \alpha }^2\).
+\end{prev}
+
+This directly gives \(\Var_{}[T_N - T_N^{\prime} ] = \frac{N^2}{N-1} \sigma _{Nc}^2 \sigma _{N(\alpha - \alpha ^{\prime} )}^2\) since we can write
+\[
+	T_N - T_N^{\prime}
+	= \sum_{i=1}^{N} c_{Ni} (\alpha _N - \alpha _N^{\prime} )(R_{Ni}),
+\]
+and the same calculation applies. Hence, it suffices to show \(\sigma _{N(\alpha - \alpha ^{\prime} )}^2 / \sigma _{N \alpha }^2 \to 0\).
+
+\begin{prev}
+	We have proved that \(\sigma _{N \alpha }^2 \to \Var_{}[\phi (U_1)] > 0\).
+\end{prev}
+
+Hence, we just need to show that \(\sigma _{N(\alpha - \alpha ^{\prime} )}^2 = \Var_{}[(\alpha _N - \alpha _N^{\prime} )(R_{N1})] \to 0\), which again, suffice to show that \((\alpha _N - \alpha _N^{\prime} )(R_{N1}) \overset{L^2}{\to} 0\), i.e.,
+\[
+	\mathbb{E}_{}[\phi (U_1) \mid R_{\sim N}] - \phi \left( \frac{R_{N1}}{N+1} \right)
+	\overset{L^2}{\to} 0.
+\]
+With \(\mathbb{E}_{}[\phi (U_1) \mid R_{\sim N}] \overset{L^2}{\to} \phi (U_1)\), it reduces to show \(\phi ( R_{N1} / (N+1) ) \overset{L^2}{\to} \phi (U_1)\).
+
+\begin{eg}
+	If \(\phi = \id \), then we have showed that \(R_{N1} / (N+1) \overset{L^2}{\to} U_1\) in the \hyperref[clm:lec23]{previous claim}.
+\end{eg}
+
+If we assume that the above holds almost surely, then for an almost surely continuous \(\phi \), we will have
+\[
+	\phi \left( \frac{R_{N1}}{N+1} \right)
+	\overset{\text{a.s.} }{\to} \phi (U_1)
+	\overset{?}{\implies } \phi \left( \frac{R_{N1}}{N+1} \right) \overset{L^2}{\to} \phi (U_1).
+\]
+The implication can be provided by \hyperref[thm:Scheffe]{Scheffé's theorem}, i.e., we check\footnote{\hyperref[thm:Scheffe]{Scheffé's theorem} actually requires \(\mathbb{E}_{}[\phi ^2(R_{N1} / (N+1))] \to \mathbb{E}_{}[\phi ^2(U_1)] < \infty \). However, one direction is trivial by \href{https://en.wikipedia.org/wiki/Fatou's_lemma}{Fatou's lemma}, so we only have another.}
+\[
+	\limsup_{N \to \infty} \mathbb{E}_{}\left[\phi ^2\left( \frac{R_{N1}}{N+1} \right) \right]
+	= \limsup_{N \to \infty} \frac{1}{N} \sum_{i=1}^{N} \phi ^2 \left( \frac{i}{N+1} \right)
+	\leq \mathbb{E}_{}[\phi ^2(U_1)]
+	= \int_{0}^{1} \phi ^2(u) \,\mathrm{d}u
+\]
+since \(R_{N1} \sim \mathcal{U} ([N])\) as we mentioned.
+
+\begin{intuition}
+	We can understand the left-hand side as a Riemann integral.
+\end{intuition}
+
+\begin{eg}
+	Both conditions, i.e., \(\phi (R_{N1} / (N+1)) \overset{\text{a.s.} }{\to} \phi (U_1)\) and the condition for \hyperref[thm:Scheffe]{Scheffé's theorem} are satisfied when \(\phi \) is increasing.
+\end{eg}
+\begin{explanation}
+	Since we can write
+	\[
+		\begin{split}
+			\int_{0}^{1} \phi ^2(u) \,\mathrm{d}u
+			 & = \lim_{N \to \infty} \sum_{i=1}^{N+1} \int_{\frac{i-1}{N+1}}^{\frac{i}{N+1}} \phi ^2 (u) \,\mathrm{d}u \\
+			 & \geq \lim_{N \to \infty} \sum_{i=1}^{N+1} \phi ^2\left( \frac{i-1}{N+1} \right) \cdot \frac{1}{N+1}
+			\geq \lim_{N \to \infty} \frac{N}{N+1} \frac{1}{N} \sum_{i=1}^{N} \phi ^2\left( \frac{i}{N+1} \right),
+		\end{split}
+	\]
+	which is what we want.
+\end{explanation}

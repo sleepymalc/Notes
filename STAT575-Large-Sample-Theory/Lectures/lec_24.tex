@@ -1,0 +1,236 @@
+\chapter{Maximum Likelihood Method and \(M\)-Estimation}
+\lecture{24}{16 Apr.\ 9:30}{The Maximum Likelihood Estimator}
+Consider \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\), and we would like to say something about \(F\) or \(T(F)\). To do this, one can we first obtain the empirical cdf \(\hat{F} _n\), and plug in \(T(\hat{F} _n)\).
+
+\begin{eg}[Quantile]
+	The \(p^{\text{th} }\)-quantile is defined as \(T(F) = \theta _p = F^{-1} (p)\), which is estimated by the sample \(p^{\text{th} }\)-quantile \(T(\hat{F} _n) = \hat{\theta} _p = \hat{F} _n ^{-1} (p)\).
+\end{eg}
+
+\begin{eg}[Moment]
+	The \(k^{\text{th} }\)-moment is defined as \(T(F) = \mu _k = \int (x - \mu )^k F(\mathrm{d} x)\) where \(\mu = \int x F(\mathrm{d} x)\), which is estimated by the sample \(k^{\text{th} }\)-central moment \(T(\hat{F} _n) = M_k = \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^k\).\todo{?}
+\end{eg}
+
+On the other hand, instead of directly estimating \(F\), we can start by postulating a family of cdfs \(\{ G_\theta \colon \theta  \in \Theta \} \) where \(\Theta \) is a metric space, with the goal being to choose \(\hat{\theta} _n\) among \(\Theta \) such that \(G_{\hat{\theta} _n}\) approximates \(F\). Our choice, \(\hat{\theta} _n\), should be a function of the data \(X_1, \dots , X_n\).
+
+\section{Maximum Likelihood Estimator}
+If we assume \(G_\theta \) has a corresponding density \(g_\theta \) for all \(\theta \in \Theta \), then a natural choice is to select \(\hat{\theta} _n \in \Theta \) by maximizing the \emph{likelihood function}, i.e., the well-known \hyperref[def:MLE]{maximum likelihood estimator} (MLE).
+
+\begin{definition}[Maximum likelihood eestimator]\label{def:MLE}
+	Given \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) and a family of cdfs \(\{ G_\theta \colon \theta \in \Theta \} \) for some metric space \(\Theta \). The \emph{maximum likelihood estimator} \(\hat{\theta} _n\) is the maximizer of the likelihood function, i.e., \(\hat{\theta} _n = \argmax_{\theta \in \Theta } \prod_{i=1}^{n} g_\theta (X_i)\).
+\end{definition}
+
+\subsection{Divergence Minimizing}
+This is all good, since we're just proposing a method. The true motivating question is the following.
+
+\begin{problem*}
+	What does the \hyperref[def:MLE]{maximum likelihood estimator} \(\hat{\theta} _n\) estimating?
+\end{problem*}
+
+Observe that \(\hat{\theta} _n\) is also a maximizer of \(\frac{1}{n} \sum_{i=1}^{n} \log (g_\theta (X_i))\).\footnote{We adapt the convention that \(\log (0) \coloneqq -\infty \) since it happens when \(\{ G_\theta  \} \) is misspecified.} As \(n\to \infty \), from the \hyperref[thm:SLLN]{strong law of large number}, we know that for all \(\theta \in \Theta \),
+\[
+	\frac{1}{n} \sum_{i=1}^{n} \log (g_\theta (X_i))
+	\overset{\text{a.s.} }{\to} \mathbb{E}_{}[\log (g_\theta (X))]
+	\eqqcolon M(\theta ) \in [-\infty , \infty ].
+\]
+
+\begin{note}
+	We will need to assume that \(M(\theta ) > -\infty \) for some \(\theta \), otherwise there's no hope.
+\end{note}
+
+Since \(\hat{\theta} _n\) is maximizing the left-hand side, it's natural to conjecture the following.
+
+\begin{conjecture}\label{conj:MLE-consistency}
+	\(\hat{\theta} _n\) should ``converge'' to the maximizer of \(M(\theta )\).
+\end{conjecture}
+
+To see why this might be the case, assuming \(F\) has a density \(f\), then we can write
+\[
+	M(\theta )
+	= \int_{\mathbb{R} } \log g_\theta (x) f(x) \,\mathrm{d} x
+	= \int_{\mathbb{R} } \log \frac{g_\theta (x)}{f(x)} f(x) \,\mathrm{d} x + \int_{\mathbb{R} } \log f(x) f(x) \,\mathrm{d} x .
+\]
+The second term is independent of \(\theta \), and the first term is just the \href{https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence}{Kullback-Leibler divergence} since
+\[
+	\int_{\mathbb{R} } \log \frac{g_\theta (x)}{f(x)} f(x) \,\mathrm{d} x
+	= - \int_{\mathbb{R} } \log \frac{f(x)}{g_\theta (x)} f(x) \,\mathrm{d} x
+	= - \KL(f \Vert g_\theta ) .
+\]
+
+\begin{remark}
+	The maximizer of \(M(\theta )\) is minimizing the \href{https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence}{KL divergence} \(\KL(f \Vert g_\theta ) \).
+\end{remark}
+
+Let \(\theta ^{\ast} = \argmax_{\theta \in \Theta } M(\theta )\). Then if we can actually show \autoref{conj:MLE-consistency}, then we can conclude that \(\hat{\theta} _n\) is estimating \(\theta ^{\ast} \), i.e., \(\hat{\theta} _n\) also tries to minimize the \href{https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence}{KL divergence} between \(f\) and \(g_{\hat{\theta} _n}\).
+
+\begin{eg}[Supremum estimation]
+	Suppose \(X_1, \dots , X_n\) follows \(\mathbb{P} (0 \leq X \leq u) = 1\) for some \(u > 0\) such that for all \(\epsilon >0\), \(F(u - \epsilon ) < 1 = F(u)\). Consider the family of uniform distribution \(\{ G_\theta = \mathcal{U} (0, \theta ) \colon \theta > 0\} \). The likelihood function is given by
+	\[
+		\Theta \ni \theta
+		\mapsto \prod_{i=1}^{n} \frac{1}{\theta ^n} \mathbbm{1}_{\max _{1 \leq i \leq n} X_i \leq \theta },
+	\]
+	hence the maximizer of the likelihood function is given by \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i\).
+
+	On the other hand, \(M(\theta ) = \mathbb{E}_{}[\log g_\theta (X)] \) for all \(\theta  > 0\), and want to find \(\sup _{\theta > 0} M(\theta )\). But if \(\theta < u\), \(\mathbb{P} (g_\theta (x) = 0) > 0\), then \(M(\theta ) = -\infty \), hence
+	\[
+		\sup _{\theta > 0} M(\theta )
+		= \sup _{\theta \geq u} M(\theta )
+		= \sup _{\theta \geq u} \log (\frac{1}{\theta }),
+	\]
+	which is attained by \(u\). From the very \hyperref[eg:supremum-estimation]{first example}, indeed, \(\hat{\theta} _n \overset{\text{a.s.} }{\to} u\).
+\end{eg}
+
+Next, for the following examples let's consider the following setup: consider a family \(\{ G_\theta (x) = G(x - \theta ) \}\) for some cdf \(G\) with a density \(g\). In this case, \(\hat{\theta} _n\) maximizes \(\prod_{i=1}^{n} g(X_i - \theta )\), or equivalently,
+\[
+	\hat{\theta} _n
+	= \argmax_{\theta \in \Theta } \sum_{i=1}^{n} \log (g(X_i - \theta )).
+\]
+The following two examples also confirm \autoref{conj:MLE-consistency}.
+
+\begin{eg}[Normal]
+	If \(G \sim \mathcal{N} (0, 1)\), i.e., \(g(x) = \frac{1}{\sqrt{2\pi } } e^{- x^2 / 2}\), then
+	\begin{itemize}
+		\item \(\hat{\theta} _n = \argmax_{\theta \in \Theta } \sum_{i=1}^{n} - (X_i - \theta )^2 = \overline{X} _n\);
+		\item \(\theta ^{\ast} = \argmax_{\theta \in \Theta } \mathbb{E}_{}[-(X - \theta )^2] = \mathbb{E}_{}[X] \).
+	\end{itemize}
+	From \hyperref[thm:SLLN]{strong law of large number}, \(\overline{X} _n \overset{\text{a.s.} }{\to} \mathbb{E}_{}[X] \) assuming it converges.
+\end{eg}
+
+\begin{eg}[Laplace]
+	If \(G \sim \operatorname{Laplace} (\mu , b)\) where \(\sigma ^2 = 2b^2\), i.e., \(g(x) = \frac{1}{2b} e^{- \frac{\lvert x \rvert}{b}} = \frac{1}{\sigma \sqrt{2} } e^{- \frac{\lvert x - \mu \rvert }{\sigma / \sqrt{2} } }\), then
+	\begin{itemize}
+		\item \(\hat{\theta} _n = \argmax_{\theta \in \Theta } \sum_{i=1}^{n} - \lvert X_i - \theta \rvert\), which is the sample median;
+		\item \(\theta ^{\ast} = \argmax_{\theta \in \Theta } \mathbb{E}_{}[- \lvert X - \theta  \rvert ] \), which is the population median.
+	\end{itemize}
+	Hence, from \autoref{col:Bahadur-representation}, \(\hat{\theta} _n \overset{p}{\to} \theta ^{\ast} \).
+\end{eg}
+
+\begin{remark}
+	We see that the \hyperref[def:MLE]{MLE} will do the right thing: when estimating \(\mu \) (hence \(\theta _{1 / 2}\)), as we have shown, for \hyperref[eg:ARE-normal]{normal}, \(\overline{X} _n\) is better than \(\hat{\theta} _{1 / 2}\), while for \hyperref[eg:ARE-Laplace]{Laplace} \(\hat{\theta} _{1 / 2}\) is better.
+\end{remark}
+
+However, sometimes we don't know \(\hat{\theta} _n\) and \(\theta ^{\ast} \), hence we don't know whether \autoref{conj:MLE-consistency} is true.
+
+\begin{eg}[Cauchy]
+	If \(G \sim \operatorname{Cauchy} \) with location \(0\) and scale \(1\), i.e., \(g(x) = \frac{1}{\pi (1 + x^2)}\), then
+	\begin{itemize}
+		\item \(\hat{\theta} _n = \argmax_{\theta \in \Theta } \sum_{i=1}^{n} - \log (1 + (X_i - \theta )^2)\);
+		\item \(\theta ^{\ast} = \argmax_{\theta \in \Theta } \mathbb{E}_{}[- \log (1 + (X - \theta )^2)] \).
+	\end{itemize}
+	However, we don't know what are \(\hat{\theta} _n\) and \(\theta ^{\ast} \) this time, hence we need a different technique.
+\end{eg}
+
+\subsection{\(M\)-Estimator}
+The upshot is that in the above examples, we're dealing with \(\hat{\theta} _n = \argmax_{\theta \in \Theta } \sum_{i=1}^{n} m(X_i - \theta )\) where \(m(x) = - \log (g(x))\). But we're not limited to choosing this specific \(m\).
+
+\begin{eg}
+	Consider \(m(x) = x^2 \mathbbm{1}_{\lvert x \rvert \leq k} + (2k\lvert x \rvert - k^2) \mathbbm{1}_{\lvert x \rvert > k} \) for some \(k \in \mathbb{R} \).
+\end{eg}
+
+This kind of general estimator in the form of \textbf{m}aximizing some \(m\) is called the \(M\)-estimator.
+
+\begin{definition}[\(M\)-estimator]\label{def:M-estimator}
+	\todo{fill}
+\end{definition}
+
+\begin{intuition}
+	This allows us to not specifying the family \(\{ G_\theta \colon \theta \in \Theta  \} \).
+\end{intuition}
+
+More generally, consider \(X_1, \dots , X_n \), not necessarily i.i.d. For all \(\theta \in \Theta \) where \(\Theta \) is a metric space, consider a function \(M_n(\theta )\) of \(X_1, \dots , X_n\) such that \(M_n(\theta ) \to M(\theta ) \in [-\infty , \infty )\) as \(n \to \infty \), where the convergence can be either \hyperref[def:converge-almost-surely]{almost surely} or just \hyperref[def:converge-in-probability]{in probability}.
+
+\begin{note}
+	Again, we need to at least assume that \(M(\theta ) > -\infty \) for some \(\theta  \in \Theta \).
+\end{note}
+
+Let \(\hat{\theta} _n\) be an ``approximate maximizer'' of \(\theta \mapsto M_n(\theta )\), i.e.,
+\[
+	M_n(\hat{\theta} _n)
+	\geq \sup _{\theta \in \Theta } M_n(\theta ) - J_n
+\]
+where \(J_n \overset{\text{a.s.} }{\to } 0\) (or \(\overset{p}{\to} \)) as \(n \to \infty \).
+
+\begin{problem*}
+	Where does \(\hat{\theta} _n\) converge, if anywhere?
+\end{problem*}
+
+We will need some assumptions to develop a theory of \(M\)-estimator to answer the above question.
+
+\begin{enumerate}[label=(A\arabic*)]
+	\item\label{asp:MLE-1} \(M\) has a unique maximizer \(\theta ^{\ast} \), and for all \(\epsilon > 0\), \(M(\theta ^{\ast} ) > \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta )\),\footnote{Specifically, \(B(\theta ^{\ast} , \epsilon ) = \{ \theta \in \Theta \colon d(\theta , \theta ^{\ast} ) < \epsilon \} \), where \(d\) is the metric on \(\Theta \).} i.e., it's well-separated.
+	\item\label{asp:MLE-2} \(\mathbb{P} ( \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) - \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \geq \delta ) \to 0\).
+\end{enumerate}
+We can also consider a stronger version of \autoref{asp:MLE-2}:
+\begin{enumerate}[resume, label=(A\arabic*)]
+	\item\label{asp:MLE-3} \(\mathbb{P} ( \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \geq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) + \delta \text{ i.o.} ) = 0\) where i.o.\ means happens infinitely often (in terms of \(n\)).
+\end{enumerate}
+
+Let's understand them one-by-one. Firstly, we see that if \(\widetilde{\theta} \neq \theta ^{\ast} \), then \(\widetilde{\theta} \notin B(\theta ^{\ast} , \epsilon )\) for some \(\epsilon > 0\). Hence, \autoref{asp:MLE-1} implies \(M(\theta ^{\ast} ) > \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \geq M(\widetilde{\theta} )\). To satisfy \autoref{asp:MLE-1}, consider the following.
+
+\begin{definition}[Upper semi-continuous]\label{def:upper-semi-continuous}
+	A function \(M\colon \Theta \to \mathbb{R} \) is \emph{upper semi-continuous} if for \(\theta _n \to \theta \), we have \(M(\theta ) \geq \limsup_{n \to \infty} M(\theta _n)\).
+\end{definition}
+
+\hyperref[def:upper-semi-continuous]{Upper semi-continuity} is useful since we have the following result from analysis.
+
+\begin{theorem}\label{thm:unique-maximizer-usc}
+	If \(\Theta \) is compact and \(M(\theta )\) is \hyperref[def:upper-semi-continuous]{upper semi-continuous}, then \(\sup _{\theta \in \Theta } M(\theta )\) is obtained, i.e., there exists a maximizer \(\theta ^{\ast} \).
+\end{theorem}
+
+A simple application of \autoref{thm:unique-maximizer-usc} allows us to prove \autoref{asp:MLE-1}.
+
+\begin{corollary}
+	\autoref{asp:MLE-1} is satisfied if \(\Theta \) is compact, \(M\) is \hyperref[def:upper-semi-continuous]{upper semi-continuous}, and the maximizer \(\theta ^{\ast} \) is unique.
+\end{corollary}
+\begin{proof}
+	Firstly, we can write \(\sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) = \sup _{\theta \in (B(\theta ^{\ast} , \epsilon ))^{c} } M(\theta ) \). Since \(B(\theta ^{\ast} , \epsilon )\) is open, \((B(\theta ^{\ast} , \epsilon ))^{c} \) is closed, hence compact since \(\Theta \) is compact. Applying \autoref{thm:unique-maximizer-usc}, we see that \(\sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta )\) is obtained by a maximizer \(\theta ^{\ast} \), which is unique as assumed.
+\end{proof}
+
+\begin{remark}
+	As long as \(\Theta \) is compact and \(M(\theta )\) is reasonable enough, \autoref{asp:MLE-1} can be satisfied.
+\end{remark}
+
+On the other hand, \autoref{asp:MLE-2} is a bit more involved. To understand it, we might start by considering \(\sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert \to 0\) first, where the convergence can be either \(\overset{\text{a.s.} }{\to} \) or \(\overset{p}{\to} \).
+
+\begin{claim}
+	\(\sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{p}{\to} 0\) is stronger than \autoref{asp:MLE-2}.
+\end{claim}
+\begin{explanation}
+	By the triangle inequality, \(M_n(\theta ) \leq \lvert M_n(\theta ) - M(\theta ) \rvert + M(\theta )\), hence
+	\[
+		\sup _{\theta \in \Theta } M_n(\theta )
+		\leq \sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert  + \sup _{\theta \in \Theta }M(\theta ),
+	\]
+	implying \(\sup _{\theta \in \Theta } M_n(\theta ) - \sup _{\theta \in \Theta }M(\theta ) \leq \sup _{\theta \in \Theta }\lvert M_n(\theta ) - M(\theta ) \rvert \). Hence, \(\sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{p}{\to} 0\) implies
+	\[
+		\mathbb{P} \left( \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) - \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \geq \delta \right)
+		\to 0
+	\]
+	for any \(\delta > 0\), which is exactly \autoref{asp:MLE-2}.
+\end{explanation}
+
+\begin{intuition}
+	\autoref{asp:MLE-2} uniformly controls the convergence.
+\end{intuition}
+
+In this regard, \autoref{asp:MLE-3} is motivated by \autoref{asp:MLE-2} by modifying \autoref{asp:MLE-2} as
+\[
+	\begin{split}
+		 & \mathbb{P} \left( \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \geq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) + \delta \text{ i.o.} \right)
+		= 0                                                                                                                                                                                                         \\
+		 & \iff \mathbb{P} \left( \limsup_{n \to \infty} \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \geq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) + \delta  \right) = 0 \\
+		 & \iff \mathbb{P} \left( \limsup_{n \to \infty} \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \leq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \right) = 1.
+	\end{split}
+\]
+
+\begin{theorem}
+	If \autoref{asp:MLE-1} and \autoref{asp:MLE-2} holds, then \(\hat{\theta} _n \overset{p}{\to} \theta ^{\ast} \). On the other hand, if we replace \autoref{asp:MLE-2} by \autoref{asp:MLE-3}, then we have \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \).
+\end{theorem}
+\begin{proof}
+	We will need to show that for all \(\epsilon > 0\), \(\mathbb{P} (d(\hat{\theta} _n , \theta ^{\ast} ) \geq \epsilon ) \to 0\) or \(\mathbb{P} (d(\hat{\theta} _n, \theta ^{\ast} ) > \epsilon \text{ i.o.} ) = 0\). Firstly, since \(d(\hat{\theta} _n, \theta ^{\ast} ) \geq \epsilon \) implies \(\hat{\theta} _n \notin B(\theta ^{\ast} , \epsilon )\), hence
+	\[
+		\sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta )
+		\geq M_n(\hat{\theta} _n)
+		\geq \sup _{\theta \in \Theta } M_n(\theta ) - J_n
+		\geq M_n(\theta ^{\ast} ) - J_n.
+	\]
+\end{proof}

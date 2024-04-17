@@ -1,4 +1,11 @@
 \lecture{12}{22 Feb.\ 9:30}{Asymptotic Joint Distribution by Multivariate CLT}
+\begin{theorem}[Multivariate central limit theorem]\label{thm:multivariate-CLT}
+	Let \((X_n)\) be i.i.d.\ random vectors in \(\mathbb{R} ^d\) with \(\mathbb{E}_{}[X_i] = \mu \in \mathbb{R} ^d\), \(\Var_{}[X_i] = \Sigma \in \mathbb{R} ^{d \times d}\) for all \(1 \leq i \leq n\). Then
+	\[
+		\frac{1}{\sqrt{n} } \sum_{i=1}^{n} (X_i - \mu )
+		\overset{D}{\to} \mathcal{N} (0, \Sigma ).
+	\]
+\end{theorem}
 \begin{proof}
 	Set \(\mu = 0\), and from \hyperref[thm:Cramer-Wold-device]{Cramér-Wold device}, it suffices to show that for any \(t \in \mathbb{R} ^d\),
 	\[
@@ -6,12 +13,7 @@
 		\overset{D}{\to} t \cdot Z
 		\sim \mathcal{N} (0, t ^{\top} \Sigma t)
 	\]
-	where \(Z \sim \mathcal{N} (0, \Sigma )\). We see that from the \hyperref[thm:CLT]{univariate central limit theorem}, the left-hand side is
-	\[
-		\frac{1}{\sqrt{n} } \sum_{i=1}^{n} t \cdot X_i
-		\overset{D}{\to} \mathcal{N} (0, \Var_{}[t\cdot X_i] ),
-	\]
-	and since \(\Var_{}[t \cdot X] = t^{\top} \Var_{}[X_i] t = t ^{\top} \Sigma t = \Var_{}[t \cdot Z] \), hence we're done.
+	where \(Z \sim \mathcal{N} (0, \Sigma )\). Indeed, since from the \hyperref[thm:CLT]{univariate central limit theorem}, the left-hand side \hyperref[def:converge-in-distribution]{converges} to \(\mathcal{N} (0, \Var_{}[t\cdot X_i] )\), with \(\Var_{}[t \cdot X] = t^{\top} \Var_{}[X_i] t = t ^{\top} \Sigma t = \Var_{}[t \cdot Z] \), we're done.
 \end{proof}
 
 \subsection{Testing Normality with General Moments}
@@ -185,7 +187,7 @@ First, consider the following illustrative example.
 To further quantify how much better is it, we ask how many data we need to we get a similar precision: consider the problem of estimating a scalar parameter \(\theta \) such that for two estimators \(T_n^1\) and \(T_n^2\),
 \[
 	\sqrt{n} (T_n^i - \theta )
-	\overset{D}{\to} \sigma _i^2(\theta ) Z \sim \mathcal{N} (0, \sigma _i^2(\theta ))
+	\overset{D}{\to} \sigma _i (\theta ) Z \sim \mathcal{N} (0, \sigma _i^2(\theta ))
 \]
 Our goal is to find a single number which compares these two estimators. Firstly, for \(n\) large enough,
 \[
@@ -207,14 +209,23 @@ i.e., \(n_1(\gamma ) / n_2(\gamma ) \cong \sigma _1^2(\theta ) / \sigma _2^2(\th
 	\]
 \end{definition}
 
+\begin{intuition}
+	We can read \(\operatorname{ARE}_\theta (T^1, T^2) < 1\) as \(n_1 < n_2\) and infer \(T^1\) is better than \(T^2\).
+\end{intuition}
+
+\begin{note}
+	\autoref{def:asymptotic-relative-efficiency-estimator} is different from the convention, where we usually define the \emph{asymptotic relative efficiency of \(T^1\) w.r.t.\ \(T^2\)} as \(\operatorname{ARE}_\theta (T^1, T^2) = (\sigma _2(\theta ) / \sigma _1(\theta ))^2\). But it's just the convention.
+\end{note}
+
 \subsection{Variance Stabilizing Transformation}
 Continuing on the previous \hyperref[eg:ARE]{example}, say we use \(\overline{X} _n\) as the estimator of \(\theta \). We have
 \[
 	\sqrt{n} (\overline{X} _n - \theta ) \overset{D}{\to} \sqrt{\theta } Z \sim \sqrt{\theta } \mathcal{N} (0, 1) = \mathcal{N} (0, \theta ) .
 \]
+As the asymptotic distribution depends on \(\theta \), we don't directly get a confidence interval.
 
 \begin{prev}
-	As the asymptotic distribution depends on \(\theta \), we don't directly get a confidence interval. Indeed, usually we will first write \(\sqrt{n} / \sqrt{\theta } (\overline{X} _n - \theta ) \overset{D}{\to} Z \sim \mathcal{N} (0, 1)\), replace \(\sqrt{\theta } \) by \(\sqrt{\overline{X} _n} \), and apply \hyperref[thm:continuous-mapping]{continuous mapping theorem} and \hyperref[thm:Slutsky]{Slutsky's theorem} to get a confidence interval.
+	We will usually write \(\sqrt{n} / \sqrt{\theta } (\overline{X} _n - \theta ) \overset{D}{\to} Z \sim \mathcal{N} (0, 1)\), replace \(\sqrt{\theta } \) by \(\sqrt{\overline{X} _n} \), and apply \hyperref[thm:continuous-mapping]{continuous mapping theorem} and \hyperref[thm:Slutsky]{Slutsky's theorem} to get a confidence interval.
 \end{prev}
 
 We see that our usual approach relies on (\hyperref[def:consistent]{consistently}) estimating the variance of the asymptotic distribution, which is potentially ``unstable'' for small \(n\). To get around this, observe that from the \hyperref[thm:delta-method]{delta method} with some \(g \colon \mathbb{R} \to \mathbb{R} \) differentiable at \(\theta \) and \(g^{\prime} (\theta ) \neq 0\),
@@ -236,16 +247,15 @@ and hence an asymptotic confidence interval for \(\theta \) with confidence leve
 This is the so-called \emph{variance stabilizing transformation}.
 
 \begin{claim}
-	For \(c = 1 / 2\), \(g(\theta ) = \sqrt{\theta } \) suffices. Hence in our case, \(g^{-1} (u) = u^2\).
+	For \(c = 1 / 2\), \(g(\theta ) = \sqrt{\theta } \) suffices. Hence, in this case, \(g^{-1} (u) = u^2\).
 \end{claim}
 \begin{explanation}
 	Since for \(g^{\prime} (\theta ) = \frac{1}{2 \sqrt{\theta } }\), we have \(g(\theta ) = \sqrt{\theta } \).
 \end{explanation}
 
+Lastly, we note that the above can be easily generalized.
+
 \begin{remark}
-	The above can be easily generalized.
-\end{remark}
-\begin{explanation}
 	Consider estimating a scalar parameter \(\theta \) in some open interval \(\Theta \), where we replace:
 	\begin{itemize}
 		\item \(\sqrt{\theta }\) by \(h(\theta )\), a positive function;\footnote{We don't need continuity since we don't need \(h(T_n)\) when doing the variance stabilizing transformation.}
@@ -253,4 +263,8 @@ This is the so-called \emph{variance stabilizing transformation}.
 		\item \(\overline{X} _n\) by \(T_n\), a \hyperref[def:consistent]{consistent} estimator of \(\theta \).
 	\end{itemize}
 	In this way, letting \(g^{\prime} (\theta ) h(\theta ) = c > 0\) for all \(\theta \in \Theta \) asserts \(g^{\prime} (\theta ) > 0\) for all \(\theta \in \Theta \), hence \(g\) is strictly increasing and its usual inverse \(g^{-1} \) is well-defined.
-\end{explanation}
+\end{remark}
+
+\begin{note}
+	Essentially, variance stabilizing transformation don't have any theoretical guarantees. Rather, it's just our guess that by making the variance independent of \(n\), it'll become better in terms of stability.
+\end{note}

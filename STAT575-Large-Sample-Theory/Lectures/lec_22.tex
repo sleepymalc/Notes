@@ -1,14 +1,24 @@
-\lecture{22}{9 Apr.\ 9:30}{The Theory of Linear Rank Statistics}
-\section{Linear Rank Statistics}
+\lecture{22}{9 Apr.\ 9:30}{The Theory of Simple Linear Rank Statistics}
+\section{Simple Linear Rank Statistics}
 Consider \(X_1, \dots , X_N, \dots \overset{\text{i.i.d.} }{\sim } F\) such that \(F\) is continuous, and for \(1 \leq i \leq N\), let the \emph{rank} be
 \[
 	R_{Ni}
 	\coloneqq \sum_{j=1}^{N} \mathbbm{1}_{X_j \leq X_i},
 \]
-i.e., \(R_{Ni}\) is the rank of the \(i^{\text{th} }\) observation among the first \(N\).
+i.e., \(R_{Ni}\) is the rank of the \(i^{\text{th} }\) observation among the first \(N\). Clearly, as \(N\) varies, \(R_{Ni}\) is distributed differently. In particular, we have the following relatively easy lemma where we omit the proof.
+
+\begin{lemma}\label{lma:rank}
+	The rank vector \(\widetilde{R} _N \coloneqq (R_{N1}, \dots , R_{NN})\) is uniformly distributed on the permutations of \([N]\). Consequently,
+	\begin{itemize}
+		\item \(R_{Ni}\) is uniformly distributed on \([N]\) for every \(1 \leq i \leq N\).
+		\item \((R_{Ni}, R_{Nj})\) is uniformly distributed on \(\{ (k, \ell) \colon 1 \leq k \neq \ell \leq N\} \) for every \(1 \leq i\neq j \leq N\).
+	\end{itemize}
+\end{lemma}
+
+On the other hand, we also note the following.
 
 \begin{remark}
-	Clearly, as \(N\) varies, \(R_{Ni}\) is distributed differently. In particular, \(R_{Ni} \sim \mathcal{U} ([N])\) for all \(1 \leq i \leq N\), but they are not independent. On the other hand, since \(F\) is continuous, \(U_i \coloneqq F(X_i)\overset{\text{i.i.d.} }{\sim } \mathcal{U} (0, 1)\) for all \(i \geq 1\), and we have \(R_{Ni} = \sum_{j=1}^{N} \mathbbm{1}_{U_j \leq U_i} \) almost surely.
+	Since \(F\) is continuous, \(U_i \coloneqq F(X_i)\overset{\text{i.i.d.} }{\sim } \mathcal{U} (0, 1)\) for all \(i \geq 1\), and we have \(R_{Ni} = \sum_{j=1}^{N} \mathbbm{1}_{U_j \leq U_i} \) almost surely.
 \end{remark}
 
 Now, let's revisit the \hyperref[prb:two-sample]{two-sample problem}.
@@ -47,19 +57,19 @@ Now, let's revisit the \hyperref[prb:two-sample]{two-sample problem}.
 
 This suggests we look into the following.
 
-\begin{definition}[Linear rank statistic]\label{def:linrea-rank-statistic}
-	Consider \(X_1, \dots , X_N \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous. The \emph{linear rank statistic} is defined as
+\begin{definition}[Simple linear rank statistic]\label{def:simple-linrea-rank-statistic}
+	Consider \(X_1, \dots , X_N \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is continuous. The \emph{simple linear rank statistic} is defined as
 	\[
-		\sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni}),
+		\sum_{i=1}^{N} c_N(i) \alpha _N(R_{Ni}),
 	\]
-	where \(\alpha _N(i) \eqqcolon \alpha _{Ni}\) for \(1 \leq i \leq N\) and \(c_{N1}, \dots , c_{NN}\) are all constants.
+	where \(c_N(i) \eqqcolon c_{Ni}\) and \(\alpha _N(i) \eqqcolon \alpha _{Ni}\) for \(1 \leq i \leq N\) are all constants.
 \end{definition}
 
 \begin{remark}
-	The distribution of any \hyperref[def:linrea-rank-statistic]{linear rank statistics} is independent of \(F\)!
+	The distribution of any \hyperref[def:simple-linrea-rank-statistic]{simple linear rank statistics} is independent of \(F\)!
 \end{remark}
 
-Although this might look very limited, but in fact \hyperref[def:linrea-rank-statistic]{linear rank statistic} is very common in practice.
+In fact, \hyperref[def:simple-linrea-rank-statistic]{simple linear rank statistic} is very common in practice.
 
 \begin{eg}[Median statistic]
 	We can also consider \(\sum_{i=n+1}^{M} \mathbbm{1}_{R_{Ni} \geq (N+1) / 2}\).
@@ -73,28 +83,29 @@ Although this might look very limited, but in fact \hyperref[def:linrea-rank-sta
 	Consider a \emph{simple random sample}, i.e., all subset of size \(n\) from the population is equally likely to be selected. In this case, \((R_{N1}, \dots , R_{NN})\) is equally likely to be any permutation of \([N]\). Hence, the above indicators are just \(\mathbbm{1}_{R_{Ni} \leq n} \), which suggests \(\alpha _N(R_{Ni}) \coloneqq \mathbbm{1}_{R_{Ni} \leq n} \) in the above notation.
 \end{eg}
 
-All these examples motivates us to develop a general theory for the \hyperref[def:linrea-rank-statistic]{linear rank statistic} in the form of \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni})\), in particular, to establish the asymptotic normality of them.
+All these examples motivates us to develop a general theory for the \hyperref[def:simple-linrea-rank-statistic]{simple linear rank statistic} in the form of \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni})\), in particular, to establish the asymptotic normality of them.
 
 \subsection{Moments of Linear Rank Statistics}
 To start, let's first compute the expectation and the variance. We will adopt the following notations.
 
 \begin{notation}
-	We write \(\overline{\alpha} _N\) and \(\overline{c} _N\) to be the population mean of \(\alpha _{Ni}\) and \(c_{Ni}\), i.e.,
+	We write \(\overline{\alpha} _N\) to be the mean of \(\alpha _{Ni}\) and \(\overline{c} _N\) to be the average of \(c_{Ni}\), i.e.,
 	\[
 		\overline{\alpha} _N \coloneqq \frac{1}{N} \sum_{i=1}^{N} \alpha _N(i), \text{ and }
 		\overline{c} _N \coloneqq \frac{1}{N} \sum_{i=1}^{N} c_{Ni}.
 	\]
-	Moreover, let \(\sigma _{N \alpha }^2\) and \(\sigma _{Nc}^2\) to be the population variance of \(\alpha _{Ni}\) and \(c_{Ni}\) respectively, i.e.,\footnote{Recall that for any individual \(R_{Ni}\), marginally they're identically distributed.}
+	Moreover, let \(\sigma _{N \alpha }^2\) to be the variance of \(\alpha _{Ni}\), and similarly define \(\sigma _{Nc}^2\), i.e.,
 	\[
 		\sigma _{N \alpha }^2 = \frac{1}{N} \sum_{i=1}^{N} (\alpha _N(i) - \overline{\alpha} _N)^2, \text{ and }
 		\alpha _{N c}^2 = \frac{1}{N} \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N)^2.
 	\]
+	These make sense since for any individual \(R_{Ni}\), marginally they're identically distributed from \autoref{lma:rank}. On the other hand, there's no randomness in \(c_i\)'s.
 \end{notation}
 
 With this notation, we can now compute the first and the second moments.
 
 \begin{claim}
-	For any \hyperref[def:linrea-rank-statistic]{linear rank statistic} \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N (R_{Ni})\), \(\mathbb{E}_{}[T_N] = N \overline{\alpha} _N \overline{c} _N\).
+	For any \hyperref[def:simple-linrea-rank-statistic]{simple linear rank statistic} \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N (R_{Ni})\), \(\mathbb{E}_{}[T_N] = N \overline{\alpha} _N \overline{c} _N\).
 \end{claim}
 \begin{explanation}
 	Since marginally, \(R_{Ni}\)'s are just uniform over \([N]\), hence the expectation of \(T_N\) is
@@ -111,7 +122,7 @@ With this notation, we can now compute the first and the second moments.
 Computing the variance is a bit more challenging, but still doable.
 
 \begin{claim}
-	For any \hyperref[def:linrea-rank-statistic]{linear rank statistic} \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N (R_{Ni})\), \(\Var_{}[T_N] = \frac{N^2}{N-1} \sigma _{Nc}^2 \sigma _{N \alpha }^2\).
+	For any \hyperref[def:simple-linrea-rank-statistic]{simple linear rank statistic} \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N (R_{Ni})\), \(\Var_{}[T_N] = \frac{N^2}{N-1} \sigma _{Nc}^2 \sigma _{N \alpha }^2\).
 \end{claim}
 \begin{explanation}
 	Let's first center \(T_N\), which gives
@@ -167,7 +178,7 @@ Computing the variance is a bit more challenging, but still doable.
 \end{explanation}
 
 \subsection{Asymptotic Normality of Linear Rank Statistics}
-With the above calculation, we now want to establish the asymptotic normality for the \hyperref[def:linrea-rank-statistic]{linear rank statistic}. Specifically, we consider a special form of \(\alpha _N(i)\) given some \(\phi \colon [0, 1] \to \mathbb{R} \), i.e., for \(1 \leq i \leq N\),
+With the above calculation, we now want to establish the asymptotic normality of the \hyperref[def:simple-linrea-rank-statistic]{simple linear rank statistic}. Specifically, we consider a special form of \(\alpha _N(i)\) given some \(\phi \colon [0, 1] \to \mathbb{R} \), i.e., for \(1 \leq i \leq N\),
 \[
 	\alpha _N(i) = \phi \left( \frac{i}{N+1} \right) .
 \]
@@ -178,23 +189,23 @@ It might seem cryptic and mysterious at the first glance why we want to consider
 \end{intuition}
 
 \begin{eg}
-	The \hyperref[def:linrea-rank-statistic]{linear rank statistic} we have seen so far can be written in the above form.
+	The \hyperref[def:simple-linrea-rank-statistic]{simple linear rank statistic} we have seen so far can be written in the above form.
 \end{eg}
 
 To proceed, one might expect something like \(\phi (\mathbb{E}_{}[U_{N(i)}] ) \approx \mathbb{E}_{}[\phi (U_{N(i)})] \) to hold, and in fact, while both of them are of our interests, the latter is easier to analyze than \(\phi (\mathbb{E}_{}[U_{N(i)}] )\).
 
-\begin{notation}
-	We write \(R_{\sim N} \coloneqq (R_{N1}, \dots , R_{NN})\).
-\end{notation}
-
 \begin{intuition}
-	For \(\alpha _N(i) = \mathbb{E}_{}[\phi (U_{N(i)})]\), we have \(\alpha _N(R_{Ni}) = \mathbb{E}_{}[\phi (U_i) \mid R_{\sim N}]\).
+	For \(\alpha _N(i) = \mathbb{E}_{}[\phi (U_{N(i)})]\), we have \(\alpha _N(R_{Ni}) = \mathbb{E}_{}[\phi (U_i) \mid \widetilde{R} _N]\).
 \end{intuition}
 
 The above shows that \(\alpha _N(i) = \mathbb{E}_{}[\phi (U_{N(i)})]\) is more convenient since we will have
 \[
 	T_N
 	= \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni})
-	= \sum_{i=1}^{N} c_{Ni} \mathbb{E}_{}[\phi (U_i) \mid R_{\sim N}] ,
+	= \sum_{i=1}^{N} c_{Ni} \mathbb{E}_{}[\phi (U_i) \mid \widetilde{R} _N] ,
 \]
 which is a conditional expectation. We can then apply the theory of \hyperref[def:projection]{projection}.
+
+\begin{notation}
+	In what follows, we denote \(\alpha _{Ni} \coloneqq \mathbb{E}_{}[\phi (U_{N(i)})] \) and \(\alpha _{Ni}^{\prime} \coloneqq \phi (\mathbb{E}_{}[U_{N(i)}] )\) for \(1 \leq i \leq N\), and refer to the corresponding \hyperref[def:simple-linear-rank-statistic]{simple linear rank statistic} as \(T_N\) and \(T_N^{\prime} \), respectively.
+\end{notation}

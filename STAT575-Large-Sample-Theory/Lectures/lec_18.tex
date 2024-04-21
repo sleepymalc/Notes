@@ -1,43 +1,70 @@
 \lecture{18}{26 Mar.\ 9:30}{Wilcoxon Signed-Rank Test}
-By conditioning on \(\lvert X_j \rvert \)'s, we overcome the non i.i.d.\ problem: consider the following \(H_0\) such that
-\[
-	\forall 1 \leq i \leq n \colon \mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert , 1 \leq j \leq n) = \frac{1}{2}.
-\]
-In other words, \(\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert , 1 \leq j \leq n) = 1 / 2\). We see that \(\sgn (X_i)\)'s are now i.i.d.
-
-\begin{intuition}
-	In practice, when doing inference, we usually implicitly condition on \(\vert X_j \vert \)'s too: by doing inference on the selected ``design points'', we're essentially condition on those.
-\end{intuition}
-
-Then, by writing \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)\) and treating \(\vert X_i \vert \)'s as constants, under \(H_0\),
-\begin{equation}\label{eq:two-sample}
-	\frac{\sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} X_i^2} }
-	\overset{D}{\to} \mathcal{N} (0, 1)
-\end{equation}
-by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use the left-hand side for out test as usual.
-
-Let's point out other potential problems: firstly, since even for i.i.d.\ \(X_i\)'s, the results for \(T_n\) is asymptotic, and we might wonder what's the rate of convergence.
+Before we explain the above answer, let's point out other potential problems: firstly, since even for i.i.d.\ \(X_i\)'s, the results for \(T_n\) is asymptotic, and we might wonder what's the rate of convergence.
 
 \begin{problem*}
 	How fast does \(T_n \overset{D}{\to} \mathcal{N} (0, 1)\) under \(H_0\)?
 \end{problem*}
+\begin{answer}
+	It depends heavily on \(F\), so it's unlikely to get a universal answer.
+\end{answer}
 
-Clearly, the answer to this problem depends heavily on \(F\), so it's unlikely to get a universal answer. On the other hand, what if the underlying distribution has heavy tails?
+On the other hand, what if the underlying distribution has heavy tails?
 
 \begin{problem*}
 	What if \(\Var_{}[X_i] \), or even \(\mathbb{E}_{}[X_i] \), doesn't exist?
 \end{problem*}
+\begin{answer}
+	This is something we will solve along the way when we deal with the i.i.d.\ problem.
+\end{answer}
 
-It turns out that this is something we will solve along the way when we deal with the i.i.d.\ problem.
-
-\subsection{Sign Test}
-Our first goal is to avoid conditioning on \(\vert X_j \vert \)'s. Inspired by the above, consider the following.
+Now, we focus on the non-i.i.d.\ problem. It turns out that if each unit in each pair is equally likely to be in the treatment and the control group, independently of what happens in the other pairs, then \(H_0 \colon \mu = 0\) can be expressed as for all \(1 \leq i \leq n\), \(\mathbb{P} (X_i = \pm \vert X_i \vert \mid \vert X_j \vert = \lvert x_j \rvert , 1 \leq j \leq n) = 1 / 2\), i.e.,
+\[
+	H_0 \colon
+	\mathbb{P} (\sgn (X_i) = \pm 1 \mid \vert X_j \vert = \lvert x_j \rvert , 1 \leq j \leq n)
+	= \frac{1}{2} \text{ for all } 1 \leq i \leq n.
+\]
+Hence, we can test this ``conditionally on the observed absolute values of \(X_1, \dots , X_n\),'' i.e., given \(\lvert X_j \rvert = \lvert x_j \rvert \) for \(1 \leq j \leq n\). This is exactly the problem of \hyperref[prb:testing-symmetry]{testing for symmetry}.
 
 \begin{intuition}
-	We may reject \(H_0\) if \(\sum_{i=1}^{n} \sgn (X_i) \) is large, i.e., we simply discard all \(X_i\)'s in \autoref{eq:two-sample}.
+	We see that now under \(H_0\), \(\sgn (X_i)\)'s are i.i.d., overcoming the problem of non-i.i.d.
 \end{intuition}
 
-This motivates us to define the \hyperref[def:sign-statistic]{sign statistic}.
+\begin{note}
+	In practice, when doing inference, we usually implicitly condition on \(\vert X_j \vert \)'s too: by doing inference on the selected ``design points'', we're essentially condition on those.
+\end{note}
+
+\begin{eg}[\(t\)-statistic for two-sample problem]\label{eg:two-sample-t-statistic}
+	Consider writing \(\sum_{i=1}^{n} X_i = \sum_{i=1}^{n} \vert X_i \vert \sgn (X_i) = \sum_{i=1}^{n} \lvert x_i \rvert \sgn (X_i)\). Then by treating \(\vert x_i \vert \)'s as constants, under \(H_0\),
+	\begin{equation}\label{eq:two-sample}
+		T_n
+		= \frac{\sum_{i=1}^{n} X_i}{\sqrt{\sum_{i=1}^{n} x_i^2} } \sqrt{\frac{\sum_{i=1}^{n} x_i^2}{\sum_{i=1}^{n} (x_i - \overline{x} _n)^2}}
+		= \frac{\sum_{i=1}^{n} \vert X_i \vert \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} x_i^2} }\sqrt{\frac{\sum_{i=1}^{n} x_i^2}{\sum_{i=1}^{n} (x_i - \overline{x} _n)^2}}
+		\overset{D}{\to} \mathcal{N} (0, 1)
+	\end{equation}
+	by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem} as long as \(\max _{1 \leq i \leq n} x_i^2 / \sqrt{\sum_{j=1}^{n} x_j^2} \to 0\). We can then use the left-hand side for out test as usual.
+\end{eg}
+
+Let's use such an example as our running example of \hyperref[prb:testing-symmetry]{testing for symmetry}.
+
+\subsection{Student's \(t\)-Test, Sign Test, and Wilcoxon Signed-Rank Test}
+Returning to the general problem of \hyperref[prb:testing-symmetry]{testing for symmetry}, let \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\).
+
+\begin{prev}
+	Now \(H_0\) is defined to be whether \(F\) is symmetric about \(0\), or \(X \overset{D}{=} -X\).
+\end{prev}
+
+As suggested by the \hyperref[eg:two-sample-t-statistic]{running example}, one standard way to solve this is still considering the \hyperref[def:t-statistic]{\(t\)-statistic},
+\[
+	T_n
+	= \frac{\sum_{i=1}^{n} X_i}{\sqrt{\sum_{i=1}^{n} (X_i - \overline{X} _n)^2} },
+\]
+and reject \(H_0\) when \(T_n\) is larger than some critical value.
+
+\begin{prev}
+	If \(X\) has positive and finite variance, \(\mathbb{P} _{H_0}(T_n > Z_\alpha ) \to \alpha \) as \(n \to \infty \). However, as we have seen, the rate of such an approximation depends on the unknown \(F\).
+\end{prev}
+
+An alternative and even more classical way to solve this, which works even if \(X\) does not have any moments, is to consider the \hyperref[def:sign-statistic]{sign statistic}.
 
 \begin{definition}[Sign statistic]\label{def:sign-statistic}
 	Given a sample \(X_1, \dots , X_n\), the \emph{sign statistic} is defined as
@@ -48,19 +75,22 @@ This motivates us to define the \hyperref[def:sign-statistic]{sign statistic}.
 	\]
 \end{definition}
 
-Observe that under \(H_0\), the distribution of \(\mathrm{sign} _n\) is independent of \(F\) since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\), i.e., we can conduct the hypothesis test non-asymptotically. On the other hand, under \(H_0\), we also have asymptotic normality, i.e.,
+Observe that under \(H_0\), the distribution of \(\mathrm{sign} _n\) is independent of \(F\) since \(\sum_{i=1}^{n} \mathbbm{1}_{X_i > 0} \overset{H_0}{\sim} \operatorname{Bin}(n, 1 / 2)\), i.e., we can conduct the hypothesis test non-asymptotically. On the other hand, under \(H_0\), even if we consider its asymptotic behavior, i.e., from the usual \hyperref[thm:CLT]{central limit theorem},
 \[
 	\frac{1}{\sqrt{n} } \mathrm{sign} _n
 	= \frac{\sum_{i=1}^{n} \sgn (X_i)}{\sqrt{n} }
-	\overset{D}{\to} \mathcal{N} (0, 1)
+	\overset{D}{\to} \mathcal{N} (0, 1),
 \]
-from the usual \hyperref[thm:CLT]{central limit theorem}, so we can also reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
+the quality of the approximation doesn't depend on \(F\), and we reject \(H_0\) when \(\sum_{i=1}^{n} \sgn (x_i) / \sqrt{n} \geq Z_\alpha \).
 
-\subsection{Wilcoxon Signed-Rank Test}
-The sign test with the \hyperref[def:sign-statistic]{sign statistic} \(\mathrm{sign} _n\) is simple, but since we're not using the information of \(\vert X_j \vert \) at all, it's questionable that how powerful it is. To address this, let's again allow conditioning on \(\lvert X_j \rvert \)'s but design another test to get some sense. In this case, we can utilize \(\vert X_j \vert \)'s as follows.
+\begin{eg}[Sign-statistic for two-sample problem]
+	One can also motivate the \hyperref[def:sign-statistic]{sign statistic} from the use of \hyperref[def:t-statistic]{\(t\)-statistic} \(T_n\) in our \hyperref[eg:two-sample-t-statistic]{running example}, i.e., by simply ignoring \(\lvert X_i \rvert \)'s used in \(T_n\) to avoid conditioned on them. Hence, we reject \(H_0\) if \(\sum_{i=1}^{n} \sgn (X_i) = \mathrm{sign} _n\) is large.
+\end{eg}
+
+The sign test with the \hyperref[def:sign-statistic]{sign statistic} is simple, but it's questionable that how powerful it is as we're not using \(\vert X_i \vert \)'s at all. In view of the above intuition, let's utilize \(\lvert X_i \rvert \)'s in other ways.
 
 \begin{intuition}
-	Replace \(\vert X_i \vert \)'s in \autoref{eq:two-sample} by their ``rank'' information.
+	We can utilize \(\vert X_i \vert \)'s by replacing \(\lvert X_i \rvert \)'s in \autoref{eq:two-sample} by their ``rank'' information.
 \end{intuition}
 
 In particular, consider the \emph{rank} \(R_i\) for \(1 \leq i \leq n\)
@@ -76,31 +106,37 @@ It's clear that \(R_i\)'s are dependent to each other.
 
 Following the intuition, consider the so-called \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon signed-rank statistic}.
 
-\begin{definition}[Wilcoxon signed-rank test]\label{def:Wilcoxon-signed-rank-statistic}
+\begin{definition}[Wilcoxon signed-rank statistic]\label{def:Wilcoxon-signed-rank-statistic}
 	Given a sample \(X_1, \dots , X_n\), the \emph{Wilcoxon signed-rank statistic} is defined as
 	\[
 		W_n = \sum_{i=1}^{n} R_i \sgn (X_i).
 	\]
 \end{definition}
 
-Then, the corresponding Wilcoxon signed-rank test is to reject \(H_0\) if \(W_n\) is ``large.'' To figure out the critical value, since we condition on \(\{ \vert X_j \vert \}_{j = 1}^n \), without loss of generality, \(R_i = i\) for every \(1 \leq i \leq n\).\footnote{This is doable since \(\vert X_j \vert \)'s are treated as constants.} In this case, \(W_n = \sum_{i=1}^{n} i \sgn (X_i)\), hence under \(H_0\),
-\[
-	\frac{\sum_{i=1}^{n} i \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} i^2} }
-	\overset{D}{\to} \mathcal{N} (0, 1)
-\]
-by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use this to test \(H_0\).
+Then, the corresponding Wilcoxon signed-rank test is to reject \(H_0\) if \(W_n\) is ``large'' as usual.
 
 \begin{note}
-	Under \(H_0\), this test statistic is again independent of \(F\).
+	Under \(H_0\), \(W_n\) is again independent of \(F\).
 \end{note}
+
+However, it turns out that it's quite hard to get the exact critical value for a general problem of \hyperref[prb:testing-symmetry]{testing for symmetry}.
+
+\begin{eg}[Wilcoxon signed-rank statistic for two-sample probelm]
+	If we condition on \(\vert X_j \vert \)'s as in the \hyperref[eg:two-sample-t-statistic]{running example}, without loss of generality, \(R_i = i\) for every \(1 \leq i \leq n\).\footnote{This is doable since \(\vert X_j \vert \)'s are treated as constants.} In this case, \(W_n = \sum_{i=1}^{n} i \sgn (X_i)\), hence under \(H_0\),
+	\[
+		\frac{\sum_{i=1}^{n} i \sgn (X_i)}{\sqrt{\sum_{i=1}^{n} i^2} }
+		\overset{D}{\to} \mathcal{N} (0, 1)
+	\]
+	by the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}. We can then use this to test \(H_0\).
+\end{eg}
 
 Without conditioning on \(\vert X_j \vert \)'s, the above doesn't hold. However, some sign tests are still possible.
 
-\begin{eg}[Yet another sign test]
-	To test whether the data is i.i.d., consider \(H_0 \colon \sgn (X_i) = \epsilon _i\) where \(\epsilon _i\) is a Rademacher random variable, i.e., \(\mathbb{P} (X > 0) = \mathbb{P} (X < 0) = 1 / 2\) if \(X\) is symmetric.
-\end{eg}
+\begin{intuition}[Another sign test]
+	Consider \(H_0 \colon \sgn (X_i) = \epsilon _i\) where \(\epsilon _i\) is a Rademacher random variable, i.e., \(\mathbb{P} (X > 0) = \mathbb{P} (X < 0) = 1 / 2\) if \(X\) is symmetric. This doesn't need to assume \(\mathbb{E}_{}[X_i] < \infty \).
+\end{intuition}
 
-Indeed, while the above doesn't need \(\mathbb{E}_{}[X_i] < \infty \), but if we assume \(\Var_{}[X_i] < \infty \), then the Wilcoxon signed-rank test still work, just that now we have its original form, i.e., \(W_n = \sum_{i=1}^{n} R_i \sgn (X_i)\). Let's first see a useful characterization of \(W_n\) to get started.
+If we further assume \(\Var_{}[X_i] < \infty \), then it's possible to say something about \(W_n\) without conditioning on \(\lvert X_j \rvert \)'s. Let's first see a useful characterization of \(W_n\) to get started.
 
 \begin{proposition}\label{prop:Wilcoxon-signed-rank-test}
 	Let \(h(x_1, x_2) \coloneqq \mathbbm{1}_{x_1 + x_2 \geq 0}\). Then we have

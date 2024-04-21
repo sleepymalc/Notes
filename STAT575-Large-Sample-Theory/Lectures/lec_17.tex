@@ -96,8 +96,8 @@ For bounded random variable, we have a simpler form.
 	\end{itemize}
 \end{eg}
 
-\section{The Two-Sample Problem}
-With this new tool in hand, i.e., the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, we will now apply it to study the \hyperref[prb:two-sample]{two-sample problem}. First, let's see one illustrative problem, i.e., \emph{testing the i.i.d.\ assumption}.
+\subsection{Testing the I.I.D.\ Assumption}
+With this new tool in hand, i.e., the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, let's see one illustrative application, i.e., \emph{testing the i.i.d.\ assumption}.
 
 \begin{problem*}[Testing the i.i.d.\ assumption]
 	Consider collecting a sequence of data \(X_1, \dots , X_n \sim F\) where \(F\) is continuous. We want to test whether \(X_i\)'s are i.i.d.\ from \(F\).
@@ -151,7 +151,15 @@ In either case (\(R_i\) or \(Z_i\)), the above gives us some hints about how to 
 	Find some statistics whose distribution is \emph{independent} of the underlying \(F\) under \(H_0\).
 \end{intuition}
 
-We now state the famous \hyperref[prb:two-sample]{two-sample problem} formally.
+\section{Testing for Symmetry}
+Our next goal is to apply the intuition we get from the i.i.d.\ problem, and apply it to the problem of \hyperref[prb:testing-symmetry]{testing for symmetry}.
+
+\begin{problem}[Testing for symmetry]\label{prb:testing-symmetry}
+Let \(X, X_1, \dots  X_n \overset{\text{i.i.d.} }{\sim } F\) where \(F\) is a distribution function. The problem of \emph{testing symmetry} is to test the null hypothesis, \(H_0\), that \(F\) is symmetric about \(0\), i.e., whether \(X \overset{D}{=} -X\).
+\end{problem}
+
+\subsection{Motivation: Two-Sample Problem with no I.I.D.\ Assumption}
+\hyperref[prb:testing-symmetry]{Symmetry testing} is important since it justifies various tests we use in practice for the classical \hyperref[prb:two-sample]{two-sample problem}, even if the i.i.d.\ assumption is violated.
 
 \begin{problem}[Two-sample problem]\label{prb:two-sample}
 Given the data of two random samples obtained from a different given population. The \emph{two-sample problem} considers the task of determining whether the difference between these two populations is statistically significant.
@@ -160,13 +168,10 @@ Given the data of two random samples obtained from a different given population.
 One classical example of a \hyperref[prb:two-sample]{two-sample problem} is the \emph{treatment effect testing}.
 
 \begin{eg}[Treatment effect]\label{eg:treatment-effect}
-	Consider the task of testing the effect of a treatment. Ideally, we have the treatment group and the control group (the two populations), and we observe \(Y_i^{\text{T} }\)'s from the treatment group, and \(Y_i^{\text{C} }\)'s from the control group. It's common to pair the data together and get \((Y_1^{\text{T} }, Y_1^{\text{C} }), (Y_2^{\text{T} }, Y_2^{\text{C} }), \dots , (Y_n^{\text{T} }, Y_n^{\text{C} })\).
+	Consider a treatment group and a control group (the two populations), and we observe \(Y_i^{\text{T} }\)'s and \(Y_i^{\text{C} }\)'s from the treatment and the control group, respectively. The goal is to test whether the treatment takes affect. It's common to pair the data together and get \((Y_1^{\text{T} }, Y_1^{\text{C} }), \dots , (Y_n^{\text{T} }, Y_n^{\text{C} })\), and let \(X_i \coloneqq Y_i^{\text{T} } - Y_i^{\text{C} }\) for all \(1 \leq i \leq n\).
 \end{eg}
 
-Let's use the \hyperref[eg:treatment-effect]{treatment effect testing problem} as our running example. Let \(X_i \coloneqq Y_i^{\text{T} } - Y_i^{\text{C} }\) for all \(1 \leq i \leq n\). Usually, we assume \(X_1 , \dots , X_n\) are i.i.d.\ with mean \(\mu \) and finite variance, and the null hypothesis we want to test is \(H_0 \colon \mu = 0\).
-
-\subsection{Student's \(t\)-test}
-Since we assume \(X_i\)'s are i.i.d., we may use the \(t\)-test, i.e., we reject \(H_0\) if the \hyperref[def:t-statistic]{\(t\)-statistic}
+Usually, we assume \(X_1 , \dots , X_n\) are i.i.d.\ with mean \(\mu \) and finite variance, and the null hypothesis we want to test is \(H_0 \colon \mu = 0\). As \(X_i\)'s are i.i.d., we may use the \(t\)-test to the \hyperref[eg:treatment-effect]{treatment effect problem}, namely, we reject \(H_0\) if the \hyperref[def:t-statistic]{\(t\)-statistic} is too large, i.e.,
 \[
 	T_n
 	= \sqrt{n} \frac{\overline{X} _n}{\hat{\sigma} _n}
@@ -180,11 +185,5 @@ for some \(\alpha > 0\). Since \(\Var_{}[X_i] < \infty \), \(T_n \overset{D}{\to
 	In reality, \(X_i\)'s are never i.i.d., but people still use the \(t\)-test. Why?
 \end{problem*}
 \begin{answer}
-	This is because we usually give the treatment in a ``randomized'' way. In addition, we can ``condition'' on the observed data \(\vert X_i \vert \)'s.
+	This is because we usually give the treatment in a ``randomized'' way. In addition, we can ``condition'' on the observed data \(\vert X_i \vert \)'s. In this case, we can design a hypothesis testing such that it only depends on statistics that are now i.i.d., and by applying the \hyperref[thm:CLT]{central limit theorem}, we will get something like \(\sum_{i=1}^{n} X_i / \sqrt{\sum_{i=1}^{n} X_i^2} \), pretty much like what we have in the \(t\)-test.
 \end{answer}
-
-The above answer is pretty vague, which is intended. The key idea is the following:
-
-\begin{intuition}
-	In this case, we can design a hypothesis testing such that it only depends on statistics that are now i.i.d., and by applying the \hyperref[thm:CLT]{central limit theorem}, we will get something like \(\sum_{i=1}^{n} X_i / \sqrt{\sum_{i=1}^{n} X_i^2} \), pretty much like what we have in the \(t\)-test.
-\end{intuition}

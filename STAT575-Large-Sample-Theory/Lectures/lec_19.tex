@@ -3,30 +3,23 @@
 A natural approach to find such \((\widetilde{S} _n)\) is to ``project'' \((S_n)\) onto some space, which potentially has nice properties for us to do the analysis. Consider the space \(L^2 = \{ Y \colon \lVert Y \rVert = \sqrt{\mathbb{E}_{}[Y^2] } < \infty \} \), and let \(K \subseteq L^2\) with \(Y \in L^2\). The goal is to approximate \(Y\) by a sequence in \(K\).
 
 \begin{definition}[Projection]\label{def:projection}
-	Given a subspace \(K \subseteq L^2\), \(Y^{\ast} \in K\) is the \emph{projection} of \(Y \in L^2\) onto \(K\) if \(\lVert Y^{\ast} - Y \rVert \leq \lVert Z - Y \rVert \) for all \(Z \in K\).
+	Given a subspace \(K \subseteq L^2\), \(Y^{\ast} \in K\) is a \emph{projection} of \(Y \in L^2\) onto \(K\) if \(\lVert Y^{\ast} - Y \rVert \leq \lVert Z - Y \rVert \) for all \(Z \in K\).
 \end{definition}
 
 The following characterization of the \hyperref[def:projection]{projection} is useful in our analysis.
 
 \begin{proposition}\label{prop:projection}
-	Suppose \(K \subseteq L^2\) is a linear subspace. If \(Y^{\ast} \in K\) and \(\mathbb{E}_{}[Y^{\ast} Z] = \mathbb{E}_{}[Y Z] \) for every \(Z \in K\), then \(Y^{\ast} \) is a \hyperref[def:projection]{projection} of \(Y\) onto \(K\).
+	Suppose \(K \subseteq L^2\) is a linear subspace. If \(Y^{\ast} \in K\) and \(\mathbb{E}_{}[Y^{\ast} Z] = \mathbb{E}_{}[Y Z] \) for every \(Z \in K\), then \(Y^{\ast} \) is a \hyperref[def:projection]{projection} of \(Y\) onto \(K\). If in addition, \(1 \in K\), then \(\mathbb{E}_{}[Y Y^{\ast} ] = \mathbb{E}_{}[(Y^{\ast} )^2] \) and \(\Cov_{}[Y, Y^{\ast} ] = \Var_{}[Y^{\ast} ] \). In particular, \(\Corr_{}(Y, Y^{\ast} ) = \sqrt{\Var_{}[Y^{\ast} ] / \Var_{}[Y] } \).
 \end{proposition}
 \begin{proof}
 	We see that for all \(Z \in K\),
 	\begin{align*}
 		\lVert Y - Z \rVert ^2
 		 & = \lVert Y - Y^{\ast}  \rVert ^2 + \lVert Y^{\ast} - Z \rVert ^2 + 2 \mathbb{E}_{}[(Y-Y^{\ast} ) (Y^{\ast} - Z)] \\
-		\shortintertext{from the assumption, for every \(Z \in K\), \(\mathbb{E}_{}[(Y^{\ast} - Y) Z] = 0 \), with \(Y^{\ast} - Z \in K\),}
+		\shortintertext{from the assumption, for every \(W \in K\), \(\mathbb{E}_{}[(Y^{\ast} - Y) W] = 0 \), with \(W \coloneqq Y^{\ast} - Z \in K\),}
 		 & = \lVert Y - Y^{\ast}  \rVert ^2 + \lVert Y^{\ast} - Z \rVert ^2,
 	\end{align*}
-	which is greater than \(\lVert Y - Y^{\ast} \rVert ^2\).
-\end{proof}
-
-\begin{corollary}\label{col:projection}
-	Under the setup of \autoref{prop:projection}, if in addition, \(1 \in K\), then \(\Cov_{}[Y, Y^{\ast} ] = \Var_{}[Y^{\ast} ] \). In particular, \(\Corr_{}(Y, Y^{\ast} ) = \sqrt{\Var_{}[Y^{\ast} ] / \Var_{}[Y] } \).
-\end{corollary}
-\begin{proof}
-	By taking \(Z = 1\) in \autoref{prop:projection}, \(\mathbb{E}_{}[Y^{\ast} ] = \mathbb{E}_{}[Y] \). On the other hand, for \(Z = Y^{\ast} \), we have \(\mathbb{E}_{}[Y Y^{\ast} ] = \mathbb{E}_{}[(Y^{\ast} )^2] \). Hence,
+	which is greater than \(\lVert Y - Y^{\ast} \rVert ^2\). Now, if \(1 \in K\), by taking \(Z = 1\), \(\mathbb{E}_{}[Y^{\ast} ] = \mathbb{E}_{}[Y] \). On the other hand, for \(Z = Y^{\ast} \), we have \(\mathbb{E}_{}[Y Y^{\ast} ] = \mathbb{E}_{}[(Y^{\ast} )^2] \). Hence,
 	\[
 		\Cov_{}[Y, Y^{\ast} ]
 		= \mathbb{E}_{}[Y Y^{\ast} ] - \mathbb{E}_{}[Y] \mathbb{E}_{}[Y^{\ast} ]
@@ -36,29 +29,36 @@ The following characterization of the \hyperref[def:projection]{projection} is u
 	The correlation is then \(\Corr_{}(Y, Y^{\ast} ) = \Var_{}[Y^{\ast} ] / \sqrt{\Var_{}[Y] \Var_{}[Y^{\ast} ] } = \sqrt{\Var_{}[Y^{\ast} ] / \Var_{}[Y] }\).
 \end{proof}
 
-Following the intuition, we may select \(\widetilde{S} _n\) as a \hyperref[def:projection]{projection} of \(S_n\) onto some linear subspace \(K_n \subseteq L^2\) where \(1 \in K_n\). If such \(K_n\)'s are found, as long as \(\Var_{}[S_n] / \Var_{}[\widetilde{S} _n] \to 1\), from \autoref{col:projection}, \(\Corr_{}(Y, Y^{\ast} ) \to 1\) is automatically satisfied, hence \autoref{prop:correlation-converging-together} can be applied, i.e.:
+If we combine the above, our plan is clear now. In particular, we have the following.
 
-\begin{intuition}
-	Find \(K_n\)'s such that \(\Var_{}[S_n] / \Var_{}[\widetilde{S} _n] \to 1\), and \(\widetilde{S} _n - \mathbb{E}_{}[\widetilde{S} _n] \) \hyperref[def:converge-in-distribution]{converges} somewhere.
-\end{intuition}
+\begin{corollary}\label{col:U-statistic-via-projection}
+	For each \(n \in \mathbb{N} \), let \(\widetilde{S} _n\) be a \hyperref[def:projection]{projection} of \(S_n\) onto a linear subspace \(K_n\) of \(L^2\) with \(1 \in K_n\). If \(\Var_{}[S_n] / \Var_{}[\widetilde{S} _n] \to 1\), then
+	\[
+		\frac{S_n - \mathbb{E}_{}[S_n] }{\sqrt{\Var_{}[S_n] } } - \frac{\widetilde{S} _n - \mathbb{E}_{}[\widetilde{S} _n] }{\sqrt{\Var_{}[S_n] } }
+		\overset{L^2}{\to} 0.
+	\]
+\end{corollary}
+\begin{proof}
+	Since \(\Var_{}[S_n] / \Var_{}[\widetilde{S} _n] \to 1\), from \autoref{prop:projection}, \(\Corr_{}(Y, Y^{\ast} ) \to 1\) is automatically satisfied. The result then follows from \autoref{prop:correlation-converging-together}.
+\end{proof}
 
-Let's first see some examples of how to find \hyperref[def:projection]{projections} in practice.
+With \autoref{col:U-statistic-via-projection}, the goal is to find suitable \(K_n\)'s such that \(\Var_{}[S_n] / \Var_{}[\widetilde{S} _n] \to 1\), and \(\widetilde{S} _n - \mathbb{E}_{}[\widetilde{S} _n] \) \hyperref[def:converge-in-distribution]{converges} somewhere. However, we should first understand how to find \hyperref[def:projection]{projections} in practice.
 
 \begin{eg}
-	Let \(X\) be a random vector, and let \(K = \{ g(X) \colon g(X) \in L^2 \} \). Then \(Y^{\ast} = \mathbb{E}_{}[Y \mid X] \). More generally, let \(X_1, \dots , X_n\) be a sequence of random vectors, and let
+	Let \(X\) be a random vector and \(K = \{g(X) \in L^2 \} \). Then \(Y^{\ast} = \mathbb{E}_{}[Y \mid X] \) is a \hyperref[def:projection]{projection} of \(Y \in L^2\) onto \(K\). More generally, let \(X_1, \dots , X_n\) be a sequence of random vectors, and let
 	\[
-		K_n = \{ g(X_1, \dots , X_n) \colon g(X_1, \dots , X_n) \in L^2\}.
+		K_n = \{g(X_1, \dots , X_n) \in L^2\}.
 	\]
-	Then \(Y^{\ast} = \mathbb{E}_{}[Y \mid X_1, \dots , X_n] \).
+	Then \(Y^{\ast} = \mathbb{E}_{}[Y \mid X_1, \dots , X_n] \) is a \hyperref[def:projection]{projection} of \(Y \in L^2\) onto \(K_n\).
 \end{eg}
 \begin{explanation}
-	From \autoref{prop:projection}, it suffices to show that for all \(g \in K\),
+	For all \(g \in K\), from the basic properties for conditional expectation, we have
 	\[
 		\mathbb{E}_{}[\mathbb{E}_{}[Y \mid X] \cdot g(X)]
 		= \mathbb{E}_{}[\mathbb{E}_{}[g(X) \cdot Y \mid X] ]
-		= \mathbb{E}_{}[g(X) \cdot Y]
+		= \mathbb{E}_{}[g(X) \cdot Y].
 	\]
-	from the basic properties for conditional expectation.
+	Then from \autoref{prop:projection}, the result follows.
 \end{explanation}
 
 A more elaborated example is the following, which turns out to be flexible enough for our purpose.
@@ -68,15 +68,15 @@ A more elaborated example is the following, which turns out to be flexible enoug
 	\[
 		K_n = \left\{ \sum_{i=1}^{n} g_i(X_i) \colon g_i(X_i) \in L^2 \text{ for all } 1 \leq i \leq n \right\}.
 	\]
-	In this case, \(Y^{\ast} - \mathbb{E}_{}[Y] = \sum_{i=1}^{n} \mathbb{E}_{}[Y - \mathbb{E}_{}[Y] \mid X_i] \).
+	In this case, \(Y^{\ast} - \mathbb{E}_{}[Y] = \sum_{i=1}^{n} \mathbb{E}_{}[Y - \mathbb{E}_{}[Y] \mid X_i] \), where \(Y^{\ast} \) is a \hyperref[def:projection]{projection} of \(Y \in L^2\) onto \(K_n\).
 \end{eg}
 \begin{explanation}
-	We want to show that for all \(g \in K_n\), \(\mathbb{E}_{}[Y^{\ast} \sum_{i=1}^{n} g_i(X_i)] = \mathbb{E}_{}[Y \sum_{i=1}^{n} g_i(X_i)] \). Equivalently,
+	We want to show that for all \(\sum_{i=1}^{n} g_i \in K_n\), \(\mathbb{E}_{}[Y^{\ast} \sum_{i=1}^{n} g_i(X_i)] = \mathbb{E}_{}[Y \sum_{i=1}^{n} g_i(X_i)] \), i.e.,
 	\[
 		\mathbb{E}_{}\left[(Y^{\ast} - \mathbb{E}_{}[Y^{\ast} ] ) \sum_{i=1}^{n} g_i(X_i)\right]
 		= \mathbb{E}_{}\left[(Y - \mathbb{E}_{}[Y] ) \sum_{i=1}^{n} g_i(X_i)\right]
 	\]
-	since \(\mathbb{E}_{}[Y^{\ast} ] = \mathbb{E}_{}[Y] \). Expanding the left-hand side, we have
+	since \(\mathbb{E}_{}[Y^{\ast} ] = \mathbb{E}_{}[Y] \). Expanding the left-hand side, and using \(\mathbb{E}_{}[Y^{\ast} ] = \mathbb{E}_{}[Y] \) again,
 	\begin{align*}
 		\mathbb{E}_{}\left[(Y^{\ast} - \mathbb{E}_{}[Y^{\ast} ] ) \sum_{i=1}^{n} g_i(X_i)\right]
 		 & = \mathbb{E}_{}\left[\left( \sum_{i=1}^{n} \mathbb{E}_{}[Y - \mathbb{E}_{}[Y] \mid X_i] \right) \sum_{j=1}^{n} g_j(X_j)\right]                                                            \\
@@ -89,117 +89,135 @@ A more elaborated example is the following, which turns out to be flexible enoug
 	where we again use the property of conditional expectation.
 \end{explanation}
 
+We see that the \hyperref[def:projection]{projection} in the above example is a sum of independent random variables, so we can apply the \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem} to establish asymptotic normality.
+
+\begin{remark}
+	In particular, with the help of \autoref{col:U-statistic-via-projection}, we only need to make sure that \(K_n\) is a linear subspace that contains constants and \(\Var_{}[S_n] / \Var_{}[\widetilde{S} _n] \to 1\) as \(n \to \infty \).
+\end{remark}
+
+\begin{remark}
+	Since we're using \hyperref[thm:Lindeberg-CLT]{Lindeberg central limit theorem}, it's possible to generalize the above to the case of triangular array of random variables \(X_{n1}, \dots , X_{nn}\) with what we're going to do next.
+\end{remark}
+
 \subsection{Asymptotic Distribution of \(U\)-Statistic}
 Now, let's start developing a theory for the \hyperref[def:U-statistic]{\(U\)-statistics}. First, consider the following.
 
 \begin{definition}[\(U\)-statistic]\label{def:U-statistic}
-	Given a sequence of i.i.d.\ random vectors \((X_n)\) and a permutation symmetric function \(h \colon \mathbb{R} ^m \to \mathbb{R} \), the \emph{\(U\)-statistic} is defined as
+	Given a sequence of i.i.d.\ random vectors \((X_n)\) and a permutation symmetric function \(h \colon \mathbb{R} ^m \to \mathbb{R} \)\footnote{We refer to \(h\) as \(U_n\)'s \emph{kernel}.} with \(n \geq m\), the \emph{\(U\)-statistic} is defined as
 	\[
 		U_n
 		= \frac{1}{\binom{n}{m}} \sum_{\substack{i_1, \dots , i_m \\ \{ i_1, \dots , i_m \} \subseteq [n] }} h(X_{i_1}, \dots , X_{i_m}).
 	\]
 \end{definition}
 
-\begin{remark}
-	The \hyperref[def:U-statistic]{\(U\)-statistic} is an \textbf{u}nbiased estimator of \(\theta = \mathbb{E}_{}[h(X_1, \dots , X_m)] \).
-\end{remark}
-
 \begin{notation}
 	Let \([n] \coloneqq \{ 1, 2, \dots , n \} \) for \(n \in \mathbb{N} \).
 \end{notation}
+
+\begin{remark}
+	The \hyperref[def:U-statistic]{\(U\)-statistic} is an \textbf{u}nbiased estimator of \(\theta = \mathbb{E}_{}[h(X_1, \dots , X_m)] \), and in particular, an average of dependent, but identically distributed random variables.
+\end{remark}
 
 \begin{note}
 	Since \(h\) is permutation symmetric, the order of indices used in the argument doesn't matter.
 \end{note}
 
 \begin{eg}[Wilcoxon signed-rank statistic]
-	When studying the \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon signed-rank statistic} \(W_n\), we see that \(\left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right) / \binom{n}{2} = 2U_n - 1\) where \(U_n\) is an \hyperref[def:U-statistic]{\(U\)-statistic} defined as
+	When studying the \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon signed-rank statistic} \(W_n\), we see that \(\left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right) / \binom{n}{2} = 2U_n - 1\) where \(U_n\) is an \hyperref[def:U-statistic]{\(U\)-statistic} defined as\footnote{Note that \(i < j\) is the same as \(\{ i, j \} \subseteq [n] \). Indeed, one can use \(i_1 < \dots < i_m\) without loss of generality.}
 	\[
 		U_n = \frac{1}{\binom{n}{2}} \sum_{i < j} h(X_i, X_j).
 	\]
 \end{eg}
 
-\begin{note}
-	In the above, we see that \(i < j\) is the same as \(\{ i, j \} \subseteq [n] \). Indeed, one can assume \(i_1 < \dots < i_m\) without loss of generality.
-\end{note}
-
-
-Our goal is clear now: given the \hyperref[def:projection]{projection} \(U_n^{\ast} \) of \(U_n\) onto \(K_n = \{ \sum_{i=1}^{n} g_i(X_i) \} \), we want to show
+From \autoref{col:U-statistic-via-projection}, given the \hyperref[def:projection]{projection} \(U_n^{\ast} \) of \(U_n\) onto \(K_n = \{ \sum_{i=1}^{n} g_i(X_i) \} \), we want to show
 \[
 	\left\vert \frac{U_n - \mathbb{E}_{}[U_n] }{\sqrt{\Var_{}[U_n] } } - \frac{U_n^{\ast} - \mathbb{E}_{}[U_n^{\ast} ] }{\sqrt{\Var_{}[U_n] } } \right\vert
-	= \left\vert \frac{U_n - \theta }{\sqrt{\Var_{}[U_n] } } - \frac{U_n^{\ast} - \theta }{\sqrt{\Var_{}[U_n] } } \right\vert
-	\overset{p}{\to} 0
+	\overset{p}{\to} 0,
 \]
-since \(\mathbb{E}_{}[U_n] = \mathbb{E}_{}[U_n^{\ast} ] = \theta \) (recall \autoref{col:projection} with \(Z = 1\)). Let's first find \(U_n^{\ast} \). From the \hyperref[eg:projection]{last example},
-\begin{align*}
-	U_n^{\ast} - \theta
-	 & = \sum_{i=1}^{n} \mathbb{E}_{}[U_n - \theta \mid X_i]                                                                                                                                             \\
-	 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_1, \dots , i_m \} \subseteq [n] } \mathbb{E}_{}\left[h(X_{i_1}, \dots X_{i_m}) - \theta \mid X_k\right]                                        \\
-	 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_1, \dots , i_m \} \subseteq [n] } \left( \mathbb{E}_{}\left[h(X_{i_1}, \dots X_{i_m}) \mid X_k\right] - \theta \right).                        \\
-	\shortintertext{When \(k \neq i_1, \dots , i_m\), the conditional expectation becomes an unconditional one, which is \(\theta \), i.e., the only terms survive is when \(i_j = k\) for some \(1 \leq j \leq m\). Hence,}
-	 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_2, \dots , i_m \} \subseteq [n] \setminus \{ k \} } \left( \mathbb{E}_{}\left[h(X_k, X_{i_2}, \dots X_{i_m}) \mid X_k \right] - \theta \right) \\
-	\shortintertext{as \(X_i\)'s are i.i.d.\ and \(h\) is permutation symmetry, by letting \(\widetilde{h} (x) \coloneqq \mathbb{E}_{}[h(x, X_2, \dots , X_m)] \), we have}
-	 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_2, \dots , i_m \} \subseteq [n] \setminus \{ k \} } ( \widetilde{h} (X_k) - \theta )                                                           \\
-	 & =  \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \binom{n-1}{m-1} ( \widetilde{h} (X_k) - \theta )                                                                                                        \\
-	 & = \frac{m}{n} \sum_{k=1}^{n} (\widetilde{h} (X_k) - \theta ).
-\end{align*}
+and establish the asymptotic normality of \(U_n\). For this, assuming that \(U_n \in L^2\) for each \(n \geq m\), i.e., \(\Var_{}[h(X_1, \dots , X_m)] < \infty \). Let's first find \(U_n^{\ast} \).
 
-\begin{note}
-	\(\widetilde{h} (X_k)\)'s are i.i.d., so we can apply the \hyperref[thm:CLT]{central limit theorem}.
-\end{note}
+\begin{proposition}\label{prop:U-statistic-projection}
+	For every \(n \geq m\), let \(K_n = \{ \sum_{i=1}^{n} g_i(X_i) \colon g_i(X_i) \in L^2\} \). Furthermore, let \(\widetilde{h} (x) \coloneqq \mathbb{E}_{}[h(x, X_2, \dots , X_m)] \), then the \hyperref[def:projection]{projection} of \(U_n\) onto \(K_n\) is given by
+	\[
+		U_n^{\ast}
+		= \mathbb{E}_{}[U_n] + \frac{m}{n} \sum_{k=1}^{n} (\widetilde{h} (X_k) - \mathbb{E}_{}[U_n] ).
+	\]
+\end{proposition}
+\begin{proof}
+	Denote \(\theta \coloneqq \mathbb{E}_{}[U_n] = \mathbb{E}_{}[U_n^{\ast} ] \) (recall \autoref{prop:projection}), then from the \hyperref[eg:projection]{last example},
+	\begin{align*}
+		U_n^{\ast} - \theta
+		 & = \sum_{i=1}^{n} \mathbb{E}_{}[U_n - \theta \mid X_i]                                                                                                                                             \\
+		 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_1, \dots , i_m \} \subseteq [n] } \mathbb{E}_{}\left[h(X_{i_1}, \dots X_{i_m}) - \theta \mid X_k\right]                                        \\
+		 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_1, \dots , i_m \} \subseteq [n] } \left( \mathbb{E}_{}\left[h(X_{i_1}, \dots X_{i_m}) \mid X_k\right] - \theta \right).                        \\
+		\shortintertext{When \(k \neq i_1, \dots , i_m\), the conditional expectation becomes an unconditional one, which is \(\theta \), i.e., the only terms survive is when \(i_j = k\) for some \(1 \leq j \leq m\). Hence,}
+		 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_2, \dots , i_m \} \subseteq [n] \setminus \{ k \} } \left( \mathbb{E}_{}\left[h(X_k, X_{i_2}, \dots X_{i_m}) \mid X_k \right] - \theta \right) \\
+		\shortintertext{as \(X_i\)'s are i.i.d.\ and \(h\) is permutation symmetry, with \(\widetilde{h} \), we have}
+		 & = \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \sum_{\{ i_2, \dots , i_m \} \subseteq [n] \setminus \{ k \} } ( \widetilde{h} (X_k) - \theta )                                                           \\
+		 & =  \sum_{k=1}^{n} \frac{1}{\binom{n}{m}} \binom{n-1}{m-1} ( \widetilde{h} (X_k) - \theta )                                                                                                        \\
+		 & = \frac{m}{n} \sum_{k=1}^{n} (\widetilde{h} (X_k) - \theta ).
+	\end{align*}
+	Rearranging the terms gives the result.
+\end{proof}
 
-In particular, if \(\Var_{}[\widetilde{h} (X)] \in (0, \infty )\), then
+As \(\widetilde{h} (X_k)\)'s are i.i.d., we can apply the \hyperref[thm:CLT]{central limit theorem} if \(\Var_{}[\widetilde{h} (X)] \in (0, \infty )\) and get
 \[
-	\sqrt{n} (U_n^{\ast} - \theta ) \overset{D}{\to} \mathcal{N} (0, m^2 \Var_{}[\widetilde{h} (X)] ),
+	\sqrt{n} (U_n^{\ast} - \theta ) \overset{D}{\to} \mathcal{N} (0, m^2 \Var_{}[\widetilde{h} (X)] ).
 \]
-hence, our second goal is achieved. We just need to show that \(\Var_{}[U_n] / \Var_{}[U_n^{\ast} ] \to 1\). Firstly, since
+Hence, we just need to show that \(\Var_{}[U_n] / \Var_{}[U_n^{\ast} ] \to 1\). Firstly, since
 \[
 	\Var_{}[U_n^{\ast} ]
 	= \frac{m^2}{n} \Var_{}[\widetilde{h} (X_i)],
 \]
-it reduces to show \(\Var_{}[U_n] \sim m^2 \Var_{}[\widetilde{h} (X_i)] / n\). Recall the usual rule for variance.
+it reduces to show \(\Var_{}[U_n] \sim m^2 \Var_{}[\widetilde{h} (X_i)] / n\). We have the following.
 
-\begin{prev}
-	For \(S_n = \sum_{i=1}^{n} X_i\), \(\Var_{}[S_n] = \sum_{i} \Var_{}[X_i] + \sum_{i \neq j} \Cov_{}[X_i, X_j]\).
-\end{prev}
-In our case, we see that
-\[
-	\begin{split}
-		\binom{n}{m}^2 \Var_{}[U_n]
-		 & = \sum_{\{ i_1, \dots , i_m \} \subseteq [n]} \Var_{}[h(X_{i_1}, \dots , X_{i_m})]                 \\
-		 & + \sum_{\substack{\{ i_1, \dots , i_m \} , \{ i_1^{\prime} , \dots , i_m^{\prime} \} \subseteq [n] \\ \{ i_1 , \dots , i_m \} \neq \{ i_1^{\prime} , \dots , i_m^{\prime} \}}} \Cov_{}[h(X_{i_1}, \dots , X_{i_m}), h(X_{i_1^{\prime} }, \dots , X_{i_m^{\prime} })].
-	\end{split}
-\]
-The variance terms are clear since for every subset, they're all the same, hence
-\[
-	\sum_{\{ i_1, \dots , i_m \} \subseteq [n]} \Var_{}[h(X_{i_1}, \dots , X_{i_m})]
-	= \binom{n}{m} \Var_{}[h(X_1, \dots , X_m)]
-	\eqqcolon J_{0, m}.
-\]
-For the covariance terms, we observe the following.
-
-\begin{intuition}
-	If \(\{ i_1, \dots , i_m \} \cap \{ i_1^{\prime} , \dots , i_m^{\prime}  \} = \varnothing \), the covariance vanishes from independence.
-\end{intuition}
-
-Hence, we might consider iterate through subsets of \(i\)'s and \(i^{\prime} \)'s with \(r \geq 1\) common indices.
-
-\begin{eg}
-	Let \(1, \dots , r\) be the common indices between \(\{i_1, \dots , i_m \} \) and \(\{ i_1^{\prime} , \dots , i_m^{\prime} \} \), i.e., \([r] = \{i_1, \dots , i_m \} \cup \{ i_1^{\prime} , \dots , i_m^{\prime} \}\). In this case, the covariance term becomes
+\begin{proposition}\label{prop:U-statistic-variance}
+	For every \(n \geq 2m - 1\), we have
 	\[
-		\Cov_{}[h(X_1, \dots , X_r, X_{i_{r+1}}, \dots , X_{i_m}), h(X_1, \dots , X_r, X_{i_{r+1}^{\prime} }, \dots , X_{i_m^{\prime} })]
+		\binom{n}{m} \Var_{}[U_n]
+		= \sum_{r=1}^{m} \binom{m}{r} \binom{n-m}{m-r}J_{r, m},
 	\]
-	where \(\{ i_{r+1} , \dots , i_m \} \cap \{ i_{r+1}^{\prime} , \dots , i_m^{\prime} \} = \varnothing \). Such a covariance is fixed for every \(r\), regardless of other indices \(i_j , i_j^{\prime} \) for \(r+1 \leq j \leq m\) since \(X_{i_{r+1}}, \dots , X_{i_m}\) and \(X_{i_{r+1}^{\prime} }, \dots , X_{i_m^{\prime} }\) are i.i.d.
-\end{eg}
+	where for every \(r \in [m]\), let \(\{ i_{r+1} , \dots , i_m\} \cap \{ i_{r+1}^{\prime} , \dots , i_m^{\prime} \} \) be disjoint subsets of \([n]\) and set
+	\[
+		J_{r, m} \coloneqq \Cov_{}[h(X_1, \dots , X_r, X_{i_{r+1}}, \dots , X_{i_m}), h(X_1, \dots , X_r, X_{i^{\prime} _{r+1}}, \dots , X_{i_m^{\prime} })].
+	\]
+\end{proposition}
+\begin{proof}
+	By the definition of the variance, we have
+	\[
+		\begin{split}
+			\binom{n}{m}^2 \Var_{}[U_n]
+			 & = \sum_{\{ i_1, \dots , i_m \} \subseteq [n]} \Var_{}[h(X_{i_1}, \dots , X_{i_m})]                 \\
+			 & + \sum_{\substack{\{ i_1, \dots , i_m \} , \{ i_1^{\prime} , \dots , i_m^{\prime} \} \subseteq [n] \\ \{ i_1 , \dots , i_m \} \neq \{ i_1^{\prime} , \dots , i_m^{\prime} \}}} \Cov_{}[h(X_{i_1}, \dots , X_{i_m}), h(X_{i_1^{\prime} }, \dots , X_{i_m^{\prime} })].
+		\end{split}
+	\]
+	The variance terms are clear since for every subset, they're all the same, hence
+	\[
+		\sum_{\{ i_1, \dots , i_m \} \subseteq [n]} \Var_{}[h(X_{i_1}, \dots , X_{i_m})]
+		= \binom{n}{m} \Var_{}[h(X_1, \dots , X_m)]
+		= \binom{n}{m} J_{m, m}.
+	\]
+	For the covariance terms, if \(\{ i_1, \dots , i_m \} \cap \{ i_1^{\prime} , \dots , i_m^{\prime}  \} = \varnothing \), the covariance vanishes from independence. Hence, consider iterate through subsets of \(i\)'s and \(i^{\prime} \)'s with \(r \geq 1\) common indices.
 
-Let denote the covariance for a particular \(r\) by \(J_{r, m}\). Then, the second summation becomes
-\[
-	\sum_{\substack{\{ i_1, \dots , i_m \} , \{ i_1^{\prime} , \dots , i_m^{\prime} \} \subseteq [n] \\ \{ i_1 , \dots , i_m \} \neq \{ i_1^{\prime} , \dots , i_m^{\prime} \}}} \Cov_{}[h(X_{i_1}, \dots , X_{i_m}) , h(X_{i_1^{\prime} }, \dots , X_{i_m^{\prime} })]
-	= \sum_{r=1}^{m-1} \binom{n}{m} \binom{m}{r} \binom{n-m}{m-r} J_{r, m},
-\]
-where the summation is from \(r = 1\) to \(m-1\) since it's impossible to have \(r = m\) as we require \(\{ i_1 , \dots , i_m \} \neq \{ i_1^{\prime} , \dots , i_m^{\prime} \}\). We note that the counting is calculated as:
-\begin{enumerate}
-	\item choose \(m\) indices for the first \(h\) arbitrarily from \(n\) indices;
-	\item choose \(r\) indices to be the common indices between the first and second \(h\) from the \(m\) indices chosen above;
-	\item choose \(m-r\) indices for the second \(h\) from indices different from those are chosen before. In total, \(n-m\) of them.
-\end{enumerate}
+	\begin{intuition}
+		Let \(1, \dots , r\) be the common indices between \(\{i_1, \dots , i_m \} \) and \(\{ i_1^{\prime} , \dots , i_m^{\prime} \} \), i.e., \([r] = \{i_1, \dots , i_m \} \cap \{ i_1^{\prime} , \dots , i_m^{\prime} \}\). In this case, the covariance term becomes
+		\[
+			J_{r, m}
+			= \Cov_{}[h(X_1, \dots , X_r, X_{i_{r+1}}, \dots , X_{i_m}), h(X_1, \dots , X_r, X_{i_{r+1}^{\prime} }, \dots , X_{i_m^{\prime} })]
+		\]
+		where \(\{ i_{r+1} , \dots , i_m \} \cap \{ i_{r+1}^{\prime} , \dots , i_m^{\prime} \} = \varnothing \). Such a covariance is fixed for every \(r\), regardless of other indices \(i_j , i_j^{\prime} \) for \(r+1 \leq j \leq m\) since \(X_{i_{r+1}}, \dots , X_{i_m}\) and \(X_{i_{r+1}^{\prime} }, \dots , X_{i_m^{\prime} }\) are i.i.d.
+	\end{intuition}
+
+	With this, the second summation for covariance becomes
+	\[
+		\sum_{\substack{\{ i_1, \dots , i_m \} , \{ i_1^{\prime} , \dots , i_m^{\prime} \} \subseteq [n] \\ \{ i_1 , \dots , i_m \} \neq \{ i_1^{\prime} , \dots , i_m^{\prime} \}}} \Cov_{}[h(X_{i_1}, \dots , X_{i_m}) , h(X_{i_1^{\prime} }, \dots , X_{i_m^{\prime} })]
+		= \sum_{r=1}^{m-1} \binom{n}{m} \binom{m}{r} \binom{n-m}{m-r} J_{r, m},
+	\]
+	where the summation is from \(r = 1\) to \(m-1\) since we require \(\{ i_1 , \dots , i_m \} \neq \{ i_1^{\prime} , \dots , i_m^{\prime} \}\), i.e., \(r \neq m\). We note that the counting is calculated as:
+	\begin{enumerate}
+		\item choose \(m\) indices for the first \(h\) arbitrarily from \(n\) indices;
+		\item choose \(r\) indices to be the common indices between the first and second \(h\) from the \(m\) indices chosen above;
+		\item choose \(m-r\) indices for the second \(h\) from indices different from those are chosen before. In total, \(n-m\) of them.
+	\end{enumerate}
+	Combining the sum of variances and covariances, dividing both sides by \(\binom{n}{m}\) gives the result.
+\end{proof}

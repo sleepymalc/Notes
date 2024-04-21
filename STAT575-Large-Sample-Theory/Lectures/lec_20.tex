@@ -1,37 +1,41 @@
 \lecture{20}{2 Apr.\ 9:30}{Comparing Different Tests for Symmetry}
-Continuing on the calculation, we now need to calculate \(J_{r, m}\), which is
-\[
-	J_{r, m}
-	= \Cov_{}[h(X_1, \dots , X_r, X_{r+1}, \dots , X_m), h(X_1, \dots , X_r, X_{m+1}, \dots , X_{2m-r})],
-\]
-which implies
-\[
-	\Var_{}[U_n]
-	= \frac{1}{\binom{n}{m}} \left( J_{0, m} + \sum_{r=1}^{m-1} \binom{m}{r} \binom{n-m}{m-r} J_{r, m} \right)
-	\sim \frac{\binom{m}{1} \binom{n-m}{m-1}}{\binom{n}{m}} J_{1, m}
-	\sim \frac{m^2}{n} J_{1, m}
-\]
-with some algebra. It remains to show that \(\Var_{}[\widetilde{h} (X)] = J_{1, m}\). Indeed,
-\[
-	\begin{split}
-		J_{1, m}
-		 & = \Cov_{}[(X_1, X_2, \dots , X_m), h(X_1, X_{m+1}, \dots , X_{2m-1})]                                                       \\
-		 & = \mathbb{E}_{}[(h(X_1, X_2, \dots , X_m) - \theta ) \cdot (h(X_1, X_{m+1}, \dots , X_{2m-1}) - \theta ) ]                  \\
-		 & = \int \mathbb{E}_{}[h(x, X_2, \dots , X_m) - \theta ] \cdot \mathbb{E}_{}[h(x, X_{m+1}, \dots , X_{2m-1})] F(\mathrm{d} x) \\
-		 & = \int (\widetilde{h} (x) - \theta ) (\widetilde{h} (x) - \theta ) F(\mathrm{d} x)                                          \\
-		 & = \mathbb{E}_{}[(\widetilde{h} (X) - \theta )^2]                                                                            \\
-		 & = \Var_{}[\widetilde{h} (X)] .
-	\end{split}
-\]
+We can finally establish the asymptotic normality of \(U_n\).
 
-\begin{eg}
-	Let \(\theta = \mathbb{E}_{}[h(X_1, X_2)] = \mathbb{P} (X_1 + X_2 > 0)\). Then, \(h(x) = \mathbb{P} (x + X > 0) = 1 - F(-x)\) with
+\begin{theorem}\label{thm:U-statistic}
+	If for every \(r \in [m]\), \(J_{r, m}\) is bounded away from \(0\) and infinity as \(n \to \infty \), then
 	\[
-		\Var_{}[\widetilde{h} (X)]
-		= \Var_{}[F(-X)]
-		> 0
+		\sqrt{n} (U_n - \mathbb{E}_{}[U_n] )
+		= \frac{m}{\sqrt{n} } \sum_{k=1}^{n} (\widetilde{h} (X_k) - \mathbb{E}_{}[U_n] ) + o_p(1).
 	\]
-	when \(X\) is not trivial. E.g., if \(H_0 \colon X \overset{D}{=} -X \) and \(X\) is continuous, under \(H_0\), \(\Var_{}[\widetilde{h} (X)] = \Var_{}[F(X)] = 1 / 12\) as \(F(X) \sim \mathcal{U} (0, 1)\) since \(F\) is assumed to be continuous. Moreover,
+	Furthermore, if \(\Var_{}[\widetilde{h} (X)] > 0\), then \(\sqrt{n} (U_n - \mathbb{E}_{}[U_n] ) \overset{D}{\to} \mathcal{N} (0, m^2 \Var_{}[\widetilde{h} (X)] )\).
+\end{theorem}
+\begin{proof}
+	Recall that by \autoref{prop:U-statistic-projection} and \autoref{col:U-statistic-via-projection}, it suffices to show that \(\Var_{}[U_n] \sim \Var_{}[\widetilde{U} _n] = m^2 / n \cdot \Var_{}[\widetilde{h} (X_i)]\) for all \(n \in \mathbb{N} \). By \autoref{prop:U-statistic-variance}, and the Stirling's approximation,\footnote{Recall that as \(n \to \infty \), for any fixed \(m\), \(\binom{n}{m} \sim n^m / m!\) by the Sterling's approximation.}
+	\[
+		\Var_{}[U_n]
+		= \frac{1}{\binom{n}{m}} \sum_{r=1}^{m} \binom{m}{r} \binom{n-m}{m-r} J_{r, m}
+		\sim \frac{\binom{m}{1} \binom{n-m}{m-1}}{\binom{n}{m}} J_{1, m}
+		\sim \frac{m^2}{n} J_{1, m}
+	\]
+	with some algebra (and our assumptions). It remains to show that \(\Var_{}[\widetilde{h} (X)] = J_{1, m}\). Indeed,
+	\[
+		\begin{split}
+			J_{1, m}
+			 & = \Cov_{}[(X_1, X_2, \dots , X_m), h(X_1, X_{m+1}, \dots , X_{2m-1})]                                                       \\
+			 & = \mathbb{E}_{}[(h(X_1, X_2, \dots , X_m) - \theta ) \cdot (h(X_1, X_{m+1}, \dots , X_{2m-1}) - \theta ) ]                  \\
+			 & = \int \mathbb{E}_{}[h(x, X_2, \dots , X_m) - \theta ] \cdot \mathbb{E}_{}[h(x, X_{m+1}, \dots , X_{2m-1})] F(\mathrm{d} x) \\
+			 & = \int (\widetilde{h} (x) - \theta ) (\widetilde{h} (x) - \theta ) F(\mathrm{d} x)                                          \\
+			 & = \mathbb{E}_{}[(\widetilde{h} (X) - \theta )^2]                                                                            \\
+			 & = \Var_{}[\widetilde{h} (X)] ,
+		\end{split}
+	\]
+	which is exactly what we want to show.
+\end{proof}
+
+Let's conclude the discussion by looking at our initial motivation.
+
+\begin{eg}[Wilcoxon signed-rank statistic]\label{eg:Wilcoxon-signed-rank-statistic-asymptotic-normality}
+	For \(d = 1\), consider \(h(x_1, x_2) = \mathbbm{1}_{x_1 + x_2 > 0} \). Then, \(\theta = \mathbb{E}_{}[h(X_1, X_2)] = \mathbb{P} (X_1 + X_2 > 0)\) and \(\widetilde{h} (x) = \mathbb{P} (x + X > 0) = 1 - F(-x)\). If \(X\) is not trivial, then \(\Var_{}[\widetilde{h} (X)] = \Var_{}[F(-X)] > 0\). For example, under \(H_0 \colon X \overset{D}{=} -X \) and \(X\) is continuous, \(\Var_{}[\widetilde{h} (X)] = \Var_{}[F(X)] = 1 / 12\) as \(F(X) \sim \mathcal{U} (0, 1)\) since \(F\) is assumed to be continuous. Moreover,
 	\[
 		\theta
 		= \mathbb{P} (X_1 > -X_2)
@@ -40,18 +44,19 @@ with some algebra. It remains to show that \(\Var_{}[\widetilde{h} (X)] = J_{1, 
 		= 1 - \frac{1}{2}
 		= \frac{1}{2}.
 	\]
-	Therefore, \(\sqrt{n} ( U_n - 1 / 2 ) \overset{D}{\to} \mathcal{N} ( 0, 2^2 / 12 ) = \mathcal{N} ( 0, 1 / 3 ) \).
+	Therefore, \(\sqrt{n} ( U_n - 1 / 2 ) \overset{D}{\to} \mathcal{N} ( 0, 2^2 / 12 ) = \mathcal{N} ( 0, 1 / 3 ) \) from \autoref{thm:U-statistic}. Finally, recall the \hyperref[eq:Wilcoxon-signed-rank-test]{representation} that the \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon signed-rank statistic} \(W_n\) admits under \(H_0\), i.e.,
+	\[
+		\frac{\sqrt{n}}{2 \cdot \binom{n}{2}}  \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
+		= \frac{\sqrt{n}}{n(n-1)} \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
+		= \sqrt{n} \left( U_n - \frac{1}{2} \right)
+		\overset{D}{\to} \mathcal{N} \left( 0, \frac{1}{3} \right),
+	\]
+	where \(U\) is a \hyperref[def:U-statistic]{\(U\)-statistic} with \(h(x_1, x_2) = \mathbbm{1}_{x_1 + x_2 \geq 0} \), hence the above calculation\footnote{Ignore the difference between \(\mathbbm{1}_{x_1 + x_2 \geq 0} \) for \(W_n\) and \(\mathbbm{1}_{x_1 + x_2 > 0} \) in the above example as now \(X\) is continuous.} applies, giving the asymptotic normality. This further implies that under \(H_0\), \(W_n / n^{3 / 2} \overset{D}{\to} \mathcal{N} (0, 1 / 3)\).\footnote{Since from the \hyperref[not:Wilcoxon-signed-rank-test-alone]{previous note}, the sum of \(\sgn (X_i)\)'s will vanish.}
 \end{eg}
 
-\begin{remark}
-	Recall that \(W_n = \sum_{k=1}^{n} \sgn (X_k) R_k\) and \autoref{eq:Wilcoxon-signed-rank-test}. Now, we conclude that
-	\[
-		\frac{\sqrt{n}}{n(n-1)} \left( W_n - \sum_{i=1}^{n} \sgn (X_i) \right)
-		= \sqrt{n} \left( U_n - \frac{1}{2} \right)
-		\overset{D}{\to} \mathcal{N} \left( 0, \frac{1}{3} \right).
-	\]
-	This implies that under \(H_0\), \(W_n / n^{3 / 2} \overset{D}{\to} \mathcal{N} (0, 1 / 3)\).
-\end{remark}
+\begin{note}
+	This is the same guarantee when we condition on \(\lvert X_j \rvert \)'s as seen in the \hyperref[eg:Wilcoxon-signed-rank-statistic-two-sample-probelm]{previous example}.
+\end{note}
 
 We make one last remark before we move on to the next topic.
 
@@ -60,7 +65,7 @@ We make one last remark before we move on to the next topic.
 \end{remark}
 
 \section{Asymptotic Relative Efficiency of Tests}
-For the \hyperref[prb:testing-symmetry]{testing for symmetry problem}, we have three potential tests, i.e., \hyperref[def:t-statistic]{ \(t\)-statistic} \(T_n = \sqrt{n} \overline{X} _n / \hat{\sigma} _n\), the sign test statistic \(\mathrm{sign} _n = \sum_{i=1}^{n} \sgn (X_i) / \sqrt{n}\), and the \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon signed-rank statistic} \(W_n = \sum_{i=1}^{n} R_i \sgn (X_i)\). A natural question is the following.
+For the \hyperref[prb:testing-symmetry]{testing for symmetry problem}, we have three test statistics, i.e., \hyperref[def:t-statistic]{ \(t\)-statistic} \(T_n = \sqrt{n} \overline{X} _n / \hat{\sigma} _n\), the \hyperref[def:sign-statistic]{sign statistic} \(\mathrm{sign} _n = \sum_{i=1}^{n} \sgn (X_i) \), and the \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon signed-rank statistic} \(W_n = \sum_{i=1}^{n} R_i \sgn (X_i)\).
 
 \begin{problem*}
 	How does \(T_n\), \(\mathrm{sign} _n\), and \(W_n\) compared in terms of their efficiency? Can we say something similar for the estimator's efficiency we have developed, i.e., the \hyperref[def:asymptotic-relative-efficiency-estimator]{asymptotic relative efficiency}?

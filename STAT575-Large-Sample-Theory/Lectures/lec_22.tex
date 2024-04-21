@@ -42,7 +42,7 @@ Now, let's revisit the \hyperref[prb:two-sample]{two-sample problem}.
 			0, & \text{ if } 1 \leq i \leq n.
 		\end{dcases}
 	\]
-	Observe that \(\sum_{i=n+1}^{M} R_{Ni}\) is just a Wilcoxon two-sample rank statistic.
+	Observe that \(\sum_{i=n+1}^{M} R_{Ni}\) is just a \hyperref[def:Wilcoxon-signed-rank-statistic]{Wilcoxon two-sample rank statistic}.
 \end{eg}
 
 This suggests we look into the following.
@@ -59,23 +59,24 @@ This suggests we look into the following.
 	The distribution of any \hyperref[def:linrea-rank-statistic]{linear rank statistics} is independent of \(F\)!
 \end{remark}
 
+Although this might look very limited, but in fact \hyperref[def:linrea-rank-statistic]{linear rank statistic} is very common in practice.
+
 \begin{eg}[Median statistic]
 	We can also consider \(\sum_{i=n+1}^{M} \mathbbm{1}_{R_{Ni} \geq (N+1) / 2}\).
 \end{eg}
 
 \begin{eg}[Simple random sampling]
-	Given a finite population \(\{ x_1, \dots , x_N \} \), say we want to estimate the population average \((x_1 + \dots + x_N) / N\). To do this, we take a sample of size \(n\) and evaluate the sample mean
+	Given a finite population \(\{ x_1, \dots , x_N \} \), to estimate the population average \((x_1 + \dots + x_N) / N\), we take a sample of size \(n\) and evaluate the sample mean
 	\[
 		\frac{1}{n} \sum_{i=1}^{N} x_i \mathbbm{1}_{\text{\(i^{\text{th} }\) population is in the sample} } .
 	\]
-	Consider a \emph{simple random sample}, i.e., all subset of size \(n\) from the population is equally likely to be selected. In this case, we observe that \((R_{N1}, \dots , R_{NN})\)  is equally likely to take any permutation of \([N]\). Hence, the above indicators can be defined as \(\mathbbm{1}_{R_{Ni} \leq n} \), which suggests \(\alpha _N(R_{Ni}) \coloneqq \mathbbm{1}_{R_{Ni} \leq n} \) in the above notation.
+	Consider a \emph{simple random sample}, i.e., all subset of size \(n\) from the population is equally likely to be selected. In this case, \((R_{N1}, \dots , R_{NN})\) is equally likely to be any permutation of \([N]\). Hence, the above indicators are just \(\mathbbm{1}_{R_{Ni} \leq n} \), which suggests \(\alpha _N(R_{Ni}) \coloneqq \mathbbm{1}_{R_{Ni} \leq n} \) in the above notation.
 \end{eg}
 
-\begin{notation}
-	We write \(R_{\sim N} \coloneqq (R_{N1}, \dots , R_{NN})\).
-\end{notation}
+All these examples motivates us to develop a general theory for the \hyperref[def:linrea-rank-statistic]{linear rank statistic} in the form of \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni})\), in particular, to establish the asymptotic normality of them.
 
-All these examples motivates us to develop a general theory for the \hyperref[def:linrea-rank-statistic]{linear rank statistic} in the form of \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni})\). It helps to compute the expectation and the variance of \(T_N\) to get some sense what it really is. Consider the following notations.
+\subsection{Moments of Linear Rank Statistics}
+To start, let's first compute the expectation and the variance. We will adopt the following notations.
 
 \begin{notation}
 	We write \(\overline{\alpha} _N\) and \(\overline{c} _N\) to be the population mean of \(\alpha _{Ni}\) and \(c_{Ni}\), i.e.,
@@ -90,11 +91,10 @@ All these examples motivates us to develop a general theory for the \hyperref[de
 	\]
 \end{notation}
 
-\subsection{Asymptotically Normality of Linear Rank Statistics}
-Let's first compute the expectation.
+With this notation, we can now compute the first and the second moments.
 
 \begin{claim}
-	\(\mathbb{E}_{}[T_N] = N \overline{\alpha} _N \overline{c} _N\).
+	For any \hyperref[def:linrea-rank-statistic]{linear rank statistic} \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N (R_{Ni})\), \(\mathbb{E}_{}[T_N] = N \overline{\alpha} _N \overline{c} _N\).
 \end{claim}
 \begin{explanation}
 	Since marginally, \(R_{Ni}\)'s are just uniform over \([N]\), hence the expectation of \(T_N\) is
@@ -111,18 +111,16 @@ Let's first compute the expectation.
 Computing the variance is a bit more challenging, but still doable.
 
 \begin{claim}
-	\(\Var_{}[T_N] = \frac{N^2}{N-1} \sigma _{Nc}^2 \sigma _{N \alpha }^2\).
+	For any \hyperref[def:linrea-rank-statistic]{linear rank statistic} \(T_N \coloneqq \sum_{i=1}^{N} c_{Ni} \alpha _N (R_{Ni})\), \(\Var_{}[T_N] = \frac{N^2}{N-1} \sigma _{Nc}^2 \sigma _{N \alpha }^2\).
 \end{claim}
 \begin{explanation}
 	Let's first center \(T_N\), which gives
-	\begin{align*}
+	\[
 		T_N - \mathbb{E}_{}[T_N]
-		 & = \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni}) - \sum_{i=1}^{N} c_{Ni} \overline{\alpha} _N                                                                        \\
-		 & = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni}) + \overline{c} _N \sum_{i=1}^{N} \alpha _N(R_{Ni}) - \sum_{i=1}^{N} c_{Ni} \overline{\alpha} _N \\
-		\shortintertext{and with \(\sum_{i=1}^{N} \alpha _N(R_{Ni}) = \sum_{i=1}^{N} \alpha _N(i)\), the last two terms cancel out, and we have}
-		 & = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni}).
-	\end{align*}
-	Then, by the definition of variance,
+		= \sum_{i=1}^{N} c_{Ni} \alpha _N(R_{Ni}) - \sum_{i=1}^{N} c_{Ni} \overline{\alpha} _N
+		= \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni}) + \overline{c} _N \sum_{i=1}^{N} \alpha _N(R_{Ni}) - \sum_{i=1}^{N} c_{Ni} \overline{\alpha} _N .
+	\]
+	Now, observe that \(\sum_{i=1}^{N} \alpha _N(R_{Ni}) = \sum_{i=1}^{N} \alpha _N(i)\), the last two terms will cancel out, giving \(T_N - \mathbb{E}_{}[T_N] = \sum_{i=1}^{N} (c_{Ni} - \overline{c} _N) \alpha _N(R_{Ni})\). Then, by the definition of variance,
 	\[
 		\begin{split}
 			\Var_{}[T_N]
@@ -168,6 +166,7 @@ Computing the variance is a bit more challenging, but still doable.
 	which gives the desired result.
 \end{explanation}
 
+\subsection{Asymptotic Normality of Linear Rank Statistics}
 With the above calculation, we now want to establish the asymptotic normality for the \hyperref[def:linrea-rank-statistic]{linear rank statistic}. Specifically, we consider a special form of \(\alpha _N(i)\) given some \(\phi \colon [0, 1] \to \mathbb{R} \), i.e., for \(1 \leq i \leq N\),
 \[
 	\alpha _N(i) = \phi \left( \frac{i}{N+1} \right) .
@@ -183,6 +182,10 @@ It might seem cryptic and mysterious at the first glance why we want to consider
 \end{eg}
 
 To proceed, one might expect something like \(\phi (\mathbb{E}_{}[U_{N(i)}] ) \approx \mathbb{E}_{}[\phi (U_{N(i)})] \) to hold, and in fact, while both of them are of our interests, the latter is easier to analyze than \(\phi (\mathbb{E}_{}[U_{N(i)}] )\).
+
+\begin{notation}
+	We write \(R_{\sim N} \coloneqq (R_{N1}, \dots , R_{NN})\).
+\end{notation}
 
 \begin{intuition}
 	For \(\alpha _N(i) = \mathbb{E}_{}[\phi (U_{N(i)})]\), we have \(\alpha _N(R_{Ni}) = \mathbb{E}_{}[\phi (U_i) \mid R_{\sim N}]\).

@@ -1,0 +1,142 @@
+\lecture{26}{23 Apr.\ 9:30}{Asymptotic Normality of \(M\)-Estimators}
+Let's summarize what we have done.
+
+\begin{theorem}[Wall]\label{thm:M-estimator-consistency-Wall}
+	Given \(X, (X_n) \overset{\text{i.i.d.} }{\sim } F\), a compact metric space \(\Theta \), and \(\theta \mapsto m_\theta (x)\) \hyperref[def:upper-semi-continuous]{upper semi-continuous} for all \(x\). Define \(M_n (\theta ) = \frac{1}{n}\sum_{i=1}^{n} m_\theta (X_i)\), and let \(\hat{\theta} _n\) to be the approximate maximizer of \(M_n\).\footnote{I.e., \autoref{eq:M-estimator}: \(M_n(\hat{\theta} _n) \geq M_n(\theta ^{\ast} ) - z_n\) for some \(z_n \overset{\text{a.s.} }{\to} 0\).} If \(M(\theta ) = \mathbb{E}_{}[m_\theta (X)] \) has a unique maximizer \(\theta ^{\ast} \) and \(\mathbb{E}_{}[\sup _{u \in B(\theta , \rho )} m_u (X) ] < \infty\) for some small \(\rho > 0\) and all \(\theta \in \Theta \), then \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \).
+\end{theorem}
+\begin{proof}
+	From the \hyperref[thm:SLLN]{strong law of large number}, \(M_n(\theta ) \overset{\text{a.s.} }{\to} M(\theta ) = \mathbb{E}_{}[m_\theta (X) ] \in [-\infty , \infty )\) for all \(\theta \in \Theta \). Furthermore, since for some \(\rho > 0\), \(\mathbb{E}_{}[\sup _{u \in B(\theta , \rho )} m_u(X)] < \infty \), \autoref{prop:M-estimator-upper-semi-continuous} implies that \(M\) is also \hyperref[def:upper-semi-continuous]{upper semi-continuous} as \(m_\theta (x)\) is. Hence, as \(\Theta \) is compact and the maximizer \(\theta ^{\ast} \) of \(M\) is unique, \autoref{col:asp:MLE-1} implies that \autoref{asp:MLE-1} is satisfied. Finally, as we discussed above, \autoref{asp:MLE-3} is also satisfied by the same set of assumptions, hence \autoref{thm:M-estimator-consistency} proves that \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \).
+\end{proof}
+
+Indeed, \autoref{thm:M-estimator-consistency-Wall} helps us find the MLE of Cauchy that we \hyperref[eg:MLE-Cauchy]{previously} don't know how to solve.
+
+\begin{eg}[Cauchy]
+	Let \(X \sim F = G_{\theta ^{\ast} }\) with a family of cdfs \(\{ G_\theta \sim \operatorname{Cauchy}(\theta , 1) \colon \theta \in \Theta = \overline{\mathbb{R}} \} \) where the pdf of \(G_\theta \) is given by \(g_\theta (x) = 1 / \pi (1 + (x - \theta )^2)\). Consider the setup of MLE, i.e., \(m_\theta (x) = \log (g_\theta (x))\), and let \(\hat{\theta} _n \coloneqq \argmax_{\theta \in \Theta } M_n(\theta )\) and \(\theta ^{\ast} = \argmax_{\theta \in \Theta } M(\theta )\), then \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast}\).
+\end{eg}
+\begin{explanation}
+	We first check the following.
+	\begin{itemize}
+		\item \(\theta \mapsto m_\theta (x)\) is \hyperref[def:upper-semi-continuous]{upper semi-continuous}: clearly since \(\theta \mapsto g_\theta (x)\) is continuous.
+		\item \(\Theta \) is compact: we consider the extended real line \(\overline{\mathbb{R}} = [-\infty , \infty ]\). However, we need to be careful to define \(m_{\pm \infty }(x) = -\infty \) for all \(x \in \mathbb{R} \), which indeed preserves the continuity of \(m_\theta (x)\) since \(g_\theta (x) \to 0\) as \(\theta \to \pm \infty \).
+		\item \(\mathbb{E}_{}[\sup _{u \in B(\theta , \rho )} m_u(X)] < \infty \) for small \(\rho \): indeed, since \(m_\theta (x) \leq - \log (\pi )\) for all \(\theta \in \Theta \) and \(x \in \mathbb{R} \).
+		\item \(M\) does have a unique maximizer: since Cauchy distribution is identifiable.
+	\end{itemize}
+	Hence, we can apply \autoref{thm:M-estimator-consistency-Wall}, and conclude the result.
+\end{explanation}
+
+Another example is the following.
+
+\begin{eg}[Uniform]\label{eg:uniform-MLE}
+	Let \(X \sim F = G_{\theta ^{\ast} }\) with a family of cdfs \(\{ G_\theta \sim \mathcal{U} (0, \theta ) \colon \theta > 0 \}\). From the \hyperref[eg:supremum-estimation-MLE]{previous example}, the MLE is given by \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i\). Applying \autoref{thm:M-estimator-consistency-Wall} gives \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \).
+\end{eg}
+
+\section{Asymptotic Distributions}
+With \autoref{thm:M-estimator-consistency-Wall}, under reasonable assumptions, we can establish \hyperref[def:consistent]{consistency} for \(M\)-estimators. A further natural question is that whether we can obtain some asymptotic distribution for \(M\)-estimators as well. However, asymptotic normality is impossible in general.
+
+\begin{eg}[Uniform is not asymptotically normal]
+	From the \hyperref[eg:uniform-MLE]{previous example}, clearly we don't have \(\sqrt{n} (\theta^{\ast} - \hat{\theta} _n) \overset{D}{\to} \mathcal{N} \) as we always have \(\theta ^{\ast} - \hat{\theta} _n \geq 0\).
+\end{eg}
+
+More specifically, for the \hyperref[eg:uniform-MLE]{uniform example}, the asymptotic distribution is the exponential.
+
+\begin{proposition}\label{prop:uniform-MLE-asymptotic-distribution}
+	If \(X_i \sim \mathcal{U} (0, \theta ^{\ast} )\) with the family \(\{\mathcal{U} (0, \theta ) \colon \theta > 0 \} \), then \(n (\theta ^{\ast} - \hat{\theta} _n) \overset{D}{\to} \operatorname{Exp}(\theta ^{\ast} )\).
+\end{proposition}
+\begin{proof}
+	We want to show that for all \(x > 0\), \(\mathbb{P} (n(\theta ^{\ast} - \hat{\theta} _n) > x) \to e^{- x / \theta ^{\ast} }\). As \(\hat{\theta} _n = \max _{1 \leq i \leq n} X_i\),
+	\[
+		\mathbb{P} (n(\theta ^{\ast} - \hat{\theta} _n) > x)
+		= \mathbb{P} \left( \hat{\theta} _n <\theta ^{\ast} - \frac{x}{n} \right)
+		= \prod_{i=1}^{n} \mathbb{P} \left( X_i < \theta ^{\ast} - \frac{x}{n} \right)
+		= \left( \mathbb{P} \left( X < \theta ^{\ast} - \frac{x}{n} \right) \right) ^n.
+	\]
+	For \(n\) large enough, \(x / n < \theta ^{\ast} \), then \(\mathbb{P} (X < \theta ^{\ast} - x / n) = (\theta ^{\ast} - x / n) / \theta ^{\ast} \). This further gives
+	\[
+		\mathbb{P} (n(\theta ^{\ast} - \hat{\theta} _n) > x)
+		= \left( \frac{\theta ^{\ast} - x / n}{\theta ^{\ast} } \right) ^n
+		= \left( 1 + \frac{- x / \theta ^{\ast} }{n} \right) ^n
+		\to e^{- x / \theta ^{\ast} }
+	\]
+	as \(n \to \infty \).
+\end{proof}
+
+\begin{remark}
+	In general, we don't have asymptotic normality for \(M\)-estimators.
+\end{remark}
+
+Hence, our next goal is to show that under what conditions we can establish the asymptotic normality. But firstly, we discuss the method of moments estimators, which turns out to be useful for later.
+
+\subsection{Method of Moments Estimators}
+Let \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) and let \(\{ G_\theta \colon \theta \in \Theta \subseteq \mathbb{R} ^m \} \) be a family of cdfs. Write \(h(x) = (x, \dots , x^m)\), then consider \(T(\theta ) = \mathbb{E}_{\theta }[h(X)] \) for \(\theta \in \Theta \subseteq \mathbb{R} ^m\), i.e.,
+\[
+	T(\theta )
+	= (\mathbb{E}_{\theta }[X], \dots , \mathbb{E}_{\theta }[X^m] ).
+\]
+If \(T\) is one-to-one, we can then define the \emph{method of moments (MOM) estimator} \(\widetilde{\theta} _n \coloneqq T^{-1} (\overline{h(X)} _n)\) where \(\overline{h(X)} _n = \frac{1}{n}\sum_{i=1}^{n} h(X_i)\).
+
+\begin{note}
+	More generally, consider \(h(x) = (h_1(x), \dots , h_m(x))\) and \(T(\theta ) = (\mathbb{E}_{\theta }[h_1(X)] , \dots , \mathbb{E}_{\theta }[h_m(X)] )\).
+\end{note}
+
+Clearly, from the \hyperref[thm:SLLN]{strong law of large number}, \(\overline{h(X)} _n \overset{\text{a.s.} }{\to} \mathbb{E}_{F}[h(X)] \) as long as \(\mathbb{E}_{F}[h(X)] < \infty \). Hence, if \(T^{-1} \) is continuous at \(\mathbb{E}_{F}[h(X)] \), \hyperref[thm:continuous-mapping]{continuous mapping theorem} implies
+\[
+	\widetilde{\theta} _n
+	= T^{-1} (\overline{h(X)} _n)
+	\overset{p}{\to} T^{-1} (\mathbb{E}_{F}[h(X)] ).
+\]
+Moreover, since \(\sqrt{n} (\overline{h(X)} - \mathbb{E}_{F}[h(X)] ) \overset{D}{\to} \mathcal{N} (0, \Var_{}[h(X)] )\) by the \hyperref[thm:CLT]{central limit theorem} as long as the variance is well-defined. Hence, if \(T^{-1} \) is differentiable at \(\mathbb{E}_{F}[h(X)] \), by the \hyperref[thm:delta-method]{Delta method},
+\[
+	\sqrt{n} (\widetilde{\theta} _n - T^{-1} (\mathbb{E}_{F}[h(X)] ))
+	\overset{D}{\to} \mathcal{N} (0, \Sigma ).
+\]
+We see the following.
+
+\begin{lemma}\label{lma:MOM-consistency}
+	If the model is well-specified, i.e., \(F = G_{\theta ^{\ast} }\) for some \(\theta ^{\ast} \in \Theta \), \(\widetilde{\theta} _n \overset{p}{\to} \theta ^{\ast} \).
+\end{lemma}
+\begin{proof}
+	Since \(T^{-1} (\mathbb{E}_{F}[h(X)] ) = T^{-1} (\mathbb{E}_{G_{\theta ^{\ast} }}[h(X)] ) = \theta ^{\ast} \) from the definition of \(T^{-1} \).
+\end{proof}
+
+On the other hand, what if \(F\) is not in \(\{ G_\theta \colon \theta \in \Theta \} \)?
+
+\begin{eg}[Uniform]
+	Let \(F(u - \epsilon ) < 1 = F(u)\) for all \(\epsilon > 0\) such that \(\mathbb{P} (0 \leq X \leq u) = 1\), i.e., \(X\) has support \([0, u]\). Consider the family of cdfs \(\{ G_\theta \sim \mathcal{U} (0, \theta ) \colon \theta > 0 \} \), then \(T(\theta ) = \mathbb{E}_{\theta }[X] = \theta / 2 \) for \(\theta > 0\), which is clearly invertible, and we can define \(T^{-1} \) to get \(\widetilde{\theta} _n = 2 \overline{X} _n\).
+
+	Hence, from the \hyperref[thm:SLLN]{strong law of large number}, \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} 2 \mathbb{E}_{}[X] \), so \(\widetilde{\theta} _n\) is a \hyperref[def:strongly-consistent]{strongly consistent} estimator of \(u\) as long as \(\mathbb{E}_{}[X] = u / 2\). Furthermore, by the \hyperref[thm:CLT]{central limit theorem}, we also have \(\sqrt{n} (\widetilde{\theta} _n - 2 \mathbb{E}_{}[X] ) \overset{D}{\to} \mathcal{N} (0, 4 \Var_{}[X] )\).
+\end{eg}
+
+Comparing the above example and \autoref{prop:uniform-MLE-asymptotic-distribution}, we see that while the MOM estimator is asymptotically normal, the MLE is not. Moreover, they converge with different rates: specifically, \(n(u - \hat{\theta} _n) \overset{D}{\to} \operatorname{Exp}(u) \) for the MLE and \(\sqrt{n} (\widetilde{\theta} _n - 2 \mathbb{E}_{}[X] ) \overset{D}{\to} \mathcal{N} (0, 4 \Var_{}[X] )\) for the MOM estimator. We see that MLE is better than the MOM estimator since the rate is much faster (\(n\) v.s.\ \(\sqrt{n} \)).
+
+\begin{remark}[Consistent under symmetry]
+	The above example for MOM holds whenever \(X\) is symmetric about \(u / 2\) since in this case, \(\mathbb{E}_{}[X] = u / 2\) also. That means, the MOM estimator is also \hyperref[def:consistent]{consistent} and asymptotically normal with a rate \(\sqrt{n} \).
+\end{remark}
+
+\subsection{Maximum Likelihood Estimators}
+Again, let \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) such that \(M_n(\theta ) = \frac{1}{n}\sum_{i=1}^{n} m_\theta (X_i)\) where \(\theta \in \Theta \subseteq \mathbb{R} ^m\). We first discuss how to find the approximate maximizer of \(M_n\). If we assume that \(\theta ^{\ast} \in \operatorname{int}(\Theta ) \) and \(\theta \mapsto M_n(\theta )\) is differentiable, then we find \(\hat{\theta} _n\) by searching the solution set of
+\[
+	\nabla M_n(\theta )
+	\eqqcolon \Psi _n(\theta )
+	= 0
+\]
+via some numerical algorithms, e.g., the classical \href{https://en.wikipedia.org/wiki/Newton%27s_method}{Newton-Raphson}.
+
+\begin{prev}[Newton-Raphson algorithm]
+	Starting with some \(\hat{\theta} _n^{(0)} \in \Theta \). Then for \(k \geq 0\), consider updating \(\hat{\theta} _n^{(k)}\) by
+	\[
+		\hat{\theta} _n^{(k+1)}
+		= \hat{\theta} _n^{(k)} - \left( \nabla \Psi _n(\hat{\theta} _n^{(k)}) \right) ^{-1} \Psi _n(\hat{\theta} _n^{(k)}).
+	\]
+\end{prev}
+
+Typically, \(\Psi _n(\theta )\) has many roots (sometimes even grows linearly with \(n\)), and in general, we don't know whether our numerical algorithm gives us the actual maximizer of \(M_n(\theta )\). One might want to try different \(\hat{\theta} _n^{(0)}\) and run the numerical algorithm multiple times.
+
+\begin{intuition}
+	The up-shot is that we don't need to do this: if \(\hat{\theta} _n^{(0)}\) is ``good,'' then we're fine.
+\end{intuition}
+
+Specifically, if \(\sqrt{n} (\hat{\theta} _n^{(0)} - \theta ^{\ast} ) = O_p(1)\), then by only one Newton-Raphson update, we can obtain a sequence of estimators that is asymptotically normal. This is the so-called \emph{one-step MLE}.
+
+\begin{note}
+	We will show that using the MOM estimator as the initialization point suffices.
+\end{note}

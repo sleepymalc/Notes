@@ -33,7 +33,7 @@ Another example is the following.
 \section{Asymptotic Distributions}
 With \autoref{thm:M-estimator-consistency-Wall}, under reasonable assumptions, we can establish \hyperref[def:consistent]{consistency} for \hyperref[def:M-estimator]{\(M\)-estimators}. A further natural question is that whether we can obtain some asymptotic distribution for \hyperref[def:M-estimator]{\(M\)-estimators} as well. However, asymptotic normality is impossible in general.
 
-\begin{eg}[Uniform is not asymptotically normal]
+\begin{eg}[Uniform is not asymptotically normal]\label{eg:uniform-is-not-asymptotically-normal}
 	From the \hyperref[eg:uniform-MLE]{previous example}, clearly we don't have \(\sqrt{n} (\theta^{\ast} - \hat{\theta} _n) \overset{D}{\to} \mathcal{N} \) as we always have \(\theta ^{\ast} - \hat{\theta} _n \geq 0\).
 \end{eg}
 
@@ -112,14 +112,15 @@ Comparing the above example and \autoref{prop:uniform-MLE-asymptotic-distributio
 	The above example for MOM holds whenever \(X\) is symmetric about \(u / 2\) since in this case, \(\mathbb{E}_{}[X] = u / 2\) also. That means, the MOM estimator is also \hyperref[def:consistent]{consistent} and asymptotically normal with a rate \(\sqrt{n} \).
 \end{remark}
 
-\subsection{Maximum Likelihood Estimators}
-Again, let \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) such that \(M_n(\theta ) = \frac{1}{n}\sum_{i=1}^{n} m_\theta (X_i)\) where \(\theta \in \Theta \subseteq \mathbb{R} ^m\). We first discuss how to find the approximate maximizer of \(M_n\). If we assume that \(\theta ^{\ast} \in \operatorname{int}(\Theta ) \) and \(\theta \mapsto M_n(\theta )\) is differentiable, then we find \(\hat{\theta} _n\) by searching the solution set of
-\[
-	\nabla M_n(\theta )
-	\eqqcolon \Psi _n(\theta )
-	= 0
-\]
-via some numerical algorithms, e.g., the classical \href{https://en.wikipedia.org/wiki/Newton%27s_method}{Newton-Raphson}.
+\subsection{\(M\)-Estimators}
+Again, let \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) such that \(M_n(\theta ) = \frac{1}{n}\sum_{i=1}^{n} m_\theta (X_i)\) where \(\theta \in \Theta \subseteq \mathbb{R} ^m\). There are two closely related problems we're going to address in this section.
+
+\begin{problem*}
+	How to find the approximate maximizer \(\hat{\theta} _n\) of \(M_n\) in practice?
+\end{problem*}
+\begin{answer}
+	If \(\theta ^{\ast} \in \operatorname{int}(\Theta ) \) and \(\theta \mapsto M_n(\theta )\) is differentiable, then we can find \(\hat{\theta} _n\) by searching the solution set of \(\nabla M_n(\theta ) \eqqcolon \Psi _n(\theta ) = 0\) via some numerical algorithms, e.g., the classical \href{https://en.wikipedia.org/wiki/Newton%27s_method}{Newton-Raphson}.
+\end{answer}
 
 \begin{prev}[Newton-Raphson algorithm]
 	Starting with some \(\hat{\theta} _n^{(0)} \in \Theta \). Then for \(k \geq 0\), consider updating \(\hat{\theta} _n^{(k)}\) by
@@ -129,14 +130,17 @@ via some numerical algorithms, e.g., the classical \href{https://en.wikipedia.or
 	\]
 \end{prev}
 
-Typically, \(\Psi _n(\theta )\) has many roots (sometimes even grows linearly with \(n\)), and in general, we don't know whether our numerical algorithm gives us the actual maximizer of \(M_n(\theta )\). One might want to try different \(\hat{\theta} _n^{(0)}\) and run the numerical algorithm multiple times.
+However, we should note that typically, \(\Psi _n(\theta )\) has many roots (sometimes even grows linearly with \(n\)) and in general, we don't know whether our numerical algorithm gives us the actual maximizer of \(M_n(\theta )\). One might want to try different \(\hat{\theta} _n^{(0)}\) and run the numerical algorithm multiple times.
 
 \begin{intuition}
 	The up-shot is that we don't need to do this: if \(\hat{\theta} _n^{(0)}\) is ``good,'' then we're fine.
 \end{intuition}
 
-Specifically, if \(\sqrt{n} (\hat{\theta} _n^{(0)} - \theta ^{\ast} ) = O_p(1)\), then by only one Newton-Raphson update, we can obtain a sequence of estimators that is asymptotically normal. This is the so-called \emph{one-step MLE}.
+If we can find \(\hat{\theta} _n\), with \autoref{thm:M-estimator-consistency-Wall}, we can have \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \). However, a follow-up question arises:
 
-\begin{note}
-	We will show that using the MOM estimator as the initialization point suffices.
-\end{note}
+\begin{problem*}
+	Under what condition can we establish asymptotic normality of \(\hat{\theta} _n\)?
+\end{problem*}
+\begin{answer}
+	In general, \(\hat{\theta} _n\) is not asymptotically normal, e.g., the \hyperref[eg:uniform-is-not-asymptotically-normal]{uniform example}. On the other hand, we will show that if \(\hat{\theta} _n^{(0)}\) is ``good,'' or more specifically, if \(\sqrt{n} (\hat{\theta} _n^{(0)} - \theta ^{\ast} ) = O_p(1)\), then by only one Newton-Raphson update, we can obtain a sequence of estimators \((\hat{\theta} _n^{(1)})\) that is asymptotically normal, hence also \hyperref[def:consistent]{consistent}. The above approach is the so-called \emph{one-step MLE}.
+\end{answer}

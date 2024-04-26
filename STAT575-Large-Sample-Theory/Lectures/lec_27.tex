@@ -1,0 +1,215 @@
+\lecture{27}{25 Apr.\ 9:30}{Consistency with Computational Consideration}
+To continue the discussion, we will need to establish a \emph{uniform} version of the \hyperref[thm:SLLN]{strong law of large number}. In particular, say \(X, (X_n) \overset{\text{i.i.d.} }{\sim } F\) and \(h_\theta (\cdot) \in \mathbb{R} \) is given for every \(\theta \in \Theta \). From the \hyperref[thm:SLLN]{strong law of large number}, \(\frac{1}{n}\sum_{i=1}^{n} h_\theta (X_i) \overset{\text{a.s.} }{\to} \mathbb{E}_{}[h_\theta (X)] \) for any fixed \(\theta \in \Theta \). Now, we interested in whether
+\[
+	\frac{1}{n} \sum_{i=1}^{n} h_{\theta _n}(X_i)
+	\overset{\text{a.s.} }{\to} \mathbb{E}_{}[h_{\theta ^{\ast}}(X)]
+\]
+for some sequence \((\theta _n)\), either deterministic or random, such that \(\theta _n \to \theta ^{\ast} \in \Theta \) (or \(\theta _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \)).
+
+\begin{theorem}[Uniform strong law of large number]\label{thm:uniform-SLLN}
+	Let \(X, (X_n) \overset{\text{i.i.d.} }{\sim } F\) and \(h_\theta (x) \in \mathbb{R} \) be given. Furthermore, let \((\theta _n)\) be a sequence such that \(\theta _n \to \theta ^{\ast} \). If \(\theta \mapsto h_\theta (x)\) is continuous for all \(x\) and \(\mathbb{E}_{}[\sup _{\theta \in \overline{B(\theta ^{\ast} , \rho )} } \lvert h_\theta (X) \rvert ] < \infty \) for some \(\rho > 0\), then
+	\[
+		\frac{1}{n} \sum_{i=1}^{n} h_{\theta _n}(X_i)
+		\overset{\text{a.s.} }{\to} \mathbb{E}_{}[h_{\theta ^{\ast}}(X)].
+	\]
+\end{theorem}
+\begin{proof}
+	The main idea is to apply \autoref{prop:M-estimator-upper-semi-continuous} twice with \(h\) and \(-h\), and conclude
+	\[
+		\sup _{\theta \in \overline{B(\theta ^{\ast} , \rho )} } \left\lvert \frac{1}{n}\sum_{i=1}^{n} h_{\theta }(X_i) - \mathbb{E}_{}[h_{\theta }(X)] \right\rvert
+		\to 0.
+	\]
+	This will conclude the proof since we can write
+	\[
+		\left\lvert \frac{1}{n}\sum_{i=1}^{n} h_{\theta _n}(X_i) - \mathbb{E}_{}[h_{\theta ^{\ast} }(X)] \right\rvert
+		\leq \left\lvert \frac{1}{n}\sum_{i=1}^{n} h_{\theta _n}(X_i) - \mathbb{E}_{}[h_{\theta _n}(X)] \right\rvert + \left\lvert \mathbb{E}_{}[h_{\theta _n}(X)] - \mathbb{E}_{}[h_{\theta ^{\ast} }(X)]  \right\rvert.
+	\]
+	Firstly, the second term goes to \(0\) as \(n \to \infty \) if \(\theta \mapsto \mathbb{E}_{}[h_\theta (X)] \) is continuous at \(\theta ^{\ast} \). Indeed, since \(\theta \mapsto h_\theta (x)\) is continuous for all \(x\), \(\theta \mapsto \mathbb{E}_{}[h_\theta (X)] \) is also continuous at \(\theta ^{\ast} \). On the other hand,
+	\[
+		\left\lvert \frac{1}{n}\sum_{i=1}^{n} h_{\theta _n}(X_i) - \mathbb{E}_{}[h_{\theta _n}(X)] \right\rvert
+		\leq \sup _{\theta \in \Theta } \left\lvert \frac{1}{n}\sum_{i=1}^{n} h_{\theta }(X_i) - \mathbb{E}_{}[h_{\theta }(X)] \right\rvert,
+	\]
+	and since we only care about \(n\to \infty \), we may assume that for some \(\rho > 0\),
+	\[
+		\mathbb{P} (\theta _n \in B(\theta ^{\ast} , \rho ) \text{ for all \(n\) large enough} ) = 1.
+	\]
+	Hence, we can replace \(\Theta \) by \(B(\theta ^{\ast} , \rho )\), which gives
+	\[
+		\left\lvert \frac{1}{n}\sum_{i=1}^{n} h_{\theta _n}(X_i) - \mathbb{E}_{}[h_{\theta _n}(X)] \right\rvert
+		\leq \sup _{\theta \in B(\theta ^{\ast} , \rho )} \left\lvert \frac{1}{n}\sum_{i=1}^{n} h_{\theta }(X_i) - \mathbb{E}_{}[h_{\theta }(X)] \right\rvert
+	\]
+	for all large enough \(n\) with probability \(1\). This goes to \(0\) as we have shown in the beginning.
+\end{proof}
+
+Before resuming our discussion on asymptotic normality of \hyperref[def:M-estimator]{\(M\)-estimators}, let's recall our motivation.
+
+\begin{prev}
+	Let \(M_n(\theta ) = \frac{1}{n}\sum_{i=1}^{n} m_\theta (X_i) \overset{\text{a.s.} }{\to} M(\theta ) = \mathbb{E}_{}[m_\theta (X)] \) for all \(\theta \in \Theta \), and let \(\hat{\theta} _n\) be the maximizer of \(\theta \mapsto M_n(\theta )\). From \autoref{thm:M-estimator-consistency-Wall}, \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \) under assumptions:
+	\begin{itemize}
+		\item \(\Theta \) is compact;
+		\item \(\theta \mapsto m_\theta (x)\) is \hyperref[def:upper-semi-continuous]{upper semi-continuous} for all \(x\);
+		\item \(\theta ^{\ast} \) is the unique maximizer of \(\theta \mapsto M(\theta )\);
+		\item \(\mathbb{E}_{}[\sup _{\theta \in B(\theta ^{\ast} , \rho )} m_\theta (X)] < \infty \) for some \(\rho > 0\),
+	\end{itemize}
+	While \(\hat{\theta} _n\) is \hyperref[def:strongly-consistent]{strongly consistent}, we have seen that \(\hat{\theta} _n\) doesn't need to be asymptotically normal, e.g., the \hyperref[eg:uniform-is-not-asymptotically-normal]{uniform example}. Furthermore, it's also unclear how to compute \(\hat{\theta} _n\) in practice.
+\end{prev}
+
+Toward this end, we will need additional assumptions in order to solve these two problems. Firstly, assume further that \(\Theta \subseteq \mathbb{R} ^m\) with \(\theta ^{\ast} \in \operatorname{int}(\Theta ) \),\footnote{Before this, for \hyperref[def:consistent]{consistency} discussion, we can work with a general metric space.} and \(\theta \mapsto m_\theta (x) \in C^2\) for any \(x\).
+
+\begin{notation}
+	The class of second-differentiable functions is denoted as \(C^2\).
+\end{notation}
+
+Furthermore, let \(\psi _\theta (x) \coloneqq \nabla _\theta m_\theta (x)\) for all \(x\) and assume
+\[
+	\mathbb{E}_{}\left[\sup _{\theta \in \overline{B(\theta ^{\ast} , \rho )} } \left\lVert \nabla \psi _\theta (X) \right\rVert _{\max }\right] < \infty,
+\]
+where the \emph{max norm} is defined as \(\lVert A \rVert _{\max } = \max _{i, j} \lvert a_{ij} \rvert \).
+
+\begin{remark}
+	Since \(\theta ^{\ast} \in \operatorname{int}(\Theta ) \), \(\theta ^{\ast} \) is the maximizer of \(M(\theta ) = \mathbb{E}_{}[m_\theta (X)] \).
+\end{remark}
+
+From our assumption, \(M\) is also differentiable, and \(\theta ^{\ast} \) is a root of
+\[
+	\nabla M(\theta )
+	= \nabla \mathbb{E}_{}[m_\theta (X)]
+	= \mathbb{E}_{}[\nabla m_\theta (X)]
+	= \mathbb{E}_{}[\psi _\theta (X)],
+\]
+implying \(\mathbb{E}_{}[\psi _{\theta ^{\ast} }(X)] = 0\).
+
+\begin{note}
+	We can interchange \(\nabla \) and \(\mathbb{E} \) from our assumption on \(\lVert \nabla \psi _\theta (X) \rVert _{\max }\).
+\end{note}
+
+Finally, assume that \(\Var_{}[\psi _{\theta ^{\ast} }(X)] = J_{\ast}\) and \(\mathbb{E}_{}[\nabla \psi _\theta (X)] \eqqcolon - J(\theta )\) exists for all \(\theta \in B(\theta ^{\ast} , \rho )\) for some \(\rho > 0\) such that they are both invertible, and in particular, positive semi-definite.
+
+\begin{note}
+	\(J_{\ast}\) doesn't equal to \(J(\theta ^{\ast} )\) in general.
+\end{note}
+
+\begin{eg}
+	Under the framework of MLE and with our assumptions, \(J(\theta ^{\ast} ) = J_{\ast}\). This is something commonly used in the calculation of \href{https://en.wikipedia.org/wiki/Cram%C3%A9r%E2%80%93Rao_bound}{Cramér-Rao lower bound}.
+\end{eg}
+
+With these notations and new assumptions, we answer a slightly different version of the first problem.
+
+\begin{prev}
+	In \autoref{thm:M-estimator-consistency-Wall}, we're searching for the (approximate) maximizer \(\hat{\theta} _n\) over the entire space \(\Theta \), hence it's possible that \(\hat{\theta} _n\) isn't the actual root of \(\nabla M_n(\theta )\).
+\end{prev}
+
+Since in practice, when maximizing \(M_n\), we will find the root of the derivative of \(M_n\), i.e.,
+\[
+	\Psi _n(\theta )
+	\coloneqq \nabla M_n(\theta )
+	= \frac{1}{n}\sum_{i=1}^{n} \nabla m_{\theta }(X_i).
+\]
+We want to know that if we restrict our attention to roots of \(\Psi _n(\theta )\), can we still establish \hyperref[def:consistent]{consistency}?
+
+\begin{problem*}
+	Does there exist a sequence of roots \((\widetilde{\theta} _n)\) of \(\Psi _n(\theta )\) that is \hyperref[def:consistent]{consistent} with \(\theta ^{\ast} \)?
+\end{problem*}
+\begin{answer}
+	For every \(x\), for some \(\rho > 0\), consider for all \(\theta \in \overline{B(\theta ^{\ast} , \rho )} \) with the \hyperref[note:lec10]{Taylor expansion}
+	\[
+		m_\theta (x) - m_{\theta ^{\ast} }(x)
+		= \psi _{\theta ^{\ast} }(x) (\theta - \theta ^{\ast} ) + (\theta - \theta ^{\ast} )^{\top} \left( \int_{0}^{1} \int_{0}^{1} \nabla \psi _{\theta ^{\ast} + uv(\theta - \theta ^{\ast} )} (xuv) u \,\mathrm{d}u \,\mathrm{d}v \right) (\theta - \theta ^{\ast} ).
+	\]
+	Then, we apply \autoref{thm:M-estimator-consistency-Wall} with \(m_\theta (x) - m_{\theta ^{\ast} }(x)\) by considering the metric space being \(\overline{B(\theta ^{\ast} , \rho )} \) instead of \(\Theta \), i.e., we only need to check \(\mathbb{E}_{}[\sup _{\theta \in B(\theta ^{\ast} , \rho ) } m_\theta (X)] < \infty\), or equivalently,
+	\[
+		\begin{split}
+			 & \mathbb{E}_{}\left[\sup _{\theta \in B(\theta ^{\ast} , \rho )} (m_\theta (X) - m_{\theta ^{\ast} }(X))\right]                                                                                                                                                                                                                            \\
+			 & = \mathbb{E}_{}\left[\sup _{\theta \in B(\theta ^{\ast} , \rho )} \psi _{\theta ^{\ast} }(X) (\theta - \theta ^{\ast} ) + (\theta - \theta ^{\ast} )^{\top} \left( \int_{0}^{1} \int_{0}^{1} \nabla \psi _{\theta ^{\ast} + uv(\theta - \theta ^{\ast} )} (X uv) u \,\mathrm{d}u \,\mathrm{d}v \right) (\theta - \theta ^{\ast} ) \right]
+			< \infty.
+		\end{split}
+	\]
+	This is true since \(\mathbb{E}_{}[\psi _{\theta ^{\ast} } (X)] = 0\) and \(\mathbb{E}_{}[\sup _{\theta \in \overline{B(\theta ^{\ast} , \rho )} } \lVert \nabla \psi _\theta (X) \rVert _{\max }] < \infty \). Hence, there exists a maximizer \(\widetilde{\theta} _n\) of \(M_n(\theta ) - M_n(\theta ^{\ast} )\) such that \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \) by \autoref{thm:M-estimator-consistency-Wall}.
+
+	\begin{claim}
+		\(\widetilde{\theta} _n\) is a root of \(\Psi _n(\theta )\) for large enough \(n\) with probability \(1\).
+	\end{claim}
+	\begin{explanation}
+		As \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \), for large \(n\) and with probability \(1\), \(\widetilde{\theta} _n\) will not be on the boundary of \(\overline{B(\theta ^{\ast} , \rho )} \), i.e., it's indeed a root of \(\Psi _n(\theta )\) since if \(\widetilde{\theta} _n\) is in the interior and is a maximizer, the first-order condition gives \(\nabla M_n(\widetilde{\theta} _n) = \Psi _n(\widetilde{\theta} _n) = 0\).
+	\end{explanation}
+
+	Since \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \) and \(\widetilde{\theta} _n\)'s are roots of \(\Psi _n(\theta )\) for large enough \(n\) with probability \(1\), we're done.
+\end{answer}
+
+Therefore, we see that there indeed exists a sequence of roots \((\widetilde{\theta} _n)\) of \(\Psi _n(\theta )\) that is \hyperref[def:consistent]{consistent} of \(\theta ^{\ast} \). Next, we answer the question about asymptotic normality, but for \(\widetilde{\theta} _n\) this time.
+
+\begin{problem*}
+	Let \((\widetilde{\theta} _n)\) be a sequence of roots of \(\Psi _n(\theta )\) such that \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \). Is \(\widetilde{\theta} _n\) asymptotically normal?
+\end{problem*}
+\begin{answer}
+	By the first-order Taylor expansion,
+	\[
+		\Psi _n(\widetilde{\theta} _n)
+		= \frac{1}{n}\sum_{i=1}^{n} \psi _{\widetilde{\theta} _n}(X_i)
+		= \frac{1}{n}\sum_{i=1}^{n} \psi _{\theta ^{\ast} }(X_i) + \frac{1}{n}\sum_{i=1}^{n} \left( \int_{0}^{1} \nabla \psi _{\theta ^{\ast} + u (\widetilde{\theta} _n - \theta ^{\ast} )} (X_i) \,\mathrm{d}u \right) (\widetilde{\theta} _n - \theta ^{\ast} ),
+	\]
+	which is \(0\) for \(n\) large enough since then \(\Psi _n(\widetilde{\theta} _n) = 0\). Multiplying both sides by \(\sqrt{n} \), we have
+	\[
+		-\frac{1}{\sqrt{n} }\sum_{i=1}^{n} \psi _{\theta ^{\ast} }(X_i)
+		= \sqrt{n} (\widetilde{\theta} _n - \theta ^{\ast} ) \cdot \frac{1}{n}\sum_{i=1}^{n} \left( \int_{0}^{1} \nabla \psi _{\theta ^{\ast} + u (\widetilde{\theta} _n - \theta ^{\ast} )} (X_i) \,\mathrm{d}u \right) .
+	\]
+	By the \hyperref[thm:multivariate-CLT]{multivariate central limit theorem}, the left-hand side \hyperref[def:converge-in-distribution]{converges to} \(\mathcal{N} (0, J_{\ast})\) where \(J_\ast = \Var_{}[\psi _{\theta ^{\ast} }(X)] \). For the right-hand side, we see the following.
+
+	\begin{intuition}
+		If we can ignore \(u(\widetilde{\theta} _n - \theta ^{\ast} )\), then by the \hyperref[thm:SLLN]{strong law of large number}, we have
+		\[
+			\frac{1}{n}\sum_{i=1}^{n} \int_{0}^{1} \nabla \psi _{\theta ^{\ast} }(X_i) \,\mathrm{d}u
+			\overset{\text{a.s.} }{\to} \mathbb{E}_{}[\nabla \psi _{\theta ^{\ast} }(X)]
+			= - J(\theta ^{\ast} ).
+		\]
+	\end{intuition}
+
+	Indeed, by the \hyperref[thm:uniform-SLLN]{uniform strong law of large number}, with \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \), this can be rigorously justified. Combining everything together, we see that
+	\[
+		\sqrt{n} (\widetilde{\theta} _n - \theta ^{\ast} )
+		\overset{D}{\to} - J(\theta ^{\ast} )^{-1} \mathcal{N} (0, J_{\ast}),
+	\]
+	hence we conclude that \(\widetilde{\theta} _n\) is asymptotically normal.
+\end{answer}
+
+The question now becomes how to obtain \(\widetilde{\theta} _n\) in practice. While our numerical algorithm can find roots, we're not guaranteed to get \(\widetilde{\theta} _n\) since there might be multiple roots. However, if we initialize our algorithm with some \(\check{\theta }_n\) ``close enough'' to \(\theta ^{\ast} \), we're fine.
+
+\begin{claim}
+	Let \((\check{\theta }_n)\) be a sequence such that \(\sqrt{n} (\check{\theta }_n - \theta ^{\ast} ) = O_p(1) \). Then with one Newton-Raphson update, i.e., \(\hat{\theta} _n \coloneqq \check{\theta }_n - \left( \nabla \Psi _n(\check{\theta }_n) \right) ^{-1} \Psi _n(\check{\theta }_n)\), we have \(\sqrt{n} (\hat{\theta} _n - \widetilde{\theta} _n) \overset{p}{\to} 0\).
+\end{claim}
+\begin{explanation}
+	Firstly, consider writing
+	\[
+		\sqrt{n} (\hat{\theta} _n - \widetilde{\theta} _n)
+		= \sqrt{n} (\hat{\theta} _n - \check{\theta }_n) + \sqrt{n} (\check{\theta }_n - \widetilde{\theta} _n).
+	\]
+	By the definition, the first term is \(- \sqrt{n} \left( \nabla \Psi _n(\check{\theta }_n) \right) ^{-1} \Psi _n(\check{\theta }_n) \), which can be written as
+	\[
+		- \sqrt{n} \left( \nabla \Psi _n(\check{\theta }_n) \right) ^{-1} \left[ \Psi _n(\widetilde{\theta} _n) + \left( \int_{0}^{1} \nabla \Psi _n(\widetilde{\theta} _n + u(\check{\theta }_n - \widetilde{\theta} )_n) \,\mathrm{d}u \right) (\check{\theta }_n - \widetilde{\theta} _n) \right],
+	\]
+	and with \(\Psi _n(\widetilde{\theta} _n) = 0\), we then have
+	\[
+		\sqrt{n} (\hat{\theta} _n - \check{\theta }_n)
+		= - \sqrt{n} \underbrace{\left(\nabla \Psi _n (\check{\theta }_n)\right)^{-1} \left( \int_{0}^{1} \nabla \Psi _n(\widetilde{\theta} _n + u(\check{\theta }_n - \widetilde{\theta} )_n) \,\mathrm{d}u \right)}_{\coloneqq B_n} (\check{\theta }_n - \widetilde{\theta} _n)
+		\eqqcolon \sqrt{n} B_n (\check{\theta }_n - \widetilde{\theta} _n).
+	\]
+	Hence, \(\sqrt{n} (\hat{\theta} _n - \widetilde{\theta} _n) = (I - B_n) \sqrt{n} (\check{\theta }_n - \widetilde{\theta} _n)\). To show that this is \(o_p(1)\), we first see that \(\sqrt{n} (\check{\theta }_n - \widetilde{\theta} _n) = O_p(1)\) since \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \) and \(\sqrt{n} (\check{\theta }_n - \theta ^{\ast} ) = O_p(1)\). On the other hand, for \(I - B_n\), from  the \href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{dominated convergence theorem},
+	\[
+		\int_{0}^{1} \nabla \Psi _n(\widetilde{\theta} _n + u(\check{\theta }_n - \widetilde{\theta} _n) ) \,\mathrm{d}u
+		\to \mathbb{E}_{}[\nabla \psi _{\theta ^{\ast} }(X)] ,
+	\]
+	and by the \hyperref[thm:uniform-SLLN]{uniform strong law of large number},
+	\[
+		\nabla \Psi _n(\check{\theta }_n)
+		\to \mathbb{E}_{}[\nabla \Psi _n(\theta ^{\ast} )]
+		= \mathbb{E}_{}[\nabla \psi _{\theta ^{\ast} }(X)],
+	\]
+	which implies \((\nabla \Psi _n(\check{\theta }_n))^{-1} \to (\mathbb{E}_{}[\nabla \psi _{\theta ^{\ast} }(X)] )^{-1} \) since inverse function is continuous. Combining both, we see that \(B_n \to (\mathbb{E}_{}[\nabla \psi _{\theta ^{\ast} }(X)])^{-1} \mathbb{E}_{}[\nabla \psi _{\theta ^{\ast} }(X)] = I\), which gives
+	\[
+		\sqrt{n} (\hat{\theta} _n - \widetilde{\theta} _n)
+		= (I - B_n) \sqrt{n} (\check{\theta }_n - \widetilde{\theta} _n)
+		= o(1) O_p(1)
+		= o_p(1),
+	\]
+	i.e., \(\sqrt{n} (\hat{\theta} _n - \widetilde{\theta} _n) \overset{p}{\to} 0\).
+\end{explanation}

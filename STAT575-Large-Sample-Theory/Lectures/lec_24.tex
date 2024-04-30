@@ -10,13 +10,13 @@ Consider \(X, X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\), and we would
 	The \(k^{\text{th} }\)-moment is defined as \(T(F) = \mu _k = \int (x - \mu )^k F(\mathrm{d} x)\) where \(\mu = \int x F(\mathrm{d} x)\), which is estimated by the sample \(k^{\text{th} }\)-central moment \(T(\hat{F} _n) = M_k = \frac{1}{n} \sum_{i=1}^{n} (X_i - \overline{X} _n)^k\).\footnote{Note that we're essentially interpreting \(M_k = \frac{1}{n}\sum_{i=1}^{n} (X_i - \overline{X} _n)^k\) as \(\int (x - \overline{X} _n) \hat{F} _n(\mathrm{d} x)\) with \(\overline{X} _n = \int x \hat{F} _n(\mathrm{d} x)\).}
 \end{eg}
 
-On the other hand, instead of directly estimating \(F\), we can start by postulating a family of cdfs \(\{ G_\theta \colon \theta  \in \Theta \} \) where \(\Theta \) is a metric space, with the goal being to choose \(\hat{\theta} _n\) among \(\Theta \) such that \(G_{\hat{\theta} _n}\) approximates \(F\). Our choice, \(\hat{\theta} _n\), should be a function of the data \(X_1, \dots , X_n\).
+On the other hand, instead of directly estimating \(F\), we can start by postulating a family of cdfs \(\{ G_\theta \colon \theta  \in \Theta \} \) where \((\Theta , \rho )\) is a metric space, with the goal being to choose \(\hat{\theta} _n\) among \(\Theta \) such that \(G_{\hat{\theta} _n}\) approximates \(F\). Our choice, \(\hat{\theta} _n\), should be a function of the data \(X_1, \dots , X_n\).
 
 \section{Maximum Likelihood Estimator}
 If we assume \(G_\theta \) has a corresponding density \(g_\theta \) for all \(\theta \in \Theta \), then a natural choice is to select \(\hat{\theta} _n \in \Theta \) by maximizing the \emph{likelihood function}, i.e., the well-known \hyperref[def:MLE]{maximum likelihood estimator} (MLE).
 
 \begin{definition}[Maximum likelihood eestimator]\label{def:MLE}
-	Given \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) and a family of cdfs \(\{ G_\theta \colon \theta \in \Theta \} \) for some metric space \(\Theta \). The \emph{maximum likelihood estimator} \(\hat{\theta} _n\) is the maximizer of the likelihood function, i.e., \(\hat{\theta} _n = \argmax_{\theta \in \Theta } \prod_{i=1}^{n} g_\theta (X_i)\).
+	Given \(X_1, \dots , X_n \overset{\text{i.i.d.} }{\sim } F\) and a family of cdfs \(\{ G_\theta \colon \theta \in \Theta \} \) for some metric space \((\Theta , \rho )\). The \emph{maximum likelihood estimator} \(\hat{\theta} _n\) is the maximizer of the likelihood function, i.e., \(\hat{\theta} _n = \argmax_{\theta \in \Theta } \prod_{i=1}^{n} g_\theta (X_i)\).
 \end{definition}
 
 \subsection{Divergence Minimizing}
@@ -129,7 +129,7 @@ The upshot is that in the above examples, we're dealing with \(\hat{\theta} _n =
 This kind of general estimator in the form of maximizing some \(m\) is called the \hyperref[def:M-estimator]{\(M\)-estimator}.
 
 \begin{definition}[\(M\)-estimator]\label{def:M-estimator}
-	Given data \(X_1, \dots , X_n \), not necessarily i.i.d., and a metric space \(\Theta \), let \(m_\theta (x)\) be a function for every \(\theta \in \Theta \), and define a function \(M_n(\theta )\) of \(X_i\)'s as \(M_n (\theta ) \coloneqq \frac{1}{n} \sum_{i=1}^{n} m_\theta (X_i)\). An \emph{\(M\)-estimator} \(\hat{\theta} _n\) is a maximizer of \(M_n\), i.e., \(\hat{\theta} _n = \argmax_{\theta \in \Theta } M_n(\theta )\).
+	Given data \(X_1, \dots , X_n \), not necessarily i.i.d., and a metric space \((\Theta , \rho )\), let \(m_\theta (x)\) be a function for every \(\theta \in \Theta \), and define a function \(M_n(\theta )\) of \(X_i\)'s as \(M_n (\theta ) \coloneqq \frac{1}{n} \sum_{i=1}^{n} m_\theta (X_i)\). An \emph{\(M\)-estimator} \(\hat{\theta} _n\) is a maximizer of \(M_n\), i.e., \(\hat{\theta} _n = \argmax_{\theta \in \Theta } M_n(\theta )\).
 \end{definition}
 
 We see that if \(X_i\)'s are i.i.d., then \(M_n(\theta ) \to M(\theta ) \coloneqq \mathbb{E}_{}[m_\theta (X)] \in [-\infty , \infty )\)\footnote{Again, assume that \(M(\theta ) > -\infty \) for some \(\theta  \in \Theta \), otherwise such a optimization problem is meaningless.} as \(n \to \infty \) for any fixed \(\theta \in \Theta \), where the convergence can be either \hyperref[def:converge-almost-surely]{almost surely} or just \hyperref[def:converge-in-probability]{in probability}.
@@ -145,10 +145,10 @@ Hence, the goal of an \hyperref[def:M-estimator]{\(M\)-estimator} is to use \((\
 \end{intuition}
 
 \section{Consistency}
-Our first goal is to establish \(\hat{\theta} _n \overunderset{\text{a.s.}}{p}{\to } \theta ^{\ast} \), i.e., the \hyperref[def:consistent]{consistency} of the \hyperref[def:M-estimator]{\(M\)-estimator}. However, we will see that the \emph{approximate maximizer} \(\hat{\theta} _n\) of \(\theta \mapsto M_n(\theta )\) suffices for our purpose. In particular, we define \(\hat{\theta} _n\) in the way that for a (positive) vanishing sequence \(z_n \overunderset{\text{a.s.}}{p}{\to } 0\) as \(n \to 0\), \(\hat{\theta} _n\) satisfies
+Our first goal is to establish \(\hat{\theta} _n \overunderset{\text{a.s.}}{p}{\to } \theta ^{\ast} \), i.e., the \hyperref[def:consistent]{consistency} of the \hyperref[def:M-estimator]{\(M\)-estimator}. However, we will see that the \emph{approximate maximizer} \(\hat{\theta} _n\) of \(\theta \mapsto M_n(\theta )\) suffices for our purpose. In particular, we define \(\hat{\theta} _n\) in the way that for a (positive) vanishing sequence \(\xi _n \overunderset{\text{a.s.}}{p}{\to } 0\) as \(n \to 0\), \(\hat{\theta} _n\) satisfies
 \begin{equation}\label{eq:approximate-M-estimator}
 	M_n(\hat{\theta} _n)
-	\geq \sup _{\theta \in \Theta } M_n(\theta ) - z_n.
+	\geq \sup _{\theta \in \Theta } M_n(\theta ) - \xi _n.
 \end{equation}
 
 \begin{intuition}
@@ -174,7 +174,7 @@ We can also consider a stronger version of \autoref{asp:MLE-2}:
 \end{enumerate}
 
 \begin{notation}[Open ball]
-	Let \(B(\theta ^{\ast} , \epsilon ) = \{ \theta \in \Theta \colon d(\theta , \theta ^{\ast} ) < \epsilon \} \) be an open ball around \(\theta ^{\ast} \in \Theta \) with radii \(\epsilon > 0\), where \(d\) is the metric on \(\Theta \).
+	Let \(B(\theta ^{\ast} , \epsilon ) = \{ \theta \in \Theta \colon \rho (\theta , \theta ^{\ast} ) < \epsilon \} \) be an open ball around \(\theta ^{\ast} \in \Theta \) with radii \(\epsilon > 0\), where \(d\) is the metric on \(\Theta \).
 \end{notation}
 
 Let's understand them one-by-one. Firstly, we see that if \(\widetilde{\theta} \neq \theta ^{\ast} \), then \(\widetilde{\theta} \notin B(\theta ^{\ast} , \epsilon )\) for some \(\epsilon > 0\). Hence, \autoref{asp:MLE-1} implies \(M(\theta ^{\ast} ) > \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \geq M(\widetilde{\theta} )\). To satisfy \autoref{asp:MLE-1}, consider the following.
@@ -201,22 +201,20 @@ A simple application of \autoref{thm:unique-maximizer-usc} allows us to prove \a
 Hence, as long as \(\Theta \) is compact and \(M(\theta )\) is reasonable enough, \autoref{asp:MLE-1} can be satisfied. On the other hand, \autoref{asp:MLE-2} is a bit more involved. To understand it, observe the following.
 
 \begin{claim}
-	\(\sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{p}{\to} 0\) implies \autoref{asp:MLE-2}.
+	\(\sup _{\theta \notin B(\theta ^{\ast} , \epsilon) } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{p}{\to} 0\) implies \autoref{asp:MLE-2}.
 \end{claim}
 \begin{explanation}
 	By the triangle inequality, \(M_n(\theta ) \leq \lvert M_n(\theta ) - M(\theta ) \rvert + M(\theta )\), hence
 	\[
-		\sup _{\theta \in \Theta } M_n(\theta )
-		\leq \sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert  + \sup _{\theta \in \Theta }M(\theta ) \\
-		\implies \sup _{\theta \in \Theta } M_n(\theta ) - \sup _{\theta \in \Theta }M(\theta )
-		\leq \sup _{\theta \in \Theta }\lvert M_n(\theta ) - M(\theta ) \rvert.
+		\sup _{\theta \notin B(\theta ^{\ast} , \epsilon) } M_n(\theta )
+		\leq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon) } \lvert M_n(\theta ) - M(\theta ) \rvert  + \sup _{\theta \notin B(\theta ^{\ast} , \epsilon) }M(\theta ),
 	\]
-	Moreover, taking the supremum over a smaller subset, we have
+	which implies
 	\[
-		\sup _{\theta \notin B(\theta^{\ast}, \epsilon) } M_n(\theta ) - \sup _{\theta \notin B(\theta^{\ast}, \epsilon) }M(\theta )
-		\leq \sup _{\theta \in \Theta }\lvert M_n(\theta ) - M(\theta ) \rvert,
+		\sup _{\theta \notin B(\theta ^{\ast} , \epsilon) } M_n(\theta ) - \sup _{\theta \notin B(\theta ^{\ast} , \epsilon) }M(\theta )
+		\leq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon) }\lvert M_n(\theta ) - M(\theta ) \rvert.
 	\]
-	hence, \(\sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{p}{\to} 0\) implies \(\mathbb{P} ( \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) - \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \geq \delta ) \to 0\) for any \(\delta > 0\), which is \autoref{asp:MLE-2}.
+	Hence, \(\sup _{\theta \notin B(\theta ^{\ast} , \epsilon) } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{p}{\to} 0\) implies \(\mathbb{P} ( \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) - \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \geq \delta ) \to 0\) for any \(\delta > 0\), which is \autoref{asp:MLE-2}.
 \end{explanation}
 
 \begin{intuition}
@@ -228,7 +226,7 @@ In this regard, by reformulating \autoref{asp:MLE-3} as
 	\mathbb{P} \left( \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \geq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) + \delta \text{ i.o.} \right) = 0
 	\iff \mathbb{P} \left( \limsup_{n \to \infty} \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \leq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) \right) = 1,
 \]
-since the i.o.\ can be expressed as \(\mathbb{P} ( \limsup_{n \to \infty} \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \geq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) + \delta  ) = 0\). Then, the same argument shows that \(\sup _{\theta \in \Theta } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{\text{a.s.} }{\to} 0\) implies \autoref{asp:MLE-3}.
+since the i.o.\ can be expressed as \(\mathbb{P} ( \limsup_{n \to \infty} \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M_n(\theta ) \geq \sup _{\theta \notin B(\theta ^{\ast} , \epsilon )} M(\theta ) + \delta  ) = 0\). Then, the same argument shows that \(\sup _{\theta \notin B(\theta ^{\ast} , \epsilon ) } \lvert M_n(\theta ) - M(\theta ) \rvert \overset{\text{a.s.} }{\to} 0\) implies \autoref{asp:MLE-3}.
 
 \begin{theorem}\label{thm:M-estimator-consistency}
 	If \autoref{asp:MLE-1} and \autoref{asp:MLE-2} holds, then \(\hat{\theta} _n \overset{p}{\to} \theta ^{\ast} \). On the other hand, if we replace \autoref{asp:MLE-2} by \autoref{asp:MLE-3}, then we have \(\hat{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \).

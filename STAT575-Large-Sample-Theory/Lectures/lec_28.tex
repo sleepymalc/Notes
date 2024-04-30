@@ -1,0 +1,44 @@
+\lecture{28}{30 Apr.\ 9:30}{The End}
+We now formalize what we have proved so far.
+
+\begin{theorem}\label{thm:M-estimator-asymptotic-normality}
+	Assuming that the above assumptions holds. Then with probability \(1\), there exists \((\widetilde{\theta} _n) \) in \(\operatorname{int}(\Theta )\) where each \(\widetilde{\theta} _n\) is a function of \((X_n)\) and is a root of \(\Psi _n(\theta )\), i.e., \(\Psi _n(\widetilde{\theta} _n) = 0\), for all large \(n\), such that \(\widetilde{\theta} _n \overset{\text{a.s.} }{\to} \theta ^{\ast} \) and
+	\[
+		\sqrt{n} (\widetilde{\theta} _n - \theta ^{\ast} )
+		\overset{D}{\to} (J(\theta ^{\ast} ))^{-1} Z
+	\]
+	where \(Z \sim \mathcal{N} (0, J_{\ast} )\). Furthermore, if \(\sqrt{n} (\check{\theta }_n - \theta ^{\ast} ) = O_p(1)\), then
+	\[
+		\sqrt{n} \left( \check{\theta }_n - \left( \nabla \Psi _n(\check{\theta }_n) \right) ^{-1} \Psi _n(\check{\theta }_n) - \theta _n - \widetilde{\theta} _n \right)
+		\overset{p}{\to} 0.
+	\]
+\end{theorem}
+
+\begin{remark}[Fisher scoring]
+	Since \(\nabla \Psi _n(\theta ) = \frac{1}{n}\sum_{i=1}^{n} \nabla \psi _\theta (X_i) \overset{\text{a.s.} }{\to} \mathbb{E}_{}[\nabla \psi _\theta (X)] = - J(\theta )\), hence in reality, one can avoid computing \((\nabla \Psi _n(\check{\theta }_n))^{-1} \) by considering \(-(J(\check{\theta }_n))^{-1} \).
+\end{remark}
+
+\begin{eg}[Well-specified MLE]
+	If \(F = G_{\theta ^{\ast} }\) where the postulated family of cdfs \(\{ G_\theta \colon \theta \in \Theta \} \) is identifiable, then \(J(\theta ^{\ast} ) = J_{\ast} \). In this case, \autoref{thm:M-estimator-asymptotic-normality} implies
+	\[
+		\sqrt{n} (\widetilde{\theta} _n - \theta ^{\ast} )
+		\overset{D}{\to} \mathcal{N} (0, J_{\ast} ^{-1} ),
+	\]
+	where \(J_{\ast} ^{-1} \) is the \href{https://en.wikipedia.org/wiki/Cram%C3%A9r%E2%80%93Rao_bound}{Cramér-Rao lower bound}. Such an estimator is called \emph{asymptotically efficient}.
+\end{eg}
+
+Lastly, we make one more remark on the above result, which basically says that attaining \href{https://en.wikipedia.org/wiki/Cram%C3%A9r%E2%80%93Rao_bound}{Cramér-Rao lower bound} asymptotically is not the end of the story.
+
+\begin{eg}[Superefficiency]
+	Suppose \(d = 1\) such that \(\sqrt{n} (\hat{\theta} _n - \theta ^{\ast} ) \overset{D}{\to} \mathcal{N} (0, 1 / J_{\ast} )\). Fix a \(u \in \Theta \) and a sequence \(b_n \to \infty \) at a certain rate,\footnote{The rate is not too fast; in particular, it's about \(n^{1 / 4}\).} and define the \emph{Hodges' estimator}
+	\[
+		\overline{\theta} _n \coloneqq \begin{dcases}
+			\hat{\theta} _n, & \text{ if } \sqrt{n} \lvert \hat{\theta} _n - u \rvert > b_n ;   \\
+			u,               & \text{ if } \sqrt{n} \lvert \hat{\theta} _n - u \rvert \leq b_n.
+		\end{dcases}
+	\]
+	If \(\theta ^{\ast} \neq u\), then \(\sqrt{n} (\overline{\theta} _n - \theta ^{\ast} ) \overset{D}{\to} \mathcal{N} (0, 1 / J_{\ast} )\). On the other hand, if \(\theta^{\ast} = u\), then \(\sqrt{n} (\overline{\theta} _n - \theta ^{\ast} ) \overset{p}{\to} 0\).
+\end{eg}
+\begin{explanation}
+	It suffices to show that \(\mathbb{P} (\hat{\theta} _n \neq \overline{\theta} _n) \to 0\) for the first case. The second case is more direct.
+\end{explanation}

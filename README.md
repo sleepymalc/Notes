@@ -5,7 +5,7 @@
 </p>
 
 <p align="center"><b><i>
-	The Source Code of my LaTeX Lecture Notes.
+	Source Code of my LaTeX Lecture Notes.
 </i></b></p>
 
 ## Abstract

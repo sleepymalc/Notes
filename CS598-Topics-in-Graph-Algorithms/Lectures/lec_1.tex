@@ -22,7 +22,7 @@ Finding the minimum cost \hyperref[def:spanning-tree]{spanning tree} (MST) in a 
 Then, the problem can be formalized as follows.
 
 \begin{problem}[Minimum spanning tree]\label{prb:MST}
-Given a connected graph \(G=(V, E)\) and edge weight \(c \colon E \to \mathbb{R} \), find the min-cost \hyperref[def:spanning-tree]{spanning tree}.
+Given a connected graph \(G=(V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), find the min-cost \hyperref[def:spanning-tree]{spanning tree}.
 \end{problem}
 
 \begin{remark}
@@ -54,7 +54,7 @@ Another one is about \hyperref[lma:cycle-rule]{cycles}:
 \end{corollary}
 
 \begin{remark}
-	Without loss of generality, we can assume that the cost are unique by, e.g., perturbation.
+	Without loss of generality, we can assume that the cost are unique by, e.g., perturbation or consistent tie-breaking rule.
 \end{remark}
 
 \subsection{Standard Algorithms}
@@ -66,25 +66,25 @@ Intuitively speaking, \hyperref[algo:Kruskal]{Kruskal's algorithm} sorts the edg
 \begin{algorithm}[H]\label{algo:Kruskal}
 	\DontPrintSemicolon
 	\caption{Kruskal's algorithm}
-	\KwData{A connected graph \(G = (V, E)\) and edge weight \(c \colon E \to \mathbb{R} \)}
+	\KwData{A connected graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \)}
 	\KwResult{A \hyperref[prb:MST]{MST} \(T = (V, F)\)}
 	\BlankLine
 
 	Sort the edges such that \(c(e_1) \leq c(e_2) \leq \dots \leq c(e_m)\)\Comment*[r]{\(O(m \ln n)\)}
-	\(F \gets \varnothing \)\;
+	\(F \gets \varnothing \)\Comment*[r]{Initialize the tree}
 	\For(){\(i = 1, \dots  , m\)}{
-		\If(){\(e_i + F\) has no cycle}{
+		\If(){\label{algo:Kruskal-check}\(e_i + F\) has no cycle}{
 			\(F \gets F + e_i\)\;
 		}
 	}
 	\Return{\((V, F)\)}\;
 \end{algorithm}
 
-\begin{lemma}\label{lma:Kruskal}
+\begin{theorem}\label{thm:Kruskal}
 	\hyperref[algo:Kruskal]{Kruskal's algorithm} takes \(O(m \ln n)\) .
-\end{lemma}
+\end{theorem}
 \begin{proof}
-	Sorting takes \(O(m \ln n)\) time. The standard solution for this is to use a \href{https://en.wikipedia.org/wiki/Disjoint-set_data_structure}{union-find} data structure. Union-find data structure with path compression yields a total run time, after sorting, of \(O(m \alpha (m, n))\) where \(\alpha (m, n)\) is inverse \href{https://en.wikipedia.org/wiki/Ackermann_function}{Ackerman function} which is extremely slowly growing. Thus, the bottleneck is sorting, and the run-time is \(O(m \ln n)\).
+	Sorting takes \(O(m \ln n)\) time. The standard solution for \autoref{algo:Kruskal-check} is to use a \href{https://en.wikipedia.org/wiki/Disjoint-set_data_structure}{union-find} data structure. Union-find data structure with path compression yields a total run time, after sorting, of \(O(m \alpha (m, n))\) where \(\alpha (m, n)\) is \href{https://en.wikipedia.org/wiki/Ackermann_function#Inverse}{inverse Ackerman function} which is extremely slowly growing. Thus, the bottleneck is sorting, and the run-time is \(O(m \ln n)\).
 \end{proof}
 
 \subsubsection{Jarnik-Prim's Algorithm}
@@ -93,55 +93,78 @@ Intuitively speaking, \hyperref[algo:Kruskal]{Kruskal's algorithm} sorts the edg
 \begin{algorithm}[H]\label{algo:Jarnik-Prim}
 	\DontPrintSemicolon
 	\caption{Jarnik-Prim's algorithm}
-	\KwData{A connected graph \(G = (V, E)\) and edge weight \(c \colon E \to \mathbb{R} \)}
+	\KwData{A connected graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \)}
 	\KwResult{A \hyperref[prb:MST]{MST} \(T = (V, F)\)}
+	\SetKwFunction{unif}{uniform}
 	\BlankLine
 
-	% Sort the edges such that \(c(e_1) \leq c(e_2) \leq \dots \leq c(e_m)\);
-	% \(F \gets \varnothing \);
-	% \For(){\(i = 1, \dots  , m\)}{
-	% 	\If(){\(e_i + F\) has no cycle}{
-	% 		\(F \gets F + e_i\);
-	% 	}
-	% }
-	% \Return{}\;
+	\(r \gets \)\unif{\(V\)}\Comment*[r]{Sample a root}
+	\(V^{\prime} \gets \{ r \} \), \(F \gets \varnothing\)\Comment*[r]{Initialize the tree}
+	\While(){\(V^{\prime} \neq V\)}{
+		\(e \gets \argmin _{e = (u, v) \in \delta (V^{\prime} ), u \in V^{\prime} } c(e)\)\label{algo:Jarnik-Prim-find}\;
+		\(F \gets F + e\), \(V^{\prime} \gets V^{\prime} + v\)\Comment*[r]{Update the tree}
+	}
+	\Return{\((V , F)\)}\;
 \end{algorithm}
 
-\begin{lemma}\label{lma:Jarnik-Prim}
+\begin{theorem}\label{thm:Jarnik-Prim}
 	\hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} takes \(O(m + n \ln n)\).
-\end{lemma}
+\end{theorem}
 \begin{proof}
-	To find the cheapest edge leaving \(T\), one typically uses a priority queue data structure where we maintain vertices not yet in the tree with a key for \(v\) equal to the cost of the cheapest edge from \(v\) to the current tree. When a new vertex \(u\) is added to \(T\) the algorithm scans the edges in \(\delta (u)\) to update the keys of neighbors of \(v\). Thus, one sees that there are a total of \(O(m)\) decrease-key operations, \(O(n)\) delete-min operations, and initially we set up an empty queue. Standard priority queues implement decrease-key and delete-min in \(O(\ln n)\) time each, so the total time is \(O(m \ln n)\). However, \href{https://en.wikipedia.org/wiki/Fibonacci_heap}{Fibonacci heaps} and related data structures show that one can implement decrease-key in amortized \(O(1)\) time which reduces the total run time to \(O(m + n \ln n)\).
+	To find the cheapest edge leaving \(T\) (\autoref{algo:Jarnik-Prim-find}), one typically uses a priority queue data structure where we maintain vertices not yet in the tree with a key for \(v\) equal to the cost of the cheapest edge from \(v\) to the current tree. When a new vertex \(v\) is added to \(T\) the algorithm scans the edges in \(\delta (v)\) to update the keys of neighbors of \(v\). Thus, one sees that there are a total of \(O(m)\) decrease-key operations, \(O(n)\) delete-min operations, and initially we set up an empty queue. Standard priority queues implement decrease-key and delete-min in \(O(\ln n)\) time each, so the total time is \(O(m \ln n)\). However, \href{https://en.wikipedia.org/wiki/Fibonacci_heap}{Fibonacci heaps} and related data structures show that one can implement decrease-key in amortized \(O(1)\) time which reduces the total run time to \(O(m + n \ln n)\).
 \end{proof}
 
 \begin{remark}
 	The \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} runs in linear-time for moderately dense graphs!
 \end{remark}
 
-\subsubsection{Boruvka's Algorithm}
-\hyperref[algo:Boruvka]{Boruvka's algorithm} seems to be the first \hyperref[prb:MST]{MST} algorithm. It has very nice properties and essentially uses no data structures. The algorithm works in phases. We describe it recursively to simplify the description. In the first phase the algorithm finds, for each vertex \(v\) the cheapest edge in \(\delta (v)\). By the \hyperref[lma:cut-rule]{cut rule} this edge is in every \hyperref[prb:MST]{MST}. Note that an edge \(e = uv\) may be the cheapest edge for both \(u\) and \(v\). The algorithm collects all these edges, say \(F\), and adds them to the tree. One can easily implement this in \(O(m)\) time by a linear scan of the adjacency lists. It then shrinks the connected components induced by \(F\) and recurses on the resulting graph \(H = (V^{\prime}  , E^{\prime} )\). Computing \(H\) can be done in \(O(m)\) time. The main observation is that \(\lvert V^{\prime} \rvert \leq \lvert V \rvert / 2\) since each vertex \(v\) is in a connected component of size at least \(2\) since we add an edge leaving \(v\) to \(F\). Thus the algorithm terminates in \(O(\ln n)\) phases for a total of \(O(m \ln n)\) time. Note that this algorithm is easy to parallelize unlike the other two algorithms.
+\subsubsection{Borůvka's Algorithm}
+\hyperref[algo:Boruvka]{Borůvka's algorithm} seems to be the first \hyperref[prb:MST]{MST} algorithm, which has very nice properties and essentially uses no data structures. The algorithm works in phases. We describe it recursively to simplify the description, while refer to \autoref{algo:Boruvka} for the real implementation. In the first phase the algorithm finds, for each vertex \(v\) the cheapest edge in \(\delta (v)\). By the \hyperref[lma:cut-rule]{cut rule} this edge is in every \hyperref[prb:MST]{MST}.
+
+\begin{note}
+	An edge \(e = uv\) may be the cheapest edge for both \(u\) and \(v\).
+\end{note}
+
+The algorithm collects all these edges, say \(F\), and adds them to the tree. It then shrinks the connected components induced by \(F\) and recurses on the resulting graph \(H = (V^{\prime}  , E^{\prime} )\). It's easy to see that \hyperref[algo:Boruvka]{Borůvka's algorithm} can be parallelized, unlike the other two algorithms.
 
 \begin{algorithm}[H]\label{algo:Boruvka}
 	\DontPrintSemicolon
-	\caption{Boruvka's algorithm}
-	\KwData{A connected graph \(G = (V, E)\) and edge weight \(c \colon E \to \mathbb{R} \)}
+	\caption{Borůvka's algorithm}
+	\KwData{A connected graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \)}
 	\KwResult{A \hyperref[prb:MST]{MST} \(T = (V, F)\)}
 	\BlankLine
 
-	% Sort the edges such that \(c(e_1) \leq c(e_2) \leq \dots \leq c(e_m)\);
-	% \(F \gets \varnothing \);
-	% \For(){\(i = 1, \dots  , m\)}{
-	% 	\If(){\(e_i + F\) has no cycle}{
-	% 		\(F \gets F + e_i\);
-	% 	}
-	% }
-	% \Return{}\;
+	\(F = \varnothing \)\Comment*[r]{Initialize the tree}
+	\(\mathcal{S} \gets \{ S_v = \{ v \} \} \)\Comment*[r]{Collection of all sets}
+	\While(){\(\lvert \mathcal{S} \rvert > 1\)}{
+		\For(){\(S \in \mathcal{S} \)}{
+			\(e_S = (u, v) \gets \argmin_{e \in \delta (S)} c(e)\)\;
+			\(\mathcal{S} \gets \mathcal{S} - \{ S_u, S_v \} + S_u \cup S_v\)\label{algo:Boruvka-notation}\Comment*[r]{Merge (i.e., shrink)}
+			\(F \gets F + e_S\)\Comment*[r]{Update the tree}
+		}
+	}
+	\Return{\((V , F)\)}\;
 \end{algorithm}
 
-\subsection{Faster Algorithms}
-A natural question is whether there is a linear time \hyperref[prb:MST]{MST} algorithm, that is an algorithm that runs in \(O(m)\). Very early on, Yao, in 1975, obtained an algorithm that ran in \(O(\ln \ln n)\)\cite{yao1975log}, which leverages the idea developed in 1974 for the linear-time Selection algorithm.
+\begin{notation}
+	In \autoref{algo:Boruvka-notation}, \(S_u\) and \(S_v\) both refer to \(S \coloneqq S_u \cup S_v\) later in the algorithm.
+\end{notation}
 
-In 1987, Fredman and Tarjan~\cite{fredman1987fibonacci} developed the Fibonacci heaps and give an \hyperref[prb:MST]{MST} algorithm which runs in \(O(m \ln ^{\ast} n)\).\footnote{Formally, it runs in \(O(m \beta (m, n))\), where \(\beta (m, n)\) is the minimum value of \(i\) such that \(\ln^{(i)} n \leq m / n\), where \(\ln ^{(i)} n\) is the logarithmic function iterated \(i\) times. Since \(m \leq n^2\), \(\beta (m, n) \leq \ln ^{\ast} n\).} This was further improved to \(O(m \ln \ln ^{\ast} n)\)~\cite{gabow1986efficient}. Karger, Klein, and Tarjan~\cite{karger1995randomized} obtained a linear time randomized algorithm that will be the main topic of this lecture. Finally, Chazelle's algorithm~\cite{chazelle2000minimum} that runs in \(O(m \alpha (m, n))\) is the fastest known deterministic algorithm.
+\begin{theorem}\label{thm:Boruvka}
+	\hyperref[algo:Boruvka]{Borůvka's algorithm} takes \(O(m \ln n)\).
+\end{theorem}
+\begin{proof}
+	The first phase needs \(O(m)\) from a linear scan of the adjacency lists, and also computing \(H\) (i.e., shrinking) can be done in \(O(m)\) time. The main observation is that \(\lvert V^{\prime} \rvert \leq \lvert V \rvert / 2\) since each vertex \(v\) is in a connected component of size at least \(2\) as we add an edge leaving \(v\) to \(F\). Thus, the algorithm terminates in \(O(\ln n)\) phases for a total of \(O(m \ln n)\) time.
+\end{proof}
+
+\subsection{Faster Algorithms}
+A natural question is whether there is a linear-time, i.e., \(O(m)\), \hyperref[prb:MST]{MST} algorithm. The following is the history of fast \hyperref[prb:MST]{MST} algorithms:
+\begin{itemize}
+	\item Very early on, Yao, in 1975, obtained an algorithm that ran in \(O(m \ln \ln n)\)\cite{yao1975log}, which leverages the idea developed in 1974 for the linear-time Selection algorithm.
+	\item In 1987, Fredman and Tarjan~\cite{fredman1987fibonacci} developed the Fibonacci heaps and give an \hyperref[prb:MST]{MST} algorithm which runs in \(O(m \ln ^{\ast} n)\).\footnote{Formally, it runs in \(O(m \beta (m, n))\), where \(\beta (m, n)\) is the minimum value of \(i\) such that \(\ln^{(i)} n \leq m / n\), where \(\ln ^{(i)} n\) is the logarithmic function iterated \(i\) times. Since \(m \leq n^2\), \(\beta (m, n) \leq \ln ^{\ast} n\).} This was further improved to \(O(m \ln \ln ^{\ast} n)\)~\cite{gabow1986efficient}.
+	\item Karger, Klein, and Tarjan~\cite{karger1995randomized} obtained a linear time randomized algorithm that will be the main topic of this lecture.
+	\item Chazelle's algorithm~\cite{chazelle2000minimum} that runs in \(O(m \alpha (m, n))\) is the fastest known deterministic algorithm.
+\end{itemize}
 
 \begin{note}
 	Pettie and Ramachandran gave an optimal deterministic algorithm in the comparison model without known what its actual running time is~\cite{pettie2002optimal}!
@@ -150,107 +173,127 @@ In 1987, Fredman and Tarjan~\cite{fredman1987fibonacci} developed the Fibonacci 
 Perhaps an easier question is the following.
 
 \begin{problem}[MST verification]\label{prb:MST-verification}
-Given a graph \(G\) and a tree \(T\), is \(T\) an \hyperref[prb:MST]{MST} of \(G\)?
+Given a graph \(G\) and a tree \(T\), decide \(T\) is an \hyperref[prb:MST]{MST} of \(G\) or not.
 \end{problem}
 
-Clearly, one can always use an \hyperref[prb:MST]{MST} algorithm to solve the \hyperref[prb:MST-verification]{verification} problem, but not necessarily the other way around. Interestingly, there is indeed a linear-time \hyperref[prb:MST-verification]{MST verification} algorithm. It is based on several non-trivial ideas and data structures and was first developed in the RAM model\footnote{The RAM model allows bit-wise operation on \(O(\ln n)\) bit words in \(O(1)\) time.} by Dixon, Rauch, and Tarjan~\cite{dixon1992verification} based on insights from Komlós~\cite{komlos1985linear}, with the simplification done by King~\cite{king1997simpler}.
+One can always use an \hyperref[prb:MST]{MST} algorithm to solve the \hyperref[prb:MST-verification]{verification} problem, but not necessarily the other way around. Interestingly, there is indeed a linear-time \hyperref[prb:MST-verification]{MST verification} algorithm based on several non-trivial ideas and data structures and was first developed in the RAM model by Dixon, Rauch, and Tarjan~\cite{dixon1992verification} with insights from Komlós~\cite{komlos1985linear}. Simplification is done by King~\cite{king1997simpler}.
+
+\begin{note}[RAM model]
+	The RAM model allows bit-wise operation on \(O(\ln n)\) bit words in \(O(1)\) time.
+\end{note}
 
 \begin{theorem}[MST verification]\label{thm:MST-verification}
 	There is a linear-time \hyperref[prb:MST-verification]{MST verification} algorithm in the RAM model. In fact, the algorithm is based on a more general result that we will need: Given a graph \(G = (V, E)\) with edge costs and a \hyperref[def:spanning-tree]{spanning tree} \(T = (V, F)\), there is an \(O(m)\)-time algorithm that outputs all the \hyperref[def:heavy]{\(F\)-heavy} edge of \(G\).
 \end{theorem}
-
-\begin{remark}
-	The original algorithm is quite complicated, and it has been simplified over the years. See lecture notes of \href{https://www.cs.cmu.edu/~15850/notes/lec1.pdf}{Gupta} and \href{https://sepehr.assadi.info/courses/cs860-w24/Lectures/lec1.pdf}{Assadi} for accessible explanation, also the MST surveys by Eisner~\cite{eisner1997state} and Mareš~\cite{marevs2008saga}.
-\end{remark}
+\begin{proof}
+	The original complicated algorithm has been simplified over the years. See lecture notes of \href{https://www.cs.cmu.edu/~15850/notes/lec1.pdf}{Gupta} and \href{https://sepehr.assadi.info/courses/cs860-w24/Lectures/lec1.pdf}{Assadi} for accessible explanation, also the MST surveys~\cite{eisner1997state,marevs2008saga}.
+\end{proof}
 
 \subsubsection{Fredman-Tarjan's Algorithm}
-Here we briefly describe Fredman and Tarjan's algorithm~\cite{fredman1987fibonacci,marevs2008saga} via Fibonacci heaps, which is reasonably simple to describe and analyze modulo a few implementation details that we will gloss over for the sake of brevity. First, we develop a simple \(O(m \ln \ln n)\) time algorithm by combining \hyperref[algo:Boruvka]{Boruvka's algorithm} and \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}.
+Here we briefly describe Fredman and Tarjan's algorithm~\cite{fredman1987fibonacci,marevs2008saga} via Fibonacci heaps, which is reasonably simple to describe and analyze modulo a few implementation details that we will gloss over for the sake of brevity. First, we develop a simple \(O(m \ln \ln n)\) time algorithm by combining \hyperref[algo:Boruvka]{Borůvka's algorithm} and \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}.
 
-Recall that \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} takes \(O(m + n \ln n)\) time via Fibonacci heaps, and this is already very good if \(m\) is large. The bottleneck is when \(m = o(n \ln n)\). On the other hand, \hyperref[algo:Boruvka]{Boruvka's algorithm} starts with a graph on \(n\) nodes and after \(i^{\text{th} }\) phases, reduces the number of nodes to \(n / 2^i\); each phase takes \(O(m)\) times.
+\begin{prev}
+	\hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} takes \(O(m + n \ln n)\) time via Fibonacci heaps where the bottleneck is when \(m = o(n \ln n)\). On the other hand, \hyperref[algo:Boruvka]{Borůvka's algorithm} starts with a graph on \(n\) nodes and after \(i^{\text{th} }\) phases, reduces the number of nodes to \(n / 2^i\); each phase takes \(O(m)\) times.
+\end{prev}
 
 \begin{intuition}
-	Suppose we run \hyperref[algo:Boruvka]{Boruvka's algorithm} for \(k\) phases and then run \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} once the number of nodes is reduced. We can see that the total run time is \(O(m k)\) for the \(k\) phases of \hyperref[algo:Boruvka]{Boruvka's algorithm}, and \(O(m + n / 2^k \ln n / 2^k)\) for the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} on the reduced graph. Thus, if we choose \(k = \ln \ln n\), we obtain a total run-time of \(O(m \ln \ln n)\).
-
-	\begin{itemize}
-		\item Run the boruksr algorithm for \(h\) phases.
-		\item Let \(H\) be the reduced graph. Run JP algorithm with Fibonacci heap on \(H\).
-	\end{itemize}
-	This gives \(O(mh + m^{\prime} + n^{\prime} \log n^{\prime} )\), where \(m^{\prime} \) and \(n^{\prime} \) is for the reduced graph, i.e.,
-	\[
-		O \left( mh + m + \frac{n}{2^h} \ln \frac{n}{2^h} \right)
-		= O(m \ln \ln n)
-	\]
-	by choosing \(h \coloneqq \log \log n\).
+	Suppose we run \hyperref[algo:Boruvka]{Borůvka's algorithm} for \(k\) phases and then run \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} once the number of nodes is reduced. We can see that the total run time is \(O(m k)\) for the \(k\) phases of \hyperref[algo:Boruvka]{Borůvka's algorithm}, and \(O(m + n / 2^k \ln n / 2^k)\) for the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} on the reduced graph. Thus, if we choose \(k = \ln \ln n\), we obtain a total run-time of \(O(m \ln \ln n)\).
 \end{intuition}
 
 Tarjan and Fredman obtained a more sophisticated scheme based on the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}, but the basic idea is to reduce the number of vertices. The algorithm runs again in phases. We describe the first phase here.
 
-\begin{intuition}
+\begin{intuition}[First phase]
 	Start growing the tree. If the heap gets too big, we stop.
 \end{intuition}
 
-Consider an integer  parameter \(t\) such that \(1 < t \leq n\). Pick an arbitrary root \(r_1\) and grow a tree \(T_1\) following the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} with a Fibonacci heap. We stop the tree growth when the heap size exceeds \(t\) for the first time or if we run out of vertices. All the vertices in the tree are marked as visited. Now pick an arbitrary, unmarked vertex as root \(r_2 \in V - T\) and grow a tree \(T_2\), and we stop growing \(T_2\) if it touches \(T_1\), in which case it merges with it, or if the heap size exceeds \(t\) or if we run out of vertices.
+Consider an integer  parameter \(t\) such that \(1 < t \leq n\). Pick an arbitrary root \(r_1\) and grow a tree \(T_1\) via \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} with a Fibonacci heap. We stop the tree growth when the heap size exceeds \(t\) for the first time or if we run out of vertices. All the vertices in the tree are marked as visited. Now pick an arbitrary, unmarked vertex as root \(r_2 \in V - T\) and grow a tree \(T_2\), and we stop growing \(T_2\) if it touches \(T_1\), in which case it merges with it, or if the heap size exceeds \(t\) or if we run out of vertices. The algorithm proceeds in this fashion by picking new roots and growing them until all nodes are marked.
+
+\begin{note}
+	While growing \(T_2\), the heap may contain previously marked vertices. It is only when the algorithm finds one of the marked vertices as the cheapest neighbor of the current tree that we merge the trees and stop.
+\end{note}
+
+It's easy to see that the \hyperref[algo:Fredman-Tarjan-I]{first phase of Fredman-Tarjan algorithm} correctly adds a set of \hyperref[prb:MST]{MST} edges \(F\). After this, we simply shrink these trees and recurse on the smaller graph.
 
 \begin{algorithm}[H]\label{algo:Fredman-Tarjan}
 	\DontPrintSemicolon
 	\caption{Fredman-Tarjan's algorithm}
-	\KwData{A connected graph \(G = (V, E)\) and edge weight \(c \colon E \to \mathbb{R} \)}
+	\KwData{A connected graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \)}
 	\KwResult{A \hyperref[prb:MST]{MST} \(T = (V, F)\)}
+	\SetKwFunction{JP}{\hyperref[algo:Jarnik-Prim]{Jarnik-Prim}}
+	\SetKwFunction{unif}{uniform}
+	\SetKwFunction{Grow}{Grow}
 	\BlankLine
 
-
-	\Return{\((V, F)\)}\;
+	\(V^{\prime} \gets V\), \(F \gets \varnothing \)\Comment*[r]{Initialize the tree}
+	\While(){\(\lvert V \rvert > 1\)}{
+		\(T\gets\)\Grow{\(G\)}\label{algo:Fredman-Tarjan-I}\Comment*[r]{First phase}
+		\(F \gets F \cup E(T)\)\Comment*[r]{Update the tree}
+		Shrink \(G\) w.r.t.\ \(T\), update \(V\) and \(E\)\Comment*[r]{Second phase}
+	}
+	\Return{\((V^{\prime} , F)\)}\;
+	\;
+	\SetKwProg{Fn}{}{:}{}
+	\Fn{\Grow{\(G\)}}{
+		\(V^{\prime} \gets \varnothing \), \(F \gets \varnothing \), \(T \gets (V^{\prime} , F)\)\Comment*[r]{Initialize the forest}
+		\While(){\(V^{\prime} \neq V\)}{
+			\(r \gets\)\unif{\(V - V^{\prime} \)}\Comment*[r]{Pick an unmarked vertex}
+			\(T^{\prime} \gets (\{ r \} , \varnothing )\)\Comment*[r]{Initialize a tree}
+			\While(){\(\lvert N(T^{\prime} ) \rvert < t\) or \(V(T^{\prime} ) \cap V^{\prime} \neq \varnothing \)}{
+				Run one more step of \JP{\(r\), \(T^{\prime} \)}\label{algo:Fredman-Tarjan-I-grow}\Comment*[r]{Starting at \(r\), maintaining \(T^{\prime} \)}
+			}
+			\(V^{\prime} \gets V^{\prime} \cup V(T)\)\Comment*[r]{Mark}
+			\(F \gets F \cup E(T^{\prime} )\)\Comment*[r]{Update the forest by merging the tree}
+		}
+		\Return{\((V, F)\)}\label{algo:Fredman-Tarjan-I-return}\Comment*[r]{Return a forest of \(G\)}
+	}
 \end{algorithm}
 
 \begin{note}
-	Note that the heap, while growing \(T_2\), may contain previously marked vertices. It is only when the algorithm finds one of the marked vertices as the cheapest neighbor of the current tree that we merge the trees and stop.
+	This can be seen as a parameterized version of \hyperref[algo:Boruvka]{Borůvka's algorithm}.
 \end{note}
 
-The algorithm proceeds in this fashion by picking new roots and growing them until all nodes are marked. We see that the algorithm correctly adds a set of \hyperref[prb:MST]{MST} edges \(F\).
-
-\begin{claim}\label{clm:Fredman-Tarjan}
-	Number of vertices after shrinking the connected components induced by \(F\) is \(\leq 2m / t\).
-\end{claim}
-\begin{explanation}
-	Let \(C_1, \dots , C_h\) be the connected components of \(F\). Suppose for every \(C_i\), \(\sum_{v \in C_i} \deg(v) \geq t\), then
-	\[
-		2m
-		= \sum_{v \in V} \deg(v)
-		= \sum_{i=1}^{h} \sum_{v \in C_i} \deg(v)
-		\geq ht,
-	\]
-	which implies \(h \leq 2m / t\). To see why this is the case, consider the growth of a tree \(T_j\) by the algorithm:
-	\begin{itemize}
-		\item If we stop \(T_j\) because heap size exceeds \(t\), then each of the vertex in the heap is a witness to a unique edge incident to \(T_j\), hence the property holds.
-		\item If \(T_j\) merged with a previous tree, then the property holds because the previous tree already had the property and adding vertices can only increase the total degree of the component.
-	\end{itemize}
-	The only reason the property may not hold is if the algorithm terminates a tree because all vertices are already included in it, but then the phase finishes the algorithm.
-\end{explanation}
+The difficult part is to determine its runtime. We have the following.
 
 \begin{theorem}\label{thm:Fredman-Tarjan}
-	The \hyperref[algo:Fredman-Tarjan]{Fredman-Tarjan's algorithm} takes \(O(m \beta (m, n))\) .
+	\hyperref[algo:Fredman-Tarjan]{Fredman-Tarjan's algorithm} takes \(O(m \beta (m, n))\).
 \end{theorem}
 \begin{proof}
-	Firstly, the total time to scan edges and insert vertices into heaps and do decrease-key is \(O(m)\) since an edge is only visited twice, once from each end point. Since each heap is not allowed to grow to more than size \(t\), the total time for all the delete-min operations take \(O(n \ln t)\). Note that we're utilizing the fact that the initialization of each data structure is easy because it starts as an empty one. Thus, we have obtained a new algorithm that, in a single phase, takes \(O(m + n \ln t)\) time and reduces the number of vertices to \(2m / t\) based on the \hyperref[clm:Fredman-Tarjan]{previous claim}.
+	Firstly, the total time to scan edges and insert vertices into heaps and do decrease-key is \(O(m)\) since an edge is only visited twice, once from each end point. Since each heap is not allowed to grow to more than size \(t\), the total time for all the delete-min operations take \(O(n \ln t)\). With the fact that the initialization of each data structure is easy as it starts as an empty one, hence, the \hyperref[algo:Fredman-Tarjan-I]{first phase} takes \(O(m + n \ln t)\). We claim that it also reduces the number of vertices to \(2m / t\).
 
-	\begin{note}
-		This can be seen as a parameterized version of \hyperref[algo:Boruvka]{Boruvka's algorithm}.
-	\end{note}
+	\begin{claim}
+		The number of connected components induced by \(F\) is \(\leq 2m / t\) after the \hyperref[algo:Fredman-Tarjan-I]{first phase}.
+	\end{claim}
+	\begin{explanation}
+		Let \(C_1, \dots , C_h\) be the connected components of \(F\). If for every \(C_i\), \(\sum_{v \in C_i} \deg(v) \geq t\),
+		\[
+			2m
+			= \sum_{v \in V} \deg(v)
+			= \sum_{i=1}^{h} \sum_{v \in C_i} \deg(v)
+			\geq ht
+			\implies h \leq \frac{2m}{t}.
+		\]
+		To see why the assumption holds, consider the growth of a tree \(T^{\prime}\) in \autoref{algo:Fredman-Tarjan-I-grow}:
+		\begin{itemize}
+			\item If we stop \(T^{\prime}\) because heap size \(\lvert N(T^{\prime} ) \rvert \) exceeds \(t\), then each of the vertex in the heap is a witness to a unique edge incident to \(T^{\prime}\), hence the property holds.
+			\item If \(T^{\prime}\) merged with a previous tree, then the property holds because the previous tree already had the property and adding vertices can only increase the total degree of the component.
+		\end{itemize}
+		The only reason the property may not hold is if \autoref{algo:Fredman-Tarjan-I-return} terminates a tree because all vertices are already included in it, but then that phase finishes the algorithm.
+	\end{explanation}
 
 	The question reduces to choosing \(t\).
 
 	\begin{intuition}
-		We want linear time in the first phase, i.e., \(n \ln t\) to be no more than \(O(m)\), leading to \(t = 2^{2m / n}\). If we do this in every phase, then this leads to \(O(m)\) time per phase.
+		We want linear time in the \hyperref[algo:Fredman-Tarjan-I]{first phase}, i.e., \(n \ln t\) to be no more than \(O(m)\), leading to \(t = 2^{2m / n}\). If we do this in every iteration, then this leads to \(O(m)\) time per iteration.
 	\end{intuition}
 
-	Now we need to bound the overall time, i.e., the number of phases. Consider \(t_1 \coloneqq 2^{2m / n}\), and \(t_i \coloneqq 2^{2m / n_i}\),\footnote{Technically, we need to choose \(t_i \coloneqq 2^{\lceil 2m / n_i \rceil }\), but we will be aa bit sloppy and ignore the ceilings here.} where \(n_i\) and \(m_i\) are the number of vertices and edges at the beginning of the iteration \(i\), with \(m_1 = m\) and \(n_1 = n\). From the \hyperref[clm:Fredman-Tarjan]{claim}, \(n_{i+1} \leq 2m_i / t_i\), giving
+	We now bound the number of iteration. Consider \(t_1 \coloneqq 2^{2m / n}\) and \(t_i \coloneqq 2^{2m / n_i}\),\footnote{Technically, we need to choose \(t_i \coloneqq 2^{\lceil 2m / n_i \rceil }\), but we will be aa bit sloppy and ignore the ceilings here.} where \(n_i\) and \(m_i\) are the number of vertices and edges at the beginning of the \(i^{\text{th} }\) iteration, with \(m_1 = m\) and \(n_1 = n\). From the previous claim, \(n_{i+1} \leq 2m_i / t_i\), which gives
 	\[
 		t_{i+1}
 		= 2^{2m / n_{i+1}}
 		\geq 2^{\frac{2m}{2m_i / t_i}}
 		\geq 2^{t_i}.
 	\]
-	Thus, \(t_i\) is a power of twos with \(t_1 = 2^{2m / n}\), and the \hyperref[algo:Fredman-Tarjan]{Fredman-Tarjan's algorithm} stops if \(t_i \geq n\) since it will grow a single tree and finish. Thus, the algorithm needs at most \(\beta (m, n)\) phases, giving the total time \(O(m \beta (m, n))\).
+	Thus, \(t_i\) is a power of twos with \(t_1 = 2^{2m / n}\), and the \hyperref[algo:Fredman-Tarjan]{Fredman-Tarjan's algorithm} stops if \(t_i \geq n\) since it will \hyperref[algo:Fredman-Tarjan-I]{grow} a single tree and finish. Thus, the algorithm needs at most \(\beta (m, n)\) iterations, giving the total time \(O(m \beta (m, n))\).
 \end{proof}
 
 \subsubsection{Linear-Time Randomized Algorithm}

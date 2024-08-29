@@ -3,13 +3,13 @@
 Throughout the course, we consider a graph \(G=(V, E)\) such that \(n \coloneqq \lvert V \rvert \) and \(m\coloneqq \lvert E \rvert \). Let's see some examples about the recent breakthroughs.
 
 \begin{eg}[Shortest paths with negative length]
-	The classical algorithm runs in \(O(mn)\). In 2022, [BNW]\todo{cite} came up with an algorithm \(O(m \ln ^3 n C)\), where \(C\) is the largest absolute value of the \emph{integer} length.
+	The classical algorithm runs in \(O(mn)\). In 2022, [BNW]\todo{cite} came up with an algorithm \(O(m \log ^3 n C)\), where \(C\) is the largest absolute value of the \emph{integer} length.
 
 	This is not a strongly polynomial time algorithm. In 2024 [Fineman]\todo{cite} come up with \(\widetilde{O} (m n^{8 / 9})\), and soon after 2024 [HJQ]\todo{cite} improve this to \(\widetilde{O} (m n^{4 / 5})\).
 \end{eg}
 
 \begin{eg}[\(s\)-\(t\) maxflow]
-	The tradition running time is \(O(mn \ln m / n)\), and it's later improved to be \(O(m \sqrt{n} \ln n C)\). Recently, [Chen et-al]\todo{cite} improve to \(O(m^{1 + o(1)})\), which is almost-linear.\footnote{This can be also applied to min-cost flow and quadratic-cost flow.}
+	The tradition running time is \(O(mn \log m / n)\), and it's later improved to be \(O(m \sqrt{n} \log n C)\). Recently, [Chen et-al]\todo{cite} improve to \(O(m^{1 + o(1)})\), which is almost-linear.\footnote{This can be also applied to min-cost flow and quadratic-cost flow.}
 \end{eg}
 
 \section{Minimum Spanning Tree}
@@ -70,7 +70,7 @@ Intuitively speaking, \hyperref[algo:Kruskal]{Kruskal's algorithm} sorts the edg
 	\KwResult{A \hyperref[prb:MST]{MST} \(T = (V, F)\)}
 	\BlankLine
 
-	Sort the edges such that \(c(e_1) \leq c(e_2) \leq \dots \leq c(e_m)\)\Comment*[r]{\(O(m \ln n)\)}
+	Sort the edges such that \(c(e_1) \leq c(e_2) \leq \dots \leq c(e_m)\)\Comment*[r]{\(O(m \log n)\)}
 	\(F \gets \varnothing \)\Comment*[r]{Initialize the tree}
 	\For(){\(i = 1, \dots  , m\)}{
 		\If(){\label{algo:Kruskal-check}\(e_i + F\) has no cycle}{
@@ -81,10 +81,10 @@ Intuitively speaking, \hyperref[algo:Kruskal]{Kruskal's algorithm} sorts the edg
 \end{algorithm}
 
 \begin{theorem}\label{thm:Kruskal}
-	\hyperref[algo:Kruskal]{Kruskal's algorithm} takes \(O(m \ln n)\) .
+	\hyperref[algo:Kruskal]{Kruskal's algorithm} takes \(O(m \log n)\) .
 \end{theorem}
 \begin{proof}
-	Sorting takes \(O(m \ln n)\) time. The standard solution for \autoref{algo:Kruskal-check} is to use a \href{https://en.wikipedia.org/wiki/Disjoint-set_data_structure}{union-find} data structure. Union-find data structure with path compression yields a total run time, after sorting, of \(O(m \alpha (m, n))\) where \(\alpha (m, n)\) is \href{https://en.wikipedia.org/wiki/Ackermann_function#Inverse}{inverse Ackerman function} which is extremely slowly growing. Thus, the bottleneck is sorting, and the run-time is \(O(m \ln n)\).
+	Sorting takes \(O(m \log n)\) time. The standard solution for \autoref{algo:Kruskal-check} is to use a \href{https://en.wikipedia.org/wiki/Disjoint-set_data_structure}{union-find} data structure. Union-find data structure with path compression yields a total run time, after sorting, of \(O(m \alpha (m, n))\) where \(\alpha (m, n)\) is \href{https://en.wikipedia.org/wiki/Ackermann_function#Inverse}{inverse Ackerman function} which is extremely slowly growing. Thus, the bottleneck is sorting, and the run-time is \(O(m \log n)\).
 \end{proof}
 
 \subsubsection{Jarnik-Prim's Algorithm}
@@ -108,10 +108,10 @@ Intuitively speaking, \hyperref[algo:Kruskal]{Kruskal's algorithm} sorts the edg
 \end{algorithm}
 
 \begin{theorem}\label{thm:Jarnik-Prim}
-	\hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} takes \(O(m + n \ln n)\).
+	\hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} takes \(O(m + n \log n)\).
 \end{theorem}
 \begin{proof}
-	To find the cheapest edge leaving \(T\) (\autoref{algo:Jarnik-Prim-find}), one typically uses a priority queue data structure where we maintain vertices not yet in the tree with a key for \(v\) equal to the cost of the cheapest edge from \(v\) to the current tree. When a new vertex \(v\) is added to \(T\) the algorithm scans the edges in \(\delta (v)\) to update the keys of neighbors of \(v\). Thus, one sees that there are a total of \(O(m)\) decrease-key operations, \(O(n)\) delete-min operations, and initially we set up an empty queue. Standard priority queues implement decrease-key and delete-min in \(O(\ln n)\) time each, so the total time is \(O(m \ln n)\). However, \href{https://en.wikipedia.org/wiki/Fibonacci_heap}{Fibonacci heaps} and related data structures show that one can implement decrease-key in amortized \(O(1)\) time which reduces the total run time to \(O(m + n \ln n)\).
+	To find the cheapest edge leaving \(T\) (\autoref{algo:Jarnik-Prim-find}), one typically uses a priority queue where we maintain vertices not yet in the tree with a key for \(v\) equal to the cost of the cheapest edge from \(v\) to the current tree. When a new vertex \(v\) is added to \(T\) the algorithm scans the edges in \(\delta (v)\) to update the keys of neighbors of \(v\). Thus, one sees that there are a total of \(O(m)\) \texttt{decrease-key} operations, \(O(n)\) \texttt{extract-min} operations, and initially we set up an empty queue. Standard priority queues implement \texttt{decrease-key} and \texttt{extract-min} in \(O(\log n)\) time each, so the total time is \(O(m \log n)\). However, \href{https://en.wikipedia.org/wiki/Fibonacci_heap}{Fibonacci heaps} and related data structures show that one can implement \texttt{decrease-key} in amortized \(O(1)\) time which reduces the total run time to \(O(m + n \log n)\).
 \end{proof}
 
 \begin{remark}
@@ -151,17 +151,17 @@ The algorithm collects all these edges, say \(F\), and adds them to the tree. It
 \end{notation}
 
 \begin{theorem}\label{thm:Boruvka}
-	\hyperref[algo:Boruvka]{Borůvka's algorithm} takes \(O(m \ln n)\).
+	\hyperref[algo:Boruvka]{Borůvka's algorithm} takes \(O(m \log n)\).
 \end{theorem}
 \begin{proof}
-	The first phase needs \(O(m)\) from a linear scan of the adjacency lists, and also computing \(H\) (i.e., shrinking) can be done in \(O(m)\) time. The main observation is that \(\lvert V^{\prime} \rvert \leq \lvert V \rvert / 2\) since each vertex \(v\) is in a connected component of size at least \(2\) as we add an edge leaving \(v\) to \(F\). Thus, the algorithm terminates in \(O(\ln n)\) phases for a total of \(O(m \ln n)\) time.
+	The first phase needs \(O(m)\) from a linear scan of the adjacency lists, and also computing \(H\) (i.e., shrinking) can be done in \(O(m)\) time. The main observation is that \(\lvert V^{\prime} \rvert \leq \lvert V \rvert / 2\) since each vertex \(v\) is in a connected component of size at least \(2\) as we add an edge leaving \(v\) to \(F\). Thus, the algorithm terminates in \(O(\log n)\) phases for a total of \(O(m \log n)\) time.
 \end{proof}
 
 \subsection{Faster Algorithms}
 A natural question is whether there is a linear-time, i.e., \(O(m)\), \hyperref[prb:MST]{MST} algorithm. The following is the history of fast \hyperref[prb:MST]{MST} algorithms:
 \begin{itemize}
-	\item Very early on, Yao, in 1975, obtained an algorithm that ran in \(O(m \ln \ln n)\)\cite{yao1975log}, which leverages the idea developed in 1974 for the linear-time Selection algorithm.
-	\item In 1987, Fredman and Tarjan~\cite{fredman1987fibonacci} developed the Fibonacci heaps and give an \hyperref[prb:MST]{MST} algorithm which runs in \(O(m \ln ^{\ast} n)\).\footnote{Formally, it runs in \(O(m \beta (m, n))\), where \(\beta (m, n)\) is the minimum value of \(i\) such that \(\ln^{(i)} n \leq m / n\), where \(\ln ^{(i)} n\) is the logarithmic function iterated \(i\) times. Since \(m \leq n^2\), \(\beta (m, n) \leq \ln ^{\ast} n\).} This was further improved to \(O(m \ln \ln ^{\ast} n)\)~\cite{gabow1986efficient}.
+	\item Very early on, Yao, in 1975, obtained an algorithm that ran in \(O(m \log \log n)\)\cite{yao1975log}, which leverages the idea developed in 1974 for the linear-time Selection algorithm.
+	\item In 1987, Fredman and Tarjan~\cite{fredman1987fibonacci} developed the Fibonacci heaps and give an \hyperref[prb:MST]{MST} algorithm which runs in \(O(m \log ^{\ast} n)\).\footnote{Formally, it runs in \(O(m \beta (m, n))\), where \(\beta (m, n)\) is the minimum value of \(i\) such that \(\log^{(i)} n \leq m / n\), where \(\log ^{(i)} n\) is the logarithmic function iterated \(i\) times. Since \(m \leq n^2\), \(\beta (m, n) \leq \log ^{\ast} n\).} This was further improved to \(O(m \log \log ^{\ast} n)\)~\cite{gabow1986efficient}.
 	\item Karger, Klein, and Tarjan~\cite{karger1995randomized} obtained a linear time randomized algorithm that will be the main topic of this lecture.
 	\item Chazelle's algorithm~\cite{chazelle2000minimum} that runs in \(O(m \alpha (m, n))\) is the fastest known deterministic algorithm.
 \end{itemize}
@@ -179,7 +179,7 @@ Given a graph \(G\) and a tree \(T\), decide \(T\) is an \hyperref[prb:MST]{MST}
 One can always use an \hyperref[prb:MST]{MST} algorithm to solve the \hyperref[prb:MST-verification]{verification} problem, but not necessarily the other way around. Interestingly, there is indeed a linear-time \hyperref[prb:MST-verification]{MST verification} algorithm based on several non-trivial ideas and data structures and was first developed in the RAM model by Dixon, Rauch, and Tarjan~\cite{dixon1992verification} with insights from Komlós~\cite{komlos1985linear}. Simplification is done by King~\cite{king1997simpler}.
 
 \begin{note}[RAM model]
-	The RAM model allows bit-wise operation on \(O(\ln n)\) bit words in \(O(1)\) time.
+	The RAM model allows bit-wise operation on \(O(\log n)\) bit words in \(O(1)\) time.
 \end{note}
 
 \begin{theorem}[MST verification]\label{thm:MST-verification}
@@ -190,14 +190,14 @@ One can always use an \hyperref[prb:MST]{MST} algorithm to solve the \hyperref[p
 \end{proof}
 
 \subsubsection{Fredman-Tarjan's Algorithm}
-Here we briefly describe Fredman and Tarjan's algorithm~\cite{fredman1987fibonacci,marevs2008saga} via Fibonacci heaps, which is reasonably simple to describe and analyze modulo a few implementation details that we will gloss over for the sake of brevity. First, we develop a simple \(O(m \ln \ln n)\) time algorithm by combining \hyperref[algo:Boruvka]{Borůvka's algorithm} and \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}.
+Here we briefly describe Fredman and Tarjan's algorithm~\cite{fredman1987fibonacci,marevs2008saga} via Fibonacci heaps, which is reasonably simple to describe and analyze modulo a few implementation details that we will gloss over for the sake of brevity. First, we develop a simple \(O(m \log \log n)\) time algorithm by combining \hyperref[algo:Boruvka]{Borůvka's algorithm} and \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}.
 
 \begin{prev}
-	\hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} takes \(O(m + n \ln n)\) time via Fibonacci heaps where the bottleneck is when \(m = o(n \ln n)\). On the other hand, \hyperref[algo:Boruvka]{Borůvka's algorithm} starts with a graph on \(n\) nodes and after \(i^{\text{th} }\) phases, reduces the number of nodes to \(n / 2^i\); each phase takes \(O(m)\) times.
+	\hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} takes \(O(m + n \log n)\) time via Fibonacci heaps where the bottleneck is when \(m = o(n \log n)\). On the other hand, \hyperref[algo:Boruvka]{Borůvka's algorithm} starts with a graph on \(n\) nodes and after \(i^{\text{th} }\) phases, reduces the number of nodes to \(n / 2^i\); each phase takes \(O(m)\) times.
 \end{prev}
 
 \begin{intuition}
-	Suppose we run \hyperref[algo:Boruvka]{Borůvka's algorithm} for \(k\) phases and then run \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} once the number of nodes is reduced. We can see that the total run time is \(O(m k)\) for the \(k\) phases of \hyperref[algo:Boruvka]{Borůvka's algorithm}, and \(O(m + n / 2^k \ln n / 2^k)\) for the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} on the reduced graph. Thus, if we choose \(k = \ln \ln n\), we obtain a total run-time of \(O(m \ln \ln n)\).
+	Suppose we run \hyperref[algo:Boruvka]{Borůvka's algorithm} for \(k\) phases and then run \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} once the number of nodes is reduced. We can see that the total run time is \(O(m k)\) for the \(k\) phases of \hyperref[algo:Boruvka]{Borůvka's algorithm}, and \(O(m + n / 2^k \log n / 2^k)\) for the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} on the reduced graph. Thus, if we choose \(k = \log \log n\), we obtain a total run-time of \(O(m \log \log n)\).
 \end{intuition}
 
 Tarjan and Fredman obtained a more sophisticated scheme based on the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}, but the basic idea is to reduce the number of vertices. The algorithm runs again in phases. We describe the first phase here.
@@ -258,7 +258,7 @@ The difficult part is to determine its runtime. We have the following.
 	\hyperref[algo:Fredman-Tarjan]{Fredman-Tarjan's algorithm} takes \(O(m \beta (m, n))\).
 \end{theorem}
 \begin{proof}
-	Firstly, the total time to scan edges and insert vertices into heaps and do decrease-key is \(O(m)\) since an edge is only visited twice, once from each end point. Since each heap is not allowed to grow to more than size \(t\), the total time for all the delete-min operations take \(O(n \ln t)\). With the fact that the initialization of each data structure is easy as it starts as an empty one, hence, the \hyperref[algo:Fredman-Tarjan-I]{first phase} takes \(O(m + n \ln t)\). We claim that it also reduces the number of vertices to \(2m / t\).
+	Firstly, the total time to scan edges and insert vertices into heaps and do \texttt{decrease-key} is \(O(m)\) since an edge is only visited twice, once from each end point. Since each heap is not allowed to grow to more than size \(t\), the total time for all the \texttt{extract-min} operations take \(O(n \log t)\). With the fact that the initialization of each data structure is easy as it starts as an empty one, hence, the \hyperref[algo:Fredman-Tarjan-I]{first phase} takes \(O(m + n \log t)\). We claim that it also reduces the number of vertices to \(2m / t\).
 
 	\begin{claim}
 		The number of connected components induced by \(F\) is \(\leq 2m / t\) after the \hyperref[algo:Fredman-Tarjan-I]{first phase}.
@@ -283,7 +283,7 @@ The difficult part is to determine its runtime. We have the following.
 	The question reduces to choosing \(t\).
 
 	\begin{intuition}
-		We want linear time in the \hyperref[algo:Fredman-Tarjan-I]{first phase}, i.e., \(n \ln t\) to be no more than \(O(m)\), leading to \(t = 2^{2m / n}\). If we do this in every iteration, then this leads to \(O(m)\) time per iteration.
+		We want linear time in the \hyperref[algo:Fredman-Tarjan-I]{first phase}, i.e., \(n \log t\) to be no more than \(O(m)\), leading to \(t = 2^{2m / n}\). If we do this in every iteration, then this leads to \(O(m)\) time per iteration.
 	\end{intuition}
 
 	We now bound the number of iteration. Consider \(t_1 \coloneqq 2^{2m / n}\) and \(t_i \coloneqq 2^{2m / n_i}\),\footnote{Technically, we need to choose \(t_i \coloneqq 2^{\lceil 2m / n_i \rceil }\), but we will be aa bit sloppy and ignore the ceilings here.} where \(n_i\) and \(m_i\) are the number of vertices and edges at the beginning of the \(i^{\text{th} }\) iteration, with \(m_1 = m\) and \(n_1 = n\). From the previous claim, \(n_{i+1} \leq 2m_i / t_i\), which gives

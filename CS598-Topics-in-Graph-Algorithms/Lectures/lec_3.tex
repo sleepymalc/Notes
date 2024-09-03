@@ -1,0 +1,90 @@
+\lecture{3}{3 Sep.\ 11:00}{Min-Cut}
+\section{Min-Cuts}
+\begin{problem}[\(s\)-\(t\) min-cut]\label{prb:s-t-min-cut}
+Given a graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), the \emph{\(s\)-\(t\) min-cut} problem aims to find \(\min _{S \subseteq V \colon s \in S, t \in V\setminus S} c(\delta (S))\).
+\end{problem}
+
+\begin{problem}[Global min-cut]\label{prb:global-min-cut}
+Given a graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), the \emph{global min-cut} problem aims to find \(\min _{\varnothing \neq S \subseteq V} c(\delta (S))\).
+\end{problem}
+
+A naive way to solve the \hyperref[prb:global-min-cut]{global min-cut} problem is to first fix one end \(s \in V\), and compute the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} for all \(t \in V - s\).
+
+\begin{itemize}
+	\item Nagemathi-Ibache [NI] \(O(mn + n^2 \log n)\).
+	\item Karger: randomized contraction \(O(n^2 \log n)\).
+	\item Karger: \(O(m \log ^3 n)\), tree packing.
+	\item Isolating cuts.
+\end{itemize}
+
+Recall that \autoref{col:Tutte-Nash-Williams-min-cut} gives that
+\[
+	\frac{\lambda (G)}{2} \frac{n}{n-1}
+	\leq \tau _{\text{frac} }(G)
+	\leq \lambda (G).
+\]
+\begin{intuition}
+	On average, each tree can't cross the min-cut more than twice.
+\end{intuition}
+
+\begin{definition}[Respecting]\label{def:respecting}
+	Let \(T\) be a \hyperref[def:spanning-tree]{spanning tree} and \((S, V\setminus S)\) be a cut. \(T\)  is \emph{\(h\)-respecting} w.r.t.\ \(S\) if \(\lvert E_T \cap \delta (S) \rvert \leq h\).
+\end{definition}
+
+Assuming that we have access of the algorithm in \autoref{thm:approximate-TP}.
+
+\begin{notation}
+	Fix some min-cut \((S, V-S)\) for the tree \(T\), let \(\ell _T \coloneqq \lvert E_T \cap \delta (S) \rvert \).
+\end{notation}
+
+\begin{lemma}\label{lma:}
+	Suppose \(y_T\), \(T \in \mathcal{T} _G\) is a \((1 - \epsilon )\)-approximate \hyperref[prb:TP]{tree packing}. Let \(p_T = y_T / \sum_{T\in \mathcal{T} _G} y_T \).  Let \(q \coloneqq \sum_{T \colon \ell (T) \leq 2} p_T \). Then,
+	\[
+		q \geq \frac{1}{2} \left( 3 - \frac{2}{1 - \epsilon } \left( 1 - \frac{1}{n} \right) \right) .
+	\]
+	In particular, if \(\epsilon = 0\), \(1 \geq 1 / 2 + 1 / n\), and if \(\epsilon < 1 / 5\), then \(q > 1 / 4\).
+\end{lemma}
+\begin{proof}
+	Consider
+	\[
+		\sum_{T \colon \ell (T) \leq 2} y_T + 3 \sum_{T \colon \ell (T) \geq 3} y_T
+		\leq \lambda (G)
+		\implies q + 3 (1 - q)
+		\leq \frac{\lambda (G)}{\sum_{T \in \mathcal{T} _G} y_T}
+		\leq \frac{2}{1 - \epsilon }
+	\]
+	where \(\sum_{T \in \mathcal{T} _G} y_T \geq (1 - \epsilon ) \tau _{\text{frac} }(G) \geq (1 - \epsilon ) \lambda (G) / 2 \).
+\end{proof}
+
+\begin{theorem}
+	Given a graph \(G = (V, E)\) and a \hyperref[def:spanning-tree]{spanning tree} \(T = (V, E^{\prime} )\). The min-cut \((S, V - S)\) in \(G\) that crosses \(T\) less than \(2\) times can be found in \(O(m \log ^2 n)\) time.
+\end{theorem}
+
+\begin{enumerate}
+	\item Compute a \((1 - \epsilon _0)\)-approximation \hyperref[prb:TP]{tree packing} for \(\epsilon _0 < 1 / 5\) and get \(\{ y_T \} _{T \in \mathcal{T} _G}\).
+	\item Pick a tree at random where \(pvT = y_T / \sum_{T \in \mathcal{T} _G} y_T \).
+	\item Use DP+ data structure to find the cheapest-cut that \hyperref[def:respecting]{\(2\)-respecting} \(T\).
+\end{enumerate}
+
+We see that since the first step takes \(O(m \log ^3 n)\), and assuming that it's possible to sample (step 2), then the algorithm gives the min-cut with probability at least \(1 / 4\). By repeating step 2 and 3 \(O(\log n)\) times, the whole algorithm takes \(O(m \log ^3 n)\) and will success with high probability.
+
+Given a graph \(G = (V, E)\), how many different min-cuts are there? For \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cuts}, it can be exponential. On the other hand, for \hyperref[prb:global-min-cut]{global min-cut}, it's at most \(\binom{n}{2}\).
+
+We're also interested in \(\alpha \)-approximation min-cut for \(\alpha \geq 1\), i.e., a cut \((S, V \setminus S)\) such that \(c(\delta (S)) \leq \alpha \lambda (G)\).
+
+\begin{theorem}
+	The number of \(\alpha \)-approximation min-cuts is at most \(O_\alpha (n^{\lfloor 2\alpha \rfloor })\).
+\end{theorem}
+\begin{proof}
+	If \(q\) is the fraction of \hyperref[def:respecting]{\(2\)-respecting} trees w.r.t.\ \(S\), then \(q \geq 1 / 2 + 1 / n\). Let \(h \coloneqq \lfloor 2 \alpha \rfloor \), and
+	\[
+		q_{h, \alpha }
+		\coloneqq \sum_{T \colon \ell (T) \leq h} p_T,
+	\]
+	and after the same calculation as before, we have
+	\[
+		q_{h, \alpha }
+		\geq \frac{1}{h} (1 - (2\alpha - \lfloor 2 \alpha \rfloor )) \left( 1 - \frac{1}{n} \right) .
+	\]
+	Consider an optimal solution \(y^{\ast} _T\), which has the support with size smaller than \(m\). Fix \(T\) such that \(y^{\ast} _T > 0\). It's only possible to create cuts by first removing \(h\) edges, i.e., \(\binom{n-1}{h} 2^{h+1} \times m \leq n^{\lfloor 2\alpha \rfloor } 2^{\lfloor 2\alpha \rfloor }m\).
+\end{proof}

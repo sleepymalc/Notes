@@ -1,0 +1,278 @@
+\lecture{4}{5 Sep.\ 11:00}{Steiner Min-Cut with Isolating Cuts}
+\subsection{Steiner Min-Cut}
+Consider the following problem that generalizes the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} and \hyperref[prb:global-min-cut]{global min-cut}.
+
+\begin{problem}[Steiner min-cut]\label{prb:Steiner-min-cut}
+Given a graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \) and a set \(T \subseteq V\) of terminals, the \emph{Steiner min-cut} problem aims to find the min-cut \((S, V\setminus S)\) which separates some pair of terminals, i.e., \(S \cap T \neq \varnothing \) and \((V \setminus S) \cap T \neq \varnothing \).
+\end{problem}
+
+\begin{remark}
+	\hyperref[prb:Steiner-min-cut]{Steiner min-cut} generalizes both \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} and \hyperref[prb:global-min-cut]{global min-cut}.
+\end{remark}
+\begin{explanation}
+	\hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} corresponds to \(T = \{ s, t \} \), while \hyperref[prb:global-min-cut]{global min-cut} corresponds to \(T = V\).
+\end{explanation}
+
+A simple algorithm for the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} is the same as the \hyperref[prb:global-min-cut]{global min-cut} by solving \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}: for \(T = \{ t_1, \dots , t_k \} \), fix a terminal, say \(t_1\), then compute \hyperref[prb:s-t-min-cut]{\(t_1\)-\(t_i\) min-cut} for all \(i \geq 2\). This requires \(\lvert T \rvert - 1\) max-flow computations. In fact, this is the best known algorithm even for the \hyperref[prb:global-min-cut]{global min-cut} till~\cite{nagamochi1992computing}.
+
+Quite recently, a simple yet striking approach that computes the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using only \(O(\log ^3 n)\) \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} computations is developed~\cite{li2020deterministic}, which is based on \hyperref[prb:isolating-cut]{isolating cut}.
+
+\subsubsection{Submodular Function}
+We will need some machinery from combinatorial mathematics, specifically, \hyperref[def:submodular]{submodular} functions.
+
+\begin{definition*}
+	Given a finite ground set \(V\), consider a set function \(f \colon 2^V \to \mathbb{R} \).
+	\begin{definition}[Modular]\label{def:modular}
+		The function \(f\) is \emph{modular} if for all \(A, B \subseteq V\),
+		\[
+			f(A) + f(B)
+			= f(A \cap B) + f(A \cup B).
+		\]
+	\end{definition}
+	\begin{definition}[Submodular]\label{def:submodular}
+		The function \(f\) is \emph{submodular} if for all \(A, B \subseteq V\),
+		\[
+			f(A \cap B) + f(A \cup B)
+			\leq f(A) + f(B).
+		\]
+	\end{definition}
+	\begin{definition}[Supermodular]\label{def:supermodular}
+		The function \(f\) is \emph{supermodular} if for all \(A, B \subseteq V\),
+		\[
+			f(A \cap B) + f(A \cup B)
+			\geq f(A) + f(B).
+		\]
+	\end{definition}
+	\begin{definition}[Posi-modular]\label{def:posi-modular}
+		The function \(f\) is \emph{posi-modular} if for all \(A, B \subseteq V\),
+		\[
+			f(A - B) + f(B - A)
+			\geq f(A) + f(B).
+		\]
+	\end{definition}
+\end{definition*}
+
+\begin{eg}[Weight]
+	\(f\) is \hyperref[def:modular]{modular} if and only if there exists some \(w\colon V \to \mathbb{R} \) such that \(f(A) = \sum_{v \in A} w(v) + c\) for some shift \(c\).
+\end{eg}
+
+\begin{eg}[Cut]
+	Given a graph \(G = (V, E)\), the cut size function \(\lvert \delta _G (\cdot) \rvert \colon 2^V \to \mathbb{R} _+\) is \hyperref[def:submodular]{submodular}.
+\end{eg}
+
+\begin{eg}
+	A symmetric \hyperref[def:submodular]{submodular} function is automatically \hyperref[def:posi-modular]{posi-modular}.
+\end{eg}
+
+The structural property that we will utilize is the following.
+
+\begin{lemma}\label{lma:union-intersection-min-cut}
+	Let \(G = (V, E)\) be a graph and \((A, V\setminus A)\), \((B, V\setminus B)\) be two \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cuts}. Then \(A \cap B\) and \(A \cup B\) are also \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cuts}.
+\end{lemma}
+\begin{proof}
+	From \hyperref[def:submodular]{submodularity}, we have \(\lvert \delta (A) \rvert + \lvert \delta (B) \rvert \geq \lvert \delta (A \cap B) \rvert + \lvert \delta (A \cup B) \rvert \). However, as both \(A \cup B\) and \(A \cap B\) are themselves \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cuts}, all terms need to be equal.
+\end{proof}
+
+\begin{corollary}\label{col:union-intersection-min-cut}
+	For any graph \(G = (V, E)\), there is a unique (inclusion-wise) \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
+\end{corollary}
+
+\subsubsection{Isolating Cuts via Poly-log Max-flow Computations}
+We can now formally introduce the \hyperref[prb:isolating-cut]{isolating cut} problem.
+
+\begin{problem}[Isolating cut]\label{prb:isolating-cut}
+Given a graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \) and a set \(T \subseteq V\) of terminals. The \emph{\(t_i\)-isolating cut} problem aims to find a cut \((U_i, V\setminus U_i)\) such that \(t_i \in U_i\) and \(t_j \notin U_i\) (i.e., \(t_j \in V \setminus U_i\)) for all \(j \neq i\).
+\end{problem}
+
+\begin{intuition}
+	In other words, the cut isolates \(t_i\) from the rest of the terminals.
+\end{intuition}
+
+The minimum capacity \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} can be found by a single max-flow computation: by shrinking the terminals in \(T - t_i\) into a single vertex \(s\) and computing the \hyperref[prb:s-t-min-cut]{\(s\)-\(t_i\) min-cut}. Thus, all \hyperref[prb:isolating-cut]{isolating cuts} require \(k\) max-flow computations. The upshot is that this can be done in only \(O(\log k)\) max-flow.
+
+\begin{theorem}\label{thm:isolating-cut}
+	Given a graph \(G = (V, E)\) and a terminal set \(T = \{ t_i \} _{i=1}^k\), there is a deterministic algorithm that computes all minimum \hyperref[prb:isolating-cut]{\(t_i\)-isolating cuts} in \(O(\log k)\) max-flow on a graph of size \(\lvert G \rvert \).
+\end{theorem}
+
+From \hyperref[def:submodular]{submodularity}, we also have the following, just like \autoref{col:union-intersection-min-cut}.
+
+\begin{lemma}\label{lma:unique-isolating-cut}
+	There is a unique minimal \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} \((U_i, V \setminus U_i)\) such that if \((U, V\setminus U)\) is any \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut}, then \(U_i \subseteq U\).
+\end{lemma}
+
+We now describe the algorithm for computing the \hyperref[prb:isolating-cut]{isolating cuts}. Basically, we consider \(h\) bi-partitions \((A_1, B_1), \dots , (A_h, B_h )\) with \(h = \lceil \log k \rceil \), and compute a cut separating each bi-partition. Then, we take the intersection among the resulting cut sets.
+
+\begin{algorithm}[H]\label{algo:isolating-cut}
+	\DontPrintSemicolon{}
+	\caption{\hyperref[prb:isolating-cut]{Isolating Cut}~\cite{li2020deterministic} (also developed independently in~\cite{abboud2021subcubic})}
+	\KwData{A connected graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
+	\KwResult{A set of \hyperref[prb:isolating-cut]{isolating cuts} \(\{ (U_i^{\ast} , V\setminus U_i^{\ast} )\}_{i=1}^{k} \) isolating \(t_i\)'s}
+	\SetKwFunction{mincut}{\hyperref[prb:s-t-min-cut]{\(s\)-\(t\)-min-cut}}
+	\BlankLine
+
+	\(h \gets \lceil \log k \rceil \)\;
+	\For(\label{algo:isolating-cut-for-1}\Comment*[f]{\(h\) bi-partitions \((A_{\ell }, B_{\ell })\) of \(T\)}){\(\ell = 1, \dots , h\)}{
+		\(A_{\ell } \gets \{ t_i \mid \text{binary representation of \(i\) has \(1\) in \(\ell^{\text{th}}\) bit} \} \)\;
+		\(B_{\ell } \gets T \setminus A_{\ell } \)\;
+		\((X_{\ell }, Y_{\ell } ) \gets\)\mincut{\(G\), \(A_{\ell } \), \(B_{\ell } \)}\footnote{This can be done via shrinking \(A_{\ell } \) and \(B_{\ell } \) in to two separate nodes, and compute the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.}\label{algo:isolating-cut-bi-partition-cut}\Comment*[r]{\(Y_{\ell } = V\setminus X_{\ell } \) }
+	}
+	\For(){\(i = 1, \dots , k\)}{
+	\(U_i \gets \bigcap_{\ell \colon t_i \in A_{\ell } } X_{\ell } \cap \bigcap_{\ell \colon t_i \in B_{\ell } } Y_{\ell } \)\label{algo:isolating-cut-U}\;
+	\(H_i = (V_i, E_i)\gets\) shrinking \(V \setminus U_i\) to a single vertex \(s_i\)\label{algo:isolating-cut-H}\;
+	\((U_i^{\ast} , V\setminus U_i^{\ast} )\gets\)\mincut{\(H_i\), \(t_i\), \(s_i\)}\label{algo:isolating-cut-min-cut}\;
+	}
+	\Return{\(\{ (U_i^{\ast} , V\setminus U_i^{\ast} )\}_{i=1}^{k} \)}\;
+\end{algorithm}
+
+\begin{intuition}
+	The following illustrates \autoref{algo:isolating-cut-bi-partition-cut}, where terminals are black vertices. \((A_{\ell } , B_{\ell } )\) is a bi-partition of \(T\), while \((X_{\ell } , Y_{\ell } )\) is a \hyperref[prb:s-t-min-cut]{min-cut} that separates \((A_{\ell }, B_{\ell } )\).
+	\begin{figure}[H]
+		\centering
+		\incfig{isolating-cut-bipartition-cut}
+	\end{figure}
+	Additionally, \autoref{algo:isolating-cut-U} is created by considering the intersections of all \(X_{\ell } \) (or \(Y_{\ell } \)) that includes \(t_i\).
+\end{intuition}
+
+To see the correctness of the \autoref{algo:isolating-cut}, we want to say that \hyperref[prb:s-t-min-cut]{\(s_i\)-\(t_i\) min-cut} is exactly the minimum cost \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} in \(G\). This is due to \autoref{lma:algo:isolating-cut}.
+
+\begin{lemma}\label{lma:algo:isolating-cut}
+	For each \(i\), \((U_i, V\setminus U_i)\) is a \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut}. Furthermore, \(U_i\)'s are pairwise disjoint.
+\end{lemma}
+\begin{proof}
+	Firstly, \(t_i \in A_{\ell } \subseteq X_{\ell }\) or \(t_i \in B_{\ell } \subseteq Y_{\ell } \), implying \(t_i \in U_i\). Consider \(t_j\) with \(j \neq i\). As \(i \neq j\), there is some index \(\ell \) in the binary representation of \(i\) and \(j\) differ in the bit position. Suppose \(i\) has \(1\) in the \(\ell ^{\text{th} }\) position and \(j\) has \(0\), then \(t_i \in A_{\ell } \) and \(t_j \in B_{\ell } \), implying \(t_i \in X_{\ell } \) and \(t_j \notin X_{\ell } \) as \(t_j \in B_{\ell } \subseteq Y_{\ell } \) and \(Y_{\ell } \cap X_{\ell } = \varnothing \). This means \(t_j \notin U_i\).
+
+	We now prove that \(U_i \cap U_j = \varnothing \) for all \(i \neq j\). Firstly, there exists some \(\ell \) such that \(t_i \in A_{\ell } \) and \(t_j \in B_{\ell } \) (or \(t_i \in B_{\ell } \) and \(t_j \in A_{\ell } \)). Suppose \(v \in X_{\ell } \), then \(v\) can't be in \(U_j \subseteq Y_{\ell } \) and if \(v \in Y_{\ell } \), then \(v\) can't be in \(U_i \subseteq X_{\ell } \), hence \(v\) can't be in both \(U_i\) and \(U_j\).
+\end{proof}
+
+\autoref{lma:algo:isolating-cut} gives the following picture, where each \(t_i\) lives in exactly one \(U_i\).
+
+\begin{figure}[H]
+	\centering
+	\incfig{isolating-cut-unique-disjoint}
+\end{figure}
+
+Hence, for each \(i\), we have a \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} \((U_i, V\setminus U_i)\). \autoref{lma:unique-isolating-cut} states that there is a \hyperref[prb:isolating-cut]{\(t_i\)-isolating min-cut} \((U_i^{\ast} , V\setminus U_i^{\ast} )\) where \(U_i^{\ast} \subseteq U_i\). More explicitly, consider the following:
+
+\begin{lemma}\label{lma:unique-isolating-min-cut}
+	There exists a unique minimal \hyperref[prb:isolating-cut]{\(t_i\)-isolating min-cut} \((U_i^{\ast} , V \setminus U_i^{\ast} )\) such that \(U_i^{\ast} \subseteq U_i\).
+\end{lemma}
+\begin{proof}
+	It suffices to prove that if \(t_i \in A_{\ell } \) then \(U_i^{\ast} \subseteq X_{\ell } \). Assume not, then \(U_i^{\ast} \cap (V\setminus X_{\ell } ) \neq \varnothing \). But since \(U_i^{\ast} \cap X_{\ell } \) is a \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut}, while \(U_i^{\ast} \) is the minimal \hyperref[prb:isolating-cut]{\(t_i\)-isolating min-cut}, \(\lvert \delta (U_i^{\ast} \cap X_{\ell } ) \rvert > \lvert \delta (U_i^{\ast} ) \rvert \).
+
+	Moreover, it's trivial to see that \(U_i^{\ast} \cup X_{\ell } \) is a \(A_{\ell } \)-\(B_{\ell } \) cut (not necessarily minimum, just a cut), hence we also have \(\lvert \delta (U_i^{\ast} \cup X_{\ell } ) \rvert \geq \lvert \delta (X_{\ell } ) \rvert \). From \hyperref[def:submodular]{submodularity} of \(\lvert \delta (\cdot) \rvert \), we have
+	\[
+		\lvert \delta (U_i^{\ast} ) \rvert + \lvert \delta (X_{\ell } ) \rvert
+		\geq \lvert \delta (U_i^{\ast} \cap X_{\ell } ) \rvert + \lvert \delta (U_i^{\ast} \cup X_{\ell } ) \rvert,
+	\]
+	which is a contradiction.
+\end{proof}
+
+With all the lemmas, it's now easy to see that \autoref{algo:isolating-cut} is at least correct. Firstly, from \autoref{lma:unique-isolating-min-cut}, we know that there the optimal \hyperref[prb:isolating-cut]{\(t_i\)-isolating min-cut} \(U_i^{\ast} \subseteq U_i\) (here, \(U_i^{\ast} \) is not necessary the one found by \autoref{algo:isolating-cut}: indeed, we're trying to argue this). As \(U_i\)'s are disjoint, each terminal \(t_i\) lives in exactly one \(U_i\), hence computing \hyperref[prb:s-t-min-cut]{\(s_i\)-\(t_i\) min-cut} will indeed recover \(U_i^{\ast} \).
+
+\begin{intuition}
+	When we contract \(V \setminus U_i\), we do not lose the optimal \hyperref[prb:isolating-cut]{isolating cut} \(U_i^{\ast} \).
+\end{intuition}
+
+\begin{theorem}[\cite{li2020deterministic}]\label{thm:isolating-min-cut}
+	\autoref{algo:isolating-cut} is a deterministic algorithm that given \(G = (V, E)\) and a terminal set \(T \subseteq V\) with \(\lvert T \rvert = k\), computes all the \hyperref[prb:isolating-cut]{isolating cuts} using \(O(\log k)\) max-flow computations on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges each.
+\end{theorem}
+\begin{proof}
+	We analyze the runtime. It's easy to see that \autoref{algo:isolating-cut-for-1} requires \(O(\log k)\) max-flow computations on \(G\). It's also easy to show that computing \(U_i\)'s in \autoref{algo:isolating-cut-U} can be done in \(O((m+n) \log k)\) time given \((X_{\ell } , Y_{\ell } )\) for \(\ell \in [h]\). However, \autoref{algo:isolating-cut-H} and \autoref{algo:isolating-cut-min-cut} seem to require \(k\) max-flow computations.
+
+	\begin{claim}
+		In total, \autoref{algo:isolating-cut-min-cut} only requires \(O(\log k)\) max-flow computations.
+	\end{claim}
+	\begin{explanation}
+		Let us understand the size of \(H_i\). It has \(n_i + 1\) vertices where \(n_i = \lvert U_i \rvert \), and it has \(m_i\) edges where \(m_i = \lvert E(U_i) \rvert + \lvert \delta (U_i) \rvert \). Thus, the running time of max-flow on \(H_i\) is \(T(n_i + 1, m_i)\) where \(T(a, b)\) is the running time of max-flow on graph with \(a\) nodes and \(b\) edges. We observe that \(\sum_{i} (n_i + 1) \leq 2n\) since \(U_i\)'s are disjoint, while \(\sum_{i} m_i \leq 2m\): consider any edge \(uv \in E\). If \(uv \in E(U_i)\) for some \(i\), then it does not contribute to any other \(H_j\). If \(uv \in \delta (U_i)\) for some \(i\), then it can be in \(\delta (U_j)\) for only one more index \(j \neq i\).
+
+		Thus, the total time to compute all \(k\) max-flows is \(\sum_{i} T(n_i, m_i) \leq T(2n, 2m)\) under reasonable assumption, specifically, \(T(a, b)\) is super-additive.\footnote{Formally, we first create a single \(H\) that includes each \(H_i\) as a copy in it, and we can run a single max-flow on \(H\) to recover all the max-flow values in each \(H_i\). \(H\) will have \(O(n)\) vertices and \(O(m)\) edges.}
+	\end{explanation}
+	With the correctness of \autoref{algo:isolating-cut}, the theorem is proved.
+\end{proof}
+
+We see that this could have been discovered many years ago in terms of its simplicity. \autoref{algo:isolating-cut} has been very influential in the last few years for a number of problems.
+
+\begin{note}
+	Another perspective of the bi-partitions is that they are a way to \emph{derandomize} a natural randomized algorithm that picks some \(O(\log k)\) bi-partitions of \(T\) at random and computes the cuts between them. With high probability, every \(t_i, t_j\) with \(i \neq j\) will be separated in at least on of the random bi-partitions.
+\end{note}
+
+\begin{remark}
+	The core idea of \hyperref[prb:isolating-cut]{isolating cuts} relies only on \hyperref[def;submodular]{submodularity} and symmetry, thus, this applies in much more generality and to several other problems. This is explicitly discussed in~\cite{chekuri2021isolating}, though the ideas are implicit in~\cite{li2020deterministic}.
+\end{remark}
+
+\subsubsection{Randomized Algorithm for Steiner Min-Cut via Isolating Cuts}
+\hyperref[prb:isolating-cut]{Isolating cut} naturally lead to a simple randomized algorithm for \hyperref[prb:Steiner-min-cut]{Steiner min-cut}. The basic idea is quite simple. Consider an optimum \hyperref[prb:Steiner-min-cut]{Steiner min-cut} \((S, V\setminus S)\) and let \(T_1 \coloneqq S \cap T\) and \(T_2 \coloneqq (V \setminus S) \cap T\), with \(k_1 = \lvert T_1 \rvert \) and \(k_2 = \lvert T_2 \rvert \). We may assume that \(1 \leq k_1 \leq k_2\).
+
+\begin{note}
+	\((S, V\setminus S)\) is a \hyperref[prb:s-t-min-cut]{\(t_i\)-\(t_j\) min-cut} for any \(i \neq j\) since otherwise, it induces a lower-cost cut.
+\end{note}
+
+The basic intuition is the following.
+
+\begin{intuition}
+	If we can sample exactly one terminal in one side of the \hyperref[prb:Steiner-min-cut]{Steiner min-cut}, then we can simply use the \hyperref[prb:isolating-cut]{isolating cut} to recover the \hyperref[prb:Steiner-min-cut]{Steiner min-cut}.
+\end{intuition}
+
+Say we know \(k_1\). We can sample each terminal in \(T\) independently with probability \(1 / k_1\) to obtain \(T^{\prime} \subseteq T\) such that with constant probability, \(\lvert T^{\prime} \cap T_1 \rvert = 1\) and \(\lvert T^{\prime} \cap T_2 \rvert \geq 1\) (recall \(k_1 \leq k_2\)). Suppose \(T^{\prime} \) satisfies these properties and let \(T^{\prime} \cap T_1 = \{ t_i \} \). Then, \((S, V\setminus S)\) is a minimum cost \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} w.r.t.\ \(T^{\prime} \). Hence, by computing \hyperref[prb:isolating-cut]{\(t_i\)-isolating cuts} for all \(t_i \in T^{\prime} \) and choosing the cheapest one identifies the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} for \(T\).
+
+The problem is that we don't know \(k_1\), and trying all possible values for \(k_1\) (from \(1\) to \(k / 2\)) will be too expensive. The idea is that the above sampling procedure is robust: say if we sample with probability, say, \(1 / 2k_1\), everything still happens with constant probability. Hence, we only need to try \(k_i = 2^i\), i.e., \(O(\log k)\) different sampling probabilities.
+
+\begin{algorithm}[H]\label{algo:Steiner-min-cut}
+	\DontPrintSemicolon{}
+	\caption{\hyperref[prb:Steiner-min-cut]{Steiner Min-Cut}}
+	\KwData{A connected graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
+	\KwResult{A possible \hyperref[prb:Steiner-min-cut]{Steiner min-cut} \((U^{\ast} , V\setminus U^{\ast} )\)}
+	\SetKwFunction{sample}{Sample}
+	\SetKwFunction{isolatingcut}{\hyperref[algo:isolating-cut]{Isolating-Cut}}
+	\SetKwFunction{mincost}{Min-Cost}
+	\BlankLine
+
+	\(U^{\ast} \gets \varnothing \)\Comment*[r]{Initialize \hyperref[prb:Steiner-min-cut]{Steiner min-cut}}
+	\For(){\(i = 0, \dots , \lceil \log k \rceil \)}{
+	\(T^{\prime} \gets\)\sample{\(T\), \(1 / 2^i\)}\Comment*[r]{Sample each terminal in \(T\) with probability \(1 / 2^i\)}
+	\(\{ (U_i^{\ast} , V\setminus U_i^{\ast} ) \}_{i=1}^{\lvert T^{\prime} \rvert } \gets\)\isolatingcut{\(G\), \(c\), \(T^{\prime} \)}\;
+	\(U^{\ast} \gets \)\mincost{\(\{ (U_i^{\ast} , V\setminus U_i^{\ast}) \}_{i=1}^{\lvert T^{\prime} \rvert } \cup \{ (U^{\ast} , V\setminus U^{\ast} ) \} \)}\Comment*[r]{Update minimum cost cut}
+	}
+	\Return{\((U^{\ast} , V\setminus U^{\ast} )\)}\;
+\end{algorithm}
+
+We now formally prove the robustness we have mentioned.
+
+\begin{lemma}\label{lma:algo:Steiner-min-cut}
+	\autoref{algo:Steiner-min-cut} finds the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} for \(T\) with a constant probability.
+\end{lemma}
+\begin{proof}
+	We see that for \(k_1 = 1\), \autoref{algo:Steiner-min-cut} is correct (deterministically) since \(i\) can only be \(0\) and \(T^{\prime} = T\). Hence, let \(k_1 > 1\). Consider the case that \(1 / 2^{i+1} < 1 / k_1 \leq 1 / 2^i\), where \(i\) will be tried at some point during \(i=0\) to \(\lceil \log k \rceil \) since \(1 \leq k_1 \leq k / 2\). Let \(\ell = 2^i\), i.e., \(\ell \leq k_1 \leq 2 \ell \).
+
+	Now, let \(\mathcal{E} _1\) be the event that \(\lvert T_1 \cap T^{\prime} \rvert = 1\), i.e., exactly one terminal from \(T_1\) is chosen. Then
+	\[
+		\Pr(\mathcal{E} _1)
+		= k_1 \cdot \frac{1}{\ell } \cdot \left( 1 - \frac{1}{\ell } \right) ^{k_1 - 1}
+		\geq \left( 1 - \frac{1}{\ell } \right) ^{2\ell }
+		\geq \frac{1}{e^2}.
+	\]
+	On the other hand, let \(\mathcal{E} _2\) be the event that \(T_2 \cap T^{\prime} \neq \varnothing \). We see that
+	\[
+		\Pr(\mathcal{E} _2)
+		\geq 1 - \left( 1 - \frac{1}{\ell } \right) ^{k_2}
+		\geq \left( 1 - \frac{1}{\ell } \right) ^{\ell }
+		\geq 1 - \frac{1}{e}.
+	\]
+	Since \(T_1\) and \(T_2\) are disjoint, \(\mathcal{E} _1\) and \(\mathcal{E} _2\) are independent, we have
+	\[
+		\Pr(\mathcal{E} _1 \cap \mathcal{E} _2)
+		\geq \left( 1 - \frac{1}{e} \right) \cdot \frac{1}{e^2},
+	\]
+	which is a constant.
+\end{proof}
+
+\begin{theorem}
+	There is a randomized algorithm that given \(G=(V, E)\) and terminal set \(T \subseteq V\) with \(\lvert T \rvert = k\), outputs the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using in \(O(\log^2 k \log n)\) max-flow computations.\footnote{Again, potentially on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges each from \autoref{thm:isolating-min-cut}.}
+\end{theorem}
+\begin{proof}
+	From \autoref{lma:algo:Steiner-min-cut}, \autoref{algo:Steiner-min-cut} successes with a constant probability. We further boost the overall success probability by rerunning \autoref{algo:Steiner-min-cut} \(\Theta (\log n)\) times. With \autoref{thm:isolating-cut}, this requires \(O(\log ^2k \log n)\) max-flow computations.
+\end{proof}
+
+\begin{remark}[Deterministic algorithm]
+	Li and Panigraphy~\cite{li2020deterministic} also developed deterministic \hyperref[prb:global-min-cut]{min-cut} and \hyperref[prb:Steiner-min-cut]{Steiner min-cut} algorithms using additional ideas based on expander decomposition.
+\end{remark}

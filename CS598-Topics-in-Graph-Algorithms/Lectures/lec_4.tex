@@ -88,19 +88,13 @@ Given a graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \) and
 	In other words, the cut isolates \(t_i\) from the rest of the terminals.
 \end{intuition}
 
-The minimum capacity \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} can be found by a single max-flow computation: by shrinking the terminals in \(T - t_i\) into a single vertex \(s\) and computing the \hyperref[prb:s-t-min-cut]{\(s\)-\(t_i\) min-cut}. Thus, all \hyperref[prb:isolating-cut]{isolating cuts} require \(k\) max-flow computations. The upshot is that this can be done in only \(O(\log k)\) max-flow.
-
-\begin{theorem}\label{thm:isolating-cut}
-	Given a graph \(G = (V, E)\) and a terminal set \(T = \{ t_i \} _{i=1}^k\), there is a deterministic algorithm that computes all minimum \hyperref[prb:isolating-cut]{\(t_i\)-isolating cuts} in \(O(\log k)\) max-flow on a graph of size \(\lvert G \rvert \).
-\end{theorem}
-
-From \hyperref[def:submodular]{submodularity}, we also have the following, just like \autoref{col:union-intersection-min-cut}.
+The minimum capacity \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} can be found by a single max-flow computation: by shrinking the terminals in \(T - t_i\) into a single vertex \(s\) and computing the \hyperref[prb:s-t-min-cut]{\(s\)-\(t_i\) min-cut}. Thus, naively, computing all \hyperref[prb:isolating-cut]{isolating cuts} require \(k\) max-flow computations. The upshot is that this can be done in only \(O(\log k)\) max-flow. Before we describe the algorithm, we first note that from \hyperref[def:submodular]{submodularity}, we also have a similar structural result, just like \autoref{col:union-intersection-min-cut}.
 
 \begin{lemma}\label{lma:unique-isolating-cut}
 	There is a unique minimal \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} \((U_i, V \setminus U_i)\) such that if \((U, V\setminus U)\) is any \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut}, then \(U_i \subseteq U\).
 \end{lemma}
 
-We now describe the algorithm for computing the \hyperref[prb:isolating-cut]{isolating cuts}. Basically, we consider \(h\) bi-partitions \((A_1, B_1), \dots , (A_h, B_h )\) with \(h = \lceil \log k \rceil \), and compute a cut separating each bi-partition. Then, we take the intersection among the resulting cut sets.
+We now describe the algorithm for computing the \hyperref[prb:isolating-cut]{isolating cuts}. Basically, we consider \(h\) bi-partitions \((A_1, B_1), \dots , (A_h, B_h )\) with \(h = \lceil \log k \rceil \), and compute a cut separating each bi-partition. Then, we take the intersection among the resulting cut sets, which will be \hyperref[prb:isolating-cut]{isolating cuts} as we will see. Finally, with the structural property \autoref{lma:unique-isolating-cut}, we can then find the minimum \hyperref[prb:isolating-cut]{isolating cuts} from them.
 
 \begin{algorithm}[H]\label{algo:isolating-cut}
 	\DontPrintSemicolon{}

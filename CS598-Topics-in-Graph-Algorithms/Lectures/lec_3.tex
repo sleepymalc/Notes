@@ -3,11 +3,11 @@
 Consider the following famous problems about min-cuts.
 
 \begin{problem}[\(s\)-\(t\) min-cut]\label{prb:s-t-min-cut}
-Given a graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), the \emph{\(s\)-\(t\) min-cut} problem aims to find \(\min _{S \subseteq V \colon s \in S, t \in V\setminus S} c(\delta (S))\).
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), the \emph{\(s\)-\(t\) min-cut} problem aims to find \(\min _{S \subseteq V \colon s \in S, t \in V\setminus S} c(\delta (S))\).
 \end{problem}
 
 \begin{problem}[Global min-cut]\label{prb:global-min-cut}
-Given a graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), the \emph{global min-cut} problem aims to find \(\min _{\varnothing \neq S \subsetneq V} c(\delta (S))\).
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), the \emph{global min-cut} problem aims to find \(\min _{\varnothing \neq S \subsetneq V} c(\delta (S))\).
 \end{problem}
 
 In what follows, we will simply use \hyperref[prb:global-min-cut]{min-cut} to refer to \autoref{prb:global-min-cut} problem. A naive way to solve it is to first fix one end \(s \in V\), and compute the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} for all \(t \in V - s\). Fairly recent work shows how one can do it with only poly-log max-flow computations.
@@ -103,7 +103,7 @@ By black-boxing this near-linear time \hyperref[prb:TP]{tree packing} algorithm,
 \begin{algorithm}[H]\label{algo:Karger-tree-packing-based-min-cut}
 	\DontPrintSemicolon{}
 	\caption{\hyperref[prb:TP]{Tree Packing}-Based \hyperref[prb:global-min-cut]{Min-Cut} Algorithm~\cite{karger2000minimum,chekuri2017near}}
-	\KwData{A connected graph \(G = (V, E)\) with edge weight \(c \colon E \to \mathbb{R} \), \(\epsilon _0 \in < 1 / 5\)}
+	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), \(\epsilon _0 \in < 1 / 5\)}
 	\KwResult{A cut \(S\)}
 	\SetKwFunction{CQ}{\hyperref[thm:approximate-TP]{Approximate-Tree-Packing}}
 	\BlankLine
@@ -154,10 +154,9 @@ In contrast, for \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cuts}, it can be exp
 
 \begin{eg}
 	Consider the following multi-highway-like graph, which has exponentially many \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cuts} since if we choose one of the road section in each line of the road, it'll be a \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
-	\begin{figure}[H]
-		\centering
+	\begin{center}
 		\incfig{highway}
-	\end{figure}
+	\end{center}
 \end{eg}
 
 Hence, we're interested in the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximation min-cut}:

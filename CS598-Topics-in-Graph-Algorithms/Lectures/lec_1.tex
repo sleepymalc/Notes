@@ -137,11 +137,13 @@ The algorithm collects all these edges, say \(F\), and adds them to the tree. It
 	\(F = \varnothing \)\Comment*[r]{Initialize the tree}
 	\(\mathcal{S} \gets \{ S_v = \{ v \} \} \)\Comment*[r]{Collection of all sets}
 	\While(){\(\lvert \mathcal{S} \rvert > 1\)}{
+		\(\mathcal{S} ^{\prime} \gets \mathcal{S} \)\Comment*[r]{Make a copy}
 		\For(){\(S \in \mathcal{S} \)}{
 			\(e_S = (u, v) \gets \argmin_{e \in \delta (S)} c(e)\)\;
-			\(\mathcal{S} \gets \mathcal{S} - \{ S_u, S_v \} + S_u \cup S_v\)\label{algo:Boruvka-notation}\Comment*[r]{Merge (i.e., shrink)}
+			\(\mathcal{S}^{\prime} \gets \mathcal{S}^{\prime} - \{ S_u, S_v \} + S_u \cup S_v\)\label{algo:Boruvka-notation}\Comment*[r]{Merge (i.e., shrink)}
 			\(F \gets F + e_S\)\Comment*[r]{Update the tree}
 		}
+		\(\mathcal{S} \gets \mathcal{S} ^{\prime} \)\Comment*[r]{Update \(\mathcal{S} \)}
 	}
 	\Return{\((V , F)\)}\;
 \end{algorithm}

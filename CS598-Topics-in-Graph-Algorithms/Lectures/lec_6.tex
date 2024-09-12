@@ -111,7 +111,16 @@ The main difference is in the probability guarantee which is refinement of the p
   The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\), i.e., \(\alpha = \alpha (\delta ) = 4 \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\).
 \end{theorem}
 \begin{proof}
-  We sketch the proof based on the proof of \autoref{lma:multi-cut-random-partition-probability}.
+  We sketch the proof based on the proof of \autoref{lma:multi-cut-random-partition-probability}. Assuming the exact same notation, and we fix \(u, v \in V\) and think of \(V\) as \(v_1, \dots , v_n\). If \(d(u, v) \geq \delta / 8\), then the edge is going to get cut with constant probability, and the bound is not giving anything interesting, so we are primarily interested in the case when \(d(u, v) < \delta / 8\).
+
+  We consider the event \(A_i\) which is that \(v_i\) is the first vertex to separate the pair \(u, v\). We can argue as before that \(\Pr(A_i) \leq 1 / i \cdot \Pr(\theta \in [L_i, R_i])\), and this is at most \(4d(u, v) / \delta i\) since we're choosing the radius from \([\delta / 4, \delta / 2)\). The new twist is that since we choose \(\theta \in [\delta / 4, \delta / 2)\) and \(d(u, v) <\delta / 8\), no vertex \(v_j \in B(u, \delta / 8)\) can separate \(u, v\) because \(L_j \leq d(v_j, u) < \delta / 8\) and \(R_j \leq L_j + d(u, v_j) \leq \delta / 8 + \delta / 8 = \delta / 4\). Any such vertex will capture both \(u, v\) if they are not already separated. Similarly, any vertex \(v_j \notin B(u, \delta )\) can cut the pair because \(L_j \geq \delta - d(u, v) \geq \delta - \delta / 8 \geq \delta / 2\). Therefore, if \(A\) is the event of \(u, v\) being cut, then
+  \[
+    \Pr(A)
+    \leq \sum_{j \in B(u, \delta ) \setminus B(u, \delta / 8)} \Pr(A_j)
+    \leq \frac{4d(u, v)}{\delta } \sum_{\lvert B(u, \delta / 8) \rvert < j \leq \lvert B(u, \delta ) \rvert } \frac{1}{j}
+    \leq \frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta ) \rvert }{\lvert B(u, \delta / 8) \rvert },
+  \]
+  proving the result.
 \end{proof}
 
 \subsection{Probabilistic Embedding of Metrics into Dominating Tree Metrics}

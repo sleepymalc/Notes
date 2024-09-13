@@ -211,8 +211,12 @@ Specifically, let \((V, d)\) be a metric space with diameter \(\Delta \). We use
   \Return{\((T, r)\)}\;
 \end{algorithm}
 
+\begin{center}
+  \incfig{algo-tree-embedding-recursive-tree-construction}
+\end{center}
+
 \begin{notation}
-  We use \(\delta = \Delta / 2^i\) at level \(i\) to make the analysis cleaner.
+  We say \(\delta = \Delta / 2^i\) at level \(i\) to make the analysis cleaner.
 \end{notation}
 
 We will now assume that the minimum distance is at least \(1\) by scaling, and let \(\Delta \) be the diameter of the metric space with this assumption.
@@ -263,12 +267,23 @@ Finally, we note that if we choose \autoref{algo:random-partition*} as the \hype
   The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\).
 \end{prev}
 
-Thus, the guarantee from the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm is no longer uniform but depends on the diameter. Plugging this to \autoref{eq:tree-embed}, we have
+Thus, the guarantee \(\alpha (\delta )\) from the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm is no longer uniform but depends on the diameter. Plugging this to \autoref{eq:tree-embed}, we have
 \[
   \begin{split}
     \mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
      & \leq \sum_{i=0}^{t+1} 2 \log \frac{\lvert B(u, \Delta / 2^i) \rvert }{\lvert B(u, \Delta / 2^{i+3}) \rvert } \frac{d(u, v)}{\Delta / 2^{i-1}} \cdot \left( 4 \frac{\Delta }{2^{i-1}} \right) \\
-     & \leq 2d(u, v) \left( \log \lvert B(u, \Delta / 2) \rvert + \log \lvert B(u, \Delta / 4) \rvert + \log \lvert B(u, \Delta / 8) \rvert \right)
+     & \leq 8 d(u, v) \left( \log \lvert B(u, \Delta / 2) \rvert + \log \lvert B(u, \Delta / 4) \rvert + \log \lvert B(u, \Delta / 8) \rvert \right)
     \leq O(\log n) d(u, v).
   \end{split}
 \]
+
+\begin{remark}[Lower-bound]
+  \(O(\log n)\) bound for \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm and \hyperref[prb:tree-embedding]{tree embeddings} are near optimal (modulo precise constant factors).
+\end{remark}
+\begin{explanation}
+  We can use the existence of low-girth graphs which are closely tied to expanders in a direct fashion. Another way is via indirection. Previously, in the lecture note, we saw that the integrality gap of the \hyperref[eq:multi-min-cut-LP]{linear program relaxation} for \hyperref[prb:multi-min-cut]{multi-min-cut} is \(\Omega (\log k)\) (the upper-bound is proved in \autoref{thm:multi-min-cut-integrality-gap} via a \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm). In fact, if \(\alpha \) is the factor for the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm, then we get an \(O(\alpha )\)-approximation for \hyperref[prb:multi-min-cut]{multi-min-cut} via the \hyperref[eq:multi-min-cut-LP]{linear program}. Thus, one see that \(\alpha = \Omega (\log n)\) for general metrics (in the integrality gap example for \hyperref[prb:multi-min-cut]{multi-min-cut} \(k = \Omega (n^2)\)). One can use similar approaches to prove for \hyperref[prb:tree-embedding]{tree embedding}.
+\end{explanation}
+
+\begin{note}[Efficient algorithms]
+  While we focus on the quality of \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithms and \hyperref[prb:tree-embedding]{tree embedding} but not so much on the running times, it is easy to see that the algorithms themselves can be implemented in polynomial time. The main computation is about the shortest paths. If one computes all pairs shortest paths (APSP), then the algorithms are pretty simple. However, APSP is slow, which takes \(O(mn)\) times. It is possible to compute the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm and metric \hyperref[prb:tree-embedding]{tree embeddings} in close to linear time on a weighted graph with \(m\) edges. This involves computing approximate shortest paths and several tricks, and sometimes we give up on the quality of the approximation by logarithmic factors.
+\end{note}

@@ -1,6 +1,6 @@
 \lecture{5}{10 Sep.\ 11:00}{Metric Embedding and Multi-Cut Problem}
-\section{Metric Embedding}
-Consider a directed graph \(G= (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\). Consider the following linear program relaxation of the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} where \(s, t\) are two distinct vertices, where the integer version is with constraints \(x_e \in \{ 0, 1 \} \):
+\subsection{Max-Flow Min-Cut Theorem}
+Finally, we conclude this section by proving the well-known \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. Given a directed graph \(G= (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), consider the following linear program relaxation of the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} where \(s, t\) are two distinct vertices:
 \begin{equation}\label{eq:s-t-min-cut-LP}
 	\begin{aligned}
 		\min~           & \sum_{e \in E} c(e) x_e                              \\
@@ -13,20 +13,27 @@ Consider a directed graph \(G= (V, E)\) with edge capacity \(c \colon E \to \mat
 		\text{(D)}\quad & y_P \geq 0                          & \forall P \in \mathcal{P}_{s, t},
 	\end{aligned}
 \end{equation}
-where \(\mathcal{P} _{s, t}\) is the set of all \(s\)-\(t\) paths.
+where \(\mathcal{P} _{s, t}\) is the set of all \(s\)-\(t\) paths. The integer version is with constraints \(x_e \in \{ 0, 1 \} \).
 
 \begin{remark}
-	An \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} is often also defined as \(\delta ^+(S)\) for some \(S \subseteq V\) where \(s \in S\) and \(t \in V \setminus S\). Suppose \(E^{\prime} \) is a \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} and \(S\) is the set of nodes reachable from \(s\) in \(G - E^{\prime} \). Then, \(\delta (S) \subseteq E^{\prime} \) and \(\delta (S)\) is an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut}. Hence, it suffices to focus on such limited type of cuts.\footnote{In some more general settings, it is useful to keep these notions separate.}
+	An \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} is often also defined as \(\delta ^+(S)\) for some \(S \subseteq V\) where \(s \in S\) and \(t \in V \setminus S\).
 \end{remark}
+\begin{explanation}
+	Suppose \(E^{\prime} \) is an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} and \(S\) is the set of nodes reachable from \(s\) in \(G - E^{\prime} \). Then, \(\delta (S) \subseteq E^{\prime} \) and \(\delta (S)\) is an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut}. Hence, it suffices to focus on such limited type of cuts.\footnote{In some more general settings, it is useful to keep these notions separate.}
+\end{explanation}
 
-\subsection{Max-Flow Min-Cut Theorem}
-It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be computed efficiently via \(s\)-\(t\) max-flow, which also establishes the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. This is a fundamental theorem in combinatorial optimization with many direct and indirect applications. The proof of the \hyperref[thm:max-flow-min-cut]{max-flow min-cut} theorem is typically established via the augmenting path algorithm for computing a max-flow, here, we give another proof that is based on the above linear program.
+It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be computed efficiently via \(s\)-\(t\) max-flow, establishing the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. This fundamental theorem in combinatorial optimization has many applications, and is typically established via the augmenting path algorithm. Here, we give another proof.
 
 \begin{theorem}[Max-flow min-cut]\label{thm:max-flow-min-cut}
 	Let \(G = (V, E)\) be a directed graph with rational edge capacities \(c \colon E \to \mathbb{Q} _+\) and let \(s, t\in V\) be two distinct vertices. The \(s\)-\(t\) max-flow value in \(G\) is equal to the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} value, and both can be computed in strongly polynomial time. Furthermore, if \(c\) is integer valued, then there exists an integer-valued max-flow as well.
 \end{theorem}
 \begin{proof}
-	We first observe that the linear program can be viewed as assigning lengths to the edges such that the shortest path between \(s\) and \(t\) according to the lengths is at least \(1\), which is a fractional relaxation of the cut. Now, we show that it's possible to round the fractional solution of the primal to the exact \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} without any loss.
+	To start, we observe that following.
+	\begin{intuition}
+		The primal \hyperref[eq:s-t-min-cut-LP]{linear program} assigns lengths to edges such that the \(s\)-\(t\) shortest path according to which is at least \(1\). This is a fractional relaxation of the cut.
+	\end{intuition}
+
+	We claim that it's possible to round the fractional solution of the primal to the exact \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} without any loss. Consider the following rounding algorithms for the primal \hyperref[eq:s-t-min-cut-LP]{linear program}.
 
 	\begin{algorithm}[H]\label{algo:max-flow-min-cut-rounding}
 		\DontPrintSemicolon{}
@@ -45,11 +52,10 @@ It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be com
 		\For(){\(v \in V\)}{
 			\(d_x(s, v) \gets\)\shortestPathDistance{\(s\), \(v\), \(G\), \(x\)}\;
 		}
-		\(F\gets \delta ^+(B_x(s, \theta ))\)\Comment*[r]{\(B_x(s, \theta ) = \{ v\in V \mid d_x(s, v) \leq \theta  \} \)}
-		\Return{\(F\)}\;
+		\Return{\(F = \delta ^+(B_x(s, \theta ))\)}\Comment*[r]{\(B_x(s, \theta ) = \{ v\in V \mid d_x(s, v) \leq \theta  \} \)}
 	\end{algorithm}
 
-	We see that \autoref{algo:max-flow-min-cut-rounding} will definitely output a valid \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} since \(d_x(s, t) \geq 1\) by feasibility of the linear program solution \(x\) and hence \(t \notin B_x(s, \theta )\) for any \(\theta < 1\).
+	Firstly, \autoref{algo:max-flow-min-cut-rounding} will output a valid \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} since \(d_x(s, t) \geq 1\) by feasibility of the linear program solution \(x\) and hence \(t \notin B_x(s, \theta )\) for any \(\theta < 1\).
 
 	\begin{claim}
 		For any \(e \in E\), \(\Pr(e \text{ is cut by \autoref{algo:max-flow-min-cut-rounding}} ) \leq x_e\).
@@ -69,18 +75,17 @@ It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be com
 
 The above intuition not only helps the analysis, but also gives a way to derandomize \autoref{algo:max-flow-min-cut-rounding}. Basically, we can try all possible \(\theta \)'s, and if we adapt this line embedding viewpoint, the only interesting \(\theta \)'s are given by the \(n\) values \(d_x(s, v)\).
 
-\subsection{Multi-cut and Approximation via Randomized Decomposition}
-Now, consider a more general question than \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} called \hyperref[prb:multi-min-cut]{multi-min-cut}.
+\chapter{Metric Methods}
+In this chapter, we will see a series of techniques that are based on the structure of the metric spaces underlying the graphs.
+
+\section{Multi-cut via Metric Decomposition}
+Recall that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut problem} we just saw. Now, consider a more general problem called \hyperref[prb:multi-min-cut]{multi-min-cut}.
 
 \begin{problem}[Multi-min-cut]\label{prb:multi-min-cut}
 Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and \(k\) pairs of vertices \(\{ (s_i, t_i) \} _{i=1}^{k}\), the \emph{multi-min-cut problem} aims to find a minimum capacity cut that separates all pairs.
 \end{problem}
 
-\begin{remark}
-	\hyperref[prb:multi-min-cut]{Multi-min-cut} is \(\NP\)-hard even on trees. In general, it is a \(\NP\)-complete problem.
-\end{remark}
-
-Since this is a hard problem, we ask for an approximation algorithm. Firstly, an \(O(k)\)-approximation algorithm is trivial since we can simply output the union of all \hyperref[prb:s-t-min-cut]{\(s_i\)-\(t_i\) min-cuts}. The goal is to design an \(O(\log k)\)-approximation algorithm, which also proves a multi-commodity flow-cut gap.
+\hyperref[prb:multi-min-cut]{Multi-min-cut} is \(\NP\)-hard even on trees. In general, it is a \(\NP\)-complete problem. Hence, we ask for an approximation algorithm instead. An \(O(k)\)-approximation algorithm is trivial by simply outputting the union of all \hyperref[prb:s-t-min-cut]{\(s_i\)-\(t_i\) min-cuts}. The goal is an \(O(\log k)\)-approximation algorithm, which also proves the multi-commodity flow-cut gap.
 
 \begin{note}
 	It turns out that \(O(\log k)\) is tight in general graphs. For planar graphs, one can get an \(O(1)\)-approximation and flow-cut gap. These results are only for undirected graphs since the situation is more complicated in directed graphs, and we will discuss that later.
@@ -102,10 +107,10 @@ Again, we can write the following linear program relaxation for the \hyperref[pr
 The primal assigns distance labels \(x_e\) to edges so that, on each path \(P\) between \(s_i\) and \(t_i\), the distance labels of these edges on \(P\) sum up to at least one, just like the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
 
 \begin{remark}
-	Although the primal again has exponentially many constraints, from ellipsoid method, this is still efficiently solvable.
+	The primal (with exponentially many constraints) is efficiently solvable.
 \end{remark}
 \begin{explanation}
-	The separation oracle is as follows. Given distance labels \(x_e\), we set the length of each edge to \(x_e\) and for each pair \((s_i, t_i)\), we compute the length of the shortest path between \(s_i\) and \(t_i\) and check whether it is at least one. This only takes \(k\) many times compared to the previous separation oracle for the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} linear program relaxation, hence it's still polynomial time.
+	With the ellipsoid method, we just need a separation oracle. Consider setting the length of each edge to \(x_e\) and for each pair \((s_i, t_i)\), compute the length of the shortest path between \(s_i\) and \(t_i\) and check whether it is at least \(1\). This only takes \(k\) many times compared to the previous separation oracle for the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} linear program relaxation, hence it's still polynomial time.
 \end{explanation}
 
 On the other hand, the dual variable can be interpreted as the amount of flow between \(s_i\) and \(t_i\) that is routed along the path \(P\). This is called the \emph{maximum throughput multi-commodity flow} problem, where we don't care about individual demands, but only the overall flow. The dual tries to assign an amount of flow \(y_P\) to each path \(P\) so that the total flow on each edge is at most the capacity of the edge.
@@ -114,6 +119,7 @@ On the other hand, the dual variable can be interpreted as the amount of flow be
 	The flow conservation constraints are automatically satisfied and the endpoints of the path \(P\) determine which kind of commodity is routed along the path.
 \end{note}
 
+\subsection{Approximation via Randomized Decomposition}
 Now, we will show that the integrality gap of the primal linear program is \(O(\log k)\) using a randomized rounding algorithm~\cite{calinescu2005approximation}.
 
 \begin{note}
@@ -215,13 +221,7 @@ To do this, we consider the following algorithm.
 	\autoref{algo:multi-cut-random-partition} is an \(O(\log k)\)-approximation (in expectation) algorithm for the \hyperref[prb:multi-min-cut]{multi-min-cut problem}. Furthermore, the integrality gap of the \hyperref[prb:multi-min-cut]{multi-min-cut} linear program is \(O(\log k)\).
 \end{theorem}
 \begin{proof}
-	Let \(F\) be the set of edges outputted by \autoref{algo:multi-cut-random-partition}. For each edge \(e\), let \(\xi _e = \mathbbm{1}_{e \in F}\) in an indicator random variable. Hence, we have
-	\[
-		\mathbb{E}_{}[\xi _e]
-		= \mathbb{P} (\xi _e = 1)
-		\leq 2 H_k x_e
-	\]
-	from \autoref{lma:multi-cut-random-partition-probability}. This leads to
+	Let \(F\) be the set of edges outputted by \autoref{algo:multi-cut-random-partition}. For each edge \(e\), let \(\xi _e = \mathbbm{1}_{e \in F}\) in an indicator random variable. Hence, we have \(\mathbb{E}_{}[\xi _e] = \mathbb{P} (\xi _e = 1) \leq 2 H_k x_e\) from \autoref{lma:multi-cut-random-partition-probability}. This leads to
 	\[
 		\mathbb{E}_{}[c(F)]
 		\coloneqq \mathbb{E}_{}\left[ \sum_{e \in F} c(e) \right]

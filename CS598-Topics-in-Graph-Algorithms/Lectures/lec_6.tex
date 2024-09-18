@@ -123,7 +123,7 @@ The main difference is in the probability guarantee which is refinement of the p
   proving the result.
 \end{proof}
 
-\subsection{Probabilistic Embedding of Metrics into Dominating Tree Metrics}
+\section{Dominating Tree Metrics Embedding}
 Using tree representations of graphs is a powerful tool in algorithm design. Here, we are interested in representing the distances in an undirected graph via distances in a \hyperref[def:spanning-tree]{spanning tree}. Let \(G = (V, E)\) be a graph with edge length \(\ell \colon E \to \mathbb{R} _+\), which induces a metric space \((V, d)\) via shortest path distances. The main question is the following:
 
 \begin{problem}[Tree embedding]\label{prb:tree-embedding}
@@ -162,6 +162,7 @@ This can also be viewed as a metric \emph{embedding} result. In keeping with met
   A lower-bound of \(\alpha = \Omega (\log n)\) is required for probabilistic \hyperref[def:spanning-tree]{tree} approximation, and it's conjectured that this is tight~\cite{alon1995graph}.
 \end{note}
 
+\subsection{Dominating Tree Metric}
 It turned out that this is quite difficult to obtain even a poly-logarithmic bound~\cite{elkin2005lower}, and currently the best known bound is \(O(\log n \log \log n)\)~\cite{abraham2008nearly}. To make the problem easier, \cite{bartal1996probabilistic} proposed to forget about the graph topology and just focus on \((V, d)\), i.e., consider the \emph{metric embeddings} instead of \hyperref[prb:tree-embedding]{spanning tree embeddings}. More generally, we work with the metric completion \((V, d)\) and view it as a complete graph on \(V\), where any \hyperref[def:spanning-tree]{spanning tree} of the complete graph is now allowed. Moreover, we allow additional vertices. This is formalized as follows.
 
 \begin{definition}[Dominating tree metric]\label{def:dominating-tree-metric}
@@ -179,6 +180,8 @@ Furthermore, we say that the \hyperref[def:probabilistic-approximation]{probabil
   \mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
   \leq \alpha d(u, v).
 \]
+
+\subsection{Tree Embedding with Low-Diameter Decomposition}
 One can use \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} to efficiently sample from a distribution that has stretch \(\alpha = O(\log ^2 n)\)~\cite{bartal1996probabilistic}, and this was subsequently improved to \(O(\log n \log \log n)\)~\cite{bartal1998approximating}, and finally improved to the optimal \(O(\log n)\)~\cite{fakcharoenphol2003tight} using \autoref{algo:random-partition*}.
 
 \begin{intuition}
@@ -211,9 +214,13 @@ Specifically, let \((V, d)\) be a metric space with diameter \(\Delta \). We use
   \Return{\((T, r)\)}\;
 \end{algorithm}
 
-\begin{center}
+
+\begin{figure}[H]
+  \centering
   \incfig{algo-tree-embedding-recursive-tree-construction}
-\end{center}
+  \caption{Illustration of \autoref{algo:tree-embedding}.}
+  \label{fig:algo:tree-embedding}
+\end{figure}
 
 \begin{notation}
   We say \(\delta = \Delta / 2^i\) at level \(i\) to make the analysis cleaner.

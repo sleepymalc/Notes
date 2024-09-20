@@ -1,0 +1,270 @@
+\lecture{8}{19 Sep.\ 11:00}{Randomized Rounding for Sparsest Cut and Expanders}
+\subsubsection{Randomized Rounding Algorithm with Metric Embeddings}
+Now, we see how to utilize \autoref{thm:Borugain*} to design a randomized rounding algorithm for the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut problem}. The main theorem is the following.
+
+\begin{theorem}\label{thm:Borugain-graph}
+	Let \(G = (V, E)\) be a graph. Suppose any finite metric induced by edge lengths on \(E\) can be embedded into \hyperref[def:l1-metric]{\(\ell _1\)} with \hyperref[def:distortion]{distortion} \(\alpha \), then the integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} for the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} is at most \(\alpha \) for any instance on \(G\).
+\end{theorem}
+\begin{proof}
+	Let \((x, y)\) be a feasible fraction solution of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation}, and let \(d\) be the metric induced by edge lengths given by \(x\). Let \(\lambda \) be the value of the solution, i.e.,
+	\[
+		\lambda = \frac{\sum_{uv \in E} c(uv) d(u, v)}{\sum_{i=1}^{k} D_i d(s_i, t_i)}.
+	\]
+	Since \(d\) can be embedded into \hyperref[def:l1-metric]{\(\ell _1\)} with \hyperref[def:distortion]{distortion} at most \(\alpha \), and any \hyperref[def:l1-metric]{\(\ell _1\) metric} is in the \hyperref[def:cut-cone]{cut cone} from \autoref{lma:l1-metric-iff-cut-cone}, it implies that there are scalars \(z_S\), \(S \subseteq V\), such that for all \(u, v \in V\),
+	\[
+		\frac{1}{\alpha } \sum_{S \subseteq V}  z_S d_S(u, v)
+		\leq d(u, v)
+		\leq \sum_{S \subseteq V} z_S d_S(u, v).
+	\]
+	Without loss of generality, we assume that the embedding is a \hyperref[def:contraction]{contraction}. Then, we have
+	\[
+		\begin{split}
+			\lambda
+			= \frac{\sum_{uv \in E} c(uv) d(u, v)}{\sum_{i=1}^{k} D_i d(s_i, t_i)}
+			 & \geq \frac{1}{\alpha } \frac{\sum_{uv \in E} c(uv) \sum_{S \subseteq V} z_S d_S(u, v)}{\sum_{i=1}^{k} D_i \sum_{S \subseteq V} d_S(s_i, t_i)} \\
+			 & = \frac{1}{\alpha } \frac{\sum_{S \subseteq V} z_S c(\delta _G(S))}{\sum_{S \subseteq V} z_S D(\delta _H(S))  }
+			\geq \frac{1}{\alpha } \min _{S \subseteq V} \frac{c(\delta _G(S))}{D(\delta _H(S)) }.
+		\end{split}
+	\]
+	Hence, there is a cut whose \hyperref[def:sparsity]{sparsity} is at most \(\alpha \lambda \).
+\end{proof}
+
+\autoref{thm:Borugain-graph} shows that one of the cuts with \(z_S > 0\) has \hyperref[def:sparsity]{sparsity} at most \(\alpha \lambda \). Now, suppose we have an \hyperref[def:l1-metric]{\(\ell _1\)} embedding into \(h\)-dimensions, i.e., \(\mathbb{R} ^h\). Observe the following.
+
+\begin{intuition}
+	First, each dimension in \(\mathbb{R} ^h\) corresponds to a \hyperref[def:line-metric]{line} embedding, and each \hyperref[def:line-metric]{line} embedding is in the \hyperref[def:cut-cone]{cut cone} with only \(n-1\) cuts used to express it (recall \autoref{lma:l1-metric-iff-cut-cone}). Thus, given an \hyperref[def:l1-metric]{\(\ell _1\)} embedding into \(\mathbb{R} ^h\) with \hyperref[def:distortion]{distortion} \(\alpha \), we only need to try \(d(n-1)\) cuts and one of them will be guaranteed to have \hyperref[def:sparsity]{sparsity} at most \(\alpha \lambda \).
+\end{intuition}
+
+\autoref{algo:sparsest-cut-embedding} exploits this intuition.
+
+\begin{algorithm}[H]\label{algo:sparsest-cut-embedding}
+	\DontPrintSemicolon{}
+	\caption{\hyperref[prb:non-uniform-sparsest-cut]{Non-Uniform Sparsest Cut} via Embedding}
+	\KwData{A supply graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), demand graph \(H = (V, F)\) with demand capacity \(D\colon F \to \mathbb{R} _+\)}
+	\KwResult{The \hyperref[prb:non-uniform-sparsest-cut]{sparsest cut} \(S \subseteq V\)}
+	\SetKwFunction{LPSolve}{LP-Solve}
+	\SetKwFunction{SparsestCutLP}{\hyperref[eq:non-uniform-sparsest-cut-LP-primal]{Non-Uniform-Sparsest-Cut-LP}}
+	\SetKwFunction{BourgainEmbed}{\hyperref[thm:Borugain*]{Bourgain-Embedding}}
+
+	\BlankLine
+	\((\{ x_e \} _{e\in E} , \{ y_i \}_{i=1}^{k} )\gets\)\LPSolve{\SparsestCutLP{\(G\), \(c\), \(H\), \(D\)}}\;
+	\(f \gets\)\BourgainEmbed{\((V, d_x)\)}\Comment*[r]{\(f \colon V \to\mathbb{R} ^h\), \(h = O(\log ^2 n)\)}
+	\For(){\(\ell = 1, \dots , h\)}{
+	Sort \(\ell ^{\text{th} }\) coordinate of \(\{f(v)\}_{v \in V}\) as \(x_1^{(\ell )} \leq x_2^{(\ell )} \leq \dots \leq x_n^{(\ell )}\)\Comment*[r]{\(f(v)_{\ell } = x_i^{(\ell )}\) for some \(i\)}
+	\For(){\(j = 1, \dots , n-1\)}{
+	\(S_j^{(\ell )} \gets \{ v \in V \mid f(v)_{\ell } \leq x_j^{(\ell )} \} \)\;
+	}
+	}
+	\(S \gets \argmin_{\ell \in [h], j \in [n-1]} c(\delta _G(S_j^{(\ell )})) / D(\delta _H(S_j^{(\ell )}))\)\;
+	\Return{\(S\)}\;
+\end{algorithm}
+
+The guarantee of \autoref{algo:sparsest-cut-embedding} can be derived from \autoref{thm:Borugain-graph}.
+
+\begin{theorem}\label{thm:sparsest-cut-embedding}
+	\autoref{algo:sparsest-cut-embedding} outputs cuts of \hyperref[def:sparsity]{sparsity} at most \(\alpha \lambda ^{\ast} \),\footnote{\(\lambda ^{\ast} \) is the optimal solution of the \hyperref[eq:non-uniform-sparsest-cut-LP-dual]{dual linear program}.} in particular, it's a randomized \(O(\log k)\)-approximation algorithm for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}.
+\end{theorem}
+\begin{proof}
+	From \autoref{thm:Borugain*}, \(f\) is a \hyperref[def:contraction]{contraction} and with \hyperref[def:distortion]{distortion} \(\alpha = O(\log k)\). From a similar argument as in \autoref{thm:Borugain-graph}, we see that for some \(z_S\), \(S \subseteq V\), we have
+	\[
+		\begin{split}
+			\lambda ^{\ast}
+			 & = \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i d_x(s_i, t_i)}                                                                                                                                                                                            \\
+			 & \geq \frac{\sum_{uv \in E} c(uv) \lVert f(u) - f(v) \rVert _1}{\alpha \sum_{i=1}^{k} D_i \lVert f(s_i) - f(t_i) \rVert _1}                                                                                                                                    \\
+			 & = \frac{1}{\alpha } \frac{\sum_{uv \in E} c(uv) \sum_{\ell =1}^{h} \lvert f(u)_{\ell } - f(v) _\ell  \rvert }{\sum_{i=1}^{k} D_i \sum_{\ell =1}^{h} \lvert f(s_i)_{\ell } - f(t_i)_{\ell }  \rvert }                                                          \\
+			 & = \frac{1}{\alpha } \frac{\sum_{\ell =1}^{h} \sum_{j=1}^{n-1} \lvert x_{j+1}^{(\ell )} - x_{j}^{(\ell )}\rvert c(\delta _G(S_j^{(\ell )}))}{\sum_{\ell =1}^{h} \sum_{j=1}^{n-1} \lvert x_{j+1}^{(\ell )} - x_{j}^{(\ell )}\rvert D(\delta _H(S_j^{(\ell )}))}
+			= \frac{1}{\alpha } \frac{\sum_{S \subseteq V} z_S c(\delta _G(S))}{\sum_{S \subseteq V} z_S D(\delta _H(S))}
+			\geq \frac{1}{\alpha } \min _{S \subseteq V} \frac{c(\delta _G(S))}{D(\delta _H(S))},
+		\end{split}
+	\]
+	where the second last equality follows from the fact that \(s_i, t_i \in V\) as well.
+\end{proof}
+
+\subsection{Line, \(\ell _1\), and Tree Embeddings, and State-of-the-Art}
+\autoref{thm:Borugain*} shows that any finite metric space on \(n\) points embeds into \hyperref[def:l1-metric]{\(\ell _1\)} with \hyperref[def:distortion]{distortion} \(O(\log n)\). Here, we hint on the underlying algorithm of the construction: from \autoref{lma:l1-metric-iff-non-negative-combination-of-line-metric}, \hyperref[def:l1-metric]{\(\ell _1\)} embeddings are a non-negative combination of \hyperref[def:line-metric]{line} embeddings. A particular type of \hyperref[def:line-metric]{line} embedding is the following.
+
+\begin{definition}[Fréchet embedding]\label{def:Fréchet-embedding}
+	Let \((V, d)\) be a metric space and let \(S \subseteq V\). The \emph{Fréchet embedding} is a \hyperref[def:contraction]{contraction} \(f\colon V \to \mathbb{R} \) such that \(f(v) = d(S, v)\).
+\end{definition}
+
+Many results in embeddings into \(\ell _p\) spaces are based on using \hyperref[def:Fréchet-embedding]{Fréchet embeddings} in various clever and often highly non-trivial ways. In particular, \autoref{thm:Borugain*} is based on picking many random sets and combining the resulting \hyperref[def:Fréchet-embedding]{Fréchet embeddings}.
+
+Now, we note that \autoref{thm:Borugain*} can also be derived via \hyperref[def:probabilistic-approximation]{probabilistic} tree embeddings because every \hyperref[def:dominating-tree-metric]{tree metric} embeds into \hyperref[def:l1-metric]{\(\ell _1\)} \hyperref[def:isometric-embedding]{isometrically}. For general metrics, tree embeddings provide a more constrained space while yielding the same worst-case \hyperref[def:distortion]{distortion}. However, one can ask if \hyperref[def:l1-metric]{\(\ell _1\)} embeddings provide better \hyperref[def:distortion]{distortion} for concrete graph classes. This is indeed the case.
+
+\begin{eg}[Ring]
+	Consider a ring graph (a cycle with capacities). One can prove that tree embeddings require a \hyperref[def:distortion]{distortion} \(2\), while the ring metric can be \hyperref[def:isometric-embedding]{isometrically embedded} into \hyperref[def:l1-metric]{\(\ell _1\)}. Thus, the flow-cut gap on ring is \(1\) which is not obvious.
+\end{eg}
+
+Rather than looking at \hyperref[def:distortion]{distortion}, one can ask about the flow-cut gap obtained via different embeddings for a particular graph class. First, recall the followings for the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}.
+
+\begin{prev}[\autoref{thm:sparsest-cut-embedding}]
+	The flow-cut gap in general undirected graphs is \(O(\log k)\).
+\end{prev}
+
+Additionally, for general graph, a lower bound is also known.
+
+\begin{remark}[Lower bound]
+	\hyperref[def:expander]{Expanders} give a lower bound on the flow-cut gap to be \(\Omega (\log k)\) even for \hyperref[prb:sparsest-cut]{uniform sparsest cut}~\cite{leighton1999multicommodity}.
+\end{remark}
+
+With these general bounds in mind, we now consider the flow-cut gap for planar graphs in particular.
+
+\begin{eg}[Planar graph]
+	There is a famous conjecture that the flow-cut gap in planar graphs is \(O(1)\)~\cite{gupta2004cuts}. Interestingly, for tree embeddings, there is a lower bound of \(\Omega (\log n)\) even on the special case of planar graphs called series parallel graphs. Hence, tree embeddings are not powerful enough to prove the conjecture.
+
+	The best flow-cut gap so far is \(O(\sqrt{\log n} )\) via \hyperref[def:l1-metric]{\(\ell _1\)} embeddings, thus separating the general graph case from the planar graph case. For series parallel graphs, we know that the flow-cut gap is a tight bound of \(2\) and establishing this tight bound took a fair amount of work.
+
+	For \hyperref[prb:sparsest-cut]{uniform sparsest cut}, the flow-cut gap in planar graphs is \(O(1)\)~\cite{klein1993excluded}. One can show a tight connection between embeddability into \hyperref[def:l1-metric]{\(\ell _1\)} and flow-cut gap~\cite{gupta2004cuts}.
+\end{eg}
+
+On the other hand, we can ask for a better approximation guarantee. First, note the following.
+
+\begin{note}
+	Approximating the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut problem} is not the same as establishing the flow-cut gap as the flow-cut gap relies on the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation}.
+\end{note}
+
+\begin{problem*}
+	Can we obtain a better approximation than \(O(\log k)\) for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}?
+\end{problem*}
+\begin{answer}
+	Yes! By using semi-definite programming based relaxation, one can obtain an \(O(\sqrt{\log n} )\)-approximation for \hyperref[prb:sparsest-cut]{uniform sparsest cut}~\cite{arora2009expander} and also the \hyperref[prb:product-instance-of-sparsest-cut]{product instances}. Based on this, an \(O(\sqrt{\log n} \log \log n )\)-approximation for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} is achieved~\cite{arora2005euclidean,arora2007frechet}.\footnote{There was a conjecture that the SDP based relaxation would yield an \(O(1)\)-approximation, but it was shown that the integrality gap is essentially close to \(\Omega (\sqrt{\log n} )\).}
+\end{answer}
+
+\subsection{Node Capacities\footnote{We refer to the \href{https://courses.grainger.illinois.edu/cs598csc/fa2024/Notes/lec-sparsest-cut.pdf}{note} for further information on further generalizations to node capacitated graph and directed graph.}}
+A slight generalization of the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem} is obtained by considering demands induced by weights on vertices, which we refer to \hyperref[prb:product-instance-of-sparsest-cut]{product instance}.
+
+\begin{problem}[Product instance of sparsest cut]\label{prb:product-instance-of-sparsest-cut}
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and vertex weight \(\pi \colon V \to \mathbb{R} _+\). The \emph{product instance of sparsest cut problem} is the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut problem} with demand \(D(u, v)\) for edge \(uv \in E\) setting to be \(\pi (u) \pi (v)\).
+\end{problem}
+
+\begin{notation}
+	In this case, the dual flow instances are called \emph{product multi-commodity flow}.
+\end{notation}
+
+We see that the \hyperref[prb:product-instance-of-sparsest-cut]{product instances} indeed generalizes \hyperref[prb:sparsest-cut]{uniform sparsest cut}: If \(\pi (u) = 1\) for all \(u\), then this reduces to the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem}.
+
+\begin{remark}[Subset sparsity]
+	If \(\pi (u) \in \{ 0, 1 \} \) for all \(u\), then we are focusing our attention on the \hyperref[def:sparsity]{sparsity} w.r.t.\ the set \(V^{\prime} = \{ v \in V \mid \pi (v) = 1 \} \). Since vertices with \(\pi (u) = 0\) play no role.
+\end{remark}
+
+\section{Expander}
+We now introduce \hyperref[def:expander]{expanders}~\cite{hoory2006expander}, which relate to the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} in an intricate way.
+
+\begin{definition}[Expander]\label{def:expander}
+	An \emph{expander} with parameter \(\alpha \) is a graph \(G = (V, E)\) such that for all \(S \subseteq V\) with \(\lvert S \rvert \leq \lvert V \rvert / 2\) such that \(\lvert \delta (S) \rvert \geq \alpha \lvert S \rvert\).
+\end{definition}
+
+\begin{definition}[Expansion]\label{def:expansion}
+	The \emph{expansion} of a graph \(G = (V, E)\) is \(\min _{S\colon \lvert S \rvert \leq \lvert V \rvert / 2} \lvert \delta (S) \rvert / \lvert S \rvert \).
+\end{definition}
+
+It's clear that \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander} if the \hyperref[def:expansion]{expansion} of \(G\) is at least \(\alpha \). Initially, \hyperref[def:expansion]{expansion} arose from the \hyperref[prb:graph-bisection]{graph bisection problem}.
+
+\begin{problem}[Graph bisection]\label{prb:graph-bisection}
+Given a graph \(G = (V, E)\), the \emph{graph bisection problem} aims to find a partition of \(G\) into \((S, V \setminus S)\) such that \(\lvert S \rvert = \lvert V \setminus S \rvert \) while minimizing \(\lvert \delta (S) \rvert \).
+\end{problem}
+
+However, as we will soon see, \hyperref[def:expander]{expander} itself is quite interesting. Firstly, we note that \hyperref[def:expander]{expanders} do exist, and they are quite common.
+
+\begin{lemma}\label{lma:expander-existence}
+	There exists \hyperref[def:expander]{expanders} with degree \(3\) with \hyperref[def:expansion]{expansion} \(\alpha = \Omega (1)\). More specifically, a random \(3\)-regular graph is an \hyperref[def:expander]{expander} with high probability.
+\end{lemma}
+
+Hence, with \autoref{lma:expander-existence}, a natural way to generate an \hyperref[def:expander]{expander} is to first sample a random regular graph, then check its \hyperref[def:expansion]{expansion}. However, computing the \hyperref[def:expansion]{expansion} is \(\coNP\)-hard.
+
+Finally, we introduce another related notion, called \hyperref[def:conductance]{conductance}, which also has nice connection to \hyperref[prb:sparsest-cut]{uniform sparsest cut} as we will see.
+
+\begin{definition}[Conductance]\label{def:conductance}
+	Given a graph \(G = (V, E)\) and a cut \(S \subseteq V\), the \emph{conductance} \(\phi (G)\) of \(G\) is defined as \(\lvert \delta (S) \rvert / \operatorname{vol}(S) \) where \(\operatorname{vol}(S) = \sum_{v \in S} \deg(v)\).
+\end{definition}
+
+\subsection{Expansion and Conductance via Sparsest Cut}
+The first connection of \hyperref[def:expander]{expander} to the \hyperref[prb:sparsest-cut]{uniform sparsest cut} is that the latter can be used to find the \hyperref[def:expansion]{expansion} of a graph. In particular, we see that when \(\lvert S \rvert \leq \lvert V \rvert / 2\), we have
+\[
+	\frac{1}{\lvert V \rvert } \frac{\lvert \delta (S) \rvert }{\lvert S \rvert }
+	\leq \frac{\lvert \delta (S) \rvert }{\lvert S \rvert \lvert V \setminus S \rvert }
+	\leq \frac{2}{\lvert V \rvert } \frac{\lvert \delta (S) \rvert }{\lvert S \rvert }.
+\]
+
+\begin{remark}
+	The \hyperref[def:expansion]{expansion} and the \hyperref[prb:sparsest-cut]{uniform sparsest cut}'s sparsity are within a factor of \(2\) of each other. Hence, while determining the \hyperref[def:expansion]{expansion} exactly is \(\coNP\)-hard, we can use \hyperref[prb:sparsest-cut]{uniform sparsest cut} to certify the \hyperref[def:expansion]{expansion} of a graph within a factor of \(2\).
+\end{remark}
+
+Sometimes it is useful to consider \hyperref[def:expansion]{expansion} with vertex weights \(w \colon V \to \mathbb{R} _+\) as well. In this case, the expansion is defined as
+\[
+	\min _{S \colon w(S) \leq w(V) / 2} \frac{\lvert \delta (S) \rvert }{w(S)}.
+\]
+
+\begin{note}
+	This corresponds to the \emph{product multi-commodity flow instances} (dual of \autoref{prb:product-instance-of-sparsest-cut}) where \(\pi (v) = w(v)\).
+\end{note}
+
+As for \hyperref[def:conductance]{conductance}, it's easy to see that one can capture it by \hyperref[def:expansion]{expansion} via setting weights on vertices with \(w(v) = \deg (v)\), which further reduces to the \hyperref[prb:product-instance-of-sparsest-cut]{product instance of sparsest cut}.
+
+\begin{claim}
+	For regular graphs, \hyperref[def:expansion]{expansion} and \hyperref[def:conductance]{conductance} are the same.
+\end{claim}
+
+\subsection{Spectral Relaxation for Conductance}
+In several applications it is important to obtain constant-degree \hyperref[def:expander]{expanders} with constant \hyperref[def:expansion]{expansion}.
+
+\begin{intuition}
+	The \(O(\sqrt{\log k} )\)-approximation \hyperref[algo:sparsest-cut-embedding]{algorithms} we saw are not useful in this regime.
+\end{intuition}
+
+It turns out that there is a very different method based on spectral graph theory that helps in this regime. For an undirected graph on \(n\) vertices, consider the Laplacian \(\mathcal{L} _G \coloneqq D - A\), where \(D\) is the diagonal degree matrix and \(A\) is the adjacent matrix. In particular, we have
+\[
+	(\mathcal{L} _G )_{ij}
+	\coloneqq \begin{dcases}
+		\deg (v_i), & \text{ if } i = j ;                           \\
+		-1 ,        & \text{ if } i \neq j \text{ and } A_{ij} = 1; \\
+		0,          & \text{ otherwise} .
+	\end{dcases}
+\]
+Since \(\mathcal{L} _G\) is symmetric, all its eigenvalues are real. Moreover, this matrix is also positive semi-definite, hence all its eigenvalues are actually non-negative. Let \(0 = \lambda _1 \leq \lambda _2 \leq \dots \leq \lambda _n\) be its eigenvalues, then a well-known and famous result in spectral graph theory is the following.
+
+\begin{theorem}[Chegger's inequality]\label{def:Chegger-inequality}
+	Given a graph \(G\) with \hyperref[def:conductance]{conductance} \(\phi (G)\),
+	\[
+		\frac{\lambda _2}{2}
+		\leq \phi (G)
+		\leq \sqrt{2 \lambda _2}.
+	\]
+\end{theorem}
+
+\begin{remark}
+	\(\lambda _2\) provides a constant factor approximation for the \hyperref[def:conductance]{conductance} when it is a constant!
+\end{remark}
+
+As the \hyperref[def:expansion]{expansion} and \hyperref[def:conductance]{conductance} are related by the maximum degree and hence when the degree is small and constant one can use \(\lambda _2\) to certify \hyperref[def:expansion]{expansion}. Due to its importance for certifying \hyperref[def:expansion]{expansion}/\hyperref[def:conductance]{conductance}, some use \(\lambda _2\) as the definition of \hyperref[def:expansion]{expansion} since it is computable and also helps in construction of \hyperref[def:expander]{exapnders}.
+
+\subsection{Expander Decomposition}
+Even if a graph is not an \hyperref[def:expander]{expander} at first, it is possible to decompose a graph into smaller subgraphs such that each of them has good \hyperref[def:expansion]{expansion}/\hyperref[def:conductance]{conductance}. More explicitly, the goal is to remove as few edges as possible such that the graph decomposes into \hyperref[def:expander]{expanders}.
+
+\begin{intuition}
+	This is useful since \hyperref[def:expander]{expander} leads to good algorithms.
+\end{intuition}
+
+The question is the trade-off between the number of edges that we remove and the \hyperref[def:expansion]{expansion} that we can guarantee for the pieces.
+
+\begin{notation}
+	Technically the process works with \hyperref[def:conductance]{conductance}, but we use the terminology of \hyperref[def:expander-decomposition]{expander decomposition} for historical reasons.
+\end{notation}
+
+Since one is often interested in finding fast algorithms for \hyperref[def:expander-decomposition]{expander decomposition}, it is common to explore trade-offs between the quality of the \hyperref[def:conductance]{conductance} of the pieces and the number of edges.
+
+\begin{definition}[Expander decomposition]\label{def:expander-decomposition}
+	A \emph{\((\phi, \epsilon )\)-expander decomposition} is a partition of the (connected) graph \(G = (V, E)\) into vertex induced subgraphs \(\{ G_i = G[V_i] \}_{i=1}^{h} \) such that each \(G_i\) has \hyperref[def:conductance]{conductance} at least \(\phi \), and the number of inter-cluster edges is at most \(em\), i.e.,
+	\[
+		\frac{1}{2} \sum_{i=1}^{h} \lvert \delta (V_i) \rvert
+		\leq \epsilon m.
+	\]
+\end{definition}
+
+\begin{theorem}\label{thm:expander-decomposition}
+	Let \(G=(V, E)\) be a graph and \(\epsilon \in (0, 1)\). Suppose there is an \(\alpha \)-approximation for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}, then there is an efficient algorithm that outputs an \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon }{\alpha \log m}), \epsilon )\)-expander decomposition} of \(G\).
+\end{theorem}
+
+\begin{remark}
+	If we don't care about efficiency, we can set \(\alpha = 1\). In particular, \autoref{thm:expander-decomposition} guarantees that the decomposed pieces have \hyperref[def:conductance]{conductance} \(\Omega (1 / \log m)\) while cutting only a constant fraction of the edges. This is tight as shown by the hypercube~\cite{alev2017graph}.
+\end{remark}

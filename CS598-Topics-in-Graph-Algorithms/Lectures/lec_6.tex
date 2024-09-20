@@ -3,41 +3,41 @@
 Given a graph \(G = (V, E)\) and edge length \(\ell \colon E \to \mathbb{R} _+\), which define a metric space \((V, d)\) where \(d(u, v)\) is the shortest path distances between \(u\) and \(v\) in \(G\) as before. As we have seen, a useful notion is to decompose or partition the graph into subgraphs (or clusters) of small diameter. More precisely, given a graph \(G = (V, E)\), we would like to partition \(V\) into clusters with vertex sets \(\{ V_i \} _{i=1}^{h}\) such that each \(V_i\) has diameter at most some given parameter \(\delta \).
 
 \begin{eg}[Singleton]
-  It's trivial to consider the singleton partition, where \(V_i = \{ v \} \) for all \(v \in V\).
+	It's trivial to consider the singleton partition, where \(V_i = \{ v \} \) for all \(v \in V\).
 \end{eg}
 
 However, the goal in partitioning is to ensure that two vertices \(u, v \in V\) that are close to each other, say \(d(u, v) < \delta \), should ideally not be split apart into different clusters. However, as the graph (or metric space) is connected, it's impossible to do this deterministically.
 
 \begin{eg}[Line graph]
-  Considered a line graph \(L_n\). The most natural randomized algorithm is to shift the line by \(\theta \in [0, \delta )\), and then we separate the line graph by \(\delta \)-length clusters. In this way, the probability that any pair \(u, v \in V\) is cut is at most \(d(u, v) / \delta \).
+	Considered a line graph \(L_n\). The most natural randomized algorithm is to shift the line by \(\theta \in [0, \delta )\), and then we separate the line graph by \(\delta \)-length clusters. In this way, the probability that any pair \(u, v \in V\) is cut is at most \(d(u, v) / \delta \).
 \end{eg}
 
 This is the best we can hope for, i.e., \(u, v\) are separated only with probability proportional to \(d(u, v) / \delta \).
 
 \begin{definition}[Low-diameter decomposition]\label{def:low-diameter-decomposition}
-  Let \(G = (V, E)\) be a graph with edge lengths \(\ell \colon E \to \mathbb{R} _+\), which induces a distance metric \(d \colon V \times V \to \mathbb{R} _+\). Let \(\Delta \) be the diameter of the metric space \((V, d)\). For a given \(\delta \in [0, \Delta ]\), a \emph{low-diameter decomposition} with cutting probability parameter \(\alpha \) is a probability distribution \(\mathcal{D} \) over the set \(\mathcal{P} \) of all partitions of \(V\) such that
-  \begin{itemize}
-    \item for any partition \(P= (V_1, \dots , V_h) \in \mathcal{P} \) in \(\supp(\mathcal{D} )\), \(\operatorname{diam}((V_i, d)) \leq \delta \);
-    \item for all \(u, v \in V\), \(\Pr(u, v \text{ are separated} ) \leq \alpha d(u, v) / \delta \).
-  \end{itemize}
+	Let \(G = (V, E)\) be a graph with edge lengths \(\ell \colon E \to \mathbb{R} _+\), which induces a distance metric \(d \colon V \times V \to \mathbb{R} _+\). Let \(\Delta \) be the diameter of the metric space \((V, d)\). For a given \(\delta \in [0, \Delta ]\), a \emph{low-diameter decomposition} with cutting probability parameter \(\alpha \) is a probability distribution \(\mathcal{D} \) over the set \(\mathcal{P} \) of all partitions of \(V\) such that
+	\begin{itemize}
+		\item for any partition \(P= (V_1, \dots , V_h) \in \mathcal{P} \) in \(\supp(\mathcal{D} )\), \(\operatorname{diam}((V_i, d)) \leq \delta \);
+		\item for all \(u, v \in V\), \(\Pr(u, v \text{ are separated} ) \leq \alpha d(u, v) / \delta \).
+	\end{itemize}
 \end{definition}
 
 Given a partition \(P \in \mathcal{P} \), we write \(E_P\) be the set of edges (pairs) that are separated by \(P\). Hence, in \autoref{def:low-diameter-decomposition}, the second point is equivalent to \(\Pr((u, v) \in E_P) \leq \alpha d(u, v) / \delta \).
 
 \begin{definition}[Low-diameter decomposition scheme]\label{def:low-diameter-decomposition-scheme}
-  A \emph{low-diameter decomposition scheme} with parameter \(\alpha \) is a family of algorithms that given any \(\delta \in [0, \Delta )\), generates a \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} with cutting (separation) probability parameter at most \(\alpha \).
+	A \emph{low-diameter decomposition scheme} with parameter \(\alpha \) is a family of algorithms that given any \(\delta \in [0, \Delta )\), generates a \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} with cutting (separation) probability parameter at most \(\alpha \).
 \end{definition}
 
 \begin{notation}[Strong v.s.\ weak diameter guarantee]
-  A \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} is said to have the \emph{strong diameter} guarantee if the diameter of each cluster \(V_i\) in the induced graphs \(G[V_i]\) is at most \(\delta \). Note that \autoref{def:low-diameter-decomposition-scheme} does not require that because it is based on the metric closure \((V, d)\) of the given graph. The standard definition is called the \emph{weak diameter} guarantee. Some applications require the strong diameter guarantee. We will, by default, work with weak diameter guarantee and mention strong diameter guarantee when needed.
+	A \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} is said to have the \emph{strong diameter} guarantee if the diameter of each cluster \(V_i\) in the induced graphs \(G[V_i]\) is at most \(\delta \). Note that \autoref{def:low-diameter-decomposition-scheme} does not require that because it is based on the metric closure \((V, d)\) of the given graph. The standard definition is called the \emph{weak diameter} guarantee. Some applications require the strong diameter guarantee. We will, by default, work with weak diameter guarantee and mention strong diameter guarantee when needed.
 \end{notation}
 
 \begin{note}[Padded decomposition]
-  \autoref{def:low-diameter-decomposition} is often strengthened to require more. Given a point \(u\), let \(B_d(u, r) = \{ v \in V \mid d(u, v) \leq r \} \). In \emph{padded decomposition}, we require that for each \(u\), and for each \(r \leq \delta \), the probability of \(B_d(u, r)\) being contained in the same part is at least \(e^{-\beta r}\).
+	\autoref{def:low-diameter-decomposition} is often strengthened to require more. Given a point \(u\), let \(B_d(u, r) = \{ v \in V \mid d(u, v) \leq r \} \). In \emph{padded decomposition}, we require that for each \(u\), and for each \(r \leq \delta \), the probability of \(B_d(u, r)\) being contained in the same part is at least \(e^{-\beta r}\).
 \end{note}
 
 \begin{remark}[Sparse cover]
-  A \emph{sparse cover} consists of several clusters \(\{ V_i \} _{i = 1}^{h}\). Each cluster should have weak/strong diameter at most \(\delta \). For each \(u, v\) with distance at most \(\delta \), there must be some cluster \(V_i\) that contains both \(u\) and \(v\), and no vertex \(u\) must be in more than some number \(s\) of clusters. The techniques underlying sparse covers and \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} are related though we will mostly work only with the latter.
+	A \emph{sparse cover} consists of several clusters \(\{ V_i \} _{i = 1}^{h}\). Each cluster should have weak/strong diameter at most \(\delta \). For each \(u, v\) with distance at most \(\delta \), there must be some cluster \(V_i\) that contains both \(u\) and \(v\), and no vertex \(u\) must be in more than some number \(s\) of clusters. The techniques underlying sparse covers and \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} are related though we will mostly work only with the latter.
 \end{remark}
 
 The main question here for the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} is the smallest \(\alpha \) that one can obtain. It turns out that for general metric spaces, \(\alpha = O(\log n)\) is a tight bound for both strong and weak diameter guarantee~\cite{bartal1996probabilistic}. For planar graph metrics, \(\alpha = O(1)\) is achievable, where weak diameter guarantee was shown in~\cite{klein1993excluded}, and the strong diameter guarantee was more difficult and was shown later. See~\cite{filtser2024sparse} for some recent work and pointers to literature on these topics.
@@ -45,82 +45,82 @@ The main question here for the \hyperref[def:low-diameter-decomposition]{low-dia
 Now, we present the algorithm for weak diameter guarantee. Let \((V, d)\) be a metric space with \(\lvert V \rvert = n\). Borrowing ideas from \autoref{algo:multi-cut-random-partition}, we see that implicitly this is a \hyperref[def:low-diameter-decomposition-scheme]{metric partitioning scheme}. We simply modify the algorithm to ensure that the weak diameter of each cluster is at most a given parameter \(\delta \).
 
 \begin{algorithm}[H]\label{algo:random-partition}
-  \DontPrintSemicolon{}
-  \caption{Random Partition~\cite{calinescu2005approximation}}
-  \KwData{A metric space \((V, d)\), \(\delta \)}
-  \KwResult{\(E_P\) for the partition \(P\)}
-  \SetKwFunction{uniform}{Uniform}
+	\DontPrintSemicolon{}
+	\caption{Random Partition~\cite{calinescu2005approximation}}
+	\KwData{A metric space \((V, d)\), \(\delta \)}
+	\KwResult{\(E_P\) for the partition \(P\)}
+	\SetKwFunction{uniform}{Uniform}
 
-  \BlankLine
+	\BlankLine
 
-  \(\theta \gets\)\uniform{\([0, \delta / 2)\)}\;
-  \(\sigma \gets\)\uniform{\(S(V)\)}\Comment*[r]{Random permutation from permutation group \(S(V)\)}
-  \For(){\(i = 1, \dots , n\)}{
-    \(V_{\sigma (i)} \gets B_d(v_{\sigma (i)}, \theta ) \setminus \bigcup_{j < i} V_{\sigma (j)}\)\;
-  }
-  \Return{\(\bigcup_{i=1}^{n} \delta (V_i)\)}\;
+	\(\theta \gets\)\uniform{\([0, \delta / 2)\)}\;
+	\(\sigma \gets\)\uniform{\(S(V)\)}\Comment*[r]{Random permutation from permutation group \(S(V)\)}
+	\For(){\(i = 1, \dots , n\)}{
+		\(V_{\sigma (i)} \gets B_d(v_{\sigma (i)}, \theta ) \setminus \bigcup_{j < i} V_{\sigma (j)}\)\;
+	}
+	\Return{\(\bigcup_{i=1}^{n} \delta (V_i)\)}\;
 \end{algorithm}
 
 From the same analysis as in \autoref{lma:multi-cut-random-partition-probability}, claim the following.
 
 \begin{claim}
-  \autoref{algo:random-partition} correctly outputs a partition of \(V\) into clusters, each of which has weak diameter at most \(\delta \).
+	\autoref{algo:random-partition} correctly outputs a partition of \(V\) into clusters, each of which has weak diameter at most \(\delta \).
 \end{claim}
 
 Furthermore, the probability guarantee can also be stated.
 
 \begin{theorem}\label{thm:random-partition}
-  The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition} is at most  \(2 H_n d(u, v) / \delta \), i.e., \(\alpha = H_k = O(\log n)\).
+	The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition} is at most  \(2 H_n d(u, v) / \delta \), i.e., \(\alpha = H_k = O(\log n)\).
 \end{theorem}
 \begin{proof}
-  We see that \(\Pr(A_j) \leq 2d(u, v) / \delta \cdot 1 / j\), hence \(\Pr(A) \leq 2 H_n d(u, v) / \delta \).
+	We see that \(\Pr(A_j) \leq 2d(u, v) / \delta \cdot 1 / j\), hence \(\Pr(A) \leq 2 H_n d(u, v) / \delta \).
 \end{proof}
 
 Finally, we consider a not so apparent modification of \autoref{algo:random-partition}: we sample \(\theta \) from \([\delta / 4, \delta / 2)\) instead of \([0, \delta / 2)\).
 
 \begin{algorithm}[H]\label{algo:random-partition*}
-  \DontPrintSemicolon{}
-  \caption{Refined Random Partition~\cite{calinescu2005approximation}}
-  \KwData{A metric space \((V, d)\), \(\delta \)}
-  \KwResult{\(E_P\) for the partition \(P\)}
-  \SetKwFunction{uniform}{Uniform}
+	\DontPrintSemicolon{}
+	\caption{Refined Random Partition~\cite{calinescu2005approximation}}
+	\KwData{A metric space \((V, d)\), \(\delta \)}
+	\KwResult{\(E_P\) for the partition \(P\)}
+	\SetKwFunction{uniform}{Uniform}
 
-  \BlankLine
+	\BlankLine
 
-  \(\theta \gets\)\uniform{\([\delta / 4, \delta / 2)\)}\;
-  \(\sigma \gets\)\uniform{\(S(V)\)}\Comment*[r]{Random permutation from permutation group \(S(V)\)}
-  \For(){\(i = 1, \dots , n\)}{
-    \(V_{\sigma (i)} \gets B_d(v_{\sigma (i)}, \theta ) \setminus \bigcup_{j < i} V_{\sigma (j)}\)\;
-  }
-  \Return{\(\bigcup_{i=1}^{n} \delta (V_i)\)}\;
+	\(\theta \gets\)\uniform{\([\delta / 4, \delta / 2)\)}\;
+	\(\sigma \gets\)\uniform{\(S(V)\)}\Comment*[r]{Random permutation from permutation group \(S(V)\)}
+	\For(){\(i = 1, \dots , n\)}{
+		\(V_{\sigma (i)} \gets B_d(v_{\sigma (i)}, \theta ) \setminus \bigcup_{j < i} V_{\sigma (j)}\)\;
+	}
+	\Return{\(\bigcup_{i=1}^{n} \delta (V_i)\)}\;
 \end{algorithm}
 
 \begin{intuition}
-  Intuitively, this will preserve closer points.
+	Intuitively, this will preserve closer points.
 \end{intuition}
 
 It's clear that the guarantee about the diameter remains the same.
 
 \begin{claim}
-  \autoref{algo:random-partition*} correctly outputs a partition of \(V\) into clusters, each of which has weak diameter at most \(\delta \).
+	\autoref{algo:random-partition*} correctly outputs a partition of \(V\) into clusters, each of which has weak diameter at most \(\delta \).
 \end{claim}
 
 The main difference is in the probability guarantee which is refinement of the previous bound.
 
 \begin{theorem}\label{thm:random-partition*}
-  The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\), i.e., \(\alpha = \alpha (\delta ) = 4 \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\).
+	The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\), i.e., \(\alpha = \alpha (\delta ) = 4 \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\).
 \end{theorem}
 \begin{proof}
-  We sketch the proof based on the proof of \autoref{lma:multi-cut-random-partition-probability}. Assuming the exact same notation, and we fix \(u, v \in V\) and think of \(V\) as \(v_1, \dots , v_n\). If \(d(u, v) \geq \delta / 8\), then the edge is going to get cut with constant probability, and the bound is not giving anything interesting, so we are primarily interested in the case when \(d(u, v) < \delta / 8\).
+	We sketch the proof based on the proof of \autoref{lma:multi-cut-random-partition-probability}. Assuming the exact same notation, and we fix \(u, v \in V\) and think of \(V\) as \(v_1, \dots , v_n\). If \(d(u, v) \geq \delta / 8\), then the edge is going to get cut with constant probability, and the bound is not giving anything interesting, so we are primarily interested in the case when \(d(u, v) < \delta / 8\).
 
-  We consider the event \(A_i\) which is that \(v_i\) is the first vertex to separate the pair \(u, v\). We can argue as before that \(\Pr(A_i) \leq 1 / i \cdot \Pr(\theta \in [L_i, R_i])\), and this is at most \(4d(u, v) / \delta i\) since we're choosing the radius from \([\delta / 4, \delta / 2)\). The new twist is that since we choose \(\theta \in [\delta / 4, \delta / 2)\) and \(d(u, v) <\delta / 8\), no vertex \(v_j \in B(u, \delta / 8)\) can separate \(u, v\) because \(L_j \leq d(v_j, u) < \delta / 8\) and \(R_j \leq L_j + d(u, v_j) \leq \delta / 8 + \delta / 8 = \delta / 4\). Any such vertex will capture both \(u, v\) if they are not already separated. Similarly, any vertex \(v_j \notin B(u, \delta )\) can cut the pair because \(L_j \geq \delta - d(u, v) \geq \delta - \delta / 8 \geq \delta / 2\). Therefore, if \(A\) is the event of \(u, v\) being cut, then
-  \[
-    \Pr(A)
-    \leq \sum_{j \in B(u, \delta ) \setminus B(u, \delta / 8)} \Pr(A_j)
-    \leq \frac{4d(u, v)}{\delta } \sum_{\lvert B(u, \delta / 8) \rvert < j \leq \lvert B(u, \delta ) \rvert } \frac{1}{j}
-    \leq \frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta ) \rvert }{\lvert B(u, \delta / 8) \rvert },
-  \]
-  proving the result.
+	We consider the event \(A_i\) which is that \(v_i\) is the first vertex to separate the pair \(u, v\). We can argue as before that \(\Pr(A_i) \leq 1 / i \cdot \Pr(\theta \in [L_i, R_i])\), and this is at most \(4d(u, v) / \delta i\) since we're choosing the radius from \([\delta / 4, \delta / 2)\). The new twist is that since we choose \(\theta \in [\delta / 4, \delta / 2)\) and \(d(u, v) <\delta / 8\), no vertex \(v_j \in B(u, \delta / 8)\) can separate \(u, v\) because \(L_j \leq d(v_j, u) < \delta / 8\) and \(R_j \leq L_j + d(u, v_j) \leq \delta / 8 + \delta / 8 = \delta / 4\). Any such vertex will capture both \(u, v\) if they are not already separated. Similarly, any vertex \(v_j \notin B(u, \delta )\) can cut the pair because \(L_j \geq \delta - d(u, v) \geq \delta - \delta / 8 \geq \delta / 2\). Therefore, if \(A\) is the event of \(u, v\) being cut, then
+	\[
+		\Pr(A)
+		\leq \sum_{j \in B(u, \delta ) \setminus B(u, \delta / 8)} \Pr(A_j)
+		\leq \frac{4d(u, v)}{\delta } \sum_{\lvert B(u, \delta / 8) \rvert < j \leq \lvert B(u, \delta ) \rvert } \frac{1}{j}
+		\leq \frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta ) \rvert }{\lvert B(u, \delta / 8) \rvert },
+	\]
+	proving the result.
 \end{proof}
 
 \section{Dominating Tree Metrics Embedding}
@@ -131,166 +131,165 @@ Given a graph \(G=(V, E)\) with edge length \(\ell \colon E \to \mathbb{R} _+\),
 \end{problem}
 
 \begin{eg}[Cycle]
-  Consider a cycle \(C_n\). We see that for a fixed edge \((u, v)\), there exists one spanning tree \(T\) such that \(d_T(u, v) = n - 1\).
+	Consider a cycle \(C_n\). We see that for a fixed edge \((u, v)\), there exists one spanning tree \(T\) such that \(d_T(u, v) = n - 1\).
 \end{eg}
 
 Motivated by applications of \hyperref[def:spanning-tree]{spanning tree} based metric approximations, we observe that if we are allowed to pick a probability distribution over \hyperref[def:spanning-tree]{spanning trees}, then the expected distance for any pair of vertices can be much better than the above worst-case example.
 
 \begin{eg}[Cycle]
-  Again, consider a cycle \(C_n\). If we allow randomization (picking trees randomly),
-  \[
-    \mathbb{E}_{}[d_T(u, v)]
-    = \frac{n-1}{n} \cdot 1 + \frac{1}{n} \cdot (n-1)
-    \leq 2.
-  \]
+	Again, consider a cycle \(C_n\). If we allow randomization (picking trees randomly),
+	\[
+		\mathbb{E}_{}[d_T(u, v)]
+		= \frac{n-1}{n} \cdot 1 + \frac{1}{n} \cdot (n-1)
+		\leq 2.
+	\]
 \end{eg}
 
 It's showed that~\cite{alon1995graph} for any weighted graph \(G = (V, E)\), there is a distribution \(\mathcal{D} \) over \hyperref[def:spanning-tree]{spanning trees} of \(G\) such that for any \(u, v \in V\),
 \[
-  \mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
-  \leq \exp (\sqrt{\log n \log \log n} ) \cdot d_G(u, v)
-  < n^{o(1)} d_G(u, v).
+	\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
+	\leq \exp (\sqrt{\log n \log \log n} ) \cdot d_G(u, v)
+	< n^{o(1)} d_G(u, v).
 \]
 
 \begin{intuition}
-  This is a probabilistic approximation of a graph metric by \hyperref[def:spanning-tree]{spanning tree} metrics.
+	This is a probabilistic approximation of a graph metric by \hyperref[def:spanning-tree]{spanning tree} metrics.
 \end{intuition}
 
 This can also be viewed as a metric \emph{embedding} result. In keeping with metric embedding terminology, we're interested in the worst-case guarantee of how much the expected distance for any pair increases, i.e., minimizing \(\alpha \). In the above example \(\alpha \leq \exp (\sqrt{\log n \log \log n} )\).
 
-\begin{note}[Lower-bound]
-  A lower-bound of \(\alpha = \Omega (\log n)\) is required for probabilistic \hyperref[def:spanning-tree]{tree} approximation, and it's conjectured that this is tight~\cite{alon1995graph}.
+\begin{note}[Lower bound]
+	A lower bound of \(\alpha = \Omega (\log n)\) is required for probabilistic \hyperref[def:spanning-tree]{tree} approximation, and it's conjectured that this is tight~\cite{alon1995graph}.
 \end{note}
 
 \subsection{Dominating Tree Metric}
 It turned out that this is quite difficult to obtain even a poly-logarithmic bound~\cite{elkin2005lower}, and currently the best known bound is \(O(\log n \log \log n)\)~\cite{abraham2008nearly}. To make the problem easier, \cite{bartal1996probabilistic} proposed to forget about the graph topology and just focus on \((V, d)\), i.e., consider the \emph{metric embeddings} instead of \hyperref[prb:tree-embedding]{spanning tree embeddings}. More generally, we work with the metric completion \((V, d)\) and view it as a complete graph on \(V\), where any \hyperref[def:spanning-tree]{spanning tree} of the complete graph is now allowed. Moreover, we allow additional vertices. This is formalized as follows.
 
 \begin{definition}[Dominating tree metric]\label{def:dominating-tree-metric}
-  A tree \(T = (V_T, E_T)\) with edge length \(\ell _T \colon E_T \to \mathbb{R} _+\) is a \emph{dominating tree metric} for a finite metric space \((V, d)\) if \(V \subseteq V_T\) and for all \(u, v \in V\), \(d_T(u, v) \geq d_G(u, v)\).
+	A tree \(T = (V_T, E_T)\) with edge length \(\ell _T \colon E_T \to \mathbb{R} _+\) is a \emph{dominating tree metric} for a finite metric space \((V, d)\) if \(V \subseteq V_T\) and for all \(u, v \in V\), \(d_T(u, v) \geq d_G(u, v)\).
 \end{definition}
 
 Then, we're interested in approximating metrics probabilistically by \hyperref[def:dominating-tree-metric]{dominating tree metrics}:
 
 \begin{definition}[Probabilistic approximation]\label{def:probabilistic-approximation}
-  A \emph{probabilistic approximation} of a metric space \((V, d)\) by \hyperref[def:dominating-tree-metric]{dominating tree metrics} is a probability distribution \(\mathcal{D} \) over a collection of trees \(\{ T_i \} _{i = 1}^{h}\) if each \(T_i\) is a \hyperref[def:dominating-tree-metric]{dominating tree metric} for \((V, d)\).
+	A \emph{probabilistic approximation} of a metric space \((V, d)\) by \hyperref[def:dominating-tree-metric]{dominating tree metrics} is a probability distribution \(\mathcal{D} \) over a collection of trees \(\{ T_i \} _{i = 1}^{h}\) if each \(T_i\) is a \hyperref[def:dominating-tree-metric]{dominating tree metric} for \((V, d)\).
 \end{definition}
 
 Furthermore, we say that the \hyperref[def:probabilistic-approximation]{probabilistic approximation} \(\mathcal{D} \) has \emph{stretch} \(\alpha \) if for all \(u, v \in V\),
 \[
-  \mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
-  \leq \alpha d(u, v).
+	\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
+	\leq \alpha d(u, v).
 \]
 
 \subsection{Tree Embedding with Low-Diameter Decomposition}
 One can use \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} to efficiently sample from a distribution that has stretch \(\alpha = O(\log ^2 n)\)~\cite{bartal1996probabilistic}, and this was subsequently improved to \(O(\log n \log \log n)\)~\cite{bartal1998approximating}, and finally improved to the optimal \(O(\log n)\)~\cite{fakcharoenphol2003tight} using \autoref{algo:random-partition*}.
 
 \begin{intuition}
-  Recursively decompose \((V, d)\) using \hyperref[def:low-diameter-decomposition]{low-diameter decomposition}.
+	Recursively decompose \((V, d)\) using \hyperref[def:low-diameter-decomposition]{low-diameter decomposition}.
 \end{intuition}
 
 Specifically, let \((V, d)\) be a metric space with diameter \(\Delta \). We use \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} with parameter \(\delta = \Delta / 2\) to randomly partition \(V\) into clusters \(\{ V_i \} _{i=1}^{h}\) of diameter at most \(\Delta / 2\), then we recursively find a tree for each of the \(V_i\), with root \(r_i\). We create a new dummy root \(r\) and connect each \(r_i\) to \(r\) with an edge of length \(\Delta \).
 
 \begin{algorithm}[H]\label{algo:tree-embedding}
-  \DontPrintSemicolon{}
-  \caption{\hyperref[prb:tree-embedding]{Tree Embedding}}
-  \KwData{A metric space \((V, d)\), diameter \(D\)}
-  \KwResult{A rooted tree \((T, r)\)}
-  \SetKwFunction{LDD}{\hyperref[algo:random-partition]{Low-Diameter-decomposition}}
-  \SetKwFunction{TreeEmbed}{\hyperref[algo:tree-embedding]{Tree-Embedding}}
+	\DontPrintSemicolon{}
+	\caption{\hyperref[prb:tree-embedding]{Tree Embedding}}
+	\KwData{A metric space \((V, d)\), diameter \(D\)}
+	\KwResult{A rooted tree \((T, r)\)}
+	\SetKwFunction{LDD}{\hyperref[algo:random-partition]{Low-Diameter-decomposition}}
+	\SetKwFunction{TreeEmbed}{\hyperref[algo:tree-embedding]{Tree-Embedding}}
 
-  \BlankLine
+	\BlankLine
 
-  \If(){\(\lvert V \rvert = 1\)}{
-    \(T \gets (V, \varnothing )\)\;
-    \Return{\((T, v)\)}\Comment*[r]{\(V = \{ v \} \)}
-  }
-  \;
-  Create a tree \(T\) with root \(r\)\;
-  \(\{ V_i \} _{i=1}^{h} \gets\)\LDD{\((V, d)\), \(D / 2\)}\;
-  \For(){\(j = 1, \dots , h\)}{
-    \((T_j, r_j)\gets\)\TreeEmbed{\((V_j, d)\), \(D / 2\)}\;
-    Connect \(T_j\) to \(T\) by adding edge \((r, r_j)\) of length \(D\)\;
-  }
-  \Return{\((T, r)\)}\;
+	\If(){\(\lvert V \rvert = 1\)}{
+		\(T \gets (V, \varnothing )\)\;
+		\Return{\((T, v)\)}\Comment*[r]{\(V = \{ v \} \)}
+	}
+	\;
+	Create a tree \(T\) with root \(r\)\;
+	\(\{ V_i \} _{i=1}^{h} \gets\)\LDD{\((V, d)\), \(D / 2\)}\;
+	\For(){\(j = 1, \dots , h\)}{
+		\((T_j, r_j)\gets\)\TreeEmbed{\((V_j, d)\), \(D / 2\)}\;
+		Connect \(T_j\) to \(T\) by adding edge \((r, r_j)\) of length \(D\)\;
+	}
+	\Return{\((T, r)\)}\;
 \end{algorithm}
 
-
 \begin{figure}[H]
-  \centering
-  \incfig{algo-tree-embedding-recursive-tree-construction}
-  \caption{Illustration of \autoref{algo:tree-embedding}.}
-  \label{fig:algo:tree-embedding}
+	\centering
+	\incfig{algo-tree-embedding-recursive-tree-construction}
+	\caption{Illustration of \autoref{algo:tree-embedding}.}
+	\label{fig:algo:tree-embedding}
 \end{figure}
 
 \begin{notation}
-  We say \(\delta = \Delta / 2^i\) at level \(i\) to make the analysis cleaner.
+	We say \(\delta = \Delta / 2^i\) at level \(i\) to make the analysis cleaner.
 \end{notation}
 
 We will now assume that the minimum distance is at least \(1\) by scaling, and let \(\Delta \) be the diameter of the metric space with this assumption.
 
 \begin{remark}
-  If the minimum distance is at least \(1\), \autoref{algo:tree-embedding} yields a stretch of \(O(\log n \log \Delta )\).
+	If the minimum distance is at least \(1\), \autoref{algo:tree-embedding} yields a stretch of \(O(\log n \log \Delta )\).
 \end{remark}
 
 \begin{theorem}\label{thm:tree-embed}
-  Let \(\Delta \) be the diameter of \((V, d)\). \autoref{algo:tree-embedding} outputs a random \hyperref[def:dominating-tree-metric]{dominating tree metric} \(T = (V_T, E_T)\) with length \(\ell _T\) such that for each \(u, v \in V\), \(\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)] \leq O(\alpha \log \Delta ) d(u, v)\) where \(\alpha \) is the cutting probability of the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm used.
+	Let \(\Delta \) be the diameter of \((V, d)\). \autoref{algo:tree-embedding} outputs a random \hyperref[def:dominating-tree-metric]{dominating tree metric} \(T = (V_T, E_T)\) with length \(\ell _T\) such that for each \(u, v \in V\), \(\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)] \leq O(\alpha \log \Delta ) d(u, v)\) where \(\alpha \) is the cutting probability of the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm used.
 \end{theorem}
 \begin{proof}
-  We prove this by induction. It's clear that the base case is trivial. If we start with \(D = \Delta \), then at depth \(i\) of the recursion, the parameter is \(\Delta / 2^{i-1}\), and it is the upper-bound on the diameter of the metric space in that recursive call. We note the following claims.
+	We prove this by induction. It's clear that the base case is trivial. If we start with \(D = \Delta \), then at depth \(i\) of the recursion, the parameter is \(\Delta / 2^{i-1}\), and it is the upper-bound on the diameter of the metric space in that recursive call. We note the following claims.
 
-  \begin{claim}
-    The length of the root to leaf path of a tree created at level \(i\) of the recursion is at most \(\sum_{j \geq i} \Delta / 2^{j-1} \leq 2 \Delta / 2^{i-1} \).
-  \end{claim}
+	\begin{claim}
+		The length of the root to leaf path of a tree created at level \(i\) of the recursion is at most \(\sum_{j \geq i} \Delta / 2^{j-1} \leq 2 \Delta / 2^{i-1} \).
+	\end{claim}
 
-  Suppose \(u\) and \(v\) are first separated at level \(i\) of the recursion. Then, \(d_T(u, v) \leq 4 \Delta / 2^{i-1}\) from the above claim. We see that if \(u\) and \(v\) are separated in the first level of the recursion due to the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm, its probability is at most \(\alpha d(u, v) / (\Delta / 2) \leq 2 \alpha d(u, v) / \Delta \), in which case their distance in the tree is at most \(4 \Delta \). Otherwise, they are in the same cluster, and we can apply induction. Note that \(u\) and \(v\) are definitely separated by level \(t\) where \(t\) is the smallest integer such that \(\Delta / 2^{t+1} < d(u, v)\). Hence, the depth of the recursion is at most \(1 + \lceil \log \Delta \rceil \leq 2 \log \Delta \). It's easy to unroll the induction and use the preceding claim to obtain
-  \begin{equation}\label{eq:tree-embed}
-    \mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
-    \leq \sum_{i=0}^{t+1} 2\alpha \frac{d(u, v)}{(\Delta / 2^{i-1})} \cdot \left( 4 \frac{\Delta }{2^{i-1}} \right)
-    \leq O(\alpha \log \Delta ) d(u, v)
-  \end{equation}
-  since the depth of the recursion is \(O(\log \Delta )\).
+	Suppose \(u\) and \(v\) are first separated at level \(i\) of the recursion. Then, \(d_T(u, v) \leq 4 \Delta / 2^{i-1}\) from the above claim. We see that if \(u\) and \(v\) are separated in the first level of the recursion due to the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm, its probability is at most \(\alpha d(u, v) / (\Delta / 2) \leq 2 \alpha d(u, v) / \Delta \), in which case their distance in the tree is at most \(4 \Delta \). Otherwise, they are in the same cluster, and we can apply induction. Note that \(u\) and \(v\) are definitely separated by level \(t\) where \(t\) is the smallest integer such that \(\Delta / 2^{t+1} < d(u, v)\). Hence, the depth of the recursion is at most \(1 + \lceil \log \Delta \rceil \leq 2 \log \Delta \). It's easy to unroll the induction and use the preceding claim to obtain
+	\begin{equation}\label{eq:tree-embed}
+		\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
+		\leq \sum_{i=0}^{t+1} 2\alpha \frac{d(u, v)}{(\Delta / 2^{i-1})} \cdot \left( 4 \frac{\Delta }{2^{i-1}} \right)
+		\leq O(\alpha \log \Delta ) d(u, v)
+	\end{equation}
+	since the depth of the recursion is \(O(\log \Delta )\).
 \end{proof}
 
 If we use \autoref{algo:random-partition} as the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm, then we have \(\alpha = O(\log n)\). From \autoref{thm:tree-embed}, we see that the tree may require depth \(\log \Delta \) to provide a good approximation, and in general \(\log \Delta \) can be as large as \(n\), so we get an \(O(n \log n)\) approximation.
 
 \begin{eg}
-  Consider the metric induced by a path with \(n\) edges and edge lengths are \(2^i\) for all \(i = 1, \dots , n\). In such cases, the dependence of the stretch on \(\log \Delta \) is undesirable.
+	Consider the metric induced by a path with \(n\) edges and edge lengths are \(2^i\) for all \(i = 1, \dots , n\). In such cases, the dependence of the stretch on \(\log \Delta \) is undesirable.
 \end{eg}
 
 \begin{remark}
-  One can alter \autoref{algo:tree-embedding} to make the stretch bound \(O(\log ^2 n)\).
+	One can alter \autoref{algo:tree-embedding} to make the stretch bound \(O(\log ^2 n)\).
 \end{remark}
 \begin{explanation}
-  In applying the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm with parameter \(\delta \), we ensure that any pair \(u, v\) such that \(d(u, v) \leq \delta / n^2\) is not cut during the procedure. We can do this by contracting all such pairs without changing the diameter of the resulting metric space too much. This will ensure that in the tree construction process, a pair \(u, v\) participates in only \(O(\log n)\) levels and hence the expected stretch can be bounded by \(O(\alpha \log n)\).
+	In applying the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm with parameter \(\delta \), we ensure that any pair \(u, v\) such that \(d(u, v) \leq \delta / n^2\) is not cut during the procedure. We can do this by contracting all such pairs without changing the diameter of the resulting metric space too much. This will ensure that in the tree construction process, a pair \(u, v\) participates in only \(O(\log n)\) levels and hence the expected stretch can be bounded by \(O(\alpha \log n)\).
 \end{explanation}
 
 \begin{remark}[Hierarchically well-separated tree]
-  The trees constructed by \autoref{algo:tree-embedding} have an additional strong property: the edge lengths at each level are the same and the length from the root to the leaf go down by a factor of \(2\) at each level. A tree metric with such a property is called \emph{hierarchically well-separated} tree metric and this additional property can be exploited in algorithms and comes for free in the construction.
+	The trees constructed by \autoref{algo:tree-embedding} have an additional strong property: the edge lengths at each level are the same and the length from the root to the leaf go down by a factor of \(2\) at each level. A tree metric with such a property is called \emph{hierarchically well-separated} tree metric and this additional property can be exploited in algorithms and comes for free in the construction.
 \end{remark}
 
 Finally, we note that if we choose \autoref{algo:random-partition*} as the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm specifically, the expected stretch is actually \(O(\log n)\), which is optimal~\cite{fakcharoenphol2003tight}.
 
 \begin{prev}[\autoref{thm:random-partition*}]
-  The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\).
+	The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\).
 \end{prev}
 
 Thus, the guarantee \(\alpha (\delta )\) from the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm is no longer uniform but depends on the diameter. Plugging this to \autoref{eq:tree-embed}, we have
 \[
-  \begin{split}
-    \mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
-     & \leq \sum_{i=0}^{t+1} 2 \log \frac{\lvert B(u, \Delta / 2^i) \rvert }{\lvert B(u, \Delta / 2^{i+3}) \rvert } \frac{d(u, v)}{\Delta / 2^{i-1}} \cdot \left( 4 \frac{\Delta }{2^{i-1}} \right) \\
-     & \leq 8 d(u, v) \left( \log \lvert B(u, \Delta / 2) \rvert + \log \lvert B(u, \Delta / 4) \rvert + \log \lvert B(u, \Delta / 8) \rvert \right)
-    \leq O(\log n) d(u, v).
-  \end{split}
+	\begin{split}
+		\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
+		 & \leq \sum_{i=0}^{t+1} 2 \log \frac{\lvert B(u, \Delta / 2^i) \rvert }{\lvert B(u, \Delta / 2^{i+3}) \rvert } \frac{d(u, v)}{\Delta / 2^{i-1}} \cdot \left( 4 \frac{\Delta }{2^{i-1}} \right) \\
+		 & \leq 8 d(u, v) \left( \log \lvert B(u, \Delta / 2) \rvert + \log \lvert B(u, \Delta / 4) \rvert + \log \lvert B(u, \Delta / 8) \rvert \right)
+		\leq O(\log n) d(u, v).
+	\end{split}
 \]
 
-\begin{remark}[Lower-bound]
-  \(O(\log n)\) bound for \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm and \hyperref[prb:tree-embedding]{tree embeddings} are near optimal (modulo precise constant factors).
+\begin{remark}[Lower bound]
+	\(O(\log n)\) bound for \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm and \hyperref[prb:tree-embedding]{tree embeddings} are near optimal (modulo precise constant factors).
 \end{remark}
 \begin{explanation}
-  We can use the existence of low-girth graphs which are closely tied to expanders in a direct fashion. Another way is via indirection. Previously, in the lecture note, we saw that the integrality gap of the \hyperref[eq:multi-min-cut-LP]{linear program relaxation} for \hyperref[prb:multi-min-cut]{multi-min-cut} is \(\Omega (\log k)\) (the upper-bound is proved in \autoref{thm:multi-min-cut-integrality-gap} via a \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm). In fact, if \(\alpha \) is the factor for the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm, then we get an \(O(\alpha )\)-approximation for \hyperref[prb:multi-min-cut]{multi-min-cut} via the \hyperref[eq:multi-min-cut-LP]{linear program}. Thus, one see that \(\alpha = \Omega (\log n)\) for general metrics (in the integrality gap example for \hyperref[prb:multi-min-cut]{multi-min-cut} \(k = \Omega (n^2)\)). One can use similar approaches to prove for \hyperref[prb:tree-embedding]{tree embedding}.
+	We can use the existence of low-girth graphs which are closely tied to expanders in a direct fashion. Another way is via indirection. Previously, in the lecture note, we saw that the integrality gap of the \hyperref[eq:multi-min-cut-LP]{linear program relaxation} for \hyperref[prb:multi-min-cut]{multi-min-cut} is \(\Omega (\log k)\) (the upper-bound is proved in \autoref{thm:multi-min-cut-integrality-gap} via a \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm). In fact, if \(\alpha \) is the factor for the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm, then we get an \(O(\alpha )\)-approximation for \hyperref[prb:multi-min-cut]{multi-min-cut} via the \hyperref[eq:multi-min-cut-LP]{linear program}. Thus, one see that \(\alpha = \Omega (\log n)\) for general metrics (in the integrality gap example for \hyperref[prb:multi-min-cut]{multi-min-cut} \(k = \Omega (n^2)\)). One can use similar approaches to prove for \hyperref[prb:tree-embedding]{tree embedding}.
 \end{explanation}
 
 \begin{note}[Efficient algorithms]
-  While we focus on the quality of \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithms and \hyperref[prb:tree-embedding]{tree embedding} but not so much on the running times, it is easy to see that the algorithms themselves can be implemented in polynomial time. The main computation is about the shortest paths. If one computes all pairs shortest paths (APSP), then the algorithms are pretty simple. However, APSP is slow, which takes \(O(mn)\) times. It is possible to compute the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm and metric \hyperref[prb:tree-embedding]{tree embeddings} in close to linear time on a weighted graph with \(m\) edges. This involves computing approximate shortest paths and several tricks, and sometimes we give up on the quality of the approximation by logarithmic factors.
+	While we focus on the quality of \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithms and \hyperref[prb:tree-embedding]{tree embedding} but not so much on the running times, it is easy to see that the algorithms themselves can be implemented in polynomial time. The main computation is about the shortest paths. If one computes all pairs shortest paths (APSP), then the algorithms are pretty simple. However, APSP is slow, which takes \(O(mn)\) times. It is possible to compute the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm and metric \hyperref[prb:tree-embedding]{tree embeddings} in close to linear time on a weighted graph with \(m\) edges. This involves computing approximate shortest paths and several tricks, and sometimes we give up on the quality of the approximation by logarithmic factors.
 \end{note}

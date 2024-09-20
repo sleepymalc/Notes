@@ -1,5 +1,5 @@
-\lecture{7}{17 Sep.\ 11:00}{Sparsest Cut and Expander}
-\section{Sparsest Cut and Expanders}
+\lecture{7}{17 Sep.\ 11:00}{Linear Programming for Sparsest Cut}
+\section{Sparsest Cut}
 Consider building a network of \(n\) vertices. The best network might be the complete graph, which can do everything and is robust. However, the problem is that the degree is too high (\(n-1\)).
 
 \begin{eg}
@@ -18,146 +18,78 @@ The magic happens whenever the degree goes up to \(3\).
 	for \(\lvert S \rvert \ll \lvert V \setminus S \rvert \) and some \(c \geq 0 \).
 \end{intuition}
 
-This notion can be formalized as the so-called \hyperref[def:expander]{expander}~\cite{hoory2006expander}.
-
-\begin{definition}[Expander]\label{def:expander}
-	An \emph{expander} with parameter \(\alpha \) is a graph \(G = (V, E)\) such that for all \(S \subseteq V\) with \(\lvert S \rvert \leq \lvert V \rvert / 2\) such that \(\lvert \delta (S) \rvert \geq \alpha \lvert S \rvert\).
-\end{definition}
-
-\begin{definition}[Expansion]\label{def:expansion}
-	The \emph{expansion} of a graph \(G = (V, E)\) is \(\min _{S\colon \lvert S \rvert \leq \lvert V \rvert / 2} \lvert \delta (S) \rvert / \lvert S \rvert \).
-\end{definition}
-
-Indeed, \hyperref[def:expander]{expanders} do exist, and they are quite common.
-
-\begin{lemma}\label{lma:expander-existence}
-	There exists \hyperref[def:expander]{expanders} with degree \(3\) with \(\alpha = \Omega (1)\). More specifically, a random \(3\)-regular graph is an \hyperref[def:expander]{expander} with high probability.
-\end{lemma}
-
-It's clear that \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander} if the \hyperref[def:expansion]{expansion} of \(G\) is at least \(\alpha \). Hence, with \autoref{lma:expander-existence}, a natural way to generate an \hyperref[def:expander]{expander} is to first sample a random regular graph, then check its \hyperref[def:expansion]{expansion}. However, computing the \hyperref[def:expansion]{expansion} is \(\coNP\)-hard. Moreover, we note that initially, \hyperref[def:expansion]{expansion} is interested from the \hyperref[prb:graph-bisection]{graph bisection problem}.
-
-\begin{problem}[Graph bisection]\label{prb:graph-bisection}
-Given a graph \(G = (V, E)\), the \emph{graph bisection problem} aims to find a partition of \(G\) into \((S, V \setminus S)\) such that \(\lvert S \rvert = \lvert V \setminus S \rvert \) while minimizing \(\lvert \delta (S) \rvert \).
-\end{problem}
+This notion can be formalized as the so-called \hyperref[def:expander]{expander}~\cite{hoory2006expander}. We postpone the formal introduction of \hyperref[def:expander]{expander}, and first focus on a closely related problem, the \hyperref[prb:sparsest-cut]{sparsest cut problem}, specifically, the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform} version. It turns out that solving this helps us answer various questions for \hyperref[def:expander]{expanders}.
 
 \subsection{Uniform and Non-Uniform Sparsest Cut Problem}
-In a similar spirit to the \hyperref[prb:graph-bisection]{graph bisection problem}, we consider a more general one called \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut problem}.
+To introduce the problem, we first define the \hyperref[def:sparsity]{sparsity} for a cut.
+
+\begin{definition}[Sparsity]\label{def:sparsity}
+	Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and a demand graph \(H = (V, F)\) with demand capacity \(D \colon F \to \mathbb{R} _+\), for any cut \(S \subseteq V\), its \emph{sparsity} is defined as
+	\[
+		\frac{c(\delta (S))}{\sum_{i \colon \lvert S \cap \{ s_i, t_i \} \rvert = 1} D_i}.
+	\]
+\end{definition}
+
+That is, the \hyperref[def:sparsity]{sparsity} of a cut is the ratio of the capacity of the cut and the total demand of the pairs separated by \(S\). Now, we can introduce the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut problem}.
 
 \begin{problem}[Non-uniform sparsest cut]\label{prb:non-uniform-sparsest-cut}
-Given a supply graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and \(k\) pairs of vertices \(\{ (s_i, t_i) \} _{i=1}^{k}\) along with non-negative demand values \(D_1, \dots , D_k\).\footnote{If \(G\) is undirected, then the demand pairs are unordered, i.e., we do not distinguish \((s_i, t_i)\) from \((t_i, s_i)\).} The \emph{non-uniform sparsest cut problem} aims to find a cut \(S\) with minimum sparsity, where the sparsity of a cut \(S\) is defined as
-\[
-	\frac{c(\delta (S))}{\sum_{i \colon \lvert S \cap \{ s_i, t_i \} \rvert = 1} D_i},
-\]
-i.e., the ratio of the capacity of the cut and the total demand of the pairs separated by \(S\).
+Given a supply graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and \(k\) pairs of vertices \(\{ (s_i, t_i) \} _{i=1}^{k}\) along with non-negative demand values \(D_1, \dots , D_k\).\footnote{If \(G\) is undirected, then the demand pairs are unordered, i.e., we do not distinguish \((s_i, t_i)\) from \((t_i, s_i)\).} The \emph{non-uniform sparsest cut problem} aims to find a cut \(S\) with minimum \hyperref[def:sparsity]{sparsity}.
 \end{problem}
 
-\begin{intuition}
-	We're trying to find the best ``bang per buck''	cut, i.e., how much capacity do we need to remove per amount of demand separated?
-\end{intuition}
+Here, demands forms a demand graph \(H = (V, F)\) with edges \((s_i, t_i)\) and demand capacity \(D\colon F \to \mathbb{R} _+\) such that \(D((s_i, t_i)) = D_i\). With this representation, the \hyperref[def:sparsity]{sparsity} of cut \(S\) is simply \(c(\delta _G(S)) / D(\delta _H(S))\) where \(\delta _G(S)\) (respectively, \(\delta _H(S)\)) represents the supply (respectively, demand) edges crossing \(S\).
 
-It is sometimes convenient to consider \(G\) as the supply graph and the demands as forming a demand graph \(H = (V, E_H)\) with edges \((s_i, t_i)\) with demand capacity \(D\colon E_H \to \mathbb{R} _+\). With this representation of the demand pairs, the sparsity of cut \(S\) is simply \(c(\delta _G(S)) / D(\delta _H(S))\) where \(\delta _G(S)\) (respectively, \(\delta _H(S)\)) represents the supply (respectively, demand) edges crossing \(S\).
+\begin{intuition}
+	We're trying to find the best ``bang per buck''	cut, i.e., how much capacity do we need to remove per amount of demand separated to satisfy the demand?
+\end{intuition}
 
 \begin{remark}
 	We can define a cut as removing a set of edges, leading to more than two components. In the case of \hyperref[prb:non-uniform-sparsest-cut]{sparsest cut} in undirected graphs, it suffices to restrict attention to cuts of the form \(\delta (S)\) for some \(S \subseteq V\). This is not necessarily true for directed graphs or even in undirected graphs with node-weights or in hypergraphs.
 \end{remark}
-% \begin{explanation}
-% 	Intuitively, if the \hyperref[prb:non-uniform-sparsest-cut]{sparsest cut} induces more than two components, we can show that
-% \end{explanation}
 
 \begin{problem}[(Uniform) sparsest cut]\label{prb:sparsest-cut}
 The \emph{sparsest cut} problem is the same as \autoref{prb:non-uniform-sparsest-cut} with all \(D(u, v) = 1\) for each unordered pair of vertices \((u, v)\).\footnote{That is, \(\{ (s_i, t_i) \} _{i=1}^{k}\) is the set of all unordered pairs of vertices.}
 \end{problem}
 
-We see that in the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem}, the sparsity of a cut \(S\) is given by \(c(\delta _G(S)) / \lvert S \rvert \lvert V \setminus S \rvert \). Alternatively, the demand graph \(H\) is a complete graph with unit demand values on each edge.
+We see that in the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem}, the \hyperref[def:sparsity]{sparsity} of a cut \(S\) is given by \(c(\delta _G(S)) / \lvert S \rvert \lvert V \setminus S \rvert \). In this case, the demand graph \(H\) is a complete graph with unit demand values on each edge.
 
-\begin{note}[Generalization to vertex weight]
-	A slight generalization of the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem} is obtained by considering demands induced by weights on vertices. In this case, the dual flow instances are called \emph{product multi-commodity flow}. Specifically, there is a weight function \(\pi \colon V \to \mathbb{R} _+\) on vertices and demand \(D(u, v)\) for pair \((u, v)\) is set to be \(\pi (u) \pi (v)\).
-	\begin{itemize}
-		\item If \(\pi (u) = 1\) for all \(u\), then this reduces to the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem}.
-		\item If \(\pi (u) \in \{ 0, 1 \} \) for all \(u\), then we are focusing our attention on sparsity w.r.t.\ the set \(V^{\prime} = \{ v \in V \mid \pi (v) = 1 \} \).since vertices with \(\pi (u) = 0\) play no role.
-	\end{itemize}
-\end{note}
-
-\hyperref[def:expansion]{Expansion} and the \hyperref[prb:sparsest-cut]{uniform sparsest cut} are closely related. Firstly, when \(\lvert S \rvert \leq \lvert V \rvert / 2\), we have
-\[
-	\frac{1}{\lvert V \rvert } \frac{\lvert \delta (S) \rvert }{\lvert S \rvert }
-	\leq \frac{\lvert \delta (S) \rvert }{\lvert S \rvert \lvert V \setminus S \rvert }
-	\leq \frac{2}{\lvert V \rvert } \frac{\lvert \delta (S) \rvert }{\lvert S \rvert }.
-\]
-Thus, the \hyperref[def:expansion]{expansion} and the \hyperref[prb:sparsest-cut]{uniform sparsest cut}'s sparsity are within a factor of \(2\) of each other.
-
-\begin{remark}
-	Although determining the \hyperref[def:expansion]{expansion} exactly is \(\coNP\)-hard, we can use \hyperref[prb:sparsest-cut]{uniform sparsest cut problem} to certify the \hyperref[def:expansion]{expansion} of a graph within a factor of \(2\).
-\end{remark}
-
-\begin{note}[Generalization to vertex weight]
-	Sometimes it is useful to consider \hyperref[def:expansion]{expansion} with vertex weights \(w \colon V \to \mathbb{R} _+\) as well. In this case, the expansion is defined as
-	\[
-		\min _{S \colon w(S) \leq w(V) / 2} \frac{\lvert \delta (S) \rvert }{w(S)}.
-	\]
-	This corresponds to product multi-commodity flow instances where \(\pi (v) = w(v)\).
-\end{note}
-
-Finally, we define one more notation that is similar to \hyperref[def:expansion]{expansion}, called \hyperref[def:conductance]{conductance}.
-
-\begin{definition}[Conductance]\label{def:conductance}
-	Given a graph \(G = (V, E)\) and a cut \(S \subseteq V\), the \emph{conductance} is defined as \(\lvert \delta (S) \rvert / \operatorname{vol}(S) \) where \(\operatorname{vol}(S) = \sum_{v \in S} \deg(v)\).
-\end{definition}
-
-\begin{eg}
-	For regular graphs, \hyperref[def:expansion]{expansion} and \hyperref[def:conductance]{conductance} are the same. Moreover, one can capture \hyperref[def:conductance]{conductance} by \hyperref[def:expansion]{expansion} via setting weights on vertices with \(w(v) = \deg (v)\).
-\end{eg}
-
-We note that \hyperref[prb:sparsest-cut]{uniform sparsest cut} is fundamentally interesting because it helps us directly and indirectly solve the \hyperref[prb:balanced-separator]{balanced separator problem}.
+Finally, to further motivate the problem, we see that the \hyperref[prb:sparsest-cut]{uniform sparsest cut} helps us directly and indirectly solve the \hyperref[prb:balanced-separator]{balanced separator problem}, a central problem is graph algorithm:
 
 \begin{problem}[Balanced separator]\label{prb:balanced-separator}
 The \emph{balanced separator problem} aims to partition a graph \(G = (V, E)\) into two pieces \(G_1 = (V_1, E_1)\) and \(G_2 = (V_2, E_2)\) such that \(\lvert V_1 \rvert \approx \lvert V_2 \rvert \) while minimizing edges between \(V_1\) and \(V_2\).
 \end{problem}
 
 \subsection{Linear Program Relaxation and Maximum Concurrent Flow}
-It's not clear how to start solving the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem} as writing a linear program relaxation for which is not obvious, compared to \hyperref[prb:multi-min-cut]{multi-min-cut} and other cut problems where we have explicit terminal pairs that we wish to separate. In any case, consider the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, and we first write an integer program for which.
-
-% The necessary condition for an instance of \hyperref[prb:multi-commodity-flow]{multi-commodity flow problem} is to first verify \(\min _{S} \lvert \delta _G(S) \rvert / \lvert \delta _H(S) \rvert \geq 1\). However, this is not sufficient.
-
-% \begin{eg}
-
-% \end{eg}
-
-% Consider the \hyperref[prb:multi-commodity-flow]{multi-commodity flow problem}, and we aim to find \(\min _{S \subseteq V} \lvert \delta _G(S) \rvert / \operatorname{Dem}(S) \).
-
-Let \(y_i \in \{ 0, 1 \} \) being the indicator variable of whether we want to separate \((s_i, t_i)\). Moreover, let \(x_e \in \{ 0, 1 \} \) for all \(e \in E\) to be the cut indicator variables.
+It's not clear how to start solving the \hyperref[prb:sparsest-cut]{uniform sparsest cut problem} as writing a linear program relaxation for which is not obvious, compared to \hyperref[prb:multi-min-cut]{multi-min-cut} and other cut problems where we have explicit terminal pairs that we wish to separate. Hence, to write an integer program for which, we let \(y_i \in \{ 0, 1 \} \) being the indicator variable of whether we want to separate \((s_i, t_i)\). Moreover, let \(x_e \in \{ 0, 1 \} \) for all \(e \in E\) to be the cut indicator variables.
 
 \begin{intuition}
 	If we decide to separate \((s_i, t_i)\), then for every path between \(s_i\) and \(t_i\) we should cut at least one edge on the path.
 \end{intuition}
 
-Hence, a natural integer program of \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} is given by
-\[
-	\begin{aligned}
-		\min~ & \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i y_i}                                                           \\
-		      & \sum_{e \in P} x_e \geq y_i                            & \forall P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} \\
-		      & x_e \in \{ 0, 1 \}                                     & \forall e \in E                                         \\
-		      & y_i \in \{ 0, 1 \}                                     & \forall i = 1, \dots , k.                               \\
-	\end{aligned}
-\]
-Since we have a ratio in the objective, the above is not a linear program. A standard trick is to normalize the denominator to be \(1\) and relax the variables to be real-valued:
+Hence, a natural integer program of \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} and its relaxation is given by:
 \begin{equation}\label{eq:non-uniform-sparsest-cut-LP-primal}
 	\begin{aligned}
-		\min~ & \sum_{e \in E} c(e) x_e                                                               \\
-		      & \sum_{i=1}^{k} D_i y_i = 1                                                            \\
-		      & \sum_{e \in P} x_e \geq y_i & \forall P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} \\
-		      & x_e \geq 0                  & \forall e \in E                                         \\
-		      & y_i \geq 0                  & \forall i = 1, \dots , k,                               \\
+		\min~ & \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i y_i}                                                            \\
+		      & \sum_{e \in P} x_e \geq y_i                            & \forall P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}; \\
+		      & x_e \in \{ 0, 1 \}                                     & \forall e \in E;                                         \\
+		      & y_i \in \{ 0, 1 \}                                     & \forall i = 1, \dots , k;                                \\
+	\end{aligned}\quad
+	\to
+	\begin{aligned}
+		\min~           & \sum_{e \in E} c(e) x_e                                                                \\
+		                & \sum_{i=1}^{k} D_i y_i = 1                                                             \\
+		                & \sum_{e \in P} x_e \geq y_i & \forall P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}; \\
+		                & x_e \geq 0                  & \forall e \in E ;                                        \\
+		\text{(P)}\quad & y_i \geq 0                  & \forall i = 1, \dots , k,                                \\
 	\end{aligned}
 \end{equation}
-With the dual variable \(y_P\) for each path such that it indicates the amount of ``flow'' sent on the path \(P\), the dual of the above is
+where we use the standard trick, i.e., linearization to normalize the denominator to be \(1\), to make the ratio of the integer program into a linear program. With the dual variable \(z_P\) for each path such that it indicates the amount of ``flow'' sent on the path \(P\), the dual of the above is
 \begin{equation}\label{eq:non-uniform-sparsest-cut-LP-dual}
 	\begin{aligned}
-		\max~ & \lambda                                                                                                                \\
-		      & \sum_{P \in \mathcal{P} _{s_i, t_i}} z_P \geq \lambda D_i    & \forall i = 1, \dots , k                                \\
-		      & \sum_{i=1}^{k} \sum_{\substack{P \in \mathcal{P} _{s_i, t_i}                                                           \\ P \ni e}} z_P \leq c(e) & \forall e \in E                                         \\
-		      & z_P \geq 0                                                   & \forall P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} \\
-		      & \lambda \geq 0,
+		\max~           & \lambda                                                                                                                 \\
+		                & \sum_{P \in \mathcal{P} _{s_i, t_i}} z_P \geq \lambda D_i    & \forall i = 1, \dots , k;                                \\
+		                & \sum_{i=1}^{k} \sum_{\substack{P \in \mathcal{P} _{s_i, t_i}                                                            \\ P \ni e}} z_P \leq c(e) & \forall e \in E;                                         \\
+		                & z_P \geq 0                                                   & \forall P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}; \\
+		\text{(D)}\quad & \lambda \geq 0,
 	\end{aligned}
 \end{equation}
 which is a multi-commodity flow. In particular, it solves the \emph{maximum concurrent multi-commodity flow} problem for the given instance, i.e., it finds the largest value of \(\lambda \) such that there is a feasible multi-commodity flow for the given pairs in which the flow routed for pair \((s_i, t_i)\) is at least \(\lambda D_i\).
@@ -175,59 +107,59 @@ We note that this dual can be solved efficiently via ellipsoid method since the 
 	\end{aligned}
 \]
 
-\begin{remark}[Flow-cut gap]
-	The \emph{flow-cut gap} in this case is the following equivalent way of thinking about the problem. Consider a multi-commodify flow instance on \(G\) with demand pairs \(\{ (s_i, t_i) \} _{i = 1}^{k}\) and demand values \(D_1, \dots , D_k\). Suppose \(G\) satisfies the \emph{cut-condition}, i.e., for every \(S \subseteq V\), the capacity \(c(\delta (S))\) is at lesat the demand separated by \(S\). Can we route all the demand pairs? This is true when \(k = 1\) but is not true in general even for \(k = 3\) in undirected graphs. The question is the maximum value of \(\lambda \) such that we can route \(\lambda D_i\) for each pair \(i\). The worst-case integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{proceeding linear program} is precisely the flow-cut gap.
+In this context, we can understand the \emph{flow-cut gap} of \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} by the following equivalent way of thinking about the problem:
 
-	One can ask about the flow-cut gap for all graphs, a specific class of graphs, for a specific class of demand graphs, a specific class of supply and demand graphs, and so on. We will establish that the flow-cut gap in general undirected graphs is at most \(O(\log k)\), and there are instances where the gap is \(\Omega (\log k)\) which are uniform instances. It is conjectured that the gap is \(O(1)\) for planar graphs but the best upper bound we have is \(O(\sqrt{\log n} )\).
-\end{remark}
+\begin{intuition}[Cut-condition]
+	Given a multi-commodify flow instance on \(G\). A necessary condition to route all the demand pairs is that if \(G\) satisfies the \emph{cut-condition}, i.e., for every \(S \subseteq V\), the capacity \(c(\delta (S))\) is at least the demand separated by \(S\). However, the converse it not necessarily true, i.e., the cut-condition is not sufficient.
+\end{intuition}
+
+The cut-condition is sufficient when \(k = 1\) but is not true in general even for \(k = 3\) in undirected graphs. The question is the maximum value of \(\lambda \) such that we can route \(\lambda D_i\) for each pair \(i\). The worst-case integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{proceeding linear program} is precisely the flow-cut gap.
 
 \subsection{Rounding Linear Program via \(\ell _1\) Embeddings}
-It's known that there is an \(O(\log n)\)-approximation algorithm and the flow-cut gap for \hyperref[prb:sparsest-cut]{uniform sparsest cut}, together with a lower bound of \(\Omega (\log n)\) on the flow-cut gap for \hyperref[prb:sparsest-cut]{uniform sparsest cut} via \hyperref[def:expander]{expanders}~\cite{leighton1999multicommodity}. This led to an \(O(\log ^2 n)\)-approximation for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, and it was an open problem to obtain a tight conjectured bound of \(O(\log n)\). The optimal rounding the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} turns out to go via metric embedding theory~\cite{linial1995geometry,aumann1998log}. We need some basics in metric embeddings to point out the connection and rounding.
+It's known that there is an \(O(\log n)\)-approximation algorithm and the flow-cut gap for \hyperref[prb:sparsest-cut]{uniform sparsest cut}, together with a lower bound of \(\Omega (\log n)\) on the flow-cut gap for \hyperref[prb:sparsest-cut]{uniform sparsest cut} via \hyperref[def:expander]{expanders}~\cite{leighton1999multicommodity}. This leads to an \(O(\log ^2 n)\)-approximation for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, and it was an open problem to obtain a tight conjectured bound of \(O(\log n)\). The optimal rounding the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} turns out to go via metric embedding theory~\cite{linial1995geometry,aumann1998log}. We need some basics in metric embeddings to point out the connection and rounding.
 
 \begin{note}
 	Even though the metric embedding machinery is powerful, it can seem like magic. The more basic ideas for \hyperref[prb:sparsest-cut]{uniform sparsest cut} based on region growing is useful to know~\cite{williamson2011design}.
 \end{note}
 
+\begin{remark}[Rounding via multi-min-cut]
+	There are also close connections between \hyperref[prb:non-uniform-sparsest-cut]{sparsest cut} and \hyperref[prb:multi-min-cut]{multi-min-cut}. In particular, suppose there is an \(\alpha (k, n)\)-approximation for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, then we have an \(O(\alpha (k, n) \ln k)\)-approximation for \hyperref[prb:multi-min-cut]{multi-min-cut}. The converse is also true.\footnote{See the \href{https://courses.grainger.illinois.edu/cs598csc/fa2024/Notes/lec-sparsest-cut.pdf}{note} for a reference.}
+\end{remark}
+
 Before we start, consider the following simple setting when \(G\) is a tree \(T = (V, E)\).
 
 \begin{eg}[Tree]
-	Given a tree \(G = T = (V, E)\), for each edge \(e \in T\), we can associate a cut \(S_e\) which is one side of the two components in \(T - e\). The capacity of the cut \(\delta (S_e)\) is \(c(e)\). Let \(D(e) = \sum_{i\colon \lvert S_e \cup \{ s_i, t_i \} \rvert = 1} D_i \) be the demand separated by \(e\). The sparsity of the cut \(S_e\) is simply \(c(e) / D_e\), hence finding the \hyperref[prb:sparsest-cut]{sparsest cut} in this case is easy.
-
-	A more interesting fact is that the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} give an optimum solution on a tree.
-
-	\begin{claim}
-		Let \((x, y)\) be a feasible solution to the \hyperref[eq:non-uniform-sparsest-cut-LP-dual]{dual} of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} with objective value \(\lambda \). If \(G\) is a tree \(T\), then there is an edge \(e \in T\) such that \(c_e / D_e \leq \lambda \).
-	\end{claim}
-	\begin{explanation}
-		We note that the integer program in this case becomes
-		\[
-			\begin{aligned}
-				\min~ & \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i d_x(s_i, t_i)}                                         \\
-				      & \sum_{e \in P} x_e \geq y_i                                      & \forall P \in \mathcal{P} _{s_i, t_i} \\
-				      & x_e \in \{ 0, 1 \}                                               & \forall e \in E                       \\
-				      & y_i \in \{ 0, 1 \}                                               & \forall i = 1, \dots , k,
-			\end{aligned}
-		\]
-		where \(d_x(s_i, t_i)\) is the shortest path distance between \(s_i\) and \(t_i\) induced by \(x\). Since there is a unique path \(P_{s_i, t_i}\) from \(s_i\) to \(t_i\) in \(T\) such that \(d_x(s_i, t_i) = \sum_{e \in P_{s_i, t_i}} x_e\), we have
-		\[
-			\lambda
-			= \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i d_x(s_i, t_i)}
-			= \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i \sum_{e \in P_{s_i, t_i}} x_e}
-			= \frac{\sum_{e \in E} c(e) x_e}{\sum_{e \in E} x_e \sum_{i \colon e \in P_{s_i, t_i}} D_i}
-			= \frac{\sum_{e \in E} c(e) x_e}{\sum_{e \in E} D(e) x_e }.
-		\]
-		Finally, the result follows from \(\sum_{i} a_i / \sum_{i} b_i \geq \min _i a_i / b_i\) for positive \(a_i\) and \(b_i\)'s.
-	\end{explanation}
+	Given a tree \(G = T = (V, E)\), for each edge \(e \in T\), we can associate a cut \(S_e\) which is one side of the two components in \(T - e\). The capacity of the cut \(\delta (S_e)\) is \(c(e)\). Let \(D(e) = \sum_{i\colon \lvert S_e \cup \{ s_i, t_i \} \rvert = 1} D_i \) be the demand separated by \(e\). The \hyperref[def:sparsity]{sparsity} of the cut \(S_e\) is simply \(c(e) / D_e\), hence finding the \hyperref[prb:sparsest-cut]{sparsest cut} in this case is easy. Interestingly, the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} give an optimum solution on a tree.
 \end{eg}
+\begin{explanation}
+	Let \((x, y)\) be a feasible solution to the \hyperref[eq:non-uniform-sparsest-cut-LP-dual]{dual} of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} with objective value \(\lambda \). We want to prove that if \(G\) is a tree \(T\), then there is an edge \(e \in T\) such that \(c_e / D_e \leq \lambda \). We note that the integer program in this case becomes
+	\[
+		\begin{aligned}
+			\min~ & \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i d_x(s_i, t_i)}                                           \\
+			      & \sum_{e \in P} x_e \geq y_i                                      & \forall P \in \mathcal{P} _{s_i, t_i} ; \\
+			      & x_e \in \{ 0, 1 \}                                               & \forall e \in E ;                       \\
+			      & y_i \in \{ 0, 1 \}                                               & \forall i = 1, \dots , k,
+		\end{aligned}
+	\]
+	where \(d_x(s_i, t_i)\) is the shortest path distance between \(s_i\) and \(t_i\) induced by \(x\). Since there is a unique path \(P_{s_i, t_i}\) from \(s_i\) to \(t_i\) in \(T\) such that \(d_x(s_i, t_i) = \sum_{e \in P_{s_i, t_i}} x_e\), we have
+	\[
+		\lambda
+		= \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i d_x(s_i, t_i)}
+		= \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i \sum_{e \in P_{s_i, t_i}} x_e}
+		= \frac{\sum_{e \in E} c(e) x_e}{\sum_{e \in E} x_e \sum_{i \colon e \in P_{s_i, t_i}} D_i}
+		= \frac{\sum_{e \in E} c(e) x_e}{\sum_{e \in E} D(e) x_e }.
+	\]
+	Finally, the result follows from \(\sum_{i} a_i / \sum_{i} b_i \geq \min _i a_i / b_i\) for positive \(a_i\) and \(b_i\)'s.
+\end{explanation}
 
 \begin{eg}[Ring]
 	For a ring graph, the same technique works where we need to remove two edges.
 \end{eg}
 
-The reason why the above proof works for trees is because of a more general phenomenon: the shortest path distances are \hyperref[def:l1-metric]{\(\ell _1\)-metrics}, or equivalently, \hyperref[def:cut-metric]{cut metrics}.
+The reason why the above proof works for trees is because of a more general phenomenon: the shortest path distances are \hyperref[def:l1-metric]{\(\ell _1\) metrics}, or equivalently, \hyperref[def:cut-metric]{cut metrics}.
 
-\subsection{Metric Embeddings}
-To explain, consider a finite metric space \((V, d)\). We will be interested in two special types of metrics:
+\subsubsection{Cut, Line, and \(\ell _1\) Metrics, and Metric Embedding}
+To explain the above phenomenon, consider a finite metric space \((V, d)\) with following metrics:
 
 \begin{definition}[Cut metric]\label{def:cut-metric}
 	Let \((V, d)\) be a finite metric space. The metric \(d\) is a \emph{cut metric} if there is a set \(S \subseteq V\) such that \(d = d_S\), where \(d_S\) associated with the cut \(S\) is defined as
@@ -240,13 +172,17 @@ To explain, consider a finite metric space \((V, d)\). We will be interested in 
 	\]
 \end{definition}
 
+The \hyperref[def:cut-cone]{cut-cone} consists of non-negative combination of \hyperref[def:cut-metric]{cut metrics}:
+
 \begin{definition}[Cut cone]\label{def:cut-cone}
-	Let \((V, d)\) be a finite metric space. The metric \(d\) is in the \emph{cut cone} (or in the \emph{cone} of the \hyperref[def:cut-metric]{cut metrics}) if there exist non-negative scalars \(y_S\) where \(S \subseteq V\) such that for all \(u, v \in V\),
+	Let \((V, d)\) be a finite metric space. The metric \(d\) is in the \emph{cut cone} if there exist non-negative scalars \(y_S\) where \(S \subseteq V\) such that for all \(u, v \in V\),
 	\[
 		d(u, v)
 		= \sum_{S \subseteq V} y_S d_S(u, v).
 	\]
 \end{definition}
+
+Beside the \hyperref[def:cut-metric]{cut metric}, another useful metric is the \hyperref[def:line-metric]{line metric} and the well-known \hyperref[def:l1-metric]{\(\ell _1\) metric}:
 
 \begin{definition}[Line metric]\label{def:line-metric}
 	Let \((V, d)\) be a finite metric space. The metric \(d\) is a \emph{line metric} if there is a mapping \(f \colon V \to \mathbb{R} \) such that for all \(u, v \in V\),
@@ -256,7 +192,7 @@ To explain, consider a finite metric space \((V, d)\). We will be interested in 
 	\]
 \end{definition}
 
-\begin{definition}[\(\ell _1\)-metric]\label{def:l1-metric}
+\begin{definition}[\(\ell _1\) metric]\label{def:l1-metric}
 	Let \((V, d)\) be a finite metric space. The metric \(d\) is an \emph{\(\ell _1\) metric} if there is some integer \(d\) and a mapping \(f \colon V \to \mathbb{R} ^d\) such that for all \(u, v \in V\),
 	\[
 		d(u, v)
@@ -264,38 +200,52 @@ To explain, consider a finite metric space \((V, d)\). We will be interested in 
 	\]
 \end{definition}
 
-\begin{claim}
-	A metric \(d\) of a metric space \((V, d)\) is an \hyperref[def:l1-metric]{\(\ell _1\) metric} if and only if it is a non-negative combination of \hyperref[def:line-metric]{line metrics} (in the cone of the \hyperref[def:line-metric]{line metrics}).
-\end{claim}
-\begin{explanation}
-	If \(d\) is an \hyperref[def:l1-metric]{\(\ell _1\) metric} then each dimension corresponds to a \hyperref[def:line-metric]{line metric}. Conversely, any non-negative combination of \hyperref[def:line-metric]{line metrics} can be made into an \hyperref[def:l1-metric]{\(\ell _1\) metric} where each \hyperref[def:line-metric]{line metric} becomes a separate dimension (scalar multiplication for a \hyperref[def:line-metric]{line metric} is also a \hyperref[def:line-metric]{line metric}).
-\end{explanation}
+It might not be too surprising that the following holds.
 
-\begin{lemma}
+\begin{lemma}\label{lma:l1-metric-iff-non-negative-combination-of-line-metric}
+	A metric \(d\) of a metric space \((V, d)\) is an \hyperref[def:l1-metric]{\(\ell _1\) metric} if and only if it is a non-negative combination of \hyperref[def:line-metric]{line metrics} (in the cone of the \hyperref[def:line-metric]{line metrics}).
+\end{lemma}
+\begin{proof}
+	If \(d\) is an \hyperref[def:l1-metric]{\(\ell _1\) metric} then each dimension corresponds to a \hyperref[def:line-metric]{line metric}. Conversely, any non-negative combination of \hyperref[def:line-metric]{line metrics} can be made into an \hyperref[def:l1-metric]{\(\ell _1\) metric} where each \hyperref[def:line-metric]{line metric} becomes a separate dimension (scalar multiplication for a \hyperref[def:line-metric]{line metric} is also a \hyperref[def:line-metric]{line metric}).
+\end{proof}
+
+A more interesting observation is that any \hyperref[def:cut-metric]{cut metric} \(d_S\) is a simple \hyperref[def:line-metric]{line metric}: map all vertices in \(S\) to \(0\) and all vertices in \(V \setminus S\) to \(1\). This leads to the following.
+
+\begin{lemma}\label{lma:l1-metric-iff-cut-cone}
 	A metric \(d\) is an \hyperref[def:l1-metric]{\(\ell _1\) metric} if and only if \(d\) is in the \hyperref[def:cut-cone]{cut cone}.
 \end{lemma}
 \begin{proof}
-	\todo{add}
+	If \(d\) is in the \hyperref[def:cut-cone]{cut cone}, then it is a non-negative combination of the \hyperref[def:cut-metric]{cut metrics}, hence it is a non-negative combination of \hyperref[def:line-metric]{line metrics} by the above observation, hence an \hyperref[def:l1-metric]{\(\ell _1\) metric}.
+
+	For the converse, it suffices to argue that any \hyperref[def:line-metric]{line metric} is in the \hyperref[def:cut-cone]{cut cone}. Let \(V = \{ v_i \} _{i = 1}^{n}\) and let \(d\) be a \hyperref[def:line-metric]{line metric} on \(V\). Without loss of generality, assume that the coordinates \(x_i\) of the points for each \(v_i\) corresponding to the \hyperref[def:line-metric]{line metric} \(d\) are \(x_1 \leq x_2 \leq \dots \leq x_n\) on the real line. For \(1 \leq i < n\), let \(S_i = \{ v_1, v_2, \dots , v_i \} \). It is not hard to verify that \(\sum_{i=1}^{n-1} \lvert x_{i+1} - x_i \rvert d_{S_i} = d\).
 \end{proof}
 
-Now we have introduced all the necessary metrics we will use. Consider again a finite metric space \((V, d)\).
+Now we have introduced all the necessary metrics we will use. Consider a finite metric space \((V, d)\).
 
 \begin{claim}
 	Any finite metric space can be viewed as one that is derived from the shortest path metric induced on a graph with some non-negative edge lengths.
 \end{claim}
 
-If \(G = (V, E)\) is a simple graph and \(\ell \colon E \to \mathbb{R} _+\) are some edge-lengths, the metric induced on \(V\) depends both on the \emph{topology} of \(G\) and the lengths as well, i.e., finite metrics can encode graph structure, hence it can be diverse. When trying to round we may want to work with simpler metric spaces. One way to do this is to embed a given metric space \((V, d)\) into a simpler host metric space \((V^{\prime} , d^{\prime} )\) via an embedding \(f \colon V \to V^{\prime} \). Even though we may be interested in finite metric spaces, the host metric space can be continuous or infinite such as the \(\mathbb{R} ^h\) for dimension \(h\). As embedding typically distorts the distances, thus, one wants to find embeddings with small \hyperref[def:distortion]{distortion}.
+If \(G = (V, E)\) is a simple graph and \(\ell \colon E \to \mathbb{R} _+\) are some edge-lengths, the metric induced on \(V\) depends both on the \emph{topology} of \(G\) and the lengths as well, i.e., finite metrics can encode graph structure, hence it can be diverse. When trying to round we may want to work with simpler metric spaces.
+
+\begin{intuition}[Embedding]
+	Embed a given metric space \((V, d)\) into a simpler host metric space \((V^{\prime} , d^{\prime} )\) via an embedding \(f \colon V \to V^{\prime} \).
+\end{intuition}
+
+\begin{note}
+	Even though we may be interested in finite metric spaces, the host metric space can be continuous or infinite such as the \(\mathbb{R} ^h\) for dimension \(h\).
+\end{note}
+
+As embedding typically distorts the distances, thus, we want to find embeddings with small \hyperref[def:distortion]{distortion}.
 
 \begin{definition}[Distortion]\label{def:distortion}
-	Let \((V, d)\) and \((V^{\prime} , d^{\prime} )\) be two metric spaces and let \(f \colon V \to V^{\prime} \) be an embedding. The \emph{distortion} of \(f\) is given by
+	Let \((V, d)\) and \((V^{\prime} , d^{\prime} )\) be two metric spaces and let \(f \colon V \to V^{\prime} \) be an embedding. The \emph{distortion} of \(f\) is given by\footnote{Additive version are also explored, although they are very restrictive due to lack of scale invariance.}
 	\[
 		\max _{\substack{u, v \in V \\ u \neq v}} \left( \frac{d^{\prime} (f(u), f(v))}{d(u, v)} , \frac{d(u, v)}{d^{\prime} (f(u), f(v))}\right) .
 	\]
 \end{definition}
 
-\begin{remark}
-	Additive notions of \autoref{def:distortion} are also explored in the literature, although they are very restrictive due to lack of scale invariance.
-\end{remark}
+Additionally, we're interested in the following kind of embeddings:
 
 \begin{definition*}
 	Let \((V, d)\) and \((V^{\prime} , d^{\prime} )\) be two metric spaces and let \(f \colon V \to V^{\prime} \) be an embedding.
@@ -310,7 +260,7 @@ If \(G = (V, E)\) is a simple graph and \(\ell \colon E \to \mathbb{R} _+\) are 
 	\end{definition}
 \end{definition*}
 
-Of particular importance are embeddings of finite metric spaces into \(\mathbb{R} ^h\), where the distance in the host space is measured under a norm such as \(\ell _1, \ell _2, \ell _\infty \). The dimension \(h\) is also important in various applications but in some settings like with \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, it is not. In any case, the following is known.
+Of particular importance are embeddings of finite metric spaces into \(\mathbb{R} ^h\), where the distance in the host space is measured under a norm such as \(\ell _p\) norm. The dimension \(h\) is also important in various applications but in some settings like with \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, it is not. We assume the following:
 
 \begin{theorem}[Bourgain]\label{thm:Bourgain}
 	Any \(n\)-point finite metric space can be embedded into \(\ell _2\) (hence also \(\ell _1\)) with \hyperref[def:distortion]{distortion} \(O(\log n)\). Moreover, the embedding is a \hyperref[def:contraction]{contraction} and can be constructed in randomized polynomial time and embeds points into \(\mathbb{R} ^h\) where \(h = O(\log ^2 n)\).
@@ -323,34 +273,3 @@ In fact, one can obtain a refined version of \autoref{thm:Bourgain} that is usef
 \end{theorem}
 
 We saw that the integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} is \(1\) on trees since the shortest path metric on trees is in the \hyperref[def:cut-cone]{cut cone}, i.e., \(\ell _1\)-embeddable. More generally, one can prove that if the shortest path metric on a graph \(G\) embeds into \(\ell _1\) with \hyperref[def:distortion]{distortion} \(\alpha \), then the integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} is at most \(\alpha \). This will imply an \(O(\log n)\)-integrality gap via \autoref{thm:Borugain*} since any \(n\)-point finite metric space embeds into \(\ell _1\) with \hyperref[def:distortion]{distortion} \(O(\log n)\).
-
-\begin{theorem}
-	Let \(G = (V, E)\) be a graph. Suppose any finite metric induced by edge lengths on \(E\) can be embedded into \(\ell _1\) with \hyperref[def:distortion]{distortion} \(\alpha \), then the integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} for the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} is at most \(\alpha \) for any instance on \(G\).
-\end{theorem}
-\begin{proof}
-	Let \((x, y)\) be a feasible fraction solution of the \hyperref[eq:non-uniform-sparsest-cut-LP-dual]{dual}, and let \(d\) be the metric induced by edge lengths given by \(x\). Let \(\lambda \) be the value of the solution and recall that
-	\[
-		\lambda = \frac{\sum_{uv \in E} c(uv) d(uv)}{\sum_{i=1}^{k} d_i d(s_i, t_i)}.
-	\]
-	Since \(d\) can be embedded into \(\ell _1\) with \hyperref[def:distortion]{distortion} at most \(\alpha \), and any \hyperref[def:l1-metric]{\(\ell _1\) metric} is in the \hyperref[def:cut-cone]{cut cone}, it implies that there are scalars \(z_S\), \(S \subseteq V\), such that for all \(u, v \in V\),
-	\[
-		\frac{1}{\alpha } \sum_{S \subseteq V}  z_S d_S(u, v)
-		\leq d(u, v)
-		\leq \sum_{S \subseteq V} z_S d_S(u, v).
-	\]
-	Without loss of generality, we assume that the embedding is a \hyperref[def:contraction]{contraction}. For a set \(S \subseteq V\), let \(\operatorname{Dem}(\delta (S)) \coloneqq \sum_{i \colon \lvert S \cap \{ s_i, t_i \} \rvert = 1} D_i \) to denote the total demand crossing the cut \(S\). Then, we have
-	\[
-		\begin{split}
-			\lambda
-			= \frac{\sum_{uv \in E} c(uv) d(uv)}{\sum_{i=1}^{k} D_i d(s_i, t_i)}
-			 & \geq \frac{1}{\alpha } \frac{\sum_{uv \in E} c(uv) \sum_{S \subseteq V} z_S d_S(uv)}{\sum_{i=1}^{k} D_i \sum_{S \subseteq V} d_S(s_i, t_i)} \\
-			 & = \frac{1}{\alpha } \frac{\sum_{S \subseteq V} z_S c(\delta (S))}{\sum_{S \subseteq V} z_S \operatorname{Dem}(\delta (S))  }
-			\geq \frac{1}{\alpha } \min _{S \subseteq V} \frac{c(\delta (S))}{\operatorname{Dem}(\delta (S)) }.
-		\end{split}
-	\]
-	Hence, there is a cut whose sparsity is at most \(\alpha \lambda \).
-\end{proof}
-
-\begin{remark}
-	There are also close connections between \hyperref[prb:non-uniform-sparsest-cut]{sparsest cut} and \hyperref[prb:multi-min-cut]{multi-min-cut}. In particular, suppose there is an \(\alpha (k, n)\)-approximation for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, then we have an \(O(\alpha (k, n) \ln k)\)-approximation for \hyperref[prb:multi-min-cut]{multi-min-cut}. The converse is also true.\footnote{See the \href{https://courses.grainger.illinois.edu/cs598csc/fa2024/Notes/lec-sparsest-cut.pdf}{note} for a reference.}
-\end{remark}

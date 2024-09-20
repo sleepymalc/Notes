@@ -3,13 +3,13 @@
 Finally, we conclude this section by proving the well-known \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. Given a directed graph \(G= (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), consider the following linear program relaxation of the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} where \(s, t\) are two distinct vertices:
 \begin{equation}\label{eq:s-t-min-cut-LP}
 	\begin{aligned}
-		\min~           & \sum_{e \in E} c(e) x_e                              \\
-		                & \sum_{e \in P} x_e \geq 1 & P \in \mathcal{P}_{s, t} \\
+		\min~           & \sum_{e \in E} c(e) x_e                                \\
+		                & \sum_{e \in P} x_e \geq 1 & P \in \mathcal{P}_{s, t} ; \\
 		\text{(P)}\quad & x_e \geq 0                & \forall e \in E;
 	\end{aligned}\qquad
 	\begin{aligned}
 		\max~           & \sum_{P \in \mathcal{P}_{s, t}} y_P                                     \\
-		                & \sum_{P \ni e} y_P \leq c(e)        & \forall e \in E                   \\
+		                & \sum_{P \ni e} y_P \leq c(e)        & \forall e \in E ;                 \\
 		\text{(D)}\quad & y_P \geq 0                          & \forall P \in \mathcal{P}_{s, t},
 	\end{aligned}
 \end{equation}
@@ -94,14 +94,14 @@ Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\)
 Again, we can write the following linear program relaxation for the \hyperref[prb:multi-min-cut]{multi-min-cut problem}:
 \begin{equation}\label{eq:multi-min-cut-LP}
 	\begin{aligned}
-		\min~           & \sum_{e \in E} c(e) x_e                                             \\
-		                & \sum_{e \in P} x_e \geq 1 & P \in \mathcal{P}_{s_i, t_i}, i \in [k] \\
+		\min~           & \sum_{e \in E} c(e) x_e                                                      \\
+		                & \sum_{e \in P} x_e \geq 1 & P \in \bigcup_{i=1}^{k} \mathcal{P}_{s_i, t_i} ; \\
 		\text{(P)}\quad & x_e \geq 0                & \forall e \in E;
 	\end{aligned}\qquad
 	\begin{aligned}
-		\max~           & \sum_{i=1}^{k} \sum_{P \in \mathcal{P}_{s_i, t_i}} y_P                                                    \\
-		                & \sum_{i=1}^{k} \sum_{P \ni e} y_P \leq c(e)            & \forall e \in E                                  \\
-		\text{(D)}\quad & y_P \geq 0                                             & \forall P \in \mathcal{P}_{s_i, t_i}, i \in [k].
+		\max~           & \sum_{i=1}^{k} \sum_{P \in \mathcal{P}_{s_i, t_i}} y_P                                                           \\
+		                & \sum_{i=1}^{k} \sum_{P \ni e} y_P \leq c(e)            & \forall e \in E ;                                       \\
+		\text{(D)}\quad & y_P \geq 0                                             & \forall P \in \bigcup_{i=1}^{k} \mathcal{P}_{s_i, t_i}.
 	\end{aligned}
 \end{equation}
 The primal assigns distance labels \(x_e\) to edges so that, on each path \(P\) between \(s_i\) and \(t_i\), the distance labels of these edges on \(P\) sum up to at least one, just like the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
@@ -120,24 +120,12 @@ On the other hand, the dual variable can be interpreted as the amount of flow be
 \end{note}
 
 \subsection{Approximation via Randomized Decomposition}
-Now, we will show that the integrality gap of the primal linear program is \(O(\log k)\) using a randomized rounding algorithm~\cite{calinescu2005approximation}.
-
-\begin{note}
-	In fact, the first algorithm that achieved an \(O(\log k)\)-approximation for \hyperref[prb:multi-min-cut]{multi-min-cut} is due to Garg, Vazirani, and Yannakakis~\cite{garg1993approximate} (see~\cite{vazirani2001approximation,williamson2011design}), and it's based on the region growing technique~\cite{leighton1999multicommodity}. The reason we choose to present the randomized rounding algorithm is due to its future application for metric embedding.
-\end{note}
-
-The goal is to find a procedure to cut (i.e., decompose) the graph into components that satisfies the requirement of being a \hyperref[prb:multi-min-cut]{multi-cut}, i.e.,
+The first algorithm~\cite{garg1993approximate} (see~\cite{vazirani2001approximation,williamson2011design}) that achieved an \(O(\log k)\)-approximation for \hyperref[prb:multi-min-cut]{multi-min-cut} is based on the region growing technique~\cite{leighton1999multicommodity}. Here, we present the randomized rounding algorithm due to its future application for metric embedding~\cite{calinescu2005approximation}, which in particular also shows the integrality gap of the primal \hyperref[eq:multi-min-cut-LP]{linear program} to be \(O(\log k)\). The goal is to find a procedure to cut (i.e., decompose) the graph into components that satisfies the requirement of being a \hyperref[prb:multi-min-cut]{multi-cut}, i.e.,
 \begin{itemize}
 	\item each component has diameter at most \(1\) when the edge capacity is induced by the primal solution;
 	\item the probability that edge \(e\) is cut is at most \(\alpha x_e\),
 \end{itemize}
-then we will get an \(\alpha \)-approximation algorithm.
-
-\begin{intuition}
-	It essentially reduces to \emph{low-diameter decomposition} in a metric space.
-\end{intuition}
-
-To do this, we consider the following algorithm.
+then we will get an \(\alpha \)-approximation algorithm. To do this, we consider the following algorithm.
 
 \begin{algorithm}[H]\label{algo:multi-cut-random-partition}
 	\DontPrintSemicolon{}
@@ -160,6 +148,10 @@ To do this, we consider the following algorithm.
 	\(F \gets \bigcup_{i=1}^{k} \delta (V_i)\)\;
 	\Return{\(F\)}\;
 \end{algorithm}
+
+\begin{intuition}
+	It essentially reduces to \emph{low-diameter decomposition} in a metric space.
+\end{intuition}
 
 \begin{lemma}\label{lma:multi-cut-random-partition-feasible}
 	\autoref{algo:multi-cut-random-partition} outputs a feasible \hyperref[prb:multi-min-cut]{multi-cut} for the given instance.
@@ -240,9 +232,7 @@ To do this, we consider the following algorithm.
 	This also implies that there exists a set of edges \(F\) such that the total capacity of edges in \(F\) is at most \(2 H_k \OPT_{\LP} \), i.e., \(\OPT_{\LP} \leq \OPT \leq 2 H_k \OPT_{\LP}\), which proves the integrality gap result.
 \end{proof}
 
-\begin{note}
-	The expected cost analysis can be used to obtain a randomized algorithm via repetition that outputs an \(O(\log k)\)-approximation with high probability. The algorithm can also be derandomized, but it's not straight forward.
-\end{note}
+The expected cost analysis can be used to obtain a randomized algorithm via repetition that outputs an \(O(\log k)\)-approximation with high probability. The algorithm can also be derandomized, but it's not straight forward.
 
 \begin{remark}[Flow-cut gap]
 	Recall that when \(k = 1\), we have the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. The integrality gap of the standard linear program for \hyperref[prb:multi-min-cut]{multi-min-cut} is the same as the relative gap between flow and cut when \(k\) is arbitrary. The upper bound on the integrality gap gives an upper bound on the gap.

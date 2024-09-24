@@ -147,7 +147,7 @@ We see that the \hyperref[prb:product-instance-of-sparsest-cut]{product instance
 	If \(\pi (u) \in \{ 0, 1 \} \) for all \(u\), then we are focusing our attention on the \hyperref[def:sparsity]{sparsity} w.r.t.\ the set \(V^{\prime} = \{ v \in V \mid \pi (v) = 1 \} \). Since vertices with \(\pi (u) = 0\) play no role.
 \end{remark}
 
-\section{Expander}
+\section{Expander and Well-Linked Set}
 We now introduce \hyperref[def:expander]{expanders}~\cite{hoory2006expander}, which relate to the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} in an intricate way.
 
 \begin{definition}[Expander]\label{def:expander}
@@ -156,6 +156,12 @@ We now introduce \hyperref[def:expander]{expanders}~\cite{hoory2006expander}, wh
 
 \begin{definition}[Expansion]\label{def:expansion}
 	The \emph{expansion} of a graph \(G = (V, E)\) is \(\min _{S\colon \lvert S \rvert \leq \lvert V \rvert / 2} \lvert \delta (S) \rvert / \lvert S \rvert \).
+\end{definition}
+
+Another related notion called \hyperref[def:conductance]{conductance} also has a nice connection to \hyperref[prb:sparsest-cut]{uniform sparsest cut}.
+
+\begin{definition}[Conductance]\label{def:conductance}
+	Given a graph \(G = (V, E)\) and a cut \(S \subseteq V\), the \emph{conductance} \(\phi (G)\) of \(G\) is defined as \(\lvert \delta (S) \rvert / \operatorname{vol}(S) \) where \(\operatorname{vol}(S) = \sum_{v \in S} \deg(v)\).
 \end{definition}
 
 It's clear that \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander} if the \hyperref[def:expansion]{expansion} of \(G\) is at least \(\alpha \). Initially, \hyperref[def:expansion]{expansion} arose from the \hyperref[prb:graph-bisection]{graph bisection problem}.
@@ -172,12 +178,6 @@ However, as we will soon see, \hyperref[def:expander]{expander} itself is quite 
 
 Hence, with \autoref{lma:expander-existence}, a natural way to generate an \hyperref[def:expander]{expander} is to first sample a random regular graph, then check its \hyperref[def:expansion]{expansion}. However, computing the \hyperref[def:expansion]{expansion} is \(\coNP\)-hard.
 
-Finally, we introduce another related notion, called \hyperref[def:conductance]{conductance}, which also has nice connection to \hyperref[prb:sparsest-cut]{uniform sparsest cut} as we will see.
-
-\begin{definition}[Conductance]\label{def:conductance}
-	Given a graph \(G = (V, E)\) and a cut \(S \subseteq V\), the \emph{conductance} \(\phi (G)\) of \(G\) is defined as \(\lvert \delta (S) \rvert / \operatorname{vol}(S) \) where \(\operatorname{vol}(S) = \sum_{v \in S} \deg(v)\).
-\end{definition}
-
 \subsection{Expansion and Conductance via Sparsest Cut}
 The first connection of \hyperref[def:expander]{expander} to the \hyperref[prb:sparsest-cut]{uniform sparsest cut} is that the latter can be used to find the \hyperref[def:expansion]{expansion} of a graph. In particular, we see that when \(\lvert S \rvert \leq \lvert V \rvert / 2\), we have
 \[
@@ -190,13 +190,10 @@ The first connection of \hyperref[def:expander]{expander} to the \hyperref[prb:s
 	The \hyperref[def:expansion]{expansion} and the \hyperref[prb:sparsest-cut]{uniform sparsest cut}'s sparsity are within a factor of \(2\) of each other. Hence, while determining the \hyperref[def:expansion]{expansion} exactly is \(\coNP\)-hard, we can use \hyperref[prb:sparsest-cut]{uniform sparsest cut} to certify the \hyperref[def:expansion]{expansion} of a graph within a factor of \(2\).
 \end{remark}
 
-Sometimes it is useful to consider \hyperref[def:expansion]{expansion} with vertex weights \(w \colon V \to \mathbb{R} _+\) as well. In this case, the expansion is defined as
-\[
-	\min _{S \colon w(S) \leq w(V) / 2} \frac{\lvert \delta (S) \rvert }{w(S)}.
-\]
+Sometimes it is useful to consider \hyperref[def:expansion]{expansion} with vertex weights \(w \colon V \to \mathbb{R} _+\) as well. In this case, the expansion is defined as \(\min _{S \colon w(S) \leq w(V) / 2} \lvert \delta (S) \rvert / w(S)\).
 
 \begin{note}
-	This corresponds to the \emph{product multi-commodity flow instances} (dual of \autoref{prb:product-instance-of-sparsest-cut}) where \(\pi (v) = w(v)\).
+	It's dual corresponds to the \emph{product multi-commodity flow instances} where \(\pi (v) = w(v)\).
 \end{note}
 
 As for \hyperref[def:conductance]{conductance}, it's easy to see that one can capture it by \hyperref[def:expansion]{expansion} via setting weights on vertices with \(w(v) = \deg (v)\), which further reduces to the \hyperref[prb:product-instance-of-sparsest-cut]{product instance of sparsest cut}.
@@ -236,16 +233,10 @@ Since \(\mathcal{L} _G\) is symmetric, all its eigenvalues are real. Moreover, t
 	\(\lambda _2\) provides a constant factor approximation for the \hyperref[def:conductance]{conductance} when it is a constant!
 \end{remark}
 
-As the \hyperref[def:expansion]{expansion} and \hyperref[def:conductance]{conductance} are related by the maximum degree and hence when the degree is small and constant one can use \(\lambda _2\) to certify \hyperref[def:expansion]{expansion}. Due to its importance for certifying \hyperref[def:expansion]{expansion}/\hyperref[def:conductance]{conductance}, some use \(\lambda _2\) as the definition of \hyperref[def:expansion]{expansion} since it is computable and also helps in construction of \hyperref[def:expander]{exapnders}.
+Since the \hyperref[def:expansion]{expansion} and \hyperref[def:conductance]{conductance} are related by the maximum degree, when the degree is a small constant, one can use \(\lambda _2\) to certify \hyperref[def:expansion]{expansion}. Due to its importance for certifying \hyperref[def:expansion]{expansion}/\hyperref[def:conductance]{conductance}, some use \(\lambda _2\) as the definition of \hyperref[def:expansion]{expansion} since it is computable and also helps in construction of \hyperref[def:expander]{expanders}.
 
 \subsection{Expander Decomposition}
-Even if a graph is not an \hyperref[def:expander]{expander} at first, it is possible to decompose a graph into smaller subgraphs such that each of them has good \hyperref[def:expansion]{expansion}/\hyperref[def:conductance]{conductance}. More explicitly, the goal is to remove as few edges as possible such that the graph decomposes into \hyperref[def:expander]{expanders}.
-
-\begin{intuition}
-	This is useful since \hyperref[def:expander]{expander} leads to good algorithms.
-\end{intuition}
-
-The question is the trade-off between the number of edges that we remove and the \hyperref[def:expansion]{expansion} that we can guarantee for the pieces.
+Even if a graph is not an \hyperref[def:expander]{expander} at first, it is possible to decompose a graph into smaller subgraphs such that each of them has good \hyperref[def:expansion]{expansion}/\hyperref[def:conductance]{conductance}. More explicitly, the goal is to remove as few edges as possible such that the graph decomposes into \hyperref[def:expander]{expanders}. This is useful since \hyperref[def:expander]{expander} leads to good algorithms. The question is the trade-off between the number of edges that we remove and the \hyperref[def:expansion]{expansion} that we can guarantee for the pieces.
 
 \begin{notation}
 	Technically the process works with \hyperref[def:conductance]{conductance}, but we use the terminology of \hyperref[def:expander-decomposition]{expander decomposition} for historical reasons.
@@ -254,17 +245,9 @@ The question is the trade-off between the number of edges that we remove and the
 Since one is often interested in finding fast algorithms for \hyperref[def:expander-decomposition]{expander decomposition}, it is common to explore trade-offs between the quality of the \hyperref[def:conductance]{conductance} of the pieces and the number of edges.
 
 \begin{definition}[Expander decomposition]\label{def:expander-decomposition}
-	A \emph{\((\phi, \epsilon )\)-expander decomposition} is a partition of the (connected) graph \(G = (V, E)\) into vertex induced subgraphs \(\{ G_i = G[V_i] \}_{i=1}^{h} \) such that each \(G_i\) has \hyperref[def:conductance]{conductance} at least \(\phi \), and the number of inter-cluster edges is at most \(em\), i.e.,
+	A \emph{\((\phi, \epsilon )\)-expander decomposition} for some \(\epsilon \in (0, 1)\) is a partition of the (connected) graph \(G = (V, E)\) into vertex induced subgraphs \(\{ G_i = G[V_i] \}_{i=1}^{h} \) such that each \(G_i\) has \hyperref[def:conductance]{conductance} at least \(\phi \), and the number of inter-cluster edges is at most \(\epsilon m\), i.e.,
 	\[
 		\frac{1}{2} \sum_{i=1}^{h} \lvert \delta (V_i) \rvert
 		\leq \epsilon m.
 	\]
 \end{definition}
-
-\begin{theorem}\label{thm:expander-decomposition}
-	Let \(G=(V, E)\) be a graph and \(\epsilon \in (0, 1)\). Suppose there is an \(\alpha \)-approximation for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}, then there is an efficient algorithm that outputs an \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon }{\alpha \log m}), \epsilon )\)-expander decomposition} of \(G\).
-\end{theorem}
-
-\begin{remark}
-	If we don't care about efficiency, we can set \(\alpha = 1\). In particular, \autoref{thm:expander-decomposition} guarantees that the decomposed pieces have \hyperref[def:conductance]{conductance} \(\Omega (1 / \log m)\) while cutting only a constant fraction of the edges. This is tight as shown by the hypercube~\cite{alev2017graph}.
-\end{remark}

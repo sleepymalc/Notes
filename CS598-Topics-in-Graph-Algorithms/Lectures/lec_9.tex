@@ -1,0 +1,219 @@
+\lecture{9}{24 Sep.\ 11:00}{Expander Decomposition and Well-Linked Sets}
+\begin{theorem}\label{thm:expander-decomposition}
+	Let \(G=(V, E)\) be a graph and \(\epsilon \in (0, 1)\). Suppose there is an \(\alpha \)-approximation for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}, then there is an efficient algorithm that outputs an \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon }{\alpha \log m}), \epsilon )\)-expander decomposition} of \(G\).
+\end{theorem}
+\begin{proof}
+	Consider the following algorithm.
+
+	\begin{algorithm}[H]\label{algo:expander-decomposition}
+		\DontPrintSemicolon{}
+		\caption{\hyperref[def:expander-decomposition]{Expander decomposition}}
+		\KwData{A connected graph \(G = (V, E)\), base graph edge set size \(M\), parameter \(\epsilon \in (0, 1)\)}
+		\KwResult{An \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon}{\alpha \log m}), \epsilon)\)-expander decomposition} \(\{ G_i \} _{i=1}^{h}\)}
+		\SetKwFunction{ExpanderDecomposition}{\hyperref[algo:expander-decomposition]{Expander-Decomposition}}
+		\SetKwFunction{SparsestCut}{\(\alpha \)-\hyperref[prb:sparsest-cut]{Uniform-Sparsest-Cut}}
+
+		\BlankLine
+
+		\If(\Comment*[f]{Base case}){\(m \leq 10 \log M / \epsilon \)}{
+			\Return{\(G\)}\;
+		}
+		\;
+		\((S, V\setminus S) \gets\)\SparsestCut{\(G\)}\footnote{Recall that this is for \hyperref[def:conductance]{conductance}, which can be formalized as a \hyperref[prb:product-instance-of-sparsest-cut]{project instance}.}\Comment*[r]{\(\operatorname{vol}(S) \leq \operatorname{vol}(V \setminus S) \)}
+		\;
+		\uIf(\Comment*[f]{Check \hyperref[def:sparsity]{sparsity}}){\(\lvert \delta (S) \rvert / \operatorname{vol}(S) > c / 10 \log M\)}{
+			\Return{\(G\)}\;
+		}
+		\Else{
+		\(\{ G_i^{(1)} \}_{i=1}^{h_1} \gets\)\ExpanderDecomposition{\(G[S]\), \(M\), \(\epsilon \)}\;
+		\(\{ G_i^{(2)} \}_{i=1}^{h_2} \gets\)\ExpanderDecomposition{\(G[V\setminus S]\), \(M\), \(\epsilon \)}\;
+		\Return{\(\{ G_i^{(1)} \}_{i=1}^{h_1} \cup \{ G_i^{(2)} \}_{i=1}^{h_2} \)}\;
+		}
+	\end{algorithm}
+
+	\begin{claim}
+		The \hyperref[def:conductance]{conductance} of each subgraph output by \autoref{algo:expander-decomposition} is at least \(\epsilon / 10 \alpha \log M\).
+	\end{claim}
+	\begin{explanation}
+		For the base case, if \(G\) is connected and has at most \(10 \log M / \epsilon \) edges, then the \hyperref[def:conductance]{conductance} of \(G\) is at least \(c / 10 \log M\) since at least one edge crosses any cut, and the volume of the smaller side is at most \(10 \log M\).
+
+		On the other hand, if the \(\alpha \)-approximation algorithm of the \hyperref[prb:sparsest-cut]{uniform sparsest cut} for \hyperref[def:conductance]{conductance} outputs a cut \((S, V\setminus S)\) with \hyperref[def:sparsity]{sparsity} at least \(c / 10\log M\), we know that the actual \hyperref[def:sparsity]{sparsity} of \(G\) is at least \(c / 10 \alpha \log M\) as desired.
+	\end{explanation}
+
+	Next, we analyze the total number of edges cut, which needs to be at most \(\epsilon m\).
+	\begin{intuition}
+		If \(G\) is of constant size (and connected) or it does not have a \hyperref[prb:sparsest-cut]{sparse cut}, \autoref{algo:expander-decomposition} does not cut any edges.
+	\end{intuition}
+	Let \(T(m)\) be the total number of edges cut by \autoref{algo:expander-decomposition} on a graph with \(m\) edges. \autoref{algo:expander-decomposition} removes edges between \(S\) and \(V\setminus S\) only when \(\lvert \delta (S) \rvert \leq \epsilon \operatorname{vol}(S) / 10 \log M \) where \(\operatorname{vol}(S) \leq \operatorname{vol}(V \setminus S) \). Let \(m^{\prime} \coloneqq \lvert \delta (S) \rvert \), \(m_1 \coloneqq \lvert E(G[S]) \rvert \), and \(m_2 \coloneqq \lvert E(G[V\setminus S]) \rvert\), then
+	\[
+		m^{\prime}
+		\leq \frac{\epsilon }{10 \log m} (2m_1 + m^{\prime} )
+		\implies (1 - o(1)) m^{\prime} \leq \frac{\epsilon }{5 \log m} m_1
+		\leq \frac{\epsilon }{4 \log M} m_1.
+	\]
+	With \(m_1 \leq m_2\), the recurrence can be written as
+	\[
+		T(m)
+		\leq T(m_1) + T(m_2) + \frac{\epsilon }{4 \log M} \min (m_1, m_2)
+		= T(m_1) + T(m_2) + \frac{\epsilon }{4 \log M} m_1
+	\]
+	where \(m_1 + m_2 \leq m\), which gives \(T(m) \leq \epsilon m\).
+\end{proof}
+
+If we don't care about efficiency, we can set \(\alpha = 1\) and solve the \hyperref[prb:sparsest-cut]{uniform sparsest cut} exactly. In particular, \autoref{thm:expander-decomposition} guarantees that the decomposed pieces have \hyperref[def:conductance]{conductance} \(\Omega (1 / \log m)\) while cutting only a constant fraction of the edges.
+
+\begin{note}
+	The bound \(\Omega (1 / \log m)\) is tight as shown by the hypercube~\cite{alev2017graph}.
+\end{note}
+
+We can rephrase \autoref{thm:expander-decomposition} in a different form where we want a lower bound on the \hyperref[def:conductance]{conductance} of the pieces and express the number of edges cut as a function that parameter:
+
+\begin{corollary}\label{col:expander-decomposition}
+	Let \(G = (V, E)\) be a graph and \(\phi \) be a parameter. Suppose there is an \(\alpha \)-approximation for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}, then there is an efficient algorithm that computes a \hyperref[def:expander-decomposition]{\((\phi , O(\alpha \cdot \phi \cdot \log m))\)-expander decomposition}.
+\end{corollary}
+
+\begin{note}
+	Number of edges cut is less than \(m\) only if \(\alpha \phi \log m < 1\), so one should think of \(\phi \leq 1 / \alpha \log m\).
+\end{note}
+
+\begin{remark}
+	\autoref{thm:expander-decomposition} is phrased in terms of \(m\), the number of edges. Capacitated graphs can be handled by scaling since we do not assume that \(G\) is simple. However, the dependence on \(\log m\) means that when capacities are large, we are not guaranteed a strongly polynomial bound. One can handle this issue in various ways depending on the application. In most applications of \hyperref[def:expander-decomposition]{expander decomposition}, it is the case that the total capacity of the edges can be assumed to be polynomially bounded in \(n\) and in this case, the \(\log m\) factor is typically replaced with \(\log n\).
+\end{remark}
+
+We remark that \autoref{algo:expander-decomposition} is based on \hyperref[prb:sparsest-cut]{sparsest cut} algorithms. Traditionally, these algorithms were quite slow. There have been several developments in the last few years which enabled \hyperref[prb:sparsest-cut]{sparsest cut} to be reduced to a poly-logarithmic number of \(s\)-\(t\) flows via the so-called \emph{cut-matching game}~\cite{khandekar2009graph,orecchia2008partitioning}, which in turn enabled faster flow algorithms. There are now near-linear time randomized algorithms for \hyperref[def:expander-decomposition]{expander decomposition} (with slightly weaker parameters than the ideal one) for the regimes of interest~\cite{saranurak2019expander}. In some applications the randomized algorithm is not adequate and there has been considerable effort to obtain deterministic algorithms. There are now almost-linear time deterministic algorithm~\cite{chuzhoy2020deterministic,saranurak2021deterministic}.
+
+\subsection{Well-Linked Set}
+Consider the following generalization of \autoref{def:expander}, where we only care about \hyperref[def:expansion]{expansion} of a subset.
+
+\begin{definition}[Well-linked]\label{def:well-linked}
+	A set \(X \subseteq V\) is \emph{well-linked} in a graph \(G = (V< E)\) if for all \(S \subseteq V\),
+	\[
+		\lvert \delta (S) \rvert
+		\geq \min (\lvert S \cap X \rvert , \lvert S \cap (V \setminus X) \rvert ).
+	\]
+\end{definition}
+
+On the other hand, recall that \hyperref[def:expansion]{\(\alpha \)-expansion} means that for all sets \(S \subseteq V\) with \(\lvert S \rvert \leq \lvert V \rvert / 2\), \(\lvert \delta (S) \rvert \geq \alpha \lvert S \rvert \). This is a cut condition. Suppose \(A, B\) are two disjoint sets of vertices of equal size \(\lvert A \rvert = \lvert B \rvert \), clearly we have \(\lvert A \rvert , \lvert B \rvert \leq \lvert V \rvert / 2\). We can ask for a similar guarantee as the same cut condition. This turns out to be another generalization of \hyperref[def:expander]{expander}:
+
+\begin{definition}[Linkage]\label{def:linkage}
+	Let \(A, B \subseteq V\), \(A \cap B = \varnothing \), and \(\lvert A \rvert = \lvert B \rvert \). An \emph{\(A\)-\(B\) linkage} is a set of edge-disjoint paths connecting \(A\) to \(B\) with each vertex in \(A \cup B\) in exactly one path. In this case, we say \(A\) and \(B\) are \emph{linked} in \(G\).
+\end{definition}
+
+\begin{note}
+	We do not have to insist on \(A \cap B = \varnothing \). If not and we allow each vertex in \(A \cap B\) to connect to itself via an empty path, then it is the same as asking \(A\setminus B\) and \(B\setminus A\) to be \hyperref[def:linkage]{linked}. Thus, requiring \(\lvert A \rvert = \lvert B \rvert \) suffice.
+\end{note}
+
+We can view \hyperref[def:linkage]{linkage} as sending flows:
+
+\begin{definition}[Fractional linkage]\label{def:fractional-linkage}
+	An \hyperref[def:linkage]{\(A\)-\(B\) linkage} is \emph{fractional} if there is a flow in \(G\) with that satisfies demand of \(1\) on each vertex in \(A\) and a demand of \(-1\) on each vertex of \(B\).\footnote{Note that this corresponds to a single-commodity flow.} In particular, we say that \(A, B\) are \emph{\(\alpha \)-linked} for some parameter \(\alpha \) if there is a flow in \(G\) that satisfies the demand of \(\alpha \) on each vertex in \(A\) and a demand of \(-\alpha \) on each vertex of \(B\).
+\end{definition}
+
+\begin{lemma}\label{lma:expander-linkage}
+	Suppose \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander} with \(\alpha \geq 1\). Then there is an \hyperref[def:linkage]{\(A\)-\(B\) linkage} in \(G\) for every pair of disjoint equal sized sets \(A, B\).
+\end{lemma}
+\begin{proof}
+
+\end{proof}
+
+One can scale capacities or directly prove the following.
+
+\begin{corollary}
+	Suppose \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander}. Then if \(A, B\) are disjoint vertex sets with \(\lvert A \rvert = \lvert B \rvert \), then \(A, B\) are \hyperref[def:fractional-linkage]{\(\alpha \)-linked}.
+\end{corollary}
+
+Interestingly, the converse is also true.
+
+\begin{lemma}\label{lma:linkage-expander}
+	Suppose \(G\) is a graph and for any two disjoint set \(A, B\) of equal size, \(A, B\) are \hyperref[def:fractional-linkage]{\(\alpha \)-linked}. Then \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander}.
+\end{lemma}
+
+The following shows the connection of \hyperref[def:linkage]{linkage} and \hyperref[def:well-linked]{well-linked}.
+
+\begin{claim}
+	A set \(X\) is \hyperref[def:well-linked]{well-linked} if for all \(A, B \subseteq X\) and \(\lvert A \rvert = \lvert B \rvert \), \(A\) and \(B\) are \hyperref[def:linkage]{linked}.
+\end{claim}
+
+\begin{definition}[Fractinoal well-linked]\label{def:fractional-well-linked}
+	A set \(X\) is \emph{\(\alpha \)-well-linked} in a graph \(G\) is for any two \(A, B \subseteq X\) with \(\lvert A \rvert = \lvert B \rvert \), the sets \(A, B\) are \hyperref[def:fractional-linkage]{\(\alpha \)-linked}.
+\end{definition}
+
+More generally, we have the following.
+
+\begin{lemma}
+	A set \(X \subseteq V\) is \hyperref[def:fractional-well-linked]{\(\alpha \)-well-linked} in \(G\) if and only if for any set \(S \subseteq V\), \(\lvert \delta (S) \rvert \geq \alpha \min (\lvert S \cap X \rvert , \lvert S \cap (V\setminus X) \rvert )\).
+\end{lemma}
+
+\begin{corollary}
+	A graph \(G = (V, E)\) is an \hyperref[def:expander]{\(\alpha \)-expander} if and only if \(V\) is \hyperref[def:fractional-well-linked]{\(\alpha \)-well-linked} in \(G\).
+\end{corollary}
+
+Thus, the notion of \hyperref[def:fractional-well-linked]{well-linked} sets extends the definition of \hyperref[def:expansion]{expansion} to subsets of the graph. This is very useful in a number of settings.
+
+\begin{eg}[Star]
+	A start on \(n\) vertices is an \hyperref[def:expander]{expander} and has a \hyperref[def:well-linked]{well-linked} set of size \(n\). This strange artifact is because of the large degree of the center vertex.
+\end{eg}
+
+This artifact disappears if we ask for constant degree graphs or if we insist on \hyperref[def:node-linkage]{node linkage}, i.e., we now want \emph{node-disjoint paths}.
+
+\begin{definition}[Node linkage]\label{def:node-linkage}
+	Let \(A, B \subseteq V\), \(A \cap B = \varnothing \), and \(\lvert A \rvert = \lvert B \rvert \). An \emph{\(A\)-\(B\) node linkage} is a set of node-disjoint paths connecting \(A\) to \(B\) with each vertex in \(A \cup B\) in exactly one path.\footnote{We also skip the definition of \(\alpha \)-linkage for now. The definition is basically the same where we want flow with node capacities rather than edge capacities.}
+\end{definition}
+
+\begin{definition}[Node well-linked]\label{def:node-well-linked}
+	A set \(X\) is \emph{\(\alpha \)-node-well-linked} in \(G\) if for any two \(A, B \subseteq X\) with \(\lvert A \rvert = \lvert B \rvert \), \(A, B\) are \hyperref[def:node-linkage]{\(\alpha \)-linked}.
+\end{definition}
+
+\begin{intuition}
+	If \(X\) is \hyperref[def:node-well-linked]{node-well-linked} in a graph, then \(X\) cannot have a sparse node separator, i.e., if \(S\) separates \(G\setminus S\)  	into components and \(S\) does not have any vertices of \(X\) then no component of \(G\setminus S\) can have more than \(\lvert S \rvert \) vertices of \(X\).
+\end{intuition}
+
+In graph theory literature on \href{https://en.wikipedia.org/wiki/Treewidth}{treewidth}, the notion of \hyperref[def:linkage]{linkages} is defined primarily via node-disjoint paths. We will not use treewidth very often in this course hence we overload \hyperref[def:linkage]{edge} and \hyperref[def:node-well-linked]{node well-linked} notations. In particular, its connection to \hyperref[def:node-well-linked]{node-well-linkedness} is the following.
+
+\begin{theorem}
+	Let \(k\) be the cardinality of the largest \hyperref[def:node-well-linked]{node-well-linked} set in a graph \(G\). Then \(k \leq \operatorname{tw}(G) \leq 4k\).
+\end{theorem}
+
+\begin{remark}
+	In fact, most algorithmic approaches to computing treewidth are based on algorithms for sparse node separator computations.
+\end{remark}
+
+\hyperref[def:node-well-linked]{Node-well-linkedness} is connected to vertex-\hyperref[def:expander]{expanders}. Sometimes people do not distinguish between these two notions too much in the \hyperref[def:expansion]{expansion} literature because of the following.
+
+\begin{claim}
+	If \(G\) is an \hyperref[def:expander]{\(\alpha \)-edge-expander} with maximum degree \(d\), then \(G\) is also an \(\Omega (\alpha / d)\)-vertex-\hyperref[def:expander]{expander}.
+\end{claim}
+
+Thus, if one is working with constant degree graphs, the two notions are not very far.
+
+\begin{eg}[Star]
+	Consider the start graph again. One can see that it is an \hyperref[def:expander]{edge-expander}, but it is very far from being a vertex \hyperref[def:expander]{expander}. In fact, the largest \hyperref[def:node-well-linked]{node-well-linked} set in a star is of size \(2\).
+\end{eg}
+
+On the other hand, the grid is not only  \hyperref[def:well-linked]{edge-well-linked}, but also \hyperref[def:node-well-linked]{node-well-linked}.
+
+\begin{eg}[Grid]
+	A \(\sqrt{n} \times \sqrt{n} \) grid is a planar graph with \(n\) vertices. It has a bisection with \(O(\sqrt{n} )\) edges hence it is at best a \hyperref[def:expander]{\(1 / \sqrt{n} \)-expander} (which in fact it is). It has a \hyperref[def:fractional-well-linked]{well-linked} set of size \(\Omega (\sqrt{n} )\), i.e., rows or columns \(X\) of \(\sqrt{n} \) vertices. We see that although \(G\) is not a good \hyperref[def:expander]{expander}, but it has good \hyperref[def:expansion]{expansion} w.r.t.\ \(X\). Actually, it's even \hyperref[def:node-linkage]{node well-linked} (right).
+	\begin{center}
+		\incfig{grid-well-linked}
+	\end{center}
+\end{eg}
+
+In some sense, grid is the best planar graph in terms of \hyperref[def:node-well-linked]{node-well-linkedness}.
+
+\begin{theorem}
+	Every planar graph has a balanced separator of size \(O(\sqrt{n} )\). Hence, no planar graph on \(n\) vertices have a \hyperref[def:node-well-linked]{node-well-linked} set of size more than \(c \sqrt{n} \) for some fixed constant \(c\).
+\end{theorem}
+
+\begin{theorem}
+	Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), there is a rooted tree \(T = (V_T, E_T)\) such that
+	\begin{enumerate}[(a)]
+		\item leaves of \(T\) are \(V\),
+		\item every edge \(e \in E_T\) is associated with capacity of the cut induced by \(T_u\), and
+		\item any demand matrix \(D\) that is reachable in \(T\) is reachable in \(G\) with congestion \(O(\log ^3 n)\).
+	\end{enumerate}
+\end{theorem}
+
+\begin{problem}[Oblivious routing]\label{def:oblivious-routing}
+Given a directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\). The goal of \emph{oblivious routing} is to output a distribution of paths between every pair of \(u, v \in V\) such that when the demand \(D \colon V \times V \to \mathbb{R} _{\geq 0}\) come, the congestion is low.
+\end{problem}

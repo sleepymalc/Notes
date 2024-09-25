@@ -132,14 +132,10 @@ Before we start, consider the following simple setting when \(G\) is a tree \(T 
 	Given a tree \(G = T = (V, E)\), for each edge \(e \in T\), we can associate a cut \(S_e\) which is one side of the two components in \(T - e\). The capacity of the cut \(\delta (S_e)\) is \(c(e)\). Let \(D(e) = \sum_{i\colon \lvert S_e \cup \{ s_i, t_i \} \rvert = 1} D_i \) be the demand separated by \(e\). The \hyperref[def:sparsity]{sparsity} of the cut \(S_e\) is simply \(c(e) / D_e\), hence finding the \hyperref[prb:sparsest-cut]{sparsest cut} in this case is easy. Interestingly, the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} give an optimum solution on a tree.
 \end{eg}
 \begin{explanation}
-	Let \((x, y)\) be a feasible solution to the \hyperref[eq:non-uniform-sparsest-cut-LP-dual]{dual} of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} with objective value \(\lambda \). We want to prove that if \(G\) is a tree \(T\), then there is an edge \(e \in T\) such that \(c_e / D_e \leq \lambda \). We note that the integer program in this case becomes
+	Let \((x, y)\) be a feasible solution to the \hyperref[eq:non-uniform-sparsest-cut-LP-dual]{dual} of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program relaxation} with objective value \(\lambda \). We want to prove that if \(G\) is a tree \(T\), then there is an edge \(e \in T\) such that \(c_e / D_e \leq \lambda \). We note that by considering the compact linear program with distance variables, we have
 	\[
-		\begin{aligned}
-			\min~ & \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i d_x(s_i, t_i)}                                           \\
-			      & \sum_{e \in P} x_e \geq y_i                                      & \forall P \in \mathcal{P} _{s_i, t_i} ; \\
-			      & x_e \in \{ 0, 1 \}                                               & \forall e \in E ;                       \\
-			      & y_i \in \{ 0, 1 \}                                               & \forall i = 1, \dots , k,
-		\end{aligned}
+		\lambda
+		= \frac{\sum_{e \in E} c(e) x_e}{\sum_{i=1}^{k} D_i d_x(s_i, t_i)}
 	\]
 	where \(d_x(s_i, t_i)\) is the shortest path distance between \(s_i\) and \(t_i\) induced by \(x\). Since there is a unique path \(P_{s_i, t_i}\) from \(s_i\) to \(t_i\) in \(T\) such that \(d_x(s_i, t_i) = \sum_{e \in P_{s_i, t_i}} x_e\), we have
 	\[
@@ -272,4 +268,10 @@ In fact, one can obtain a refined version of \autoref{thm:Bourgain} that is usef
 	Let \((V, d)\) be an \(n\)-point finite metric space and let \(S \subseteq V\) with \(\lvert S \rvert = k\). Then there is a randomized polynomial time algorithm to compute an embedding \(f \colon V \to \mathbb{R} ^{O(\log ^2 n)}\) such that the embedding is a \hyperref[def:contraction]{contraction}\footnote{I.e., \(\lVert f(u) - f(v) \rVert _1 \leq d(u, v)\) for all \(u, v \in V\)} and for every \(u, v \in S\), \(\lVert f(u) - f(v) \rVert _1 \geq c d(u, v) / \log k\) for some universal constant \(c\).
 \end{theorem}
 
-We saw that the integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} is \(1\) on trees since the shortest path metric on trees is in the \hyperref[def:cut-cone]{cut cone}, i.e., \(\ell _1\)-embeddable. More generally, one can prove that if the shortest path metric on a graph \(G\) embeds into \(\ell _1\) with \hyperref[def:distortion]{distortion} \(\alpha \), then the integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} is at most \(\alpha \). This will imply an \(O(\log n)\)-integrality gap via \autoref{thm:Borugain*} since any \(n\)-point finite metric space embeds into \(\ell _1\) with \hyperref[def:distortion]{distortion} \(O(\log n)\).
+We now see how can one utilize \autoref{thm:Borugain*} with the previous insight we have on tree to provide a general guarantee.
+
+\begin{prev}
+	The integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} is \(1\) on trees since the shortest path metric on trees is in the \hyperref[def:cut-cone]{cut cone}, i.e., \(\ell _1\)-embeddable.
+\end{prev}
+
+More generally, one can prove that if the shortest path metric on a graph \(G\) embeds into \(\ell _1\) with \hyperref[def:distortion]{distortion} \(\alpha \), then the integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{linear program} is at most \(\alpha \). This will imply an \(O(\log n)\)-integrality gap via \autoref{thm:Borugain*} since any \(n\)-point finite metric space embeds into \(\ell _1\) with \hyperref[def:distortion]{distortion} \(O(\log n)\).

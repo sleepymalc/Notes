@@ -1,1 +1,113 @@
-\lecture{10}{26 Sep.\ 11:00}{}
+\lecture{10}{26 Sep.\ 11:00}{Oblivious Routing}
+\begin{definition}[Routable]\label{def:routable}
+	A demand matrix \(D \in \mathbb{R} _+^{n \times n}\) is \emph{routable} in a directed graph \(G = (V, E)\) with capacity \(c \colon E \to \mathbb{R} _+\) if there exists a feasible multi-commodity flow for \(D\) in \(G\).
+\end{definition}
+
+It's easy to see that \(\mathcal{D} _G \coloneqq \{ D \in \mathbb{R} _+^{n \times n} \mid D \text{ is \hyperref[def:routable]{routable} } \} \) is a convex set. Suppose we have \(w(u, v)\) for all \(u, v \in V\). We ask the following question.
+
+\begin{problem}[Optimiznig demand polytope]\label{prb:optimize-demand-polytope}
+Can we solve \(\max _{D \in \mathcal{D} _G} \sum_{u, v} w(u, v) D(u, v)\)?
+\end{problem}
+\begin{answer}
+	We simply observe that \(D \in \mathcal{D} _G\) can be characterized by linear constraints for flows.
+\end{answer}
+
+\begin{lemma}
+	\(D\) is \hyperref[def:routable]{routable} if and only if for all \(\ell \colon E \to \mathbb{R} _+\)
+	\[
+		\sum_{e \in E} c(e) \ell (e) \geq \sum_{u, v \in V} D(u, v) d_{\ell } (u, v)
+	\]
+	where \(d_{\ell } \) is the shortest path distance \(d_{\ell } \) induced by \(\ell \).
+\end{lemma}
+
+
+\begin{problem}[Oblivious routing]\label{def:oblivious-routing}
+Given a directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\). The goal of \emph{oblivious routing} is to output a distribution of paths between every pair of \(u, v \in V\) such that when the demand \(D \colon V \times V \to \mathbb{R} _+\) come, the congestion is low.
+\end{problem}
+
+\begin{definition}[Oblivious routing scheme]\label{def:oblivious-routing-scheme}
+	Given a graph \(G = (V, E)\), consider the following.
+	\begin{definition}[Edge-based oblivious routing scheme]\label{def:edge-based-oblivious-routing-scheme}
+		An \emph{edge-based oblivious routing scheme} is a collection of unit flows in \(G\), one for each \((u, v) \in V \times V\), specified via edge-based flows \(f_e^{(u, v)}\).
+	\end{definition}
+
+	\begin{definition}[Path-based oblivious routing scheme]\label{def:path-based-oblivious-routing-scheme}
+		A \emph{path-based oblivious routing scheme} is similar to \hyperref[def:edge-based-oblivious-routing-scheme]{edge-based} where the unit flow is specified via a path based flow.
+	\end{definition}
+\end{definition}
+
+
+\begin{definition}[Congestion]\label{def:congestion}
+	The \emph{congestion} of an \hyperref[def:oblivious-routing-scheme]{oblivious routing scheme} is equal to
+	\[
+		\max _{D \in \mathcal{D} _G} \max _{e \in E} \frac{\sum_{u, v \in V} D(u, v) f_e^{(u, v)}}{c(e)}.
+	\]
+\end{definition}
+
+\begin{claim}
+	Every graph on \(n\) vertices has an \hyperref[def:oblivious-routing]{oblivious routing scheme} with \hyperref[def:congestion]{congestion} \(n^2\).
+\end{claim}
+\begin{explanation}
+	Consider computing the max-flow for every pair and then scale it down to a unit flow.
+\end{explanation}
+
+\[
+	\begin{aligned}
+		\max ~ & \rho                                                                                                                          \\
+		       & f_e^{(u, v)} \text{ defines a unit flow for pair \((u, v) \in V \times V\) } & \forall e \in E;                               \\
+		       & \sum_{u, v \in V} D(u, v) f_e^{(u, v)}  \leq \rho c(e)                       & \forall e \in E, \forall D \in \mathcal{D} _G; \\
+		       & f_e^{(u, v)} \geq 0                                                          & \forall e \in E, \forall u, v, \in V.
+	\end{aligned}
+\]
+
+To design a separation oracle, given a solution \(f_e^{(u, v)}\), we see that checking unit flow is easy, while for the second one, given any fix edge \(e\), we simply maximize \(\sum_{u, v \in V} D(u, v) f_e^{(u, v)}\) via \autoref{prb:optimize-demand-polytope} and compare it with \(\rho c(e)\).
+
+\begin{theorem}
+	For undirected graph, \(\rho ^{\ast} = O(\log^{3 n} )\), and then it's further improved to \(\rho ^{\ast} = O(\log n)\).
+\end{theorem}
+
+We will prove a weaker result, \(O(\log n \log \log n)\), due to the notation. Given an undirected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), and a probability distribution over \hyperref[def:spanning-tree]{spanning tree} \(p\colon \mathcal{T} _G \to [0, 1]\) such that \(\sum_{T \in \mathcal{T} } p_T = 1\). This gives an \hyperref[def:oblivious-routing]{oblivious routing} since each tree \(T \in \mathcal{T} _G\) gives a unique path between any pair \((u, v) \in V \times V\).
+
+\begin{notation}[Tree-based oblivious routing]
+	The above scheme is what we called \emph{tree-based oblivious routing}, which is indeed \hyperref[def:path-based-oblivious-routing-scheme]{path-based}.
+\end{notation}
+
+Define the load \(L(T, e)\) on edge \(e\) to be \(c(\delta (S_e))\), where \(S_e\) is the component induced by removing \(e\) from \(T\). If \(e\) is not in \(T\), then we let \(L(T, e) = 0\). Then, the \hyperref[def:congestion]{congestion} of \(e\) is given by
+\[
+	\rho (e)
+	= \frac{\sum_{T \in \mathcal{T} _G} p_T L(T, e)}{c(e)},
+\]
+with \(\rho \coloneqq \max _{e \in E} \rho (e)\).
+
+\begin{lemma}
+	Given \(p \colon \mathcal{T} \to [0, 1]\), the maximum \hyperref[def:congestion]{congestion} of the \hyperref[def:oblivious-routing-scheme]{oblivious routing} induced by \(p\) is \(\rho \).
+\end{lemma}
+\begin{proof}
+	Fix a demand matrix \(D \in \mathcal{D} _G\). \hyperref[def:congestion]{Congestion} of \(e\) is less than \(\rho (e)\) since
+	\[
+		\frac{\sum_{T \in \mathcal{T} _G, T \ni e} p_T \sum_{\lvert S_e \cap \{ u, v \} \rvert =1} D(u, v)}{c(e)}
+		\leq \frac{\sum_{T \in \mathcal{T} _G, T \ni e} p_T L(T, e)}{c(e)}.
+	\]
+	Taking maximum over \(e \in E\) gives the result.
+\end{proof}
+
+\[
+	\begin{aligned}
+		\min~           & \rho                                                                      \\
+		                & \sum_{T \in \mathcal{T} _G} x_T = 1                                       \\
+		                & \sum_{T \in\mathcal{T} _G} x_T L(T, e) \leq \rho c(e) & \forall e \in E ; \\
+		\text{(P)}\quad & x_T \geq 0 ;
+	\end{aligned}\quad
+	\begin{aligned}
+		\max~           & \beta                                                                  \\
+		                & \sum_{e \in E} c(e) z_e = 1                                            \\
+		                & \sum_{e \in T} L(T, e) z_e \geq \beta & \forall T \in \mathcal{T} _G ; \\
+		\text{(D)}\quad & z_e \geq 0 .
+	\end{aligned}
+\]
+We see that the dual is equivalent to
+\[
+	\max _{z \colon E \to \mathbb{R} _+} \min _{T \in \mathcal{T} _G} \frac{\sum_{e \in T} L(T, e) z_e}{\sum_{e \in E} c(e) z_e}
+	= \max _{z \colon E \to \mathbb{R} _+} \min _{T \in \mathcal{T} _G} \frac{\sum_{uv \in E} c(uv) d_{T, z}(u, v)}{\sum_{e \in E} c(e) z_e},
+\]
+which is just the \hyperref[def:distortion]{distortion} of the tree, which we know that for tree, it's \(O(\log n \log \log n)\).

@@ -1,56 +1,124 @@
-\lecture{10}{26 Sep.\ 11:00}{Oblivious Routing}
+\lecture{10}{26 Sep.\ 11:00}{Tree-Based Oblivious Routing}
+\section{Oblivious Routing}
+Consider routing demands between source-sink pairs in a network \(G = (V, E)\) with capacity \(c \colon E\to \mathbb{R} _+\). In particular, the actual demands are not known in advance and come and go in an online fashion. Hence, the problem is, which routes should the demand for some specific pair \((s, t)\) be routed on?
+
+\begin{intuition}
+	To feasibly route a given set of demands, we need to essentially solve a multi-commodity flow, which helps to balance the network's capacity among many competing pairs.
+\end{intuition}
+
+This is a non-trivial problems and leads to lots of the breakthroughs. \hyperref[prb:oblivious-routing]{Oblivious routing} is one of which that we will be interested in. The goal in \hyperref[prb:oblivious-routing]{oblivious routing}, in some sense, is to bridge the static setting where the demands are all fully known to the fully online setting where we specify a route to a new demand when it arrives.
+
+\begin{problem}[Oblivious routing]\label{prb:oblivious-routing}
+Given a directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), the goal of \emph{oblivious routing} is to output a distribution of paths \(\mathcal{P} _{u, v}\)  between every pair of \(u, v \in V\) such that when the demand \(D \colon V \times V \to \mathbb{R} _+\) come, specifically, \(D(u, v)\) for a pair \(u, v \in V\), a flow is routed on a path \(P \in \mathcal{P} _{u, v}\) according to the distribution.
+\end{problem}
+
+Alternatively, we can also think of sending \(D(u, v)\) demand fractionally along the paths in proportion to the probability. Clearly, \autoref{prb:oblivious-routing} is oblivious since the probability distribution over \(\mathcal{P} _{u, v}\) is specified before knowing any of the actual demands. In particular, if we know the entire set of demands in advance, we can compute an optimal routing via some sort of multi-commodity flow computation. The question now is that, how well can an \hyperref[prb:oblivious-routing]{oblivious routing} do when compared to a static routing, and how to measure the quality. More fundamentally, do good \hyperref[prb:oblivious-routing]{oblivious routing} even exists?
+
+The initial work that motivated the problem of \hyperref[prb:oblivious-routing]{oblivious routing} is that good deterministic \hyperref[prb:oblivious-routing]{oblivious routing} exist in special classes of graphs such as hypercubes~\cite{valiant1981universal}; later the need for randomization in the sense of picking paths randomly as we described was realized.
+
+\subsection{Routable Demands and Congestion}
+We first digress towards defining \hyperref[def:routable]{routable} demands and some properties.
+
 \begin{definition}[Routable]\label{def:routable}
 	A demand matrix \(D \in \mathbb{R} _+^{n \times n}\) is \emph{routable} in a directed graph \(G = (V, E)\) with capacity \(c \colon E \to \mathbb{R} _+\) if there exists a feasible multi-commodity flow for \(D\) in \(G\).
 \end{definition}
 
-It's easy to see that \(\mathcal{D} _G \coloneqq \{ D \in \mathbb{R} _+^{n \times n} \mid D \text{ is \hyperref[def:routable]{routable} } \} \) is a convex set. Suppose we have \(w(u, v)\) for all \(u, v \in V\). We ask the following question.
+It's easy to see that \(\mathcal{D} _G \coloneqq \{ D \in \mathbb{R} _+^{n \times n} \mid D \text{ is \hyperref[def:routable]{routable} } \} \) is a convex set. Moreover, given a demand matrix \(D\), we can efficiently check if \(D\) is \hyperref[def:routable]{routable} in \(G\) via solving a linear program for multi-commodity flow. Thus, we have a membership oracle for the convex set \(\mathcal{D} _G\).
+
+\begin{intuition}
+	The flow linear program is nice because it is also linear in \(D(u, v)\) values, hence we can claim something stronger.
+\end{intuition}
+
+Suppose we have \(w(u, v)\) for all \(u, v \in V\). We ask the following question.
 
 \begin{problem}[Optimiznig demand polytope]\label{prb:optimize-demand-polytope}
 Can we solve \(\max _{D \in \mathcal{D} _G} \sum_{u, v} w(u, v) D(u, v)\)?
 \end{problem}
 \begin{answer}
-	We simply observe that \(D \in \mathcal{D} _G\) can be characterized by linear constraints for flows.
+	By the equivalence of optimization and separation, we have an efficient separation oracle over \(\mathcal{D} _g\)! That is, there is an efficient algorithm that given \(D \in \mathbb{R} _+^{n \times n}\), either outputs that \(D \in \mathcal{D} _G\) or outputs a separating hyperplane that separates \(D\) from the convex set \(\mathcal{D} _G\).
 \end{answer}
 
-\begin{lemma}
-	\(D\) is \hyperref[def:routable]{routable} if and only if for all \(\ell \colon E \to \mathbb{R} _+\)
+The above is a convoluted but easy way of deriving a useful fact. A more direct way is often referred to as the \hyperref[lma:Japanese-theorem]{Japanese theorem on multi-commodity flow}, which can be derived from linear program duality, as we saw in \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest-cut}.
+
+\begin{lemma}[Japanese theorem]\label{lma:Japanese-theorem}
+	The demand \(D\) is \hyperref[def:routable]{routable} if and only if for all \(\ell \colon E \to \mathbb{R} _+\),
 	\[
 		\sum_{e \in E} c(e) \ell (e) \geq \sum_{u, v \in V} D(u, v) d_{\ell } (u, v)
 	\]
-	where \(d_{\ell } \) is the shortest path distance \(d_{\ell } \) induced by \(\ell \).
+	where \(d_{\ell } \) is the shortest path distance induced by \(\ell \).
 \end{lemma}
 
+Hence, to prove that \(D\) is not \hyperref[def:routable]{routable} in \(G\), it suffices to produce one length function \(\ell \colon E \to \mathbb{R} _+\) that violates the inequality in \autoref{lma:Japanese-theorem}.
 
-\begin{problem}[Oblivious routing]\label{def:oblivious-routing}
-Given a directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\). The goal of \emph{oblivious routing} is to output a distribution of paths between every pair of \(u, v \in V\) such that when the demand \(D \colon V \times V \to \mathbb{R} _+\) come, the congestion is low.
-\end{problem}
+\begin{intuition}
+	One can view \(\mathcal{D} _G\) as being defined by an infinite set of linear inequalities, one for each non-negative length function.
+\end{intuition}
+
+Next, to measure the quality of \hyperref[prb:oblivious-routing]{oblivious routing}, the central notion is the \hyperref[def:congestion]{congestion}.
+
+\begin{definition}[Congestion]\label{def:congestion}
+	A demand matrix \(D \in \mathbb{R} _+^{n \times n}\) is \emph{routable with congestion} \(\rho > 0\) in a directed graph \(G = (V, E)\) with capacity \(c \colon E \to \mathbb{R} _+\) if \(D\) is \hyperref[def:routable]{routable} in \(G\) where edge capacities are multiplied by \(\rho \).
+\end{definition}
+
+When \(\rho = 1\), it corresponds to the \hyperref[def:routable]{routable} case. Moreover, the set of all \hyperref[def:routable]{routable} demand metrics in \(G\) with a fixed \hyperref[def:congestion]{congestion} \(\rho \) is also convex.
+
+\subsection{Oblivious Routing to Minimize Congestion}
+Recall that in \hyperref[prb:oblivious-routing]{oblivious routing}, we want to specify a probability distribution over \(\mathcal{P} _{u, v}\) for each pair \((u, v)\). Naively, since there are exponential many paths, specifying a probability on each path can be tricky.
+
+\begin{intuition}
+	One can view such a probability distribution as a flow of one unit from \(u\) to \(v\) where the flow on a path \(P\in \mathcal{P} _{u, v}\) is equal to the probability of \(P\).
+\end{intuition}
+
+Thus, one compact way to represent a probability distribution over paths is via a unit flow via flow values on edges, which can be specified using only \(m\) numbers. Formally, consider the following:
 
 \begin{definition}[Oblivious routing scheme]\label{def:oblivious-routing-scheme}
 	Given a graph \(G = (V, E)\), consider the following.
-	\begin{definition}[Edge-based oblivious routing scheme]\label{def:edge-based-oblivious-routing-scheme}
-		An \emph{edge-based oblivious routing scheme} is a collection of unit flows in \(G\), one for each \((u, v) \in V \times V\), specified via edge-based flows \(f_e^{(u, v)}\).
+	\begin{definition}[Edge-based oblivious routing]\label{def:edge-based-oblivious-routing}
+		An \emph{edge-based oblivious routing} is a collection of unit flows in \(G\), one for each \((u, v) \in V \times V\), specified via edge-based flows \(f_e^{(u, v)}\).
 	\end{definition}
 
-	\begin{definition}[Path-based oblivious routing scheme]\label{def:path-based-oblivious-routing-scheme}
-		A \emph{path-based oblivious routing scheme} is similar to \hyperref[def:edge-based-oblivious-routing-scheme]{edge-based} where the unit flow is specified via a path based flow.
+	\begin{definition}[Path-based oblivious routing]\label{def:path-based-oblivious-routing}
+		A \emph{path-based oblivious routing} is similar to \hyperref[def:edge-based-oblivious-routing]{edge-based} where the unit flow is specified via a path based flow.
 	\end{definition}
 \end{definition}
 
+However, edge-based flow does not uniquely specify a path-based flow, so we are losing information by using the compact representation, but it is helpful in some computational situations.
 
-\begin{definition}[Congestion]\label{def:congestion}
-	The \emph{congestion} of an \hyperref[def:oblivious-routing-scheme]{oblivious routing scheme} is equal to
+\begin{note}
+	\(f_e^{(u, v)}\) is a number in \([0, 1]\), and whether the \hyperref[def:oblivious-routing-scheme]{oblivious routing} is specified via \hyperref[def:edge-based-oblivious-routing]{edge-based} or \hyperref[def:path-based-oblivious-routing]{path-based}, this quantity is well-defined.
+\end{note}
+
+Now, for \hyperref[def:oblivious-routing-scheme]{oblivious routing}, we can define its \hyperref[def:congestion]{congestion} as follows.
+
+\begin{definition}[Congestion of oblivious routing]\label{def:congestion-of-oblivious-routing}
+	Let \(D\) be a demand matrix. The \emph{congestion} incurred for \(D\) via the \hyperref[def:oblivious-routing-scheme]{oblivious routing} specified by \(f_e^{(u, v)}\) for \(e \in E\) and \((u, v) \in V \times V\) is
 	\[
-		\max _{D \in \mathcal{D} _G} \max _{e \in E} \frac{\sum_{u, v \in V} D(u, v) f_e^{(u, v)}}{c(e)}.
+		\max _{e \in E} \frac{\sum_{u, v \in V} D(u, v) f_e^{(u, v)}}{c(e)}.
 	\]
+	Moreover, the \emph{congestion} of an \hyperref[def:oblivious-routing-scheme]{oblivious routing} is the smallest \(\rho \geq 1\) such that every \hyperref[def:routable]{routable} demand \(D \in \mathcal{D} _G\) is routed with congestion at most \(\rho \) by the \hyperref[def:oblivious-routing-scheme]{oblivious routing}.
 \end{definition}
+
+We say that an optimal \hyperref[def:oblivious-routing-scheme]{oblivious routing} for \(G\) is the one which achieves the smallest \(\rho \) among all \hyperref[def:oblivious-routing-scheme]{oblivious routings}. In other words, we are asking how much should we scale up the capacities of \(G\) so that any demand matrix \(D\) that is \hyperref[def:routable]{routable} in \(G\) can be routed in \(G\) via the \hyperref[def:oblivious-routing-scheme]{oblivious routing}, i.e.,
+\[
+	\max _{D \in \mathcal{D} _G} \max _{e \in E} \frac{\sum_{u, v \in V} D(u, v) f_e^{(u, v)}}{c(e)}.
+\]
 
 \begin{claim}
-	Every graph on \(n\) vertices has an \hyperref[def:oblivious-routing]{oblivious routing scheme} with \hyperref[def:congestion]{congestion} \(n^2\).
+	Every graph on \(n\) vertices has an \hyperref[prb:oblivious-routing]{oblivious routing scheme} with \hyperref[def:congestion-of-oblivious-routing]{congestion} \(n^2\).
 \end{claim}
 \begin{explanation}
 	Consider computing the max-flow for every pair and then scale it down to a unit flow.
 \end{explanation}
 
+We give some pointers to the fundamental results on \hyperref[prb:oblivious-routing]{oblivious routing} in roughly a chronological order:
+\begin{itemize}
+	\item Harald Räcke proved that every undirected graph admits an \hyperref[def:oblivious-routing-scheme]{oblivious routing} with \hyperref[def:congestion-of-oblivious-routing]{congestion} \(O(\log ^3 n)\)~\cite{racke2002minimizing}. The initial proof is based on an optimal algorithm for \hyperref[prb:non-uniform-sparsest-cut]{non-unifrom sparsest cut}, hence does not lead to an efficient algorithm to construct the \hyperref[def:oblivious-routing-scheme]{oblivious routing}. Soon after, efficient algorithms are known with the \hyperref[def:congestion-of-oblivious-routing]{congestion} being \(O(\log ^2 n \log \log n)\)~\cite{bienkowski2003practical,harrelson2003polynomial}. These results are based on the \hyperref[thm:hierarchical-expander-decomposition]{hierarchical expander decomposition} of the graph which results in a compact cut representation of every graph.
+	\item \cite{azar2003optimal} proved, via a simple idea in retrospect, that the optimal \hyperref[def:oblivious-routing-scheme]{oblivious routing} can be computed efficiently via linear program techniques even for directed graphs. Note that being able to compute an optimum \hyperref[def:oblivious-routing-scheme]{oblivious routing} for any given graph does not tell us an easy way to understand a universal bound. We will see this next.
+	\item \hyperref[def:oblivious-routing-scheme]{Oblivious routing} in directed graphs requires \hyperref[def:congestion-of-oblivious-routing]{congestion} \(\Omega (\sqrt{n} )\)~\cite{azar2003optimal}; this lower bound holds even for the restricted case of single-source demands. A similar lower bound was shown to hold also for undirected graphs with node capacities~\cite{hajiaghayi2007oblivious}. Recently, the lower bound for directed graphs has been improved to \(\Omega (n)\)~\cite{ene2016routing}.
+	\item In another breakthrough, Harald Räcke made a beautiful and surprising connection between \hyperref[def:oblivious-routing-scheme]{oblivious routing} and \hyperref[def:probabilistic-approximation]{probabilistic} \hyperref[prb:tree-embedding]{tree embeddings} for metric distortion~\cite{racke2008optimal} and obtain an optimal \(O(\log n)\)-\hyperref[def:congestion-of-oblivious-routing]{congestion} \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing scheme}. Via this algorithm, an \(O(\log n)\)-approximation for the minimum bisection problem in graphs is developed.
+\end{itemize}
+
+\subsection{Efficient Algorithm for Optimal Oblivious Routing}
 \[
 	\begin{aligned}
 		\max ~ & \rho                                                                                                                          \\
@@ -66,13 +134,13 @@ To design a separation oracle, given a solution \(f_e^{(u, v)}\), we see that ch
 	For undirected graph, \(\rho ^{\ast} = O(\log^{3 n} )\), and then it's further improved to \(\rho ^{\ast} = O(\log n)\).
 \end{theorem}
 
-We will prove a weaker result, \(O(\log n \log \log n)\), due to the notation. Given an undirected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), and a probability distribution over \hyperref[def:spanning-tree]{spanning tree} \(p\colon \mathcal{T} _G \to [0, 1]\) such that \(\sum_{T \in \mathcal{T} } p_T = 1\). This gives an \hyperref[def:oblivious-routing]{oblivious routing} since each tree \(T \in \mathcal{T} _G\) gives a unique path between any pair \((u, v) \in V \times V\).
+We will prove a weaker result, \(O(\log n \log \log n)\), due to the notation. Given an undirected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), and a probability distribution over \hyperref[def:spanning-tree]{spanning tree} \(p\colon \mathcal{T} _G \to [0, 1]\) such that \(\sum_{T \in \mathcal{T} } p_T = 1\). This gives an \hyperref[prb:oblivious-routing]{oblivious routing} since each tree \(T \in \mathcal{T} _G\) gives a unique path between any pair \((u, v) \in V \times V\).
 
-\begin{notation}[Tree-based oblivious routing]
-	The above scheme is what we called \emph{tree-based oblivious routing}, which is indeed \hyperref[def:path-based-oblivious-routing-scheme]{path-based}.
+\begin{notation}[Tree-based oblivious routing]\label{not:tree-based-oblivious-routing}
+	The above scheme is what we called \emph{tree-based oblivious routing}, which is indeed \hyperref[def:path-based-oblivious-routing]{path-based}.
 \end{notation}
 
-Define the load \(L(T, e)\) on edge \(e\) to be \(c(\delta (S_e))\), where \(S_e\) is the component induced by removing \(e\) from \(T\). If \(e\) is not in \(T\), then we let \(L(T, e) = 0\). Then, the \hyperref[def:congestion]{congestion} of \(e\) is given by
+Define the load \(L(T, e)\) on edge \(e\) to be \(c(\delta (S_e))\), where \(S_e\) is the component induced by removing \(e\) from \(T\). If \(e\) is not in \(T\), then we let \(L(T, e) = 0\). Then, the \hyperref[def:congestion-of-oblivious-routing]{congestion} of \(e\) is given by
 \[
 	\rho (e)
 	= \frac{\sum_{T \in \mathcal{T} _G} p_T L(T, e)}{c(e)},
@@ -80,10 +148,10 @@ Define the load \(L(T, e)\) on edge \(e\) to be \(c(\delta (S_e))\), where \(S_e
 with \(\rho \coloneqq \max _{e \in E} \rho (e)\).
 
 \begin{lemma}
-	Given \(p \colon \mathcal{T} \to [0, 1]\), the maximum \hyperref[def:congestion]{congestion} of the \hyperref[def:oblivious-routing-scheme]{oblivious routing} induced by \(p\) is \(\rho \).
+	Given \(p \colon \mathcal{T} \to [0, 1]\), the maximum \hyperref[def:congestion-of-oblivious-routing]{congestion} of the \hyperref[def:oblivious-routing-scheme]{oblivious routing} induced by \(p\) is \(\rho \).
 \end{lemma}
 \begin{proof}
-	Fix a demand matrix \(D \in \mathcal{D} _G\). \hyperref[def:congestion]{Congestion} of \(e\) is less than \(\rho (e)\) since
+	Fix a demand matrix \(D \in \mathcal{D} _G\). \hyperref[def:congestion-of-oblivious-routing]{Congestion} of \(e\) is less than \(\rho (e)\) since
 	\[
 		\frac{\sum_{T \in \mathcal{T} _G, T \ni e} p_T \sum_{\lvert S_e \cap \{ u, v \} \rvert =1} D(u, v)}{c(e)}
 		\leq \frac{\sum_{T \in \mathcal{T} _G, T \ni e} p_T L(T, e)}{c(e)}.

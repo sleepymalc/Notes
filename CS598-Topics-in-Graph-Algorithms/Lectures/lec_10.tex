@@ -63,7 +63,7 @@ Next, to measure the quality of \hyperref[prb:oblivious-routing]{oblivious routi
 When \(\rho = 1\), it corresponds to the \hyperref[def:routable]{routable} case. Moreover, the set of all \hyperref[def:routable]{routable} demand metrics in \(G\) with a fixed \hyperref[def:congestion]{congestion} \(\rho \) is also convex.
 
 \subsection{Oblivious Routing to Minimize Congestion}
-Recall that in \hyperref[prb:oblivious-routing]{oblivious routing}, we want to specify a probability distribution over \(\mathcal{P} _{u, v}\) for each pair \((u, v)\). Naively, since there are exponential many paths, specifying a probability on each path can be tricky.
+In \hyperref[prb:oblivious-routing]{oblivious routing}, we want to specify a probability distribution over \(\mathcal{P} _{u, v}\) for each pair \((u, v)\). Naively, since there are exponential many paths, specifying a probability on each path can be tricky.
 
 \begin{intuition}
 	One can view such a probability distribution as a flow of one unit from \(u\) to \(v\) where the flow on a path \(P\in \mathcal{P} _{u, v}\) is equal to the probability of \(P\).
@@ -110,45 +110,121 @@ We say that an optimal \hyperref[def:oblivious-routing-scheme]{oblivious routing
 	Consider computing the max-flow for every pair and then scale it down to a unit flow.
 \end{explanation}
 
-We give some pointers to the fundamental results on \hyperref[prb:oblivious-routing]{oblivious routing} in roughly a chronological order:
+We give some pointers to the fundamental results on \hyperref[prb:oblivious-routing]{oblivious routing} in a chronological order:
 \begin{itemize}
 	\item Harald Räcke proved that every undirected graph admits an \hyperref[def:oblivious-routing-scheme]{oblivious routing} with \hyperref[def:congestion-of-oblivious-routing]{congestion} \(O(\log ^3 n)\)~\cite{racke2002minimizing}. The initial proof is based on an optimal algorithm for \hyperref[prb:non-uniform-sparsest-cut]{non-unifrom sparsest cut}, hence does not lead to an efficient algorithm to construct the \hyperref[def:oblivious-routing-scheme]{oblivious routing}. Soon after, efficient algorithms are known with the \hyperref[def:congestion-of-oblivious-routing]{congestion} being \(O(\log ^2 n \log \log n)\)~\cite{bienkowski2003practical,harrelson2003polynomial}. These results are based on the \hyperref[thm:hierarchical-expander-decomposition]{hierarchical expander decomposition} of the graph which results in a compact cut representation of every graph.
-	\item \cite{azar2003optimal} proved, via a simple idea in retrospect, that the optimal \hyperref[def:oblivious-routing-scheme]{oblivious routing} can be computed efficiently via linear program techniques even for directed graphs. Note that being able to compute an optimum \hyperref[def:oblivious-routing-scheme]{oblivious routing} for any given graph does not tell us an easy way to understand a universal bound. We will see this next.
+	\item Via a simple idea in retrospect, that the optimal \hyperref[def:oblivious-routing-scheme]{oblivious routing} can be computed efficiently via linear program techniques even for directed graphs~\cite{azar2003optimal}. Note that being able to compute an optimum \hyperref[def:oblivious-routing-scheme]{oblivious routing} for any given graph does not tell us an easy way to understand a universal bound. We will see this next.
 	\item \hyperref[def:oblivious-routing-scheme]{Oblivious routing} in directed graphs requires \hyperref[def:congestion-of-oblivious-routing]{congestion} \(\Omega (\sqrt{n} )\)~\cite{azar2003optimal}; this lower bound holds even for the restricted case of single-source demands. A similar lower bound was shown to hold also for undirected graphs with node capacities~\cite{hajiaghayi2007oblivious}. Recently, the lower bound for directed graphs has been improved to \(\Omega (n)\)~\cite{ene2016routing}.
 	\item In another breakthrough, Harald Räcke made a beautiful and surprising connection between \hyperref[def:oblivious-routing-scheme]{oblivious routing} and \hyperref[def:probabilistic-approximation]{probabilistic} \hyperref[prb:tree-embedding]{tree embeddings} for metric distortion~\cite{racke2008optimal} and obtain an optimal \(O(\log n)\)-\hyperref[def:congestion-of-oblivious-routing]{congestion} \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing scheme}. Via this algorithm, an \(O(\log n)\)-approximation for the minimum bisection problem in graphs is developed.
 \end{itemize}
 
 \subsection{Efficient Algorithm for Optimal Oblivious Routing}
-\[
+In this section, we will prove that one can find an optimal \hyperref[def:edge-based-oblivious-routing]{edge-flow based oblivious routing} in polynomial time~\cite{azar2003optimal}. In particular, we will consider directed graphs since it is easier to define edge-based flows. To find an \hyperref[def:edge-based-oblivious-routing]{edge-flow based oblivious routing} with minimum \hyperref[def:congestion-of-oblivious-routing]{congestion}, we write the following linear program which essentially follows from the definition:
+\begin{equation}\label{eq:oblivious-routing-LP}
 	\begin{aligned}
-		\max ~ & \rho                                                                                                                          \\
-		       & f_e^{(u, v)} \text{ defines a unit flow for pair \((u, v) \in V \times V\) } & \forall e \in E;                               \\
-		       & \sum_{u, v \in V} D(u, v) f_e^{(u, v)}  \leq \rho c(e)                       & \forall e \in E, \forall D \in \mathcal{D} _G; \\
-		       & f_e^{(u, v)} \geq 0                                                          & \forall e \in E, \forall u, v, \in V.
+		\min~ & \rho                                                                                                                \\
+		      & f_e^{(u, v)} \text{ defines a unit flow from \(u\) to \(v\)}      & \forall e \in E, \forall (u, v) \in V \times V; \\
+		      & \sum_{(u, v) \in V \times V} D(u, v) f_e^{(u, v)}  \leq \rho c(e) & \forall e \in E, \forall D \in \mathcal{D} _G;  \\
+		      & f_e^{(u, v)} \geq 0                                               & \forall e \in E, \forall (u, v) \in V \times V.
 	\end{aligned}
-\]
+\end{equation}
 
-To design a separation oracle, given a solution \(f_e^{(u, v)}\), we see that checking unit flow is easy, while for the second one, given any fix edge \(e\), we simply maximize \(\sum_{u, v \in V} D(u, v) f_e^{(u, v)}\) via \autoref{prb:optimize-demand-polytope} and compare it with \(\rho c(e)\).
+\begin{note}
+	We omit writing down the linear constraints for the unit flow from \(u\) to \(v\) since it's easy.
+\end{note}
 
-\begin{theorem}
-	For undirected graph, \(\rho ^{\ast} = O(\log^{3 n} )\), and then it's further improved to \(\rho ^{\ast} = O(\log n)\).
-\end{theorem}
+The only catch in solve \autoref{eq:oblivious-routing-LP} is that it has an infinite number of constraints, with polynomially many (\(mn^2\)) variables. Hence, one can use the ellipsoid method if we have an efficient separation oracle.
 
-We will prove a weaker result, \(O(\log n \log \log n)\), due to the notation. Given an undirected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), and a probability distribution over \hyperref[def:spanning-tree]{spanning tree} \(p\colon \mathcal{T} _G \to [0, 1]\) such that \(\sum_{T \in \mathcal{T} } p_T = 1\). This gives an \hyperref[prb:oblivious-routing]{oblivious routing} since each tree \(T \in \mathcal{T} _G\) gives a unique path between any pair \((u, v) \in V \times V\).
+\begin{claim}
+	There is an efficient separation oracle for \autoref{eq:oblivious-routing-LP}.
+\end{claim}
+\begin{explanation}
+	Given \(f_e^{(u, v)}\) and \(\rho \), we see that checking unit flow is easy. For the second constraint, given any fix edge \(e\), we simply maximize \(\sum_{u, v \in V} D(u, v) f_e^{(u, v)}\) via \autoref{prb:optimize-demand-polytope} (efficiently!) and compare it with \(\rho c(e)\). Hence, by iterating through all \(e \in E\), we're done.
+\end{explanation}
+
+While the resulting algorithm is not very efficient in practice, but it shows the power of the ellipsoid method and working with large implicit linear programs fearlessly. One can use multiplicative weight updates and other techniques to obtain fast approximation algorithms for some of these problems.
+
+\begin{remark}
+	This technique to design optimum \hyperref[def:edge-based-oblivious-routing]{oblivious routing} is fairly general. We do not need to consider the full set of demand matrices \(\mathcal{D} _G\), as long as we have a nice convex set of demand matrices that we can optimize over, we can find an optimum \hyperref[def:edge-based-oblivious-routing]{oblivious routing} when restricted to those demand matrices.
+\end{remark}
+
+\subsection{Tree-Based Oblivious Routing via Duality and Low Stretch Trees}
+We now prove that in undirected graphs, there is always an \hyperref[def:edge-based-oblivious-routing]{oblivious routing} with \hyperref[def:congestion-of-oblivious-routing]{congestion} \(O(\log n)\), which is an optimal bound. Räcke prove this result via an elegant connection to \hyperref[prb:tree-embedding]{tree embeddings} for distance preservation~\cite{racke2008optimal}. The bound, the connection, and the tree-based aspect are all important.
+
+\begin{prev}
+	\hyperref[def:probabilistic-approximation]{Probabilistic approximation} of a graph by \hyperref[def:spanning-tree]{spanning trees} for distances incurs an \(O(\log n \log \log n)\) \hyperref[def:distortion]{distortion}~\cite{abraham2008nearly} while we can obtain an optimal \(O(\log n)\) \hyperref[def:distortion]{distortion} if we allow \hyperref[def:dominating-tree-metric]{dominating tree metrics} (recall the differences).
+\end{prev}
+
+It is easier to understand the ideas, and in particular the notation, by working with \hyperref[def:spanning-tree]{spanning trees} than with general hierarchical tree representations (\autoref{thm:hierarchical-expander-decomposition}) of graphs (in some cases, the \hyperref[def:spanning-tree]{spanning tree} result is useful and needed). The difference in the \hyperref[def:distortion]{distortion} is insignificant for our purposes here, and we will use these results in a black-box fashion.
+
+Now, let \(\alpha (n)\) denote the best bound that we can obtain for approximating the distance in an \(n\)-node graph \(G = (V, E)\) with edge length \(\ell \colon E \to \mathbb{R} _+\) by a probability distribution over \hyperref[def:spanning-tree]{spanning tree} \(p\colon \mathcal{T} _G \to [0, 1]\) such that \(\sum_{T \in \mathcal{T} } p_T = 1\). A simple implication of \(\alpha (n) = O(\log n \log \log n)\) is the following.
+
+\begin{lemma}\label{lma:oblivious-routing-distortion}
+	Let \(G = (V, E)\) be a graph with non-negative edge lengths \(\ell \colon E \to \mathbb{R} _+\). Let \(w \colon E \to \mathbb{R} _+\) be any set of no-negative edge weights. Then there is a \hyperref[def:spanning-tree]{spanning tree} \(T \in \mathcal{T} _G\) such that
+	\[
+		\frac{\sum_{uv \in E} w(uv) d_T(u, v)}{\sum_{e \in E} w(e) \ell (e) }
+		\leq \alpha (n),
+	\]
+	where \(d_T(u, v)\) is the length of the unique path from \(u\) to \(v\) in \(T\).
+\end{lemma}
+\begin{proof}
+	Recall that there is a probability distribution \(p \colon \mathcal{T} _G \to [0, 1]\) such that for every pair of vertices \(u, v \in V\), \(\mathbb{E}_{}[d_T(u, v)] \leq \alpha (n) d_G(u, v)\) where distances are induced by the edge lengths \(\ell \colon E \to \mathbb{R} _+\). Now, fix any weight function \(w\) over pairs of vertices. Then by linearity of expectation,
+	\[
+		\mathbb{E}_{}\left[\sum_{u, v \in V} w((u, v)) d_T(u, v)\right]
+		\leq \alpha (n) \sum_{u, v \in V} w((u, v)) d_G(u, v).
+	\]
+	Thus, there exists a tree \(T\) such that \(\sum_{u, v \in V} w((u, v)) d_T(u, v) \leq \alpha (n) \sum_{u, v \in V} w((u, v)) d_G(u, v)\). Now, consider the case when the support of the weights \(w\) is only on the edges of \(G\), i.e., \(w((u, v)) = 0\) when \(uv \notin E\). In this case, we write \(w(uv)\) for \(uv \in E\). Furthermore, we let \(d_T(u, v)\) is the shortest path length along the path in \(T\). Since \(d_G(u, v) \leq \ell (u, v)\),
+	\[
+		\sum_{uv \in E} w(uv) d_T(u, v)
+		\leq \alpha (n) \sum_{uv \in E} w(uv) d_G(u, v)
+		\leq \alpha (n) \sum_{uv \in E} w(uv) \ell (uv),
+	\]
+	which gives the desired result.
+\end{proof}
+
+We now introduce a specific type of \hyperref[def:oblivious-routing-scheme]{oblivious routing}. Consider any probability distribution \(p\) over the \hyperref[def:spanning-tree]{spanning trees} of \(G\). Observe that this distribution induces an \hyperref[prb:oblivious-routing]{oblivious routing} since each tree \(T \in \mathcal{T} _G\) gives a unique path between any pair \((u, v) \in V \times V\). We sample a \hyperref[def:spanning-tree]{tree} from the distribution and whenever a demand arrives, we simply route it along the unique path in the \hyperref[def:spanning-tree]{tree}.
 
 \begin{notation}[Tree-based oblivious routing]\label{not:tree-based-oblivious-routing}
 	The above scheme is what we called \emph{tree-based oblivious routing}, which is indeed \hyperref[def:path-based-oblivious-routing]{path-based}.
 \end{notation}
 
-Define the load \(L(T, e)\) on edge \(e\) to be \(c(\delta (S_e))\), where \(S_e\) is the component induced by removing \(e\) from \(T\). If \(e\) is not in \(T\), then we let \(L(T, e) = 0\). Then, the \hyperref[def:congestion-of-oblivious-routing]{congestion} of \(e\) is given by
-\[
-	\rho (e)
-	= \frac{\sum_{T \in \mathcal{T} _G} p_T L(T, e)}{c(e)},
-\]
-with \(\rho \coloneqq \max _{e \in E} \rho (e)\).
+\begin{note}
+	The distribution over \(\mathcal{T} _G\) induces a distribution for every pair of vertices simultaneously.
+\end{note}
 
-\begin{lemma}
-	Given \(p \colon \mathcal{T} \to [0, 1]\), the maximum \hyperref[def:congestion-of-oblivious-routing]{congestion} of the \hyperref[def:oblivious-routing-scheme]{oblivious routing} induced by \(p\) is \(\rho \).
+While this is a restricted class of \hyperref[def:oblivious-routing-scheme]{oblivious routing}, but it's particularly nice, at least form a theoretical point of view. Two natural questions arise.
+
+\begin{problem*}
+	How good is the best \hyperref[not:tree-based-oblivious-routing]{tree-distributions-based oblivious routing}?
+\end{problem*}
+
+\begin{problem*}
+	Can the best \hyperref[not:tree-based-oblivious-routing]{tree-distributions-based oblivious routing} be efficiently computed?
+\end{problem*}
+
+Räcke showed that \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing} have a nice structural property that allows one to characterize the \hyperref[def:congestion-of-oblivious-routing]{congestion} in a simple way~\cite{racke2008optimal}. Let \(T\) be a \hyperref[def:spanning-tree]{spanning tree} and consider an edge \(e \in E_T\). \(T - e\) induces a partition of the vertex set of \(G = (V, E)\) into two sets \((S_e, V\setminus S_e)\). We define the load \(L(T, e)\) on edge \(e\) to be \(c(\delta (S_e))\). If \(e\) is not in \(T\), then we let \(L(T, e) = 0\).
+
+\begin{intuition}
+	Think of all the edges crossing the cut \((S_e, V \setminus S_e)\). For each of those edges \(e^{\prime} = (s, t) \in \delta (S_e)\), the path from \(s\) to \(t\) in \(T\) has to go via \(e\).
+\end{intuition}
+
+Hence, if we want to route demands corresponding to edges, then the \hyperref[def:congestion-of-oblivious-routing]{congestion} on \(e\) will be \(L(T, e) / c(e)\). Formally, since we now have a probability distribution over \(\mathcal{T} _G\), hence we consider the \hyperref[def:expected-load]{expected load} and \hyperref[def:expected-congestion]{expected congestion}:
+
+\begin{definition*}
+	Let \(p \colon \mathcal{T} _G \to [0, 1]\) be a probability distribution that induces a \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing}. Consider a given edge \(e \in E\).
+	\begin{definition}[Expected load]\label{def:expected-load}
+		The \emph{expected load} on \(e\) is \(L(e) = \sum_{T \in \mathcal{T} _G} p(T) L(T, e) \).
+	\end{definition}
+
+	\begin{definition}[Expected congestion]\label{def:expected-congestion}
+		The \emph{expected congestion} on \(e\) is \(\rho (e) = L(e) / c(e)\).
+	\end{definition}
+\end{definition*}
+
+A simple yet important observation is the following, which characterizes the quality of the \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing} based on the \hyperref[def:expected-congestion]{expected congestion} of the edges.
+
+\begin{lemma}\label{lma:tree-based-oblivious-routing-congestion}
+	Given \(p \colon \mathcal{T} \to [0, 1]\), the maximum \hyperref[def:congestion-of-oblivious-routing]{congestion} of the \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing} induced by \(p\) is at most \(\max _{e \in E} \rho (e)\).
 \end{lemma}
 \begin{proof}
 	Fix a demand matrix \(D \in \mathcal{D} _G\). \hyperref[def:congestion-of-oblivious-routing]{Congestion} of \(e\) is less than \(\rho (e)\) since
@@ -159,23 +235,41 @@ with \(\rho \coloneqq \max _{e \in E} \rho (e)\).
 	Taking maximum over \(e \in E\) gives the result.
 \end{proof}
 
+\autoref{lma:tree-based-oblivious-routing-congestion} allows us to write an linear program to find the best \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing}. Let \(x_T\) to denote the probability that \(T \in \mathcal{T} _G\) is chosen in the probability distribution, and \(\rho \) to denote the \hyperref[def:congestion-of-oblivious-routing]{congestion} that we wish to minimize. We write down constraints that express \(x\) as a probability distribution and to express the \hyperref[def:expected-load]{load} on each edge being bounded by \(\rho c(e)\):
 \[
 	\begin{aligned}
-		\min~           & \rho                                                                      \\
-		                & \sum_{T \in \mathcal{T} _G} x_T = 1                                       \\
-		                & \sum_{T \in\mathcal{T} _G} x_T L(T, e) \leq \rho c(e) & \forall e \in E ; \\
-		\text{(P)}\quad & x_T \geq 0 ;
-	\end{aligned}\quad
+		\min~           & \rho                                                                                  \\
+		                & \sum_{T \in \mathcal{T} _G} x_T = 1                                                   \\
+		                & \sum_{T \in\mathcal{T} _G} x_T L(T, e) \leq \rho c(e) & \forall e \in E ;             \\
+		\text{(P)}\quad & x_T \geq 0                                            & \forall T \in \mathcal{T} _T;
+	\end{aligned}\qquad
 	\begin{aligned}
 		\max~           & \beta                                                                  \\
 		                & \sum_{e \in E} c(e) z_e = 1                                            \\
 		                & \sum_{e \in T} L(T, e) z_e \geq \beta & \forall T \in \mathcal{T} _G ; \\
-		\text{(D)}\quad & z_e \geq 0 .
+		\text{(D)}\quad & z_e \geq 0                            & \forall e \in E.
 	\end{aligned}
 \]
 We see that the dual is equivalent to
-\[
-	\max _{z \colon E \to \mathbb{R} _+} \min _{T \in \mathcal{T} _G} \frac{\sum_{e \in T} L(T, e) z_e}{\sum_{e \in E} c(e) z_e}
-	= \max _{z \colon E \to \mathbb{R} _+} \min _{T \in \mathcal{T} _G} \frac{\sum_{uv \in E} c(uv) d_{T, z}(u, v)}{\sum_{e \in E} c(e) z_e},
-\]
-which is just the \hyperref[def:distortion]{distortion} of the tree, which we know that for tree, it's \(O(\log n \log \log n)\).
+\begin{equation}\label{eq:tree-based-oblivious-routing-dual-LP-equivalent}
+	\max _{z \colon E \to \mathbb{R} _+} \min _{T \in \mathcal{T} _G} \frac{\sum_{e \in T} L(T, e) z_e}{\sum_{e \in E} c(e) z_e}.
+\end{equation}
+The observation is that \autoref{lma:oblivious-routing-distortion} implies that the optimal dual value is \(\alpha (n)\), which corresponds to the bound for \hyperref[prb:tree-embedding]{tree-based distance approximation}! Suppose this was true then we have shown that there exists a \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing} with \hyperref[def:congestion-of-oblivious-routing]{congestion} \(O(\log n \log \log n)\). We now prove this formally.
+
+\begin{theorem}\label{thm:tree-based-oblivious-routing-congestion}
+	The optimal dual value \(\beta \) is at most \(\alpha (n)\).
+\end{theorem}
+\begin{proof}
+	Observe that by the definition of \(L(T, e)\), after interchanging the order of summation,
+	\[
+		\sum_{e \in T} L(T, e) z_e
+		= \sum_{uv \in E} c(uv) \sum_{e \in P_T(u, v)}  z_e,
+	\]
+	where \(P_T(u, v)\) is the unique path from \(u\) to \(v\) in \(T\). Note that \(\sum_{e \in P_T(u, v)} z_e\) can be thought of as the length of the path from \(u\) to \(v\) in \(T\) according to lengths given by \(z\), which we denote as \(d_T(u, v)\). Now, think of \(c(e)\) as a weight \(w(e)\) and think of \(z_e\) as length \(\ell (e)\), \autoref{eq:tree-based-oblivious-routing-dual-LP-equivalent} can be written as
+	\[
+		\max _{\ell \in \mathbb{R} _+^m} \min _{T \in \mathcal{T} _G} \frac{\sum_{uv \in E} w(uv) d_T(u, v)}{\sum_{uv \in E} w(uv) \ell (uv)},
+	\]
+	and by \autoref{lma:oblivious-routing-distortion}, this is at most \(\alpha (n)\).
+\end{proof}
+
+\autoref{thm:tree-based-oblivious-routing-congestion} implies that we have \(\alpha (n) = O(\log n \log \log n)\) \hyperref[def:expected-congestion]{expected congestion} for \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing}.\footnote{See \href{https://courses.grainger.illinois.edu/cs598csc/fa2024/Notes/lec-oblivious-routing.pdf}{note} for how to obtain the optimum bound \(O(\log n)\).} Since \autoref{thm:tree-based-oblivious-routing-congestion} is based on duality, it is not immediately clear that it leads to an efficient algorithm. As one would expect, we need an efficient algorithm for the dual separation oracle. This is the problem of approximating distances in the graph by \hyperref[def:spanning-tree]{spanning trees}, and we have seen efficient algorithms for it. However, it is still not obvious that we can use such approximation algorithms in the dual, but there are standard techniques via the multiplicative weight update method and related ideas~\cite{racke2008optimal}.

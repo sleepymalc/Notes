@@ -144,16 +144,15 @@ We now describe the algorithm for computing the \hyperref[prb:isolating-cut]{iso
 	\SetKwFunction{mincut}{\hyperref[prb:s-t-min-cut]{\(s\)-\(t\)-min-cut}}
 	\BlankLine
 
-	\(h \gets \lceil \log k \rceil \)\;
-	\For(\label{algo:isolating-cut-for-1}\Comment*[f]{\(h\) bi-partitions \((A_{\ell }, B_{\ell })\) of \(T\)}){\(\ell = 1, \dots , h\)}{
+	\For(\label{algo:isolating-cut-for-1}\Comment*[f]{\(\lceil \log k \rceil\) bi-partitions \((A_{\ell }, B_{\ell })\) of \(T\)}){\(\ell = 1, \dots , \lceil \log k \rceil\)}{
 		\(A_{\ell } \gets \{ t_i \mid \text{binary representation of \(i\) has \(1\) in \(\ell^{\text{th}}\) bit} \} \)\;
 		\(B_{\ell } \gets T \setminus A_{\ell } \)\;
-		\((X_{\ell }, Y_{\ell } ) \gets\)\mincut{\(G\), \(A_{\ell } \), \(B_{\ell } \)}\footnote{This can be done via shrinking \(A_{\ell } \) and \(B_{\ell } \) in to two separate nodes, and compute the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.}\label{algo:isolating-cut-bi-partition-cut}\Comment*[r]{\(Y_{\ell } = V\setminus X_{\ell } \) }
+		\((X_{\ell }, Y_{\ell } ) \gets\)\mincut{\(G\), \(c\), \(A_{\ell } \), \(B_{\ell } \)}\footnote{This can be done via shrinking \(A_{\ell } \) and \(B_{\ell } \) in to two separate nodes, and compute the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.}\label{algo:isolating-cut-bi-partition-cut}\Comment*[r]{\(Y_{\ell } = V\setminus X_{\ell } \) }
 	}
 	\For(){\(i = 1, \dots , k\)}{
 	\(S_i \gets \bigcap_{\ell \colon t_i \in A_{\ell } } X_{\ell } \cap \bigcap_{\ell \colon t_i \in B_{\ell } } Y_{\ell } \)\label{algo:isolating-cut-U}\;
 	\(H_i = (V_i, E_i)\gets\) shrinking \(V \setminus S_i\) to a single vertex \(s_i\)\label{algo:isolating-cut-H}\;
-	\((S_i^{\ast} , V\setminus S_i^{\ast} )\gets\)\mincut{\(H_i\), \(t_i\), \(s_i\)}\label{algo:isolating-cut-min-cut}\;
+	\((S_i^{\ast} , V\setminus S_i^{\ast} )\gets\)\mincut{\(H_i\), \(c\), \(t_i\), \(s_i\)}\label{algo:isolating-cut-min-cut}\;
 	}
 	\Return{\(\{ (S_i^{\ast} , V\setminus S_i^{\ast} )\}_{i=1}^{k} \)}\;
 \end{algorithm}
@@ -255,19 +254,19 @@ The problem is that we don't know \(k_1\), and trying all possible values for \(
 	\DontPrintSemicolon{}
 	\caption{\hyperref[prb:Steiner-min-cut]{Steiner Min-Cut}}
 	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
-	\KwResult{A possible \hyperref[prb:Steiner-min-cut]{Steiner min-cut} \((U^{\ast} , V\setminus U^{\ast} )\)}
+	\KwResult{A possible \hyperref[prb:Steiner-min-cut]{Steiner min-cut} \((S^{\ast} , V \setminus S^{\ast} )\)}
 	\SetKwFunction{sample}{Sample}
 	\SetKwFunction{isolatingcut}{\hyperref[algo:isolating-cut]{Isolating-Cut}}
 	\SetKwFunction{mincost}{Min-Cost}
 	\BlankLine
 
-	\(U^{\ast} \gets \varnothing \)\Comment*[r]{Initialize \hyperref[prb:Steiner-min-cut]{Steiner min-cut}}
+	\(S^{\ast} \gets \varnothing \)\Comment*[r]{Initialize \hyperref[prb:Steiner-min-cut]{Steiner min-cut}}
 	\For(){\(i = 0, \dots , \lceil \log k \rceil \)}{
 	\(T^{\prime} \gets\)\sample{\(T\), \(1 / 2^i\)}\Comment*[r]{Sample each terminal in \(T\) with probability \(1 / 2^i\)}
 	\(\{ (S_i^{\ast} , V\setminus S_i^{\ast} ) \}_{i=1}^{\lvert T^{\prime} \rvert } \gets\)\isolatingcut{\(G\), \(c\), \(T^{\prime} \)}\;
-	\(U^{\ast} \gets \)\mincost{\(\{ (S_i^{\ast} , V\setminus S_i^{\ast}) \}_{i=1}^{\lvert T^{\prime} \rvert } \cup \{ (U^{\ast} , V\setminus U^{\ast} ) \} \)}\Comment*[r]{Update minimum cost cut}
+	\(S^{\ast} \gets \)\mincost{\(\{ (S_i^{\ast} , V\setminus S_i^{\ast}) \}_{i=1}^{\lvert T^{\prime} \rvert } \cup \{ (S^{\ast} , V \setminus S^{\ast} ) \} \)}\Comment*[r]{Update minimum cost cut}
 	}
-	\Return{\((U^{\ast} , V\setminus U^{\ast} )\)}\;
+	\Return{\((S^{\ast} , V\setminus S^{\ast} )\)}\;
 \end{algorithm}
 
 We now formally prove the robustness we have mentioned.

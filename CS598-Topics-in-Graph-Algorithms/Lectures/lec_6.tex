@@ -195,7 +195,7 @@ Specifically, let \((V, d)\) be a metric space with diameter \(\Delta \). We use
 	\caption{\hyperref[prb:tree-embedding]{Tree Embedding}}
 	\KwData{A metric space \((V, d)\), diameter \(D\)}
 	\KwResult{A rooted tree \((T, r)\)}
-	\SetKwFunction{LDD}{\hyperref[algo:random-partition]{Low-Diameter-decomposition}}
+	\SetKwFunction{LDD}{\hyperref[def:low-diameter-decomposition]{Low-Diameter-Decomposition}}
 	\SetKwFunction{TreeEmbed}{\hyperref[algo:tree-embedding]{Tree-Embedding}}
 
 	\BlankLine
@@ -256,12 +256,7 @@ If we use \autoref{algo:random-partition} as the \hyperref[def:low-diameter-deco
 	Consider the metric induced by a path with \(n\) edges and edge lengths are \(2^i\) for all \(i = 1, \dots , n\). In such cases, the dependence of the stretch on \(\log \Delta \) is undesirable.
 \end{eg}
 
-\begin{remark}
-	One can alter \autoref{algo:tree-embedding} to make the stretch bound \(O(\log ^2 n)\).
-\end{remark}
-\begin{explanation}
-	In applying the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm with parameter \(\delta \), we ensure that any pair \(u, v\) such that \(d(u, v) \leq \delta / n^2\) is not cut during the procedure. We can do this by contracting all such pairs without changing the diameter of the resulting metric space too much. This will ensure that in the tree construction process, a pair \(u, v\) participates in only \(O(\log n)\) levels and hence the expected stretch can be bounded by \(O(\alpha \log n)\).
-\end{explanation}
+One can alter \autoref{algo:tree-embedding} to make the stretch bound \(O(\log ^2 n)\): in applying the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm with parameter \(\delta \), we ensure that any pair \(u, v\) such that \(d(u, v) \leq \delta / n^2\) is not cut during the procedure. We can do this by contracting all such pairs without changing the diameter of the resulting metric space too much. This will ensure that in the tree construction process, a pair \(u, v\) participates in only \(O(\log n)\) levels and hence the expected stretch can be bounded by \(O(\alpha \log n)\).
 
 \begin{remark}[Hierarchically well-separated tree]
 	The trees constructed by \autoref{algo:tree-embedding} have an additional strong property: the edge lengths at each level are the same and the length from the root to the leaf go down by a factor of \(2\) at each level. A tree metric with such a property is called \emph{hierarchically well-separated} tree metric and this additional property can be exploited in algorithms and comes for free in the construction.
@@ -269,19 +264,21 @@ If we use \autoref{algo:random-partition} as the \hyperref[def:low-diameter-deco
 
 Finally, we note that if we choose \autoref{algo:random-partition*} as the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm specifically, the expected stretch is actually \(O(\log n)\), which is optimal~\cite{fakcharoenphol2003tight}.
 
-\begin{prev}[\autoref{thm:random-partition*}]
-	The probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\).
-\end{prev}
-
-Thus, the guarantee \(\alpha (\delta )\) from the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm is no longer uniform but depends on the diameter. Plugging this to \autoref{eq:tree-embed}, we have
-\[
-	\begin{split}
-		\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
-		 & \leq \sum_{i=0}^{t+1} 2 \log \frac{\lvert B(u, \Delta / 2^i) \rvert }{\lvert B(u, \Delta / 2^{i+3}) \rvert } \frac{d(u, v)}{\Delta / 2^{i-1}} \cdot \left( 4 \frac{\Delta }{2^{i-1}} \right) \\
-		 & \leq 8 d(u, v) \left( \log \lvert B(u, \Delta / 2) \rvert + \log \lvert B(u, \Delta / 4) \rvert + \log \lvert B(u, \Delta / 8) \rvert \right)
-		\leq O(\log n) d(u, v).
-	\end{split}
-\]
+\begin{theorem}\label{thm:tree-embed-optimal}
+	Let \(\Delta \) be the diameter of \((V, d)\). When \autoref{algo:random-partition*} is used as the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm in \autoref{algo:tree-embedding}, \autoref{algo:tree-embedding} outputs a random \hyperref[def:dominating-tree-metric]{dominating tree metric} \(T = (V_T, E_T)\) with length \(\ell _T\) such that for each \(u, v \in V\), \(\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)] \leq O(\log n) d(u, v)\).
+\end{theorem}
+\begin{proof}
+	Firstly, we recall that from \autoref{thm:random-partition*}, the probability that \(u\) and \(v\) are in different clusters outputted by \autoref{algo:random-partition*} is at most \(\frac{4 d(u, v)}{\delta } \log \frac{\lvert B(u, \delta / 2) \rvert }{\lvert B(u, \delta / 8) \rvert }\). Thus, the guarantee \(\alpha (\delta )\) from the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm is no longer uniform but depends on the diameter. Plugging this to \autoref{eq:tree-embed}, we have
+	\[
+		\begin{split}
+			\mathbb{E}_{T \sim \mathcal{D} }[d_T(u, v)]
+			 & \leq \sum_{i=0}^{t+1} 2 \log \frac{\lvert B(u, \Delta / 2^i) \rvert }{\lvert B(u, \Delta / 2^{i+3}) \rvert } \frac{d(u, v)}{\Delta / 2^{i-1}} \cdot \left( 4 \frac{\Delta }{2^{i-1}} \right) \\
+			 & \leq 8 d(u, v) \left( \log \lvert B(u, \Delta / 2) \rvert + \log \lvert B(u, \Delta / 4) \rvert + \log \lvert B(u, \Delta / 8) \rvert \right)
+			\leq O(\log n) d(u, v),
+		\end{split}
+	\]
+	proving the desired result.
+\end{proof}
 
 \begin{remark}[Lower bound]
 	\(O(\log n)\) bound for \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} algorithm and \hyperref[prb:tree-embedding]{tree embeddings} are near optimal (modulo precise constant factors).

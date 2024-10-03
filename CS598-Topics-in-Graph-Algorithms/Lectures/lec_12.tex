@@ -1,0 +1,58 @@
+\lecture{12}{3 Oct.\ 11:00}{}
+\begin{notation}[Parameter]
+	Let \(\sigma \) be the flow-cut gap, \(\lambda \coloneqq 64 \sigma \log n\), \(\alpha \coloneqq 1 / 24 \sigma \lambda \).
+\end{notation}
+
+\begin{definition}[Pre-condition]\label{def:pre-condition}
+	The subset \(R \subseteq V\) satisfies the \emph{pre-condition} if for all \(U \subseteq R\) and \(\lvert U \rvert \leq 3 \lvert R \rvert / 4\),
+	\[
+		c(U, R \setminus U)
+		\geq \frac{\pi (U)}{\lambda }.
+	\]
+\end{definition}
+
+\begin{lemma}
+	Let \(R \subseteq V\) with \(\lvert R \rvert \geq 2\)  be any set that satisfies the \hyperref[def:pre-condition]{pre-condition}. Then there is an efficient algorithm that partition \(R\) into sub-clusters \(R_1, \dots , R_p\) such that
+	\begin{enumerate}[(a)]
+		\item \(\lvert R_i \rvert \leq 2 \lvert R \rvert / 3\),
+		\item each \(R_i\) satisfies the \hyperref[def:pre-condition]{pre-condition},
+		\item \(R\) satisfies the \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-partition-and-boundary-well-linkedness} with respect to the partition.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+
+\end{proof}
+
+\begin{lemma}
+	Let \(R \subseteq V\) be any cluster. Then, \(R\) can be decomposed into \(R_1, \dots , R_p\) such that
+	\begin{enumerate}[(a)]
+		\item each \(R_i\) satisfies the \hyperref[def:pre-condition]{pre-condition},
+		\item \(\sum_{i=1}^{p} c(\delta _G(R_i)) \leq 2 c(\delta _G(R))\).
+	\end{enumerate}
+	Moreover, the algorithm is the following:
+
+	\begin{algorithm}[H]\label{algo:assure-pre-condition}
+		\DontPrintSemicolon{}
+		\caption{Assure \hyperref[def:pre-condition]{Pre-Condition}}
+		\KwData{A connected graph \(G = (V, E)\), \(R \subseteq V\)}
+		\KwResult{An \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon}{\alpha \log m}), \epsilon)\)-expander decomposition} \(\{ G_i \} _{i=1}^{h}\)}
+		\SetKwFunction{ExpanderDecomposition}{\hyperref[algo:expander-decomposition]{Expander-Decomposition}}
+		\SetKwFunction{SparsestCut}{\(\alpha \)-\hyperref[prb:sparsest-cut]{Uniform-Sparsest-Cut}}
+
+		\BlankLine
+
+		Define a demand matrix \(D\) on \(R \times R\) as \(D(u, v) = \pi (u) / \lvert R \rvert \) for all \(v \neq u\)\;
+		\((A, B) \gets\)\SparsestCut{\(G\)}\;
+		\(\psi \gets\) \hyperref[def:sparsity]{sparsity} of \((A, B)\)\;
+		\;
+		\uIf(\Comment*[f]{Check \hyperref[def:sparsity]{sparsity}}){\(\psi > 4 \sigma / \lambda \)}{
+			\Return{\(R\)}\;
+		}
+		\Else{
+		\(R_1 \gets\)\ExpanderDecomposition{\(G[A]\), \(R\)}\;
+		\(R_2 \gets\)\ExpanderDecomposition{\(G[B]\), \(R\)}\;
+		\Return{\(\{ G_i^{(1)} \}_{i=1}^{h_1} \cup \{ G_i^{(2)} \}_{i=1}^{h_2} \)}\;
+		}
+	\end{algorithm}
+\end{lemma}
+

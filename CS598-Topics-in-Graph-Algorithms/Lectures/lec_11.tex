@@ -1,0 +1,248 @@
+\lecture{11}{1 Oct.\ 11:00}{Expander Hierarchy}
+\section{Cut-Based Hierarchical Decomposition}
+Räcke proved the existence of a cut-based \hyperref[def:hierarchical-decomposition]{hierarchical decomposition} of undirected graphs as a tool to prove the existence of good \hyperref[prb:oblivious-routing]{oblivious routings}~\cite{racke2002minimizing}, which is different from the \hyperref[not:tree-based-oblivious-routing]{tree-based oblivious routing} construction we saw last time. This cut-based \hyperref[def:hierarchical-decomposition]{hierarchical decomposition} has found several applications outside the original motivation for \hyperref[prb:oblivious-routing]{oblivious routing}, and is also a fundamental structural result in graph theoretic terms.
+
+\begin{note}
+	The construction and proof are technical, and this is the first attempt to teach it and provide some additional commentary along the way, which we hope is of pedagogical value for those interested in understanding the details of a construction from~\cite{bienkowski2003practical}.
+\end{note}
+
+We first set up notations to state the result where the statement is tailored towards cut-approximation rather than the \hyperref[prb:oblivious-routing]{oblivious routing} aspect.
+
+\subsection{Statement of the Expander Hierarchy}
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{Z} _+\), consider the \hyperref[def:cut-tree]{cut-tree}.
+
+\begin{definition}[Laminary]\label{def:laminary}
+	A family of subsets is \emph{laminary} if no two sets \(A, B\) in the family cross, i.e., \(A \cap B = \varnothing \) or \(A \subseteq B\) or \(A \supseteq B\).
+\end{definition}
+
+\begin{definition}[Hierarchical decomposition]\label{def:hierarchical-decomposition}
+	Given a graph \(G = (V, E)\), a \emph{hierarchical decomposition} is a \hyperref[def:laminary]{laminary} family of subsets of the vertex set \(V\).
+\end{definition}
+
+Any \hyperref[def:laminary]{laminary} family over \(V\), augmented with the entire set \(V\) if needed, defines a way to decompose \(V\), and hence implicitly the graph, in a recursive fashion. Each such decomposition has an associated rooted tree \(T\), where the leaves of \(T\) are labeled with the vertex set \(V\) and each internal node \(v_t\) corresponds to a subset \(S_{v_t}\) of the vertices of \(G\) which are the leaves in the subtree \(T_{v_t}\). We associate the graph \(H_{v_t} = G[S_{v_t}]\) with each \(v_t\). \hyperref[def:hierarchical-decomposition]{Hierarchical decompositions} of graphs are used in several settings and the meaning and applications of them depend on the application and context. Here, we will be interested in decompositions that preserve cuts of the graph, in particular for routing demands in \(G\).
+
+\begin{definition}[Cut-tree]\label{def:cut-tree}
+	A \hyperref[def:hierarchical-decomposition]{hierarchical decomposition} \(T\) is a \emph{cut-tree} if for each edge \((v_t, v_{t^{\prime} })\) of \(T\) where \(v_{t^{\prime} }\)  is the parent of \(v_t\), we assign a capacity equal to \(c(\delta _G(S_{v_t}))\).
+\end{definition}
+
+\begin{figure}[H]
+	\centering
+	\incfig{cut-tree}
+	\caption{A graph with a \hyperref[def:hierarchical-decomposition]{hierarchical decomposition} and its representation as a \hyperref[def:cut-tree]{cut tree}.}
+	\label{fig:cut-tree}
+\end{figure}
+
+\begin{remark}
+	A \hyperref[def:cut-tree]{cut-tree} has exactly \(n\) edges, so it's keeping track only a very small number of cut values.
+\end{remark}
+
+Surprisingly, every graph admits a \hyperref[def:cut-tree]{cut-tree} which can approximate all \hyperref[prb:sparsest-cut]{sparse cuts} in the graph. To formalize the statement, we start with the following simple observation.
+
+\begin{claim}
+	Let \(G = (V, E)\) be a graph with edge capacities \(c \colon E \to \mathbb{R} _+\). Suppose \(D \in \mathbb{R} _+^{V \times V} \in \mathcal{D} _G\) is a non-negative demand matrix that is routable in \(G\). Then, it is routable in any \hyperref[def:cut-tree]{cut-tree} \(T\) of \(G\) (\(D\) is now demand matrix over the leaves of \(T\)).
+\end{claim}
+\begin{explanation}
+	Recall that a demand matrix is routable in a capacitated tree if and only if it satisfies the cut condition. The only \hyperref[prb:sparsest-cut]{sparse cuts} of interest in a tree are the single edge cuts. If \(D\) is routable in \(G\), then for any cut \((S, V\setminus S)\) we have \(D(S, V\setminus S) \leq c(S, V\setminus S)\) in \(G\). Since \(T\) is a \hyperref[def:cut-tree]{cut-tree}, and \(D\) is only between leaves of \(T\), each edge \(v_t, v_{t^{\prime} }\) in \(E_T\) corresponds to the cut \((S_{v_t}, V\setminus S_{v_t})\) in \(G\) and the capacity of the edge in \(tis equal \to  fmc(S, V\setminus S)\). Thus, \(D\) satisfies the cut condition in \(T\), hence is routable in \(T\).
+\end{explanation}
+
+Now, we're ready to state the result.
+
+\begin{theorem}[Hierarchical expander decomposition~\cite{racke2002minimizing}]\label{thm:hierarchical-expander-decomposition}
+	Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), there is a \hyperref[def:cut-tree]{cut-tree} \(T = (V_T, E_T)\) such that any demand matrix \(D \in \mathbb{R} _+^{V \times V}\) that is routable in \(T\) is also routable in \(G\) with \hyperref[def:congestion]{congestion} \(O(\log ^3 n)\).
+\end{theorem}
+
+\begin{note}
+	\hyperref[thm:hierarchical-expander-decomposition]{Hierarchical expander decomposition} has found many applications in fast graph algorithms recently~\cite{goranci2021expander}.
+\end{note}
+
+In other words, there is a very compact data structure, i.e., the \hyperref[def:cut-tree]{cut-tree}, that captures \emph{all} the relevant cuts for routing (in particular, the \hyperref[prb:sparsest-cut]{sparse cuts}) in \(G\) approximately within a poly-logarithmic factor. The first proof was based on finding \hyperref[prb:sparsest-cut]{sparsest cuts} and hence did not lead to an efficient algorithm~\cite{racke2002minimizing}. Soon after, efficient algorithm~\cite{bienkowski2003practical} with an improved \hyperref[def:congestion]{congestion} bound of \(O(\log ^2 n \log \log n)\)~\cite{harrelson2003polynomial}, which is still the beset known.
+
+We will give a proof outline of the construction of~\cite{bienkowski2003practical} that achieves a weaker \hyperref[def:congestion]{congestion} bound of \(O(\log ^4 n)\). If one wants to approximate only cuts but not the routing aspect, then an improved bound of \(O(\log ^{3 / 2} n \log \log n)\) is known~\cite{racke2014improved}.
+
+\subsection{Intuition, Connection to Expanders and Well-Lined Decomposition}
+Firstly, we say that a \hyperref[def:cut-tree]{cut-tree} is \(\rho \)-approximate if any demand matrix \(D\) routable in \(T\) can be routed in \(G\) with \hyperref[def:congestion]{congestion} \(\rho \). Moreover, throughout we will be working with induced subgraphs of the original graph that arise as the algorithm constructs the \hyperref[def:hierarchical-decomposition]{hierarchical decomposition}. Given \(S \subseteq V\), its induced subgraph \(G[S]\) can also be referred as a cluster, and we associate it with a node of the \hyperref[def:cut-tree]{cut-tree} \(T\). We will be interested in how well can \(S\) interface with the rest of the graph in terms of the edges between \(S\) and \(V\setminus S\). Since we will be interested in \(G\) and various induced subgraphs, consider the following.
+
+\begin{notation}
+	The set of all edges with one end point in \(A\) and the other in \(B\) is denoted as \(E(A, B)\).\footnote{Note that \(A\) and \(B\) need not be disjoint.}
+\end{notation}
+
+Thus, to represent \(\delta _G(S)\), we will often use \(E(S, V\setminus S)\). Finally, we will use \(c(A, B)\) as a shortcut for the total capacity of edges in \(E(A, B)\):
+
+\begin{notation}
+	We let \(c(A, B) \coloneqq \sum_{e \in E(A, B)} c(e)\), and will refer to \(c(\delta _G(S))\) sometimes as \(\operatorname{out}(S) \) for compactness.
+\end{notation}
+
+Most of the time, we are interested in \hyperref[def:conductance]{conductance}, but we use the word \hyperref[def:expansion]{expansion}. Suppose \(G = (V, E)\) has good \hyperref[def:conductance]{conductance} \(\phi (G) = \Omega (1)\), i.e., for all \(S \subseteq V\), \(c(\delta (S)) \geq \phi \operatorname{vol}(S) \). We know the following from the flow-cut gap.
+
+\begin{claim}
+	Suppose \(G\) has \hyperref[def:conductance]{conductance} \(\phi \). Let \(D\) be any demand matrix such that the following holds for each \(u \in V\): \(b(u) = \sum_{v \in V} D(u, v) \leq c(\delta (u))\). Then, \(G\) satisfies the cut condition for \(\phi D\) and hence \(D\) is routable in \(G\) with \hyperref[def:congestion]{congestion} \(O(\sigma (n) / \phi )\) where \(\sigma (n)\) is the flow-cut gap for product multi-commodity flow in graphs of at most \(n\) nodes. In particular, \(\sigma (n) = O(\log n)\) in general graphs and is \(O(1)\) in planar graphs.
+\end{claim}
+
+Thus, if \(\phi = \Omega (1)\), the set of routable demand matrices can be approximately characterized by stating that they should respect the trivial cuts at the vertices.
+
+\begin{eg}[Expander]
+	If \(G\) is a graph with \hyperref[def:conductance]{conductance} \(\phi \), then the star graph with \(V\) as the leaves is a \hyperref[def:cut-tree]{cut-tree} with approximation \(O(\log n / \phi )\).
+	\begin{center}
+		\incfig{expander-cut-tree-star}
+	\end{center}
+\end{eg}
+
+What should one do if \(G\) does not have good \hyperref[def:conductance]{conductance}?
+
+\begin{intuition}
+	A natural approach is to decompose the graph into well-connected pieces, i.e., subgraphs with high \hyperref[def:conductance]{conductance}, along \hyperref[prb:sparsest-cut]{sparse cuts}.
+\end{intuition}
+
+The question is how to. It is also not difficult to see that decomposing the graph into one or a few levels is not sufficient by looking at the grid graph.
+
+\begin{eg}[Grid]
+	Consider a planar graph such as the \(\sqrt{n} \times \sqrt{n} \) grid. Then no subgraph has good \hyperref[def:conductance]{conductance} unless it is essentially of constant size. Thus, the only reasonable thing is to decompose the graph recursively into several levels. For example, the grid can be decomposed naturally into say four equal sized grids and then recursively to obtain a \(O(\log n)\) depth \hyperref[def:cut-tree]{cut-tree} which one can prove has poly-logarithmic approximation.
+	\begin{center}
+		\incfig{grid-cut-tree}
+	\end{center}
+\end{eg}
+
+Although grids are easy to decompose due to their nice symmetric properties, it is still non-obvious to formally understand why it yields a good \hyperref[def:cut-tree]{cut-tree}.
+
+\begin{intuition}
+	A key is to see that the boundary of the grid is \hyperref[def:well-linked]{well-linked}.
+\end{intuition}
+
+How should one do this for a general graph whose structure is not apparent to us? The key concepts that one needs are being able to understand how a given cluster \(H = G[S]\) interfaces with the rest of the graph through its boundary edges (those edges that cross \(S\)) and how a given cluster is decomposed into sub-clusters. We formalize these notations as follows. They are the refined versions of \hyperref[def:well-linked]{well-linkedness}.
+
+\begin{intuition}
+	Since \hyperref[def:well-linked]{well-linkedness} allows us to use the notion of \hyperref[def:expansion]{expansion}/\hyperref[def:conductance]{conductance} for subsets of vertices and with arbitrary weights so that we can use it in a refined way.
+\end{intuition}
+
+We start from the following.
+
+\begin{definition}\label{def:cut-flow-well-linked}
+	Let \(G = (V, E)\) and \(\pi \colon V \to \mathbb{R} _+\) be bounds on vertices. Let \(\alpha > 0\) be a scalar.
+	\begin{definition}[Cut well-linked]\label{def:cut-well-linked}
+		\(G\) is \emph{\((\pi , \alpha) \)-cut-well-linked} if for all \(S \subseteq V\), \(c(\delta (S)) \geq \alpha \cdot \min (\pi (S), \pi (V \setminus S))\).
+	\end{definition}
+
+	\begin{definition}[Flow well-linked]\label{def:flow-well-linked}
+		\(G\) is \emph{\((\pi , \alpha )\)-flow-well-linked} if for any demand matrix \(D\) such that \(\sum_{v \in V} D(u, v) \leq \pi (u)\) for all \(u \in V\) is routable in \(G\) with \hyperref[def:congestion]{congestion} \(1 / \alpha \).
+	\end{definition}
+\end{definition}
+
+We define \hyperref[def:flow-well-linked]{flow-well-linkedness} in a stronger form since this is useful for the application in this topic. It can be defined in a slightly different form as we only consider the demand matrix \(D_\pi \) being \(D_\pi (u, v) = \pi (u) \pi (v) / \pi (V)\). The advantage of this definition is that we can check whether \(G\) satisfies this requirement efficiently via a multi-commodity flow computation. Indeed, these two do not differ much:
+
+\begin{claim}
+	Let \(\pi \colon V \to \mathbb{R} _+\) be non-negative bounds on vertices of \(G = (V, E)\). Suppose \(G\) can route the product multi-commodity flow induced by \(\pi \), then \(G\) can route any demand matrix \(D\) with \hyperref[def:congestion]{congestion} \(2\) if \(\sum_{v \in V} D(u, v) \leq \pi (u)\) for all \(u \in V\).
+\end{claim}
+
+From the flow-cut gap, we obtain the following.
+
+\begin{claim}
+	IF \(G\) is \hyperref[def:cut-well-linked]{\((\pi , \alpha )\)-cut-well-linked}, then \(G\) is \hyperref[def:flow-well-linked]{\((\pi , \alpha / \sigma (n))\)-flow-well-linked}.
+\end{claim}
+
+\begin{note}
+	If \(G\) has \hyperref[def:conductance]{conductance} \(\phi \) then it is \hyperref[def:cut-well-linked]{\((\pi , \phi )\)-cut-well-linked} where \(\pi (u) = c(\delta (u))\) is the capacitated degree of \(u\) in \(G\). As we saw, it also implies that \(G\) is \hyperref[def:flow-well-linked]{\((\pi , \phi / \sigma (n))\)-flow-well-linked}.
+\end{note}
+
+From the above discussion, we see that the key advantage of allowing arbitrary \(\pi \) is the following:
+
+\begin{intuition}
+	Allowing \(\pi \) to be arbitrary allows us to generalize the notation of \hyperref[def:conductance]{conductance} and routability to subsets of vertices and to control the amount of flow incident to a vertex.
+\end{intuition}
+
+IN the context of \hyperref[def:cut-tree]{cut-trees}, we are interested in the following two types of well-linkedness:
+
+\begin{definition}[Boundary-well-linked]\label{def:boundary-well-linked}
+	Let \(G = (V, E)\) be a graph and \(H = G[S]\) be an induced subgraph (cluster) \(S \subseteq V\). We say \(S\) is \emph{\(\alpha \)-cut/flow-boundary-well-linked} if \(H\) is \((\pi , \alpha )\)-\hyperref[def:cut-well-linked]{cut}/\hyperref[def:flow-well-linked]{flow}-\hyperref[def:cut-flow-well-linked]{well-linked} where \(\pi (u) = c(u, V\setminus S) = c(\delta (u) \cap \delta (S))\) for all \(u \in S\).
+\end{definition}
+
+Note that we require \(H = G[S]\) to be \hyperref[def:well-linked]{well-linked} as a separate graph, implying the following:
+
+\begin{intuition}
+	If a cluster is \hyperref[def:boundary-well-linked]{boundary-well-linked}, then it acts as a good router as far as its external interface is concerned.
+\end{intuition}
+
+This is an important property that is essentially required of any cluster in a \hyperref[def:cut-tree]{cut-tree} since the capacity of the edge from a cluster to its parent is equal to \(c(S, V\setminus S)\), the boundary capacity. Another important property that is needed for a cluster is with respect to its children in the \hyperref[def:cut-tree]{cut-tree}, i.e., how it is partitioned into sub-clusters for the next level. This motivates the following:
+
+\begin{definition}[Partition-and-boundary-well-linked]\label{def:partition-and-boundary-well-linked}
+	Let \(G = (V, E)\) be a graph and \(H = G[S]\) be an induced subgraph (cluster) \(S \subseteq V\). Let \(\mathcal{D} = \{ S_i \} _{i=1}^{r}\) be a partition of \(S\) into sub-clusters \(\{ H_i = G[S_i]\} _{i=1}^{r}\). We say \(S\) is \emph{\(\alpha \)-cut/flow-partition-and-boundary-well-linked} if \(H\) is \((\pi ^{\prime} , \alpha )\)-\hyperref[def:cut-well-linked]{cut}/\hyperref[def:flow-well-linked]{flow}-\hyperref[def:cut-flow-well-linked]{well-linked} where \(\pi ^{\prime} (u)\) is the capacity of edges going outside its sub-cluster in \(\mathcal{D} \) for each \(u \in S\).
+\end{definition}
+
+\begin{intuition}
+	Given a cluster \(S\) in the \hyperref[def:cut-tree]{cut-tree} and its children \(\{ S_i \} _{i=1}^{r}\), the edge connecting \(S_j\) to \(S\) in the tree has capacity equal to \(c(\delta _G(S_j))\). In a sense the cluster \(S\) acts as a single node in the tree connecting the children together. Thus, \(S\) should be able to route any set of demands that go between the children as long as the total demand leaving each \(S_j\) is at most \(c(\delta _G(S_j))\).
+\end{intuition}
+
+Consider the same example as in \autoref{fig:cut-tree}, we see that for \(S = \{ f, g, h \} \), their corresponding \(\pi \) values are \(2, 1, 0\) when considering \hyperref[def:boundary-well-linked]{boundary-well-linkedness}, while they are \(4, 3, 2\) when considering \hyperref[def:partition-and-boundary-well-linked]{partition-and-boundary-well-linkedness} (i.e., \(\pi ^{\prime} \)):
+\begin{figure}[H]
+	\centering
+	\incfig{boundary-and-partition-well-linked-cut-tree}
+	\caption{Corresponding weight values when considering \autoref{def:boundary-well-linked} (\(\pi (u)\)) and \autoref{def:partition-and-boundary-well-linked} (\(\pi ^{\prime} (u)\)) for \(u \in S = \{ f, g, h \} \).}
+	\label{fig:boundary-and-partition-well-linked-cut-tree}
+\end{figure}
+
+To simplify the notation, consider the following:
+\begin{notation}[Partition-well-linked]
+	We say that \(S\) is \emph{\(\alpha \)-partition-well-linked} w.r.t.\ \(\mathcal{D} \) and omit \(\mathcal{D} \) when it is implicit in the context.
+\end{notation}
+
+It is sometimes useful to view the \hyperref[def:boundary-well-linked]{boundary-well-linkedness} and \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} by sticking dummy vertices as leaves and saying that the dummy vertices are \hyperref[def:well-linked]{well-linked} (with weight \(1\)). E.g., in \autoref{fig:boundary-and-partition-well-linked-cut-tree}, imagine adding a dummy vertex to edge sticking out of the cluster.
+
+\subsection{Sufficient Condition of Being a Good Cut-Tree}
+Now that we have set up the definitions, the first part of the proof is to understand what conditions should the tree \(T\) satisfy such that it has good properties. Interestingly, only two properties are required: low depth/height and \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} of each cluster in the decomposition.
+
+\begin{lemma}\label{lma:hierarchical-expander-decomposition-characterization}
+	Suppose \(T\) is a \hyperref[def:cut-tree]{cut-tree} for \(G\) of height \(h\). Suppose each cluster \(S\) of \(T\) (corresponds to an internal node of \(T\)) is \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-flow-partition-well-linked}, then \(T\) is \(O(h / \alpha )\)-approximate.
+\end{lemma}
+\begin{proof}
+	Recall that each cluster \(H= G[S]\) in the tree \(T\) is \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-flow-partition-well-linked}. For each \(S\):
+	\begin{itemize}
+		\item \(\pi _S\): the weights on vertices of \(S\) which correspond to the out-degree of the vertices;
+		\item \(\pi _S^{\prime} \): the weights corresponding to the partition \(\mathcal{D} \) of \(S\) induced by its children in \(T\).
+	\end{itemize}
+	Essentially, this is \autoref{fig:boundary-and-partition-well-linked-cut-tree} where we specify \(S\). Clearly, \(\pi _S^{\prime} (u) \geq \pi (u)\) for all \(u \in S\). Also, note that \(\pi _S(S) = c(S, V\setminus S)\) is the capacity of the edges leaving \(S\). When \(S\) is clear from the context, we simply use \(\pi \) and \(\pi ^{\prime} \). Now, suppose \(D\) is a demand matrix that is routable in \(T\). We need to show that it is routable in \(G\) with congestion \(O(h / \alpha )\).
+
+	\begin{intuition}
+		The height \(h\) comes into the picture since \(T\) is a \hyperref[def:hierarchical-decomposition]{hierarchical decomposition}, each edge \(e = uv \in E\) can be in up to \(h\) clusters along a path from the root of \(T\) until \(u\) and \(v\) get separated from the first time. The proof works by constructing a series of multi-commodity flows that can be stitched together to route all the demands.
+	\end{intuition}
+
+	We assume that each cluster \(S\) in \(T\) has its own private copy of each edge \(e \in E[S]\) when we compute multi-commodity flows in the cluster. We will bound the \hyperref[def:congestion]{congestion} of routing per cluster and then use the fact that each edge is in at most \(h\) clusters to derive the final \hyperref[def:congestion]{congestion}. Consider routing the demands from bottom up. Let \((a, b)\) be a vertex-pair with demand \(D(a, b)\). Let \(H = G[S]\) be the cluster which corresponds to the last common ancestor of \(a\) and \(b\) in \(T\). We call the cluster \(H\) the meetup cluster for the pair \((a, b)\). Let \(\{ H_i \} _{i=1}^{r}\) be the children of \(H\) in \(T\). Without loos of generality, let \(a \in H_1 = G[S_1]\) and \(b \in H_2 = G[S_2]\). Consider any cluster \(H^{\prime} = G[S^{\prime} ]\) along the path from \(a\) to \(H\) not including \(H\) itself. Such a cluster is called a transition cluster for pair \((a, b)\). Then, \(a\) will distribute its \(D(a, b)\) flow such that each node \(u \in S^{\prime} \) receives a fraction \(\pi _{S^{\prime} }(u) / \pi _{S^{\prime} }(S^{\prime} )\) of the flow.
+
+	\begin{remark}
+		Recall that \(\pi _{S^{\prime} }(S^{\prime} ) = c(S^{\prime} , V\setminus S^{\prime} )\) is the boundary capacity of the cluster \(S^{\prime} \) and \(\pi _{S^{\prime} }(u)\) is the amount of that capacity incident to \(u \in S^{\prime} \). So for nodes \(u\) that is not on the boundary, \(\pi _{S^{\prime} }(u) = 0\), i.e., \emph{we're sending flow to the boundary of \(S^{\prime} \)}.
+	\end{remark}
+
+	\begin{intuition}
+		All of \(a\)'s flow has to leave the cluster \(S^{\prime} \) to eventually reach \(b\), so we spread the flow in proportion to the boundary capacity.
+	\end{intuition}
+
+	Note that the actual flow from \(a\) for the pair \((a, b)\) that reaches \(u \in S^{\prime} \) is \(D(a, b) \pi _{S^{\prime} }(u) / \pi _{S^{\prime} }(S^{\prime} )\). For pair \((a, b)\) this stops as \(H_1\) for \(a\) and at \(H_2\) for \(b\), before the meetup cluster \(H = G[S]\). It then comes the responsibility of the meetup cluster \(H\) to ensure that these flows match up in \(S\). Thus, the flow for pair \((a, b)\) is fully satisfied in the clusters of the subtree at their least common ancestor which corresponds how it is routed in the tree \(T\).
+
+	To complete the description, since the flow is sent bottom up, we need to describe how a cluster \(H= G[S]\) with children \(\{ H_i \} _{i=1}^{r}\) maintains the invariant. It has two parts:
+	\begin{itemize}
+		\item For all demand pairs \((a, b)\) such that \(H\) is the meetup cluster, \(H\) has to ensure that the flow for the pairs which have reached the children's boundary are exchanged in the graph \(G[S] = H\).
+		\item For all demand pairs \((a, b)\) for which \(H\) is a transition cluster (meaning that their least common ancestor is above \(H\) in \(T\)), their flow has reached exactly one of the children of \(H\) inductively. \(H\) needs to redistribute this flow using edges only in \(G[S] = H\) such that for each such demand pair \((a, b)\), the flow is distributed over nodes \(u \in S\) in proportion to \(\pi _S(u)\).
+	\end{itemize}
+	See \autoref{fig:hierarchical-expander-decomposition-characterization} for an illustration.
+	\begin{figure}[H]
+		\centering
+		\incfig{hierarchical-expander-decomposition-characterization}
+		\caption{The cluster \(S^{\prime} _a\) is on the path from \(a\) in \(T\) to the least common ancestor \(S\) with \(b\), where \(a\) distributes \(D(a, b)\) to each node \(u \in S^{\prime} _a\) in proportion to their boundary capacity \(\pi _{S^{\prime} _a}\). Same for \(b\).}
+		\label{fig:hierarchical-expander-decomposition-characterization}
+	\end{figure}
+
+	We show that each of the above two steps can be accomplished in \(H = G[S]\) with \hyperref[def:congestion]{congestion} \(O(1 / \alpha )\) by using the \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-flow-partition-well-linkedness} property. It turns out to be reasonably simple because we have set up the definitions properly. Consider the first part. Fix a pair \((a, b)\) for which \(H\) is the meetup cluster. As we discussed before, say \(a \in H_1 = G[S_1]\) and \(b \in H_2 \in G[S_2]\) where \(H_1\) and \(H_2\) are children of \(H\), \(a\) has already sent its flow to vertices in \(S_1\) where \(u \in S_1\) has received a flow of \(D(a, b) \pi _{S_1}(u) / \pi _{S_1}(S_1)\), and similarly, \(b\) has sent its flow to \(S_2\) in proportion to \(\pi _{S_2}\). We exchange this flow by setting up a demand matrix. It is not hard to see that there is one which will ensure that the flow is matched up. We do this for every pair for which \(H\) is the meetup cluster we can exchange the flows that have reached the children clusters by setting up their own demand matrix. Routing the union of these demand matrices in \(H\) would suffice to exchange the flow, and the problem now is whether we can do it and what is the \hyperref[def:congestion]{congestion} incurred.
+	\begin{claim}
+		All these demand matrices can be routed in \(H\) with \hyperref[def:congestion]{congestion} \(1 / \alpha \).
+	\end{claim}
+	\begin{explanation}
+		Consider any child cluster \(H_i = G[S_i]\) of \(H\). Since \(D\) is routable in \(T\), the total demand that needs to meetup in \(H\) and which originates in \(H_i\) is at most the capacity of the edge \((H, H_i)\) in \(T\), which has capacity \(c(S_i, V\setminus S_i) = \pi _{S_i}(S_i)\), i.e., the boundary capacity of \(S_i\). This means that for each \(u \in S_i\), the total flow that has reached \(u\) for all the demands that need to be matched up in \(H\) is at most \(\pi _{S_i}(u) / \pi _{S_i}(S_i) \cdot c(S_i, V\setminus S_i) = \pi _{S_i}(u)\). Thus, for exchanging the meetup flow, we have set up many demand matrices, but the total demand from these matrices that originate at \(u \in S_i \in S\) is at most \(\pi _{S_i}(u)\). This is true for all the vertices in \(S\). But recall that any demand matrix that satisfies this degree condition, by definition of the \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-flow-partition-well-linkedness}, can be routed in \(H = G[S]\) with \hyperref[def:congestion]{congestion} \(1 / \alpha \).\footnote{Indeed, this is the reason we required this condition on the clusters.}
+	\end{explanation}
+	Hence, we're done for the first part. The second part is similar. Consider any demand pair \((a, b)\) for which \(H\) is a transition cluster. This means that one of \(a, b\) is in \(H\) and the other is not. Say \(a \in H\), and it has already distributed the flow to the boundary of the child \(H_i\) of \(H\) where \(a \in H_i\), i.e., for each \(u \in S_i\) in proportion to \(\pi _{S_i}(u) / \pi _{S_i}(S_i)\). To maintain the invariant, in cluster \(H\) we need to distribute \(a\)'s flow to nodes in \(S\) such that each \(v \in S\) gets flow in proportion to \(\pi _S(v) / \pi _S(S)\). We can set up a demand matrix to exchange this flow again. For any node \(u \in S_i\), the total demand originating at \(u\) is at most \(\pi _{S_i}(u)\) since the total demand crossing \(S_i\) is at most \(c(s_i, V\setminus S_i)\), and for each node \(v \in S\), the total demand that it receives is at most \(\pi _S(v) \leq \pi _S^{\prime} (v)\). Thus, the union of the demand matrices respect the total bounds imposed by \(\pi ^{\prime} \) at each node of \(S\), and hence by the \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-flow-partition-well-linkedness}, can be routed in \(S\) with \hyperref[def:congestion]{congestion} \(1 / \alpha \).
+
+	For the base case of the induction, we see that the flow originates at the singleton leaves which is its own boundary and hence there is nothing to do there. As we argued earlier, the total \hyperref[def:congestion]{congestion} on an edge is the union of the \hyperref[def:congestion]{congestions} of all the clusters it participates in, and an edge participates in at most \(h\) clusters, which proves the result.
+\end{proof}
+
+The power of \autoref{lma:hierarchical-expander-decomposition-characterization} is that it has essentially captures what we need from the \hyperref[def:hierarchical-decomposition]{hierarchical decomposition}. We will see a construction that guarantees that \(h = O(\log n)\) and \(\alpha = \Omega (1 / \log ^3 n)\), and this gives us a \hyperref[def:cut-tree]{cut-tree} that is \(O(\log ^4 n)\)-approximate, proving (a weaker version of) \autoref{thm:hierarchical-expander-decomposition}.
+
+\begin{remark}
+	We can also construct an \hyperref[def:oblivious-routing-scheme]{oblivious routing} from \autoref{lma:hierarchical-expander-decomposition-characterization} as well, but we will not do so to keep the presentation simpler.
+\end{remark}

@@ -13,18 +13,18 @@ The algorithm does not backtrack, i.e., once it partitions a cluster \(S\) into 
 	\end{itemize}
 \end{notation}
 
-We will assume that the capacities are integer valued. The algorithm is polynomial in the sum of the capacities, so technically we can only apply it for capacities that are poly-bounded but we will ignore this issue since we are more interested in the proof of the existence for now.
+We will assume that the capacities are integer valued. The algorithm is polynomial in the sum of the capacities, so technically we can only apply it for capacities that are poly-bounded, but we will ignore this issue since we are more interested in the proof of the existence for now.
 
 \begin{definition}[Precondition]\label{def:precondition}
-	Let \(H= G[R]\) for \(R \subseteq V\) be a cluster. Let \(\pi \colon R \to \mathbb{R} _+\) be boundary capacity weights, i.e., \(\pi (u)\) is the capacity of the edges leaving \(R\) that are incident to \(u\). We say \(R\) satisfies the \emph{precondition} if for all \(U \subseteq R\) such that \(\lvert U \rvert \leq 3 \lvert R \rvert / 4\),
+	Let \(H= G[S]\) for \(S \subseteq V\) be a cluster. Let \(\pi \colon S \to \mathbb{R} _+\) be boundary capacity weights, i.e., \(\pi (u)\) is the capacity of the edges leaving \(S\) that are incident to \(u\). We say \(S\) satisfies the \emph{precondition} if for all \(U \subseteq S\) such that \(\lvert U \rvert \leq 3 \lvert S \rvert / 4\),
 	\[
-		c(U, R \setminus U)
+		c(U, S \setminus U)
 		\geq \frac{\pi (U)}{\lambda }.
 	\]
 \end{definition}
 
 \begin{intuition}
-	We want each cluster to satisfy the property that \(R\) is \hyperref[def:boundary-well-linked]{boundary-well-linked}. On the other hand, to ensure the recursion depth, the algorithm will obtain a tree of height \(O(\log n)\) by ensuring that each cluster \(S\) is decomposed into sub-clusters such that no sub-cluster \(S_i\) has more than \(2 \lvert S \rvert / 3\) vertices.
+	We want each cluster \(S\) to be \hyperref[def:boundary-well-linked]{boundary-well-linked}. On the other hand, to ensure the recursion depth, the algorithm will obtain a tree of height \(O(\log n)\) by ensuring that each cluster \(S\) is decomposed into sub-clusters such that no sub-cluster \(S_i\) has more than \(2 \lvert S \rvert / 3\) vertices.
 \end{intuition}
 
 \autoref{def:precondition} resembles a \hyperref[def:cut-well-linked]{cut-well-linkedness} condition, but it is not quite the same since the numerator is about \(\pi \) while the denominator is about the cardinality of \(U\). As we will see, this actually corresponds to \hyperref[def:sparsity]{sparsity} of a related demand matrix.
@@ -35,23 +35,29 @@ The motivation for this \hyperref[def:precondition]{precondition} comes from the
 	We need this \hyperref[def:precondition]{precondition} because it turns out that not every cluster can be successfully partitioned to satisfy the \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} property.
 \end{intuition}
 
-However, since it's not feasible to efficiently check whether a given cluster satisfies the \hyperref[def:precondition]{precondition}, so we will use approximation algorithms via flow-cut gap to indirectly guarantee that the \hyperref[def:precondition]{precondition} is satisfied. Now, to ensure \hyperref[def:precondition]{precondition}, we consider something like \hyperref[def:well-linked]{well-linked} style decomposition. Specifically, during the algorithm, we will need to ensure that the sub-clusters that are created satisfy the \hyperref[def:precondition]{precondition} for the recursion. As we remarked, we cannot directly guarantee it. For this reason, we will use a decomposition procedure called \hyperref[algo:assure-precondition]{assure precondition}, that will decompose \emph{any} given cluster \(R\) such that the resulting pieces after the decomposition satisfy the \hyperref[def:precondition]{precondition}. We state the lemma and postpone the proof for later.
+However, since it's not feasible to efficiently check whether a given cluster satisfies the \hyperref[def:precondition]{precondition}, so we will use approximation algorithms via flow-cut gap to indirectly guarantee that the \hyperref[def:precondition]{precondition} is satisfied. Now, to ensure \hyperref[def:precondition]{precondition}, we consider something like \hyperref[def:well-linked]{well-linked} style decomposition. Specifically, during the algorithm, we will need to ensure that the sub-clusters that are created satisfy the \hyperref[def:precondition]{precondition} for the recursion. As we remarked, we cannot directly guarantee it. For this reason, we will use a decomposition procedure called \hyperref[algo:assure-precondition]{assure precondition}, that will decompose \emph{any} given cluster \(S\) such that the resulting pieces after the decomposition satisfy the \hyperref[def:precondition]{precondition}. We first see the lemma.
 
 \begin{lemma}\label{lma:assure-precondition}
 	Let \(S \subseteq V\) with \(\lvert S \rvert \geq 2\) be any cluster. Then \hyperref[algo:assure-precondition]{assure precondition} partitions \(S\) into sub-clusters \(\{S_i\}_{=1}^{p}\) for some \(p \geq 1\) such that
 	\begin{enumerate}[(a)]
-		\item each \(S_i\) satisfies the \hyperref[def:precondition]{precondition}, and
-		\item \(\sum_{i=1}^{p} c(\delta _G(S_i)) \leq 2c(\delta _G(S))\).
+		\item\label{lma:assure-precondition-a} each \(S_i\) satisfies the \hyperref[def:precondition]{precondition}, and
+		\item\label{lma:assure-precondition-b} \(\sum_{i=1}^{p} c(\delta _G(S_i)) \leq 2c(\delta _G(S))\).
 	\end{enumerate}
 \end{lemma}
 
-The algorithm to achieve the above is very similar to the \hyperref[algo:expander-decomposition]{expander decomposition}.
+We postpone the proof of \autoref{lma:assure-precondition}, and note that the algorithm to achieve the above is very similar to the \hyperref[algo:expander-decomposition]{expander decomposition}, but not exactly the same due to the nature of the condition.
 
 \begin{prev}
 	In \hyperref[algo:expander-decomposition]{expander decomposition}, we wish to decompose a given graph into pieces such that each piece has good \hyperref[def:conductance]{conductance} while cutting as few edges as possible. From \autoref{thm:expander-decomposition}, we know that each piece has \hyperref[def:conductance]{conductance} \(\Omega (1 / \sigma \log n)\) via an \(O(\sigma )\)-approximation algorithm for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} based on flow-cut gap, while cutting only a constant fraction of edges.
 \end{prev}
 
-In \autoref{lma:assure-precondition}, the increase in the number of cut edges is upper bounded by \(c(\delta _G(S)) / 2\) since the sum counts each such newly cut edge twice. But we are only interested in each piece being \hyperref[def:boundary-well-linked]{boundary-well-linked}, so this is similar to \hyperref[def:well-linked]{well-linked} decomposition with initial weight equal to \(\pi _S(u)\). We now give the algorithm.
+Specifically, \hyperref[algo:assure-precondition]{assure precondition algorithm} first sets up a demand matrix \(D\):\footnote{This is very different from a product multi-commodity flow!} for each vertex \(u \in S\), it creates a demand \(D(u, v)\) for each \(v\) where \(D(u, v) = \pi (u) / \lvert S \rvert \).
+
+\begin{intuition}
+	\(u\) wants to distribute \(\pi (u)\) uniformly among all vertices. The final demand matrix is then the union of these demand matrices, one for each \(u\).
+\end{intuition}
+
+From \autoref{lma:assure-precondition} \autoref{lma:assure-precondition-b}, the increase in the number of cut edges is upper bounded by \(2 c(\delta _G(S))\) since the sum counts each such newly cut edge twice. But we are only interested in each piece being \hyperref[def:boundary-well-linked]{boundary-well-linked}, so this is similar to \hyperref[def:well-linked]{well-linked} decomposition with initial weight equal to \(\pi _S(u)\).
 
 \begin{algorithm}[H]\label{algo:assure-precondition}
 	\DontPrintSemicolon{}
@@ -68,7 +74,7 @@ In \autoref{lma:assure-precondition}, the increase in the number of cut edges is
 	\;
 	\(\big((A, B), \psi \big) \gets\)\SparsestCut{\(G[S]\), \(H = (V, D)\)}\footnote{We assume that this is a flow-cut gap based \(\alpha \)-approximation algorithm.}\Comment*[r]{\hyperref[def:sparsity]{sparsity} \(\psi \) of \((A, B)\)}
 	\;
-	\uIf(\Comment*[f]{If not sparse}){\(\psi > 4 \sigma / \lambda \)}{
+	\uIf(\Comment*[f]{If not sparse}\label{algo:assure-precondition-if}){\(\psi > 4 \sigma / \lambda \)}{
 		\Return{\(\{ S \} \)}\;
 	}
 	\Else{
@@ -78,14 +84,51 @@ In \autoref{lma:assure-precondition}, the increase in the number of cut edges is
 	}
 \end{algorithm}
 
-We postpone the proof of \autoref{lma:assure-precondition} for now, and describe the main algorithm called \hyperref[algo:partition]{partition} first. It achieves the following guarantee:
+\begin{proof}[Proof of \autoref{lma:assure-precondition}]
+	Our goal is to relate the \hyperref[prb:non-uniform-sparsest-cut]{sparsest cut} for the special demand matrix we design to the \hyperref[def:precondition]{precondition} so that we can guarantee that \(S\) will satisfy the \hyperref[def:precondition]{precondition} if there is no \hyperref[prb:non-uniform-sparsest-cut]{sparse cut} with respect to \(D\). Let \(\phi \) be the overall minimum \hyperref[def:sparsity]{sparsity} according to \(D\). Via the flow-cut gap, we can find a cut \((A, B)\) such that its \hyperref[def:sparsity]{sparsity} according to \(D\) is at most \(\sigma \cdot \phi \).
+
+	\begin{claim}
+		Suppose \(S\) does not satisfy the \hyperref[def:precondition]{precondition}, then \(\phi \leq 4 / \lambda \).
+	\end{claim}
+	\begin{explanation}
+		If \(S\) does not satisfy the \hyperref[def:precondition]{precondition}, then there is a partition \((U, S\setminus U)\) of \(S\) such that
+		\[
+			c(U, S\setminus U)
+			\leq \frac{\pi (U)}{\lambda }
+		\]
+		from the definition (where \(\lvert U \rvert \leq 3 \lvert S \rvert / 4\)). Consider the demand according to \(D\) crossing this partition, which is
+		\[
+			\pi (U) \cdot \frac{\lvert S \setminus U \rvert }{\lvert S \rvert } + \pi (S\setminus U) \cdot \frac{\lvert U \rvert }{\lvert S \rvert }
+			\geq \pi (U) \cdot \frac{\lvert S\setminus U \rvert }{\lvert S \rvert },
+		\]
+		which is greater than \(\pi (U) / 4\) since \(\lvert S\setminus U \rvert \geq \lvert S \rvert / 4\). Thus, the \hyperref[def:sparsity]{sparsity} of \((U, S\setminus U)\) is at most \(4c(U, S\setminus U) / \pi (U) \leq 4 / \lambda \) by our assumption. Hence, \(\phi \leq 4 / \lambda \).
+	\end{explanation}
+	This ensures that \hyperref[algo:assure-precondition]{assure precondition} guarantees that each cluster in the final partition satisfies the \hyperref[def:precondition]{precondition} because of the termination condition and the recursion. The main issue is why it does not cut too many edges in creating the partition.\footnote{The analysis is similar to \autoref{thm:expander-decomposition}, bit a bit more involved.} We will write a recursion to understand the total number of edges cut. If \(S\) satisfies the minimum \hyperref[def:sparsity]{sparsity} condition (\autoref{algo:assure-precondition-if}), i.e., we return \(S\) and don't cut any edges, then \autoref{lma:assure-precondition-b} is trivial. Now, suppose we find a partition \((A, B)\) of \(S\) with \hyperref[def:sparsity]{sparsity} \(\psi < 4 \sigma / \lambda < 1 / 16 \log n\), then we recurse on \(A\) and \(B\). The total demand crossing \((A, B)\) is
+	\[
+		\pi (A) \frac{\lvert B \rvert }{\lvert S \rvert } + \pi (B) \frac{\lvert A \rvert }{\lvert S \rvert }
+		\leq \pi (A) + \pi (B)
+		= \pi (S),
+	\]
+	implying
+	\[
+		c(A, B)
+		\leq \frac{\pi (S)}{16 \log n},
+	\]
+	resulting in the total edges cut is at most \(\pi (S)\) with a careful analysis, hence we're done.
+\end{proof}
+
+\begin{remark}
+	Unlike the recursion analysis in \autoref{thm:expander-decomposition}, these new cut-edges \(c(A, B)\) create two new problems whose total size in terms of outgoing edges is slightly larger compared to the original problem. Nevertheless, \(\log n\) is sufficiently large that this increase can also be absorbed.
+\end{remark}
+
+We now describe the main algorithm called \hyperref[algo:partition]{partition}, which achieves the following guarantee:
 
 \begin{lemma}\label{lma:partition}
 	Let \(S \subseteq V\) with \(\lvert S \rvert \geq 2\) with \(\lvert S \rvert \geq 2\) be any cluster that satisfies the \hyperref[def:precondition]{precondition}. Then \hyperref[algo:partition]{partition algorithm} partitions \(S\) into sub-clusters \(\{ S_i \} _{i=1}^{p}\) for some \(p > 1\) such that
 	\begin{enumerate}[(a)]
-		\item \(\lvert S_i \rvert \leq 2 \lvert S \rvert / 3\) for each sub-cluster \(S_i\),
-		\item each \(S_i\) satisfies the \hyperref[def:precondition]{precondition},
-		\item \(S\) satisfies the \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-flow-partition-well-linkedness} with respect to the decomposition.
+		\item\label{lma:partition-a} \(\lvert S_i \rvert \leq 2 \lvert S \rvert / 3\) for each sub-cluster \(S_i\),
+		\item\label{lma:partition-b} each \(S_i\) satisfies the \hyperref[def:precondition]{precondition},
+		\item\label{lma:partition-c} \(S\) satisfies the \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-flow-partition-well-linkedness} with respect to the decomposition.
 	\end{enumerate}
 \end{lemma}
 
@@ -99,20 +142,17 @@ Suppose we have such an algorithm. Then the top-down recursive algorithm is stra
 	How should \hyperref[algo:partition]{partition} work?
 \end{problem*}
 \begin{answer}
-	Suppose \(S = V\) and \(G\) has good \hyperref[def:conductance]{conductance}. Then, as we argued, the right decomposition is to simply take all the singleton vertices and it satisfies the desired properties.
+	Suppose \(S = V\) and \(G\) has good \hyperref[def:conductance]{conductance}. Then, as we argued, the right decomposition is to simply take all the singleton vertices, and it satisfies the desired properties. Hence, naturally, the algorithm starts with an \emph{optimistic} guess: the trivial singletons' decomposition of \(S\). The nice aspect of this starting decomposition is that the properties \autoref{lma:partition-a} and \autoref{lma:partition-b} are automatically satisfied.
 
-	\begin{intuition}[Optimistism]
-		The algorithm starts with the trivial decomposition of \(S\) into singletons. The nice aspect of this starting decomposition is that the first two properties are automatically satisfied. We can then check if the third property is also satisfied. If it is, then we got lucky, and we're done!
-	\end{intuition}
+	\begin{note}
+		Property \autoref{lma:partition-c} can be checked efficiently, and if we got lucky to satisfy it, we're done!
+	\end{note}
 
-	Of course this is too optimistic. What the algorithm actually does is to maintain a current partition that satisfies the first two properties. Let this partition be \(\mathcal{P} = \{ H_i \} _{i=1}^{p}\). It then checks if \(S\) satisfies the desired third property for this partition:
-	\begin{itemize}
-		\item If it does, we're done.
-		\item Otherwise, it finds a \hyperref[prb:sparsest-cut]{sparse cut} \((a, B)\) of \(S\) since the \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} property fails to hold. It then uses the partition \((A, B)\) to compute another partition \(\mathcal{P} ^{\prime} \) such that once again, \(\mathcal{P} ^{\prime} \) satisfies the first two properties.
-	\end{itemize}
-	\begin{intuition}
-		The upshot is that, we can make sure it's making progress by ensuring that the total number of inter-cluster edges in \(\mathcal{P} ^{\prime} \) is strictly less than the inter-cluster edges in \(\mathcal{P} \).\footnote{The algorithm is only guaranteed to reduce the number of inter cluster edges by one, so this is the reason for the dependence of the running time on \(\sum_{e \in E} c(e)\).} This is the crux of the proof.
-	\end{intuition}
+	Of course this is too optimistic. What the algorithm actually does is to maintain a current partition that satisfies the properties \autoref{lma:partition-a} and \autoref{lma:partition-b}. Let this partition be \(\mathcal{P} = \{ H_i \} _{i=1}^{p}\). It first checks if \(S\) satisfies property \autoref{lma:partition-c} for \(\mathcal{P} \). If it does, we're done. Otherwise, it finds a \hyperref[prb:non-uniform-sparsest-cut]{sparse cut} \((A, B)\) of \(S\) w.r.t.\ \(\pi ^{\prime} \) as \(S\) is not \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedned}. It then uses the partition \((A, B)\) to compute another partition \(\mathcal{P} ^{\prime} \) such that once again, \(\mathcal{P} ^{\prime} \) satisfies the properties \autoref{lma:partition-a} and \autoref{lma:partition-b}.
+
+	\begin{note}
+		We make sure it's making progress by ensuring that the total number of inter-cluster edges in \(\mathcal{P} ^{\prime} \) is strictly less than the inter-cluster edges in \(\mathcal{P} \).\footnote{The algorithm is only guaranteed to reduce the number of inter cluster edges by one, so this is the reason for the dependence of the running time on \(\sum_{e \in E} c(e)\).} This is the crux of the proof.
+	\end{note}
 
 	Thus, the algorithm can repeat this process, and it is guaranteed to terminate with a partition that satisfies all three properties.
 \end{answer}
@@ -120,7 +160,7 @@ Suppose we have such an algorithm. Then the top-down recursive algorithm is stra
 Now, we need to describe how to compute the new partition \(\mathcal{P} ^{\prime} \) from \(\mathcal{P} \). We develop some intuition before giving a formal description.
 
 \begin{intuition}
-	Given that \((A, B)\) is a \hyperref[prb:sparsest-cut]{sparse cut} for the \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} condition, it means that the number of edges crossing \(A\) is too small in comparison to \(\pi ^{\prime} (A)\), i.e., the total number of inter-cluster edges in the current decomposition and the total number of external edges. Since \(S\) satisfy the \hyperref[def:precondition]{precondition}, it is already \hyperref[def:boundary-well-linked]{\(1 / \lambda \)-boundary-well-linked}. Thus, the reason we have a \hyperref[prb:sparsest-cut]{sparse cut} is that there are too many inter-cluster edges inside \(A\) due to the current partition \(\mathcal{P} \).
+	Given that \((A, B)\) is a \hyperref[prb:non-uniform-sparsest-cut]{sparse cut} for the \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} condition, it means that the number of edges crossing \(A\) is too small in comparison to \(\pi ^{\prime} (A)\), i.e., the total number of inter-cluster edges in the current decomposition and the total number of external edges. Since \(S\) satisfy the \hyperref[def:precondition]{precondition}, it is already \hyperref[def:boundary-well-linked]{\(1 / \lambda \)-boundary-well-linked}. Thus, the reason we have a \hyperref[prb:non-uniform-sparsest-cut]{sparse cut} is that there are too many inter-cluster edges inside \(A\) due to the current partition \(\mathcal{P} \).
 
 	Suppose we get lucky and \(A\) is the union of some sub-collection of clusters from \(\mathcal{P} \). Then it makes sense to merge all the clusters in \(A\) and make \(A\) the new cluster since it reduces the number of inter-cluster edges. But this new cluster \(A\) may not satisfy the \hyperref[def:precondition]{precondition}, but we can use \hyperref[algo:assure-precondition]{assure precondition} on \(A\) to partition it into clusters that satisfy the \hyperref[def:precondition]{precondition}.
 
@@ -128,12 +168,16 @@ Now, we need to describe how to compute the new partition \(\mathcal{P} ^{\prime
 		We will introduce new inter-cluster edges in this process, but not too many.
 	\end{remark}
 
-	Since \(A\) may not be a clean union of current clusters, the algorithm employs a simple heuristic to find a union of existing clusters: it takes the union of all clusters that have at least \(3 / 4\) of their vertices inside \(A\). The main technical claim is to show that this works.\footnote{It may not be clear at this stage that \(\operatorname{round}(A) \) is non-empty!}
-\end{intuition}
+	Since \(A\) may not be a clean union of current clusters, the algorithm employs a simple heuristic to find a union of existing clusters: it takes the union of all clusters that have at least \(3 / 4\) of their vertices inside \(A\).
 
-\begin{notation}
-	Such a heuristic is called \(\operatorname{round}(A) \)~\cite{abraham2008nearly}.
-\end{notation}
+	\begin{figure}[H]
+		\centering
+		\incfig{partition}
+		\caption{The algorithm should first find a \hyperref[prb:non-uniform-sparsest-cut]{sparse cut} \((A, B)\) if the current decomposition does not satisfy the desired \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} property. It converts \(A\) to a set \(U^{\ast} \) that is a union of existing clusters. It then uses \hyperref[algo:assure-precondition]{assure precondition} to find new clusters within \(U^{\ast} \) that satisfy the \hyperref[def:precondition]{precondition}. Note how new inter-cluster edges are introduced in the last step.}
+		\label{fig:partition}
+	\end{figure}
+	Such a heuristic is called the \emph{rounding step}, which we denote as \(U^{\ast} = \operatorname{round}(A) \)~\cite{abraham2008nearly}. While intuitive, the main technical difficulty is to show that this works.\footnote{It may not be clear at this stage that \(\operatorname{round}(A) \) is non-empty!}
+\end{intuition}
 
 We now formally describe the algorithm.
 
@@ -150,31 +194,86 @@ We now formally describe the algorithm.
 	\(\mathcal{P} \gets \{ \{ v \} \colon v \in S \} \)\;
 	\;
 	\For(\Comment*[f]{Ordered pair}){\((u, v) \in V \times V\), \(u \neq v\)}{
-		\(D(u, v)\gets \pi _S(u) / \lvert S \rvert \)\;
+		\(D(u, v)\gets \pi ^{\prime} _S(u) / \lvert S \rvert \)\;
 	}
 	\;
 	\While(\Comment*[f]{Via flow computation}){\(S\) is not \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-partition-well-linkedness} w.r.t.\ \(\mathcal{P} \)}{
 		\(\big((A, B), \psi \big) \gets\)\SparsestCut{\(G[S]\), \(H = (V, D)\)}\Comment*[r]{\(\lvert A \rvert \leq \lvert B \rvert \), \(\psi \leq \sigma \alpha \)}
 		\(U^{\ast} \gets \varnothing \)\;
-		\For(){\(R_i \in \mathcal{P} \)}{
+		\For(\Comment*[f]{Compute \(\operatorname{round}(A)\)}){\(R_i \in \mathcal{P} \)}{
 			\If(){\(\lvert R_i \cap A \rvert > 3 \lvert R_i \rvert / 4\)}{
 				\(U^{\ast} \gets U^{\ast} \cup R_i\)\;
 				\(\mathcal{P} \gets \mathcal{P} - \{ R_i \} \)\;
 			}
 		}
-		\(\mathcal{Q} \gets\)\AssurePrecondition{\(G\), \(U^{\ast} \)}\;
-		\(\mathcal{P} \gets \mathcal{P} \cup \mathcal{Q} - \{U^{\ast} \}\)\;
+		\(\mathcal{Q} \gets\)\AssurePrecondition{\(G\), \(U^{\ast} \)}\label{algo:partition-assure-precondition}\;
+		\(\mathcal{P} \gets \mathcal{P} \cup \mathcal{Q} - \{U^{\ast} \}\)\label{algo:partition-new-partition}\;
 	}
 	\Return{\(\mathcal{P} \)}\;
 \end{algorithm}
 
-We see that \hyperref[algo:partition]{partition} starts with the partition consisting of the singletons and either terminates or updates the partition. We claim that it maintains the first two properties of \autoref{lma:partition} for the partition at the start of each iteration. And clearly, when it terminates, we see that it satisfies the third property of \autoref{lma:partition} as well since it explicitly checks for it. The initial partition satisfies the first two properties of \autoref{lma:partition}, so we only need to show that this is maintained. If \autoref{algo:partition} does not terminate, it computes \(U^{\ast} \) by taking the union of some existing clusters and then uses \hyperref[algo:assure-precondition]{assure precondition} to cluster it.
+To summarize, \hyperref[algo:partition]{Partition} starts with the partition consisting of the singletons and either terminates or updates the partition. When \autoref{algo:partition} does not terminate, it then computes \(U^{\ast} \) by taking the union of some existing clusters and then uses \hyperref[algo:assure-precondition]{assure precondition} to re-cluster it. We now prove \autoref{lma:partition}, i.e., the formal guarantee of the \hyperref[algo:partition]{partition algorithm}.
 
-We first show that \(\lvert U^{\ast} \rvert \leq 2 \lvert R \rvert / 3\).
-\begin{lemma}
-	Suppose \(\mathcal{P} \) fails the \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} property. Let \(U^{\ast} \) be the union of clusters that have large intersection with \(A\). Then \(\lvert U^{\ast} \rvert \leq 2 \lvert R \rvert / 3\).
-\end{lemma}
-\begin{proof}
-	Since \(\lvert A \rvert \leq \lvert R \rvert / 2\), and we only include in \(U^{\ast} \) clusters that have large intersection with \(A\), and they satisfy the first property of \autoref{lma:partition} previously.
+\begin{proof}[Proof of \autoref{lma:partition}]
+	Firstly, when \hyperref[algo:partition]{partition} terminates, the output clearly satisfies property \autoref{lma:partition-c} as well since it explicitly checks for it. Hence, we will show that it maintains the properties \autoref{lma:partition-a} and \autoref{lma:partition-b} for the partition at the start of each iteration. The initial partition satisfies the properties \autoref{lma:partition-a} and \autoref{lma:partition-b}, so we only need to show that this is maintained. First, we observe the following.
+
+	\begin{claim}
+		Suppose \(\mathcal{P} \) fails the \hyperref[def:partition-and-boundary-well-linked]{partition-well-linkedness} property. Let \(U^{\ast} \) be the union of clusters that have large intersection with \(A\). Then \(\lvert U^{\ast} \rvert \leq 2 \lvert R \rvert / 3\), i.e., property \autoref{lma:partition-a} is maintained by \hyperref[algo:partition]{partition}.
+	\end{claim}
+	\begin{explanation}
+		Since \(\lvert A \rvert \leq \lvert R \rvert / 2\), and we only include in \(U^{\ast} \) clusters that have large intersection with \(A\), and they satisfy property \autoref{lma:partition-a} previously.
+	\end{explanation}
+	Next, since we run \hyperref[algo:assure-precondition]{assure precondition} on \(U^{\ast} \) (\autoref{algo:partition-assure-precondition}), the resulting sub-clusters \(\mathcal{Q} \) satisfy the \hyperref[def:precondition]{precondition} and their size can only decrease. Since the clusters outside \(U^{\ast} \) are not touched, and they already satisfied the properties, thus, \hyperref[algo:partition]{partition} indeed maintains the invariant for \(\mathcal{P} \) such that each cluster is not too big and that is satisfies the \hyperref[def:precondition]{precondition}, i.e., properties \autoref{lma:partition-a} and \autoref{lma:partition-b}. Hence, the remaining part is to ensure that \hyperref[algo:partition]{partition} is efficient.
+
+	The main technical part that ensures termination is the following, which relates the \hyperref[def:sparsity]{sparsity} of the cut \((A, B)\) with the \hyperref[def:sparsity]{sparsity} of the cut \(U^{\ast} \).
+
+	\begin{claim}
+		Given a \hyperref[prb:non-uniform-sparsest-cut]{sparse cut} \((A, B)\) w.r.t.\ \(\pi ^{\prime} \) for the current \(\mathcal{P} \) and \(U^{\ast} \) outputted by \hyperref[algo:partition]{partition},
+		\[
+			\frac{c(\delta _G(U^{\ast} ))}{\pi ^{\prime} (U^{\ast} )}
+			\leq 4 \lambda \frac{c(A, B)}{\pi ^{\prime} (A)}.
+		\]
+		In other words, converting \(A\) to a union of the existing clusters costs a factor \(4 \lambda \) in the \hyperref[def:sparsity]{sparsity}.
+	\end{claim}
+	\begin{explanation}
+		\todo{Not done yet}
+	\end{explanation}
+
+	Now, since \((A, B)\) is a \hyperref[prb:non-uniform-sparsest-cut]{sparse cut} with \hyperref[def:sparsity]{sparsity} at most \(\sigma \alpha \),
+	\[
+		\frac{c(A, B)}{\pi ^{\prime} (A)}
+		\leq \sigma \alpha
+		\leq \frac{1}{24\lambda }.
+	\]
+	Combined with the claim, we have \(c(\delta _G(U^{\ast} )) \leq \pi ^{\prime} (U^{\ast} ) / 6\). We now see how to use this to prove termination of \hyperref[algo:partition]{partition}. In particular, we prove that \hyperref[algo:partition]{partition} terminates in time polynomial in \(\lvert S \rvert \) and the maximum integer edge capacity \(\max _{e \in E} c(e)\).
+
+	Let \(E(\mathcal{P} ) \coloneqq \{ uv \in E  \mid u, v \in S \text{ and } u, v \text{ in different clusters} \} \) be the set of inter-cluster edges induced by the partition \(\mathcal{P} \). Observe that since we count each inter-cluster edge twice and the edges leaving \(S\) to outside once,
+	\[
+		\pi ^{\prime} (S)
+		= 2c(E(\mathcal{P} ))+ c(\delta _G(S))
+	\]
+	Let \(\mathcal{P} ^{\prime} \) be the partition at the end of the iteration (\autoref{algo:partition-new-partition}). It suffices to prove that the total capacity of \(E(\mathcal{P} ^{\prime} )\) is strictly less than that of \(E(\mathcal{P} )\). We first recall how \(\mathcal{P} ^{\prime} \) differs from \(\mathcal{P} \):
+	\begin{prev}
+		We remove all clusters of \(\mathcal{P} \) contained inside \(U^{\ast} \) and add clusters of the new partition \(\mathcal{Q} \) of \(S\), obtained by running \hyperref[algo:assure-precondition]{assure precondition} on \(U^{\ast} \).
+	\end{prev}
+
+	\begin{claim}
+		Indeed, \(E(\mathcal{P} ^{\prime} ) < E(\mathcal{P} )\).
+	\end{claim}
+	\begin{explanation}
+		From \autoref{lma:assure-precondition} \autoref{lma:assure-precondition-b}, we have
+		\[
+			\sum_{S^{\prime} \in \mathcal{Q} } c(\delta _G(S^{\prime} ))
+			\leq 2 c(\delta _G(U^{\ast} )).
+		\]
+		Let \(\pi ^{\prime\prime} \colon S \to \mathbb{R} _+\) be the new weights induced by the partition \(\mathcal{P} ^{\prime} \) that counts the inter-cluster and outgoing edges of \(\mathcal{P} ^{\prime} \). We see that by counting, we have
+		\[
+			\pi ^{\prime\prime} (S)
+			= \pi ^{\prime} (S) - \pi ^{\prime} (U^{\ast} ) + \sum_{S^{\prime} \in \mathcal{Q} } c(\delta _G(S^{\prime} ))
+			\leq \pi ^{\prime} (S) - \pi ^{\prime} (U^{\ast} ) + 2c (\delta _G(U^{\ast} ))
+			< \pi ^{\prime} (S),
+		\]
+		where the last inequality follows from the implication of the previous claim, i.e., \(\pi ^{\prime} (U^{\ast} ) \geq 6c(\delta _G(U^{\ast} ))\), and \(c(\delta _G(U^{\ast} )) > 0\). Finally, from the same counting argument as before, \(\pi ^{\prime\prime} (S) = 2c(E(\mathcal{P} ^{\prime} )) + c(\delta _G(S))\), we see that \(E(\mathcal{P} ^{\prime} ) < E(\mathcal{P} )\).
+	\end{explanation}
+	Hence, the number of inter-cluster edges reduces in each iteration, and we're done.
 \end{proof}
-

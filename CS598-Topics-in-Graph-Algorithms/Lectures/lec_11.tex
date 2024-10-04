@@ -39,13 +39,13 @@ Any \hyperref[def:laminary]{laminary} family over \(V\), augmented with the enti
 	A \hyperref[def:cut-tree]{cut-tree} has exactly \(n\) edges, so it's keeping track only a very small number of cut values.
 \end{remark}
 
-Surprisingly, every graph admits a \hyperref[def:cut-tree]{cut-tree} which can approximate all \hyperref[prb:sparsest-cut]{sparse cuts} in the graph. To formalize the statement, we start with the following simple observation.
+Surprisingly, every graph admits a \hyperref[def:cut-tree]{cut-tree} which can approximate all \hyperref[prb:non-uniform-sparsest-cut]{sparse cuts} in the graph. To formalize the statement, we start with the following simple observation.
 
 \begin{claim}
 	Let \(G = (V, E)\) be a graph with edge capacities \(c \colon E \to \mathbb{R} _+\). Suppose \(D \in \mathbb{R} _+^{V \times V} \in \mathcal{D} _G\) is a non-negative demand matrix that is routable in \(G\). Then, it is routable in any \hyperref[def:cut-tree]{cut-tree} \(T\) of \(G\) (\(D\) is now demand matrix over the leaves of \(T\)).
 \end{claim}
 \begin{explanation}
-	Recall that a demand matrix is routable in a capacitated tree if and only if it satisfies the cut condition. The only \hyperref[prb:sparsest-cut]{sparse cuts} of interest in a tree are the single edge cuts. If \(D\) is routable in \(G\), then for any cut \((S, V\setminus S)\) we have \(D(S, V\setminus S) \leq c(S, V\setminus S)\) in \(G\). Since \(T\) is a \hyperref[def:cut-tree]{cut-tree}, and \(D\) is only between leaves of \(T\), each edge \(v_t, v_{t^{\prime} }\) in \(E_T\) corresponds to the cut \((S_{v_t}, V\setminus S_{v_t})\) in \(G\) and the capacity of the edge in \(tis equal \to  fmc(S, V\setminus S)\). Thus, \(D\) satisfies the cut condition in \(T\), hence is routable in \(T\).
+	Recall that a demand matrix is routable in a capacitated tree if and only if it satisfies the cut condition. The only \hyperref[prb:non-uniform-sparsest-cut]{sparse cuts} of interest in a tree are the single edge cuts. If \(D\) is routable in \(G\), then for any cut \((S, V\setminus S)\) we have \(D(S, V\setminus S) \leq c(S, V\setminus S)\) in \(G\). Since \(T\) is a \hyperref[def:cut-tree]{cut-tree}, and \(D\) is only between leaves of \(T\), each edge \(v_t, v_{t^{\prime} }\) in \(E_T\) corresponds to the cut \((S_{v_t}, V\setminus S_{v_t})\) in \(G\) and the capacity of the edge in \(tis equal \to  fmc(S, V\setminus S)\). Thus, \(D\) satisfies the cut condition in \(T\), hence is routable in \(T\).
 \end{explanation}
 
 Now, we're ready to state the result.
@@ -58,7 +58,7 @@ Now, we're ready to state the result.
 	\hyperref[thm:hierarchical-expander-decomposition]{Hierarchical expander decomposition} has found many applications in fast graph algorithms recently~\cite{goranci2021expander}.
 \end{note}
 
-In other words, there is a very compact data structure, i.e., the \hyperref[def:cut-tree]{cut-tree}, that captures \emph{all} the relevant cuts for routing (in particular, the \hyperref[prb:sparsest-cut]{sparse cuts}) in \(G\) approximately within a poly-logarithmic factor. The first proof was based on finding \hyperref[prb:sparsest-cut]{sparsest cuts} and hence did not lead to an efficient algorithm~\cite{racke2002minimizing}. Soon after, efficient algorithm~\cite{bienkowski2003practical} with an improved \hyperref[def:congestion]{congestion} bound of \(O(\log ^2 n \log \log n)\)~\cite{harrelson2003polynomial}, which is still the beset known.
+In other words, there is a very compact data structure, i.e., the \hyperref[def:cut-tree]{cut-tree}, that captures \emph{all} the relevant cuts for routing (in particular, the \hyperref[prb:non-uniform-sparsest-cut]{sparse cuts}) in \(G\) approximately within a poly-logarithmic factor. The first proof was based on finding \hyperref[prb:non-uniform-sparsest-cut]{sparsest cuts} and hence did not lead to an efficient algorithm~\cite{racke2002minimizing}. Soon after, efficient algorithm~\cite{bienkowski2003practical} with an improved \hyperref[def:congestion]{congestion} bound of \(O(\log ^2 n \log \log n)\)~\cite{harrelson2003polynomial}, which is still the beset known.
 
 We will give a proof outline of the construction of~\cite{bienkowski2003practical} that achieves a weaker \hyperref[def:congestion]{congestion} bound of \(O(\log ^4 n)\). If one wants to approximate only cuts but not the routing aspect, then an improved bound of \(O(\log ^{3 / 2} n \log \log n)\) is known~\cite{racke2014improved}.
 
@@ -93,7 +93,7 @@ Thus, if \(\phi = \Omega (1)\), the set of routable demand matrices can be appro
 What should one do if \(G\) does not have good \hyperref[def:conductance]{conductance}?
 
 \begin{intuition}
-	A natural approach is to decompose the graph into well-connected pieces, i.e., subgraphs with high \hyperref[def:conductance]{conductance}, along \hyperref[prb:sparsest-cut]{sparse cuts}.
+	A natural approach is to decompose the graph into well-connected pieces, i.e., subgraphs with high \hyperref[def:conductance]{conductance}, along \hyperref[prb:non-uniform-sparsest-cut]{sparse cuts}.
 \end{intuition}
 
 The question is how to. It is also not difficult to see that decomposing the graph into one or a few levels is not sufficient by looking at the grid graph.
@@ -224,7 +224,6 @@ Now that we have set up the definitions, the first part of the proof is to under
 		\item For all demand pairs \((a, b)\) such that \(H\) is the meetup cluster, \(H\) has to ensure that the flow for the pairs which have reached the children's boundary are exchanged in the graph \(G[S] = H\).
 		\item For all demand pairs \((a, b)\) for which \(H\) is a transition cluster (meaning that their least common ancestor is above \(H\) in \(T\)), their flow has reached exactly one of the children of \(H\) inductively. \(H\) needs to redistribute this flow using edges only in \(G[S] = H\) such that for each such demand pair \((a, b)\), the flow is distributed over nodes \(u \in S\) in proportion to \(\pi _S(u)\).
 	\end{itemize}
-	See \autoref{fig:hierarchical-expander-decomposition-characterization} for an illustration.
 	\begin{figure}[H]
 		\centering
 		\incfig{hierarchical-expander-decomposition-characterization}
@@ -244,8 +243,8 @@ Now that we have set up the definitions, the first part of the proof is to under
 	For the base case of the induction, we see that the flow originates at the singleton leaves which is its own boundary and hence there is nothing to do there. As we argued earlier, the total \hyperref[def:congestion]{congestion} on an edge is the union of the \hyperref[def:congestion]{congestions} of all the clusters it participates in, and an edge participates in at most \(h\) clusters, which proves the result.
 \end{proof}
 
-The power of \autoref{lma:hierarchical-expander-decomposition-characterization} is that it has essentially captures what we need from the \hyperref[def:hierarchical-decomposition]{hierarchical decomposition}. We will see a construction that guarantees that \(h = O(\log n)\) and \(\alpha = \Omega (1 / \log ^3 n)\), and this gives us a \hyperref[def:cut-tree]{cut-tree} that is \(O(\log ^4 n)\)-approximate, proving (a weaker version of) \autoref{thm:hierarchical-expander-decomposition}.
-
 \begin{remark}
 	We can also construct an \hyperref[def:oblivious-routing-scheme]{oblivious routing} from \autoref{lma:hierarchical-expander-decomposition-characterization} as well, but we will not do so to keep the presentation simpler.
 \end{remark}
+
+The power of \autoref{lma:hierarchical-expander-decomposition-characterization} is that it has essentially captures what we need from the \hyperref[def:hierarchical-decomposition]{hierarchical decomposition}. We will see a construction that guarantees that \(h = O(\log n)\) and \(\alpha = \Omega (1 / \log ^3 n)\), and this gives us a \hyperref[def:cut-tree]{cut-tree} that is \(O(\log ^4 n)\)-approximate, proving (a weaker version of) \autoref{thm:hierarchical-expander-decomposition}.

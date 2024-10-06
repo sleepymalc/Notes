@@ -18,7 +18,7 @@ A simple algorithm for the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} is th
 Quite recently, a simple yet striking approach that computes the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using only \(O(\log ^3 n)\) \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} computations is developed~\cite{li2020deterministic}, which is based on \hyperref[prb:isolating-cut]{isolating cut}.
 
 \subsubsection{Submodular Function}
-The main interest here, i.e., solving \hyperref[prb:isolating-cut]{isolating cut}, will be essentially based on properties of symmetric \hyperref[def:submodular]{submodular functions}. Although we can prove various properties by appealing to only graph theoretic facts, it's useful to see the proofs via \hyperref[def:submodular]{submodularity}. Here, we give some background, and specifically, for the cut function of graphs.
+The main interest here, i.e., solving \hyperref[prb:isolating-cut]{isolating cut}, will be essentially based on properties of \hyperref[def:symmetric]{symmetric} \hyperref[def:submodular]{submodular functions}. Although we can prove various properties by appealing to first principles, it's useful to see the proofs via \hyperref[def:submodular]{submodularity}. Here, we give some necessarily background.
 
 \begin{definition*}
 	Given a finite ground set \(V\), consider a real-valued set function \(f \colon 2^V \to \mathbb{R} \).
@@ -77,10 +77,10 @@ One of the reason that \hyperref[def:submodular]{submodularity} is important for
 	where \(E(X, Y)\) is the set of edges crossing \(X\) and \(Y\) for some \(X, Y \subseteq V\).
 \end{explanation}
 
-The above argument extends naturally to non-negative capacitied graph. Moreover, this is also true for directed graph.
+The above argument extends naturally to non-negative capacitied graphs and directed graphs.
 
 \begin{eg}
-	Let \(G=(V, E)\) be a directed graph. \(\lvert \delta ^{+} (\cdot) \rvert \), and hence by symmetry \(\lvert \delta ^{-} (\cdot)\rvert \) are \hyperref[def:submodular]{submodular}.
+	For a directed graph, \(\lvert \delta ^{+} (\cdot) \rvert \) is \hyperref[def:submodular]{submodular} (so does \(\lvert \delta ^{-} (\cdot)\rvert \) by symmetry).
 \end{eg}
 
 We're also interested in the following property.
@@ -121,12 +121,8 @@ The above proof applies to directed graph as well since we only used \hyperref[d
 We can now formally introduce the \hyperref[prb:isolating-cut]{isolating cut} problem.
 
 \begin{problem}[Isolating cut]\label{prb:isolating-cut}
-Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \) and a set \(T \subseteq V\) of terminals. The \emph{\(t_i\)-isolating cut} problem aims to find a cut \((S_i, V\setminus S_i)\) such that \(t_i \in S_i\) and \(t_j \notin S_i\) (i.e., \(t_j \in V \setminus S_i\)) for all \(j \neq i\).
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \) and a set \(T \subseteq V\) of terminals. The \emph{\(t_i\)-isolating cut} problem aims to find a cut \((S_i, V\setminus S_i)\) such that \(t_i \in S_i\) and \(t_j \notin S_i\) (i.e., \(t_j \in V \setminus S_i\)) for all \(j \neq i\), i.e., the cut isolates \(t_i\) from the rest of the terminals.
 \end{problem}
-
-\begin{intuition}
-	In other words, the cut isolates \(t_i\) from the rest of the terminals.
-\end{intuition}
 
 The minimum capacity \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} can be found by a single max-flow computation: by shrinking the terminals in \(T - t_i\) into a single vertex \(s\) and computing the \hyperref[prb:s-t-min-cut]{\(s\)-\(t_i\) min-cut}. Thus, naively, computing all \hyperref[prb:isolating-cut]{isolating cuts} require \(k\) max-flow computations. The upshot is that this can be done in only \(O(\log k)\) max-flow. Before we describe the algorithm, we first note that from \hyperref[def:submodular]{submodularity}, we also have a similar structural result, just like \autoref{col:union-intersection-min-cut}.
 
@@ -246,9 +242,13 @@ The basic intuition is the following.
 	If we can sample exactly one terminal in one side of the \hyperref[prb:Steiner-min-cut]{Steiner min-cut}, then we can simply use the \hyperref[prb:isolating-cut]{isolating cut} to recover the \hyperref[prb:Steiner-min-cut]{Steiner min-cut}.
 \end{intuition}
 
-Say we know \(k_1\). We can sample each terminal in \(T\) independently with probability \(1 / k_1\) to obtain \(T^{\prime} \subseteq T\) such that with constant probability, \(\lvert T^{\prime} \cap T_1 \rvert = 1\) and \(\lvert T^{\prime} \cap T_2 \rvert \geq 1\) (recall \(k_1 \leq k_2\)). Suppose \(T^{\prime} \) satisfies these properties and let \(T^{\prime} \cap T_1 = \{ t_i \} \). Then, \((S, V\setminus S)\) is a minimum cost \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} w.r.t.\ \(T^{\prime} \). Hence, by computing \hyperref[prb:isolating-cut]{\(t_i\)-isolating cuts} for all \(t_i \in T^{\prime} \) and choosing the cheapest one identifies the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} for \(T\).
+Say we know \(k_1\). We can sample each terminal in \(T\) independently with probability \(1 / k_1\) to obtain \(T^{\prime} \subseteq T\) such that with constant probability, \(\lvert T^{\prime} \cap T_1 \rvert = 1\) and \(\lvert T^{\prime} \cap T_2 \rvert \geq 1\) (recall \(k_1 \leq k_2\)). Suppose \(T^{\prime} \) satisfies these properties and let \(T^{\prime} \cap T_1 = \{ t_i \} \). Then, \((S, V\setminus S)\) is a minimum cost \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} w.r.t.\ \(T^{\prime} \). Hence, by computing \hyperref[prb:isolating-cut]{\(t_i\)-isolating cuts} for all \(t_i \in T^{\prime} \) and choosing the cheapest one identifies the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} for \(T\). The problem is that we don't know \(k_1\), and trying all possible values for \(k_1\) (from \(1\) to \(k / 2\)) will be too expensive.
 
-The problem is that we don't know \(k_1\), and trying all possible values for \(k_1\) (from \(1\) to \(k / 2\)) will be too expensive. The idea is that the above sampling procedure is robust: say if we sample with probability, say, \(1 / 2k_1\), everything still happens with constant probability. Hence, we only need to try \(k_i = 2^i\), i.e., \(O(\log k)\) different sampling probabilities.
+\begin{intuition}
+	The above sampling procedure is robust: if we sample with probability, say, \(1 / 2k_1\), everything still happens with constant probability. Hence, we only need to try \(k_i = 2^i\), i.e., \(O(\log k)\) different sampling probabilities.
+\end{intuition}
+
+We formally describe this algorithm as follows.
 
 \begin{algorithm}[H]\label{algo:Steiner-min-cut}
 	\DontPrintSemicolon{}
@@ -300,12 +300,12 @@ We now formally prove the robustness we have mentioned.
 \end{proof}
 
 \begin{theorem}
-	There is a randomized algorithm that given \(G=(V, E)\) and terminal set \(T \subseteq V\) with \(\lvert T \rvert = k\), outputs the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using in \(O(\log^2 k \log n)\) max-flow computations.\footnote{Again, potentially on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges each from \autoref{thm:isolating-min-cut}.}
+	There is a randomized algorithm that given \(G=(V, E)\) and terminal set \(T \subseteq V\) of size \(k\), outputs the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using \(O(\log^2 k \log n)\) max-flow computations on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges.
 \end{theorem}
 \begin{proof}
 	From \autoref{lma:algo:Steiner-min-cut}, \autoref{algo:Steiner-min-cut} successes with a constant probability. We further boost the overall success probability by rerunning \autoref{algo:Steiner-min-cut} \(\Theta (\log n)\) times. With \autoref{thm:isolating-min-cut}, this requires \(O(\log ^2k \log n)\) max-flow computations.
 \end{proof}
 
 \begin{remark}[Deterministic algorithm]
-	Li and Panigraphy~\cite{li2020deterministic} also developed deterministic \hyperref[prb:global-min-cut]{min-cut} and \hyperref[prb:Steiner-min-cut]{Steiner min-cut} algorithms using additional ideas based on expander decomposition.
+	Li and Panigraphy~\cite{li2020deterministic} also developed deterministic \hyperref[prb:global-min-cut]{min-cut} and \hyperref[prb:Steiner-min-cut]{Steiner min-cut} algorithms using additional ideas based on \hyperref[def:expander-decomposition]{expander decomposition}.
 \end{remark}

@@ -1,16 +1,16 @@
 \chapter{Introduction}
 \lecture{1}{27 Aug.\ 11:00}{Overview}
-Throughout the course, we consider a graph \(G=(V, E)\) such that \(n \coloneqq \lvert V \rvert \) and \(m\coloneqq \lvert E \rvert \). Let's see some examples about the recent breakthroughs.
+Throughout the course, we consider a graph \(G=(V, E)\) such that \(n \coloneqq \lvert V \rvert \) and \(m\coloneqq \lvert E \rvert \).
 
-\begin{eg}[Shortest paths with negative length]
-	The classical algorithm runs in \(O(mn)\). In 2022, [BNW]\todo{cite} came up with an algorithm \(O(m \log ^3 n C)\), where \(C\) is the largest absolute value of the \emph{integer} length.
+% \begin{eg}[Shortest paths with negative length]
+% 	The classical algorithm runs in \(O(mn)\). In 2022, [BNW]\todo{cite} came up with an algorithm \(O(m \log ^3 n C)\), where \(C\) is the largest absolute value of the \emph{integer} length.
 
-	This is not a strongly polynomial time algorithm. In 2024 [Fineman]\todo{cite} come up with \(\widetilde{O} (m n^{8 / 9})\), and soon after 2024 [HJQ]\todo{cite} improve this to \(\widetilde{O} (m n^{4 / 5})\).
-\end{eg}
+% 	This is not a strongly polynomial time algorithm. In 2024 [Fineman]\todo{cite} come up with \(\widetilde{O} (m n^{8 / 9})\), and soon after 2024 [HJQ]\todo{cite} improve this to \(\widetilde{O} (m n^{4 / 5})\).
+% \end{eg}
 
-\begin{eg}[\(s\)-\(t\) max-flow]
-	The tradition running time is \(O(mn \log m / n)\), and it's later improved to be \(O(m \sqrt{n} \log n C)\). Recently, [Chen et-al]\todo{cite} improve to \(O(m^{1 + o(1)})\), which is almost-linear.\footnote{This can be also applied to min-cost flow and quadratic-cost flow.}
-\end{eg}
+% \begin{eg}[\(s\)-\(t\) max-flow]
+% 	The tradition running time is \(O(mn \log m / n)\), and it's later improved to be \(O(m \sqrt{n} \log n C)\). Recently, [Chen et-al]\todo{cite} improve to \(O(m^{1 + o(1)})\), which is almost-linear.\footnote{This can be also applied to min-cost flow and quadratic-cost flow.}
+% \end{eg}
 
 \section{Minimum Spanning Tree}
 Finding the minimum cost \hyperref[def:spanning-tree]{spanning tree} (MST) in a connected graph is a basic algorithmic problem that has been long-studied. We introduce the problem formally.
@@ -29,24 +29,22 @@ Given a connected graph \(G=(V, E)\) with edge capacity \(c \colon E \to \mathbb
 	The edge costs need not be positive, but we can make them positive by adding a large number without affecting correctness.
 \end{remark}
 
-Standard algorithm that are covered in most undergraduate courses are \href{https://en.wikipedia.org/wiki/Kruskal%27s_algorithm}{Kruskal's algorithm}, \href{https://en.wikipedia.org/wiki/Prim%27s_algorithm}{Jarnik-Prim's (JP) algorithm},\footnote{This is typically attributed usually to Prim but first described by Jarnik} and (sometimes) \href{https://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm}{Borůvka's algorithm}. There are many algorithms for \hyperref[prb:MST]{MST} and their correctness relies on two simple rules (structural properties). The first one is about \hyperref[lma:cut-rule]{cuts}:
+Standard algorithm that are covered in most undergraduate courses are \href{https://en.wikipedia.org/wiki/Kruskal%27s_algorithm}{Kruskal's algorithm}, \href{https://en.wikipedia.org/wiki/Prim%27s_algorithm}{Jarnik-Prim's (JP) algorithm}, and (sometimes) \href{https://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm}{Borůvka's algorithm}. There are many algorithms for \hyperref[prb:MST]{MST} and their correctness relies on two simple rules (structural properties), for cut and cycle respectively:
 
 \begin{lemma}[Cut rule]\label{lma:cut-rule}
-	If \(e\) is a minimum cost edge in a cut \(\delta (S)\) for some \(S \subseteq V\), then \(e\) is in some \hyperref[prb:MST]{MST}. In particular, if \(e\) is the unique minimum cost edge in the cut, then \(e\) is in every \hyperref[prb:MST]{MST}.
+	If \(e\) is a minimum cost edge in a cut \(\delta (S)\) for some \(S \subseteq V\), then \(e\) is in some \hyperref[prb:MST]{MST}. In particular, if \(e\) is the unique minimum cost edge in the cut, \(e\) is in every \hyperref[prb:MST]{MST}.
 \end{lemma}
 
 \begin{definition}[Light]\label{def:light}
-	An edge \(e\) is \emph{light} or \emph{safe} if there exists a cut \(\delta (S)\) such that \(e\) is the cheapest cost edge crossing the cut. We also say that \(e\) is \emph{light} w.r.t.\ a set of edges \(F \subseteq E\) if \(e\) is light in \((V, F)\).
+	An edge \(e\) is \emph{light} or \emph{safe} if there exists a cut \(\delta (S)\) such that \(e\) is the cheapest edge crossing the cut. Moreover, \(e\) is \emph{light} w.r.t.\ a set of edges \(F \subseteq E\) if \(e\) is light in \((V, F)\).
 \end{definition}
 
-Another one is about \hyperref[lma:cycle-rule]{cycles}:
-
 \begin{lemma}[Cycle rule]\label{lma:cycle-rule}
-	If \(e\) is the highest cost edge in a cycle \(C\), then there exists an \hyperref[prb:MST]{MST} that does not contain \(e\). In particular, if \(e\) is the unique highest cost edge in \(C\), then \(e\) cannot be in any \hyperref[prb:MST]{MST}.
+	If \(e\) is the highest cost edge in a cycle \(C\), then there exists an \hyperref[prb:MST]{MST} that does not contain \(e\). In particular, if \(e\) is the unique highest cost edge in \(C\), \(e\) cannot be in any \hyperref[prb:MST]{MST}.
 \end{lemma}
 
 \begin{definition}[Heavy]\label{def:heavy}
-	An edge \(e\) is \emph{heavy} or \emph{unsafe} if there exists a cycle \(C\) such that \(e\) is the highest cost edge in \(C\). We also say that \(e\) is \emph{heavy} w.r.t.\ a set of edges \(F \subseteq E\) if \(e\) is heavy in \((V, F)\).
+	An edge \(e\) is \emph{heavy} or \emph{unsafe} if there exists a cycle \(C\) such that \(e\) is the highest cost edge in \(C\). Moreover, \(e\) is \emph{heavy} w.r.t.\ a set of edges \(F \subseteq E\) if \(e\) is heavy in \((V, F)\).
 \end{definition}
 
 \begin{corollary}
@@ -140,17 +138,13 @@ The algorithm collects all these edges, say \(F\), and adds them to the tree. It
 		\(\mathcal{S} ^{\prime} \gets \mathcal{S} \)\Comment*[r]{Make a copy}
 		\For(){\(S \in \mathcal{S} \)}{
 			\(e_S = (u, v) \gets \argmin_{e \in \delta (S)} c(e)\)\;
-			\(\mathcal{S}^{\prime} \gets \mathcal{S}^{\prime} - \{ S_u, S_v \} + S_u \cup S_v\)\label{algo:Boruvka-notation}\Comment*[r]{Merge (i.e., shrink)}
+			\(\mathcal{S}^{\prime} \gets \mathcal{S}^{\prime} - \{ S_u, S_v \} + S_u \cup S_v\)\footnote{Here, \(S_u\) and \(S_v\) both refer to \(S \coloneqq S_u \cup S_v\) later in the algorithm.}\Comment*[r]{Merge (i.e., shrink)}
 			\(F \gets F + e_S\)\Comment*[r]{Update the tree}
 		}
 		\(\mathcal{S} \gets \mathcal{S} ^{\prime} \)\Comment*[r]{Update \(\mathcal{S} \)}
 	}
 	\Return{\((V , F)\)}\;
 \end{algorithm}
-
-\begin{notation}
-	In \autoref{algo:Boruvka-notation}, \(S_u\) and \(S_v\) both refer to \(S \coloneqq S_u \cup S_v\) later in the algorithm.
-\end{notation}
 
 \begin{theorem}\label{thm:Boruvka}
 	\hyperref[algo:Boruvka]{Borůvka's algorithm} takes \(O(m \log n)\).
@@ -160,12 +154,12 @@ The algorithm collects all these edges, say \(F\), and adds them to the tree. It
 \end{proof}
 
 \subsection{Faster Algorithms}
-A natural question is whether there is a linear-time, i.e., \(O(m)\), \hyperref[prb:MST]{MST} algorithm. The following is the history of fast \hyperref[prb:MST]{MST} algorithms:
+A natural question is whether there is a linear-time \hyperref[prb:MST]{MST} algorithm. A brief history of this line:
 \begin{itemize}
 	\item Very early on, Yao, in 1975, obtained an algorithm that ran in \(O(m \log \log n)\)\cite{yao1975log}, which leverages the idea developed in 1974 for the linear-time Selection algorithm.
 	\item In 1987, Fredman and Tarjan~\cite{fredman1987fibonacci} developed the Fibonacci heaps and give an \hyperref[prb:MST]{MST} algorithm which runs in \(O(m \log ^{\ast} n)\).\footnote{Formally, it runs in \(O(m \beta (m, n))\), where \(\beta (m, n)\) is the minimum value of \(i\) such that \(\log^{(i)} n \leq m / n\), where \(\log ^{(i)} n\) is the logarithmic function iterated \(i\) times. Since \(m \leq n^2\), \(\beta (m, n) \leq \log ^{\ast} n\).} This was further improved to \(O(m \log \log ^{\ast} n)\)~\cite{gabow1986efficient}.
-	\item Karger, Klein, and Tarjan~\cite{karger1995randomized} obtained a linear time randomized algorithm that will be the main topic of this lecture.
-	\item Chazelle's algorithm~\cite{chazelle2000minimum} that runs in \(O(m \alpha (m, n))\) is the fastest known deterministic algorithm.
+	\item Karger, Klein, and Tarjan~\cite{karger1995randomized} obtained a linear time randomized algorithm.
+	\item The fastest known deterministic algorithm runs in \(O(m \alpha (m, n))\)~\cite{chazelle2000minimum}.
 \end{itemize}
 
 \begin{note}
@@ -202,7 +196,7 @@ Here we briefly describe Fredman and Tarjan's algorithm~\cite{fredman1987fibonac
 	Suppose we run \hyperref[algo:Boruvka]{Borůvka's algorithm} for \(k\) phases and then run \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} once the number of nodes is reduced. We can see that the total run time is \(O(m k)\) for the \(k\) phases of \hyperref[algo:Boruvka]{Borůvka's algorithm}, and \(O(m + n / 2^k \log n / 2^k)\) for the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm} on the reduced graph. Thus, if we choose \(k = \log \log n\), we obtain a total run-time of \(O(m \log \log n)\).
 \end{intuition}
 
-Tarjan and Fredman obtained a more sophisticated scheme based on the \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}, but the basic idea is to reduce the number of vertices. The algorithm runs again in phases. We describe the first phase here.
+Tarjan and Fredman obtained a more sophisticated scheme based on \hyperref[algo:Jarnik-Prim]{Jarnik-Prim's algorithm}, where the basic idea is to reduce the number of vertices. The algorithm runs again in phases, and we describe the first phase here.
 
 \begin{intuition}[First phase]
 	Start growing the tree. If the heap gets too big, we stop.
@@ -277,7 +271,7 @@ The difficult part is to determine its runtime. We have the following.
 		To see why the assumption holds, consider the growth of a tree \(T^{\prime}\) in \autoref{algo:Fredman-Tarjan-I-grow}:
 		\begin{itemize}
 			\item If we stop \(T^{\prime}\) because heap size \(\lvert N(T^{\prime} ) \rvert \) exceeds \(t\), then each of the vertex in the heap is a witness to a unique edge incident to \(T^{\prime}\), hence the property holds.
-			\item If \(T^{\prime}\) merged with a previous tree, then the property holds because the previous tree already had the property and adding vertices can only increase the total degree of the component.
+			\item If \(T^{\prime}\) merged with a previous tree, the property holds because the previous tree already had the property and adding vertices only increases the total degree of the component.
 		\end{itemize}
 		The only reason the property may not hold is if \autoref{algo:Fredman-Tarjan-I-return} terminates a tree because all vertices are already included in it, but then that phase finishes the algorithm.
 	\end{explanation}
@@ -288,12 +282,5 @@ The difficult part is to determine its runtime. We have the following.
 		We want linear time in the \hyperref[algo:Fredman-Tarjan-I]{first phase}, i.e., \(n \log t\) to be no more than \(O(m)\), leading to \(t = 2^{2m / n}\). If we do this in every iteration, then this leads to \(O(m)\) time per iteration.
 	\end{intuition}
 
-	We now bound the number of iteration. Consider \(t_1 \coloneqq 2^{2m / n}\) and \(t_i \coloneqq 2^{2m / n_i}\),\footnote{Technically, we need to choose \(t_i \coloneqq 2^{\lceil 2m / n_i \rceil }\), but we will be a bit sloppy and ignore the ceilings here.} where \(n_i\) and \(m_i\) are the number of vertices and edges at the beginning of the \(i^{\text{th} }\) iteration, with \(m_1 = m\) and \(n_1 = n\). From the previous claim, \(n_{i+1} \leq 2m_i / t_i\), which gives
-	\[
-		t_{i+1}
-		= 2^{2m / n_{i+1}}
-		\geq 2^{\frac{2m}{2m_i / t_i}}
-		\geq 2^{t_i}.
-	\]
-	Thus, \(t_i\) is a power of twos with \(t_1 = 2^{2m / n}\), and the \hyperref[algo:Fredman-Tarjan]{Fredman-Tarjan's algorithm} stops if \(t_i \geq n\) since it will \hyperref[algo:Fredman-Tarjan-I]{grow} a single tree and finish. Thus, the algorithm needs at most \(\beta (m, n)\) iterations, giving the total time \(O(m \beta (m, n))\).
+	We now bound the number of iteration. Consider \(t_1 \coloneqq 2^{2m / n}\) and \(t_i \coloneqq 2^{2m / n_i}\),\footnote{Technically, we need to choose \(t_i \coloneqq 2^{\lceil 2m / n_i \rceil }\), but we will be a bit sloppy and ignore the ceilings here.} where \(n_i\) and \(m_i\) are the number of vertices and edges at the beginning of the \(i^{\text{th} }\) iteration, with \(m_1 = m\) and \(n_1 = n\). From the previous claim, \(n_{i+1} \leq 2m_i / t_i\), which gives \(t_{i+1} = 2^{2m / n_{i+1}} \geq 2^{\frac{2m}{2m_i / t_i}} \geq 2^{t_i}\). Thus, \(t_i\) is a power of twos with \(t_1 = 2^{2m / n}\), and the \hyperref[algo:Fredman-Tarjan]{Fredman-Tarjan's algorithm} stops if \(t_i \geq n\) since it will \hyperref[algo:Fredman-Tarjan-I]{grow} a single tree and finish. Thus, the algorithm needs at most \(\beta (m, n)\) iterations, giving the total time \(O(m \beta (m, n))\).
 \end{proof}

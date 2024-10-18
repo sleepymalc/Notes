@@ -43,7 +43,7 @@ Assuming we have the sub-routine from \autoref{thm:SSSP-sub-routine}, we can sol
 \begin{algorithm}[H]\label{algo:SSSP-scaling}
 	\DontPrintSemicolon{}
 	\caption{Scaling Algorithm for \hyperref[prb:SSSP]{SSSP}}
-	\KwData{A directed graph \(G = (V, E)\) with edge capacity \(w \colon V \to \mathbb{Z} \), source \(s \in V\)}
+	\KwData{A directed graph \(G = (V, E)\) with integral edge length \(w \colon V \to \mathbb{Z} \), source \(s \in V\)}
 	\KwResult{\hyperref[prb:SSSP]{SSSP} from the source \(s\)}
 	\SetKwFunction{SubRoutine}{\hyperref[thm:SSSP-sub-routine]{Sub-Routine}}
 	\SetKwFunction{Dijkstra}{Dijkstra}
@@ -99,7 +99,7 @@ The first fact is that if the graph induces a nice DAG, then we can find a good 
 	This works since for any \(u \to v\) in \(C_i\), change of \(u\) and \(v\)'s potential are the same, hence \(w (u, v)= w_{\phi }(u, v) \). On the other hand, for edges crossing clusters, say from \(C_i\) to \(C_j\) for \(i < j\), \(w_{\phi } \) will increase by \((j-i) L\). Hence, if \(L\) is big enough, these negative edges can be all made non-negative.
 \end{proof}
 
-Finally, the last tool turns out to be the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} for directed graph:
+Another useful tool turns out to be the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} for directed graph:
 
 \begin{theorem}[Low-Diameter decomposition for directed graph]\label{thm:directed-LDD}
 	There is a randomized algorithm such that given a directed graph \(G = (V, E, w)\) where \(w \geq 0\) and a diameter bound \(D \geq 0\), outputs a set of edges \(E^{\prime} \subseteq E\) such that in \(O(m \log ^2 n + n \log ^3 n)\) time,
@@ -111,10 +111,14 @@ Finally, the last tool turns out to be the \hyperref[def:low-diameter-decomposit
 \begin{proof}\todo{TODO}
 \end{proof}
 
+\begin{intuition}
+	As we will see, the \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} essentially allows us to get to the case described in \autoref{lma:SSSP-fix-DAG}.
+\end{intuition}
+
 Lastly, we note that if we have some bound on the number of negative edges shortest paths will have, we can actually solve \hyperref[prb:SSSP]{SSSP} by a combination of Dijkstra's algorithm and Bellman-Ford algorithm.
 
 \begin{lemma}\label{lma:SSSP-hop}
-	Suppose there exists an \(h_v\)-hop \(s\)-\(v\) shortest path for every \(v \in V\) with the source \(s\).\footnote{I.e., there is an \(s\)-\(v\) shortest path that uses at most \(h_v\) negative edges.} Then \hyperref[prb:SSSP]{SSSP} can be solved in \(O(\sum_{v \in V} h_v \deg(v))\) time.
+	Suppose there exists an \(h_v\)-\hyperref[not:hop]{hop} \(s\)-\(v\) shortest path for every \(v \in V\) with the source \(s\). Then \hyperref[prb:SSSP]{SSSP} can be solved in \(O(\sum_{v \in V} h_v \deg(v))\) time.
 \end{lemma}
 \begin{proof}
 	We essentially run Dijkstra and Bellman-Ford alternatively on a modified graph. Intuitively, we have something looks like the following:
@@ -127,6 +131,10 @@ Lastly, we note that if we have some bound on the number of negative edges short
 	\end{claim}
 	This leads to the desired bound.
 \end{proof}
+
+\begin{remark}
+	\autoref{lma:SSSP-hop} can also be proved with only Dijkstra by the layering graph construction as we have seen in the Homework 1.
+\end{remark}
 
 \begin{remark}
 	We can make the graph to have in and out-degree \(O(1)\) for all \(v\) by blow-up \(n\) to \(\Theta (m)\):

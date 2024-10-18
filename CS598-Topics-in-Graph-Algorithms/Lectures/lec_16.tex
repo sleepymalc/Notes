@@ -1,5 +1,12 @@
 \lecture{16}{17 Oct.\ 11:00}{Low-Diameter Decomposition for Directed Graph}
-Consider two new graphs \(G^B = (V, E, w^B)\) such that
+\subsection{Proof of \autoref{thm:SSSP-sub-routine}}
+Now, we can start proving \autoref{thm:SSSP-sub-routine}. Recall that we're given a graph \(G = (V, E)\) with edge lengths \(w \colon V \to \mathbb{R} \) such that \(w(e) \geq -2B\) for all \(e \in E\). We want to design an algorithm such that it outputs a potential where \(w_{\phi } (e) \geq -B\) for all \(e \in E\).
+
+\begin{note}
+	For simplicity, we will assume that there is no negative length cycle throughout. It's an exercise to figure out how to check the negative length cycle given the behavior of the algorithm or from the outputted potential.
+\end{note}
+
+We will again get inspiration from \hyperref[prev:Johnson-algorithm]{Johnson's algorithm}: i.e., let \(s^{\ast} \) be a dummy node with edges with weight \(0\) from \(s^{\ast} \) to every \(v \in V\) in \(G\), which we denote this new graph as \(G^{\prime} \). Consider two new graphs \(G^B = (V, E, w^B)\) such that
 \[
 	w^B (e)
 	= \begin{dcases}
@@ -7,58 +14,105 @@ Consider two new graphs \(G^B = (V, E, w^B)\) such that
 		w(e),     & \text{ if } w(e) \geq 0 ,
 	\end{dcases}
 \]
-and \(G^B_{\geq 0} = (V, E, w^B_{\geq 0})\) where \(w^B_{\geq 0} (e) = \max (0, w^B(e))\). Hence, we see that if we can ``neutralize'' all negative edges in \(G^B\), then we can achieve \(w_{\phi } (e) \geq -B\) for all \(e \in E\).
+and \(G^B_{\geq 0} = (V, E, w^B_{\geq 0})\) where \(w^B_{\geq 0} (e) = \max (0, w^B(e))\).
 
-Assume that \(G\) has no negative length cycle. Let \(s^{\ast} \) be a dummy node with edges from \(s^{\ast} \) to every \(v \in V\) in \(G\), and let \(\kappa _G (v)\) to be the number of hops in shortest paths from \(s^{\ast} \) to \(v\), and we further let \(\kappa _G \coloneqq \max _{v \in V} \kappa _G(v)\).
+\begin{note}
+	\(G^B\) and \(G^B_{\geq 0}\) both contains that dummy source \(s^{\ast} \).
+\end{note}
 
-\begin{lemma}
-	Suppose \(\kappa \geq \kappa _G(v)\), and we run \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} on \(G_{\geq 0}^B\) with \(D = \kappa B / 2\), where we delete \(E^{\prime} \). Then,
-	\begin{itemize}
-		\item for all \(v \in V\), \(\mathbb{E}_{}[P_{s, v} \cap E^{\prime} ] \leq O(\log ^2 n)\), and
-		\item for all SCC \(H\) in \(G - E^{\prime} \), \(\kappa _H(v) \leq \kappa / 2\).
-	\end{itemize}
+\begin{remark}
+	If we can ``neutralize'' all negative edges in \(G^B\), then \(w_{\phi } (e) \geq -B\) for all \(e \in E\).
+\end{remark}
+
+Hence, our goal now is to neutralize all negative edges in \(G^B\). The key is to use \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} with an appropriate parameter such that the number of \hyperref[not:hop]{hops} needed is reduced, i.e., hop reduction. Since \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} requires non-negative edge lengths, we consider applying it to \(G_{\geq 0}^B\):
+
+\begin{lemma}\label{lma:SSSP-LDD}
+	Let \(G = (V, E)\) be a graph with edge length \(w \colon V \to \mathbb{R} \) such that \(w(e) \geq -2B\) for all \(e \in E\). Let \(\kappa _{G^B}(v)\) to be the maximum number of \hyperref[not:hop]{hops} of any \(s^{\ast} \)-\(v\) shortest path in \(G^B\), and \(\kappa _{G^B}\coloneqq \max _{v \in V} \kappa _{G^B}(v)\). Suppose \(\kappa \geq \kappa _{G^B}\), and we run \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} on \(G_{\geq 0}^B\) with \(D = \kappa B / 2\) to get an output \(E^{\prime} \). Then,
+	\begin{enumerate}[(i)]
+		\item\label{lma:SSSP-LDD-i} for all \(v \in V\), \(\mathbb{E}_{}[P_{s^{\ast} , v} \cap E^{\prime} ] \leq O(\log ^2 n)\), where \(P_{s^{\ast} , v}\) is an \(s^{\ast} \)-\(v\) shortest path in \(G^B\);
+		\item\label{lma:SSSP-LDD-ii} for all SCC \(H\) in \(G - E^{\prime} \), \(\kappa _{H^{B} } \leq \kappa / 2\).\footnote{Note the nuance here: we first add back \(s^{\ast} \) to \(H\) since it's not in any SCC, and add \(B\) to the weight of all negative edges in \(H\).}
+	\end{enumerate}
 \end{lemma}
 \begin{proof}
-	Consider the second property. Assume that \(H\) is a SCC in \(G - E^{\prime} \) such that \(P^H_{s^{\ast} , v}\) has one shortest path from \(s^{\ast} \to u \to v\) using more than \(\kappa / 2\) negative edges. We first observe that any walk \(Q\) from \(v\) to \(u\) has length at most \(D\), i.e., \(w_{\geq 0}^B(Q) \leq D\). Hence, \(w(Q) \leq D\) as well. However, we see that this creates a negative cycle as \((\kappa / 2 + 1) (-B) + D = -B < 0\).
-
-	Now, consider shortest paths \(P_{s, v}\) in \(G^B\), and since \(w^B(P_{s, v}) \leq 0\), we know that \(w^B_{\geq 0}(P_{s, v}) \leq \kappa B\). Hence,
+	We prove \autoref{lma:SSSP-LDD-ii} first. Assume that \(H\) is an SCC in \(G - E^{\prime} \) such that there is one shortest path \(P^H_{s^{\ast} , v}\) from \(s^{\ast} \to u \to \dots \to v\) using more than \(\kappa / 2\) negative edges w.r.t.\ \(\at{w^B}{H}{} \). Denote \(P^H_{s^{\ast} , v} \setminus \{ s^{\ast} \} \eqqcolon P\). Observe that any \(v\)-\(u\) walk \(Q\) has length at most \(D\) w.r.t.\ \(w_{\geq 0}^B\) from the \hyperref[thm:directed-LDD]{low-diameter decomposition} guarantee, i.e., \(w_{\geq 0}^B(Q) \leq D\). Hence, \(w(Q) \leq D\) as well. However, we see that \(Q \cup P\) is a cycle, furthermore, is negative, since
 	\[
-		\mathbb{E}_{}[\lvert P \cap E^{\prime}  \rvert ]
-		\leq \frac{w_{\geq 0}^B(P_{s, v})}{D} O(\log ^2 n).
+		w(Q \cup P)
+		= w(Q) + w(P)
+		\leq D - B \cdot \left( \frac{\kappa }{2} + 1\right)
+		= \frac{\kappa B}{2} - \frac{\kappa B}{2} - B
+		< 0,
 	\]
+	since we assume that \(P\) contains more than \(\kappa / 2\) negative edges w.r.t.\ \(w^B\), with the fact that \(w^B(P) = w^B(P^H_{s^{\ast} , v}) \leq w^B(\{ s^{\ast} \to v \} ) = 0\),hence its original weight is at most \((\kappa / 2 + 1) \cdot (-B)\).
 
+	We now prove \autoref{lma:SSSP-LDD-i}, consider any shortest path \(P_{s^{\ast} , v}\) for some \(v\) in \(G^B\). From the same reason as above, we have \(w^B(P_{s^{\ast} , v}) \leq 0\), hence \(w^B_{\geq 0}(P_{s, v}) \leq \kappa B\). This implies
+	\[
+		\mathbb{E}_{}[\lvert P_{s^{\ast} , v} \cap E^{\prime}  \rvert ]
+		\leq \frac{w_{\geq 0}^B(P_{s^{\ast} , v})}{D} O(\log ^2 n)
+		\leq \frac{\kappa B}{D} O(\log ^2 n)
+		= O(\log ^2 n)
+	\]
+	since \(\Pr(e \in E^{\prime} ) \leq O(w(e) \log ^2 n / D)\) from the \hyperref[thm:directed-LDD]{low-diameter decomposition} guarantee.
 \end{proof}
+
+\begin{intuition}
+	\autoref{lma:SSSP-LDD} guarantees not only the hop-reduction, but also that (in expectation) the number of edges that prevent the reduction to the DAG (\autoref{lma:SSSP-fix-DAG}) is small per shortest path.
+\end{intuition}
+
+With \autoref{lma:SSSP-LDD}, we consider the following algorithm.
 
 \begin{algorithm}[H]\label{algo:scale-down}
 	\DontPrintSemicolon{}
-	\caption{Scale Down Algorithm}
-	\KwData{A directed graph \(G = (V, E)\) with edge capacity \(w \colon V \to \mathbb{Z} \), \(\kappa \)}
-	\KwResult{A \(s\)-\(t\) shortest path}
+	\caption{Scale-Down Algorithm}
+	\KwData{A directed graph \(G = (V, E)\) with integral edge length \(w \colon V \to \mathbb{Z} \), \(\kappa \geq \kappa _{G^B}\)}
+	\KwResult{A potential \(\phi \)}
 	\SetKwFunction{LDD}{\hyperref[thm:directed-LDD]{Low-Diameter-Decomposition}}
-	\SetKwFunction{SCC}{Strong-Connected-Component}
+	\SetKwFunction{SCC}{Strongly-Connected-Component}
 	\SetKwFunction{SD}{\hyperref[algo:scale-down]{Scale-Down}}
-	\SetKwFunction{FixDAG}{\hyperref[lma:fix-DAG]{Fix-DAG-Edges}}
-	\SetKwFunction{FixRedEdge}{Fix-\(E^{\prime} \)}
+	\SetKwFunction{FixDAG}{Fix-DAG-Edges}
+	\SetKwFunction{FixBadEdge}{Fix-Bad-Edges}
 	\SetKwFunction{BellmanFord}{Bellman-Ford}
 
 	\BlankLine
 
-	\If(){\(\kappa \leq 2\)}{
-		run \BellmanFord{} with \(2\) iterations\Comment*[r]{\(O(m \log n)\)}
+	\If(\label{algo:scale-down-base}\Comment*[f]{Base Case}){\(\kappa \leq 2\)}{
+		\(d(s, \cdot)\gets\)\BellmanFord{\(G^{\prime} \), \(w\), \(s^{\ast} \)} with \(2\) iterations\Comment*[r]{\(O(m \log n)\)}
+		\(\phi \gets d(s, \cdot)\)\;
+		\Return{\(\phi \)}\;
 	}
-	\(E^{\prime} \gets\)\LDD{\(G_{f\geq 0}^B\), \(\kappa B / 2\)}\;
-	\(\{ H_i \} _{i=1}^{\ell }\gets\)\SCC{\(G - E^{\prime} \)}\;
-	\For(){\(i = 1, \dots , \ell \)}{
-		\(\phi ^{(i)}\gets\)\SD{\(H_i\),  \(\kappa / 2\)}\;
+	\;
+	\(E^{\prime} \gets\)\LDD{\(G_{\geq 0}^B\), \(\kappa B / 2\)}\label{algo:scale-down-LDD}\;
+	\(\{ H_i \} _{i=1}^{\ell }\gets\)\SCC{\(G \setminus E^{\prime} \)}\;
+	\;
+	\For(\Comment*[f]{Recurse}){\(i = 1, \dots , \ell \)}{
+		\(\phi ^{(i)}\gets\)\SD{\(H_i\), \(\at{w}{H_i}{}\), \(\kappa / 2\)}\label{algo:scale-down-recurse}\;
 	}
+	\;
 	\(\phi _1 \gets \sum_{i=1}^{\ell } \phi ^{(i)}\)\;
-	\(\psi \gets\)\FixDAG{\((G - E^{\prime} )_{\phi _1}\)}\;
-	\(\phi _2 \gets \phi _1 + \psi \)\;
-	\(\phi _3 \gets\)\FixRedEdge{\((G - E^{\prime} )_{\phi _2}\), \(E^{\prime} \)}\;
+	\(\phi _2 \gets \phi _1 + \)\FixDAG{\((G \setminus E^{\prime})_{\phi _1}^B\), \(w_{\phi _1}^B\)}\label{algo:scale-down-fix-DAG}\Comment*[r]{\autoref{lma:SSSP-fix-DAG}}
+	\(\phi _3 \gets \phi _2 + \)\FixBadEdge{\(G_{\phi _2}^B\), \(w_{\phi _2}^B \)}\label{algo:scale-down-fix-bad-edge}\Comment*[r]{\autoref{lma:SSSP-hop}}
 	\Return{\(\phi _3\)}\;
 \end{algorithm}
 
-Notice that we can verify whether \(\phi _3\) is correct, we see that we either find the correct potential that neutralize all the negative length edges by running \autoref{algo:scale-down} \(O(\log nW)\) times, or tell me that there is a negative length cycle.
+We now prove \autoref{thm:SSSP-sub-routine}.
+
+\begin{proof}[Proof of \autoref{thm:SSSP-sub-routine}]
+	We show that the with \(\kappa = n\), \hyperref[algo:scale-down]{Scale-Down algorithm} indeed outputs a potential \(\phi \) such that if \(w(e) \geq -2B\) for all \(e \in E\), then \(w_{\phi } (e) \geq -B\). Hence, proving that the algorithm indeed neutralizes all negative edges in \(G^B\) suffices, i.e., \(w_{\phi }^B \geq 0\).
+
+	Firstly, in \autoref{algo:scale-down-base}, the base case indicates that the returned \(\phi \) will actually solve the problem exactly, i.e., neutralize all edges correctly. If this is not the case, then we obtain \(E^{\prime} \) in \autoref{algo:scale-down-LDD} on \(G^B_{\geq 0}\), which from \autoref{lma:SSSP-LDD} we know that for all \(H_i\), \(\kappa _{H_i^B} \leq \kappa / 2\). Hence, \autoref{algo:scale-down-recurse} is also valid.
+
+	\begin{note}
+		Furthermore, since \(n \geq \kappa _{G^B}\), hence \autoref{lma:SSSP-LDD} applies in the initial call in \autoref{algo:scale-down-LDD}.
+	\end{note}
+
+	In \autoref{algo:scale-down-recurse}, from the algorithm's guarantee, \(\phi ^{(i)}\) fixes each \(H_i\), i.e., \(w_{\phi _1}(e) \geq -B\) for all \(e\) in \(H_i\)'s. Hence, the only edges left are \(E^{\prime} \) (which are the \emph{bad edges}) and the remaining edges, which we refer to as the \emph{DAG edges}, i.e., edges in \(G \setminus E^{\prime} \).\footnote{Recall that by removing \(E^{\prime} \), we essentially have a DAG among the SCCs.}
+	\begin{itemize}
+		\item To fix DAG edges, in \autoref{algo:scale-down-fix-DAG}, we use \autoref{lma:SSSP-fix-DAG} with \(w_{\phi _1}^B\). Note that \autoref{lma:SSSP-fix-DAG} gives a new potential such that combining with \(w_{\phi _1}^B\), the result, \(\phi _2\), will become non-negative for all except bad edges.
+		\item To fix bad edges, in \autoref{algo:scale-down-fix-bad-edge}, we use \autoref{lma:SSSP-hop} which solve the \hyperref[prb:SSSP]{SSSP} exactly, hence gives a good potential for \(G\setminus E^{\prime} \) with edge weight \(w_{\phi _2}^B\). That is, the new potential with \(w_{\phi _2}^B\) becomes all non-negative.
+	\end{itemize}
+	In both cases, scaling back is what we want, hence by combining the above, we see that \hyperref[algo:scale-down]{Scale-Down algorithm} is indeed correct. We now analyze its running time.
+\end{proof}
+
+Hence, we claim that we can verify whether the output \(\phi = \phi _3\) is correct. Hence, we either find the correct potential that neutralize all the negative length edges by running \hyperref[algo:scale-down]{Scale-Down algorithm} \(O(\log nW)\) times, or it will report that there is a negative length cycle.
 
 \begin{remark}[Find the negative cycle]
 	In order to find the actual negative length cycle, consider \(G^{+M}\) is a graph that we add \(M > 0\) to every edge. Then, consider the following.

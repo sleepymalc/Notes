@@ -1,6 +1,37 @@
-\lecture{13}{8 Oct.\ 11:00}{Real Negative Weights Shortest Path\footnote{This is a guest lecture by \href{https://kentquanrud.com/}{Kent Quanrud}.}}
-\section{Shortest Paths with Negative Lengths}
-\subsection{Reals Weights}
-In the following two lectures, we will discuss a recent breakthrough of single-source shortest path with negative length \cite{huang2024fastersinglesourceshortestpaths}, which can now be solved in \(\widetilde{O} (mn^{4 / 5})\). This is built upon the recent work that first break the \(\widetilde{O} (mn)\) bound that achieves \(\widetilde{O} (mn^{8 / 9})\) ~\cite{fineman2024single}.
+\lecture{13}{8 Oct.\ 11:00}{Real Negative Weights Shortest Path}
+\section[Single Source Shortest Path with Negative Real Weights]{Single Source Shortest Path with Negative Real Weights\protect\footnote{This section is taught by \href{https://kentquanrud.com/}{Kent Quanrud}. Guest lectures!}}
+In the following two lectures, we will discuss a recent breakthrough of \hyperref[prb:SSSP]{SSSP} with negative length \cite{huang2024fastersinglesourceshortestpaths}, which can now be solved in \(\widetilde{O} (mn^{4 / 5})\). This is built upon the recent work that first break the \(\widetilde{O} (mn)\) bound that achieves \(\widetilde{O} (mn^{8 / 9})\)~\cite{fineman2024single}. Before we start, we first formally introduce the \hyperref[prb:SSSP]{single source shortest path} problem.
 
-\todo[inline]{Will fill... depend on my time...}
+\begin{problem}[Single source shortest path]\label{prb:SSSP}
+Given a graph \(G = (V, E)\) with edge capacity \(w\colon V \to \mathbb{R} \) and a source vertex \(s \in V\), the \emph{single source shortest path} problem, or \emph{SSSP}, aims to find the shortest path from a source \(s \in V\) to \(t\) for all \(t \in V - s\).
+\end{problem}
+
+\subsection{Johnson's Algorithm}
+There are several classical algorithms for solving the \hyperref[prb:SSSP]{SSSP}, including \href{https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm}{Dijkstra's algorithm} (which runs in \(O(m + n \log n)\) with Fibonacci heap) and \href{https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm}{Bellman-Ford algorithm} (which runs in \(O(mn)\)). However, we know that Dijkstra's algorithm can only handle the case when edge lengths are all positive, and hence, for general real edge lengths that are potentially negative, Bellman-Ford algorithm remains the state-of-the-art for decades. The key ingredient of the breakthrough is the classical Johnson's potential re-weighting algorithm. To be precise, let's give a quick review.
+
+\begin{prev}[Johnson's algorithm]\label{prev:Johnson-algorithm}
+	A natural strategy to achieve re-weighting is to consider a \emph{potential} \(\phi \colon V \to \mathbb{R} \) and re-weight a (directed) edge \(u \to v\) to be \(w^{\prime} (u, v)\coloneqq w(u, v) + \phi (u) - \phi (v)\).
+	\begin{intuition}
+		Reweigh edge lengths to preserve shortest paths, and also make weights non-negative.
+	\end{intuition}
+	For any \(u\)-\(v\) path \(u = v_0 \to v_1 \to \dots \to v_k = v\), the new weight of this path is
+	\[
+		\begin{split}
+			 & w^{\prime} (v_0, v_1 ) + w^{\prime} (v_1, v_2) + \dots + w^{\prime} (v_{k-1}, v_k)                                                      \\
+			 & = w(v_0, v_1) + \phi (v_0) - \phi (v_1) + w(v_1, v_2) + \phi (v_1) - \phi (v_2) + \dots + w(v_{k-1}, v_k) + \phi (v_{k-1}) + \phi (v_k) \\
+			 & = w(v_0, v_1) + w(v_1, v_2) + \dots + w(v_{k-1}, v_{k}) + \phi (v_0) - \phi (v_k).
+		\end{split}
+	\]
+	Hence, all \(u\)-\(v\) paths change by \(\phi (v_0) - \phi (v_k)\), i.e., the structure of the shortest paths are preserved. Furthermore, consider adding a dummy source vertex \(s^{\ast} \) with edge weight \(0\) for all new edge \((s^{\ast} , v)\) for all \(v \in V\). Then, consider \(\phi (v) \coloneqq d_{G^{\prime} }(s^{\ast} , v)\). We see that for any \(u \to v \in E\),
+	\[
+		w^{\prime} (u, v) = w(u, v) + \phi (u) - \phi (v) = w(u, v) + d_{G^{\prime} }(s^{\ast} , u) - d_{G^{\prime} }(s^{\ast} , v) \geq 0
+	\]
+	if and only if \(w(u, v) + d_{G^{\prime} }(s^{\ast} , u) \geq d_{G^{\prime} }(s^{\ast} , v)\), which is obviously true.
+
+	\begin{center}
+		\incfig{SSSP-dummy-source}
+	\end{center}
+	More generally, if we set \(\phi (v) \coloneqq d_G(s, v)\) from any source \(s \in V\) rather than that dummy extra source, the above still holds. Hence, distance is a good potential function; on the other hand, good potential also helps computing distances: if \(w_{\phi } (e) \geq 0\) for all \(e \in E\), then we can use Dijkstra's algorithm on \(G_{\phi } = (V, E)\) with edge weight \(w_{\phi }\) and solve \hyperref[prb:SSSP]{SSSP}.
+\end{prev}
+
+We see that finding good potential and \hyperref[prb:SSSP]{SSSP} is pretty much the same problem. We will switch our perspective between these two frequently.

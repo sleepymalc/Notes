@@ -1,0 +1,82 @@
+\lecture{16}{17 Oct.\ 11:00}{Low-Diameter Decomposition for Directed Graph}
+Consider two new graphs \(G^B = (V, E, w^B)\) such that
+\[
+	w^B (e)
+	= \begin{dcases}
+		B + w(e), & \text{ if } w(e) < 0 ;    \\
+		w(e),     & \text{ if } w(e) \geq 0 ,
+	\end{dcases}
+\]
+and \(G^B_{\geq 0} = (V, E, w^B_{\geq 0})\) where \(w^B_{\geq 0} (e) = \max (0, w^B(e))\). Hence, we see that if we can ``neutralize'' all negative edges in \(G^B\), then we can achieve \(w_{\phi } (e) \geq -B\) for all \(e \in E\).
+
+Assume that \(G\) has no negative length cycle. Let \(s^{\ast} \) be a dummy node with edges from \(s^{\ast} \) to every \(v \in V\) in \(G\), and let \(\kappa _G (v)\) to be the number of hops in shortest paths from \(s^{\ast} \) to \(v\), and we further let \(\kappa _G \coloneqq \max _{v \in V} \kappa _G(v)\).
+
+\begin{lemma}
+	Suppose \(\kappa \geq \kappa _G(v)\), and we run \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} on \(G_{\geq 0}^B\) with \(D = \kappa B / 2\), where we delete \(E^{\prime} \). Then,
+	\begin{itemize}
+		\item for all \(v \in V\), \(\mathbb{E}_{}[P_{s, v} \cap E^{\prime} ] \leq O(\log ^2 n)\), and
+		\item for all SCC \(H\) in \(G - E^{\prime} \), \(\kappa _H(v) \leq \kappa / 2\).
+	\end{itemize}
+\end{lemma}
+\begin{proof}
+	Consider the second property. Assume that \(H\) is a SCC in \(G - E^{\prime} \) such that \(P^H_{s^{\ast} , v}\) has one shortest path from \(s^{\ast} \to u \to v\) using more than \(\kappa / 2\) negative edges. We first observe that any walk \(Q\) from \(v\) to \(u\) has length at most \(D\), i.e., \(w_{\geq 0}^B(Q) \leq D\). Hence, \(w(Q) \leq D\) as well. However, we see that this creates a negative cycle as \((\kappa / 2 + 1) (-B) + D = -B < 0\).
+
+	Now, consider shortest paths \(P_{s, v}\) in \(G^B\), and since \(w^B(P_{s, v}) \leq 0\), we know that \(w^B_{\geq 0}(P_{s, v}) \leq \kappa B\). Hence,
+	\[
+		\mathbb{E}_{}[\lvert P \cap E^{\prime}  \rvert ]
+		\leq \frac{w_{\geq 0}^B(P_{s, v})}{D} O(\log ^2 n).
+	\]
+
+\end{proof}
+
+\begin{algorithm}[H]\label{algo:scale-down}
+	\DontPrintSemicolon{}
+	\caption{Scale Down Algorithm}
+	\KwData{A directed graph \(G = (V, E)\) with edge capacity \(w \colon V \to \mathbb{Z} \), \(\kappa \)}
+	\KwResult{A \(s\)-\(t\) shortest path}
+	\SetKwFunction{LDD}{\hyperref[thm:directed-LDD]{Low-Diameter-Decomposition}}
+	\SetKwFunction{SCC}{Strong-Connected-Component}
+	\SetKwFunction{SD}{\hyperref[algo:scale-down]{Scale-Down}}
+	\SetKwFunction{FixDAG}{\hyperref[lma:fix-DAG]{Fix-DAG-Edges}}
+	\SetKwFunction{FixRedEdge}{Fix-\(E^{\prime} \)}
+	\SetKwFunction{BellmanFord}{Bellman-Ford}
+
+	\BlankLine
+
+	\If(){\(\kappa \leq 2\)}{
+		run \BellmanFord{} with \(2\) iterations\Comment*[r]{\(O(m \log n)\)}
+	}
+	\(E^{\prime} \gets\)\LDD{\(G_{f\geq 0}^B\), \(\kappa B / 2\)}\;
+	\(\{ H_i \} _{i=1}^{\ell }\gets\)\SCC{\(G - E^{\prime} \)}\;
+	\For(){\(i = 1, \dots , \ell \)}{
+		\(\phi ^{(i)}\gets\)\SD{\(H_i\),  \(\kappa / 2\)}\;
+	}
+	\(\phi _1 \gets \sum_{i=1}^{\ell } \phi ^{(i)}\)\;
+	\(\psi \gets\)\FixDAG{\((G - E^{\prime} )_{\phi _1}\)}\;
+	\(\phi _2 \gets \phi _1 + \psi \)\;
+	\(\phi _3 \gets\)\FixRedEdge{\((G - E^{\prime} )_{\phi _2}\), \(E^{\prime} \)}\;
+	\Return{\(\phi _3\)}\;
+\end{algorithm}
+
+Notice that we can verify whether \(\phi _3\) is correct, we see that we either find the correct potential that neutralize all the negative length edges by running \autoref{algo:scale-down} \(O(\log nW)\) times, or tell me that there is a negative length cycle.
+
+\begin{remark}[Find the negative cycle]
+	In order to find the actual negative length cycle, consider \(G^{+M}\) is a graph that we add \(M > 0\) to every edge. Then, consider the following.
+
+	\begin{algorithm}[H]\label{algo:find-negative-cyele}
+		\DontPrintSemicolon{}
+		\caption{Find Negative Length Cycle}
+		\KwData{A directed graph \(G = (V, E)\) with edge capacity \(w \colon V \to \mathbb{Z} \), \(\kappa \)}
+		\KwResult{A \(s\)-\(t\) shortest path}
+		\SetKwFunction{Cycle}{Find-Cycle}
+		\BlankLine
+
+		\(G_1 \gets (V, E, (n^3 + 1)w)\)\;
+		Find the smallest \(M^{\ast} > 0\) such that \(G_1^{+M^{\ast} }\) has no negative length cycle\;
+		Find potential \(\phi \) for \(G_1^{+M^{\ast} }\) such that \(w_{1, \phi }(e) \geq 0\) for all \(e\)\;
+		\(E^{\prime} \gets \{ e \in E \mid w_{1, \phi }(e) > n \} \)\;
+		\(G_2 \gets G - E^{\prime} \)\;
+		\(C \gets\)\Cycle{\(G_2\) }\;
+		\Return{\(C\)}\;
+	\end{algorithm}
+\end{remark}

@@ -1,12 +1,12 @@
 \lecture{15}{15 Oct.\ 11:00}{Scaling Algorithm for Negative Integral SSSP}
-\section{Single Source Shortest Path with Negative Integral Weights}
-As we have seen how to deal with real weights, we consider the case of integer weights. We still follow the strategy of \hyperref[prev:Johnson-algorithm]{Johnson's algorithm}, i.e., we want to find potentials \(\phi (v)\) such that each edge \((u, v)\) has non-negative modified weight \(w_{\phi }(u, v) = w(u, v) + \phi (u) - \phi (v) \geq 0\).
+\section{Single-Source Shortest Path with Negative Integral Weights}
+As we have seen how to deal with real weights, we consider the case of integer weights. The goal is to check if a graph \(G\) has a negative weight cycle or to output shortest path distances from a source \(s\) to any other vertex \(v \in V\) (which are well-defined when there is no negative weight cycle). As we have mentioned, developed from 50's and 60's, the classical Bellman-Ford algorithm runs in \(O(mn)\) time and the Floyd-Warshall runs in \(O(n^3)\) time. Similar to the real weighted case, the general strategy of \hyperref[prev:Johnson-algorithm]{Johnson's algorithm} still applies, i.e., we want to find potentials \(\phi (v)\) such that each edge \((u, v)\) has non-negative modified weight \(w_{\phi }(u, v) = w(u, v) + \phi (u) - \phi (v) \geq 0\).
 
 \begin{prev}
 	This can be done by adding a dummy source \(s^{\ast} \) in the new graph \(G^{\prime} \) and compute \(\phi (v) \coloneqq d_{G^{\prime} }(s^{\ast} , v)\) for all \(v \in V\).
 \end{prev}
 
-The crucial observation is that unlike the real weight case, a trick called \emph{scaling} can be exploited such that we don't really need to obtain a potential that makes ever edge non-negative.\footnote{We should note once again that, if we solve \hyperref[prb:SSSP]{SSSP}, a good potential can be obtained. So we can still find a good potential at the end, although our original goal is to solve \hyperref[prb:SSSP]{SSSP}.}
+Unlike the real weighted case, a trick called \emph{scaling} can be exploited, where we don't need to obtain a potential that makes every edge non-negative exactly.\footnote{We should note once again that, if we solve \hyperref[prb:SSSP]{SSSP}, a good potential can be obtained. So we can still find a good potential at the end, although our original goal is to solve \hyperref[prb:SSSP]{SSSP}.} Goldberg described such a scaling algorithm for integer weighted case that runs in \(O(m \sqrt{n} \log W)\), where \(W = \max _{e \in E, w(e) < 0} \lvert w(e) \rvert \) is the absolute value of the most negative weight~\cite{goldberg1995scaling}. In a recent breakthrough, a randomized near-linear time scaling algorithm is developed~\cite{bernstein2022negative,bringmann2023negative}, which we will now discuss.
 
 \subsection{Scaling Trick}
 The high-level intuition of the scaling trick is the following.
@@ -15,66 +15,100 @@ The high-level intuition of the scaling trick is the following.
 	When considering integer weights, paths between \(s\) and \(v\) are more structured in terms of \emph{separation}: the weights of two paths are either the same or differ by at least \(1\).
 \end{intuition}
 
-In particular, given a graph \(G = (V, E)\) with edge weights \(w \colon V \to \mathbb{Z} \), consider the scaled weight \(\overline{w} (e) \coloneqq 2n \cdot w(e)\) for all \(e \in E\).
+In particular, given a graph \(G = (V, E)\) with edge weights \(w \colon V \to \mathbb{Z} \), consider the scaled weight \(w^{\prime} (e) \coloneqq 2n \cdot w(e)\) for all \(e \in E\). Note that the graph with \(w^{\prime} \) will have a negative weight cycle if and only if the graph with the original weight \(w\) has.
 
 \begin{claim}
-	Let \(P\) and \(Q\) be any two \(s\)-\(v\) paths. Then either \(\lvert \overline{w} (P) - \overline{w} (Q) \rvert = 0\) or \(\lvert \overline{w} (P) - \overline{w} (Q) \rvert \geq 2n > n\). This is also true for any potential \(\phi \), i.e., either \(\lvert \overline{w} _\phi (P) - \overline{w} _\phi (Q) \rvert = 0\) or \(\lvert \overline{w} _\phi (P) - \overline{w} _\phi (Q) \rvert \geq n\).
+	Let \(P\) and \(Q\) be any two \(s\)-\(v\) paths. Then either \(\lvert w^{\prime} (P) - w^{\prime} (Q) \rvert = 0\) or \(\lvert w^{\prime} (P) - w^{\prime} (Q) \rvert \geq 2n > n\). This is also true for any potential \(\phi \), i.e., either \(\lvert w^{\prime} _\phi (P) - w^{\prime} _\phi (Q) \rvert = 0\) or \(\lvert w^{\prime} _\phi (P) - w^{\prime} _\phi (Q) \rvert \geq n\).
 \end{claim}
 \begin{explanation}
-	If two \(s\)-\(v\) paths \(P\) and \(Q\) have different weights, since \(w(P) , w(Q) \in \mathbb{Z} \), we know that they differ by at least \(1\). By scaling, \(\overline{w} (P), \overline{w} (Q)\) differ by at least \(2n\).
+	If two \(s\)-\(v\) paths \(P\) and \(Q\) have different weights, since \(w(P) , w(Q) \in \mathbb{Z} \), we know that they differ by at least \(1\). By scaling, \(w^{\prime} (P), w^{\prime} (Q)\) differ by at least \(2n\).
 \end{explanation}
 
 With this simple observation, we can iteratively apply the following to increase the edge lengths in each iteration with suitable potentials:
 
-\begin{theorem}\label{thm:SSSP-sub-routine}
-	Let \(G = (V, E)\) be a graph with edge lengths \(w\colon V \to \mathbb{R} \) such that \(w(e) \geq -2B\) for all \(e \in E\). There is a randomized algorithm such that:
+\begin{theorem}[Scale down]\label{thm:SSSP-scale-down}
+	Let \(G = (V, E)\) be a graph with edge lengths \(w\colon V \to \mathbb{R} \) such that \(w(e) \geq -2B\) for all \(e \in E\). There is a randomized algorithm called \emph{scale down} such that:
 	\begin{itemize}
-		\item If it terminates, it outputs a potential \(\phi \colon V \to \mathbb{R} \) such that \(w_{\phi }(e) \geq -B\) for all \(e \in E\), where
-		      \[
-			      w_{\phi }(uv)
-			      \coloneqq \phi (u) + w(uv) - \phi (v).
-		      \]
+		\item If it terminates, it outputs a \emph{halving potential} \(\phi \colon V \to \mathbb{R} \) such that \(w_{\phi }(e) \geq -B\) for all \(e \in E\).
 		\item If \(G\) does not contain a negative weight cycle, then the expected runtime is \(O(m \log ^4 n)\) and the output is correct. If \(G\) has a negative weight cycle, then the algorithm may not terminate.
 	\end{itemize}
 \end{theorem}
 
-Assuming we have the sub-routine from \autoref{thm:SSSP-sub-routine}, we can solve \hyperref[prb:SSSP]{SSSP}:
+\begin{note}
+	Even it there is a negative weight cycle, the subroutine from \autoref{thm:SSSP-scale-down} can still terminate and will be a valid halving potential.
+\end{note}
+
+Assuming we have the subroutine from \autoref{thm:SSSP-scale-down}, furthermore, if we assume that it will either detect that there is a negative weight cycle, or outputting a halving potential, we can solve \hyperref[prb:SSSP]{SSSP}:
 
 \begin{algorithm}[H]\label{algo:SSSP-scaling}
 	\DontPrintSemicolon{}
 	\caption{Scaling Algorithm for \hyperref[prb:SSSP]{SSSP}}
 	\KwData{A directed graph \(G = (V, E)\) with integral edge length \(w \colon V \to \mathbb{Z} \), source \(s \in V\)}
-	\KwResult{\hyperref[prb:SSSP]{SSSP} from the source \(s\)}
-	\SetKwFunction{SubRoutine}{\hyperref[thm:SSSP-sub-routine]{Sub-Routine}}
+	\KwResult{\hyperref[prb:SSSP]{SSSP} from the source \(s\) or \(\bot\), indicating a negative weight cycle}
+	\SetKwFunction{SubRoutine}{\hyperref[thm:SSSP-scale-down]{Scale-Down}}
 	\SetKwFunction{Dijkstra}{Dijkstra}
+	\SetKwFunction{ShortestPathDistance}{Shortest-Path-Distance}
 
 	\BlankLine
 
-	\(\overline{w} \gets 2n w\)\;
-	\(W \gets \max _{e \in E \colon w(e) < 0} \lvert w(e) \rvert \)\;
-	\(W^{\prime} \gets 2n W\)\;
+	\(w^{\prime} \gets 2n w\)\;
+	\(W^{\prime} \gets \max _{e \in E \colon w(e) < 0} \lvert w^{\prime} (e) \rvert \)\;
 	\(\phi \gets 0\)\Comment*[r]{Initialize potential for all \(v \in V\)}
 	\;
 	\For(){\(i = 1, \dots , O(\log W^{\prime} )\)}{
-		\(\phi ^{\prime} \gets \)\SubRoutine{\(G\), \(\overline{w} _\phi \)}\;
-		\(\phi \gets \phi + \phi ^{\prime} \)\Comment*[r]{also updates \(\overline{w} _\phi \)}
+		\(\phi ^{\prime} \gets \)\SubRoutine{\(G\), \(w^{\prime} _\phi \)}\;
+		\If(\Comment*[f]{Check negative weight cycle}){\(\phi ^{\prime} = \varnothing \)}{
+			\Return{\(\bot\)}\;
+		}
+		\(\phi \gets \phi + \phi ^{\prime} \)\Comment*[r]{Also update \(w^{\prime} _\phi \)}
 	}
 	\;
-	\(w^{\prime} \gets \max (0, \overline{w} _\phi )\)\;
-	\Return{\Dijkstra{\(G\), \(w^{\prime} \), \(s\)}}\;
+	\(w^{\prime\prime} \gets \max (0, w^{\prime} _\phi )\)\;
+	\(T \gets\)\Dijkstra{\(G\), \(w^{\prime\prime} \), \(s\)}\Comment*[r]{Compute shortest path tree}
+	\(d(s, \cdot)\gets\)\ShortestPathDistance{\(T\), \(w\)}\Comment*[r]{Trivial to compute}
+	\Return{\(\{ d(s, v) \} _{v \in V}\)}\;
 \end{algorithm}
 
 \begin{theorem}[\cite{bernstein2022negative}]\label{thm:SSSP}
-	\autoref{algo:SSSP-scaling} solves the \hyperref[prb:SSSP]{SSSP} with negative integral edge lengths.
+	There is a randomized algorithm (\autoref{algo:SSSP-scaling}) that takes as input a graph \(G = (V, E)\) with integral edge weights \(w \colon V \to \mathbb{Z} \) and a source \(s\) such that
+	\begin{itemize}
+		\item if \(G\) contains a negative cycle, it does not terminate;
+		\item otherwise, it returns valid \hyperref[prb:SSSP]{SSSP} distances for \(s\) in expected time \(O(m \log ^4 n \log (nW))\).
+	\end{itemize}
 \end{theorem}
 \begin{proof}
-	Let \(W \coloneqq \max _{e\in E \colon w(e) < 0} \lvert w(e) \rvert \), \(W^{\prime} \coloneqq 2n W\), and \(B \coloneqq 2^{\lceil \ln W^{\prime} \rceil }\).\footnote{Hence, \(\overline{w} (e) = 2n w(e) \geq -2B\) for all \(e \in E\).} We see that if we run the sub-routine from \autoref{thm:SSSP-sub-routine} \(O(\log W^{\prime} ) = O(\log nW)\) times, we will find a potential \(\phi \colon V \to \mathbb{Z} \) such that \(\overline{w} _{\phi } (e) \geq -1 \) for all \(e \in E\). Then, by considering \(w^{\prime} (e) \coloneqq \max (0, \overline{w} _\phi (e))\) for all \(e \in E\), running the Dijkstra's algorithm on \(G\) with edge length \(w^{\prime}\), we can find the correct shortest path in \(G\) since \(w^{\prime} \) only perturbs shortest path lengths by at most \(n-1\), while we know that any two paths will have difference at least \(n\) if they're not of the same length. This is exactly \autoref{algo:SSSP-scaling}.
+	Let \(B \coloneqq 2^{\lceil \ln W^{\prime} \rceil }\).\footnote{Hence, \(w^{\prime} (e) = 2n w(e) \geq -2B\) for all \(e \in E\).} We see that if we run the \hyperref[thm:SSSP-scale-down]{scale down} subroutine \(O(\log W^{\prime} ) = O(\log nW)\) times, we will find a potential \(\phi \colon V \to \mathbb{Z} \) such that \(w^{\prime} _{\phi } (e) \geq -1 \) for all \(e \in E\) (if there is a negative weight cycle, it'll be detected by running this subroutine as well). Then, by considering \(w^{\prime} (e) \coloneqq \max (0, w^{\prime} _\phi (e))\) for all \(e \in E\), running the Dijkstra's algorithm on \(G\) with edge length \(w^{\prime}\), we can find the correct shortest path in \(G\) since \(w^{\prime} \) only perturbs shortest path lengths by at most \(n-1\), while we know that any two paths will have difference at least \(n\) if they're not of the same length. This is exactly \autoref{algo:SSSP-scaling}.
 \end{proof}
 
-Hence, the only difficult (and remaining) part is to prove \autoref{thm:SSSP-sub-routine}.
+With some slight tweaks, we obtain the following.
+
+\begin{theorem}\label{thm:SSSP-Monte-Carlo}
+	There is a randomized Monte-Carlo algorithm that takes as input a graph \(G = (V, E)\) with integral edge weights \(w \colon V \to \mathbb{Z} \) and a source \(s \in V\) such that
+	\begin{itemize}
+		\item if \(G\) contains a negative weight cycle, it returns an error message;
+		\item if \(G\) does not contain a negative weight cycle, then it returns valid \hyperref[prb:SSSP]{SSSP} distances for \(s\) with high probability. It may return an error message even if there is no negative weight cycle.
+	\end{itemize}
+	The algorithm runs in \(O(m \log ^5 n \log (nW))\) time.
+\end{theorem}
+\begin{proof}
+	We first consider the following intermediate algorithm. It runs \autoref{algo:SSSP-scaling} on input \((G, w, s)\); if it terminates before twice of its expected runtime and returns \hyperref[prb:SSSP]{SSSP} distances, then this intermediate algorithm returns the same output. If \autoref{algo:SSSP-scaling} takes more than twice of its expected runtime, then the intermediate algorithm is stopped and returns error. By Markov's inequality, this intermediate algorithm has the following properties:
+	\begin{itemize}
+		\item if \(G\) has no negative weight cycle, it returns a correct output with probability \(1 / 2\); and
+		\item if \(G\) has a negative weight cycle, it always returns error; and
+		\item it may return error even if \(G\) has no negative cycle with probability at most \(1 / 2\).
+	\end{itemize}
+
+	Then, we can simply run this intermediate algorithm \(O(\log n)\) times independently and returning error if all invocations return error. It is easy to see that it has the desired properties. The runtime is then \(O(\log n)\) times the expected run-time of \autoref{algo:SSSP-scaling}, which is \(O(m \log ^5 n \log (nW))\).
+\end{proof}
+
+\begin{remark}
+	The Monte-Carlo algorithm described in \autoref{thm:SSSP-Monte-Carlo} can be viewed as almost what we would like because it returns valid \hyperref[prb:SSSP]{SSSP} distances with high probability when they exist. But it may also return error with a small probability even when there is no negative weight cycle. Ideally, we would also like an algorithm that can detect and output a negative cycle with high probability when \(G\) has one. Suppose we had such an algorithm, then we can run the two algorithms and get what we want. We will discuss such an algorithm that finds a negative weight cycle at the end.
+\end{remark}
+
+Hence, the only difficult (and remaining) part is to prove \autoref{thm:SSSP-scale-down}.
 
 \subsection{Preliminary Tools}
-Now, we can start building up toward proving \autoref{thm:SSSP-sub-routine}. This requires some preliminary facts. Firstly, the intuition is to reduce the problem to directed acyclic graph (DAG).
+Now, we can start building up toward proving \autoref{thm:SSSP-scale-down}. This requires some preliminary facts. Firstly, the intuition is to reduce the problem to directed acyclic graph (DAG).
 
 \begin{intuition}
 	DAG has an equivalent role for directed graphs as tree for undirected graphs in some sense. In particular, we know that for shortest path, DAG is easy.
@@ -88,58 +122,70 @@ Given a directed graph \(G = (V, E)\) with positive edge weight \(w \colon V \to
 
 The first fact is that if the graph induces a nice DAG, then we can find a good potential efficiently.
 
-\begin{lemma}\label{lma:SSSP-fix-DAG}
-	Suppose \(G = (V, E)\) is a graph with edge weight \(w\) such that in each strongly connected component (SCC), the weights are non-negative. Then we can compute a potential \(\phi \colon V \to \mathbb{R} \) such that \(w_{\phi } (e) \geq 0\) for all \(e \in E\) in \(O(m + n)\) time.
+\begin{lemma}[Fix DAG edge]\label{lma:SSSP-fix-DAG}
+	Suppose \(G = (V, E)\) is a directed graph with edge weight \(w\) such that in each strongly connected component (SCC), the edge weights are non-negative. Then one can compute a potential \(\phi \colon V \to \mathbb{R} \) such that \(w_{\phi } (e) \geq 0\) for all \(e \in E\) in \(O(m + n)\) time.
 \end{lemma}
 \begin{proof}
-	Consider the DAG\footnote{It's a fact that this will form a DAG.} \(G^{\text{SCC} }\) associated with contracting all the SCCs \(\{ C_i \} _{i=1}^{\ell }\) to nodes \(\{ v_i \} _{i=1}^{\ell }\). Then by sorting \(v_i\)'s in \(G^{\text{SCC} }\) in the \href{https://en.wikipedia.org/wiki/Topological_sorting}{topological} order, we can neutralize edges between \(C_i\)'s by adding \(- (\ell - 1) L\) for some big \(L\) in the \(\ell ^{\text{th} }\) SCC \(C_{\ell } \).
+	Consider the DAG\footnote{It's a fact that this will form a DAG.} \(G^{\text{SCC} }\) associated with contracting all the SCCs \(\{ C_i \} _{i=1}^{\ell }\) to nodes \(\{ v_i \} _{i=1}^{\ell }\). Then by sorting \(v_i\)'s in \(G^{\text{SCC} }\) in the \href{https://en.wikipedia.org/wiki/Topological_sorting}{topological} order in \(O(m + n)\), we can neutralize edges between \(C_i\)'s by adding \(- (\ell - 1) L\) for some big \(L\) (e.g., \(W\)) in the \(\ell ^{\text{th} }\) SCC \(C_{\ell } \).
 	\begin{center}
 		\incfig{SSSP-fix-DAG}
 	\end{center}
 	This works since for any \(u \to v\) in \(C_i\), change of \(u\) and \(v\)'s potential are the same, hence \(w (u, v)= w_{\phi }(u, v) \). On the other hand, for edges crossing clusters, say from \(C_i\) to \(C_j\) for \(i < j\), \(w_{\phi } \) will increase by \((j-i) L\). Hence, if \(L\) is big enough, these negative edges can be all made non-negative.
 \end{proof}
 
-Another useful tool turns out to be the \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} for directed graph:
+Another useful tool turns out to be the low-diameter decomposition. We have seen \hyperref[def:low-diameter-decomposition]{low-diameter decomposition} in the context of undirected graphs and metrics. Here, we're interested in directed graphs and distances. There were implicit in algorithm for cut and flow problems for symmetric demands~\cite{klein1997approximation,seymour1995packing,even2000divide}, but the utility of their randomized variants have only recently been explored.
 
-\begin{theorem}[Low-Diameter decomposition for directed graph]\label{thm:directed-LDD}
-	There is a randomized algorithm such that given a directed graph \(G = (V, E, w)\) where \(w \geq 0\) and a diameter bound \(D \geq 0\), outputs a set of edges \(E^{\prime} \subseteq E\) such that in \(O(m \log ^2 n + n \log ^3 n)\) time,
+\begin{intuition}
+	Since reachability is asymmetric in directed graphs, in several problems of interest, we are focus on diameter of SCC.
+\end{intuition}
+
+If we also think of cuts as removing subsets of edges rather than edges leaving a set, then a nature formulation of the low-diameter decomposition of a directed graph with \emph{non-negative} weights \(w\colon E \to \mathbb{R} _+\) is to remove a subset of edges \(E^{\prime} \subseteq E\) such that the diameter of each SCC in \(G - E^{\prime} \) is at most some given parameter \(D\). The diameter of an SCC \(C \subseteq V\) is \(\max _{u, v \in C} d_G(u, v) \leq D\) for all \(u, v \in C\) in \(G\). This is the notion of ``weak diameter'' since we are using distances in \(G\).
+
+\begin{notation}[Strong diameter]\label{not:strong-diameter}
+	The \emph{strong diameter} guarantee is where \(d_C(u, v) \leq D\) for all \(u, v \in C\) where \(d_C(u, v)\) is the distance using only edges in \(G[C]\).
+\end{notation}
+
+The following states that there exists an efficient randomized algorithm to compute the low-diameter decomposition for directed graph.
+
+\begin{theorem}[Low-diameter decomposition for directed graph~\cite{bernstein2022negative}]\label{thm:directed-LDD}
+	There is a randomized algorithm such that given a directed graph \(G = (V, E, w)\) where \(w \colon E \to \mathbb{R} _+\) and a diameter bound \(D \geq 0\), outputs a set of edges \(E^{\prime} \subseteq E\) such that in \(O(m \log ^2 n + n \log ^3 n)\) time,
 	\begin{enumerate}[(i)]
-		\item all the strongly connected components \(G - E^{\prime} \) has ``weak'' diameter \(\leq D\), i.e., if \(u, v\) are in an SCC, then \(\max (d_G(u, v), d_G(v, u)) \leq D\), and
-		\item \(\Pr_{}(e \in E^{\prime} ) \leq O(w(e) \log ^2 n / D)\).
+		\item all the SCCs in \(G - E^{\prime} \) has weak diameter \(\leq D\), and
+		\item \(\Pr_{}(e \in E^{\prime} ) \leq O(w(e) \log ^2 n / D + n^{-10})\).\footnote{The term \(n^{-10}\) is negligible and is for technical reasons to obtain a fast algorithm. We will ignore it to keep it simpler.}
 	\end{enumerate}
 \end{theorem}
 \begin{proof}\todo{TODO}
 \end{proof}
 
 \begin{intuition}
-	As we will see, the \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} essentially allows us to get to the case described in \autoref{lma:SSSP-fix-DAG}.
+	The \hyperref[thm:directed-LDD]{low-diameter decomposition} allows us to get to the case of \autoref{lma:SSSP-fix-DAG}.
 \end{intuition}
+
+\begin{remark}
+	\cite{bringmann2023negative} describes an algorithm with \hyperref[not:strong-diameter]{strong diameter} guarantee with the cutting probability increased to \(O(\log ^3 n w(e) / D)\). They also describe a different decomposition procedure which gives a faster algorithm while not necessarily giving a low-diameter decomposition.
+\end{remark}
 
 Lastly, we note that if we have some bound on the number of negative edges shortest paths will have, we can actually solve \hyperref[prb:SSSP]{SSSP} by a combination of Dijkstra's algorithm and Bellman-Ford algorithm.
 
-\begin{lemma}\label{lma:SSSP-hop}
-	Suppose there exists an \(h_v\)-\hyperref[not:hop]{hop} \(s\)-\(v\) shortest path for every \(v \in V\) with the source \(s\). Then \hyperref[prb:SSSP]{SSSP} can be solved in \(O(\sum_{v \in V} h_v \deg(v))\) time.
+\begin{lemma}[Fix bad edge~\cite{bernstein2022negative}]\label{lma:SSSP-hop}
+	Suppose \(G = (V, E)\) is a directed graph with edge weight \(w \colon V \to \mathbb{R} \) has no negative weight cycle. Suppose every \(s\)-\(v\) shortest path is at most \(\kappa _v\)-\hyperref[not:hop]{hops} for every \(v \in V\) from the source \(s\). Then \hyperref[prb:SSSP]{SSSP} (with the corresponding potential) can be solved in \(O\big( (n + \sum_{v \in V} \lvert \delta ^+(v) \rvert \kappa _v ) \log n \big)\) time.
 \end{lemma}
 \begin{proof}
-	We essentially run Dijkstra and Bellman-Ford alternatively on a modified graph. Intuitively, we have something looks like the following:
+	We essentially run Dijkstra and Bellman-Ford alternatively on a modified graph. The intuition is that Dijkstra computes the correct shortest path length for positive edges, while one iteration of Bellman-Ford fix one negative edge.
 	\begin{center}
 		\incfig{SSSP-hop}
 	\end{center}
-	The intuition is that Dijkstra computes the correct shortest path length for positive edges, while one iteration of Bellman-Ford fix one negative edge. To actually bound the running time to be the sum of \(\sum_{v \in V} h_v\), one will need to implement this algorithm carefully with \emph{laziness}, i.e., nodes participate in the computation only when necessary:
+	To actually bound the running time to be the sum of \(\sum_{v \in V} \kappa _v\), one will need to implement this algorithm carefully with \emph{laziness}, i.e., nodes participate in the computation only when necessary:
 	\begin{claim}
-		After \(i\) iterations, we get correct distance \(d(s, v)\) if \(h_v \leq i\). Hence, \(v\) contributes to runtime for \(h_v\) iterations.
+		After \(i\) iterations, we get correct distance \(d(s, v)\) if \(\kappa _v \leq i\). Hence, \(v\) contributes to runtime for \(\kappa _v\) iterations.
 	\end{claim}
-	This leads to the desired bound.
+	This leads to the desired bound.\footnote{This can be proved with only Dijkstra by the layering graph construction as we have seen in the Homework 1.}
 \end{proof}
-
-\begin{remark}
-	\autoref{lma:SSSP-hop} can also be proved with only Dijkstra by the layering graph construction as we have seen in the Homework 1.
-\end{remark}
 
 \begin{remark}
 	We can make the graph to have in and out-degree \(O(1)\) for all \(v\) by blow-up \(n\) to \(\Theta (m)\):
 	\begin{center}
 		\incfig{constant-degree-blow-up}
 	\end{center}
-	Hence, \autoref{lma:SSSP-hop} runs in \(O(\sum_{v \in V} h_v)\) time.
+	Hence, the algorithm described in \autoref{lma:SSSP-hop} runs in \(O\big((m + \sum_{v \in V} \kappa _v) \log n \big)\) time.
 \end{remark}

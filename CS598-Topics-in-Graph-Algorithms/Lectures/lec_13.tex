@@ -1,9 +1,9 @@
 \lecture{13}{8 Oct.\ 11:00}{Real Negative Weights Shortest Path}
-\section[Single Source Shortest Path with Negative Real Weights]{Single Source Shortest Path with Negative Real Weights\protect\footnote{This section is taught by \href{https://kentquanrud.com/}{Kent Quanrud}. Guest lectures!}}
-In the following two lectures, we will discuss a recent breakthrough of \hyperref[prb:SSSP]{SSSP} with negative length \cite{huang2024fastersinglesourceshortestpaths}, which can now be solved in \(\widetilde{O} (mn^{4 / 5})\). This is built upon the recent work that first break the \(\widetilde{O} (mn)\) bound that achieves \(\widetilde{O} (mn^{8 / 9})\)~\cite{fineman2024single}. Before we start, we first formally introduce the \hyperref[prb:SSSP]{single source shortest path} problem.
+\section[Single-Source Shortest Path with Negative Real Weights]{Single-Source Shortest Path with Negative Real Weights\protect\footnote{This section is taught by \href{https://kentquanrud.com/}{Kent Quanrud}. Guest lectures!}}
+In the following two lectures, we will discuss a recent breakthrough of \hyperref[prb:SSSP]{SSSP} with negative length \cite{huang2024fastersinglesourceshortestpaths}, which can now be solved in \(\widetilde{O} (mn^{4 / 5})\). This is built upon the recent work that first break the \(\widetilde{O} (mn)\) bound that achieves \(\widetilde{O} (mn^{8 / 9})\)~\cite{fineman2024single}. Before we start, we first formally introduce the \hyperref[prb:SSSP]{single-source shortest path} problem.
 
-\begin{problem}[Single source shortest path]\label{prb:SSSP}
-Given a graph \(G = (V, E)\) with edge capacity \(w\colon V \to \mathbb{R} \) and a source vertex \(s \in V\), the \emph{single source shortest path} problem, or \emph{SSSP}, aims to find the shortest path from a source \(s \in V\) to \(t\) for all \(t \in V - s\).
+\begin{problem}[Single-source shortest path]\label{prb:SSSP}
+Given a graph \(G = (V, E)\) with edge capacity \(w\colon V \to \mathbb{R} \) and a source vertex \(s \in V\), the \emph{single-source shortest path} problem, or \emph{SSSP}, aims to find the shortest path from a source \(s \in V\) to \(t\) for all \(t \in V - s\).
 \end{problem}
 
 \subsection{Johnson's Algorithm}
@@ -34,7 +34,41 @@ There are several classical algorithms for solving the \hyperref[prb:SSSP]{SSSP}
 	More generally, if we set \(\phi (v) \coloneqq d_G(s, v)\) from any source \(s \in V\) rather than that dummy extra source, the above still holds. Hence, distance is a good potential function; on the other hand, good potential also helps computing distances: if \(w_{\phi } (e) \geq 0\) for all \(e \in E\), then we can use Dijkstra's algorithm on \(G_{\phi } = (V, E)\) with edge weight \(w_{\phi }\) and solve \hyperref[prb:SSSP]{SSSP}.
 \end{prev}
 
-We see that finding good potential and \hyperref[prb:SSSP]{SSSP} is pretty much the same problem. We will switch our perspective between these two frequently.
+With the notion of potential, the goal is to find such a ``good'' potential \(\phi \) such that \(w_{\phi }(e) \geq 0\) for all \(e \in E\). We call this \hyperref[def:neutralize]{neutralization}.
+
+\begin{definition}[Neutralize]\label{def:neutralize}
+	A potential \(\phi \) \emph{neutralize} a set of negative length edges \(F \subseteq E\) if \(w_{\phi } (e) \geq 0\) for all \(e \in F\).
+\end{definition}
+
+With potential, a crucial observation is the following.
+
+\begin{lemma}\label{lma:negative-cycle}
+	A graph \(G\) has no negative weight cycle if and only if there is a potential \(\phi \) such that \(w_{\phi } (e) \geq 0\) for all \(e \in E\).
+\end{lemma}
+
+Thus, the goal is to either detect that \(G\) has a negative weight cycle or find a potential that \hyperref[def:neutralize]{neutralizes} all the negative weight edges while not introducing any new negative weight edges. We see that finding good potential and \hyperref[prb:SSSP]{SSSP} is pretty much the same problem, and we will switch our perspective between these two. Finally, we make the following remark.
+
+\begin{claim}[Verification]\label{clm:SSSP-verfication}
+	One of the useful facts about \hyperref[prb:SSSP]{single-source shortest path} trees and distances is that we can check in linear time whether a given tree or set of distances are valid or not.
+\end{claim}
+\begin{explanation}
+	We simply relax (update rule of Dijkstra's algorithm) all edges and see if any of the distances change. If they do not change then the distances are valid, otherwise they are obviously not.
+\end{explanation}
+
+This verification is useful when running randomized algorithms that may work only under the assumption that \(G\) has no negative cycle but may still produce some (potentially incorrect) output when \(G\) has a negative cycle. Hence, in the following sections about \hyperref[prb:SSSP]{SSSP} with negative edge weights, we can assume that there is no negative weight cycle in the graph.
+
+
+
+\subsection{Some Preprocessing}
+We first note that without loss of generality, we can make sure that the number of negative weight edges is \(O(n)\) by splitting each vertex \(u\) into \(u^-\) and \(u^+\) and making \(w(u^-, u^+)\) equal the weight of the most negative weight out-going edges of \(u\) (\(0\) if there is no negative weight edge), and adjusting the weights going out of \(u\) (now \(u^+\)) appropriately, which now are all non-negative.
+
+\begin{center}
+	\incfig{negative-weight-edge-splitting}
+\end{center}
+
+\subsection{Preliminary}
+
+Before we get started, we need to establish some common terminologies used in this line of works.
 
 \begin{notation}[Hop]\label{not:hop}
 	A \emph{hop} in a walk means a negative edge. Hence, we will say an \(h\)-hop shortest path to indicate that this path contains \(h\) negative edges.

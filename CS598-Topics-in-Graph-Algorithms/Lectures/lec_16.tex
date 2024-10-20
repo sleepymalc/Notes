@@ -122,7 +122,7 @@ With \autoref{lma:SSSP-LDD}, it's quite natural in retrospect to consider a recu
 	\;
 	\uIf(\label{algo:scale-down-check}\Comment*[f]{Check validity}){\(w^B_{\phi _3} (e) < 0\) for any \(e \in E\)}{
 	\While(\Comment*[f]{Infinite loop}){\(1\)}{
-		\;
+		\(1 + 1\)\;
 	}
 	}\Else{
 		\Return{\(\phi _3\)}\;
@@ -140,25 +140,13 @@ We now prove \autoref{thm:SSSP-scale-down}.
 \end{proof}
 
 \subsection{Finding a Negative Cycle}
-Finally, we discuss a scaling algorithm to find a negative weight cycle, assuming we have an algorithm \(\mathcal{A} \) such that it will detect when \(G\) has a negative weight cycle, and otherwise outputs a valid potential that neutralizes all negative weight edges without introducing new ones.
-
-\begin{intuition}
-	While we don't have a deterministic algorithm of \(\mathcal{A} \), but we do have the algorithm implied in \autoref{thm:SSSP-Monte-Carlo} which we can act as a substitute.\footnote{We will not dwell into all the details to make the whole process work with the weaker algorithm and refer the reader to~\cite{bernstein2022negative,bringmann2023negative}.}
-\end{intuition}
-
-Let \(G = (V, E)\) with integral edge weights \(w \colon V \to \mathbb{Z} \), say \(\mathcal{A} \) has detected that \(G\) contains a negative cycle. We start scaling all weights by \(n^3\), i.e., consider \(w^{\prime} (e) = n^3 w(e)\) for all \(e \in E\). Let \(G_0\) be this new graph.
+Finally, we discuss a scaling algorithm to find a negative weight cycle, assuming we have an algorithm \(\mathcal{A} \) such that it will detect when \(G\) has a negative weight cycle, and otherwise outputs a valid potential that neutralizes all negative weight edges without introducing new ones. While we don't have a deterministic algorithm of \(\mathcal{A} \), but we do have the algorithm implied in \autoref{thm:SSSP-Monte-Carlo} which we can act as a substitute~\cite{bernstein2022negative,bringmann2023negative}. Let \(G = (V, E)\) be a directed graph with integral edge weights \(w \colon V \to \mathbb{Z} \). Say \(\mathcal{A} \) has detected that \(G\) contains a negative cycle. We start scaling all weights by \(n^3\), i.e., consider \(w_0(e) = n^3 w(e)\) for all \(e \in E\). Let \(G_0\) be this new graph.
 
 \begin{note}
 	If \(G\) has a negative cycle, then \(G_0\) has a negative cycle with weights \(\leq -n^3\).
 \end{note}
 
-Given \(G\) and an integer \(M \geq 0\), we define a graph \(G^{+M}\) as the graph obtained by adding \(M\) to each edge weight.
-
-\begin{note}
-	We add \(M\) to all edges, not just negative weight edges as we did earlier in defining \(G^B\).
-\end{note}
-
-Let \(M^{\ast} \) be the smallest integer such that \(G_0^{+M^{\ast} }\) does not have a negative cycle. It means that \(G_0^{+(M^{\ast} -1)}\) has a negative cycle.
+Given \(G\) and an integer \(M \geq 0\), we define a graph \(G^{+M}\) as the graph obtained by adding \(M\) to each edge weight. Note that we add \(M\) to all edges, not just negative weight edges as we did earlier in defining \(G^B\). Let \(M^{\ast} \) be the smallest integer such that \(G_0^{+M^{\ast} }\) does not have a negative cycle. It means that \(G_0^{+(M^{\ast} -1)}\) has a negative cycle.
 
 \begin{claim}
 	\(M^{\ast} \geq n^2\) and \(M^{\ast} \leq n^3 W\). Given access to \(\mathcal{A} \) that can detect a negative cycle using binary search, one can find \(M^{\ast} \) using \(O(\log (nW))\) call to which.
@@ -179,25 +167,35 @@ The main lemma that leads to the algorithm is the following.
 	Let \(\phi \) be a potential that \hyperref[def:neutralize]{neutralizes} the negative weight edges in \(G_0^{+M^{\ast} }\), and \(E^{\prime} = \{ e\in E \mid \big(w_0^{+M^{\ast} }\big)_{\phi } (e) > n \} \). Then \(G_1 \coloneqq (V, E \setminus E^{\prime} )\) contains a cycle, and any cycle in \(G_1\) is a negative cycle in \(G\).
 \end{lemma}
 \begin{proof}
-	\todo{fill}
+	There is a negative cycle \(C\) in \(G_0^{+(M^{\ast} - 1)}\) which clearly is also a negative weight cycle in \(G\). We see that \(w_0^{+M^{\ast} }(C) = w_0^{+(M^{\ast} - 1)} + \lvert C \rvert \), thus, \(w_0^{+M^{\ast} }(C) \leq n\). Note that \(\phi \) \hyperref[def:neutralize]{neutralizes} all negative weights in \(G_0^{+M^{\ast} }\), hence all edge weights of \(C\) become non-negative w.r.t.\ \(\phi \), but the total weight of \(C\) does not change w.r.t.\ \(\phi \) as potentials do not change cycle weights. This means that \(\big(w_0^{+M^{\ast} }\big)_{\phi }(C) \leq n\), and it contains only non-negative edge weights. All these imply that any edge in \(C\) must have weight at most \(n\) w.r.t.\ \(\big(w_0^{+M^{\ast} }\big)_{\phi } \), hence \(C \cap E^{\prime} = \varnothing \), which means that all edges of \(C\) survives in \(G_1\), hence \(G_1\) must have a cycle.
+
+	Now, we argue that any cycle in \(G_1\) is a negative weight cycle in \(G\). Let \(C\) be an arbitrary cycle in \(G_1\). Since \(C\) does not have any edges from \(E^{\prime} \) , we have \(\big(w_0^{+M^{\ast} }\big)_{\phi }(C) \leq n \lvert C \rvert \leq n^2\). Since potentials do not change cycle weights, we therefore have \(w_0^{+M^{\ast} }(C) \leq n^2\). However, this implies
+	\[
+		w_0(C)
+		= w_0^{+M^{\ast} }(C) - M^{\ast} \lvert C \rvert
+		\leq w_0^{+M^{\ast} }(C) - 2 M^{\ast}
+		\leq n^2 - 2n^2
+		< 0,
+	\]
+	where we use the fact that \(\lvert C \rvert \geq 2\) and \(M^{\ast} \geq n^2\). Hence, the weight of \(C\) in \(G_0\) is negative, which implies that it is also negative in \(G\) as well.
 \end{proof}
 
-Based on the above discussion, we see that the following algorithm outputs a negative cycle assuming access to \(\mathcal{A} \). It invokes \(\mathcal{A} \) only \(O(\log (nW))\) times.
+Based on \autoref{lma:SSSP-detect-negative-cycle}, we see that the following algorithm outputs a negative cycle assuming access to \(\mathcal{A} \). It invokes \(\mathcal{A} \) only \(O(\log (nW))\) times.
 
 \begin{algorithm}[H]\label{algo:find-negative-cyele}
 	\DontPrintSemicolon{}
 	\caption{Find Negative Weight Cycle}
-	\KwData{A directed graph \(G = (V, E)\) with edge capacity \(w \colon V \to \mathbb{Z} \)}
+	\KwData{A directed graph \(G = (V, E)\) with integral edge length \(w \colon V \to \mathbb{Z} \) containing a negative weight cycle}
 	\KwResult{A negative weight cycle \(C\)}
 	\SetKwFunction{Cycle}{Find-Cycle}
 	\SetKwFunction{Algo}{\(\mathcal{A} \)}
 	\BlankLine
 
-	\(w^{\prime} \gets n^3 w\)\;
-	\(G_0 \gets (V, E, w^{\prime} )\)\;
+	\(w_0 \gets n^3 w\)\;
+	\(G_0 \gets (V, E, w_0)\)\;
 	Find the smallest \(M^{\ast} > 0\) such that \(G_0^{+M^{\ast} }\) has no negative weight cycle\Comment*[r]{Binary search}
-	\(\phi \gets \)\Algo{\(G_0^{+M^{\ast} }\), \({w^{\prime}}^{+ M^{\ast}} \)}\Comment*[r]{\hyperref[def:neutralize]{Neutralize} \(G_0^{+M^{\ast} }\)}
-	\(E^{\prime} \gets \{ e \in E \mid {w^{\prime}_{\phi }}^{+ M^{\ast}} (e) > n \} \)\;
+	\(\phi \gets \)\Algo{\(G_0^{+M^{\ast} }\), \(w_0^{+ M^{\ast}} \)}\Comment*[r]{\hyperref[def:neutralize]{Neutralize} \(G_0^{+M^{\ast} }\)}
+	\(E^{\prime} \gets \{ e \in E \mid \big(w_0^{+ M^{\ast}}\big)_{\phi } (e) > n \} \)\;
 	\(C \gets\)\Cycle{\(G - E^{\prime}\)}\;
 	\Return{\(C\)}\;
 \end{algorithm}

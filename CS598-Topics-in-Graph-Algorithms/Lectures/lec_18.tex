@@ -1,0 +1,275 @@
+\lecture{18}{24 Oct.\ 11:00}{Discretized Multiplicative Weight Updates Algorithm}
+\subsection{Discretized Time Multiplicative Weight Updates Algorithm}
+We want to obtain an algorithm that terminate in a few iterations.
+
+\begin{prev}
+	Recall that we're working with a convex program
+	\[
+		\begin{aligned}
+			\max~ & f(x)                              \\
+			      & g_i(x) \leq 1 & \forall i \in [m] \\
+			      & x \in P,
+		\end{aligned}
+	\]
+	where \(f\) is concave, and \(g_i\)'s are concave. The underlying linear programs we're interested in are of the form
+	\[
+		\begin{aligned}
+			\max~ & c^{\top} x \\
+			      & Ax \leq b  \\
+			      & x \geq 0,
+		\end{aligned}
+	\]
+	where \(c \in \mathbb{R} _{\geq 0}^n\), \(A \in \mathbb{R} _{\geq 0}^{m \times n}\), and \(b \in \mathbb{R} _{\geq 0}^m\).
+\end{prev}
+
+For this, we will work with the extra condition that \(g_i(x) \geq 0\) for all \(x \in P\). This models the \hyperref[def:packing-LP]{packing} constraints of interest and is needed for the algorithms and analysis, unlike the \hyperref[algo:MWU-continuous]{continuous algorithm}.
+
+Firstly, consider the simple uniform step size algorithm \autoref{algo:MWU-discrete-uniform}. For simplicity, \(\delta \) is chosen that there is an integer \(T\) such that \(T \delta = 1\) as before. Thus, the algorithm runs for \(T\) time steps, and the goal is to minimize \(T\) such that the discrete implementation ensures that the constraints are approximately satisfied. It turns out that we can use a parameter called the \hyperref[def:width]{width} of the given instance defined as follows.
+
+\begin{definition}[Width]\label{def:width}
+	The \emph{width} \(\rho \) of the given instance is defined as \(\rho \coloneqq \sup _{x \in P, i \in [m]} g_i(x)\).
+\end{definition}
+
+In other words, it is asking how much can some arbitrary point in \(P\) violate a specific constraint in a relative sense.\footnote{Since we have normalized the right-hand-side of each constraint to \(1\) by considering \(g_i(x) \leq 1\) as the constraint.} Recall that we solve a Lagrangian relaxation in each step and find a point \(v(t)\), which can violate some specific constraint \(i\) by  significant factor since we are only solving the relaxation by taking weighted sum of the constraints. Hence, \(\rho \) allows us to bound the worst-case violation.
+
+It may seem that \(\rho \) is unbounded for even simple instances because \(g_i\) may be an increasing function and \(P\) is typically the non-negative orthant. However, for many problems of interest, there are implicit bounds on the variables and \(P\) can be implicitly taken to be a bounding box that restrict \(\rho \). We will give some examples later on to illustrate this. Suppose for now that \(\rho \) is some bounded number.
+
+\begin{theorem}\label{thm:MWU-uniform-step}
+	Suppose \(\eta = \ln m / \epsilon \), \(\delta = \epsilon / \eta \rho \), and \(\epsilon \in (0, 1 / 2)\). Then in \(O(\rho \ln m / \epsilon ^2)\) iterations, \autoref{algo:MWU-discrete-uniform} will output a point \(x_{\text{out} }\) such that
+	\begin{enumerate}[(i)]
+		\item \(f(x_{\text{out} }) \geq \OPT\), and
+		\item \(g_i(x_{\text{out} }) \leq 1 + 2\epsilon \) for all \(i \in [m]\).
+	\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+	The dependence in \autoref{thm:MWU-uniform-step} is \(1 / \epsilon ^2\) when compared to the continuous algorithm. One can view this factor as the price for discretization since we cannot follow \autoref{algo:MWU-continuous} precisely.
+\end{remark}
+
+Instead of proving \autoref{thm:MWU-uniform-step}, we consider the non-uniform step size case, which turns out to be stronger and \autoref{thm:MWU-uniform-step} can be reduced to which. Specifically, Garg and Konemann~\cite{garg2007faster} obtained a \hyperref[def:width]{width}-independent algorithm and analysis by a seemingly simple but important tweak to \autoref{algo:MWU-discrete-uniform}.
+
+\begin{intuition}
+	The non-uniform step size can be thought of as choosing the maximum step size at any point greedily so that the analysis goes through. All we need is that we want to find \(\delta \) such that \(w_i(t + \delta ) \leq w_i(t) \cdot e^{\epsilon } \), i.e., \(\delta \) is the maximum value such that \(\eta \delta g_i(v(t)) \leq \epsilon \). This is only possible if \(g_i \geq 0\).
+\end{intuition}
+
+Surprisingly, this yields an algorithm that bounds the number of iterations to \(O(m \log m / \epsilon ^2)\), which depends only on the number of constraints and \(\epsilon \), which is \hyperref[def:width]{width}-independent.
+
+\begin{note}
+	The choice of step size requires each \(g_i\) to be positive over the domain \(P\), otherwise, it is not well-defined.
+\end{note}
+
+We see the algorithm directly.
+
+\begin{algorithm}[H]\label{algo:MWU-discrete-non-uniform}
+	\DontPrintSemicolon{}
+	\caption{Multiplicative Weight Update Non-Uniform Step}
+	\KwData{An objective \(f\), constraints \(\{ g_i \} _{i=1}^{m}\), feasible set \(P\), \(\eta \)}
+	\KwResult{A solution \(x_{\text{out} }\)}
+	\BlankLine
+
+	\For(){\(i = 1, \dots , m\)}{
+		\(w_i(0) \gets 1\)\;
+	}
+	\(x(0) = 0\)\;
+	\(t = 0\)\;
+	\;
+	\While(){\(t < 1\)}{
+	\(v(t) \gets\)\Oracle{\(f\), \(\{ g_i \} _{i=1}^{m}\), \(\{ w_i(t) \} _{i=1}^{m}\), \(P\)}\;
+	\(\delta \gets \max \delta ^{\prime} \) such that \(\max _{i \in [m]} \delta ^{\prime} \eta g_i(v(t)) \leq \epsilon \)\Comment*[r]{Max step size}
+	\(\delta \gets \min (\delta , 1 - t)\)\Comment*[r]{Handle the last iteration}
+	\For(){\(i = 1, \dots , m\)}{
+		\(w_i(t+\delta ) \gets w_i(t) \cdot e^{\eta \delta g_i(v (t))}\)\;
+	}
+	\(x (t+\delta ) \gets x (t) + \delta v (t)\)\;
+	\(t \gets t + \delta \)\;
+	}
+	\Return{\(x(1)\)}\;
+\end{algorithm}
+
+We will mimic the continuous time algorithm (\autoref{algo:MWU-continuous}) analysis in some ways and point out where the discretization matters and how we bound the errors. First, let's set up some notations.
+
+\begin{notation}
+	The algorithm runs for some number \(T\) of iterations, and we use \(j\) to index the iterations and \(i\) as before to index the constraints. We think of the time before the start of iteration \(j+1\) as \(t_j\), and the step size in that iteration as \(\delta _j\). We have \(t_0 = 0\) and \(t_{j+1} = t_j + \delta _j\) for \(j = 0, 1, \dots , T-1\) such that \(\sum_{j=0}^{T-1} \delta _j = 1\). Note that in iteration \(j+1\), we compute \(v(t_j)\) and \(\delta _j\) w.r.t.\ weights \(w_i(t_j)\)'s. In other words, \(t_{j+1}\) is the time at the end of iteration \(j+1\).
+\end{notation}
+
+The following is easy to prove even with a discrete step size (compared to \autoref{lma:MWU-continuous-OPT}).
+
+\begin{lemma}\label{lma:MWU-discrete-non-uniform-OPT}
+	In \autoref{algo:MWU-discrete-non-uniform}, if \(f\) is concave, then \(f(x _{\text{out} }) = f(x (1)) \geq \OPT\).
+\end{lemma}
+\begin{proof}
+	From the definition and concavity of \(f\), we have
+	\[
+		f(x _{\text{out} })
+		= f \left( \sum_{j=0}^{T-1} \delta _{j} v (t_j) \right)
+		\geq \sum_{j=0}^{T-1} \delta _j f(v (t_j))
+		\geq \sum_{j=0}^{T-1} \delta _j \OPT
+		\geq \OPT,
+	\]
+	where we again use the fact that \(v(t_j)\) is the solution of the Lagrangian relaxation.
+\end{proof}
+
+The next claim, similar to \autoref{lma:MWU-continuous-constraint}, still holds in the discrete setting, but the proof is useful to see.
+
+\begin{lemma}\label{lma:MWU-discrete-non-uniform-constraint}
+	In \autoref{algo:MWU-discrete-non-uniform}, for each \(i \in [m]\), we have \(g_i(x _{\text{out} }) \leq \ln w_i(1) / \eta \).
+\end{lemma}
+\begin{proof}
+	We have \(x_{\text{out} } = \sum_{j=0}^{T-1} \delta _j v(t_j)\), and hence by convexity of \(g_i\), \(g(x_{\text{out} }) \leq \sum_{j=0}^{T-1} \delta _j g(v(t_j))\). We see that in iteration \(j+1\), the weight of constraint \(i\) is updated as \(w_i(t_{j+1}) = w_i(t_j) \exp (\eta \delta _j g_i(v(t_j)))\). Hence,
+	\[
+		\delta _j g_i(v(t_j))
+		= \frac{\ln w_i(t_{j+1}) - \ln w_i(t_j)}{\eta }.
+	\]
+	Summing up two sides over \(j\) and using telescoping, we have
+	\[
+		g(x_{\text{out} })
+		\leq \sum_{j=0}^{T-1} \delta _j g(v(t_j))
+		\leq \frac{\ln w_i(1) - \ln w_i(0)}{\eta },
+	\]
+	with \(w_i(0) = 1\), we're done.
+\end{proof}
+
+The main technical lemma is the following, which bounds the evolution of the total weight and this is where the choice of the step size is crucial. Here is also where we use the fact that we solve the Lagrangian relaxation.
+
+\begin{lemma}\label{lma:MWU-discrete-non-uniform-weight}
+	In \autoref{algo:MWU-discrete-non-uniform}, for all \(t_j\), \(\sum_{i=1}^{m} w_i(t_j) \leq e^{(1 + \epsilon ) \eta t_j} \sum_{i=1}^{m} w_i(0)\). Hence, \(\sum_{i=1}^{m} w_i(1) \leq m e^{(1 + \epsilon ) \eta }\).
+\end{lemma}
+\begin{proof}
+	Consider iteration \(j + 1\). Since \(g_i\)'s are all positive on the domain, all numbers involved are positive. We see that
+	\[
+		\sum_{i=1}^{m} w_i(t_j + \delta _j)
+		= \sum_{i=1}^{m} w_i(t_j) \exp (\eta \delta _j g_i(v (t_j))),
+	\]
+	where we ensure that \(\eta \delta _j g_i(v (t_j)) \leq \epsilon \leq 1 / 2\) in \autoref{algo:MWU-discrete-non-uniform}. Observe that it suffices to prove
+	\[
+		\sum_{i=1}^{m} w_i(t_j + \delta _j)
+		\leq e^{(1 + \epsilon ) \delta _j \eta } \left( \sum_{i=1}^{m} w_i(t_j) \right) .
+	\]
+
+	\begin{claim}
+		If \(a \in (0, 1 / 2)\), we have \(e^a \leq 1 + a + a^2\).
+	\end{claim}
+	\begin{explanation}
+		This is immediate from Taylor's expansion.
+	\end{explanation}
+
+	Hence, by writing \(\eta \delta _j g_i(v(t_j)) = a_i\), we have
+	\[
+		\begin{split}
+			\sum_{i=1}^{m} w_i(t_j) \exp (\eta \delta _j g_i(v (t_j)))
+			 & \leq \sum_{i=1}^{m} w_i(t_j) \exp (1 + a_i + a_i^2)                                                                                            \\
+			 & \leq \sum_{i=1}^{m} w_i(t_j) \left( 1 + a_i (1 + \epsilon ) \right)                                                                            \\
+			 & \leq \sum_{i=1}^{m} w_i(t_j) + (1 + \epsilon ) \eta \delta _j \underbrace{\sum_{i=1}^{m} w_i(t_j) g_i(v (t_j))}_{\leq \sum_{i=1}^{m} w_i(t_j)} \\
+			 & \leq \left( \sum_{i=1}^{m} w_i(t_j) \right) \left( 1 + (1 + \epsilon ) \eta \delta _j \right)
+			\leq \left( \sum_{i=1}^{m} w_i(t_j) \right) \exp ((1 + \epsilon ) \eta \delta _j)
+		\end{split}
+	\]
+	since \(1 + b \leq e^b\) for all \(b \geq 0\). Hence, we're done.
+\end{proof}
+
+\begin{remark}
+	The proof of \autoref{lma:MWU-discrete-non-uniform-weight} will go through easily for a fixed step size as long as the step size guarantees that no weight of a constraint goes up by more than an \(e^{\epsilon } \) factor. This is satisfied by the choice of the step size based on the \hyperref[def:width]{width}! The rest of the analysis is the same.
+\end{remark}
+
+\begin{theorem}\label{thm:MWU-discrete-non-uniform}
+	If \(\eta \geq \ln m / \epsilon \), then the output \(x_{\text{out} }\) of \autoref{algo:MWU-discrete-non-uniform} satisfies the following:
+	\begin{enumerate}[(i)]
+		\item\label{thm:MWU-discrete-non-uniform-i} \(f(x_{\text{out} }) \geq \OPT\);
+		\item\label{thm:MWU-discrete-non-uniform-ii} \(g_i(x_{\text{out} }) \leq 1 + 2\epsilon \) for all \(i \in [m]\).
+	\end{enumerate}
+	Moreover, \autoref{algo:MWU-discrete-non-uniform} terminates in \(O(m \log m / \epsilon ^2)\) iterations.
+\end{theorem}
+\begin{proof}
+	Firstly, \autoref{thm:MWU-discrete-non-uniform-i} is shown in \autoref{thm:MWU-discrete-non-uniform}. For \autoref{thm:MWU-discrete-non-uniform-ii}, from \autoref{lma:MWU-discrete-non-uniform-constraint}, we have \(g_i(x_{\text{out} }) \leq \ln w_i(1) / \eta \) and that \(\ln \sum_{i=1}^{m} w(1) \leq (1 + \epsilon ) \eta \ln m\) from \autoref{lma:MWU-discrete-non-uniform-weight}. This implies
+	\[
+		g_i(x _{\text{out} })
+		\leq \frac{1}{\eta } \ln (w_i(1))
+		\leq \frac{1}{\eta } \ln (\sum_{i=1}^{m} w_i(1))
+		\leq \frac{1}{\eta } \ln (m e^{(1 + \epsilon ) \eta })
+		= 1 + \epsilon + \frac{\ln m}{\eta }
+		\leq 1 + 2\epsilon .
+	\]
+	Next, we switch to exponential weights instead of reasoning with logarithms since it will be useful later. We will also use a loose argument though one can do a tighter analysis.
+	\begin{claim}
+		The total number of iterations \(T\) satisfies \(T \leq c m \ln m / \epsilon ^2\) for some small, fixed constant \(c\).
+	\end{claim}
+	\begin{explanation}
+		Firstly, in the end, the total weight \(\sum_{i=1}^{m} w(1)\) is
+		\[
+			e^{(1 + \epsilon ) \eta }m
+			= m \cdot e^{(1 + \epsilon ) (\ln m) / \epsilon }
+			= m^{1 + \frac{1 + \epsilon }{\epsilon }}
+			= m^{O(1 / \epsilon )}.
+		\]
+		Observe that since we're being greedy, in each iteration we choose \(\delta _j\) to be the maximum such that there is some \(i\) in that iteration with \(\eta \delta _j g_i(v(t_j)) = \epsilon \) exactly. But this implies that for that \(i\), its weight \(w_i\) increases by a factor of \(e^{\epsilon } \). Since each weight starts at \(1\), with the fact that the total weight at the end is \(m^{O(1 / \epsilon )}\), no weight \(w_i\) can have its weight updated by an \(e^{\epsilon } \) factor more than \(O(\log m / \epsilon ^2)\) times. But there are only \(m\) constraints and each iteration must increase at least one constraint's weight by a factor of \(e^{\epsilon } \), thus, we cannot have \(T\) more than \(cm \log m / \epsilon ^2\) for some small but fixed constant \(c\).
+	\end{explanation}
+	This finishes the proof.
+\end{proof}
+
+\subsection{Scaling Weights}
+In the analysis so far, we have sued constraints of the form \(g_i(x) \leq 1\) which makes the notation clean. Of course, any constraint of the form \(g_i(x) \leq b_i\) with \(b_i > 0\) can be scaled to achieve the standard form. However, in some combinatorial applications, when \(A\) the packing matrix corresponds to an incidence matrix of a combinatorial object and \(b_i\) represents some capacity, scaling makes the matrix unnatural.
+
+We can avoid this by modifying \autoref{algo:MWU-discrete-non-uniform} as follows. Suppose we have constraints of the form \(g_i(x) \leq b_i\) for all \(i \in [m]\) where \(b > 0\). we start with \(w_i(0) = 1 / b_i\) for each \(i\). Then, we do the analysis with \(b_i w_i\) instead of \(w_i\). Since the weights are updated in a multiplicative fashion, the whole analysis goes through cleanly.
+
+\begin{note}
+	With weights set up like this, we still solve the \hyperref[eq:MWU-oracle]{oracle} in each iteration with the constraint \(\sum_{i=1}^{m} w_i g_i(y) \leq \sum_{i=1}^{m} w_i\); the \(b_i\)'s are taken care of automatically.
+\end{note}
+
+\section{Applications to Explicit and Implicit Packing Linear Programs}
+We show how to generic scheme that we have described via multiplicative weight updates can be used to derive fast approximation algorithms for \hyperref[def:packing-LP]{packing linear programs}. Recall that the general \hyperref[def:packing-LP]{packing linear program} looks like
+\[
+	\begin{aligned}
+		\max~ & c^{\top} x  \\
+		      & Ax \leq b ; \\
+		      & x \geq 0.
+	\end{aligned}
+\]
+In terms of the generic framework, we have \(f(x) = c^{\top} X\) and \(g_i(x) = \sum_{j=1}^{n} A_{ij} x_j\) corresponds to the \(i^{\text{th} }\) row of \(A\), and \(P\) corresponds to \(\mathbb{R} _{\geq 0}^n\).
+
+\begin{note}
+	In some settings, we think of \(P\) as a bounding box implied by constraints with \(0 \leq x_j \leq u_j\) where \(u_j\) is an upper bound on \(x_j\) implicitly implied by the constraints in \(Ax \leq b\). This often helps in figuring out the \hyperref[def:width]{width} of the system.
+\end{note}
+
+\subsection{Efficient Oracle}
+\begin{prev}
+	To solve the oracle for \(v (t)\), in the positive linear programming setting, we want to solve that given \(w_i\)'s,
+	\[
+		\begin{aligned}
+			\max~ & c^{\top} x                                                                          \\
+			      & \sum_{i=1}^{m} w_i \left( \sum_{j=1}^{n} A_{ij} x_j \right) \leq \sum_{i=1}^{m} w_i \\
+			      & x \geq 0 ;
+		\end{aligned}
+		\iff \begin{aligned}
+			\max~ & c^{\top} x                                                                          \\
+			      & \sum_{j=1}^{n} \left( \sum_{i=1}^{m} w_i A_{ij} \right) x_j \leq \sum_{i=1}^{m} w_i \\
+			      & x \geq 0 ,
+		\end{aligned}
+	\]
+	which is a knapsack problem.
+\end{prev}
+
+We further see that solving the fraction knapsack problem will only touch one variable in each iteration. From the above claim, we see that we will terminate in \(2m \ln m / \epsilon ^2\) iterations, where \(m\) is the number of constraints. Hence, we see that even if we have exponentially many variables, as long as we can find the correct variable, the algorithm is still efficient.
+
+\begin{eg}[Tree packing]
+	Consider the tree packing LP:
+	\[
+		\begin{aligned}
+			\max~ & \sum_{T \in \mathcal{T} _G} x_T                                 \\
+			      & \sum_{T \ni e} x_T \leq 1       & \forall e \in E               \\
+			      & x_T \geq 0                      & \forall T \in \mathcal{T} _G.
+		\end{aligned}
+	\]
+	We see that the oracle we want is to solve \(\max _{T \in \mathcal{T} _G} 1 / \sum_{e \in T} w_e\), i.e., \(\min _{T \in \mathcal{T} _G} \sum_{e \in T} w_e\), which is just the \hyperref[prb:MST]{MST}.
+\end{eg}
+
+\begin{eg}[Maximum multi-commodity flow]
+	Consider
+	\[
+		\begin{aligned}
+			\max~ & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}} x_P                                                                       \\
+			      & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}, e \in P} x_P \leq u(e) & \forall e\in E                                   \\
+			      & x_P \geq 0                                                                 & P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}.
+		\end{aligned}
+	\]
+	The oracle is then \(\max _{P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}} 1 / \sum_{e \in P} w_e\), hence it is just the shortest path among all pairs.
+\end{eg}

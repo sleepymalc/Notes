@@ -167,9 +167,9 @@ Now, we provide the proof sketch of \autoref{thm:Karger-Klein-Tarjan}, which can
 Many properties of forests and spanning trees can be understood in the more general context of \emph{matroids}. In many cases this perspective is insightful and also useful. The \hyperref[lma:sampling]{sampling lemma} applies in this more general context and has various applications~\cite{karger1995random,karger1998random}. Obtaining a deterministic \(O(m)\) time algorithm is a major open problem. Obtaining a simpler linear-time \hyperref[thm:MST-verification]{MST verification} algorithm, even randomized, is also a very interesting open problem.
 
 \section{Tree Packing}
-We turn to another interesting problem, \hyperref[prb:TP]{tree packing}.
+We turn to another interesting problem, \hyperref[prb:tree-packing]{tree packing}.
 
-\begin{problem}[Tree packing]\label{prb:TP}
+\begin{problem}[Tree packing]\label{prb:tree-packing}
 Given a multigraph \(G = (V, E)\), find all the edge-disjoint \hyperref[def:spanning-tree]{spanning trees} in \(G\). In particular, find the maximum number, \(\tau (G)\), of edge-disjoint \hyperref[def:spanning-tree]{spanning trees} of \(G\)
 \end{problem}
 
@@ -198,7 +198,7 @@ More generally, we have the following.
 	\autoref{thm:Tutte-Nash-Williams} is a special case of a theorem on matroid base packing where it is perhaps more natural to see~\cite{schrijver2003combinatorial}.
 \end{remark}
 
-A weaker version of the theorem is regarding fractional packing. In fractional packing, we allow one to use a fraction amount of a tree. The total amount to which an edge can be used is at most \(1\) (or \(c(e)\) in the capacitated case). Clearly, an integer packing is also a fractional packing. The advantage of fractional packings is that one can write a linear program for it, and they often have some nice properties. Let \(\tau _{\text{frac} } (G)\) be the fraction \hyperref[prb:TP]{tree packing} number. Clearly, we have \(\tau _{\text{frac} }(G) \geq \tau (G)\).
+A weaker version of the theorem is regarding fractional packing. In fractional packing, we allow one to use a fraction amount of a tree. The total amount to which an edge can be used is at most \(1\) (or \(c(e)\) in the capacitated case). Clearly, an integer packing is also a fractional packing. The advantage of fractional packings is that one can write a linear program for it, and they often have some nice properties. Let \(\tau _{\text{frac} } (G)\) be the fraction \hyperref[prb:tree-packing]{tree packing} number. Clearly, we have \(\tau _{\text{frac} }(G) \geq \tau (G)\).
 
 \begin{corollary}\label{col:Tutte-Nash-Williams}
 	Given a graph \(G\), we have
@@ -255,10 +255,10 @@ We first see a tight example.
 	\autoref{col:Tutte-Nash-Williams} can also be proved in the same way when the edge capacity is rational.
 \end{note}
 
-Typically, one uses the connection between \hyperref[prb:TP]{tree packing} and min-cut to argue about the existence of many disjoint \hyperref[def:spanning-tree]{trees}, since the global minimum cut is easier to understand than \(\tau (G)\). However, we will see that one can use \hyperref[prb:TP]{tree packing} to compute \(\lambda (G)\) exactly which may seem surprising at first due to the approximate relationship \autoref{col:Tutte-Nash-Williams-min-cut}.
+Typically, one uses the connection between \hyperref[prb:tree-packing]{tree packing} and min-cut to argue about the existence of many disjoint \hyperref[def:spanning-tree]{trees}, since the global minimum cut is easier to understand than \(\tau (G)\). However, we will see that one can use \hyperref[prb:tree-packing]{tree packing} to compute \(\lambda (G)\) exactly which may seem surprising at first due to the approximate relationship \autoref{col:Tutte-Nash-Williams-min-cut}.
 
 \subsection{Proof of \autoref{col:Tutte-Nash-Williams}}
-Now, we give a different proof for \autoref{col:Tutte-Nash-Williams} via LP duality without relying on \autoref{thm:Tutte-Nash-Williams}.\footnote{Indeed, this is a hard theorem to prove so we will not touch on this.}
+Now, we give a different proof for \autoref{col:Tutte-Nash-Williams} via LP duality without relying on \autoref{thm:Tutte-Nash-Williams}.\footnote{Indeed, this is a hard theorem to prove, so we will not touch on this.}
 
 \begin{proof}[Proof of \autoref{col:Tutte-Nash-Williams}~\cite{chekuri2017near}]\label{pf:col:Tutte-Nash-Williams}
 	Consider \(\mathcal{T} _G \coloneqq \{ T \mid T \text{ is a \hyperref[def:spanning-tree]{spanning tree} of } G \} \). Then, consider the following primal and the dual linear program:
@@ -283,7 +283,7 @@ Now, we give a different proof for \autoref{col:Tutte-Nash-Williams} via LP dual
 	We see that if there exists \(e\) such that \(x^{\ast} _e = 0\), then we can just contract all these edges, so without loss of generality, \(x^{\ast} _e > 0\) for all \(e \in E\).
 
 	\begin{intuition}
-		If \(x^{\ast} _e = 0\), we can effectively increase \(c(e)\) to \(\infty \) without affecting the value of the dual solution, i.e., \(e\) is not a bottleneck in the primal \hyperref[prb:TP]{tree packing}, hence safe to contract.
+		If \(x^{\ast} _e = 0\), we can effectively increase \(c(e)\) to \(\infty \) without affecting the value of the dual solution, i.e., \(e\) is not a bottleneck in the primal \hyperref[prb:tree-packing]{tree packing}, hence safe to contract.
 	\end{intuition}
 
 	\begin{claim}
@@ -311,7 +311,7 @@ Now, we give a different proof for \autoref{col:Tutte-Nash-Williams} via LP dual
 \end{remark}
 
 \subsection{Finding an Optimum Tree Packing and Approximating Tree Packing}
-If the linear program in the \hyperref[pf:col:Tutte-Nash-Williams]{proof} of \autoref{col:Tutte-Nash-Williams} can be solved efficient to get \(\tau _{\text{frac} }(G)\), then it will also yield an algorithm for the value of the integer packing \(\tau (G)\) since it's just the floor of which. The problem is that while the primal has an exponentially many variables, the dual has an exponentially many constraints. We recall the following fact.
+If the \hyperref[eq:tree-packing-LP]{linear program} in the \hyperref[pf:col:Tutte-Nash-Williams]{proof} of \autoref{col:Tutte-Nash-Williams} can be solved efficient to get \(\tau _{\text{frac} }(G)\), then it will also yield an algorithm for the value of the integer packing \(\tau (G)\) since it's just the floor of which. The problem is that while the primal has an exponentially many variables, the dual has an exponentially many constraints. We recall the following fact.
 
 \begin{prev}
 	The Ellipsoid method needs a \emph{separation oracle}. For example, applying it to the dual, we need to answer the following question efficiently:
@@ -324,11 +324,14 @@ If the linear program in the \hyperref[pf:col:Tutte-Nash-Williams]{proof} of \au
 We see that this corresponds to solving \hyperref[prb:MST]{MST}, hence, the dual admits an efficient solution via the Ellipsoid method. One can convert an exact algorithm for the dual to an exact algorithm for the primal.
 
 \begin{remark}
-	There are combinatorial algorithms for solving \hyperref[prb:TP]{tree packing} (both integer version and fraction versions) in strongly polynomial time~\cite{schrijver2003combinatorial}.
+	There are combinatorial algorithms for solving \hyperref[prb:tree-packing]{tree packing} (both integer version and fraction versions) in strongly polynomial time~\cite{schrijver2003combinatorial}.
 \end{remark}
 
-On the other hand, we're also interested in whether we can find a faster algorithm for \hyperref[prb:TP]{tree packing} if one allows approximation. With an adaption of the \emph{multiplicative weights update} (MWU) method and data structures for \hyperref[prb:MST]{MST} maintenance, there is a near-linear time algorithm:
+On the other hand, we're also interested in whether we can find a faster algorithm for \hyperref[prb:tree-packing]{tree packing} if one allows approximation. With an adaption of the \emph{multiplicative weights update} method and data structures for \hyperref[prb:MST]{MST} maintenance, there is a near-linear time algorithm:
 
-\begin{theorem}[\cite{chekuri2017near}]\label{thm:approximate-TP}
-	There is a deterministic algorithm to compute a \((1 - \epsilon )\)-approximate fractional \hyperref[prb:TP]{tree packing} in \(O(m \log ^3 n / \epsilon ^2)\).
+\begin{theorem}[\cite{chekuri2017near}]\label{thm:approximate-tree-packing}
+	There is a deterministic algorithm to compute a \((1 - \epsilon )\)-approximate fractional \hyperref[prb:tree-packing]{tree packing} in \(O(m \log ^3 n / \epsilon ^2)\).
 \end{theorem}
+\begin{proof}
+	We will see this in \autoref{ch:MWU}.
+\end{proof}

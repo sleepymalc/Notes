@@ -24,13 +24,13 @@ The following is a consequence of Karger's contraction algorithm~\cite{karger199
 	The number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cuts} in a graph is at most \(O(n^{2 \alpha })\).
 \end{theorem}
 
-Karger then developed another approach via \hyperref[prb:TP]{tree packing} to obtain a randomized near-linear time algorithm for \hyperref[prb:global-min-cut]{min-cut}. He also was able to refine the bound on \hyperref[thm:number-approximate-min-cut]{approximate min-cuts} via this approach.
+Karger then developed another approach via \hyperref[prb:tree-packing]{tree packing} to obtain a randomized near-linear time algorithm for \hyperref[prb:global-min-cut]{min-cut}. He also was able to refine the bound on \hyperref[thm:number-approximate-min-cut]{approximate min-cuts} via this approach.
 
 \begin{theorem}[\cite{karger2000minimum}]\label{thm:Karger-tree-packing-based-min-cut}
 	There is a randomized algorithm that runs in time \(O(m \log ^3 n)\) and outputs the \hyperref[prb:global-min-cut]{min-cut} with high probability.
 \end{theorem}
 
-While the random contraction based algorithm is taught quite frequently due to its elegance and simplicity, the \hyperref[prb:TP]{tree packing} approach is more technical. More recently, the \hyperref[prb:TP]{tree packing} approach has led to several new results, which we now discuss.
+While the random contraction based algorithm is taught quite frequently due to its elegance and simplicity, the \hyperref[prb:tree-packing]{tree packing} approach is more technical. More recently, the \hyperref[prb:tree-packing]{tree packing} approach has led to several new results, which we now discuss.
 
 \subsection{Tree Packing-Based Algorithm for Min-Cut}
 Recall \autoref{col:Tutte-Nash-Williams-min-cut}, which gives \(\tau _{\text{frac} }(G) \in [\frac{\lambda (G)}{2} \frac{n}{n-1}, \lambda (G)]\). Intuitively, even if we can compute \(\tau _{\text{frac} }(G)\) exactly, we have a \(2\)-approximation to \(\lambda (G)\). However, this already leads a crucial observation:
@@ -54,7 +54,7 @@ To formalize the above intuition, consider the following definition.
 We can now formalize the intuition in \autoref{lma:tree-packing-min-cut}.
 
 \begin{lemma}\label{lma:tree-packing-min-cut}
-	Suppose \(\{ y_T \} _{T \in \mathcal{T} _G}\) is a \((1 - \epsilon )\)-approximate \hyperref[prb:TP]{tree packing} of \(G\), and \(\delta (S)\) is a \hyperref[prb:global-min-cut]{min-cut} of \(G\). Let \(\ell _T \coloneqq \lvert E_T \cap \delta (S) \rvert \) be the number of edges of \(T\) that cross the cut \(S\). Furthermore, let \(p_T = y_T / \sum_{T\in \mathcal{T} _G} y_T \) and \(q \coloneqq \sum_{T \colon \ell (T) \leq 2} p_T \). Then,
+	Suppose \(\{ y_T \} _{T \in \mathcal{T} _G}\) is a \((1 - \epsilon )\)-approximate \hyperref[prb:tree-packing]{tree packing} of \(G\), and \(\delta (S)\) is a \hyperref[prb:global-min-cut]{min-cut} of \(G\). Let \(\ell _T \coloneqq \lvert E_T \cap \delta (S) \rvert \) be the number of edges of \(T\) that cross the cut \(S\). Furthermore, let \(p_T = y_T / \sum_{T\in \mathcal{T} _G} y_T \) and \(q \coloneqq \sum_{T \colon \ell (T) \leq 2} p_T \). Then,
 	\[
 		q \geq \frac{1}{2} \left( 3 - \frac{2}{1 - \epsilon } \left( 1 - \frac{1}{n} \right) \right) .
 	\]
@@ -71,7 +71,7 @@ We can now formalize the intuition in \autoref{lma:tree-packing-min-cut}.
 		\item each tree \(T\) with \(\ell (T) \geq 3\) uses up at least \(3\) edges from \(\delta (S)\); while
 		\item each tree \(T\) with \(\ell (T) \leq 2\) uses up at least \(1\) edge from \(\delta (S)\).
 	\end{itemize}
-	Since the total capacity of \(\delta (S)\) is \(\lambda (G)\), and the \hyperref[prb:TP]{tree packing} solution is valid, we have
+	Since the total capacity of \(\delta (S)\) is \(\lambda (G)\), and the \hyperref[prb:tree-packing]{tree packing} solution is valid, we have
 	\[
 		\sum_{T \colon \ell (T) \leq 2} y_T + 3 \sum_{T \colon \ell (T) \geq 3} y_T
 		\leq \lambda (G)
@@ -83,26 +83,26 @@ We can now formalize the intuition in \autoref{lma:tree-packing-min-cut}.
 \end{proof}
 
 \begin{remark}
-	\autoref{lma:tree-packing-min-cut} states that if the \hyperref[prb:TP]{tree packing} is sufficiently good, then a constant fraction of the trees in the \hyperref[prb:TP]{packing} will cross the \hyperref[prb:global-min-cut]{min-cut} at most twice.
+	\autoref{lma:tree-packing-min-cut} states that if the \hyperref[prb:tree-packing]{tree packing} is sufficiently good, then a constant fraction of the trees in the \hyperref[prb:tree-packing]{packing} will cross the \hyperref[prb:global-min-cut]{min-cut} at most twice.
 \end{remark}
 
-Now, we're ready to see Karger's algorithm for \hyperref[prb:global-min-cut]{min-cut}~\cite{karger2000minimum}. However, the original algorithm was more involved since at that time, there was no near-linear time approximation algorithm for \hyperref[prb:TP]{tree packing}, so he used a form of sparsification and then applied an approximation \hyperref[prb:TP]{tree packing} algorithm on the sparsified graph which is quite a feat. In our case, recall that following.
+Now, we're ready to see Karger's algorithm for \hyperref[prb:global-min-cut]{min-cut}~\cite{karger2000minimum}. However, the original algorithm was more involved since at that time, there was no near-linear time approximation algorithm for \hyperref[prb:tree-packing]{tree packing}, so he used a form of sparsification and then applied an approximation \hyperref[prb:tree-packing]{tree packing} algorithm on the sparsified graph which is quite a feat. In our case, recall that following.
 
 \begin{prev}
-	\autoref{thm:approximate-TP} states that we can compute a \((1 - \epsilon )\)-approximate \hyperref[prb:TP]{tree packing} of \(G\), given by \(\{ y_T \} _{T \in \mathcal{T} _G}\), in \(O(m \log ^3 n / \epsilon ^2)\) time.
+	\autoref{thm:approximate-tree-packing} states that we can compute a \((1 - \epsilon )\)-approximate \hyperref[prb:tree-packing]{tree packing} of \(G\), given by \(\{ y_T \} _{T \in \mathcal{T} _G}\), in \(O(m \log ^3 n / \epsilon ^2)\) time.
 \end{prev}
 
-By black-boxing this near-linear time \hyperref[prb:TP]{tree packing} algorithm, consider the following.
+By black-boxing this near-linear time \hyperref[prb:tree-packing]{tree packing} algorithm, consider the following.
 
 \begin{algorithm}[H]\label{algo:Karger-tree-packing-based-min-cut}
 	\DontPrintSemicolon{}
-	\caption{\hyperref[prb:TP]{Tree Packing}-Based \hyperref[prb:global-min-cut]{Min-Cut} Algorithm~\cite{karger2000minimum,chekuri2017near}}
+	\caption{\hyperref[prb:tree-packing]{Tree Packing}-Based \hyperref[prb:global-min-cut]{Min-Cut} Algorithm~\cite{karger2000minimum,chekuri2017near}}
 	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), \(\epsilon _0 \in < 1 / 5\)}
 	\KwResult{A cut \(S\)}
-	\SetKwFunction{CQ}{\hyperref[thm:approximate-TP]{Approximate-Tree-Packing}}
+	\SetKwFunction{CQ}{\hyperref[thm:approximate-tree-packing]{Approximate-Tree-Packing}}
 	\BlankLine
 
-	\(\{ y_T \} _{T \in \mathcal{T} _G} \gets\)\CQ{\(G\), \(c\), \(\epsilon _0\)}\label{algo:Karger-tree-packing-based-min-cut-TP}\Comment*[r]{\(O(m \log ^3 n)\)}
+	\(\{ y_T \} _{T \in \mathcal{T} _G} \gets\)\CQ{\(G\), \(c\), \(\epsilon _0\)}\label{algo:Karger-tree-packing-based-min-cut-tree-packing}\Comment*[r]{\(O(m \log ^3 n)\)}
 	Sample a tree \(T\) with probability \(p_T = y_T / \sum_{T \in \mathcal{T} _G} y_T\)\label{algo:Karger-tree-packing-based-min-cut-sample}\;
 	Find the cheapest cut \((S, V\setminus S)\) in \(G\) such that \(T\) is \hyperref[def:respect]{\(2\)-respecting} w.r.t.\ \(S\)\label{algo:Karger-tree-packing-based-min-cut-find-respect-cut}\;
 	\Return{\(S\)}\;
@@ -126,7 +126,7 @@ To boost the success probability, we can simply repeat the last two steps (\auto
 We can now prove \autoref{thm:Karger-tree-packing-based-min-cut}.
 
 \begin{proof}[Proof of \autoref{thm:Karger-tree-packing-based-min-cut}]
-	Since \autoref{algo:Karger-tree-packing-based-min-cut-TP} takes \(O(m \log ^3 n)\) for \(\epsilon _0\) being a constant, and observe that once the approximated \hyperref[prb:TP]{tree packing} \(\{ y_T \} _{T \in \mathcal{T} }\) is computed, we can reuse them and apply the repetition for \autoref{algo:Karger-tree-packing-based-min-cut-sample} and \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut} to boost the probability of success. With \(\Theta (\log n)\) repetitions, we obtain an \(O(m \log ^3 n)\) time algorithm as desired with the running time guaranteed by \autoref{thm:Karger-tree-packing-based-min-cut-find-respect-cut}.
+	Since \autoref{algo:Karger-tree-packing-based-min-cut-tree-packing} takes \(O(m \log ^3 n)\) for \(\epsilon _0\) being a constant, and observe that once the approximated \hyperref[prb:tree-packing]{tree packing} \(\{ y_T \} _{T \in \mathcal{T} }\) is computed, we can reuse them and apply the repetition for \autoref{algo:Karger-tree-packing-based-min-cut-sample} and \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut} to boost the probability of success. With \(\Theta (\log n)\) repetitions, we obtain an \(O(m \log ^3 n)\) time algorithm as desired with the running time guaranteed by \autoref{thm:Karger-tree-packing-based-min-cut-find-respect-cut}.
 \end{proof}
 
 \subsection{Bounding the Number of Approximate Min-Cuts}
@@ -159,7 +159,7 @@ Hence, we're interested in the number of \hyperref[def:approximate-min-cut]{\(\a
 	For \(\alpha \geq 1\) an \emph{\(\alpha \)-approximate min-cut} is a cut \((S, V \setminus S)\) such that \(c(\delta (S)) \leq \alpha \lambda (G)\).
 \end{definition}
 
-Recall \autoref{thm:number-approximate-min-cut}, where Karger used \hyperref[prb:TP]{tree packing} to prove that the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximation min-cuts} is at most \(O_\alpha (n^{\lfloor 2\alpha \rfloor })\). Before we prove \autoref{thm:number-approximate-min-cut}, we recall some basic facts from linear programming.
+Recall \autoref{thm:number-approximate-min-cut}, where Karger used \hyperref[prb:tree-packing]{tree packing} to prove that the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximation min-cuts} is at most \(O_\alpha (n^{\lfloor 2\alpha \rfloor })\). Before we prove \autoref{thm:number-approximate-min-cut}, we recall some basic facts from linear programming.
 
 \begin{prev}
 	A solution \(x^{\ast} \) to a linear program which has \(n\) non-trivial constraints means that the support size of \(x\) is at most \(n\), i.e., \(x_i > 0\) for at most \(n\) many \(i\)'s.
@@ -168,9 +168,9 @@ Recall \autoref{thm:number-approximate-min-cut}, where Karger used \hyperref[prb
 We're now ready to prove \autoref{thm:number-approximate-min-cut}, which is based on~\cite{chekuri2020lp}.
 
 \begin{proof}[Proof of \autoref{thm:number-approximate-min-cut}]
-	Consider an optimum fraction \hyperref[prb:TP]{tree packing} solution \(\{ (T, y_T^{\ast} ) \}_{T \in \mathcal{T} _G} \). In the \hyperref[pf:col:Tutte-Nash-Williams]{proof} of \autoref{col:Tutte-Nash-Williams}, where we define the fractional \hyperref[prb:TP]{tree packing} linear program, we know that there are only \(m\) non-trivial constraints, hence there are only \(m\) many \(T\)'s such that \(y^{\ast} _T > 0\).
+	Consider an optimum fraction \hyperref[prb:tree-packing]{tree packing} solution \(\{ (T, y_T^{\ast} ) \}_{T \in \mathcal{T} _G} \). In the \hyperref[pf:col:Tutte-Nash-Williams]{proof} of \autoref{col:Tutte-Nash-Williams}, where we define the fractional \hyperref[prb:tree-packing]{tree packing} linear program, we know that there are only \(m\) non-trivial constraints, hence there are only \(m\) many \(T\)'s such that \(y^{\ast} _T > 0\).
 
-	Consider an \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cut} \(S \subseteq V\), and let \(h = \lceil 2 \alpha \rceil \). Now, let \(q_{h, \alpha }\) be the fraction of \hyperref[prb:TP]{tree packing} that \hyperref[def:respect]{\(h\)-respects} \(S \subseteq V\), i.e.,
+	Consider an \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cut} \(S \subseteq V\), and let \(h = \lceil 2 \alpha \rceil \). Now, let \(q_{h, \alpha }\) be the fraction of \hyperref[prb:tree-packing]{tree packing} that \hyperref[def:respect]{\(h\)-respects} \(S \subseteq V\), i.e.,
 	\[
 		q_{h, \alpha }
 		\coloneqq \sum_{T \colon \ell (T) \leq h} p_T.
@@ -183,10 +183,10 @@ We're now ready to prove \autoref{thm:number-approximate-min-cut}, which is base
 	The main intuition is the following:
 
 	\begin{intuition}
-		Say at least one tree in the \hyperref[prb:TP]{packing} \hyperref[def:respect]{\(h\)-respects} the cut (which is the case). Then, the total number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cuts} is at most \(m \cdot n^h \leq m \cdot n ^{\lfloor 2 \alpha \rfloor }\).
+		Say at least one tree in the \hyperref[prb:tree-packing]{packing} \hyperref[def:respect]{\(h\)-respects} the cut (which is the case). Then, the total number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cuts} is at most \(m \cdot n^h \leq m \cdot n ^{\lfloor 2 \alpha \rfloor }\).
 	\end{intuition}
 
-	But we can do better by noticing that \(q_{h, \alpha } > 0\) is a fixed constant for any fixed \(\alpha \). Suppose \(N\) is the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cuts}. For any fixed \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cut}, \(q_{h, \alpha }\) fraction of the \hyperref[prb:TP]{tree packing} is \hyperref[def:respect]{\(h\)-respecting} w.r.t.\ the cut. Consider the following question:
+	But we can do better by noticing that \(q_{h, \alpha } > 0\) is a fixed constant for any fixed \(\alpha \). Suppose \(N\) is the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cuts}. For any fixed \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cut}, \(q_{h, \alpha }\) fraction of the \hyperref[prb:tree-packing]{tree packing} is \hyperref[def:respect]{\(h\)-respecting} w.r.t.\ the cut. Consider the following question:
 
 	\begin{problem*}
 		Fix a single tree \(T\), how many distinct cuts are there such that \(T\) \hyperref[def:respect]{\(h\)-respects} w.r.t.?

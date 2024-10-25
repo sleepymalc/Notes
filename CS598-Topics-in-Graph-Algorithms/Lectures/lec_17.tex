@@ -1,29 +1,32 @@
-\chapter{Multiplicative Weight Updates}
+\chapter{Multiplicative Weight Update}\label{ch:MWU}
 \lecture{17}{22 Oct.\ 11:00}{Approximating Linear Programs}
-Positive linear programs are a large and interesting class of linear programs that arise in combinatorial optimization. These have some useful properties that can be exploited algorithmically via iterative methods coming from first order optimization methods and this leads to fast approximation solutions.
+In this chapter, we try to bridge the field of combinatorial (discrete) optimization and continuous optimization from the lens of approximating positive linear programs using \hyperref[algo:MWU-discrete-non-uniform]{multiplicative weight update}. In particular, we will look into the class of \emph{positive} linear programs, which is a large and interesting class of linear programs that arise in combinatorial optimization.
 
-Although these methods are old in optimization the formal analysis of these methods with provable worst-case guarantees for concrete problem can be traced to the work of faster algorithms for multi-commodity flows~\cite{shahrokhi1990maximum} which was later abstracted to general classes of linear programs~\cite{plotkin1995fast,grigoriadis1994fast}. Parallel algorithms were also derived via these methods~\cite{luby1993parallel}. There have been many developments since then.
+\begin{intuition}
+	Some useful properties that can be exploited algorithmically via iterative methods coming from first order optimization methods and this leads to fast approximation solutions.
+\end{intuition}
 
-\section{Positive Linear Programs}
+Although these methods are old in optimization, the formal analysis with provable worst-case guarantees for concrete problems can be traced to the work of efficient algorithms for multi-commodity flows~\cite{shahrokhi1990maximum} which was later abstracted to general classes of linear programs~\cite{plotkin1995fast,grigoriadis1994fast}. Parallel algorithms were also derived via these methods~\cite{luby1993parallel}, and there have been many developments since then.
+
+\section{Positive Linear Program}
 Positive linear programs, as the name suggests, are linear programs where the input to the linear program consists of positive numbers. This allows one to discuss relative approximations.
 
 \subsection{Packing, Covering and Mixture of Both}
 There are three types of positive linear programs that we commonly work with.
 
 \begin{definition}[Packing linear program]\label{def:packing-LP}
-	A \emph{packing linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
+	Given data \(c \in \mathbb{R} _{\geq 0}^n\), \(A \in \mathbb{R} _{\geq 0}^{m \times n}\), and \(b \in \mathbb{R} _{\geq 0}^m\), a \emph{packing linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
 	\[
 		\begin{aligned}
 			\max~ & c^{\top} x  \\
 			      & Ax \leq b ; \\
-			      & x \geq 0,
+			      & x \geq 0.
 		\end{aligned}
 	\]
-	where \(c \in \mathbb{R} _{\geq 0}^n\), \(A \in \mathbb{R} _{\geq 0}^{m \times n}\), and \(b \in \mathbb{R} _{\geq 0}^m\).
 \end{definition}
 
 \begin{definition}[Covering linear program]\label{def:covering-LP}
-	A \emph{covering linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
+	Given data \(c \in \mathbb{R} _{\geq 0}^n\), \(A \in \mathbb{R} _{\geq 0}^{m \times n}\), and \(b \in \mathbb{R} _{\geq 0}^m\), a \emph{covering linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
 	\[
 		\begin{aligned}
 			\min~ & c^{\top} x  \\
@@ -31,87 +34,93 @@ There are three types of positive linear programs that we commonly work with.
 			      & x \geq 0,
 		\end{aligned}
 	\]
-	where \(c \in \mathbb{R} _{\geq 0}^n\), \(A \in \mathbb{R} _{\geq 0}^{m \times n}\), and \(b \in \mathbb{R} _{\geq 0}^m\).
 \end{definition}
 
+Oftentimes, we have a mixture of both.
+
 \begin{definition}[Mixed packing and covering linear program]\label{def:mixed-packing-covering-LP}
-	A \emph{mixed packing and covering linear program} with \(n\) variables and \((m_1 + m_2)\) non-trivial constraints is in the form of feasibility problem of inequalities\footnote{This is general enough since we can put the objective (either maximization or minimization) into the constraints.}
+	Given data \(A \in \mathbb{R} _{\geq 0}^{m_1 \times n}\), \(b \in \mathbb{R} _{\geq 0}^{m_1}\), \(C \in \mathbb{R} _{\geq 0}^{m_2 \times n}\), and \(d \in \mathbb{R} _{\geq 0}^{m_2}\), a \emph{mixed packing and covering linear program} with \(n\) variables and \((m_1 + m_2)\) non-trivial constraints is in the form of feasibility problem of inequalities\footnote{This is general enough since we can put the objective (either maximization or minimization) into the constraints.}
 	\[
 		\begin{aligned}
 			\max~ & 0           \\
 			      & Ax \leq b ; \\
 			      & Cx \leq d ; \\
-			      & x \geq 0,
+			      & x \geq 0.
 		\end{aligned}
 	\]
-	where \(A \in \mathbb{R} _{\geq 0}^{m_1 \times n}\), \(b \in \mathbb{R} _{\geq 0}^{m_1}\), \(C \in \mathbb{R} _{\geq 0}^{m_2 \times n}\), and \(d \in \mathbb{R} _{\geq 0}^{m_2}\).
 \end{definition}
 
-An \emph{explicit} linear program is one in which all the data is specified in terms of the variables, constraints and the non-negative entries in the inequalities. We will assume that the representation is given in the sparse form, and we will usually let \(n\) denote the number of variables, \(m\) the number of constraints, and \(N\) the number of non-zeroes in the constraint matrices. Hence, the input size of an explicit specified positive linear program is \(\Theta (N + m + n)\).
+\subsection{Explicit and Implicit Linear Program}
+\begin{definition}[Explicit linear program]\label{def:explicit-LP}
+	An \emph{explicit linear program} is one in which all the data is specified in terms of the variables, constraints and the non-negative entries in the inequalities.
+\end{definition}
 
-On the other hand, an \emph{implicit} linear program is one in which we have an underlying data such as a graph or geometric object and a linear program formulation that is specified implicitly based on that data. They can have exponentially many variables or constraints and often they can be solved efficiently or approximately via Ellipsoid method. In such settings, we will not write down the explicit linear program, and we will seek iterative methods that have a running time that depends on the size of the original input that defines the linear program.
+For an \hyperref[def:explicit-LP]{explicit linear program}, we will assume that the representation is given in the sparse form, and we will usually let \(n\) denote the number of variables, \(m\) the number of constraints, and \(N\) the number of non-zeroes in the constraint matrices.
+
+\begin{remark}
+	Hence, the input size of an explicit specified positive linear program is \(\Theta (N + m + n)\).
+\end{remark}
+
+On the other hand, we also have the so-called \hyperref[def:implicit-LP]{implicit linear program}.
+
+\begin{definition}[Implicit linear program]\label{def:implicit-LP}
+	An \emph{implicit linear program} is one in which we have an underlying data such as a graph or geometric object and a linear program formulation that is specified implicitly based on that data.
+\end{definition}
+
+We note that for \hyperref[def:implicit-LP]{implicit linear programs}, they can have exponentially many variables or constraints, and often they can be solved efficiently or approximately via Ellipsoid method. In such settings, we will not write down the \hyperref[def:explicit-LP]{explicit linear program}, and we will seek iterative methods that have a running time that depends on the size of the \emph{original input} that defines the linear program.
 
 \begin{note}
-	The disadvantage of the explicit linear program is that it has many variables and constraints and typical explicit linear program solvers use memory that is quadratic in the number of variables to do matrix operations while solving the linear program via the simplex or interior point method, and this makes the memory a bottleneck.
+	The disadvantage of the \hyperref[def:explicit-LP]{explicit linear program} is that it has many variables and constraints and typical \hyperref[def:explicit-LP]{explicit linear program} solvers use memory that is quadratic in the number of variables to do matrix operations while solving the linear program via the simplex or interior point method, and this makes the memory a bottleneck.
 \end{note}
 
 \subsection{Examples}
 Let's see some examples of \hyperref[def:packing-LP]{packing linear programs}.
 
-\begin{eg}[Maximum weight bipartite matching]
-	Given a bipartite graph \(G = (V, E)\) with edge capacity \(w \colon E \to \mathbb{R} _{\geq 0}\), the following linear program gives an exact solution to the maximum weight bipartite matching:
+\begin{eg}[Maximum weight bipartite matching]\label{eg:max-weight-bipartite-matching-MWU}
+	Given a bipartite graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{\geq 0}\), the following linear program gives an exact solution to the maximum weight bipartite matching:
 	\[
 		\begin{aligned}
-			\max~ & \sum_{e \in E} w(e) x_e                                \\
+			\max~ & \sum_{e \in E} c(e) x_e                                \\
 			      & \sum_{e \in \delta (u)} x_e \leq 1 & \forall u \in V ; \\
 			      & x_e \geq 0                         & \forall e \in E.
 		\end{aligned}
 	\]
-	One can see that this is a \hyperref[def:packing-LP]{packing linear program} with \(N = 2 \lvert E \rvert \), \(n = \lvert E \rvert \), and \(m = \lvert V \rvert \).\footnote{Note that the notation of \(n, m\) is confusing here from that of typical graph usage since we are using \(n\) for the number of variables and \(m\) for the number of constraints.} Although this linear program is mainly used for bipartite matching, it is sometimes useful even for non-bipartite graphs. One can show that its integrality gap is \(2 / 3\) for general graphs.
+	One can see that this is a \hyperref[def:explicit-LP]{explicit} \hyperref[def:packing-LP]{packing linear program} with \(N = 2 \lvert E \rvert \), \(n = \lvert E \rvert \), and \(m = \lvert V \rvert \).\footnote{Note that the notation of \(n, m\) is different from the usual graph usage.} Although this linear program is mainly used for bipartite matching, it is sometimes useful even for non-bipartite graphs. One can show that its integrality gap is \(2 / 3\) for general graphs.
 \end{eg}
 
-\begin{eg}[Tree packing]
-	Recall the \hyperref[eq:tree-packing-LP]{tree packing linear program}, where the goal is to pack \hyperref[def:spanning-tree]{spanning trees} into the capacity of a given graph \(G = (V, E)\) with edge capacity \(w \colon E \to \mathbb{R} _{\geq 0}\):
+\begin{eg}[Tree packing]\label{eg:tree-packing-MWU}
+	Recall the \hyperref[eq:tree-packing-LP]{tree packing linear program}, where the goal is to pack \hyperref[def:spanning-tree]{spanning trees} into the capacity of a given graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{\geq 0}\):
 	\[
 		\begin{aligned}
 			\max~ & \sum_{T \in \mathcal{T} _G} y_T                                 \\
-			      & \sum_{T \ni e} y_T \leq w(e)    & \forall e \in E;              \\
+			      & \sum_{T \ni e} y_T \leq c(e)    & \forall e \in E;              \\
 			      & y_T \geq 0                      & \forall T \in \mathcal{T} _G.
 		\end{aligned}
 	\]
-	This is an implicit \hyperref[def:packing-LP]{packing linear program} with an exponential number of variables and \(m = \lvert E \rvert \) constraints.
+	This is an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program} with an exponential number of variables and \(m = \lvert E \rvert \) constraints. As mentioned in \autoref{thm:approximate-tree-packing}, this can be (approximately) solved efficiently without the Ellipsoid method (which runs in polynomial time, but it is considered impractical).
 \end{eg}
 
-\begin{eg}[Maximum multi-commodity flow]
-	We considered the maximum multi-commodity flow problem as a relaxation for the \hyperref[prb:multi-min-cut]{multi-min-cut} problem. Given a graph \(G = (V, E)\) with non-negative edge capacities \(w \colon E \to \mathbb{Q} _{\geq 0}\) and \(k\) source-sink pairs \(\{ (s_i, t_i) \} _{i=1}^{k}\). Let \(\mathcal{P} _{s_i, t_i}\) denote the set of all \(s_i\)-\(t_i\) paths in \(G\). We have a variable \(x_P\) for each path \(P \in \bigcup_{i=1}^{k} \mathcal{P} _i\) to denote the amount of flow that is being routed on path \(P\), and we want to maximize the total flow sent between all pairs:
+\begin{eg}[Maximum multi-commodity flow]\label{eg:maximum-multi-commodity-flow-MWU}
+	We considered the maximum multi-commodity flow problem as a relaxation for the \hyperref[prb:multi-min-cut]{multi-min-cut} problem. Given a graph \(G = (V, E)\) with non-negative edge capacities \(c \colon E \to \mathbb{Q} _{\geq 0}\) and \(k\) source-sink pairs \(\{ (s_i, t_i) \} _{i=1}^{k}\). Let \(\mathcal{P} _{s_i, t_i}\) denote the set of all \(s_i\)-\(t_i\) paths in \(G\). We have a variable \(x_P\) for each path \(P \in \bigcup_{i=1}^{k} \mathcal{P} _i\) to denote the amount of flow that is being routed on path \(P\), and we want to maximize the total flow sent between all pairs:
 	\[
 		\begin{aligned}
 			\max~ & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}} x_P                                                         \\
-			      & \sum_{i=1}^{k} \sum_{\substack{P \in\mathcal{P} _{s_i, t_i}                                                     \\ P \ni e}} x_P \leq w(e) & \forall e \in E ;                                  \\
+			      & \sum_{i=1}^{k} \sum_{\substack{P \in\mathcal{P} _{s_i, t_i}                                                     \\ P \ni e}} x_P \leq c(e) & \forall e \in E ;                                  \\
 			      & x_P \geq 0                                                  & P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} .
 		\end{aligned}
 	\]
-	This is also an implicit \hyperref[def:packing-LP]{packing linear program}. We can also write it as an explicit linear program with variables \(f(e, i)\), which is the amount of flow on \(e\) for pair \(i\):
+	This is also an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program}. We can also write it as an \hyperref[def:explicit-LP]{explicit linear program} with variables \(f(e, i)\), which is the amount of flow on \(e\) for pair \(i\):
 	\[
 		\begin{aligned}
 			\max~ & \sum_{i=1}^{k} \left[ \sum_{e \in \delta ^+ (s_i) } f(e, i) - \sum_{e \in \delta ^- (s_i) } f(e, i) \right]                                           \\
-			      & \sum_{i=1}^{k} f(e, i) \leq w(e)                                                                            & \forall e \in E                         \\
+			      & \sum_{i=1}^{k} f(e, i) \leq c(e)                                                                            & \forall e \in E ;                       \\
 			      & \sum_{e \in \delta ^-(u)} f(e, i) = \sum_{e \in \delta ^+(u)} f(e, i)                                       & u \neq s_i, t_i \text{ for } i \in [k].
 		\end{aligned}
 	\]
 	We see that the flow conservation constraints make this linear program not positive anymore.
 \end{eg}
 
-\begin{eg}[Rectangle independent set]
-	\[
-		\begin{aligned}
-			\max~ & \sum_{r} x_r                            \\
-			      & \sum_{R \ni p} x_R \leq 1 & \forall p .
-		\end{aligned}
-	\]
-\end{eg}
-
-As for the \hyperref[def:covering-LP]{covering linear programs}, we have the following. First, we introduce the well-known \hyperref[prb:set-cover]{set cover} problem and its special case called \hyperref[prb:vertex-cover]{vertex cover}.
+As for the \hyperref[def:covering-LP]{covering linear programs}, we first introduce the well-known \hyperref[prb:set-cover]{set cover} problem and its special case called \hyperref[prb:vertex-cover]{vertex cover}.
 
 \begin{problem}[Set cover]\label{prb:set-cover}
 Given a collection of \(n\) subsets \(\mathcal{S} = \{ S_i \} _{i=1}^{n}\) of \(S\) such that each \(\mathcal{S} _i \subseteq S\) is of size \(m\) and has a cost \(c_i\). The \emph{set cover} asks to find a minimum cost sub-collection of \(\mathcal{S} \) whose union is \(S\).
@@ -142,13 +151,13 @@ Given a graph \(G = (V, E)\) with edge capacity \(w \colon E \to \mathbb{R} _{\g
 			      & x \in \{ 0, 1 \} ^n.
 		\end{aligned}
 	\]
-	We work with the linear program relaxation which is a \hyperref[def:covering-LP]{covering} problem. When \(A\), \(b\) are arbitrary, the integrality gap of the natural linear program for CIP can be as large as \(m\). One needs to add knapsack-cover inequalities to strengthen the linear program and then the linear program becomes much more complex but nevertheless one can solve it fast using the multiplicative weight update methods. See~\cite{chekuri2019approximating} and references to work on CIPs.
+	We work with the linear program relaxation which is a \hyperref[def:covering-LP]{covering} problem. When \(A\), \(b\) are arbitrary, the integrality gap of the natural linear program for CIP can be as large as \(m\). One needs to add knapsack cover inequalities to strengthen the linear program and then the linear program becomes much more complex but nevertheless one can solve it fast using the \hyperref[algo:MWU-discrete-non-uniform]{multiplicative weight update} methods. See~\cite{chekuri2019approximating} and references to work on CIPs.
 \end{eg}
 
 Finally, we see some examples on the \hyperref[def:mixed-packing-covering-LP]{mixed packing and covering linear programs}.
 
 \begin{eg}[Covering integer program with bounded constraints]
-	One can also add bound constraint on CIPs where we can take a variable \(x_j\) only up to a bound \(d_i\). Then we get packing constraints and the linear program becomes a \hyperref[def:mixed-packing-covering-LP]{mixed packing and covering linear program}, albeit in a simple form
+	One can also add bound constraint on CIPs where a variable \(x_i\) can be at most \(d_i\). Then we get packing constraints and the linear program becomes a \hyperref[def:mixed-packing-covering-LP]{mixed packing and covering linear program}, albeit in a simple form
 	\[
 		\begin{aligned}
 			\min~ & c^{\top} x                    \\
@@ -157,7 +166,7 @@ Finally, we see some examples on the \hyperref[def:mixed-packing-covering-LP]{mi
 			      & x \in \mathbb{Z} _{\geq 0}^n.
 		\end{aligned}
 	\]
-	Again, the natural linear program is not good in terms of integrality gap and one needs knapsack cover inequalities.
+	This naive formulation is bad in terms of integrality gap; one needs knapsack cover inequalities.
 \end{eg}
 
 \begin{eg}[Maximum concurrent flow]
@@ -178,17 +187,18 @@ Finally, we see some examples on the \hyperref[def:mixed-packing-covering-LP]{mi
 \end{eg}
 
 \subsection{Known Approximation Results for Explicit Packing Linear Programs}
-
 Finally, we list out several results known for explicit positive linear programs. We refer to~\cite{quanrud2019fast,wang2017fast} for a good overview. Here, we state a few high-level results for sequential models.
 \begin{itemize}
-	\item For \hyperref[def:mixed-packing-covering-LP]{mixed packing and covering linear programs}, there is a multiplicative weight update based algorithm that runs in deterministic \(O(N \log N / \epsilon ^2)\) time and outputs a \((1 - \epsilon )\)-approximate feasible solution~\cite{young2014nearly}. This implies a \((1 - \epsilon )\)-approximation algorithm for \hyperref[def:packing-LP]{packing} and \hyperref[def:covering-LP]{covering} in \(O(N \log N / \epsilon ^2)\) time.
-	\item For \hyperref[def:packing-LP]{packing}, there is a randomized algorithm that yields a \((1 - \epsilon )\)-approximation feasible solution in \(O(N \log N \log (1 / \epsilon ) / \epsilon )\) time~\cite{allen2015nearly}. A similar time bound as above for \hyperref[def:covering-LP]{covering} is also known~\cite{wang2015unified}.
+	\item For \hyperref[def:mixed-packing-covering-LP]{mixed packing and covering linear programs}, there is a \hyperref[algo:MWU-discrete-non-uniform]{multiplicative weight update} based algorithm that runs in deterministic \(O(N \log N / \epsilon ^2)\) time and outputs a \((1 - \epsilon )\)-approximate feasible solution~\cite{young2014nearly}. This implies a \((1 - \epsilon )\)-approximation algorithm for \hyperref[def:packing-LP]{packing} and \hyperref[def:covering-LP]{covering} in \(O(N \log N / \epsilon ^2)\) time.
+	\item For \hyperref[def:packing-LP]{packing}, there is a randomized algorithm that yields a \((1 - \epsilon )\)-approximation feasible solution in \(O(N \log N \log (1 / \epsilon ) / \epsilon )\) time~\cite{allen2015nearly}. A similar time bound for \hyperref[def:covering-LP]{covering} is also known~\cite{wang2015unified}.
 \end{itemize}
 
-\section{Multiplicative Weight Updates Method}
-The multiplicative weight update (MWU) method is a meta-algorithm that has many applications and arises in a number of areas, even though the central analysis is very similar. The survey of Arora, Hazan, and Kale~\cite{arora2012multiplicative} outlines the utility of seeing the general approach. Here, we are interested in applications of MWU to solving positive linear programs.Although one can derive some of these via the expert framework outlines in~\cite{arora2012multiplicative}, there are some limitations as well as the overhead of introducing the expert framework.
+\section{Multiplicative Weight Update Method}
+The \emph{multiplicative weight update} (MWU) is a meta-algorithm that has many applications and arises in a number of areas, even though the central analysis is very similar. The survey of Arora, Hazan, and Kale~\cite{arora2012multiplicative} outlines the utility of seeing the general approach. Here, we are interested in applications of MWU to solving positive linear programs. We will follow the ideas and exposition from~\cite{chekuri2015multiplicative}.
 
-Even within offline optimization, the use of MWU is varied, and it is not always easy to figure out the similarities and differences even among closely related papers. We will follow the ideas and exposition from~\cite{chekuri2015multiplicative}.
+\begin{note}
+	Even within offline optimization, the use of MWU is varied, and it is not always easy to figure out the similarities and differences even among closely related papers. For example, although one can derive some of these via the expert framework outlines in~\cite{arora2012multiplicative}, there are some limitations as well as the overhead of introducing the expert framework.
+\end{note}
 
 \subsection{Convex Optimization, Lagrangian Relaxation, and Soft-Max Trick}
 While our goal is to solve linear programs, we start by considering convex programs.
@@ -197,13 +207,13 @@ While our goal is to solve linear programs, we start by considering convex progr
 	It makes some ideas and notations cleaner and more general, and also indicates where we use linearity and positivity when we ant refined results.
 \end{intuition}
 
-Let \(f \colon \mathbb{R} ^n \to \mathbb{R} \) be a concave function and let \(g_i \colon \mathbb{R} ^n \to \mathbb{R} \) for all \(i \in [m]\) be a set of convex functions, and let \(P\) be a convex set in \(\mathbb{R} ^n\).
+Let \(f \colon \mathbb{R} ^n \to \mathbb{R} \) be a concave function and let \(g_i \colon \mathbb{R} ^n \to \mathbb{R} \) for all \(i \in [m]\) be a set of convex functions, and let \(P\) be a convex set in \(\mathbb{R} ^n\).\footnote{Even though we typically use \(P\) as the non-negative orthant in \(\mathbb{R} ^n\), we can usually restrict the domain to be a box of sufficiently large size in the non-negative orthant. We will come back to this later.}
 
 \begin{note}
-	We will assume that all functions are continuous and bounded in the domain of interest, and ignore some of the technical difficulties that arise when considering unbounded functions and domains.
+	We will assume that all functions are continuous and bounded in the domain of interest, and ignore the technical difficulties that arise when considering unbounded functions and domains.
 \end{note}
 
-Even though we typically use \(P\) as the non-negative orthant in \(\mathbb{R} ^n\), we can usually restrict the domain to be a box of sufficiently large size in the non-negative orthant. Consider the following optimization problem which generalizes the setting of \hyperref[def:packing-LP]{packing linear programs}:
+Consider the following optimization problem which generalizes the setting of \hyperref[def:packing-LP]{packing linear programs}:
 \[
 	\begin{aligned}
 		\max~ & f(x)                                 \\
@@ -211,21 +221,20 @@ Even though we typically use \(P\) as the non-negative orthant in \(\mathbb{R} ^
 		      & x\in P.
 	\end{aligned}
 \]
-This is a constrained convex program. Unconstrained convex minimization is itself a non-trivial problem and typically addresses it via gradient descent and other methods. Here, we use it as a modeling tool for explanation purposes and eventually work with linear functions. The first idea is to view the multiple constraints as a single constraint \(h(x) - 1 \leq 0\) where \(h(x) = \max _{i \in [m]} g_i(x)\):
+This is a constrained convex program. Unconstrained convex minimization is itself a non-trivial problem and typically addresses it via gradient descent and other methods. Here, we use it as a modeling tool for explanation purposes and eventually work with linear functions. The first idea is to view the multiple constraints as a single constraint \(h(x) \leq 1\) where \(h(x) = \max _{i \in [m]} g_i(x)\):
 \[
 	\begin{aligned}
 		\max~ & f(x)                               \\
 		      & \max _{i \in [m]} g_i (x) \leq 1 ; \\
+		      & x\in P;
+	\end{aligned}
+	\iff \begin{aligned}
+		\max~ & f(x)          \\
+		      & h(x) \leq 1 ; \\
 		      & x\in P.
 	\end{aligned}
 \]
-From convex analysis, we know that \(h(x) = \max _{i \in [m]}g_i(x)\) is still convex, but not smooth anymore.
-
-\begin{intuition}
-	One can make it smooth by considering the soft-max, a smooth-out version of \(\max\).
-\end{intuition}
-
-Specifically, for a parameter \(\eta > 0\), the soft-max function is defined as
+From convex analysis, we know that \(h(x) = \max _{i \in [m]}g_i(x)\) is still convex, but not smooth anymore. A heuristic way is to make it smooth by considering the soft-max, a smooth-out version of \(\max\). Specifically, for a parameter \(\eta > 0\), the soft-max function is defined as
 \[
 	g_\eta (x)
 	\coloneqq \operatorname{soft-max}_\eta (\{ g_i (x)\}_{i=1}^{m} )
@@ -234,7 +243,7 @@ Specifically, for a parameter \(\eta > 0\), the soft-max function is defined as
 Again, from convex analysis, \(g_\eta (x)\) is convex.
 
 \begin{intuition}
-	The soft-max function tries to blow-up the maximum value among its argument by some (large) positive number \(\eta \) and applying the exponential function to which. By doing so, if the maximum among its arguments stands out and dominates others.
+	The soft-max function tries to blow-up the maximum value among its argument by some (large) positive number \(\eta \) and applying the exponential function to which. By doing so, the maximum among its arguments will stand out and dominate others.
 \end{intuition}
 
 It turns out that the error incurs by replacing maximum with the soft-max function is small:
@@ -290,34 +299,13 @@ Finally, motivated by the Lagrangian relaxation approach, we assume that we have
 		      & x\in P.
 	\end{aligned}
 \end{equation}
-When \(f\) and \(g_i\)'s are positive linear functions and \(P\) is the non-negative orthant, there is a simple and easy oracle for the above problem.
+The upshot is the following:
 
 \begin{remark}
-	If we're considering positive linear program, then the above is trivial. Consider the following positive \hyperref[def:packing-LP]{packing linear program}:
-	\[
-		\begin{aligned}
-			\max~ & \sum_{j=1}^{n} c_j x_j                                 \\
-			      & \sum_{j=1}^{n} A_{ij} x_j \leq 1 & \forall i \in [m] ; \\
-			      & x\geq 0.
-		\end{aligned}
-	\]
-	The above oracle in this case is just
-	\[
-		\begin{aligned}
-			\max~ & \sum_{j=1}^{n} c_j x_j                                               \\
-			      & \sum_{i=1}^{m} w_i \sum_{j=1}^{n} A_{ij} x_j \leq \sum_{i=1}^{m} w_i \\
-			      & x\geq 0;
-		\end{aligned}
-		\iff \begin{aligned}
-			\max~ & \sum_{j=1}^{n} c_j x_j                                                              \\
-			      & \sum_{j=1}^{n} \left( \sum_{i=1}^{m} w_i A_{ij} \right) x_j \leq \sum_{i=1}^{m} w_i \\
-			      & x\geq 0,
-		\end{aligned}
-	\]
-	which is a fractional knapsack problem, hence greedy applies.
+	When \(f\) and \(g_i\)'s are positive linear functions and \(P\) is the non-negative orthant, the above \hyperref[eq:MWU-oracle]{oracle} can be easily obtained.
 \end{remark}
 
-\subsection{Continuous Time Multiplicative Weight Updates Algorithm}
+\subsection{Continuous Time Multiplicative Weight Update Algorithm}
 We consider an adaptive iterative algorithm that uses a notion of time that goes from \(0\) to \(1\).
 
 \begin{intuition}
@@ -355,7 +343,7 @@ The main question is to deal with the constraint violation. For this, we will ma
 	\For(){\(i = 1, \dots , m\)}{
 		\(w_i(0) \gets 1\)\;
 	}
-	\(x(0) = 0 \)\;
+	\(x(0) = 0 \)\Comment*[r]{\(x \in \mathbb{R} ^n\)}
 	\(t = 0\)\;
 	\;
 	\While(){\(t < 1\)}{
@@ -369,7 +357,7 @@ The main question is to deal with the constraint violation. For this, we will ma
 	\Return{\(x(1)\)}\;
 \end{algorithm}
 
-Suppose we make \(\delta \to 0\), then we obtain a continuous time algorithm whose analysis can be done simply and is illuminating. For that, we set up a differential equation on the evolution of the weights. From
+By taking \(\delta \to 0\), we obtain a continuous time algorithm whose analysis can be done simply and is illuminating. Specifically, we will get a differential equation on the evolution of the weights: from
 \[
 	w_i(t+\delta )
 	= w_i(t) \exp (\eta \delta g_i(v(t))),
@@ -381,7 +369,7 @@ we see that
 	= \lim_{\delta \to 0} \frac{w_i(t) (\exp (\eta \delta g_i(v(t))) - 1)}{\delta }
 	= w_i(t) \eta g_i(v(t))
 \]
-by using the fact that \(e^x -1 \to x\) when \(x \to 0\). The final return is then
+by using the fact that \(e^x -1 \to x\) when \(x \to 0\). Finally, we also see that the final return is
 \[
 	x_{\text{out} }
 	= \int_{0}^{1} v(t) \,\mathrm{d}t .
@@ -406,10 +394,10 @@ This results in the following continuous version of \autoref{algo:MWU-discrete-u
 		Evolve \(w_i(t)\) as \(\mathrm{d} w_i(t) / \mathrm{d} t = w_i(t) \eta g_i(v(t))\)\;
 	}
 	}
-	\Return{\(\int_{0}^{t} v(t) \,\mathrm{d}t \)}\;
+	\Return{\(\int_{0}^{1} v(t) \,\mathrm{d}t \)}\;
 \end{algorithm}
 
-The4 following is one reason to choose the time interval to be \([0, 1]\) to naturally obtain a convex combination of solutions as the output.
+The following is one reason to choose the time interval to be \([0, 1]\) to naturally obtain a convex combination of solutions as the output.
 
 \begin{lemma}\label{lma:MWU-continuous-OPT}
 	In \autoref{algo:MWU-continuous}, if \(f\) is concave, then \(f(x_{\text{out} }) \geq \OPT\).
@@ -423,7 +411,7 @@ The4 following is one reason to choose the time interval to be \([0, 1]\) to nat
 		\geq \int_{0}^{1} \mathsf{OPT} \,\mathrm{d}t
 		= \mathsf{OPT},
 	\]
-	where \(f(v(t)) \geq \OPT\) since \(v(t)\) is an optimum solution to a Lagrangian relaxation of the original problem.
+	where \(f(v(t)) \geq \OPT\) since \(v(t)\) is an optimum solution to a Lagrangian relaxation.
 \end{proof}
 
 We now express the constraint values in terms of the weights.
@@ -452,7 +440,13 @@ While we do not have a direct way to bound \(w_i(1)\), but we can bound \(w_i(1)
 	In \autoref{algo:MWU-continuous}, for all \(t\), \(\sum_{i=1}^{m} w_i(t) \leq e^{\eta t} \sum_{i=1}^{m} w_i(0)\). Hence, \(\sum_{i=1}^{m} w_i(1) \leq m e^\eta \).
 \end{lemma}
 \begin{proof}
-
+	Here is where we use the fact that we solve the Lagrangian relaxation. Note that \(v(t)\) satisfies the constraint that \(\sum_{i=1}^{m} w_i(t) g_i(v(t)) \leq \sum_{i=1}^{m} w_i(t)\). Moreover, we have \(\mathrm{d} w_i(t) / \mathrm{d} t = \eta w_i(t) g_i(v(t))\) for \(i \in [m]\). Hence,
+	\[
+		\frac{1}{\eta } \sum_{i=1}^{m} \frac{\mathrm{d}w_i(t)}{\mathrm{d}t}
+		\leq \frac{1}{\eta } \sum_{i=1}^{m} \eta w_i(t) g_i(v(t))
+		\leq \sum_{i=1}^{m} w_i(t).
+	\]
+	Thus, the total weight \(w(t) \coloneqq \sum_{i=1}^{m} w_i(t)\) satisfies the differential equation \(\mathrm{d} w(t) / \mathrm{d} t \leq \eta w(t) \), which implies that \(w(t) \leq e^{\eta t} w(0) = m e^\eta\).
 \end{proof}
 
 Putting everything together, we have the following.
@@ -466,7 +460,7 @@ Putting everything together, we have the following.
 	If there is a point \(x_0 \in P\) such that \(g_i(x_0) = 0\) for all \(i \in [m]\), then \(x_{\text{out} }^{\prime} = \theta x_{\text{out} } + (1 - \theta ) x_0\) is feasible, in that \(g_i(x_{\text{out} }^{\prime} ) \leq 1\) for all \(i \in [m]\) and \(x_{\text{out} }^{\prime} \in P\).
 \end{theorem}
 \begin{proof}
-	\autoref{thm:MWU-continuous-i} is shown in \autoref{lma:MWU-continuous-OPT}. For \autoref{thm:MWU-continuous-ii}, we see that by combining \autoref{lma:MWU-continuous-constraint} and \autoref{lma:MWU-continuous-weight}, we have
+	Firstly, \autoref{thm:MWU-continuous-i} is shown in \autoref{lma:MWU-continuous-OPT}. For \autoref{thm:MWU-continuous-ii}, by combining \autoref{lma:MWU-continuous-constraint} and \autoref{lma:MWU-continuous-weight},
 	\[
 		g_i(x_{\text{out} })
 		\leq \frac{1}{\eta } \ln (w_i(1))
@@ -477,12 +471,16 @@ Putting everything together, we have the following.
 	The second part is easy to verify.
 \end{proof}
 
-To obtain a \((1 + \epsilon )\)-approximation in terms of the constraint violation, we can choose \(\eta = \ln m / \epsilon \).
+We see that to obtain a \((1 + \epsilon )\)-approximation in terms of the constraint violation, we can choose \(\eta = \ln m / \epsilon \). We note that the second part of \autoref{thm:MWU-continuous} allows us to obtain a feasible solution \(x_{\text{out} }^{\prime} \) since \(x_{\text{out} }\) from \autoref{algo:MWU-continuous} might be infeasible.
+
+\begin{intuition}
+	The impact of using \(x_{\text{out} }^{\prime} \) instead of \(x_{\text{out} }\) in terms of the objective function \(f\) is less easy to see. However, for non-negative linear objectives, we see that \(f(x_{\text{out} })^{\prime} \geq \theta f(x_{\text{out} })\), and thus we get an approximation to the objective while making the solution feasible.
+\end{intuition}
 
 \begin{remark}
-	The second part of \autoref{thm:MWU-continuous} allows us to obtain a feasible solution \(x_{\text{out} }^{\prime} \) since \(x_{\text{out} }\) from \autoref{algo:MWU-continuous} might not be feasible. The impact of using \(x_{\text{out} }^{\prime} \) instead of \(x_{\text{out} }\) in terms of the objective function \(f\) is less easy to see. However, for non-negative linear objectives, we see that \(f(x_{\text{out} })^{\prime} \geq \theta f(x_{\text{out} })\), and thus we get an approximation to the objective while making the solution feasible.
+	The analysis in \autoref{thm:MWU-continuous} does not use any property of \(f, g_i\) other than continuity. In particular, it does not use non-negativity of \(g_i\)'s. Hence, the analysis can also be applied to have constraints of the form \(g_i(x) \geq 1 \) where \(g_i\) is concave, which is equivalent to \(- g_i(x) + 2 \leq 1\).
 \end{remark}
 
-The analysis in \autoref{thm:MWU-continuous} does not use any property of \(f, g\) other than continuity. In particular, it does not use non-negativity of \(g\). Hence, the analysis can also be applied to have constraints of the form \(h_i(x) \geq 1\)  where \(h_i\) is concave which can be modeled as a convex constraint \(-h_i(x) + 2 \leq 1\).
-
-Our analysis relied on keeping track of the total weight \(w(t)\) carefully. In some works, the potential function \(\phi (t) = \ln w(t) / \eta \) or proxies for it are used. Potential functions can be powerful tools that can yield strong results though they can sometimes be mysterious~\cite{bansal2017potential}.
+\begin{note}[Potential approach]
+	Our analysis relied on keeping track of the total weight \(w(t)\) carefully. In some works, the potential function \(\phi (t) = \ln w(t) / \eta \) or proxies for it are used. Potential functions can be powerful tools that can yield strong results though they can sometimes be mysterious~\cite{bansal2017potential}.
+\end{note}

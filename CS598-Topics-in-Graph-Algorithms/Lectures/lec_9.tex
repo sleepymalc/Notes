@@ -113,7 +113,19 @@ We can view \hyperref[def:linkage]{linkage} as sending flows:
 	Suppose \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander} with \(\alpha \geq 1\). Then there is an \hyperref[def:linkage]{\(A\)-\(B\) linkage} in \(G\) for every pair of disjoint equal sized sets \(A, B\).
 \end{lemma}
 \begin{proof}
-
+	Let \(\lvert A \rvert = \lvert B \rvert = k\). To check whether there are \(k\) desired edge-disjoint paths, consider creating a flow problem by adding two new vertices \(s\) and \(t\) such that \(s\) and \(t\) are connected to all vertices in \(A\) and \(B\) of capacity \(1\), respectively. Let \(H = (V \cup \{ s, t \} , E_H)\) be this new graph. If there is an \(s\)-\(t\) flow of value \(k\) in \(H\), then these correspond to the desired paths. Suppose otherwise, i.e., the flow is strictly less than \(k\). Then by \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}, there is a set \(S^{\prime} \subseteq V_H\) with \(s \in S^{\prime} \) and \(t \notin S^{\prime} \) such that \(\lvert \delta _H(S^{\prime} ) \rvert < k\). Let \(S \coloneqq S^{\prime}  - s\) be the corresponding set of vertices in \(G\). It's easy to see that
+	\[
+		\lvert \delta _H(S^{\prime} ) \rvert
+		= \lvert \delta _G(S) \rvert + \lvert A \cap (V\setminus S) \rvert + \lvert B \cap S \rvert.
+	\]
+	This implies that \(S \neq \varnothing \) since otherwise \(\lvert A \cap (V\setminus S) \rvert = \lvert A \rvert = k\), and the above will imply \(\lvert \delta _H(S^{\prime} ) \rvert \geq k\), a contradiction. Similarly, \(V\setminus S \neq \varnothing \). Now, suppose \(\lvert S \rvert \leq \lvert V\setminus S \rvert \), i.e., the smaller side. Then by the \hyperref[def:expansion]{expansion} guarantee, \(\lvert \delta _G(S) \rvert \geq \lvert S \rvert \geq \lvert A \cap S \rvert \), implying
+	\[
+		\lvert \delta _H(S^{\prime} ) \rvert
+		= \lvert \delta _G(S) \rvert + \lvert A \cap (V\setminus S) \rvert + \lvert B \cap S \rvert
+		\geq \lvert A \cap S \rvert + \lvert A \cap (V\setminus S) \rvert
+		= k,
+	\]
+	which is again a contradiction. The same proof applies if \(\lvert V \setminus S \rvert \leq \lvert S \rvert \).
 \end{proof}
 
 One can scale capacities or directly prove the following.
@@ -127,6 +139,9 @@ Interestingly, the converse is also true.
 \begin{lemma}\label{lma:linkage-expander}
 	Suppose \(G\) is a graph and for any two disjoint set \(A, B\) of equal size, \(A, B\) are \hyperref[def:fractional-linkage]{\(\alpha \)-linked}. Then \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander}.
 \end{lemma}
+\begin{proof}
+	We cannot have \(\lvert \delta _G(A) \rvert < \alpha \lvert A \rvert \) due to the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}.
+\end{proof}
 
 The following shows the connection of \hyperref[def:linkage]{linkage} and \hyperref[def:well-linked]{well-linked}.
 

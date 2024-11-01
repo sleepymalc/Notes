@@ -223,7 +223,7 @@ We show how to generic scheme that we have described via \hyperref[algo:MWU-disc
 		      & x \geq 0.
 	\end{aligned}
 \]
-In terms of the generic framework, we have \(f(x) = c^{\top} X\) and \(g_i(x) = \sum_{j=1}^{n} A_{ij} x_j\) corresponds to the \(i^{\text{th} }\) row of \(A\), and \(P\) corresponds to \(\mathbb{R} _{\geq 0}^n\).
+In terms of the generic framework, we have \(f(x) = c^{\top} x\) and \(g_i(x) = \sum_{j=1}^{n} A_{ij} x_j\) corresponds to the \(i^{\text{th} }\) row of \(A\), and \(P\) corresponds to \(\mathbb{R} _{\geq 0}^n\).
 
 \begin{note}
 	In some settings, we think of \(P\) as a bounding box implied by constraints with \(0 \leq x_j \leq u_j\) where \(u_j\) is an upper bound on \(x_j\) implicitly implied by the constraints in \(Ax \leq b\). This often helps in figuring out the \hyperref[def:width]{width} of the system.
@@ -354,17 +354,9 @@ It is instructive to see what the \hyperref[eq:MWU-oracle-LP]{oracle} correspond
 	\[
 		\begin{aligned}
 			\max~ & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}} x_P                                                         \\
-			      & \sum_{i=1}^{k} \sum_{\substack{P \in\mathcal{P} _{s_i, t_i}                                                     \\ P \ni e}} x_P \leq w(e) & \forall e \in E ;                                  \\
+			      & \sum_{i=1}^{k} \sum_{\substack{P \in\mathcal{P} _{s_i, t_i}                                                     \\ P \ni e}} x_P \leq c(e) & \forall e \in E ;                                  \\
 			      & x_P \geq 0                                                  & P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} .
 		\end{aligned}
 	\]
-	Once again, we have an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program} with an exponential number of variables corresponding to the paths for all the commodity pairs, and the number of constraints is \(m\), corresponding to the edges. The weights correspond to exponential of the loads on the edges where the load on an edge is the total flow routed so far on the edge. Writing the \hyperref[eq:MWU-oracle-LP]{oracle} explicitly, we have
-	\[
-		\begin{aligned}
-			\max~ & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}} x_P                                                                       \\
-			      & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}, e \in P} x_P \leq u(e) & \forall e\in E                                   \\
-			      & x_P \geq 0                                                                 & P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i},
-		\end{aligned}
-	\]
-	which is the same as \(\max _{P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}} 1 / \sum_{e \in P} w_e\), i.e., finding the shortest path among all the commodity pairs, according to the weights on edges! We can find for each pair \((s_i, t_i)\) a shortest \(s_i\)-\(t_i\) path and choose the minimum. The algorithm routes some flow on that path and updates the weights along that path and iterates. The bottleneck is to compute the shortest paths.
+	Once again, we have an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program} with an exponential number of variables corresponding to the paths for all the commodity pairs, and the number of constraints is \(m\), corresponding to the edges. The weights correspond to exponential of the loads on the edges where the load on an edge is the total flow routed so far on the edge. The \hyperref[eq:MWU-oracle-LP]{oracle} explicitly in this case is the same as \(\max _{P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}} 1 / \sum_{e \in P} w_e\), i.e., finding the shortest path among all the commodity pairs, according to the weights on edges! We can find for each pair \((s_i, t_i)\) a shortest \(s_i\)-\(t_i\) path and choose the minimum. The algorithm routes some flow on that path and updates the weights along that path and iterates. The bottleneck is to compute the shortest paths.
 \end{eg}

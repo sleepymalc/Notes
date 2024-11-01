@@ -8,7 +8,7 @@
 	\begin{algorithm}[H]\label{algo:expander-decomposition}
 		\DontPrintSemicolon{}
 		\caption{\hyperref[def:expander-decomposition]{Expander Decomposition}}
-		\KwData{A connected graph \(G = (V, E)\), base graph edge set size \(M\), parameter \(\epsilon \in (0, 1)\)}
+		\KwData{A connected graph \(G = (V, E)\), base graph edge set size \(M\),\footnote{In the initial call, it's \(m\).} parameter \(\epsilon \in (0, 1)\)}
 		\KwResult{An \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon}{\alpha \log m}), \epsilon)\)-expander decomposition} \(\{ G_i \} _{i=1}^{h}\)}
 		\SetKwFunction{ExpanderDecomposition}{\hyperref[algo:expander-decomposition]{Expander-Decomposition}}
 		\SetKwFunction{SparsestCut}{\(\alpha \)-\hyperref[prb:sparsest-cut]{Uniform-Sparsest-Cut}}
@@ -19,7 +19,7 @@
 			\Return{\(G\)}\;
 		}
 		\;
-		\((S, V\setminus S) \gets\)\SparsestCut{\(G\)}\footnote{Recall that this is for \hyperref[def:conductance]{conductance}, which can be formalized as a \hyperref[prb:product-instance-of-sparsest-cut]{project instance}.}\Comment*[r]{\(\operatorname{vol}(S) \leq \operatorname{vol}(V \setminus S) \)}
+		\((S, V\setminus S) \gets\)\SparsestCut{\(G\)}\footnote{Recall that this is for \hyperref[def:conductance]{conductance}, which can be formalized as a \hyperref[prb:product-instance-of-sparsest-cut]{product instance}.}\Comment*[r]{\(\operatorname{vol}(S) \leq \operatorname{vol}(V \setminus S) \)}
 		\;
 		\uIf(\Comment*[f]{Check \hyperref[def:sparsity]{sparsity}}){\(\lvert \delta (S) \rvert / \operatorname{vol}(S) > c / 10 \log M\)}{
 			\Return{\(G\)}\;
@@ -47,8 +47,8 @@
 	Let \(T(m)\) be the total number of edges cut by \autoref{algo:expander-decomposition} on a graph with \(m\) edges. \autoref{algo:expander-decomposition} removes edges between \(S\) and \(V\setminus S\) only when \(\lvert \delta (S) \rvert \leq \epsilon \operatorname{vol}(S) / 10 \log M \) where \(\operatorname{vol}(S) \leq \operatorname{vol}(V \setminus S) \). Let \(m^{\prime} \coloneqq \lvert \delta (S) \rvert \), \(m_1 \coloneqq \lvert E(G[S]) \rvert \), and \(m_2 \coloneqq \lvert E(G[V\setminus S]) \rvert\), then
 	\[
 		m^{\prime}
-		\leq \frac{\epsilon }{10 \log m} (2m_1 + m^{\prime} )
-		\implies (1 - o(1)) m^{\prime} \leq \frac{\epsilon }{5 \log m} m_1
+		\leq \frac{\epsilon }{10 \log M} (2m_1 + m^{\prime} )
+		\implies m^{\prime} \leq (1 - o(1)) \frac{\epsilon }{5 \log M} m_1
 		\leq \frac{\epsilon }{4 \log M} m_1.
 	\]
 	With \(m_1 \leq m_2\), the recurrence can be written as

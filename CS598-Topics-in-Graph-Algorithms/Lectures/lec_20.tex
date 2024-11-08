@@ -1,45 +1,70 @@
 \chapter{Cut-Matching for Fast Sparsest Cut}
 \lecture{20}{5 Nov.\ 11:00}{Sparsest Cuts via \(s\)-\(t\) Flow}
-\section{Cut-Matching Game}
-In the \hyperref[prb:sparsest-cut]{sparsest cut} problem, we had relied on the \hyperref[eq:non-uniform-sparsest-cut-LP-dual]{linear program} to produce a fractional solution to the metric relaxation, which is then rounded to a cut. This suffices to obtain polynomial time algorithm sin theory, but for large networks, the linear program solver becomes a computational bottleneck. Meanwhile, in practice and in theory, we have fairly reliable \(s\)-\(t\) flow algorithms. It turns out that it is also possible to compute an \(O(\log ^2 n)\)-approximate \hyperref[prb:sparsest-cut]{sparsest cut} via \(O(\log ^3 n)\) many \(s\)-\(t\)-max-flow computations~\cite{khandekar2009graph}. This is done by an interesting framework called the \hyperref[def:cut-matching-game]{\emph{cut-matching game}}.
+In this chapter, we show that one can approximate \hyperref[def:expansion]{expansion} to within an \(O(\log ^2 n)\) factor via \(O(\log ^2 n)\) calls to an approximate single-commodity \(s\)-\(t\) flow routine. Since we have fairly reliable \(s\)-\(t\) flow algorithms, both in practice and in theory, this gives us a fast approximation algorithm for computing \hyperref[def:expansion]{expansion} and other problems such as \hyperref[prb:sparsest-cut]{uniform sparsest cut} and \hyperref[def:conductance]{conductance}.
 
-\subsection{Sparse Cut and Expanding Matching}
-High-level speaking, we find ourselves in the situation where \hyperref[prb:sparsest-cut]{sparsest cuts} and multi-commodity flow are slower to compute then \(s\)-\(t\) flow. This is to some extent not surprising: multi-commodity flow is computing an \(s\)-\(t\) flow for \(\Omega (n^2)\) many \((s, t)\) pairs.
+\begin{note}
+	We now have near-linear time algorithms for a \emph{constant factor approximation} to \(s\)-\(t\) flow in undirected graphs~\cite{peng2016approximate}, and an almost-linear time \emph{exact} algorithm for \(s\)-\(t\) flow in directed graphs~\cite{chen2022maximum}.
+\end{note}
 
-\begin{intuition}
-	Given the connection via duality, we might expect the \hyperref[prb:sparsest-cut]{sparsest cut} to be as difficult as multi-commodity flow.
-\end{intuition}
-
-On the other hand, recall the following.
+\section{Recap: Algorithms for Sparsest Cut}
+Previously, we have discussed how to check if a graph \(G\) is an \hyperref[def:expander]{expander}; more generally, how to estimate the \hyperref[def:expansion]{expansion}, \hyperref[def:conductance]{conductance}, and \hyperref[prb:sparsest-cut]{uniform sparsest cut}.\footnote{The \hyperref[def:expansion]{expansion} is within a factor of \(2\) of the \hyperref[def:sparsity]{sparsity} from the previous \hyperref[rmk:expansion-sparsity]{remark}.}
 
 \begin{prev}
-	The \hyperref[def:expansion]{expansion} is within a factor of \(2\) of the \hyperref[def:sparsity]{sparsity} from the previous \hyperref[rmk:expansion-sparsity]{remark}.
+	There are three approximation algorithms that we have discussed or mentioned:
+	\begin{itemize}
+		\item Multi-commodity flow~\cite{leighton1999multicommodity}: \(O(\log n)\)-approximation (\autoref{thm:sparsest-cut-embedding}).
+		\item SDP relaxation~\cite{arora2009expander}: \(O(\sqrt{\log n} )\)-approximation (\hyperref[prb:SDP-sparsest-cut]{previous problem}).
+		\item Spectral method: \(O(\sqrt{\OPT} )\)-approximation for \hyperref[def:conductance]{conductance} (\autoref{thm:Cheeger-inequality}).
+	\end{itemize}
 \end{prev}
 
+The spectral method is very fast but does not yield good approximation in the regime when the \hyperref[def:conductance]{conductance} is low. The other two methods are based on solving slow (although polynomial) mathematical programming relaxation (e.g., \autoref{eq:non-uniform-sparsest-cut-LP-dual}). While we have discussed the \hyperref[algo:MWU-discrete-non-uniform]{multiplicative weight update}-based methods for fast solutions to linear programs, and one of the motivations for these algorithms was to speed up the maximum concurrent flow linear program for \hyperref[prb:sparsest-cut]{uniform sparsest cut}. However, even with several ideas, the fastest way we know how to solve the linear programs takes \(O(mn)\) time for a constant factor approximation.
+
+\section{Cut-Matching Game}
+The algorithm that achieves \(O(\log ^2 n)\)-approximation for \hyperref[def:expansion]{expansion} using only \(O(\log ^2 n)\) many \(s\)-\(t\)-max-flow computations is based on the so-called \hyperref[def:cut-matching-game]{\emph{cut-matching game}} framework~\cite{khandekar2009graph}, which has since become a powerful tool in several applications. The framework has been further improved to yield an \(O(\log n)\)-approximation~\cite{orecchia2008partitioning}. On another line of work, a more systematic approach via matrix-multiplicative weight updates obtains fast primal-dual algorithms that yield \(O(\log n)\) and \(O(\sqrt{\log n} )\)-approximation algorithms, which also use appropriate flow sub-routines~\cite{arora2007combinatorial}.
+
+\subsection{Sparse Cut and Expanding Matching}
 For the sake of discussion, let us consider the decision version in terms of \hyperref[def:expansion]{expansion}:
 
-\begin{problem*}
-	Given a graph \(G = (V, E)\) with edge capacity \(c\colon E \to \mathbb{R} _{\geq 0}\)  and a parameter \(\varphi \), decide if the \hyperref[def:expansion]{expansion} of \(G\) is at least (approximately up to logarithmic factors) \(\varphi \). If not, then find a corresponding \hyperref[prb:sparsest-cut]{sparse cut}, i.e., \(S \subseteq V\) such that \(\lvert \delta (S) \rvert \leq \widetilde{O} (\min (\lvert S \rvert , \lvert V \setminus S \rvert ))\).
-\end{problem*}
+\begin{problem}[Expansion]\label{prb:expansion}
+Given a graph \(G = (V, E)\) with edge capacity \(c\colon E \to \mathbb{R} _{\geq 0}\) and a parameter \(\varphi \), decide if the \hyperref[def:expansion]{expansion} of \(G\) is at least \(\varphi / \alpha \) for some approximation factor \(\alpha \geq 1\). If not, then find a corresponding \hyperref[prb:sparsest-cut]{sparse cut}, i.e., \(S \subseteq V\) such that \(\lvert \delta (S) \rvert \leq \varphi \cdot \min (\lvert S \rvert , \lvert V \setminus S \rvert )\).
+\end{problem}
 
-Suppose for simplicity that \(G\) has positive integral capacities, and we want to verify if \(G\) has constant \hyperref[def:expansion]{expansion}. Let \(S \subseteq V\) such that \(\lvert S \rvert = n / 2\).\footnote{For simplicity, let \(n\) be even throughout this section.} Observe that with a single \(s\)-\(t\) flow, one can compute a perfect matching between \(S\) and \(V\setminus S\).
+\begin{note}
+	We assume that \(\varphi = 1\) since we can scale \(c\) correspondingly by \(1 / \varphi \).
+\end{note}
+
+\begin{remark}
+	If one can solve \hyperref[prb:expansion]{expansion}, then binary search can find an approximate \hyperref[prb:sparsest-cut]{sparsest cut}.
+\end{remark}
+
+To motivate the \hyperref[def:cut-matching-game]{cut-matching game}, we recall the following.
+
+\begin{prev}
+	Recall that we have a ``dual'' notion of \hyperref[def:expansion]{expansion}, i.e., \hyperref[def:well-linked]{well-linked}, from \autoref{col:expander-linkage} and \autoref{lma:linkage-expander}.
+\end{prev}
+
+We further note that one can check if \(A, B\) are \hyperref[def:linkage]{linked} by an \(s\)-\(t\) flow computation such that a \hyperref[def:linkage]{linkage} can be viewed as creating a perfect matching between \(A\) and \(B\) where the edges of the matching correspond to the paths in the \hyperref[def:linkage]{\(A\)-\(B\) linkage}.
 
 \begin{center}
 	\begin{figure}[H]
 		\centering
 		\incfig{expansion-matching}
-		\caption{Adding a super source \(s^{\ast} \) to every \(s \in S\) and a super sink from \(t \in V\setminus S\) to \(t^{\ast} \). }
+		\caption{Adding a super source \(s^{\ast} \) to every \(s \in A\) and a super sink from \(t \in B\) to \(t^{\ast} \).}
 		\label{fig:expansion-matching}
 	\end{figure}
 \end{center}
 
-From \autoref{fig:expansion-matching}, it's clear that the flow paths of integral \(s^{\ast} \)-\(t^{\ast} \) flow will implicitly match up vertices in \(S\) to vertices in \(V\setminus S\), hence inducing a perfect matching \(M_i\) if such a feasible flow exist.
+From \autoref{fig:expansion-matching}, it's clear that the flow paths of integral \(s^{\ast} \)-\(t^{\ast} \) flow will implicitly match up vertices in \(A\) to vertices in \(B\), hence inducing a perfect matching \(M_i\) if such a feasible flow exist.
 
-\begin{prev}
-	Recall that we have a ``dual'' notion of \hyperref[def:expansion]{expansion}, i.e., \hyperref[def:linkage]{well-linked}, from \autoref{col:expander-linkage} and \autoref{lma:linkage-expander}.
-\end{prev}
+\begin{problem*}
+	What is the advantage of the notion of \hyperref[def:well-linked]{well-linkedness} in this context?
+\end{problem*}
+\begin{answer}
+	To prove that \(G\) is not an \hyperref[def:expander]{expander}, it suffices to exhibit an equal-sized bipartition \((S, V\setminus S)\) with \(\lvert S \rvert = n / 2\)\footnote{For simplicity, let \(n\) be even throughout this section.} and one can check via an \(s^{\ast} \)-\(t^{\ast} \) flow computation if \(S, V\setminus S\)are not \hyperref[def:linkage]{linked}. Of course, it is much easier to exhibit a cut \(S\) which is not expanding.
+\end{answer}
 
-If the max-flow is less than a perfect matching, then we know that \(V\) is not \hyperref[def:well-linked]{\(1 / 2\)-well-linked} in \(G\), hence \(G\) has an \hyperref[def:expansion]{expansion} less than some constant. On the other hand, if the \(s^{\ast} \)-\(t^{\ast} \) flow does perfectly match \(S\) to \(V\setminus S\), then this only says that \(G\) is not necessarily not an \hyperref[def:expander]{expander}. How to proceed?
+On the other hand, if the \(s^{\ast} \)-\(t^{\ast} \) flow does perfectly match \(S\) to \(V\setminus S\), then this only says that \(G\) is not necessarily not an \hyperref[def:expander]{expander}. How to proceed?
 
 \begin{intuition}
 	We think of the problem as generating a certificate for the \hyperref[def:expansion]{expansion} by generating a series of partition of \(V\).
@@ -48,18 +73,22 @@ If the max-flow is less than a perfect matching, then we know that \(V\) is not 
 One idea is to keep selecting different sets \(S_i \subseteq V\), each of size \(n / 2\), and using the corresponding \(s^{\ast} _i\)-\(t^{\ast} _i\) max-flow \(f_{s^{\ast}_i , t^{\ast}_i }\) to either route a perfect matching \(M_i\) between \(S_i\) and \(V\setminus S_i\), or prove that \(G\) has \hyperref[def:expansion]{expansion} at most a constant.
 
 \begin{intuition}
-	If we show that these matchings behave like \emph{uniformly random matchings}, then after a constant number \(k\) of sets \(S_1, \dots , S_k\), we will have embedded a random \hyperref[def:expander]{expander} with \hyperref[def:congestion]{congestion} \(k\) into \(G\), certifying that \(G\) has \hyperref[def:expansion]{expansion} at least \(1 / k\).
+	If these matchings behave like \emph{uniformly random matchings}, then after a constant number \(k\) (e.g., \(3\)) of sets \(S_1, \dots , S_k\), we will have embedded a random \hyperref[def:expander]{expander} with \hyperref[def:congestion]{congestion} \(k\) into \(G\), certifying that \(G\) has \hyperref[def:expansion]{expansion} at least \(1 / k\) (e.g., \autoref{lma:expander-existence}).
 \end{intuition}
 
-The problem becomes that, since we treat \(s^{\ast}_i\)-\(t^{\ast} _i\) flow computation as a black-box, and there is no reason that the matchings should behave like random matchings. The upshot is that Khandekar, Rao, and Vazirani~\cite{khandekar2009graph} show how to adaptively select sets \(S_1, \dots , S_k\), where \(S_i\) depends on the matchings \(M_1, \dots , M_{i-1}\) returned in rounds \(1\) through \(i-1\) such that with high probability, after \(k = O(\log ^2 n)\) rounds, the multigraph induced by the union of \(M_1, \dots , M_k\), is a \hyperref[def:expander]{\(1\)-expander}.
+The problem becomes that, since we treat \(s^{\ast}_i\)-\(t^{\ast} _i\) flow computation as a black-box, and there is no reason that the matchings should behave like random matchings. The upshot is that Khandekar, Rao, and Vazirani~\cite{khandekar2009graph} show how to adaptively select sets \(S_1, \dots , S_k\), where \(S_i\) depends on the matchings \(M_1, \dots , M_{i-1}\) returned in rounds \(1\) through \(i-1\) such that with high probability, after \(k = O(\log ^2 n)\) rounds, the multigraph \(H = (V, \bigcup_{i=1}^{k} M_i)\) induced by the union of \(M_1, \dots , M_k\), is a \hyperref[def:expander]{\(1\)-expander} by showing that \(H\) can route uniform multi-commodity flow: a demand of \(1 / n\) between each ordered pair of vertices \((u, v)\), which suffice for \(H\) being a \hyperref[def:expander]{\(1\)-expander}.
 
 \begin{remark}
-	The above means that the \hyperref[def:expander]{\(1\)-expander} \(H = (V, \bigcup_{i=1}^{k} M_i)\) can be embedded with \hyperref[def:congestion]{congestion} \(O(\log ^2 n)\). This implies that \(G\) has \hyperref[def:expansion]{expansion} at least \(1 / k = \Omega (1 / \log ^2 n)\).
+	The above means that the \hyperref[def:expander]{\(1\)-expander} \(H\) can be embedded with \hyperref[def:congestion]{congestion} \(O(\log ^2 n)\) since each \(M_i\) is \hyperref[def:routable]{routable} in \(G\), implying that \(G\) has \hyperref[def:expansion]{expansion} at least \(1 / k = \Omega (1 / \log ^2 n)\).
 \end{remark}
 
-We now make everything formal.
+Our goal is then to minimize \(k\) while ensuring that \(H\) is an \hyperref[def:expander]{expander} without actually manually checking it. Other methods use different ways to certify that \(H\) is a \hyperref[def:expander]{\(1\)-expander}.
 
-\subsection{Setting Up the Cut-Matching Game}
+\begin{eg}
+	One can also use spectral methods via \hyperref[thm:Cheeger-inequality]{Cheeger's inequality}.
+\end{eg}
+
+\subsection{Cut-Matching Game and Results}
 We now describe the \hyperref[def:cut-matching-game]{cut-matching game} formally.
 
 \begin{definition}[Cut-matching game]\label{def:cut-matching-game}
@@ -68,6 +97,7 @@ We now describe the \hyperref[def:cut-matching-game]{cut-matching game} formally
 		\item \emph{cut player} generates a partition \((S_i, V\setminus S_i)\) of \(V\) such that \(\lvert S_i \rvert = n / 2\);
 		\item \emph{matching player} gives a routable perfect matching \(M_i\) in \(G\) between \(S_i\) and \(V \setminus S_i\).
 	\end{enumerate}
+	The cut player's goal is to make \(H_i \coloneqq (V, \bigcup_{j \leq i} M_i)\) an \hyperref[def:expander]{expander} as quickly as possible, while the goal of the matching player is to delay it as much as possible.
 \end{definition}
 
 We think of ourselves as the cut player, while the matching player is some black-box \(s\)-\(t\) flow computation algorithms that we do not have control of.
@@ -93,23 +123,32 @@ Firstly, if there is no feasible matching flow between \(S\) and \(V\setminus S\
 	which implies that \(G\) has \hyperref[def:expansion]{expansion} at most \(1\).
 \end{proof}
 
-On the other hand, if \(G\) has \hyperref[def:expansion]{expansion} at least \(1\), every bipartition produces a fractional perfect matching \(M_i\) via an \(s^{\ast} _i\)-\(t^{\ast} _i\) flow. Repeatedly doing so only implies that \(G\) is not necessarily not an \hyperref[def:expander]{expander} (which isn't saying much). As a thought experiment, supposed the \(M_i\)'s behaved like random matchings. As we have seen, a constant number of matchings forms an \hyperref[def:expander]{expander}, and embedding each of these matchings in \(G\) implies that \(G\) is an \hyperref[def:expander]{expander}. Unfortunately, we cannot say that \(M_i\)'s behave like random matchings since ultimately the matchings are out of our control. However, the following lemma, arguably the key in the entire argument, says that we can adaptively choose the bipartitions so that the union of \(M_i\)'s form a matching after \(O(\log ^2 n)\) rounds.
+On the other hand, if \(G\) has \hyperref[def:expansion]{expansion} at least \(1\), every bipartition produces a fractional perfect matching \(M_i\) via an \(s^{\ast} _i\)-\(t^{\ast} _i\) flow. Repeatedly doing so only implies that \(G\) is not necessarily not an \hyperref[def:expander]{expander} (which isn't saying much). As a thought experiment, supposed the \(M_i\)'s behaved like random matchings. As we have seen, a constant number of matchings forms an \hyperref[def:expander]{expander}, and embedding each of these matchings in \(G\) implies that \(G\) is an \hyperref[def:expander]{expander}. Unfortunately, we cannot say that \(M_i\)'s behave like random matchings since ultimately the matchings are out of our control. However, the following theorem says that we can adaptively choose the bipartitions so that the union of \(M_i\)'s form a matching after \(O(\log ^2 n)\) rounds.
 
-\begin{lemma}\label{lma:cut-matching-succeed}
-	Consider the \hyperref[def:cut-matching-game]{cut-matching game}, where the matching player returns a fractional matching \(M_i \in [0, 1]^{V \times V}\) between the cut \((S_i, V\setminus S_i)\) produced by the cut player in iteration \(i\). Let \(k = O(\log ^2 n)\). There is a randomized adaptive strategy for the cut player such that with high probability, the union of the first \(k\) matchings \(M_1, \dots , M_k\) forms a \hyperref[def:expander]{\(1\)-expander}.\footnote{Formally, each matching flows is treated as a weighted, undirected edge set. Then the union is just the sum.}
-\end{lemma}
-
-It's clear that by combining \autoref{lma:cut-matching-fail} and \autoref{lma:cut-matching-succeed}, we can prove the following.
-
-\begin{theorem}[\cite{khandekar2009graph}]\label{thm:cut-matching}
-	There is a randomized algorithm that given an \(O(\log ^2 n)\) approximation for \hyperref[prb:sparsest-cut]{uniform sparsest cut} using \(O(\log ^2 n)\) many \(s\)-\(t\) flow computations.
+\begin{theorem}[\cite{khandekar2009graph}]\label{thm:cut-matching-succeed}
+	Consider the \hyperref[def:cut-matching-game]{cut-matching game}, where the matching player returns a fractional matching \(M_i \in [0, 1]^{V \times V}\) between the cut \((S_i, V\setminus S_i)\) produced by the cut player in iteration \(i\). There is a randomized adaptive strategy for the cut player such that with high probability, the union of the first \(k\) matchings \(M_1, \dots , M_k\)\footnote{Formally, each matching flows is treated as a weighted, undirected edge set. Then the union is just the sum.} forms a \hyperref[def:expander]{\(1 / 2\)-expander} with \(k = O(\log ^2 n)\). Moreover, the certificate of \(H\)'s \hyperref[def:expansion]{expansion} is a feasible routing of the uniform multi-commodity flow over \(V\).
 \end{theorem}
+
+It's clear that by combining \autoref{lma:cut-matching-fail} and \autoref{thm:cut-matching-succeed}, we can prove the following.
+
+\begin{corollary}\label{col:cut-matching-sparsest-cut}
+	There is a randomized algorithm, that given a graph \(G\), either proves that \(G\) is not an \hyperref[def:expander]{expander}, or with high probability certifies that it is an \hyperref[def:expander]{\(\Omega (\frac{1}{\log ^2 n})\)-expander} using \(O(\log ^2 n)\) single-commodity flow instances on \(G\). Via binary search, there is a randomized algorithm for \hyperref[prb:sparsest-cut]{uniform sparsest cut} via \(O(\log ^3 n)\) single-commodity flows.
+\end{corollary}
 \begin{proof}
-	If any \((S_i, V\setminus S_i)\) cannot be feasibly routed, then we have a cut with \hyperref[def:expansion]{expansion} at most \(1\) from \autoref{lma:cut-matching-fail}. Otherwise, from \autoref{lma:cut-matching-succeed}, with high probability, we obtain a \hyperref[def:expander]{\(1\)-expander} \(H = (V, \bigcup_{i=1}^{k} M_i)\). Since each matching flow fits in \(G\), so the \(k\) matching flows fit in \(G\) scaled up by a factor of \(k\), i.e., \(H\) can be embedded in \(G\) with congestion \(k = O(\log ^2 n)\).
+	If any \((S_i, V\setminus S_i)\) cannot be feasibly routed, then we have a cut with \hyperref[def:expansion]{expansion} at most \(1\) from \autoref{lma:cut-matching-fail}. Otherwise, from \autoref{thm:cut-matching-succeed}, with high probability, we obtain a \hyperref[def:expander]{\(1 / 2\)-expander} \(H = (V, \bigcup_{i=1}^{k} M_i)\). Since each matching flow fits in \(G\), so the \(k\) matching flows fit in \(G\) scaled up by a factor of \(k\), i.e., \(H\) can be embedded in \(G\) with congestion \(k = O(\log ^2 n)\), proving the corresponding \hyperref[def:expansion]{expansion}. The binary search for \hyperref[prb:sparsest-cut]{uniform sparsest cut} is trivial.
 \end{proof}
 
-\subsection{A Randomized Cutting Strategy}
-Our goal now is to prove \autoref{lma:cut-matching-succeed}, specifically, come up with a randomized strategy of selecting the cut \((S_i, V\setminus S_i)\) in each iteration \(i\) such that the union of the fractional matchings, \(H = (V, \bigcup_{i=1}^{k} M_i)\), is a \hyperref[def:expander]{\(1\)-expander}. But how can we certify that \(H\) is a \hyperref[def:expander]{\(1\)-expander} in the first place?
+Finally, we note that this also yields an alternate proof of the flow-cut gap, although it is slightly weaker than the \(O(\log n)\)-bound we saw in \autoref{thm:sparsest-cut-embedding}:
+
+\begin{corollary}
+	The multi-commodity flow-cut gap for \hyperref[prb:sparsest-cut]{uniform instances} is \(O(\log ^2 n)\).
+\end{corollary}
+
+\section{A Randomized Cutting Strategy}
+Our goal now is to prove \autoref{thm:cut-matching-succeed}, specifically, come up with a randomized strategy of selecting the cut \((S_i, V\setminus S_i)\) in each iteration \(i\) such that the union of the fractional matchings, \(H = (V, \bigcup_{i=1}^{k} M_i)\), is a \hyperref[def:expander]{\(1 / 2\)-expander}.
+
+\subsection{Intuition: Certifying Expansion}
+But how can we certify that \(H\) is a \hyperref[def:expander]{\(1 / 2\)-expander} in the first place?
 
 \begin{problem*}
 	This seems circular: our original motivation is to decide whether \(G\) is a \hyperref[def:expander]{\(1\)-expander}. However, it seems like we still require to answer the same problem for \(H\).
@@ -118,7 +157,7 @@ Our goal now is to prove \autoref{lma:cut-matching-succeed}, specifically, come 
 	This is not cyclical because we will do something very specific to the structure of the matchings, such that we do not need to do the actual checking.
 \end{answer}
 
-The idea is the following.
+The idea is inspired by random-walk, but we will not explicitly mention the motivation and instead think of routing:
 
 \begin{intuition}
 	Use \(H_i \coloneqq (V, \bigcup_{j \leq i} M_j)\) to route a directed multi-commodity flow where we send (about) \(1 / n\) units of flow between every pair of vertices. This implies that we can embed the weighted clique, \(K_n / n\), into \(H_i\). Since \(K_n / n\) has \hyperref[def:expansion]{expansion} \(1\), which also certifies that for \(H_i\).
@@ -134,23 +173,27 @@ We build out this multi-commodity flow incrementally, one matching at a time. We
 	Use the fractional perfect matching to mix up the existing flow, hoping to produce a multi-commodity flow closer to uniform. We then choose the bipartition that maximizes the mixing.
 \end{intuition}
 
+\subsection{Potential Argument}
 Mathematically, at the beginning of the iteration \(i\), for each \(u \in V\), let \(b_u^{(i)} \in [0, 1]^V\) be the stochastic vector such that \(b_u^{(i)}(v)\) is the amount of flow that \(u\) has routed to \(v\) after the \(i^{\text{th} }\) iteration in \(H_i\). Then the above strategy is essentially that for each edge \(uv \in M_i\), let
 \[
 	b_u^{(i)}
 	= b_v^{(i)}
 	= \frac{1}{2} (b_u^{(i-1)} + b_v^{(i-1)}),
 \]
-where we assume for simplicity that the perfect matching \(M_i\) is integral.
+where we assume for simplicity that the perfect matching \(M_i\) is integral. We note that at the beginning, \(b_u^{(0)}(v) = \mathbbm{1}_{u = v} \) is the indicator vector for all \(u \in V\), i.e., \(b_u^{(0)}(u) = 1\) and \(b_u^{(0)}(v) = 0\) for all \(v \neq u\).
 
 \begin{note}
-	For the case of fractional matching, we have \(b_u^{(i)} = b_u^{(i-1)} / 2 + \sum_{v \in V} M_{uv} b_v^{(i-1)} / 2\). This will not make any difference, hence we just focus on the integral case.
+	For the case of fractional matching, we have \(b_u^{(i)} = b_u^{(i-1)} / 2 + \sum_{v \in V} M(uv) b_v^{(i-1)} / 2\). This will not make any difference, hence we just focus on the integral case.
 \end{note}
 
 We first observe the following, which simply formalizes that the routing is feasible in each iteration.
 
 \begin{claim}
-	For all \(u \in V\), \(\sum_{v \in V} b_u^{(i)}(v) = 1\) for all \(i\) and the demand matrix implied by \(b_u^{(i)}\) for all \(u \in V\) is routable in \(H_i\).
+	For all \(u \in V\), \(\sum_{v \in V} b_u^{(i)}(v) = 1\) for all \(i\). And If \(H_{i-1}\) routes the demand matrix implied by \(b_u^{(i-1)}\) for all \(u \in V\), then \(H_i\) routes the demand matrix implied by \(b_u^{(i)}\) for all \(u \in V\) as well.
 \end{claim}
+\begin{explanation}
+	The first part is trivial. For the second part, since \(H_i\) differs from \(H_{i-1}\) via the matching \(M_i\). For each \(uv \in M_i\), we use the edge to exchange the flow at \(u\) and flow at \(v\): \(1 / 2\) capacity to send \(b_u^{(i-1)}\) to \(b_v^{(i-1)}\) and \(1 / 2\) capacity to send \(b_v^{(i-1)}\) to \(b_u^{(i-1)}\).
+\end{explanation}
 
 Ideally, as we have discussed, we want \(b_u(v) = 1 / n\) for all \(u\) and \(v\). In a sense, we are taking the weighted averages of \(b_u^{(i)}\)'s as dictated by \(M\).
 
@@ -158,15 +201,12 @@ Ideally, as we have discussed, we want \(b_u(v) = 1 / n\) for all \(u\) and \(v\
 	In principle, pairing up very ``different'' \(b_u^{(i)}\)'s should produce averages closer to uniform.
 \end{intuition}
 
-The problem is again that we do not have the control of how the pairing is done, as it is given by \(M_{i+1}\). We can only choose the next partition \((S_{i+1}, V\setminus S_{i+1})\). To do that, let \(x_u^{(i)} = b_u^{(i)} - \mathbbm{1}_{V} / n \in \mathbb{R} ^V\), and consider the potential \(\phi _i = \sum_{u \in V} \lVert x_u^{(i)} \rVert _2^2\), i.e.,
+The problem is again that we do not have the control of how the pairing is done, as it is given by \(M_{i+1}\). We can only choose the next partition \((S_{i+1}, V\setminus S_{i+1})\). To do that, let \(x_u^{(i)} = b_u^{(i)} - \vec{1} / n \in \mathbb{R} ^V\), and consider the potential \(\phi _i = \sum_{u \in V} \lVert x_u^{(i)} \rVert _2^2\), i.e.,
 \[
 	\phi _i
 	= \sum_{(u, v) \in V \times V} \left( b_u^{(i)}(v) - \frac{1}{n} \right) ^2.
 \]
-
-\begin{notation}
-	Here, \(\mathbbm{1}_{V} \) is the all-\(1\) vector with dimension \(n\).
-\end{notation}
+We note that \(\phi _0 = \sum_{(u, v) \in V \times V} (\mathbbm{1}_{u = v} - 1 / n)^2 = n (1 - 1 / n) = n - 1\).
 
 \begin{intuition}
 	\(\phi _i\) measures the difference between the multi-commodity flow routed so far and a fully symmetric multi-commodity flow.
@@ -180,13 +220,12 @@ Note that in terms of \(x_u^{(i)}\), we now have \(\sum_{u \in V} x_u^{(i)} = 0\
 \]
 This potential is useful due to the following.
 
-\begin{claim}
+\begin{claim}\label{clm:cut-matching-goal}
 	If \(\phi _i \leq 1 / 4n^2\), then \(b_u^{(i)}(v) \geq 1 / 2n\) for all \(u, v \in V\), and hence \(H_i\) is a \hyperref[def:expander]{\(1 / 2\)-expander}.
 \end{claim}
 
-We do not care about the constant factor, hence we will take this as a success. Now the question is, how can we effectively minimize \(\phi _i\). In this context, we can abstract out the graphs and flows, just focus on analyzing \(x_u^{(i)}\) with the abstract update rule \(x_u^{(i)} = x_v^{(i)} = (x_u^{(i-1)} + x_v^{(i-1)}) / 2\). A natural greedy strategy is that at each iteration, choose a new bipartition \((S_i , V\setminus S_i )\) that minimizes the maximum of \(\phi _i = \sum_{u \in V} \lVert x_u^{(i+1)} \rVert _2^2\) over all fractional perfect matchings \(M_i \) of \((S_i , V\setminus S_i )\).
-
-We work backwards by first analyzing \(\phi _i\) analytically as a function of \(M\).
+\subsection{Reducing Potential Via Matching}
+Now the question is, how can we effectively minimize \(\phi _i\). In this context, we can abstract out the graphs and flows, just focus on analyzing \(x_u^{(i)}\) with the abstract update rule \(x_u^{(i)} = x_v^{(i)} = (x_u^{(i-1)} + x_v^{(i-1)}) / 2\). A natural greedy strategy is that at each iteration, choose a new bipartition \((S_i , V\setminus S_i )\) that minimizes the maximum of \(\phi _i = \sum_{u \in V} \lVert x_u^{(i+1)} \rVert _2^2\) over all fractional perfect matchings \(M_i \) of \((S_i , V\setminus S_i )\). We work backwards by first analyzing \(\phi _i\) analytically as a function of \(M\).
 
 \begin{lemma}\label{lma:cut-matching-deviation}
 	Let \(M\) be an arbitrary perfect matching \(M\) on \(V\), and let \(x_u \in \mathbb{R} ^k\) for some \(k \in \mathbb{N} \) for all \(u \in V\). Suppose for each matching edge \(uv \in M\), \(y_u = (x_u + x_v) / 2\), then
@@ -209,7 +248,18 @@ We work backwards by first analyzing \(\phi _i\) analytically as a function of \
 	By summing up over \(u \in V\), since \(M\) is a perfect matching, we have the result.
 \end{proof}
 
-\autoref{lma:cut-matching-deviation} shows that, specifically for \(x_u^{(i-1)} \in \mathbb{R} ^V\), under the update rule (which is the same as our mixing rule), we can express \(x_u^{(i)}\) explicitly.
+\autoref{lma:cut-matching-deviation} shows that, specifically for \(x_u^{(i-1)} \in \mathbb{R} ^V\), under the update rule (which is the same as our mixing rule), we can express the reduction of \(\phi _{i-1}\) explicitly:
+\begin{equation}\label{eq:cut-matching-deviation}
+	\phi _{i}
+	= \phi _{i-1} - \frac{1}{2} \sum_{uv \in M_i} \lVert x^{(i-1)}_u - x^{(i-1)}_v \rVert _2^2 .
+\end{equation}
+Hence, the potential reduction for an edge \(uv\) is proportional to \(\lVert x_u - x_v \rVert _2^2\), which is the square of the Euclidean distance between \(x_u\) and \(x_v\). Thus, the cut player should somehow force the matching player to pair vertices that are \emph{far apart}.
+
+\begin{prev}
+	The cut player can only give a partition \((S_i, V\setminus S_i)\) and the matching player has control of the actual matching it generates.
+\end{prev}
+
+It's quite hard to ensure this in high dimension. The intuition is to look at the easiest case:
 
 \begin{intuition}
 	The key observation is that when \(k = 1\), the potential goes down a lot.
@@ -218,7 +268,7 @@ We work backwards by first analyzing \(\phi _i\) analytically as a function of \
 We formalize this as follows.
 
 \begin{lemma}\label{lma:cut-matching-potential-reduction-1-dimension}
-	For each \(u \in V\), let \(z_u \in \mathbb{R} \) be a scalar. Suppose we partition \(V\) to be \((A, B)\) according to \(z_u\), where \(A\) and \(B\) is the first and the second half, respectively.\footnote{I.e., \(A = \{ u \colon z_u \leq \operatorname{median}(\{ z_v\} _{v \in V}) \} \) and \(B = V \setminus A\) such that \(\lvert A \rvert = \lvert B \rvert = n / 2\), with ties broken arbitrarily.} Then for every perfect matching \(M\) between \(A\) and \(B\), we have
+	For each \(u \in V\), let \(z_u \in \mathbb{R} \) be a scalar such that \(\sum_{u \in V} z_u = 0\). Suppose we partition \(V\) to be \((A, B)\) according to \(z_u\), where \(A\) and \(B\) is the first and the second half, respectively.\footnote{I.e., \(A = \{ u \colon z_u \leq \operatorname{median}(\{ z_v\} _{v \in V}) \} \) and \(B = V \setminus A\) such that \(\lvert A \rvert = \lvert B \rvert = n / 2\), with ties broken arbitrarily.} Then for every perfect matching \(M\) between \(A\) and \(B\), we have
 	\[
 		\sum_{uv \in M} \lVert z_u - z_v \rVert _2^2
 		= \sum_{uv \in V} (z_u - z_v)^2
@@ -226,14 +276,14 @@ We formalize this as follows.
 	\]
 \end{lemma}
 \begin{proof}
-	Since the claim is translation invariant, we can assume that the median is \(0\), i.e., \(z_u \leq 0\) for all \(u \in A\), and \(z_u \geq 0\) for all \(u \in B\). We then have
+	Let \(\beta \in \mathbb{R} \) to be the median of \(z_u\)'s. Hence, \(z_u \leq \beta \) for all \(u \in A\) and \(z_u \geq \beta \) for all \(u \in B\). Then, for any perfect matching \(M\) between \(A\) and \(B\), consider a matched edge \(uv \in M\). We have \((z_u - z_v)^2 = ((z_u - \beta) - (z_v - \beta ))^2\). Since \(z_u \leq \beta \) and \(z_v \geq \beta \), we have \(((z_u - \beta ) - (z_v - \beta ))^2 = (\lvert z_u - \beta \rvert + \lvert z_v - \beta \rvert )^2\). Summing up over all pairs in \(M\), we have
 	\[
 		\sum_{uv \in M} \lVert z_u - z_v \rVert _2^2
-		= \sum_{uv \in M} (\lvert z_u \rvert + \lvert z_v \rvert )^2
-		\geq \sum_{uv \in M} z_u^2 + z_v^2
-		= \sum_{u \in V} z_u^2,
+		= \sum_{uv \in M} (\lvert z_u - \beta \rvert + \lvert z_v - \beta \rvert )^2
+		\geq \sum_{u \in V} z_u^2 - 2\beta \sum_{u \in V} z_u + n \beta ^2
+		\geq \sum_{u \in V} z_u^2,
 	\]
-	where the first equality is due to the fact that \(z_u\) and \(z_v\) is with different sign for \(uv \in M\) as \(M\) is a perfect matching between \(A\) and \(B\).
+	where we use the fact that \(\sum_{u \in V} z_u = 0\) in the final inequality.
 \end{proof}
 
 \begin{remark}
@@ -243,18 +293,9 @@ We formalize this as follows.
 	Recall that from \autoref{lma:cut-matching-deviation}, the potential is reduced by \(\sum_{uv \in M} \lVert x_u - x_v \rVert _2^2 / 2\), which in this case is \(\sum_{uv \in M} (z_u - z_v)^2 / 2\). From \autoref{lma:cut-matching-potential-reduction-1-dimension}, this is at least half of the original potential (\(\sum_{u \in V} z_u^2 = \sum_{u \in V} \lVert z_u \rVert _2^2\)), so we get a linear decay.
 \end{explanation}
 
+\subsection{Random Projection Cutting Strategy}
 A natural idea is then to reduce the original \(x_u^{(i)} \in \mathbb{R} ^{V}\) to one-dimensional.
 
 \begin{intuition}
 	The general strategy inspired by \autoref{lma:cut-matching-potential-reduction-1-dimension} is then to project onto a random line.
 \end{intuition}
-
-This leads to the following guarantee.
-
-\begin{lemma}\label{lma:cut-matching-potential-reduction}
-	Given \(b_u^{(i-1)}\) and \(x_u^{(i)}\), there exists a partition of \(V\) into \((A_i, B_i)\) such that for any perfect matching \(M_i\) between \(A_i\) and \(B_i\),
-	\[
-		\phi _i
-		\leq \left( 1 - \frac{1}{c \log n} \right) \phi _{i-1}.
-	\]
-\end{lemma}

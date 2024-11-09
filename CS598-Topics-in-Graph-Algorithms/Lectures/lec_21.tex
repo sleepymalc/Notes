@@ -149,11 +149,13 @@ This completes the whole proof. Finally, we describe the whole \hyperref[def:cut
 \end{note}
 
 \section{Application to Treewidth}
-\todo{Cleanup}
-Previously, we have mentioned \emph{\hyperref[def:treewidth]{treewidth}} briefly (e.g., \autoref{thm:node-well-linked-treewidth}). Now, we see another good application of the \hyperref[def:cut-matching-game]{cut-matching game} to \hyperref[def:treewidth]{treewidth}. We care about how ``tree-like'' does the graph look. One of the (among many) interesting properties of a tree is what can we separate when removing one node:
+Previously, we have mentioned \emph{\hyperref[def:treewidth]{treewidth}} briefly (e.g., \autoref{thm:node-well-linked-treewidth}). Now, we see another good application of the \hyperref[def:cut-matching-game]{cut-matching game} to \hyperref[def:treewidth]{treewidth}.
+
+\subsection{Tree Decomposition and Treewidth}
+We care about how ``tree-like'' does the graph look. One of the (among many) interesting properties of a tree is that we can separate the tree in a balanced way by removing only one node:
 
 \begin{eg}[Tree]
-	For a tree \(T\), there exists a single vertex such that after removing it, no connect component has more than \(2 n/ 3\) vertices.
+	For a tree \(T\), there exists a single vertex such that after removing it, no connect component has more than \(2 n/ 3\) vertices, i.e., there exists a singleton \hyperref[def:balanced-separator]{balanced separator}.
 \end{eg}
 
 What if we allow removing more vertices?
@@ -167,56 +169,153 @@ Taking these two examples into account, we consider the following notion of \hyp
 \begin{definition}[Tree decomposition]\label{def:tree-decomposition}
 	Given a graph \(G = (V, E)\), a \emph{tree decomposition} of \(G\) is a tree \(T = (V_T, E_T)\) and a function \(B \colon V_T \to 2^V\) such that
 	\begin{enumerate}[(i)]
-		\item for all \(u \in V\), the set of ``bags'' that contains \(u \in T\) form a connected sub-tree of \(T\);
-		\item for all \(uv \in E\), there exists some \(x \in V_T\) such that both \(u, v \in B(x)\).
+		\item for all \(u \in V\), the set of ``bags'' \(B(t)\) that contains \(u\) form a connected sub-tree of \(T\);
+		\item for all \(uv \in E\), there exists some \(t \in V_T\) such that both \(u, v \in B(t)\).
 	\end{enumerate}
-	We let the \emph{width} of the tree decomposition to be the maximum size of the bag.
 \end{definition}
+
+\begin{definition}[Width]\label{def:tree-decomposition-width}
+	The \emph{width} \(\operatorname{width}(T)\) of a \hyperref[def:tree-decomposition]{tree decomposition} \(T\) of \(G\) with the function \(B \colon V_T \to 2^V\) is defined as \(\max _{t \in V_T} \lvert B(t) \rvert \).
+\end{definition}
+
+\begin{figure}[H]
+	\centering
+	\incfig{tree-decomposition}
+	\caption{The \hyperref[def:tree-decomposition]{tree decomposition} of \(G\) with its ``bag'' plotted explicitly.}
+	\label{fig:tree-decomposition}
+\end{figure}
+
+Then, we can define the \hyperref[def:treewidth]{treewidth} formally.
 
 \begin{definition}[Treewidth]\label{def:treewidth}
-	Given a graph \(G\), the \emph{treewidth} \(\operatorname{tw}(G) \) is the minimum width among all possible \hyperref[def:tree-decomposition]{tree decomposition} minus \(1\).\footnote{This is because the minimum maximum width of the \hyperref[def:tree-decomposition]{tree decomposition} for a tree is \(2\).}
+	Given a graph \(G\), the \emph{treewidth} \(\operatorname{tw}(G) \) is defined as \(\min _{T} \operatorname{width}(T) - 1\), where the minimum is taking over all possible \hyperref[def:tree-decomposition]{tree decompositions} of \(G\).
 \end{definition}
 
-Essentially, \autoref{def:treewidth} captures the desired properties we mentioned above:
+The minus one is because the minimum maximum \hyperref[def:tree-decomposition-width]{width} of the \hyperref[def:tree-decomposition]{tree decomposition} for a tree is \(2\):
 
-\begin{claim}
-	Suppose \(\operatorname{tw}(G) \leq k\). Then for any \(X \subseteq V\), there exists a set \(S\) such that \(\lvert S \rvert \leq k\) and \(G-S\) has no component with more than \(2 \lvert X \rvert / 3\) vertices from \(X\).
-\end{claim}
+\begin{eg}[Tree]
+	For any tree \(T\), there exists a \hyperref[def:tree-decomposition]{tree decomposition} with \hyperref[def:tree-decomposition-width]{width} \(2\), i.e., \(\operatorname{tw}(T) = 1\).
+	\begin{center}
+		\incfig{tree-decomposition-tree}
+	\end{center}
+\end{eg}
 
-Let us rephrase \autoref{thm:node-well-linked-treewidth} as follows:
+\begin{eg}[Cycle]
+	For any cycle \(C_n\), there exists a \hyperref[def:tree-decomposition]{tree decomposition} with \hyperref[def:tree-decomposition-width]{width} \(3\), i.e., \(\operatorname{tw}(C_n) = 2\).
+	\begin{center}
+		\incfig{tree-decomposition-cycle}
+	\end{center}
+\end{eg}
+
+\begin{eg}[Series-Parallel]
+	We have that \(\operatorname{tw}(G) \leq 2\) if and only if \(G\) is series-parallel.
+\end{eg}
+
+\begin{eg}[Clique]
+	For any clique \(K_n\), we have \(\operatorname{tw}(K_n) = n-1\) with the trivial \hyperref[def:tree-decomposition]{tree decomposition}, i.e., \(T = (V_T, E_T)\) with \(V_T = \{ t \} \), \(E_T = \varnothing \) such that \(B(t) = V\).
+\end{eg}
+
+\subsection{Balanced Separator and Treewidth}
+Essentially, \autoref{def:treewidth} captures the desired \hyperref[def:balanced-separator]{balanced separator} properties we mentioned above:
+
+\begin{intuition}
+	Any graph \(G\) with \(\operatorname{tw}(G) \leq k\) implies that \(G\) can be recursively decomposed via \hyperref[def:balanced-separator]{balanced separators} of size \(k\). Approximate converse also holds, i.e., if there is a subgraph \(H\) of \(G\) with no \hyperref[def:balanced-separator]{balanced separator} of size \(k\), then \(\operatorname{tw}(G) \geq k / c\) for some \(c > 0\).
+\end{intuition}
+
+Formally, we have the following:
+
+\begin{lemma}
+	Suppose \(\operatorname{tw}(G) \leq k\). Then for any \(X \subseteq V\), there exists a \hyperref[def:balanced-separator]{balanced separator} \(S\) for \(X\) of size \(\lvert S \rvert \leq k\), i.e., \(G-S\) has no component with more than \(2 \lvert X \rvert / 3\) vertices from \(X\).
+\end{lemma}
+
+The idea is that for any edge \((t, t^{\prime} ) \in E_T\) of the \hyperref[def:tree-decomposition]{tree decomposition} \(T\) that achieves the optimal \hyperref[def:tree-decomposition-width]{width} (i.e., \(\operatorname{tw}(G) + 1\)), \(B(t) \cap B(t^{\prime} )\) is a separator of \(G\). Hence, \(\operatorname{tw}(G) \leq k \) implies \(G\) has a \hyperref[def:balanced-separator]{balance separator} \(S\) of size \(k\). The recursive property follows from that fact that \(\operatorname{tw}(H) \leq \operatorname{tw}(G) \) for any subgraph \(H\) of \(G\). Let us rephrase \autoref{thm:node-well-linked-treewidth} as follows:
 
 \begin{lemma}\label{lma:node-well-linked-treewidth}
 	For any graph \(G\), \(\operatorname{tw}(G) \geq k\) if and only if there exists \(X\) such that \(\lvert X \rvert \geq k / 4\) such that \(X\) is \hyperref[def:node-well-linked]{node-well-linked}.
 \end{lemma}
 
-Now, we try to verify the \hyperref[def:treewidth]{treewidth}. Verifying a small \hyperref[def:treewidth]{treewidth} is easy, we just ask for a \hyperref[def:tree-decomposition]{tree decomposition} as a certification.
+With these characterizations, we have the following examples.
 
-\begin{theorem}
-	Let \(G = (V, E)\) be a graph with \hyperref[def:treewidth]{treewidth} \(\geq k\). Then three exists a subgraph \(H = (V, E_H)\) such that
+\begin{eg}[Grid]
+	For \(\sqrt{n} \times \sqrt{n} \) grid \(G\), \(\operatorname{tw}(G) = \sqrt{n} - 1 \).
+\end{eg}
+
+Indeed, grid the worst case for planar graphs.
+
+\begin{eg}[Planar separator theorem]\label{eg:planar-separator-theorem}
+	For any planar graph \(G\), \(\operatorname{tw}(G) = O(\sqrt{n} )\)~\cite{lipton1979separator}.
+\end{eg}
+
+\begin{eg}[Random graph]
+	For random \(d\)-regular graph \(G\), \(\operatorname{tw}(G) = \Theta (n)\) with high probability.
+\end{eg}
+\begin{explanation}
+	Since random \(d\)-regular graph is an \hyperref[def:expander]{expander} with high probability, and \hyperref[def:balanced-separator]{balanced separator} is of size \(\Omega (n)\) for \hyperref[def:expander]{expander}.
+\end{explanation}
+
+\subsection{Treewidth and Routing}
+Now, we try to verify the \hyperref[def:treewidth]{treewidth}. Verifying a small \hyperref[def:treewidth]{treewidth} is easy, we just ask for a \hyperref[def:tree-decomposition]{tree decomposition} as a certification. In general, given \(G\) and \(k\), checking if \(\operatorname{tw}(G) \leq k\) is \(\NP\)-complete~\cite{arnborg1987complexity}. However, it is fixed-parameter-tractable, i.e., for every fixed \(k\), there is a linear-time algorithm (specifically, \(O(k^{k^3} n)\)), that, given \(G\), decides whether \(\operatorname{tw}(G) \leq k\)~\cite{bodlaender1993linear}. As for an approximation algorithm for computing \hyperref[def:treewidth]{treewidth}, it takes \(O(2^k n)\) time for a \(5\)-approximation~\cite{bodlaender2016c}, while for the best known polynomial-time approximation algorithm is \(O(k \sqrt{\log k} )\)-approximate~\cite{feige2005improved}.
+
+Now, it turns out that instead of directly certifying/computing the \hyperref[def:treewidth]{treewidth}, from the understanding of the connection between the size of \hyperref[def:balanced-separator]{balanced separator} and \hyperref[def:treewidth]{treewidth}, with the fact that \hyperref[def:expander]{expander} has large \hyperref[def:balanced-separator]{balanced separator}, one natural idea is the following:
+
+\begin{intuition}
+	We try to ``embed'' an \hyperref[def:expander]{expander} using \hyperref[def:cut-matching-game]{cut-matching game}.
+\end{intuition}
+
+Utilizing this idea, the following is known:
+
+\begin{theorem}\label{thm:treewidth-sparsifier}
+	Let \(G = (V, E)\) be a graph with \hyperref[def:treewidth]{treewidth} \(\geq k\). Then three is a randomized algorithm that computes a subgraph \(H = (V, E_H)\) such that with high probability,
 	\begin{enumerate}[(i)]
-		\item \(\operatorname{tw}(H) \geq k / c \log ^2 k\);
+		\item \(\operatorname{tw}(H) = \Omega (k / \poly \log k)\), where \(\poly \log k\) is something like \(\log ^2 k\);
 		\item \(\deg_H(v) = O(\log ^2 k)\).
 	\end{enumerate}
 \end{theorem}
 
-\begin{theorem}
-	Let \(G = (V, E)\) be a graph with \hyperref[def:treewidth]{treewidth} \(\geq k\). Then three exists a subgraph \(H = (V, E_H)\) such that
+\autoref{thm:treewidth-sparsifier} is further improved as follows:
+
+\begin{theorem}[\cite{chekuri2013poly,chekuri2014degree}]\label{thm:treewidth-sparsifier-improved}
+	Let \(G = (V, E)\) be a graph with \hyperref[def:treewidth]{treewidth} \(\geq k\). Then three is a randomized algorithm that computes a subgraph \(H = (V, E_H)\) such that with high probability,
 	\begin{enumerate}[(i)]
-		\item \(\operatorname{tw}(H) \geq k / c \log ^{100} k\);
+		\item \(\operatorname{tw}(H) = \Omega (k / \poly \log k)\), where \(\poly \log k\) is something like \(\log ^{100} k\);
 		\item \(\deg_H(v) = 3\).
 	\end{enumerate}
 \end{theorem}
 
-\begin{remark}[Planar Graph]
-	For planar graph, we know that the grid has a \hyperref[def:treewidth]{treewidth} \(\sqrt{n} \). From the planar graph separator theorem, we also know that the \hyperref[def:treewidth]{treewidth} for planar graphs is \(O(\sqrt{n} )\). Hence, we can solve many problems in \(2^{\sqrt{n} }\) using dynamic programming for planar graphs.
+\begin{remark}
+	The full generality of \autoref{thm:treewidth-sparsifier} and \autoref{thm:treewidth-sparsifier-improved} are stated as topological minor. We omit the exact details.
 \end{remark}
+
 
 \begin{theorem}\label{thm:treewidth-planar-graph-color}
 	For any planar graph \(G = (V, E)\) and integer \(h \geq 3\), \(V\) can be colored with \(h\) colors such that for any \(i \in [h]\), \(\operatorname{tr}(G - V_i) \leq 3h\) where \(V_i \subseteq V\) is the set of vertices colored with color \(i\).
 \end{theorem}
 
-The above immediately yield several fast approximation algorithm.
+\subsection{Algorithm with Treewidth}
+The reason why we care about \hyperref[def:treewidth]{treewidth} is that there are several ``templates'' for applications:
+\begin{itemize}
+	\item if \(G\) has \emph{small} (constant) \hyperref[def:treewidth]{treewidth}, we can then solve the problem via dynamic programming on the \hyperref[def:tree-decomposition]{tree decomposition};
+	\item if \(G\) has \emph{large} \hyperref[def:treewidth]{treewidth}, we can then use structure, in particular, obstructions such as grids:
+	      \begin{itemize}
+		      \item answer is clear from obstruction, or
+		      \item ``reduce'' the problem in some fashion and recurse.
+	      \end{itemize}
+\end{itemize}
+
+Let's just look at the case that when the \hyperref[def:treewidth]{treewidth} is small. In this case, dynamic programming based algorithms for trees extends naturally to bounded \hyperref[def:treewidth]{treewidth} graphs.
+
+\begin{eg}[Problems on planar graph]
+	From the \hyperref[eg:planar-separator-theorem]{planar separator theorem}, we can solve many problems in \(2^{\sqrt{n} }\) using dynamic programming for planar graphs.
+\end{eg}
+
+One such problem is the \hyperref[prb:MWIS]{maximum (weighted) independent set}:
+
+\begin{problem}[Maximum weighted independent set]\label{prb:MWIS}
+Given a graph \(G = (V, E)\) with vertex capacity \(w \colon V \to \mathbb{R} \), the \emph{maximum weighted independent set} (MWIS) problem asks for computing \(\max _{S \subseteq V} w(S)\) such that \(S \subseteq V\) is an independent set.
+\end{problem}
+
+While it's known that \hyperref[prb:MWIS]{MWIS} is \(\NP\)-hard, even for planar graphs, and more generally, is also very hard even to approximate in general graphs, we can still solve it efficiently (in polynomial time) in bounded \hyperref[def:treewidth]{treewidth} graphs.
 
 \begin{eg}[Maximum weighted independent set]
-	Consider the \emph{maximum weighted independent set} (MWIS) problem on planar graphs. Let \(\epsilon \in (0, 1)\) and \(h = 1 / \epsilon \). From \autoref{thm:treewidth-planar-graph-color}, consider removing \(V_i\) from \(G\) and compute the corresponding MWIS to get \(\OPT_i\) in \(G - V_i\). From the simple pigeonhole principle, the optimum value of MWIS \(\max _{i\in [h]} \OPT_i\) is \((1-\epsilon)\)-approximation to \(\OPT\). Finally, we simply note that since \(\operatorname{tr}(G-V_i) \leq 3h\), computing \(\OPT_i\) takes only \(2^{O(1 / \epsilon )}\), hence in total.
+	Consider \hyperref[prb:MWIS]{MWIS} on planar graphs. Let \(\epsilon \in (0, 1)\) and \(h = 1 / \epsilon \). From \autoref{thm:treewidth-planar-graph-color}, consider removing \(V_i\) from \(G\) and compute the corresponding MWIS to get \(\OPT_i\) in \(G - V_i\). From the simple pigeonhole principle, the optimum value of MWIS \(\max _{i\in [h]} \OPT_i\) is \((1-\epsilon)\)-approximation to \(\OPT\). Finally, we simply note that since \(\operatorname{tr}(G-V_i) \leq 3h\), computing \(\OPT_i\) takes only \(2^{O(1 / \epsilon )}\), hence in total.
 \end{eg}

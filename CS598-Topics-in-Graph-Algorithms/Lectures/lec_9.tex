@@ -1,35 +1,43 @@
 \lecture{9}{24 Sep.\ 11:00}{Expander Decomposition and Well-Linked Sets}
+We first see an algorithm that compute the \hyperref[def:expander-decomposition]{expander decomposition}.
+
+\begin{algorithm}[H]\label{algo:expander-decomposition}
+	\DontPrintSemicolon{}
+	\caption{\hyperref[def:expander-decomposition]{Expander Decomposition}}
+	\KwData{A connected graph \(G = (V, E)\), base graph edge set size \(M\),\footnote{In the initial call, it's \(m\).} parameter \(\epsilon \in (0, 1)\)}
+	\KwResult{An \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon}{\alpha \log m}), \epsilon)\)-expander decomposition} \(\{ G_i \} _{i=1}^{h}\)}
+	\SetKwFunction{ExpanderDecomposition}{\hyperref[algo:expander-decomposition]{Expander-Decomposition}}
+	\SetKwFunction{SparsestCut}{\(\alpha \)-\hyperref[prb:sparsest-cut]{Uniform-Sparsest-Cut}}
+
+	\BlankLine
+
+	\If(\Comment*[f]{Base case}){\(m \leq 10 \log M / \epsilon \)}{
+		\Return{\(G\)}\;
+	}
+	\;
+	\((S, V\setminus S) \gets\)\SparsestCut{\(G\)}\footnote{Recall that this is for \hyperref[def:conductance]{conductance}, which can be formalized as a \hyperref[prb:product-instance-of-sparsest-cut]{product instance}.}\Comment*[r]{\(\operatorname{vol}(S) \leq \operatorname{vol}(V \setminus S) \)}
+	\;
+	\uIf(\Comment*[f]{Check \hyperref[def:sparsity]{sparsity}}){\(\lvert \delta (S) \rvert / \operatorname{vol}(S) > c / 10 \log M\)}{
+		\Return{\(G\)}\;
+	}
+	\Else{
+	\(\{ G_i^{(1)} \}_{i=1}^{h_1} \gets\)\ExpanderDecomposition{\(G[S]\), \(M\), \(\epsilon \)}\;
+	\(\{ G_i^{(2)} \}_{i=1}^{h_2} \gets\)\ExpanderDecomposition{\(G[V\setminus S]\), \(M\), \(\epsilon \)}\;
+	\Return{\(\{ G_i^{(1)} \}_{i=1}^{h_1} \cup \{ G_i^{(2)} \}_{i=1}^{h_2} \)}\;
+	}
+\end{algorithm}
+
+\begin{note}
+	\autoref{algo:expander-decomposition} is intuitive and simple in retrospect: we simply compute the sparsest cut and recurse. The caveat is to keep track of the final termination condition is based on the original graph parameter \(M = m\).
+\end{note}
+
+We now prove that \autoref{algo:expander-decomposition} indeed computes the \hyperref[def:expander-decomposition]{expander decomposition}.
+
 \begin{theorem}\label{thm:expander-decomposition}
 	Let \(G=(V, E)\) be a graph and \(\epsilon \in (0, 1)\). Suppose there is an \(\alpha \)-approximation for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}, then there is an efficient algorithm that outputs an \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon }{\alpha \log m}), \epsilon )\)-expander decomposition} of \(G\).
 \end{theorem}
 \begin{proof}
-	Consider the following algorithm.
-
-	\begin{algorithm}[H]\label{algo:expander-decomposition}
-		\DontPrintSemicolon{}
-		\caption{\hyperref[def:expander-decomposition]{Expander Decomposition}}
-		\KwData{A connected graph \(G = (V, E)\), base graph edge set size \(M\),\footnote{In the initial call, it's \(m\).} parameter \(\epsilon \in (0, 1)\)}
-		\KwResult{An \hyperref[def:expander-decomposition]{\((\Omega (\frac{\epsilon}{\alpha \log m}), \epsilon)\)-expander decomposition} \(\{ G_i \} _{i=1}^{h}\)}
-		\SetKwFunction{ExpanderDecomposition}{\hyperref[algo:expander-decomposition]{Expander-Decomposition}}
-		\SetKwFunction{SparsestCut}{\(\alpha \)-\hyperref[prb:sparsest-cut]{Uniform-Sparsest-Cut}}
-
-		\BlankLine
-
-		\If(\Comment*[f]{Base case}){\(m \leq 10 \log M / \epsilon \)}{
-			\Return{\(G\)}\;
-		}
-		\;
-		\((S, V\setminus S) \gets\)\SparsestCut{\(G\)}\footnote{Recall that this is for \hyperref[def:conductance]{conductance}, which can be formalized as a \hyperref[prb:product-instance-of-sparsest-cut]{product instance}.}\Comment*[r]{\(\operatorname{vol}(S) \leq \operatorname{vol}(V \setminus S) \)}
-		\;
-		\uIf(\Comment*[f]{Check \hyperref[def:sparsity]{sparsity}}){\(\lvert \delta (S) \rvert / \operatorname{vol}(S) > c / 10 \log M\)}{
-			\Return{\(G\)}\;
-		}
-		\Else{
-		\(\{ G_i^{(1)} \}_{i=1}^{h_1} \gets\)\ExpanderDecomposition{\(G[S]\), \(M\), \(\epsilon \)}\;
-		\(\{ G_i^{(2)} \}_{i=1}^{h_2} \gets\)\ExpanderDecomposition{\(G[V\setminus S]\), \(M\), \(\epsilon \)}\;
-		\Return{\(\{ G_i^{(1)} \}_{i=1}^{h_1} \cup \{ G_i^{(2)} \}_{i=1}^{h_2} \)}\;
-		}
-	\end{algorithm}
+	We prove that \autoref{algo:expander-decomposition} achieves the desired properties.
 
 	\begin{claim}
 		The \hyperref[def:conductance]{conductance} of each subgraph output by \autoref{algo:expander-decomposition} is at least \(\epsilon / 10 \alpha \log M\).
@@ -225,4 +233,43 @@ In some sense, grid is the best planar graph in terms of \hyperref[def:node-well
 \end{theorem}
 
 \subsection{Well-Linked Decomposition}
-Finally, we note that the same decomposition can be done for \hyperref[def:well-linked]{well-linked} set, just as the \hyperref[def:expander-decomposition]{expander decomposition}.
+Finally, we note that the same decomposition can be done for \hyperref[def:well-linked]{well-linked} sets, just as the \hyperref[def:expander-decomposition]{expander decomposition}. This is a generalization since \hyperref[def:well-linked]{well-linkedness} generalizes the notion of \hyperref[def:expansion]{expansion} and \hyperref[def:conductance]{conductance} from the whole vertex set to subset of vertices. To state the desired result, we need to introduce the notion of \hyperref[def:weighted-well-linked]{weighted well-linked}:
+
+\begin{definition}[Weighted-well-linked]\label{def:weighted-well-linked}
+	Let \(\pi \colon X \to \mathbb{R} _{\geq 0}\) be non-negative weights on \(X \subseteq V\). We say that \(X\) is \emph{\(\pi \)-weighted well-linked} in \(G\) if for any \(S \subseteq V\), \(\lvert \delta _G(S) \rvert \geq \min (\pi (S \cap X), \pi (S \cap (V\setminus X)))\).
+\end{definition}
+
+Note that if \(\pi (v) = 1\) for all \(v \in X\), we get back to \autoref{def:well-linked}. If \(\pi (v) = \deg(v)\) for each \(v \in V\), we obtain the \hyperref[def:conductance]{conductance}.
+
+\begin{remark}
+	Typically, it is assumed that \(\pi (v) \leq c \pi (V)\) for some constant \(c < 1\), e.g., \(c = 1 / 3\). That is, no single vertex is too heavy compared to the total weight.
+\end{remark}
+
+Now, suppose we have a multi-commodity flow between vertices in \(V\) that is routed in \(G\). Let \(D(uv)\) be the flow routed for the unordered pair \(uv\). For each \(u \in V\), let \(\pi (u) = \sum_{v \in X, v \neq u} D(uv)\) be the total flow from \(u\) to some vertex in \(X\).
+
+\begin{intuition}
+	We would like the terminals (vertices) to be \hyperref[def:weighted-well-linked]{\(\pi \)-wel-linked}, but if they are not, we would like to do a decomposition into vertex induced subgraphs such that they are.
+\end{intuition}
+
+Furthermore, we would like to do it in such a way that we lose as little amount of the original flow as possible. Since it is difficult to bound the total flow lost, so we will upper bound it by the total number of edges crossing the partitions.
+
+\begin{note}
+	Consider each edge \(uv \in E\) and send one unit of flow along that edge for the pair \(uv\), then \(\pi (u) = \deg(u)\) for each \(u \in V\). This recovers the \hyperref[def:expander-decomposition]{expander decomposition} that we saw earlier.
+\end{note}
+
+\begin{theorem}[Well-linked decomposition]\label{thm:well-linked-decomposition}
+	Let \(G = (V, E)\) be a graph and \(\epsilon \in (0, 1)\) be a parameter. Suppose there is an \(\alpha \)-approximation algorithm for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}. Let \(\pi \colon V \to \mathbb{R} _{\geq 0}\) be induced by a multi-commodity flow in \(G\), where \(\pi (u)\) is the total flow originating at \(u\). Then there is an efficient algorithm that decomposes \(G\) into vertex induced subgraphs \(\{ G_i = G[V_i] \} _{i=1}^{h}\) for \(V_i \subseteq V\) such that in each \(G_i\), \(V_i\) is \hyperref[def:weighted-well-linked]{\(\beta \pi ^{\prime} \)-well-linked} where \(\beta = \Omega (\frac{\epsilon }{\alpha \log m})\) and \(\pi ^{\prime} (u)\) is the total flow incident to \(u\) in \(G_i\) (that remains from the original flow). Furthermore, the number of inter-cluster edges is at most \(\epsilon \pi (V)\), i.e.,
+	\[
+		\frac{1}{2} \sum_{i=1}^{h} \lvert \delta (V_i) \rvert
+		\leq c \pi (V).
+	\]
+\end{theorem}
+\begin{proof}
+	The corresponding algorithm and the proof is essentially the same as in \autoref{thm:expander-decomposition}. Let \(M = \pi (V)\) to keep it fixed throughout the algorithm as before. We use the \(\alpha \)-approximation algorithm on \(V\) with weights \(\pi \). It outputs a cut \((S, V\setminus S)\) with \(\pi (S) \leq \pi (V\setminus S)\). If \(\lvert \delta (S) \rvert \geq \epsilon \pi (S) / (10 \log M)\), we output \(G\), and we are guaranteed that \(V\) is \hyperref[def:weighted-well-linked]{\(\pi / (10 \alpha \log M)\)-well-linked} in \(G\) since we used an \(\alpha \)-approximation algorithm for \hyperref[prb:sparsest-cut]{uniform sparsest cut}. Otherwise, we remove the edges in \(\delta (S)\) and recurse on \(G[S]\) and \(G[V\setminus S]\) after throwing out all the flow that is lost by the edges in \(\delta (S)\). The recursion analysis is the same as before, and we can guarantee that the total number of edges cut is at most \(c \pi (V)\).
+\end{proof}
+
+\begin{remark}
+	In routing problems, it is more useful to work with the notion of \hyperref[def:flow-well-linked]{flow-well-linkedness} rather than \hyperref[def:cut-well-linked]{cut-well-linkedness}. Theorems similar to \autoref{thm:well-linked-decomposition} can be shown via the known flow-cut gap results~\cite{chekuri2005multicommodity}.
+\end{remark}
+
+The notion of \hyperref[thm:well-linked-decomposition]{well-linked decomposition} can be generalized to node-capacitated setting naturally. It can also be generalized to directed graphs (only symmetric demands)~\cite{chekuri2015all}, which has found several applications recently in fast algorithms~\cite{bernstein2020deterministic}. Via duality, they are related to \hyperref[thm:directed-LDD]{low-diameter decomposition in directed graphs}, which have played a key role in recent fast algorithms for shortest paths with negative lengths. We will see this later (\autoref{sec:SSSP-with-negative-integral-weights}).

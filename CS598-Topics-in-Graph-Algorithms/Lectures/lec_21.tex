@@ -253,7 +253,7 @@ Indeed, grid the worst case for planar graphs.
 	Since random \(d\)-regular graph is an \hyperref[def:expander]{expander} with high probability, and \hyperref[def:balanced-separator]{balanced separator} is of size \(\Omega (n)\) for \hyperref[def:expander]{expander}.
 \end{explanation}
 
-\subsection{Treewidth and Routing}
+\subsection{Cut-Matching Game to Certify Treewidth}
 Now, we try to verify the \hyperref[def:treewidth]{treewidth}. Verifying a small \hyperref[def:treewidth]{treewidth} is easy, we just ask for a \hyperref[def:tree-decomposition]{tree decomposition} as a certification. In general, given \(G\) and \(k\), checking if \(\operatorname{tw}(G) \leq k\) is \(\NP\)-complete~\cite{arnborg1987complexity}. However, it is fixed-parameter-tractable, i.e., for every fixed \(k\), there is a linear-time algorithm (specifically, \(O(k^{k^3} n)\)), that, given \(G\), decides whether \(\operatorname{tw}(G) \leq k\)~\cite{bodlaender1993linear}. As for an approximation algorithm for computing \hyperref[def:treewidth]{treewidth}, it takes \(O(2^k n)\) time for a \(5\)-approximation~\cite{bodlaender2016c}, while for the best known polynomial-time approximation algorithm is \(O(k \sqrt{\log k} )\)-approximate~\cite{feige2005improved}.
 
 Now, it turns out that instead of directly certifying/computing the \hyperref[def:treewidth]{treewidth}, from the understanding of the connection between the size of \hyperref[def:balanced-separator]{balanced separator} and \hyperref[def:treewidth]{treewidth}, with the fact that \hyperref[def:expander]{expander} has large \hyperref[def:balanced-separator]{balanced separator}, one natural idea is the following:
@@ -286,11 +286,6 @@ Utilizing this idea, the following is known:
 	The full generality of \autoref{thm:treewidth-sparsifier} and \autoref{thm:treewidth-sparsifier-improved} are stated as topological minor. We omit the exact details.
 \end{remark}
 
-
-\begin{theorem}\label{thm:treewidth-planar-graph-color}
-	For any planar graph \(G = (V, E)\) and integer \(h \geq 3\), \(V\) can be colored with \(h\) colors such that for any \(i \in [h]\), \(\operatorname{tr}(G - V_i) \leq 3h\) where \(V_i \subseteq V\) is the set of vertices colored with color \(i\).
-\end{theorem}
-
 \subsection{Algorithm with Treewidth}
 The reason why we care about \hyperref[def:treewidth]{treewidth} is that there are several ``templates'' for applications:
 \begin{itemize}
@@ -314,8 +309,40 @@ One such problem is the \hyperref[prb:MWIS]{maximum (weighted) independent set}:
 Given a graph \(G = (V, E)\) with vertex capacity \(w \colon V \to \mathbb{R} \), the \emph{maximum weighted independent set} (MWIS) problem asks for computing \(\max _{S \subseteq V} w(S)\) such that \(S \subseteq V\) is an independent set.
 \end{problem}
 
-While it's known that \hyperref[prb:MWIS]{MWIS} is \(\NP\)-hard, even for planar graphs, and more generally, is also very hard even to approximate in general graphs, we can still solve it efficiently (in polynomial time) in bounded \hyperref[def:treewidth]{treewidth} graphs.
+\hyperref[prb:MWIS]{MWIS} is \(\NP\)-hard, even for planar graphs, and more generally, is also very hard even to approximate in general graphs. However, we can still solve it efficiently (in polynomial time) in bounded \hyperref[def:treewidth]{treewidth} graphs. To get some intuition, let's first see how to solve it for tree using dynamic programming.
 
-\begin{eg}[Maximum weighted independent set]
-	Consider \hyperref[prb:MWIS]{MWIS} on planar graphs. Let \(\epsilon \in (0, 1)\) and \(h = 1 / \epsilon \). From \autoref{thm:treewidth-planar-graph-color}, consider removing \(V_i\) from \(G\) and compute the corresponding MWIS to get \(\OPT_i\) in \(G - V_i\). From the simple pigeonhole principle, the optimum value of MWIS \(\max _{i\in [h]} \OPT_i\) is \((1-\epsilon)\)-approximation to \(\OPT\). Finally, we simply note that since \(\operatorname{tr}(G-V_i) \leq 3h\), computing \(\OPT_i\) takes only \(2^{O(1 / \epsilon )}\), hence in total.
+\begin{eg}[MWIS on tree]
+	Given a tree \(T\) with vertex capacity \(w\colon V \to \mathbb{R} \), let \(T_v\) be the sub-tree of \(T\) rooted at node \(v \in V_T\), and let \(\OPT(v)\) be the optimum value of \hyperref[prb:MWIS]{MWIS} on \(T_v\). Furthermore, let's define \(\OPT(v, 1)\) be the optimum value of \hyperref[prb:MWIS]{MWIS} on \(T_v\) that includes \(v\), and \(\OPT(v, 0)\) is defined similarly such that it does not include \(v\). Then, we have \(\OPT(v) = \max (\OPT(v, 1), \OPT(v, 0))\).
+
+	After some observation, we see that
+	\[
+		\begin{dcases}
+			\OPT(v, 1) = w(v) + \sum_{u \text{ child of } v} \OPT(u, 0) ; \\
+			\OPT(v, 0) = \sum_{u \text{ child of } v} \OPT(u).
+		\end{dcases}
+	\]
+	Using this, we can solve the corresponding dynamic programming problem efficiently.
+\end{eg}
+
+Let's now see how to use the above idea to solve \hyperref[prb:MWIS]{MWIS} for graphs with low \hyperref[def:treewidth]{treewidth}.
+
+\begin{eg}[MWIS on tree decomposition]\label{eg:MWIS-tree-decomposition}
+	Given a \hyperref[def:tree-decomposition]{tree decomposition} of \hyperref[def:tree-decomposition-width]{width} \(k\) for a graph \(G\), \hyperref[prb:MWIS]{MWIS} can be computed in \(O(k 2^{k+1} n)\) time.
+\end{eg}
+\begin{explanation}
+	Let \(T = (V_T, E_T)\) be the corresponding \hyperref[def:tree-decomposition]{tree decomposition}. For \(t \in V_T\), let \(G_t\) be the subgraph of \(G\) induced by \(S \coloneqq \bigcup_{t \in V(T_t)} B(t) \subseteq V\), i.e., nodes in bags of \(T_t\).
+
+	Now, let \(\OPT(t, S)\) be the value of \hyperref[prb:MWIS]{MWIS} in \(T_t\) among independent sets \(I\) such that \(I \cap X_t = S\). We see that the number of values to compute at each node \(t \in V_T\) is \(\leq 2^{k+1}\), where \(k\) is the \hyperref[def:tree-decomposition-width]{width} of \(T\). Using dynamic programming, we can compute all values from leaves to root in \(O(k 2^{k+1} N)\) time, where \(N\) is the number of nodes in \(T\), i.e., \(\lvert V_T \rvert \).
+\end{explanation}
+
+The above yield a \(2^{O(\sqrt{n} )}\) time algorithm for planar graphs. However, it's worth noting that it's possible to get a fast \((1 - \epsilon )\)-approximation algorithm in planar graphs. For that, we need the following.
+
+\begin{theorem}\label{thm:treewidth-planar-graph-color}
+	For any planar graph \(G = (V, E)\) and integer \(h \geq 3\), \(V\) can be colored with \(h\) colors such that for any \(i \in [h]\), \(\operatorname{tr}(G - V_i) \leq 3h\) where \(V_i \subseteq V\) is the set of vertices colored with color \(i\).
+\end{theorem}
+
+\begin{eg}[MWIS on planar graph]
+	Consider \hyperref[prb:MWIS]{MWIS} on planar graphs. Let \(\epsilon \in (0, 1)\) and \(h = 1 / \epsilon \). From \autoref{thm:treewidth-planar-graph-color}, consider removing \(V_i\) from \(G\) and compute the corresponding \hyperref[prb:MWIS]{MWIS} to get \(\OPT_i\) in \(G - V_i\) using the \hyperref[eg:MWIS-tree-decomposition]{previous example}'s approach, which takes \(O(2^{1 / \epsilon } n / \epsilon )\) since \(\operatorname{tr}(G-V_i) \leq 3h = O(1 / \epsilon )\). In total, there are \(h = 1 / \epsilon \) of \(V_i\)'s, hence the total running time is \(O(2^{1 / \epsilon } n / \epsilon ^2)\).
+
+	Then, we simply output the final answer as \(\max _{i\in [h]} \OPT_i\), say it's \(\OPT_{i^{\ast} }\). From the pigeonhole principle, the output \(\OPT_{i^{\ast} }\) for the graph \(G- V_{i^{\ast} }\) is \((1-\epsilon)\)-approximation compared to the original optimum value \(\OPT\) for the whole graph \(G\).
 \end{eg}

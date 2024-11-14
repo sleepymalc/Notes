@@ -1,52 +1,77 @@
 \lecture{19}{31 Oct.\ 11:00}{Make Multiplicative Weight Update Faster}
+\subsection{Examples}
+It is instructive to see what the \hyperref[eq:MWU-oracle-LP]{oracle} corresponds to when considering combinatorial problems. Hence, in this section, we continue on the previous examples we have seen for the \hyperref[def:packing-LP]{packing linear programs}, and see what are their corresponding \hyperref[eq:MWU-oracle-LP]{MWU oracle}.
+
+\begin{eg}[Maximum Weight Matching]
+	Continue from the \hyperref[eg:max-weight-bipartite-matching-MWU]{previous example}, where we consider the maximum weight matching problem in bipartite graphs with the following linear program:
+	\[
+		\begin{aligned}
+			\max~ & \sum_{e \in E} c(e) x_e                                \\
+			      & \sum_{e \in \delta (u)} x_e \leq 1 & \forall u \in V ; \\
+			      & x_e \geq 0                         & \forall e \in E,
+		\end{aligned}
+	\]
+	where the variables \(x_e\) correspond to the edges and the constraints correspond to the vertices. Thus, the \hyperref[algo:MWU-discrete-non-uniform]{MWU method} maintains a weight \(w_u\) for each \(u \in V\). The \hyperref[eq:MWU-oracle-LP]{oracle} is that given vertex weights \(w_u\), it finds the edge \(e = uv \in E\) that maximizes \(c_e / (w_u + w_v)\) in each step.
+
+	\begin{intuition}
+		Updating the weights is simple and fast because we are only touching two vertex weights. Hence, the bottleneck is finding the edge with the maximum ratio in each iteration.
+	\end{intuition}
+
+	We can explore simple tricks that will help speed this up. First, we bucket edges into logarithmic groups by considering weights in powers of \((1 + \epsilon )\); this affects the approximation factor only a \((1 - \epsilon )\)-factor. Within each bucket, we are trying to find the weight with the minimum weight where the weight of an edge is the sum of the weights of its end points. We can keep a priority queue for edges based on their weight. How do we update these weights? Suppose in iteration \(j\) of the algorithm, we pick edge \(e_j = (u, v)\). Then the algorithm updates the weights of edges that are incident to \(u\) and \(w\) and these will affect the priority queues. It is \(\deg(u) + \deg(v)\). This seems like a lot, but we make a crucial observation.
+
+	\begin{prev}
+		The \hyperref[def:width]{width}-independent \hyperref[thm:MWU-discrete-non-uniform]{MWU analysis} proves that the weight of any specific constraint \(i\) is updated only \(O(\log m / \epsilon ^2)\) times!
+	\end{prev}
+
+	In particular, the weight of a vertex \(u\) is updated only \(O(\log m / \epsilon ^2)\) times, where \(m = \lvert V \rvert \). Hence, the total number of updates is only \(O(\sum_{u \in V} \deg(u) \log m / \epsilon ^2) = O(\lvert E \rvert \log \lvert V \rvert / \epsilon ^2)\)! The priority queue operations have only a logarithmic overhead. Thus, we can see that with some basic observations we can implement the \hyperref[algo:MWU-discrete-non-uniform]{MWU algorithm} in \(\widetilde{O} (\lvert E \rvert / \epsilon ^2)\) time.
+\end{eg}
+
+\begin{eg}[Tree packing]\label{eg:tree-packing-MWU-implementation}
+	Continue from the \hyperref[eg:tree-packing-MWU]{previous example}, where we consider the tree packing problem with the following linear program:
+	\[
+		\begin{aligned}
+			\max~ & \sum_{T \in \mathcal{T} _G} y_T                                 \\
+			      & \sum_{T \ni e} y_T \leq c(e)    & \forall e \in E ;             \\
+			      & y_T \geq 0                      & \forall T \in \mathcal{T} _G.
+		\end{aligned}
+	\]
+	This is an \hyperref[def:implicit-LP]{implicit linear program} with an exponential number of variables but only \(m\) constraints where \(m = \lvert E \rvert \). Note that the coefficient of each variable \(y_T\) in the objective is \(1\). In this example, the right-hand side of the constraint corresponding to edge \(e\) is its capacity \(c(e)\) and these are non-uniform. It now makes sense to use weights that start with \(w_e = 1 / c(e)\).
+
+	The \hyperref[eq:MWU-oracle-LP]{oracle} is that given weights \(w_e\) on edges, we with to find a tree \(T\) that maximizes \(\frac{1}{\sum_{e \in T} w_e}\), i.e., \(\min _{T \in \mathcal{T} _G} \sum_{e \in T} w_e\). This is just the \hyperref[prb:MST]{MST} problem, which is the separation oracle for the \hyperref[eq:tree-packing-LP]{dual tree-packing linear program}! Thus, each iteration, we simply solve an \hyperref[prb:MST]{MST} problem and update the weights of the edges in the chosen \hyperref[prb:MST]{MST} \(T^{\ast} \), which takes \(O(m + n)\) time from \autoref{thm:Karger-Klein-Tarjan}. There are only \(O(m \log m / \epsilon ^2)\) iterations, hence the total time is \(O(m^2 \log m / \epsilon ^2)\).
+\end{eg}
+
+\begin{eg}[Maximum multi-commodity flow]
+	Continue from the \hyperref[eg:maximum-multi-commodity-flow-MWU]{previous example}, where we consider the maximum multi-commodity flow with the following linear program:
+	\[
+		\begin{aligned}
+			\max~ & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}} x_P                                                         \\
+			      & \sum_{i=1}^{k} \sum_{\substack{P \in\mathcal{P} _{s_i, t_i}                                                     \\ P \ni e}} x_P \leq c(e) & \forall e \in E ;                                  \\
+			      & x_P \geq 0                                                  & P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} .
+		\end{aligned}
+	\]
+	Once again, we have an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program} with an exponential number of variables corresponding to the paths for all the commodity pairs, and the number of constraints is \(m\), corresponding to the edges. The weights correspond to exponential of the loads on the edges where the load on an edge is the total flow routed so far on the edge. The \hyperref[eq:MWU-oracle-LP]{oracle} explicitly in this case is the same as \(\max _{P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}} 1 / \sum_{e \in P} w_e\), i.e., finding the shortest path among all the commodity pairs, according to the weights on edges! We can find for each pair \((s_i, t_i)\) a shortest \(s_i\)-\(t_i\) path and choose the minimum. The algorithm routes some flow on that path and updates the weights along that path and iterates. The bottleneck is to compute the shortest paths.
+\end{eg}
+
 \section{Speed Up Multiplicative Weight Update}
-\[
-	\begin{aligned}
-		\max~ & c^{\top} x  \\
-		      & Ax \leq b ; \\
-		      & x \geq 0,
-	\end{aligned}
-\]
-where \(A \in \mathbb{R} _{\geq 0}^{m \times n}\).
+Finally, we discuss how to combine what we have seen to some specific example of positive \hyperref[def:packing-LP]{packing linear program} problem to further speed up \autoref{algo:MWU-discrete-linear}.
 
-\begin{algorithm}[H]\label{algo:MWU-discrete-linear}
-	\DontPrintSemicolon{}
-	\caption{Multiplicative Weight Update for Positive \hyperref[def:packing-LP]{Packing Linear Program}}
-	\KwData{\(A\), \(c\), \(b\), \(\epsilon \)}
-	\KwResult{A solution \(x_{\text{out} }\)}
-	\BlankLine
+\begin{prev}
+	Naively, each iteration in \autoref{algo:MWU-discrete-linear} requires \(O(N)\), hence the overall runtime is \(O(N m \log m / \epsilon ^2)\) with \autoref{thm:MWU-discrete-non-uniform}.
+\end{prev}
 
-	\(\eta \gets (\log m) / \epsilon \)\;
-	\For(){\(i = 1, \dots , m\)}{
-		\(w_i(0) \gets 1 / b_i\)\;
-	}
-	\(x(0) = 0\)\Comment*[r]{\(x \in \mathbb{R} ^n\)}
-	\(t = 0\)\;
-	\;
-	\While(){\(t < 1\)}{
-	\(j^{\ast} \gets \argmax_{j \in [n]} c_j / (\sum_{i=1}^{m} A_{ij} w_i)\)\;
-	\(\delta \gets \epsilon / (\eta \max _{i \in [m]} A_{ij^{\ast} })\)\Comment*[r]{Max step size}
-	\(\delta \gets \min (\delta , 1 - t)\)\Comment*[r]{Handle the last iteration}
-	\For(){\(i = 1, \dots , m\)}{
-		\(w_i(t+\delta ) \gets w_i(t) \cdot e^{\eta \delta A_{ij^{\ast} }}\)\;
-	}
-	\(x (t+\delta ) \gets x (t) + \delta \mathbbm{1}_{j^{\ast} }\)\;
-	\(t \gets t + \delta \)\;
-	}
-	\Return{\(x(1)\)}\;
-\end{algorithm}
-
-Naively, each iteration requires \(O(N)\), hence with \autoref{thm:MWU-discrete-non-uniform}, it's \(O(N m \log m / \epsilon ^2)\).
-
-Without loss of generality, we may assume that \(c_j = 1\) for all \(j\). Hence, solving \(j^{\ast} \) is equivalent to solving \(\min _{j \in [n]} \sum_{i=1}^{m} A_{ij^{\ast} } w_i\). Let \(\lambda _j \coloneqq \sum_{i=1}^{m} A_{ij} w_i\).
+\subsection{General Idea}
+Without loss of generality, we may assume that \(c_j = 1\) for all \(j\) via scaling. Hence, solving \(j^{\ast} \) is equivalent to solving \(\min _{j \in [n]} \sum_{i=1}^{m} A_{ij^{\ast} } w_i\). Let \(\lambda _j \coloneqq \sum_{i=1}^{m} A_{ij} w_i\). The idea of speeding up \autoref{algo:MWU-discrete-linear} is the following:
 
 \begin{intuition}
-	Instead of solving \(j^{\ast} \) exactly, we allow to return some coordinate such that the returned \(\lambda _j\) is not too far from the optimal value.
+	Instead of solving \(j^{\ast} \) exactly, we allow to return some coordinate such that the returned \(\lambda _j\) is not too far from the optimal value for the particular problem at hand.
 \end{intuition}
 
-Specifically, consider divide values into \((1 + \epsilon )\)-buckets.
+\begin{eg}
+	Consider divide values into \((1 + \epsilon )\)-buckets.
+\end{eg}
 
-\subsection{Implicit Linear Program}
+\subsection{Case Study: Tree Packing}
+As an example, consider the \hyperref[eg:tree-packing-MWU]{tree packing} again:
 \[
 	\begin{aligned}
 		\max~ & \sum_{T \in \mathcal{T} _G} x_T                                 \\
@@ -54,43 +79,76 @@ Specifically, consider divide values into \((1 + \epsilon )\)-buckets.
 		      & x_T \geq 0                      & \forall T \in \mathcal{T} _G.
 	\end{aligned}
 \]
+As we have seen, the optimal solution \(j^{\ast} \) corresponds to the \hyperref[prb:MST]{MST} \(T^{\ast} \) w.r.t.\ weights \(w_e\) maintained by \autoref{algo:MWU-discrete-linear}, and the total algorithm takes \(O(m^2 \log m / \epsilon ^2)\) from the \hyperref[eg:tree-packing-MWU-implementation]{previous example}. To speed up the algorithm, as we have hinted on, we avoid computing \hyperref[prb:MST]{MST} from scratch; instead, we maintain \hyperref[prb:MST]{MST} via dynamic data structure. The classical dynamic algorithm for maintaining \hyperref[prb:MST]{MST} takes \(\poly \log n\) per edge weight change~\cite{holm2001poly} (specifically, \(O(\log ^2 n)\)), hence the total time is
+\[
+	O\left( \frac{m \log m}{\epsilon ^2} \cdot (n \poly \log n + n) \right)
+	= O(mn \poly \log n / \epsilon ^2)
+\]
+if we implement this naively, i.e., we update \(n-1\) edge weights at the end of each iteration and also maintain the corresponding new \hyperref[prb:MST]{MST}, which takes \(O(n) + n \cdot \poly \log n\).
 
-\begin{algorithm}[H]\label{algo:MWU-discrete-tree-packing}
-	\DontPrintSemicolon{}
-	\caption{Multiplicative Weight Update for Positive \hyperref[def:packing-LP]{Packing Linear Program}}
-	\KwData{A graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{\geq 0}\)}
-	\KwResult{A solution \(x_{\text{out} }\)}
-	\BlankLine
+Compared to the original runtime, \(O(m^2 \log m / \epsilon ^2)\), this is not that much of an improvement. In particular, as we have seen in the very beginning of the class, we know that it is possible to get a near-linear time algorithm:
 
-	\(\eta \gets (\log m) / \epsilon \)\;
-	\For(){\(e \in E\)}{
-		\(w_e(0) \gets 1 / c(e)\)\;
-	}
-	\(x(0) = 0\)\Comment*[r]{\(x \in \mathbb{R} ^n\)}
-	\(t = 0\)\;
-	\;
-	\While(){\(t < 1\)}{
-	\(T ^{\ast} \gets \min _{T \in \mathcal{T} _{G}} \sum_{e \in T} w(e)\)\;
-	\(\delta \gets \epsilon / (\eta \max _{e \in E} w(e))\)\Comment*[r]{Max step size}
-	\(\delta \gets \min (\delta , 1 - t)\)\Comment*[r]{Handle the last iteration}
-	\For(){\(e \in T^{\ast} \)}{
-		\(w_e(t+\delta ) \gets w_e(t) \cdot e^{\eta \delta / c(e)}\)\;
-	}
-	\(x (t+\delta ) \gets x (t) + \delta \mathbbm{1}_{j^{\ast} }\)\;
-	\(t \gets t + \delta \)\;
-	}
-	\Return{\(x(1)\)}\;
-\end{algorithm}
-
-\subsection{Sparsification}
-Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{\geq 0}\). The goal of the sparsification is to obtain a new graph \(H = (V, E_H )\) with edge capacity \(c_H \colon E_H \to \mathbb{R} _{\geq 0}\) such that \(H\) ``approximate'' \(G\) and \(\lvert H \rvert \) is small.
-
-\begin{theorem}
-	Given any graph \(G\) on \(n\) vertices and \(m\) edges and an \(\epsilon \in (0, 1)\). There exists a graph \(H = (V, E_{H})\) and \(c_H \colon E_H \to \mathbb{R} _{\geq 0}\) such that
-	\begin{enumerate}[(i)]
-		\item \(\lvert E_H \rvert = O(n \log n / \epsilon ^2)\);
-		\item for all \(S \subseteq V\), \(c_G(\delta _G(S)) \approx (1 + \epsilon ) c_H(\delta _H(S))\);
-		\item there is a randomized algorithm the constructs \(H\) in \(O(m \log ^2 n)\).
-	\end{enumerate}
+\begin{theorem}[\autoref{thm:approximate-tree-packing}~\cite{chekuri2017near}]\label{thm:MWU-tree-packing}
+	There is a deterministic \(O(m \log ^3 n / \epsilon ^2)\)-time algorithm that gives a \((1 - \epsilon )\)-approximation for fractional \hyperref[prb:tree-packing]{tree packing} in a capacitated undirected graph with \(m\) edges. Hence, a \((1 - \epsilon )\)-approximate \hyperref[prb:tree-packing]{packing} can be described in \(\widetilde{O} (m / \epsilon ^2)\) space.
 \end{theorem}
-It's known that there is a fully dynamic data structure for maintaining \hyperref[prb:MST]{MST} such that each operation takes \(O(\log ^3 n)\).
+
+The key idea of \autoref{thm:MWU-tree-packing} is twofold. Firstly, as suggested before, we can delay the update of edge weight \(w_e\) for \emph{only} computing \hyperref[prb:MST]{MST}:
+
+\begin{intuition}[Lazy update]
+	Report the update to the \hyperref[prb:MST]{MST} dynamic structure~\cite{holm2001poly} only if weight increases by \((1 + \epsilon )\) factor. Hence, now \hyperref[prb:MST]{MST} is approximate.
+\end{intuition}
+
+Specifically, we can update weight lazily if it does not change much, say, less than an \(e^{\epsilon } \approx 1 + \epsilon \) factor. From \autoref{thm:MWU-discrete-non-uniform}, the total number of updates we will report to the dynamic structure is only \(O(m \log m / \epsilon ^2)\). Hence, now, the total runtime becomes
+\[
+	O\left( \frac{m \log m}{\epsilon ^2} \cdot (\poly \log n + n) \right)
+	= O(mn \poly \log n / \epsilon ^2)
+\]
+due to the fact that we still maintain every actual (ground-truth) edge weight update after each iteration.
+
+\begin{remark}
+	To get rid of \(n\) entirely, we cannot afford to update \(w_e\) exactly after each iteration, even if we only report the updates lazily.
+\end{remark}
+
+The second idea is that on top of the lazy update to the dynamic \hyperref[prb:MST]{MST} data structure, we also update our ground-truth weight lazily if it does not change much:
+
+\begin{intuition}
+	Maintain edge weight \(w_e\) within a \((1 \pm \epsilon )\) multiplicative factor throughout.
+\end{intuition}
+
+It turns out that there exists such a data structure that can handle this type of lazy update as well~\cite{koufogiannakis2014nearly,young2014nearly}, but it is designed for \hyperref[def:explicit-LP]{explicit} problems. By some adaption, the idea is then to combine it with the previous dynamic \hyperref[prb:MST]{MST} data structures~\cite{holm2001poly}, which yields an amortized runtime throughout the algorithm of \(O(\poly \log n)\) per iteration, giving the desired near-linear runtime.
+
+The high-level intuition of this adaption is the following.
+
+\begin{intuition}
+	When a tree \(T\) is updated, its rate of change of \(w_e\) depends on \(c(e)\):
+	\begin{itemize}
+		\item if all \(c(e)\) values are \emph{uniform}, then \(n-1\) edges increase weight by \((1 + \epsilon )\) factor;
+		\item if \(c(e)\) values are \emph{non-uniform}, delay updating small weight changes.
+	\end{itemize}
+\end{intuition}
+
+The problem is how to handle the second case. If we allow randomization, then the idea is simply to touch (update) \(w_e\) \emph{in proportion to} \(1 / c(e)\). Specifically, when \(T\) is the tree added in an iteration, let \(c_{\min } \coloneqq \min _{e \in T} c(e)\) be the minimum edge capacity in \(T\). Then, for each edge \(e \in E(T)\), we update \(w_e\) as
+\[
+	w_e \gets \begin{dcases}
+		\exp (e) w_e , & \text{ if } \theta \leq c_{\min } / c(e) ; \\
+		w_e,           & \text{ otherwise} ,
+	\end{dcases}
+\]
+where \(\theta \sim \mathcal{U} ([0, 1])\). In expectation, this update is correct, although these updates are clearly correlated. The benefit of this is that these updates are easy to implement via data structures due to the correlation, with the catch being we need to prove that MWU analysis works with correlated rounding. This is done by the so-called \emph{drift analysis}~\cite{koufogiannakis2014nearly}.
+
+\begin{remark}[Determinisitic approach]
+	If we insist on a deterministic algorithm, the idea is to bucket \(c(e)\) values geometrically and lazily update using amortization. However, this is somewhat involved to describe, and it takes advantage of \(\{ 0, 1 \} \) structure of \(A\).
+\end{remark}
+
+% \subsection{Sparsification}
+% Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{\geq 0}\). The goal of the sparsification is to obtain a new graph \(H = (V, E_H )\) with edge capacity \(c_H \colon E_H \to \mathbb{R} _{\geq 0}\) such that \(H\) ``approximate'' \(G\) and \(\lvert H \rvert \) is small.
+
+% \begin{theorem}
+% 	Given any graph \(G\) on \(n\) vertices and \(m\) edges and an \(\epsilon \in (0, 1)\). There exists a graph \(H = (V, E_{H})\) and \(c_H \colon E_H \to \mathbb{R} _{\geq 0}\) such that
+% 	\begin{enumerate}[(i)]
+% 		\item \(\lvert E_H \rvert = O(n \log n / \epsilon ^2)\);
+% 		\item for all \(S \subseteq V\), \(c_G(\delta _G(S)) \approx (1 + \epsilon ) c_H(\delta _H(S))\);
+% 		\item there is a randomized algorithm the constructs \(H\) in \(O(m \log ^2 n)\).
+% 	\end{enumerate}
+% \end{theorem}
+% It's known that there is a fully dynamic data structure for maintaining \hyperref[prb:MST]{MST} such that each operation takes \(O(\log ^3 n)\).

@@ -59,7 +59,7 @@ Surprisingly, this yields an algorithm that bounds the number of iterations to \
 \begin{algorithm}[H]\label{algo:MWU-discrete-non-uniform}
 	\DontPrintSemicolon{}
 	\caption{Multiplicative Weight Update Non-Uniform Step}
-	\KwData{An objective \(f\), constraints \(\{ g_i \} _{i=1}^{m}\), feasible set \(P\), \(\eta \)}
+	\KwData{An objective \(f\), constraints \(\{ g_i \} _{i=1}^{m}\), feasible set \(P\),  parameter \(\eta \)}
 	\KwResult{A solution \(x_{\text{out} }\)}
 	\BlankLine
 
@@ -241,7 +241,7 @@ Next, we note that in the case of linear objective, it is possible to transform 
 	The \hyperref[thm:MWU-discrete-non-uniform]{MWU method}, as described, naturally give an optimum solution that violates the constraints. We can then scale the solution down to obtain a feasible solution while losing a bit in the objective. This is particularly easy for \hyperref[def:packing-LP]{packing} problems with linear objectives. Thus, we can obtain a \((1 - \epsilon )\)-approximation in the objective while obtaining a feasible solution.
 \end{remark}
 
-\subsection{Efficient Oracle for Packing Linear Program}
+\subsection{Efficient Oracle for Positive Packing Linear Program}
 Recall that we need an \hyperref[eq:MWU-oracle]{oracle} that given weights \(w_i\)'s, solve
 \[
 	\begin{aligned}
@@ -279,7 +279,37 @@ since all entries are positive.
 	This is a fractional knapsack problem! We know that the optimum solution \(x^{\ast} \) is just to pick the coordinate \(j^{\ast} \coloneqq \argmax_{j \in [n]} c_j / \alpha _j\) and setting \(x^{\ast} _{j^{\ast} } \coloneqq 1 / \alpha _{j^{\ast} }\) and the rest to \(0\).
 \end{intuition}
 
-An important aspect of this solution is that there is an optimum solution \(x^{\ast} \) to the \hyperref[eq:MWU-oracle-LP]{oracle} whose support is a \emph{single coordinate}.
+We summarize the \hyperref[algo:MWU-discrete-non-uniform]{MWU algorithm} for the case of positive \hyperref[def:packing-LP]{packing linear program} as follows.
+
+\begin{algorithm}[H]\label{algo:MWU-discrete-linear}
+	\DontPrintSemicolon{}
+	\caption{Multiplicative Weight Update for Positive \hyperref[def:packing-LP]{Packing Linear Program}}
+	\KwData{A cost vector \(c \in \mathbb{R} ^n_{\geq 0}\), constraint matrix-vector pair \(A \in \mathbb{R} ^{m \times n}_{\geq 0}\), \(b \in \mathbb{R} ^n_{\geq 0}\), error \(\epsilon \)}
+	\KwResult{A solution \(x_{\text{out} }\)}
+	\BlankLine
+
+	\(\eta \gets \log m / \epsilon \)\;
+	\;
+	\For(){\(i = 1, \dots , m\)}{
+		\(w_i(0) \gets 1 / b_i\)\;
+	}
+	\(x(0) = 0\)\Comment*[r]{\(x \in \mathbb{R} ^n\)}
+	\(t = 0\)\;
+	\;
+	\While(){\(t < 1\)}{
+		\(j^{\ast} \gets \argmax_{j \in [n]} c_j / (\sum_{i=1}^{m} A_{ij} w_i)\)\;
+		\(\delta \gets \epsilon / (\eta \max _{i \in [m]} A_{ij^{\ast} })\)\Comment*[r]{Max step size}
+		\(\delta \gets \min (\delta , 1 - t)\)\Comment*[r]{Handle the last iteration}
+		\For(){\(i = 1, \dots , m\)}{
+			\(w_i(t+\delta ) \gets w_i(t) \cdot e^{\eta \delta A_{ij^{\ast} }}\)\;
+		}
+		\(x (t+\delta ) \gets x (t) + \delta e_{j^{\ast} }\)\;
+		\(t \gets t + \delta \)\;
+	}
+	\Return{\(x(1)\)}\;
+\end{algorithm}
+
+We note that an important aspect of \(j^{\ast} \) is that there is an optimum solution \(x^{\ast} \) to the \hyperref[eq:MWU-oracle-LP]{oracle} whose support is a \emph{single coordinate}.
 
 \begin{prev}
 	The \hyperref[def:width]{width}-independent analysis (\autoref{thm:MWU-discrete-non-uniform}) shows that the number of iterations depends only on the number of constraints \(m\).
@@ -291,7 +321,6 @@ Thus, we can apply the method to \hyperref[def:implicit-LP]{implicit linear prog
 	We see that at each time step \(t\), we solve for \(v(t) = x^{\ast} \), which is simply \(1 / \alpha _{j^{\ast} }\) at the \({j^{\ast} }^{\text{th} }\) coordinate and \(0\) otherwise. In the next round for time step \(t + \delta \), only those \(w_i\)'s such that \(g_i(v(t)) > 0\) needs to be updated, i.e., for those \(i\) such that \(\sum_{j=1}^{n} A_{ij} x^{\ast} _j \neq 0\). Since \(A\) is positive, this is equivalent to those \(i\) such that \(A_{i j^{\ast} } > 0\).
 \end{remark}
 
-
 Finally, another nice aspect of the \hyperref[algo:MWU-discrete-non-uniform]{MWU method} is that it accumulates a series of solutions of Lagrangian relaxations by taking non-negative sums. In the positive settings, this means that we do not use subtraction at all. This is convenient for approximation: Suppose we only have an \(\alpha \)-approximation \hyperref[eq:MWU-oracle-LP]{oracle} in the relative sense. Then, the process yields a \((1 - \epsilon )\alpha \)-approximation solution. This is convenient not only in obtaining approximate solutions, but also in speeding up \hyperref[algo:MWU-discrete-non-uniform]{MWU method}-based algorithms substantially by using various tricks and data structures that can avoid updating information at every step since we are allowed to use an approximate \hyperref[eq:MWU-oracle-LP]{oracle}.
 
 \begin{note}
@@ -301,62 +330,3 @@ Finally, another nice aspect of the \hyperref[algo:MWU-discrete-non-uniform]{MWU
 \begin{remark}[Explicit packing linear program]
 	From \autoref{thm:MWU-discrete-non-uniform}, the algorithm takes \(O(m \log m / \epsilon ^2)\) iterations. The \hyperref[eq:MWU-oracle-LP]{oracle} for each iteration can be done in \(O(N)\) time easily and naively. Thus, we can obtain a \((1 - \epsilon )\)-approximate solution in \(O(m N \log m / \epsilon ^2)\) time. By being slightly careful and using a simple approximate \hyperref[eq:MWU-oracle-LP]{oracle}, we can reduce the running time to \(O(N \log m / \epsilon ^2)\), which is near-linear.
 \end{remark}
-
-\subsection{Examples}
-It is instructive to see what the \hyperref[eq:MWU-oracle-LP]{oracle} corresponds to when considering combinatorial problems. Hence, in this section, we continue on the previous examples we have seen for the \hyperref[def:packing-LP]{packing linear programs}, and see what are their corresponding \hyperref[eq:MWU-oracle-LP]{MWU oracle}.
-
-\begin{eg}[Maximum Weight Matching]
-	Continue from the \hyperref[eg:max-weight-bipartite-matching-MWU]{previous example}, where we consider the maximum weight matching problem in bipartite graphs with the following linear program:
-	\[
-		\begin{aligned}
-			\max~ & \sum_{e \in E} c(e) x_e                                \\
-			      & \sum_{e \in \delta (u)} x_e \leq 1 & \forall u \in V ; \\
-			      & x_e \geq 0                         & \forall e \in E,
-		\end{aligned}
-	\]
-	where the variables \(x_e\) correspond to the edges and the constraints correspond to the vertices. Thus, the \hyperref[algo:MWU-discrete-non-uniform]{MWU method} maintains a weight \(w_u\) for each \(u \in V\). The \hyperref[eq:MWU-oracle-LP]{oracle} is that given vertex weights \(w_u\), it finds the edge \(e = uv \in E\) that maximizes \(c_e / (w_u + w_v)\) in each step.
-
-	\begin{intuition}
-		Updating the weights is simple and fast because we are only touching two vertex weights. Hence, the bottleneck is finding the edge with the maximum ratio in each iteration.
-	\end{intuition}
-
-	We can explore simple tricks that will help speed this up. First, we bucket edges into logarithmic groups by considering weights in powers of \((1 + \epsilon )\); this affects the approximation factor only a \((1 - \epsilon )\)-factor. Within each bucket, we are trying to find the weight with the minimum weight where the weight of an edge is the sum of the weights of its end points. We can keep a priority queue for edges based on their weight. How do we update these weights? Suppose in iteration \(j\) of the algorithm, we pick edge \(e_j = (u, v)\). Then the algorithm updates the weights of edges that are incident to \(u\) and \(w\) and these will affect the priority queues. It is \(\deg(u) + \deg(v)\). This seems like a lot, but we make a crucial observation.
-
-	\begin{prev}
-		The \hyperref[def:width]{width}-independent \hyperref[thm:MWU-discrete-non-uniform]{MWU analysis} proves that the weight of any specific constraint \(i\) is updated only \(O(\log m / \epsilon ^2)\) times!
-	\end{prev}
-
-	In particular, the weight of a vertex \(u\) is updated only \(O(\log m / \epsilon ^2)\) times. Hence, the total number of updates is only \(O(\sum_{u \in V} \deg(u) \log m / \epsilon ^2) = O(\lvert E \rvert \log m / \epsilon ^2)\)! The priority queue operations have only a logarithmic overhead. Thus, we can see that with some basic observations we can implement the \hyperref[algo:MWU-discrete-non-uniform]{MWU algorithm} in \(\widetilde{O} (\lvert E \rvert / \epsilon ^2)\) time.
-\end{eg}
-
-\begin{eg}[Tree packing]
-	Continue from the \hyperref[eg:tree-packing-MWU]{previous example}, where we consider the tree packing problem with the following linear program:
-	\[
-		\begin{aligned}
-			\max~ & \sum_{T \in \mathcal{T} _G} y_T                                 \\
-			      & \sum_{T \ni e} y_T \leq c(e)    & \forall e \in E ;             \\
-			      & y_T \geq 0                      & \forall T \in \mathcal{T} _G.
-		\end{aligned}
-	\]
-	This is an \hyperref[def:implicit-LP]{implicit linear program} with an exponential number of variables but only \(m\) constraints where \(m = \lvert E \rvert \). Note that the coefficient of each variable \(y_T\) in the objective is \(1\). In this example, the right-hand side of the constraint corresponding to edge \(e\) is its capacity \(c(e)\) and these are non-uniform. It now makes sense to use weights that start with \(w(e) = 1 / c(e)\).
-
-	The \hyperref[eq:MWU-oracle-LP]{oracle} is that given weights \(w(e)\) on edges, we with to find a tree \(T\) that maximizes \(\frac{1}{\sum_{e \in T} w(e)}\), i.e., \(\min _{T \in \mathcal{T} _G} \sum_{e \in T} w_e\). This is just the \hyperref[prb:MST]{MST} problem!
-
-	\begin{prev}
-		\hyperref[prb:MST]{MST} is the separation oracle for the \hyperref[eq:tree-packing-LP]{dual tree-packing linear program}.
-	\end{prev}
-
-	As one can see, the \hyperref[eq:MWU-oracle-LP]{MWU oracle} turns out to be the \hyperref[eq:tree-packing-LP]{dual linear program} separation oracle. Thus, each iteration of the algorithm simply needs to solve an \hyperref[prb:MST]{MST} problem and update the weights of the edges in the chosen tree \(T\). There are only \(O(m \log m / \epsilon ^2)\) iterations. We will see later how to speed up the entire computation to run in \(\widetilde{O} (m / \epsilon ^2)\) time.
-\end{eg}
-
-\begin{eg}[Maximum multi-commodity flow]
-	Continue from the \hyperref[eg:maximum-multi-commodity-flow-MWU]{previous example}, where we consider the maximum multi-commodity flow with the following linear program:
-	\[
-		\begin{aligned}
-			\max~ & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}} x_P                                                         \\
-			      & \sum_{i=1}^{k} \sum_{\substack{P \in\mathcal{P} _{s_i, t_i}                                                     \\ P \ni e}} x_P \leq c(e) & \forall e \in E ;                                  \\
-			      & x_P \geq 0                                                  & P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} .
-		\end{aligned}
-	\]
-	Once again, we have an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program} with an exponential number of variables corresponding to the paths for all the commodity pairs, and the number of constraints is \(m\), corresponding to the edges. The weights correspond to exponential of the loads on the edges where the load on an edge is the total flow routed so far on the edge. The \hyperref[eq:MWU-oracle-LP]{oracle} explicitly in this case is the same as \(\max _{P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i}} 1 / \sum_{e \in P} w_e\), i.e., finding the shortest path among all the commodity pairs, according to the weights on edges! We can find for each pair \((s_i, t_i)\) a shortest \(s_i\)-\(t_i\) path and choose the minimum. The algorithm routes some flow on that path and updates the weights along that path and iterates. The bottleneck is to compute the shortest paths.
-\end{eg}

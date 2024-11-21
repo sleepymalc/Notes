@@ -88,7 +88,7 @@ We can rephrase \autoref{thm:expander-decomposition} in a different form where w
 	\autoref{thm:expander-decomposition} is phrased in terms of \(m\), the number of edges. Capacitated graphs can be handled by scaling since we do not assume that \(G\) is simple. However, the dependence on \(\log m\) means that when capacities are large, we are not guaranteed a strongly polynomial bound. One can handle this issue in various ways depending on the application. In most applications of \hyperref[def:expander-decomposition]{expander decomposition}, it is the case that the total capacity of the edges can be assumed to be polynomially bounded in \(n\) and in this case, the \(\log m\) factor is typically replaced with \(\log n\).
 \end{remark}
 
-We remark that \autoref{algo:expander-decomposition} is based on \hyperref[prb:sparsest-cut]{sparsest cut} algorithms. Traditionally, these algorithms were quite slow. There have been several developments in the last few years which enabled \hyperref[prb:sparsest-cut]{sparsest cut} to be reduced to a poly-logarithmic number of \(s\)-\(t\) flows via the so-called \emph{cut-matching game}~\cite{khandekar2009graph,orecchia2008partitioning}, which in turn enabled faster flow algorithms. There are now near-linear time randomized algorithms for \hyperref[def:expander-decomposition]{expander decomposition} (with slightly weaker parameters than the ideal one) for the regimes of interest~\cite{saranurak2019expander}. In some applications the randomized algorithm is not adequate and there has been considerable effort to obtain deterministic algorithms. There are now almost-linear time deterministic algorithm~\cite{chuzhoy2020deterministic,saranurak2021deterministic}.
+We remark that \autoref{algo:expander-decomposition} is based on \hyperref[prb:sparsest-cut]{sparsest cut} algorithms. Traditionally, these algorithms were quite slow. There have been several developments in the last few years which enabled \hyperref[prb:sparsest-cut]{sparsest cut} to be reduced to a poly-logarithmic number of \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) flows} via the so-called \emph{cut-matching game}~\cite{khandekar2009graph,orecchia2008partitioning}, which in turn enabled faster \hyperref[def:flow]{flow} algorithms. There are now near-linear time randomized algorithms for \hyperref[def:expander-decomposition]{expander decomposition} (with slightly weaker parameters than the ideal one) for the regimes of interest~\cite{saranurak2019expander}. In some applications the randomized algorithm is not adequate and there has been considerable effort to obtain deterministic algorithms. There are now almost-linear time deterministic algorithm~\cite{chuzhoy2020deterministic,saranurak2021deterministic}.
 
 \subsection{Well-Linked Set}
 Consider the following generalization of \autoref{def:expander}, where we only care about \hyperref[def:expansion]{expansion} of a subset.
@@ -111,17 +111,17 @@ On the other hand, recall that \hyperref[def:expansion]{\(\alpha \)-expansion} m
 	We do not have to insist on \(A \cap B = \varnothing \). If not and we allow each vertex in \(A \cap B\) to connect to itself via an empty path, then it is the same as asking \(A\setminus B\) and \(B\setminus A\) to be \hyperref[def:linkage]{linked}. Thus, requiring \(\lvert A \rvert = \lvert B \rvert \) suffice.
 \end{note}
 
-We can view \hyperref[def:linkage]{linkage} as sending flows:
+We can view \hyperref[def:linkage]{linkage} as sending \hyperref[def:flow]{flows}:
 
 \begin{definition}[Fractional linkage]\label{def:fractional-linkage}
-	An \hyperref[def:linkage]{\(A\)-\(B\) linkage} is \emph{fractional} if there is a flow in \(G\) with that satisfies demand of \(1\) on each vertex in \(A\) and a demand of \(-1\) on each vertex of \(B\).\footnote{Note that this corresponds to a single-commodity flow.} In particular, we say that \(A, B\) are \emph{\(\alpha \)-linked} for some parameter \(\alpha \) if there is a flow in \(G\) that satisfies the demand of \(\alpha \) on each vertex in \(A\) and a demand of \(-\alpha \) on each vertex of \(B\).
+	An \hyperref[def:linkage]{\(A\)-\(B\) linkage} is \emph{fractional} if there is a \hyperref[def:flow]{flow} in \(G\) with that satisfies demand of \(1\) on each vertex in \(A\) and a demand of \(-1\) on each vertex of \(B\).\footnote{Note that this corresponds to a single-commodity \hyperref[def:flow]{flow}.} In particular, we say that \(A, B\) are \emph{\(\alpha \)-linked} for some parameter \(\alpha \) if there is a \hyperref[def:flow]{flow} in \(G\) that satisfies the demand of \(\alpha \) on each vertex in \(A\) and a demand of \(-\alpha \) on each vertex of \(B\).
 \end{definition}
 
 \begin{lemma}\label{lma:expander-linkage}
 	Suppose \(G\) is an \hyperref[def:expander]{\(\alpha \)-expander} with \(\alpha \geq 1\). Then there is an \hyperref[def:linkage]{\(A\)-\(B\) linkage} in \(G\) for every pair of disjoint equal sized sets \(A, B\).
 \end{lemma}
 \begin{proof}
-	Let \(\lvert A \rvert = \lvert B \rvert = k\). To check whether there are \(k\) desired edge-disjoint paths, consider creating a flow problem by adding two new vertices \(s\) and \(t\) such that \(s\) and \(t\) are connected to all vertices in \(A\) and \(B\) of capacity \(1\), respectively. Let \(H = (V \cup \{ s, t \} , E_H)\) be this new graph. If there is an \(s\)-\(t\) flow of value \(k\) in \(H\), then these correspond to the desired paths. Suppose otherwise, i.e., the flow is strictly less than \(k\). Then by \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}, there is a set \(S^{\prime} \subseteq V_H\) with \(s \in S^{\prime} \) and \(t \notin S^{\prime} \) such that \(\lvert \delta _H(S^{\prime} ) \rvert < k\). Let \(S \coloneqq S^{\prime}  - s\) be the corresponding set of vertices in \(G\). It's easy to see that
+	Let \(\lvert A \rvert = \lvert B \rvert = k\). To check whether there are \(k\) desired edge-disjoint paths, consider creating a \hyperref[prb:s-t-max-flow]{flow} problem by adding two new vertices \(s\) and \(t\) such that \(s\) and \(t\) are connected to all vertices in \(A\) and \(B\) of capacity \(1\), respectively. Let \(H = (V \cup \{ s, t \} , E_H)\) be this new graph. If there is an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) flow} of value \(k\) in \(H\), then these correspond to the desired paths. Suppose otherwise, i.e., the \hyperref[def:flow]{flow} is strictly less than \(k\). Then by \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}, there is a set \(S^{\prime} \subseteq V_H\) with \(s \in S^{\prime} \) and \(t \notin S^{\prime} \) such that \(\lvert \delta _H(S^{\prime} ) \rvert < k\). Let \(S \coloneqq S^{\prime}  - s\) be the corresponding set of vertices in \(G\). It's easy to see that
 	\[
 		\lvert \delta _H(S^{\prime} ) \rvert
 		= \lvert \delta _G(S) \rvert + \lvert A \cap (V\setminus S) \rvert + \lvert B \cap S \rvert.
@@ -180,7 +180,7 @@ Thus, the notion of \hyperref[def:fractional-well-linked]{well-linked} sets exte
 This artifact disappears if we ask for constant degree graphs or if we insist on \hyperref[def:node-linkage]{node linkage}, i.e., we now want \emph{node-disjoint paths}.
 
 \begin{definition}[Node linkage]\label{def:node-linkage}
-	Let \(A, B \subseteq V\), \(A \cap B = \varnothing \), and \(\lvert A \rvert = \lvert B \rvert \). An \emph{\(A\)-\(B\) node linkage} is a set of node-disjoint paths connecting \(A\) to \(B\) with each vertex in \(A \cup B\) in exactly one path.\footnote{We also skip the definition of \(\alpha \)-linkage for now. The definition is basically the same where we want flow with node capacities rather than edge capacities.}
+	Let \(A, B \subseteq V\), \(A \cap B = \varnothing \), and \(\lvert A \rvert = \lvert B \rvert \). An \emph{\(A\)-\(B\) node linkage} is a set of node-disjoint paths connecting \(A\) to \(B\) with each vertex in \(A \cup B\) in exactly one path.\footnote{We also skip the definition of \(\alpha \)-linkage for now. The definition is basically the same where we want \hyperref[def:flow]{flow} with node capacities rather than edge capacities.}
 \end{definition}
 
 \begin{definition}[Node well-linked]\label{def:node-well-linked}
@@ -236,7 +236,7 @@ In some sense, grid is the best planar graph in terms of \hyperref[def:node-well
 Finally, we note that the same decomposition can be done for \hyperref[def:well-linked]{well-linked} sets, just as the \hyperref[def:expander-decomposition]{expander decomposition}. This is a generalization since \hyperref[def:well-linked]{well-linkedness} generalizes the notion of \hyperref[def:expansion]{expansion} and \hyperref[def:conductance]{conductance} from the whole vertex set to subset of vertices. To state the desired result, we need to introduce the notion of \hyperref[def:weighted-well-linked]{weighted well-linked}:
 
 \begin{definition}[Weighted-well-linked]\label{def:weighted-well-linked}
-	Let \(\pi \colon X \to \mathbb{R} _{\geq 0}\) be non-negative weights on \(X \subseteq V\). We say that \(X\) is \emph{\(\pi \)-weighted well-linked} in \(G\) if for any \(S \subseteq V\), \(\lvert \delta _G(S) \rvert \geq \min (\pi (S \cap X), \pi (S \cap (V\setminus X)))\).
+	Let \(\pi \colon X \to \mathbb{R} _{+}\) be non-negative weights on \(X \subseteq V\). We say that \(X\) is \emph{\(\pi \)-weighted well-linked} in \(G\) if for any \(S \subseteq V\), \(\lvert \delta _G(S) \rvert \geq \min (\pi (S \cap X), \pi (S \cap (V\setminus X)))\).
 \end{definition}
 
 Note that if \(\pi (v) = 1\) for all \(v \in X\), we get back to \autoref{def:well-linked}. If \(\pi (v) = \deg(v)\) for each \(v \in V\), we obtain the \hyperref[def:conductance]{conductance}.
@@ -245,27 +245,27 @@ Note that if \(\pi (v) = 1\) for all \(v \in X\), we get back to \autoref{def:we
 	Typically, it is assumed that \(\pi (v) \leq c \pi (V)\) for some constant \(c < 1\), e.g., \(c = 1 / 3\). That is, no single vertex is too heavy compared to the total weight.
 \end{remark}
 
-Now, suppose we have a multi-commodity flow between vertices in \(V\) that is routed in \(G\). Let \(D(uv)\) be the flow routed for the unordered pair \(uv\). For each \(u \in V\), let \(\pi (u) = \sum_{v \in X, v \neq u} D(uv)\) be the total flow from \(u\) to some vertex in \(X\).
+Now, suppose we have a multi-commodity \hyperref[def:flow]{flow} between vertices in \(V\) that is routed in \(G\). Let \(D(uv)\) be the \hyperref[def:flow]{flow} routed for the unordered pair \(uv\). For each \(u \in V\), let \(\pi (u) = \sum_{v \in X, v \neq u} D(uv)\) be the total \hyperref[def:flow]{flow} from \(u\) to some vertex in \(X\).
 
 \begin{intuition}
 	We would like the terminals (vertices) to be \hyperref[def:weighted-well-linked]{\(\pi \)-wel-linked}, but if they are not, we would like to do a decomposition into vertex induced subgraphs such that they are.
 \end{intuition}
 
-Furthermore, we would like to do it in such a way that we lose as little amount of the original flow as possible. Since it is difficult to bound the total flow lost, so we will upper bound it by the total number of edges crossing the partitions.
+Furthermore, we would like to do it in such a way that we lose as little amount of the original \hyperref[def:flow]{flow} as possible. Since it is difficult to bound the total \hyperref[def:flow]{flow} lost, so we will upper bound it by the total number of edges crossing the partitions.
 
 \begin{note}
-	Consider each edge \(uv \in E\) and send one unit of flow along that edge for the pair \(uv\), then \(\pi (u) = \deg(u)\) for each \(u \in V\). This recovers the \hyperref[def:expander-decomposition]{expander decomposition} that we saw earlier.
+	Consider each edge \(uv \in E\) and send one unit of \hyperref[def:flow]{flow} along that edge for the pair \(uv\), then \(\pi (u) = \deg(u)\) for each \(u \in V\). This recovers the \hyperref[def:expander-decomposition]{expander decomposition} that we saw earlier.
 \end{note}
 
 \begin{theorem}[Well-linked decomposition]\label{thm:well-linked-decomposition}
-	Let \(G = (V, E)\) be a graph and \(\epsilon \in (0, 1)\) be a parameter. Suppose there is an \(\alpha \)-approximation algorithm for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}. Let \(\pi \colon V \to \mathbb{R} _{\geq 0}\) be induced by a multi-commodity flow in \(G\), where \(\pi (u)\) is the total flow originating at \(u\). Then there is an efficient algorithm that decomposes \(G\) into vertex induced subgraphs \(\{ G_i = G[V_i] \} _{i=1}^{h}\) for \(V_i \subseteq V\) such that in each \(G_i\), \(V_i\) is \hyperref[def:weighted-well-linked]{\(\beta \pi ^{\prime} \)-well-linked} where \(\beta = \Omega (\frac{\epsilon }{\alpha \log m})\) and \(\pi ^{\prime} (u)\) is the total flow incident to \(u\) in \(G_i\) (that remains from the original flow). Furthermore, the number of inter-cluster edges is at most \(\epsilon \pi (V)\), i.e.,
+	Let \(G = (V, E)\) be a graph and \(\epsilon \in (0, 1)\) be a parameter. Suppose there is an \(\alpha \)-approximation algorithm for the \hyperref[prb:sparsest-cut]{uniform sparsest cut}. Let \(\pi \colon V \to \mathbb{R} _{+}\) be induced by a multi-commodity \hyperref[def:flow]{flow} in \(G\), where \(\pi (u)\) is the total \hyperref[def:flow]{flow} originating at \(u\). Then there is an efficient algorithm that decomposes \(G\) into vertex induced subgraphs \(\{ G_i = G[V_i] \} _{i=1}^{h}\) for \(V_i \subseteq V\) such that in each \(G_i\), \(V_i\) is \hyperref[def:weighted-well-linked]{\(\beta \pi ^{\prime} \)-well-linked} where \(\beta = \Omega (\frac{\epsilon }{\alpha \log m})\) and \(\pi ^{\prime} (u)\) is the total \hyperref[def:flow]{flow} incident to \(u\) in \(G_i\) (that remains from the original \hyperref[def:flow]{flow}). Furthermore, the number of inter-cluster edges is at most \(\epsilon \pi (V)\), i.e.,
 	\[
 		\frac{1}{2} \sum_{i=1}^{h} \lvert \delta (V_i) \rvert
 		\leq c \pi (V).
 	\]
 \end{theorem}
 \begin{proof}
-	The corresponding algorithm and the proof is essentially the same as in \autoref{thm:expander-decomposition}. Let \(M = \pi (V)\) to keep it fixed throughout the algorithm as before. We use the \(\alpha \)-approximation algorithm on \(V\) with weights \(\pi \). It outputs a cut \((S, V\setminus S)\) with \(\pi (S) \leq \pi (V\setminus S)\). If \(\lvert \delta (S) \rvert \geq \epsilon \pi (S) / (10 \log M)\), we output \(G\), and we are guaranteed that \(V\) is \hyperref[def:weighted-well-linked]{\(\pi / (10 \alpha \log M)\)-well-linked} in \(G\) since we used an \(\alpha \)-approximation algorithm for \hyperref[prb:sparsest-cut]{uniform sparsest cut}. Otherwise, we remove the edges in \(\delta (S)\) and recurse on \(G[S]\) and \(G[V\setminus S]\) after throwing out all the flow that is lost by the edges in \(\delta (S)\). The recursion analysis is the same as before, and we can guarantee that the total number of edges cut is at most \(c \pi (V)\).
+	The corresponding algorithm and the proof is essentially the same as in \autoref{thm:expander-decomposition}. Let \(M = \pi (V)\) to keep it fixed throughout the algorithm as before. We use the \(\alpha \)-approximation algorithm on \(V\) with weights \(\pi \). It outputs a cut \((S, V\setminus S)\) with \(\pi (S) \leq \pi (V\setminus S)\). If \(\lvert \delta (S) \rvert \geq \epsilon \pi (S) / (10 \log M)\), we output \(G\), and we are guaranteed that \(V\) is \hyperref[def:weighted-well-linked]{\(\pi / (10 \alpha \log M)\)-well-linked} in \(G\) since we used an \(\alpha \)-approximation algorithm for \hyperref[prb:sparsest-cut]{uniform sparsest cut}. Otherwise, we remove the edges in \(\delta (S)\) and recurse on \(G[S]\) and \(G[V\setminus S]\) after throwing out all the \hyperref[def:flow]{flow} that is lost by the edges in \(\delta (S)\). The recursion analysis is the same as before, and we can guarantee that the total number of edges cut is at most \(c \pi (V)\).
 \end{proof}
 
 \begin{remark}

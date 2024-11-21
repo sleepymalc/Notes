@@ -6,7 +6,7 @@ In this chapter, we try to bridge the field of combinatorial (discrete) optimiza
 	Some useful properties that can be exploited algorithmically via iterative methods coming from first order optimization methods and this leads to fast approximation solutions.
 \end{intuition}
 
-Although these methods are old in optimization, the formal analysis with provable worst-case guarantees for concrete problems can be traced to the work of efficient algorithms for multi-commodity flows~\cite{shahrokhi1990maximum} which was later abstracted to general classes of linear programs~\cite{plotkin1995fast,grigoriadis1994fast}. Parallel algorithms were also derived via these methods~\cite{luby1993parallel}, and there have been many developments since then.
+Although these methods are old in optimization, the formal analysis with provable worst-case guarantees for concrete problems can be traced to the work of efficient algorithms for multi-commodity \hyperref[def:flow]{flows}~\cite{shahrokhi1990maximum} which was later abstracted to general classes of linear programs~\cite{plotkin1995fast,grigoriadis1994fast}. Parallel algorithms were also derived via these methods~\cite{luby1993parallel}, and there have been many developments since then.
 
 \section{Positive Linear Program}
 Positive linear programs, as the name suggests, are linear programs where the input to the linear program consists of positive numbers. This allows one to discuss relative approximations.
@@ -15,7 +15,7 @@ Positive linear programs, as the name suggests, are linear programs where the in
 There are three types of positive linear programs that we commonly work with.
 
 \begin{definition}[Packing linear program]\label{def:packing-LP}
-	Given data \(c \in \mathbb{R} _{\geq 0}^n\), \(A \in \mathbb{R} _{\geq 0}^{m \times n}\), and \(b \in \mathbb{R} _{\geq 0}^m\), a \emph{packing linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
+	Given data \(c \in \mathbb{R} _{+}^n\), \(A \in \mathbb{R} _{+}^{m \times n}\), and \(b \in \mathbb{R} _{+}^m\), a \emph{packing linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
 	\[
 		\begin{aligned}
 			\max~ & c^{\top} x  \\
@@ -26,7 +26,7 @@ There are three types of positive linear programs that we commonly work with.
 \end{definition}
 
 \begin{definition}[Covering linear program]\label{def:covering-LP}
-	Given data \(c \in \mathbb{R} _{\geq 0}^n\), \(A \in \mathbb{R} _{\geq 0}^{m \times n}\), and \(b \in \mathbb{R} _{\geq 0}^m\), a \emph{covering linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
+	Given data \(c \in \mathbb{R} _{+}^n\), \(A \in \mathbb{R} _{+}^{m \times n}\), and \(b \in \mathbb{R} _{+}^m\), a \emph{covering linear program} with \(n\) variables and \(m\) non-trivial constraints is of the form
 	\[
 		\begin{aligned}
 			\min~ & c^{\top} x  \\
@@ -39,7 +39,7 @@ There are three types of positive linear programs that we commonly work with.
 Oftentimes, we have a mixture of both.
 
 \begin{definition}[Mixed packing and covering linear program]\label{def:mixed-packing-covering-LP}
-	Given data \(A \in \mathbb{R} _{\geq 0}^{m_1 \times n}\), \(b \in \mathbb{R} _{\geq 0}^{m_1}\), \(C \in \mathbb{R} _{\geq 0}^{m_2 \times n}\), and \(d \in \mathbb{R} _{\geq 0}^{m_2}\), a \emph{mixed packing and covering linear program} with \(n\) variables and \((m_1 + m_2)\) non-trivial constraints is in the form of feasibility problem of inequalities\footnote{This is general enough since we can put the objective (either maximization or minimization) into the constraints.}
+	Given data \(A \in \mathbb{R} _{+}^{m_1 \times n}\), \(b \in \mathbb{R} _{+}^{m_1}\), \(C \in \mathbb{R} _{+}^{m_2 \times n}\), and \(d \in \mathbb{R} _{+}^{m_2}\), a \emph{mixed packing and covering linear program} with \(n\) variables and \((m_1 + m_2)\) non-trivial constraints is in the form of feasibility problem of inequalities\footnote{This is general enough since we can put the objective (either maximization or minimization) into the constraints.}
 	\[
 		\begin{aligned}
 			\max~ & 0           \\
@@ -77,7 +77,7 @@ We note that for \hyperref[def:implicit-LP]{implicit linear programs}, they can 
 Let's see some examples of \hyperref[def:packing-LP]{packing linear programs}.
 
 \begin{eg}[Maximum weight bipartite matching]\label{eg:max-weight-bipartite-matching-MWU}
-	Given a bipartite graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{\geq 0}\), the following linear program gives an exact solution to the maximum weight bipartite matching:
+	Given a bipartite graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+}\), the following linear program gives an exact solution to the maximum weight bipartite matching:
 	\[
 		\begin{aligned}
 			\max~ & \sum_{e \in E} c(e) x_e                                \\
@@ -89,7 +89,7 @@ Let's see some examples of \hyperref[def:packing-LP]{packing linear programs}.
 \end{eg}
 
 \begin{eg}[Tree packing]\label{eg:tree-packing-MWU}
-	Recall the \hyperref[eq:tree-packing-LP]{tree packing linear program}, where the goal is to pack \hyperref[def:spanning-tree]{spanning trees} into the capacity of a given graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{\geq 0}\):
+	Recall the \hyperref[eq:tree-packing-LP]{tree packing linear program}, where the goal is to pack \hyperref[def:spanning-tree]{spanning trees} into the capacity of a given graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+}\):
 	\[
 		\begin{aligned}
 			\max~ & \sum_{T \in \mathcal{T} _G} y_T                                 \\
@@ -101,7 +101,7 @@ Let's see some examples of \hyperref[def:packing-LP]{packing linear programs}.
 \end{eg}
 
 \begin{eg}[Maximum multi-commodity flow]\label{eg:maximum-multi-commodity-flow-MWU}
-	We considered the maximum multi-commodity flow problem as a relaxation for the \hyperref[prb:multi-min-cut]{multi-min-cut} problem. Given a graph \(G = (V, E)\) with non-negative edge capacities \(c \colon E \to \mathbb{Q} _{\geq 0}\) and \(k\) source-sink pairs \(\{ (s_i, t_i) \} _{i=1}^{k}\). Let \(\mathcal{P} _{s_i, t_i}\) denote the set of all \(s_i\)-\(t_i\) paths in \(G\). We have a variable \(x_P\) for each path \(P \in \bigcup_{i=1}^{k} \mathcal{P} _i\) to denote the amount of flow that is being routed on path \(P\), and we want to maximize the total flow sent between all pairs:
+	We considered the maximum multi-commodity \hyperref[def:flow]{flow} problem as a relaxation for the \hyperref[prb:multi-min-cut]{multi-min-cut} problem. Given a graph \(G = (V, E)\) with non-negative edge capacities \(c \colon E \to \mathbb{Q} _{+}\) and \(k\) source-sink pairs \(\{ (s_i, t_i) \} _{i=1}^{k}\). Let \(\mathcal{P} _{s_i, t_i}\) denote the set of all \(s_i\)-\(t_i\) paths in \(G\). We have a variable \(x_P\) for each path \(P \in \bigcup_{i=1}^{k} \mathcal{P} _i\) to denote the amount of \hyperref[def:flow]{flow} that is being routed on path \(P\), and we want to maximize the total \hyperref[def:flow]{flow} sent between all pairs:
 	\[
 		\begin{aligned}
 			\max~ & \sum_{i=1}^{k} \sum_{P \in \mathcal{P} _{s_i, t_i}} x_P                                                         \\
@@ -109,7 +109,7 @@ Let's see some examples of \hyperref[def:packing-LP]{packing linear programs}.
 			      & x_P \geq 0                                                  & P \in \bigcup_{i=1}^{k} \mathcal{P} _{s_i, t_i} .
 		\end{aligned}
 	\]
-	This is also an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program}. We can also write it as an \hyperref[def:explicit-LP]{explicit linear program} with variables \(f(e, i)\), which is the amount of flow on \(e\) for pair \(i\):
+	This is also an \hyperref[def:implicit-LP]{implicit} \hyperref[def:packing-LP]{packing linear program}. We can also write it as an \hyperref[def:explicit-LP]{explicit linear program} with variables \(f(e, i)\), which is the amount of \hyperref[def:flow]{flow} on \(e\) for pair \(i\):
 	\[
 		\begin{aligned}
 			\max~ & \sum_{i=1}^{k} \left[ \sum_{e \in \delta ^+ (s_i) } f(e, i) - \sum_{e \in \delta ^- (s_i) } f(e, i) \right]                                           \\
@@ -117,7 +117,7 @@ Let's see some examples of \hyperref[def:packing-LP]{packing linear programs}.
 			      & \sum_{e \in \delta ^-(u)} f(e, i) = \sum_{e \in \delta ^+(u)} f(e, i)                                       & u \neq s_i, t_i \text{ for } i \in [k].
 		\end{aligned}
 	\]
-	We see that the flow conservation constraints make this linear program not positive anymore.
+	We see that the \hyperref[def:flow]{flow} conservation constraints make this linear program not positive anymore.
 \end{eg}
 
 As for the \hyperref[def:covering-LP]{covering linear programs}, we first introduce the well-known \hyperref[prb:set-cover]{set cover} problem and its special case called \hyperref[prb:vertex-cover]{vertex cover}.
@@ -127,7 +127,7 @@ Given a collection of \(n\) subsets \(\mathcal{S} = \{ S_i \} _{i=1}^{n}\) of \(
 \end{problem}
 
 \begin{problem}[Vertex cover]\label{prb:vertex-cover}
-Given a graph \(G = (V, E)\) with edge capacity \(w \colon E \to \mathbb{R} _{\geq 0}\), the \emph{vertex cover} is a special case of \hyperref[prb:set-cover]{set cover} with \(S = E\) and \(\mathcal{S} \coloneqq \{ S_v = \delta (v)\} _{v \in V}\) with unit cost for each \(S_v\).
+Given a graph \(G = (V, E)\) with edge capacity \(w \colon E \to \mathbb{R} _{+}\), the \emph{vertex cover} is a special case of \hyperref[prb:set-cover]{set cover} with \(S = E\) and \(\mathcal{S} \coloneqq \{ S_v = \delta (v)\} _{v \in V}\) with unit cost for each \(S_v\).
 \end{problem}
 
 \begin{eg}[Set cover]
@@ -160,10 +160,10 @@ Finally, we see some examples on the \hyperref[def:mixed-packing-covering-LP]{mi
 	One can also add bound constraint on CIPs where a variable \(x_i\) can be at most \(d_i\). Then we get packing constraints and the linear program becomes a \hyperref[def:mixed-packing-covering-LP]{mixed packing and covering linear program}, albeit in a simple form
 	\[
 		\begin{aligned}
-			\min~ & c^{\top} x                    \\
-			      & Ax \geq b ;                   \\
-			      & x \leq d ;                    \\
-			      & x \in \mathbb{Z} _{\geq 0}^n.
+			\min~ & c^{\top} x               \\
+			      & Ax \geq b ;              \\
+			      & x \leq d ;               \\
+			      & x \in \mathbb{Z} _{+}^n.
 		\end{aligned}
 	\]
 	This naive formulation is bad in terms of integrality gap; one needs knapsack cover inequalities.

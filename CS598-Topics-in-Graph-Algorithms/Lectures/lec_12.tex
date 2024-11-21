@@ -7,7 +7,7 @@ The algorithm does not backtrack, i.e., once it partitions a cluster \(S\) into 
 \begin{notation}[Parameter]
 	We will use some parameters for formal proofs and to help see the ideas.
 	\begin{itemize}
-		\item \(\sigma \): the upper bound on the flow-cut gap in an \(n\)-vertex graph for product multi-commodity flow instances, where we know that \(\sigma = O(\log n)\).\footnote{Recall that we can get an \(O(\sigma (n))\) approximation for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} when needed.}
+		\item \(\sigma \): the upper bound on the flow-cut gap in an \(n\)-vertex graph for product multi-commodity \hyperref[def:flow]{flow} instances, where we know that \(\sigma = O(\log n)\).\footnote{Recall that we can get an \(O(\sigma (n))\) approximation for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} when needed.}
 		\item \(\lambda \): \(64 \sigma \log n\) with \(\lambda = \Theta (\log ^2 n)\) for general graph.
 		\item \(\alpha \): \(1 / 24 \sigma \lambda = \Omega (1 / \log ^3 n)\), which is the goal. Note that \(1 / \alpha \) is a log factor smaller than \(\lambda \).
 	\end{itemize}
@@ -16,7 +16,7 @@ The algorithm does not backtrack, i.e., once it partitions a cluster \(S\) into 
 We will assume that the capacities are integer valued. The algorithm is polynomial in the sum of the capacities, so technically we can only apply it for capacities that are poly-bounded, but we will ignore this issue since we are more interested in the proof of the existence for now.
 
 \begin{definition}[Precondition]\label{def:precondition}
-	Let \(H= G[S]\) for \(S \subseteq V\) be a cluster. Let \(\pi \colon S \to \mathbb{R} _+\) be boundary capacity weights, i.e., \(\pi (u)\) is the capacity of the edges leaving \(S\) that are incident to \(u\). We say \(S\) satisfies the \emph{precondition} if for all \(U \subseteq S\) such that \(\lvert U \rvert \leq 3 \lvert S \rvert / 4\),
+	Let \(H= G[S]\) for \(S \subseteq V\) be a cluster. Let \(\pi \colon S \to \mathbb{R} _{+}\) be boundary capacity weights, i.e., \(\pi (u)\) is the capacity of the edges leaving \(S\) that are incident to \(u\). We say \(S\) satisfies the \emph{precondition} if for all \(U \subseteq S\) such that \(\lvert U \rvert \leq 3 \lvert S \rvert / 4\),
 	\[
 		c(U, S \setminus U)
 		\geq \frac{\pi (U)}{\lambda }.
@@ -197,7 +197,7 @@ We now formally describe the algorithm.
 		\(D(u, v)\gets \pi ^{\prime} _S(u) / \lvert S \rvert \)\;
 	}
 	\;
-	\While(\Comment*[f]{Via flow computation}){\(S\) is not \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-partition-well-linkedness} w.r.t.\ \(\mathcal{P} \)}{
+	\While(\Comment*[f]{Via \hyperref[def:flow]{flow} computation}){\(S\) is not \hyperref[def:partition-and-boundary-well-linked]{\(\alpha \)-partition-well-linkedness} w.r.t.\ \(\mathcal{P} \)}{
 		\(\big((A, B), \psi \big) \gets\)\SparsestCut{\(G[S]\), \(H = (V, D)\)}\Comment*[r]{\(\lvert A \rvert \leq \lvert B \rvert \), \(\psi \leq \sigma \alpha \)}
 		\(U^{\ast} \gets \varnothing \)\;
 		\For(\Comment*[f]{Compute \(\operatorname{round}(A)\)}){\(R_i \in \mathcal{P} \)}{
@@ -266,7 +266,7 @@ To summarize, \hyperref[algo:partition]{Partition} starts with the partition con
 			\sum_{S^{\prime} \in \mathcal{Q} } c(\delta _G(S^{\prime} ))
 			\leq 2 c(\delta _G(U^{\ast} )).
 		\]
-		Let \(\pi ^{\prime\prime} \colon S \to \mathbb{R} _+\) be the new weights induced by the partition \(\mathcal{P} ^{\prime} \) that counts the inter-cluster and outgoing edges of \(\mathcal{P} ^{\prime} \). We see that by counting, we have
+		Let \(\pi ^{\prime\prime} \colon S \to \mathbb{R} _{+}\) be the new weights induced by the partition \(\mathcal{P} ^{\prime} \) that counts the inter-cluster and outgoing edges of \(\mathcal{P} ^{\prime} \). We see that by counting, we have
 		\[
 			\pi ^{\prime\prime} (S)
 			= \pi ^{\prime} (S) - \pi ^{\prime} (U^{\ast} ) + \sum_{S^{\prime} \in \mathcal{Q} } c(\delta _G(S^{\prime} ))

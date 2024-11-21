@@ -3,7 +3,7 @@
 Consider the following problem that generalizes the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} and \hyperref[prb:global-min-cut]{global min-cut}.
 
 \begin{problem}[Steiner min-cut]\label{prb:Steiner-min-cut}
-Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \) and a set \(T \subseteq V\) of terminals, the \emph{Steiner min-cut} problem aims to find the min-cut \((S, V\setminus S)\) which separates some pair of terminals, i.e., \(S \cap T \neq \varnothing \) and \((V \setminus S) \cap T \neq \varnothing \).
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \) and a set \(T \subseteq V\) of terminals, the \emph{Steiner min-cut} problem aims to find the min-cut \((S, V\setminus S)\) which separates some pair of terminals, i.e., \(S \cap T \neq \varnothing \) and \((V \setminus S) \cap T \neq \varnothing \).
 \end{problem}
 
 \begin{remark}
@@ -13,7 +13,7 @@ Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \
 	\hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} corresponds to \(T = \{ s, t \} \), while \hyperref[prb:global-min-cut]{global min-cut} corresponds to \(T = V\).
 \end{explanation}
 
-A simple algorithm for the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} is the same as the \hyperref[prb:global-min-cut]{global min-cut} by solving \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}: for \(T = \{ t_1, \dots , t_k \} \), fix a terminal, say \(t_1\), then compute \hyperref[prb:s-t-min-cut]{\(t_1\)-\(t_i\) min-cut} for all \(i \geq 2\). This requires \(\lvert T \rvert - 1\) max-flow computations. In fact, this is the best known algorithm even for the \hyperref[prb:global-min-cut]{global min-cut} till~\cite{nagamochi1992computing}.
+A simple algorithm for the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} is the same as the \hyperref[prb:global-min-cut]{global min-cut} by solving \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}: for \(T = \{ t_1, \dots , t_k \} \), fix a terminal, say \(t_1\), then compute \hyperref[prb:s-t-min-cut]{\(t_1\)-\(t_i\) min-cut} for all \(i \geq 2\). This requires \(\lvert T \rvert - 1\) \hyperref[prb:s-t-max-flow]{max-flow} computations. In fact, this is the best known algorithm even for the \hyperref[prb:global-min-cut]{global min-cut} till~\cite{nagamochi1992computing}.
 
 Quite recently, a simple yet striking approach that computes the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using only \(O(\log ^3 n)\) \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} computations is developed~\cite{li2020deterministic}, which is based on \hyperref[prb:isolating-cut]{isolating cut}.
 
@@ -65,7 +65,7 @@ We note that perhaps a more common definition of \hyperref[def:submodular]{submo
 One of the reason that \hyperref[def:submodular]{submodularity} is important for graphs is because of the following.
 
 \begin{eg}[Cut]
-	Given a graph \(G = (V, E)\), the cut size function \(\lvert \delta _G (\cdot) \rvert \colon 2^V \to \mathbb{R} _+\) is \hyperref[def:submodular]{submodular}.
+	Given a graph \(G = (V, E)\), the cut size function \(\lvert \delta _G (\cdot) \rvert \colon 2^V \to \mathbb{R} _{+}\) is \hyperref[def:submodular]{submodular}.
 \end{eg}
 \begin{explanation}
 	We simply note that for any \(A, B \subseteq V\),
@@ -121,10 +121,10 @@ The above proof applies to directed graph as well since we only used \hyperref[d
 We can now formally introduce the \hyperref[prb:isolating-cut]{isolating cut} problem.
 
 \begin{problem}[Isolating cut]\label{prb:isolating-cut}
-Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \) and a set \(T \subseteq V\) of terminals. The \emph{\(t_i\)-isolating cut} problem aims to find a cut \((S_i, V\setminus S_i)\) such that \(t_i \in S_i\) and \(t_j \notin S_i\) (i.e., \(t_j \in V \setminus S_i\)) for all \(j \neq i\), i.e., the cut isolates \(t_i\) from the rest of the terminals.
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \) and a set \(T \subseteq V\) of terminals. The \emph{\(t_i\)-isolating cut} problem aims to find a cut \((S_i, V\setminus S_i)\) such that \(t_i \in S_i\) and \(t_j \notin S_i\) (i.e., \(t_j \in V \setminus S_i\)) for all \(j \neq i\), i.e., the cut isolates \(t_i\) from the rest of the terminals.
 \end{problem}
 
-The minimum capacity \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} can be found by a single max-flow computation: by shrinking the terminals in \(T - t_i\) into a single vertex \(s\) and computing the \hyperref[prb:s-t-min-cut]{\(s\)-\(t_i\) min-cut}. Thus, naively, computing all \hyperref[prb:isolating-cut]{isolating cuts} require \(k\) max-flow computations. The upshot is that this can be done in only \(O(\log k)\) max-flow. Before we describe the algorithm, we first note that from \hyperref[def:submodular]{submodularity}, we also have a similar structural result, just like \autoref{col:union-intersection-min-cut}.
+The minimum capacity \hyperref[prb:isolating-cut]{\(t_i\)-isolating cut} can be found by a single \hyperref[prb:s-t-max-flow]{max-flow} computation: by shrinking the terminals in \(T - t_i\) into a single vertex \(s\) and computing the \hyperref[prb:s-t-min-cut]{\(s\)-\(t_i\) min-cut}. Thus, naively, computing all \hyperref[prb:isolating-cut]{isolating cuts} require \(k\) \hyperref[prb:s-t-max-flow]{max-flow} computations. The upshot is that this can be done in only \(O(\log k)\) \hyperref[s-t-max-flow]{max-flow}. Before we describe the algorithm, we first note that from \hyperref[def:submodular]{submodularity}, we also have a similar structural result, just like \autoref{col:union-intersection-min-cut}.
 
 \begin{lemma}\label{lma:unique-isolating-cut}
 	There is a unique minimal \hyperref[prb:isolating-cut]{\(t_i\)-isolating min-cut} \((S_i^{\ast} , V \setminus S_i^{\ast} )\) such that if \((S_i, V\setminus S_i)\) is any \hyperref[prb:isolating-cut]{\(t_i\)-isolating min-cut}, then \(S_i^{\ast} \subseteq S_i\).
@@ -135,7 +135,7 @@ We now describe the algorithm for computing the \hyperref[prb:isolating-cut]{iso
 \begin{algorithm}[H]\label{algo:isolating-cut}
 	\DontPrintSemicolon{}
 	\caption{\hyperref[prb:isolating-cut]{Isolating Cut}~\cite{li2020deterministic} (also developed independently in~\cite{abboud2021subcubic})}
-	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
+	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
 	\KwResult{A set of \hyperref[prb:isolating-cut]{isolating cuts} \(\{ (S_i^{\ast} , V\setminus S_i^{\ast} )\}_{i=1}^{k} \) isolating \(t_i\)'s}
 	\SetKwFunction{mincut}{\hyperref[prb:s-t-min-cut]{\(s\)-\(t\)-min-cut}}
 	\BlankLine
@@ -203,18 +203,18 @@ With all the lemmas, it's now easy to see that \autoref{algo:isolating-cut} is a
 \end{intuition}
 
 \begin{theorem}[\cite{li2020deterministic}]\label{thm:isolating-min-cut}
-	\autoref{algo:isolating-cut} is a deterministic algorithm that given \(G = (V, E)\) and a terminal set \(T \subseteq V\) with \(\lvert T \rvert = k\), computes all the \hyperref[prb:isolating-cut]{isolating cuts} using \(O(\log k)\) max-flow computations on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges each.
+	\autoref{algo:isolating-cut} is a deterministic algorithm that given \(G = (V, E)\) and a terminal set \(T \subseteq V\) with \(\lvert T \rvert = k\), computes all the \hyperref[prb:isolating-cut]{isolating cuts} using \(O(\log k)\) \hyperref[prb:s-t-max-flow]{max-flow} computations on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges each.
 \end{theorem}
 \begin{proof}
-	We analyze the runtime. It's easy to see that \autoref{algo:isolating-cut-for-1} requires \(O(\log k)\) max-flow computations on \(G\). It's also easy to show that computing \(S_i\)'s in \autoref{algo:isolating-cut-U} can be done in \(O((m+n) \log k)\) time given \((X_{\ell } , Y_{\ell } )\) for \(\ell \in [\lceil \log k \rceil ]\). However, \autoref{algo:isolating-cut-H} and \autoref{algo:isolating-cut-min-cut} seem to require \(k\) max-flow computations.
+	We analyze the runtime. It's easy to see that \autoref{algo:isolating-cut-for-1} requires \(O(\log k)\) \hyperref[prb:s-t-max-flow]{max-flow} computations on \(G\). It's also easy to show that computing \(S_i\)'s in \autoref{algo:isolating-cut-U} can be done in \(O((m+n) \log k)\) time given \((X_{\ell } , Y_{\ell } )\) for \(\ell \in [\lceil \log k \rceil ]\). However, \autoref{algo:isolating-cut-H} and \autoref{algo:isolating-cut-min-cut} seem to require \(k\) \hyperref[prb:s-t-max-flow]{max-flow} computations.
 
 	\begin{claim}
-		In total, \autoref{algo:isolating-cut-min-cut} only requires \(O(\log k)\) max-flow computations.
+		In total, \autoref{algo:isolating-cut-min-cut} only requires \(O(\log k)\) \hyperref[prb:s-t-max-flow]{max-flow} computations.
 	\end{claim}
 	\begin{explanation}
-		Let us understand the size of \(H_i\). It has \(n_i + 1\) vertices where \(n_i = \lvert S_i \rvert \), and it has \(m_i\) edges where \(m_i = \lvert E(S_i) \rvert + \lvert \delta (S_i) \rvert \). Thus, the running time of max-flow on \(H_i\) is \(T(n_i + 1, m_i)\) where \(T(a, b)\) is the running time of max-flow on graph with \(a\) nodes and \(b\) edges. We observe that \(\sum_{i} (n_i + 1) \leq 2n\) since \(S_i\)'s are disjoint, while \(\sum_{i} m_i \leq 2m\): consider any edge \(uv \in E\). If \(uv \in E(S_i)\) for some \(i\), then it does not contribute to any other \(H_j\). If \(uv \in \delta (S_i)\) for some \(i\), then it can be in \(\delta (S_j)\) for only one more index \(j \neq i\).
+		Let us understand the size of \(H_i\). It has \(n_i + 1\) vertices where \(n_i = \lvert S_i \rvert \), and it has \(m_i\) edges where \(m_i = \lvert E(S_i) \rvert + \lvert \delta (S_i) \rvert \). Thus, the running time of \hyperref[prb:s-t-max-flow]{max-flow} on \(H_i\) is \(T(n_i + 1, m_i)\) where \(T(a, b)\) is the running time of \hyperref[prb:s-t-max-flow]{max-flow} on graph with \(a\) nodes and \(b\) edges. We observe that \(\sum_{i} (n_i + 1) \leq 2n\) since \(S_i\)'s are disjoint, while \(\sum_{i} m_i \leq 2m\): consider any edge \(uv \in E\). If \(uv \in E(S_i)\) for some \(i\), then it does not contribute to any other \(H_j\). If \(uv \in \delta (S_i)\) for some \(i\), then it can be in \(\delta (S_j)\) for only one more index \(j \neq i\).
 
-		Thus, the total time to compute all \(k\) max-flows is \(\sum_{i} T(n_i, m_i) \leq T(2n, 2m)\) under reasonable assumption, specifically, \(T(a, b)\) is super-additive.\footnote{Formally, we first create a single \(H\) that includes each \(H_i\) as a copy in it, and we can run a single max-flow on \(H\) to recover all the max-flow values in each \(H_i\). \(H\) will have \(O(n)\) vertices and \(O(m)\) edges.}
+		Thus, the total time to compute all \(k\) \hyperref[prb:s-t-max-flow]{max-flows} is \(\sum_{i} T(n_i, m_i) \leq T(2n, 2m)\) under reasonable assumption, specifically, \(T(a, b)\) is super-additive.\footnote{Formally, we first create a single \(H\) that includes each \(H_i\) as a copy in it, and we can run a single \hyperref[prb:s-t-max-flow]{max-flow} on \(H\) to recover all the \hyperref[prb:s-t-max-flow]{max-flow} values in each \(H_i\). \(H\) will have \(O(n)\) vertices and \(O(m)\) edges.}
 	\end{explanation}
 	With the correctness of \autoref{algo:isolating-cut}, the theorem is proved.
 \end{proof}
@@ -253,7 +253,7 @@ We formally describe this algorithm as follows.
 \begin{algorithm}[H]\label{algo:Steiner-min-cut}
 	\DontPrintSemicolon{}
 	\caption{\hyperref[prb:Steiner-min-cut]{Steiner Min-Cut}}
-	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
+	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
 	\KwResult{A possible \hyperref[prb:Steiner-min-cut]{Steiner min-cut} \((S^{\ast} , V \setminus S^{\ast} )\)}
 	\SetKwFunction{sample}{Sample}
 	\SetKwFunction{isolatingcut}{\hyperref[algo:isolating-cut]{Isolating-Cut}}
@@ -299,11 +299,11 @@ We now formally prove the robustness we have mentioned.
 	which is a constant.
 \end{proof}
 
-\begin{theorem}
-	There is a randomized algorithm that given \(G=(V, E)\) and terminal set \(T \subseteq V\) of size \(k\), outputs the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using \(O(\log^2 k \log n)\) max-flow computations on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges.
+\begin{theorem}\label{thm:Steiner-min-cut}
+	There is a randomized algorithm that given \(G=(V, E)\) and terminal set \(T \subseteq V\) of size \(k\), outputs the \hyperref[prb:Steiner-min-cut]{Steiner min-cut} with high probability using \(O(\log^2 k \log n)\) \hyperref[prb:s-t-max-flow]{max-flow} computations on graphs with \(\lvert V \rvert \) vertices and \(\lvert E \rvert \) edges.
 \end{theorem}
 \begin{proof}
-	From \autoref{lma:algo:Steiner-min-cut}, \autoref{algo:Steiner-min-cut} successes with a constant probability. We further boost the overall success probability by rerunning \autoref{algo:Steiner-min-cut} \(\Theta (\log n)\) times. With \autoref{thm:isolating-min-cut}, this requires \(O(\log ^2k \log n)\) max-flow computations.
+	From \autoref{lma:algo:Steiner-min-cut}, \autoref{algo:Steiner-min-cut} successes with a constant probability. We further boost the overall success probability by rerunning \autoref{algo:Steiner-min-cut} \(\Theta (\log n)\) times. With \autoref{thm:isolating-min-cut}, this requires \(O(\log ^2k \log n)\) \hyperref[prb:s-t-max-flow]{max-flow} computations.
 \end{proof}
 
 \begin{remark}[Deterministic algorithm]

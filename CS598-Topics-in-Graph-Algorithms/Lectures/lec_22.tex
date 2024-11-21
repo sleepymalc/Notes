@@ -1,1 +1,91 @@
-\lecture{22}{19 Nov.\ 11:00}{}
+\chapter{Blocking Flow and Push-Relabel}
+\lecture{22}{19 Nov.\ 11:00}{Blocking \hyperref[def:flow]{flow} for Max-Flow}
+\section{Augmenting Path}
+
+
+\begin{algorithm}[H]\label{algo:augmenting-path}
+	\DontPrintSemicolon{}
+	\caption{Augmenting Path}
+	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), terminal \(T = \{ t_i \} _{i=1}^{k}\)}
+	\KwResult{A possible \hyperref[prb:Steiner-min-cut]{Steiner min-cut} \((S^{\ast} , V \setminus S^{\ast} )\)}
+	\SetKwFunction{sample}{Sample}
+	\BlankLine
+
+
+	\Return{\((S^{\ast} , V\setminus S^{\ast} )\)}\;
+\end{algorithm}
+
+\section{Blocking Flow}
+Consider the \(s\)-\(t\) \hyperref[def:flow]{flow} in directed graph \(G = (V, E)\) with capacities \(c \colon E \to \mathbb{R} _{+}\). Let \(f \colon E \to \mathbb{R} _{+}\) is a \hyperref[def:flow]{flow} if
+\begin{enumerate}[(i)]
+	\item \(0 \leq f(e) \leq c(e)\) for all \(e \in E\);
+	\item \hyperref[def:flow]{flow} conservation, i.e., in-\hyperref[def:flow]{flow} is equal to out-\hyperref[def:flow]{flow} for all \(v \neq s, t\).
+\end{enumerate}
+Let the value of \(f\) to be \(\sum_{e \in \delta ^+(s)} f(e) - \sum_{e \in \delta ^-(s)} f(e)\).
+
+\begin{definition}[Residual graph]
+	define \(c(e) - f(e)\) and \(f(e)\) backward edge.
+\end{definition}
+
+Shortest augmenting path algorithm takes \(O(m^2 n)\) with a naive implementation.
+
+Dinicltz uses the blocking \hyperref[def:flow]{flow} algorithm that speed up it to \(O(mn^2)\). The idea is to first build the BFS layer graph structure and then do adaptive DFS search.
+
+\begin{theorem}[Blocking flow]\label{thm:blocking-flow}
+	The blocking \hyperref[def:flow]{flow} algorithm takes \(O(mn + \lvert f^{\ast} \rvert n)\) time when capacities are integer and \(f^{\ast} \) is the \hyperref[prb:s-t-max-flow]{max-flow} value.
+\end{theorem}
+
+For the case of unit capacity graph, it takes \(O(m \cdot \min (\sqrt{m} , n^{2 / 3}))\).
+\begin{itemize}
+	\item suppose there is only \(d\) depth, then there exists two adjacent layers with edges between them \(O(m / d)\). this gives \(O(md + m \cdot m / d)\). Choosing \(d = \sqrt{m} \) minimizes it.
+	\item Suppose \(d \geq n^{2 / 3}\). Then one can prove that there exists two adjacent layers such that each of them have less than \(2 n^{1 / 3}\) nodes.
+\end{itemize}
+
+Scaling algorithm. Suppose \(c(e) \in \mathbb{Z} _{+}\), and \(C\) is the maximum capacity of any arc. Look at the bit representation of \(c(e)\). In the first iteration, look at the most significant bit of \(c(e)\)'s, and do the unit capacity algorithm (taking \(O(mn)\)) time. Then in the next iteration, we have \(c^{\prime} (e) = 2 c(e) + b_e\) for \(b_e \in \{ 0, 1 \} \). In this case, we have \(f^{\prime} (e) = 2 f(e)\). Then, the residual graph \(G_{f^{\prime} }\), there is a min-cut with capacity at most \(m\). Hence, we can run \autoref{thm:blocking-flow} which takes \(O(mn)\) again, hence the total running time is \(O(mn \log C)\).
+
+\subsection{Link-Cut Tree}
+\begin{definition}[Link-cut tree]\label{def:link-cut-tree}
+
+\end{definition}
+The link-cut tree data structure maintains a disjoint collection of trees, which has the following operations:
+\begin{itemize}
+	\item \(\operatorname{maketree}(v) \): make a new tree with only root \(v\).
+	\item \(\operatorname{findroot}(v) \)
+	\item \(\operatorname{findcost}(v) \): find the cheapest cost edge from \(v\) to its root.
+	\item \(\operatorname{addcost}(v, c) \): add the cost of all edges from \(v\) to its root with \(c\).
+	\item \(\operatorname{link}(v, w) \): add tree with root \(v\) as the child of \(w\).
+	\item \(\operatorname{cut}(v) \): detach \(v\) from its tree and make a new rooted tree with root \(v\).
+\end{itemize}
+
+One can maintain this data structure in amortized \(O(\log n)\) time for each operation.
+
+\begin{intuition}
+	For a path, we can represent it as a dynamic binary search tree, which has height \(O(\log n)\). Then the above operations are all trivial. For a general tree, we can do the \emph{heavy light decomposition}, which essentially break the tree into a heavy path and some small things.
+\end{intuition}
+
+Hence, the total cost is \(O(m n \log n)\).
+
+\section{Push-Relabel}
+Consider the pre-flow:
+
+\begin{definition}[Preflow]\label{def:preflow}
+	\(f \colon E \to \mathbb{R} _{+}\) is a \emph{preflow} if
+	\begin{enumerate}[(i)]
+		\item \(0 \leq f(e) \leq c(e)\) for all \(e \in E\);
+		\item \(\sum_{e \in \delta ^-(v)} f(e) \geq \sum_{e \in \delta ^+(v)}f(e) \) for all \(v \in V\).
+	\end{enumerate}
+\end{definition}
+
+\begin{notation}
+	For a \hyperref[def:preflow]{preflow} \(f\), the \emph{excess} at \(v\) is defined as \(\sum_{e \in \delta ^-(v)} f(e) - \sum_{e \in \delta ^+(v)} f(e)\).
+\end{notation}
+
+If the excess is \(0\) for all \(v \neq t\), then \(f\) is a \hyperref[def:flow]{flow}. The residual graph w.r.t.\ \hyperref[def:preflow]{preflow} \(f\) is the same as before.
+
+\begin{definition}[Label]
+	\(\ell \colon V \to \mathbb{Z} _{+}\) is a \emph{label} if
+	\begin{enumerate}[(i)]
+		\item \(\ell (s) = n\) and \(\ell (t) = 0\);
+		\item if \((u, v) \in E\), then \(\ell (v) \leq \ell (u) - 1\).
+	\end{enumerate}
+\end{definition}

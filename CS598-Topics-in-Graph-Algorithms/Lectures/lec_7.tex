@@ -24,7 +24,7 @@ This notion can be formalized as the so-called \hyperref[def:expander]{expander}
 To introduce the problem, we first define the \hyperref[def:sparsity]{sparsity} for a cut.
 
 \begin{definition}[Sparsity]\label{def:sparsity}
-	Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and a demand graph \(H = (V, F)\) with demand capacity \(D \colon F \to \mathbb{R} _+\), for any cut \(S \subseteq V\), its \emph{sparsity} is defined as
+	Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+}\) and a demand graph \(H = (V, F)\) with demand capacity \(D \colon F \to \mathbb{R} _{+}\), for any cut \(S \subseteq V\), its \emph{sparsity} is defined as
 	\[
 		\frac{c(\delta (S))}{\sum_{i \colon \lvert S \cap \{ s_i, t_i \} \rvert = 1} D_i}.
 	\]
@@ -33,10 +33,10 @@ To introduce the problem, we first define the \hyperref[def:sparsity]{sparsity} 
 That is, the \hyperref[def:sparsity]{sparsity} of a cut is the ratio of the capacity of the cut and the total demand of the pairs separated by \(S\). Now, we can introduce the \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut problem}.
 
 \begin{problem}[Non-uniform sparsest cut]\label{prb:non-uniform-sparsest-cut}
-Given a supply graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and \(k\) pairs of vertices \(\{ (s_i, t_i) \} _{i=1}^{k}\) along with non-negative demand values \(D_1, \dots , D_k\).\footnote{If \(G\) is undirected, then the demand pairs are unordered, i.e., we do not distinguish \((s_i, t_i)\) from \((t_i, s_i)\).} The \emph{non-uniform sparsest cut problem} aims to find a cut \(S\) with minimum \hyperref[def:sparsity]{sparsity}.
+Given a supply graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+}\) and \(k\) pairs of vertices \(\{ (s_i, t_i) \} _{i=1}^{k}\) along with non-negative demand values \(D_1, \dots , D_k\).\footnote{If \(G\) is undirected, then the demand pairs are unordered, i.e., we do not distinguish \((s_i, t_i)\) from \((t_i, s_i)\).} The \emph{non-uniform sparsest cut problem} aims to find a cut \(S\) with minimum \hyperref[def:sparsity]{sparsity}.
 \end{problem}
 
-Here, demands forms a demand graph \(H = (V, F)\) with edges \((s_i, t_i)\) and demand capacity \(D\colon F \to \mathbb{R} _+\) such that \(D((s_i, t_i)) = D_i\). With this representation, the \hyperref[def:sparsity]{sparsity} of cut \(S\) is simply \(c(\delta _G(S)) / D(\delta _H(S))\) where \(\delta _G(S)\) (respectively, \(\delta _H(S)\)) represents the supply (respectively, demand) edges crossing \(S\).
+Here, demands forms a demand graph \(H = (V, F)\) with edges \((s_i, t_i)\) and demand capacity \(D\colon F \to \mathbb{R} _{+}\) such that \(D((s_i, t_i)) = D_i\). With this representation, the \hyperref[def:sparsity]{sparsity} of cut \(S\) is simply \(c(\delta _G(S)) / D(\delta _H(S))\) where \(\delta _G(S)\) (respectively, \(\delta _H(S)\)) represents the supply (respectively, demand) edges crossing \(S\).
 
 \begin{intuition}
 	We're trying to find the best ``bang per buck''	cut, i.e., how much capacity do we need to remove per amount of demand separated to satisfy the demand?
@@ -82,7 +82,7 @@ Hence, a natural integer program of \hyperref[prb:non-uniform-sparsest-cut]{non-
 		\text{(P)}\quad & y_i \geq 0                  & \forall i = 1, \dots , k,                                \\
 	\end{aligned}
 \end{equation}
-where we use the standard trick, i.e., linearization to normalize the denominator to be \(1\), to make the ratio of the integer program into a linear program. With the dual variable \(z_P\) for each path such that it indicates the amount of ``flow'' sent on the path \(P\), the dual of the above is
+where we use the standard trick, i.e., linearization to normalize the denominator to be \(1\), to make the ratio of the integer program into a linear program. With the dual variable \(z_P\) for each path such that it indicates the amount of ``\hyperref[def:flow]{flow}'' sent on the path \(P\), the dual of the above is
 \begin{equation}\label{eq:non-uniform-sparsest-cut-LP-dual}
 	\begin{aligned}
 		\max~           & \lambda                                                                                                                 \\
@@ -92,10 +92,10 @@ where we use the standard trick, i.e., linearization to normalize the denominato
 		\text{(D)}\quad & \lambda \geq 0,
 	\end{aligned}
 \end{equation}
-which is a multi-commodity flow. In particular, it solves the \emph{maximum concurrent multi-commodity flow} problem for the given instance, i.e., it finds the largest value of \(\lambda \) such that there is a feasible multi-commodity flow for the given pairs in which the flow routed for pair \((s_i, t_i)\) is at least \(\lambda D_i\).
+which is a multi-commodity \hyperref[def:flow]{flow}. In particular, it solves the \emph{maximum concurrent multi-commodity flow} problem for the given instance, i.e., it finds the largest value of \(\lambda \) such that there is a feasible multi-commodity \hyperref[def:flow]{flow} for the given pairs in which the \hyperref[def:flow]{flow} routed for pair \((s_i, t_i)\) is at least \(\lambda D_i\).
 
 \begin{notation}[Concurrent flow]
-	It is called \emph{concurrent flow} since we need to route all demand pairs to the same factor which is in contrast to the \hyperref[eq:multi-min-cut-LP]{dual} of \hyperref[prb:multi-min-cut]{multi-min-cut}, which corresponds to the maximum throughput multi-commodity flow.\footnote{Recall that in this case, some pairs may have zero flow while others have a lot of flow.}
+	It is called \emph{concurrent flow} since we need to route all demand pairs to the same factor which is in contrast to the \hyperref[eq:multi-min-cut-LP]{dual} of \hyperref[prb:multi-min-cut]{multi-min-cut}, which corresponds to the maximum throughput multi-commodity \hyperref[def:flow]{flow}.\footnote{Recall that in this case, some pairs may have zero \hyperref[def:flow]{flow} while others have a lot of \hyperref[def:flow]{flow}.}
 \end{notation}
 
 We note that this dual can be solved efficiently via ellipsoid method since the separation oracle is just the shortest path problem. One can also write a compact linear program via distance variables as
@@ -110,7 +110,7 @@ We note that this dual can be solved efficiently via ellipsoid method since the 
 In this context, we can understand the \emph{flow-cut gap} of \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut} by the following equivalent way of thinking about the problem:
 
 \begin{intuition}[Cut-condition]
-	Given a multi-commodify flow instance on \(G\). A necessary condition to route all the demand pairs is that if \(G\) satisfies the \emph{cut-condition}, i.e., for every \(S \subseteq V\), the capacity \(c(\delta (S))\) is at least the demand separated by \(S\). However, the converse it not necessarily true, i.e., the cut-condition is not sufficient.
+	Given a multi-commodify \hyperref[def:flow]{flow} instance on \(G\). A necessary condition to route all the demand pairs is that if \(G\) satisfies the \emph{cut-condition}, i.e., for every \(S \subseteq V\), the capacity \(c(\delta (S))\) is at least the demand separated by \(S\). However, the converse it not necessarily true, i.e., the cut-condition is not sufficient.
 \end{intuition}
 
 The cut-condition is sufficient when \(k = 1\) but is not true in general even for \(k = 3\) in undirected graphs. The question is the maximum value of \(\lambda \) such that we can route \(\lambda D_i\) for each pair \(i\). The worst-case integrality gap of the \hyperref[eq:non-uniform-sparsest-cut-LP-primal]{proceeding linear program} is precisely the flow-cut gap.
@@ -222,7 +222,7 @@ Now we have introduced all the necessary metrics we will use. Consider a finite 
 	Any finite metric space can be viewed as one that is derived from the shortest path metric induced on a graph with some non-negative edge lengths.
 \end{claim}
 
-If \(G = (V, E)\) is a simple graph and \(\ell \colon E \to \mathbb{R} _+\) are some edge-lengths, the metric induced on \(V\) depends both on the \emph{topology} of \(G\) and the lengths as well, i.e., finite metrics can encode graph structure, hence it can be diverse. When trying to round we may want to work with simpler metric spaces.
+If \(G = (V, E)\) is a simple graph and \(\ell \colon E \to \mathbb{R} _{+}\) are some edge-lengths, the metric induced on \(V\) depends both on the \emph{topology} of \(G\) and the lengths as well, i.e., finite metrics can encode graph structure, hence it can be diverse. When trying to round we may want to work with simpler metric spaces.
 
 \begin{intuition}[Embedding]
 	Embed a given metric space \((V, d)\) into a simpler host metric space \((V^{\prime} , d^{\prime} )\) via an embedding \(f \colon V \to V^{\prime} \).
@@ -267,13 +267,13 @@ Additionally, we're interested in the following kind of embeddings:
 
 Of particular importance are embeddings of finite metric spaces into \(\mathbb{R} ^h\), where the distance in the host space is measured under a norm such as \(\ell _p\) norm. The dimension \(h\) is also important in various applications but in some settings like with \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}, it is not. We assume the following:
 
-\begin{theorem}[Bourgain]\label{thm:Bourgain}
+\begin{theorem}[Bourgain~\cite{bourgain1985lipschitz,linial1995geometry}]\label{thm:Bourgain}
 	Any \(n\)-point finite metric space can be embedded into \(\ell _2\) (hence also \(\ell _1\)) with \hyperref[def:distortion]{distortion} \(O(\log n)\). Moreover, the embedding is a \hyperref[def:contraction]{contraction} and can be constructed in randomized polynomial time and embeds points into \(\mathbb{R} ^h\) where \(h = O(\log ^2 n)\).
 \end{theorem}
 
 In fact, one can obtain a refined version of \autoref{thm:Bourgain} that is useful for \hyperref[prb:non-uniform-sparsest-cut]{non-uniform sparsest cut}.
 
-\begin{theorem}[Bourgain]\label{thm:Borugain*}
+\begin{theorem}[Bourgain~\cite{linial1995geometry}]\label{thm:Borugain*}
 	Let \((V, d)\) be an \(n\)-point finite metric space and let \(S \subseteq V\) with \(\lvert S \rvert = k\). Then there is a randomized polynomial time algorithm to compute an embedding \(f \colon V \to \mathbb{R} ^{O(\log ^2 n)}\) such that the embedding is a \hyperref[def:contraction]{contraction}\footnote{I.e., \(\lVert f(u) - f(v) \rVert _1 \leq d(u, v)\) for all \(u, v \in V\)} and for every \(u, v \in S\), \(\lVert f(u) - f(v) \rVert _1 \geq c d(u, v) / \log k\) for some universal constant \(c\).
 \end{theorem}
 

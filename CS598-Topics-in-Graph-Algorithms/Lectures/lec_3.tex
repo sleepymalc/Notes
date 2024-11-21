@@ -3,16 +3,32 @@
 Consider the following famous problems about min-cuts.
 
 \begin{problem}[\(s\)-\(t\) min-cut]\label{prb:s-t-min-cut}
-Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), the \emph{\(s\)-\(t\) min-cut} problem aims to find \(\min _{S \subseteq V \colon s \in S, t \in V\setminus S} c(\delta (S))\).
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), the \emph{\(s\)-\(t\) min-cut} problem aims to find \(\min _{S \subseteq V \colon s \in S, t \in V\setminus S} c(\delta (S))\).
 \end{problem}
 
 \begin{problem}[Global min-cut]\label{prb:global-min-cut}
-Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), the \emph{global min-cut} problem aims to find \(\min _{\varnothing \neq S \subsetneq V} c(\delta (S))\).
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), the \emph{global min-cut} problem aims to find \(\min _{\varnothing \neq S \subsetneq V} c(\delta (S))\).
 \end{problem}
 
-In what follows, we will simply use \hyperref[prb:global-min-cut]{min-cut} to refer to \autoref{prb:global-min-cut} problem. A naive way to solve it is to first fix one end \(s \in V\), and compute the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} for all \(t \in V - s\). Fairly recent work shows how one can do it with only poly-log max-flow computations.
+In what follows, we will simply use \hyperref[prb:global-min-cut]{\emph{min-cut}} to refer to \autoref{prb:global-min-cut}. For convenience, we also introduce its well-known dual, the \hyperref[prb:s-t-max-flow]{max-flow} problem. We first define the \hyperref[def:flow]{flow} formally.
 
-Over the years, several very different algorithmic approaches have been developed for these problems. One of the surprising ones is based on MA-orderings~\cite{nagamochi1992computing}, which is a combinatorial \(O(mn + n^2 \log n)\) time algorithm that does not rely on flow at all.\footnote{This approach generalizes to symmetric submodular functions.} Another approach is to combine several flow computations together via the push-relabel method~\cite{hao1994faster}, which also works for directed graphs. Karger developed elegant and powerful random contraction based algorithms for \hyperref[prb:global-min-cut]{global min-cuts}~\cite{karger1995random}, leading to many results. Two notable consequences are the following.
+\begin{definition}[Flow]\label{def:flow}
+	Given a directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+}\), a \emph{flow} \(f\colon E \to \mathbb{R} _{+}\) from \(s\) to \(t\) for some pair of \(s, t \in V\) satisfies
+	\begin{enumerate}[(i)]
+		\item\label{def:flow-capacity} \(0 \leq f(e) \leq c(e)\) for all \(e \in E\);
+		\item\label{def:flow-conservation} \(\sum_{e \in \delta ^- (v)} f(e) = \sum_{e \in \delta ^+ (v)} f(e)\) for all \(v \in V\setminus \{ s, t \} \).
+	\end{enumerate}
+\end{definition}
+
+Then the problem of \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} can be formulated as follows.
+
+\begin{problem}[\(s\)-\(t\) max-flow]\label{prb:s-t-max-flow}
+Given a directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+}\). The \emph{\(s\)-\(t\) max-flow} problem aims to find \(\max _{f} \lvert f \rvert \) where \(f\) ranging over all \hyperref[def:flow]{\(s\)-\(t\) flows} and \(\lvert f \rvert \coloneqq \sum_{e \in \delta ^+(s)} f(e) = \sum_{e \in \delta ^-(t)} f(e)\).
+\end{problem}
+
+A naive way to solve the \hyperref[prb:global-min-cut]{min-cut} problem is to first fix one end \(s \in V\), and compute the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} for all \(t \in V - s\). Fairly recent work shows how one can do it with only polynomial-logarithmically many \hyperref[prb:s-t-max-flow]{max-flow} computations (\autoref{thm:Steiner-min-cut}).
+
+Over the years, several very different algorithmic approaches have been developed for these problems. One of the surprising ones is based on MA-orderings~\cite{nagamochi1992computing}, which is a combinatorial \(O(mn + n^2 \log n)\) time algorithm that does not rely on \hyperref[def:flow]{flow} at all.\footnote{This approach generalizes to symmetric submodular functions.} Another approach is to combine several \hyperref[prb:s-t-max-flow]{flow} computations together via the push-relabel method~\cite{hao1994faster}, which also works for directed graphs. Karger developed elegant and powerful random contraction based algorithms for \hyperref[prb:global-min-cut]{global min-cuts}~\cite{karger1995random}, leading to many results. Two notable consequences are the following.
 
 \begin{theorem}[\cite{karger1996new}]\label{thm:Karger-min-cut}
 	There is a randomized algorithm that runs in \(O(n^2 \log n)\) time and outputs the \hyperref[prb:global-min-cut]{min-cut} with high probability.\footnote{This is a Monte-Carlo algorithm, so we cannot guarantee that the min-cut found is the correct one.}
@@ -23,6 +39,10 @@ The following is a consequence of Karger's contraction algorithm~\cite{karger199
 \begin{theorem}[Approximate min-cut~\cite{karger2000minimum}]\label{thm:number-approximate-min-cut}
 	The number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cuts} in a graph is at most \(O(n^{2 \alpha })\).
 \end{theorem}
+
+\begin{definition}[Approximate min-cut]\label{def:approximate-min-cut}
+	For \(\alpha \geq 1\) an \emph{\(\alpha \)-approximate min-cut} is a cut \((S, V \setminus S)\) such that \(c(\delta (S)) \leq \alpha \lambda (G)\).
+\end{definition}
 
 Karger then developed another approach via \hyperref[prb:tree-packing]{tree packing} to obtain a randomized near-linear time algorithm for \hyperref[prb:global-min-cut]{min-cut}. He also was able to refine the bound on \hyperref[thm:number-approximate-min-cut]{approximate min-cuts} via this approach.
 
@@ -49,6 +69,7 @@ To formalize the above intuition, consider the following definition.
 	\centering
 	\incfig{respect}
 	\caption{The \hyperref[def:spanning-tree]{spanning tree} \(T\) is shown in red edges. \(T\) is \hyperref[def:respect]{\(3\)-rspecting} the cut \((S, V \setminus S)\).}
+	\label{fig:respecting}
 \end{figure}
 
 We can now formalize the intuition in \autoref{lma:tree-packing-min-cut}.
@@ -97,7 +118,7 @@ By black-boxing this near-linear time \hyperref[prb:tree-packing]{tree packing} 
 \begin{algorithm}[H]\label{algo:Karger-tree-packing-based-min-cut}
 	\DontPrintSemicolon{}
 	\caption{\hyperref[prb:tree-packing]{Tree Packing}-Based \hyperref[prb:global-min-cut]{Min-Cut} Algorithm~\cite{karger2000minimum,chekuri2017near}}
-	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), \(\epsilon _0 \in < 1 / 5\)}
+	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), \(\epsilon _0 \in < 1 / 5\)}
 	\KwResult{A cut \(S\)}
 	\SetKwFunction{CQ}{\hyperref[thm:approximate-tree-packing]{Approximate-Tree-Packing}}
 	\BlankLine
@@ -117,7 +138,7 @@ Firstly, we see that \autoref{algo:Karger-tree-packing-based-min-cut} admits the
 	It's immediate from \autoref{lma:tree-packing-min-cut}.
 \end{proof}
 
-To boost the success probability, we can simply repeat the last two steps (\autoref{algo:Karger-tree-packing-based-min-cut-sample}, \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut}) \(\Theta (\log n)\) times, which results in a success probability to at least \(1 - 1 / n^c\) for any constant \(c\). To analyze the running time, a key ingredient is \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut}. Karger showed that one can implement \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut} via a clever dynamic programming coupled with link-cut tree data structure:
+To boost the success probability, we can simply repeat the last two steps (\autoref{algo:Karger-tree-packing-based-min-cut-sample}, \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut}) \(\Theta (\log n)\) times, which results in a success probability to at least \(1 - 1 / n^c\) for any constant \(c\). To analyze the running time, a key ingredient is \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut}. Karger showed that one can implement \autoref{algo:Karger-tree-packing-based-min-cut-find-respect-cut} via a clever dynamic programming coupled with \hyperref[def:link-cut-tree]{link-cut tree} data structure:
 
 \begin{theorem}[\cite{karger2000minimum}]\label{thm:Karger-tree-packing-based-min-cut-find-respect-cut}
 	Given a graph \(G = (V, E)\) and a \hyperref[def:spanning-tree]{spanning tree} \(T = (V, E_T)\). There is a deterministic algorithm that computes a minimum cut \((S, V \setminus S)\) such that \(T\) is \hyperref[def:respect]{\(2\)-respecting} w.r.t.\ \(S\) in \(O(m \log ^2 n)\) time.
@@ -153,29 +174,16 @@ In contrast, for \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cuts}, it can be exp
 	\end{center}
 \end{eg}
 
-Hence, we're interested in the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximation min-cut}:
+Recall earlier in \autoref{thm:number-approximate-min-cut}, we stated that Karger used \hyperref[prb:tree-packing]{tree packing} to prove that the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximation min-cuts} is at most \(O_\alpha (n^{\lfloor 2\alpha \rfloor })\). We now prove it formally.
 
-\begin{definition}[Approximate min-cut]\label{def:approximate-min-cut}
-	For \(\alpha \geq 1\) an \emph{\(\alpha \)-approximate min-cut} is a cut \((S, V \setminus S)\) such that \(c(\delta (S)) \leq \alpha \lambda (G)\).
-\end{definition}
-
-Recall \autoref{thm:number-approximate-min-cut}, where Karger used \hyperref[prb:tree-packing]{tree packing} to prove that the number of \hyperref[def:approximate-min-cut]{\(\alpha \)-approximation min-cuts} is at most \(O_\alpha (n^{\lfloor 2\alpha \rfloor })\). Before we prove \autoref{thm:number-approximate-min-cut}, we recall some basic facts from linear programming.
-
-\begin{prev}
-	A solution \(x^{\ast} \) to a linear program which has \(n\) non-trivial constraints means that the support size of \(x\) is at most \(n\), i.e., \(x_i > 0\) for at most \(n\) many \(i\)'s.
-\end{prev}
-
-We're now ready to prove \autoref{thm:number-approximate-min-cut}, which is based on~\cite{chekuri2020lp}.
-
-\begin{proof}[Proof of \autoref{thm:number-approximate-min-cut}]
+\begin{proof}[Proof of \autoref{thm:number-approximate-min-cut}~\cite{chekuri2020lp}]
 	Consider an optimum fraction \hyperref[prb:tree-packing]{tree packing} solution \(\{ (T, y_T^{\ast} ) \}_{T \in \mathcal{T} _G} \). In the \hyperref[pf:col:Tutte-Nash-Williams]{proof} of \autoref{col:Tutte-Nash-Williams}, where we define the fractional \hyperref[prb:tree-packing]{tree packing} linear program, we know that there are only \(m\) non-trivial constraints, hence there are only \(m\) many \(T\)'s such that \(y^{\ast} _T > 0\).
 
-	Consider an \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cut} \(S \subseteq V\), and let \(h = \lceil 2 \alpha \rceil \). Now, let \(q_{h, \alpha }\) be the fraction of \hyperref[prb:tree-packing]{tree packing} that \hyperref[def:respect]{\(h\)-respects} \(S \subseteq V\), i.e.,
-	\[
-		q_{h, \alpha }
-		\coloneqq \sum_{T \colon \ell (T) \leq h} p_T.
-	\]
-	Using a similar analysis as the one in \autoref{lma:tree-packing-min-cut}, we can argue that
+	\begin{prev}
+		A solution \(x^{\ast} \) to a linear program which has \(n\) non-trivial constraints means that the support size of \(x\) is at most \(n\), i.e., \(x_i > 0\) for at most \(n\) many \(i\)'s.
+	\end{prev}
+
+	Consider an \hyperref[def:approximate-min-cut]{\(\alpha \)-approximate min-cut} \(S \subseteq V\), and let \(h = \lceil 2 \alpha \rceil \). Now, let \(q_{h, \alpha }\) be the fraction of \hyperref[prb:tree-packing]{tree packing} that \hyperref[def:respect]{\(h\)-respects} \(S \subseteq V\), i.e., \(q_{h, \alpha } \coloneqq \sum_{T \colon \ell (T) \leq h} p_T\). Using a similar analysis as the one in \autoref{lma:tree-packing-min-cut}, we can argue that
 	\[
 		q_{h, \alpha }
 		\geq \frac{1}{h} (1 - (2\alpha - \lfloor 2 \alpha \rfloor )) \left( 1 - \frac{1}{n} \right) .

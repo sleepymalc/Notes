@@ -1,6 +1,6 @@
 \lecture{5}{10 Sep.\ 11:00}{Metric Embedding and Multi-Cut Problem}
 \subsection{Max-Flow Min-Cut Theorem}
-Finally, we conclude this section by proving the well-known \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. Given a directed graph \(G= (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\), consider the following linear program relaxation of the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} where \(s, t\) are two distinct vertices:
+Finally, we conclude this section by proving the well-known \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. Consider the following linear program relaxation of the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} where \(s, t\) are two distinct vertices:
 \begin{equation}\label{eq:s-t-min-cut-LP}
 	\begin{aligned}
 		\min~           & \sum_{e \in E} c(e) x_e                                \\
@@ -22,10 +22,10 @@ where \(\mathcal{P} _{s, t}\) is the set of all \(s\)-\(t\) paths. The integer v
 	Suppose \(E^{\prime} \) is an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut} and \(S\) is the set of nodes reachable from \(s\) in \(G - E^{\prime} \). Then, \(\delta (S) \subseteq E^{\prime} \) and \(\delta (S)\) is an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut}. Hence, it suffices to focus on such limited type of cuts.\footnote{In some more general settings, it is useful to keep these notions separate.}
 \end{explanation}
 
-It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be computed efficiently via \(s\)-\(t\) max-flow, establishing the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. This fundamental theorem in combinatorial optimization has many applications, and is typically established via the augmenting path algorithm. Here, we give another proof.
+It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be computed efficiently via \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}, establishing the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. This fundamental theorem in combinatorial optimization has many applications, and is typically established via the \hyperref[algo:augmenting-path]{augmenting path algorithm}. Here, we give another proof.
 
 \begin{theorem}[Max-flow min-cut]\label{thm:max-flow-min-cut}
-	Let \(G = (V, E)\) be a directed graph with rational edge capacities \(c \colon E \to \mathbb{Q} _+\) and let \(s, t\in V\) be two distinct vertices. The \(s\)-\(t\) max-flow value in \(G\) is equal to the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} value, and both can be computed in strongly polynomial time. Furthermore, if \(c\) is integer valued, then there exists an integer-valued max-flow as well.
+	Let \(G = (V, E)\) be a directed graph with rational edge capacities \(c \colon E \to \mathbb{Q} _{+}\) and let \(s, t\in V\) be two distinct vertices. The \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} value in \(G\) is equal to the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} value, and both can be computed in strongly polynomial time. Furthermore, if \(c\) is integer valued, then there exists an integer-valued \hyperref[prb:s-t-max-flow]{max-flow} as well.
 \end{theorem}
 \begin{proof}
 	To start, we observe that the primal \hyperref[eq:s-t-min-cut-LP]{linear program} assigns lengths to edges such that the \(s\)-\(t\) shortest path according to which is at least \(1\). This is a fractional relaxation of the cut. We claim that it's possible to round the fractional solution of the primal to the exact \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} without any loss. Consider the following rounding algorithms for the primal \hyperref[eq:s-t-min-cut-LP]{linear program}.
@@ -33,7 +33,7 @@ It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be com
 	\begin{algorithm}[H]\label{algo:max-flow-min-cut-rounding}
 		\DontPrintSemicolon{}
 		\caption{\(\theta \)-Rounding Algorithm}
-		\KwData{A directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), \(s, t \in V\)}
+		\KwData{A directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), \(s, t \in V\)}
 		\KwResult{A \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} \(F\)}
 		\SetKwFunction{uniform}{Uniform}
 		\SetKwFunction{LPSolve}{LP-Solve}
@@ -61,7 +61,7 @@ It is well-known that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} can be com
 
 	With this claim, from linearity of expectation, we see that \(\mathbb{E}_{}[c(\delta ^+(B_x(s, \theta )))] \leq \sum_{e \in E} c(e) x_e\). As \(B_x(s, \theta )\) will always be a valid \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) cut}, this implies that there is an integral cut whose cost is at most that of the linear program relaxation, implying that the linear program relaxation yields an optimum solution.
 
-	Finally, observe that the dual is the \emph{path version} of the \(s\)-\(t\) max-flow. Hence, from strong duality, the optimal value of \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} is the same as the \(s\)-\(t\) max-flow. Moreover, we note that the primal is strongly polynomial-time solvable if we have a separation oracle. In this case, given \(\{ x_e \} _{e\in E}\), we need to answer either this is a feasible solution, or outputs some path \(p\) such that \(\sum_{e \in P} x_e < 1\), which is exactly the shortest \(s\)-\(t\) path algorithm and can be solved efficiently.
+	Finally, observe that the dual is the \emph{path version} of the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}. Hence, from strong duality, the optimal value of \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} is the same as the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}. Moreover, we note that the primal is strongly polynomial-time solvable if we have a separation oracle. In this case, given \(\{ x_e \} _{e\in E}\), we need to answer either this is a feasible solution, or outputs some path \(p\) such that \(\sum_{e \in P} x_e < 1\), which is exactly the shortest \(s\)-\(t\) path algorithm and can be solved efficiently.
 \end{proof}
 
 \begin{intuition}[Line embedding]
@@ -77,7 +77,7 @@ In this chapter, we will see a series of techniques that are based on the struct
 Recall that \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut problem} we just saw. Now, consider a more general problem called \hyperref[prb:multi-min-cut]{multi-min-cut}.
 
 \begin{problem}[Multi-min-cut]\label{prb:multi-min-cut}
-Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+\) and \(k\) pairs of vertices \(\{ (s_i, t_i) \} _{i=1}^{k}\), the \emph{multi-min-cut problem} aims to find a minimum capacity cut that separates all pairs.
+Given a graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+}\) and \(k\) pairs of vertices \(\{ (s_i, t_i) \} _{i=1}^{k}\), the \emph{multi-min-cut problem} aims to find a minimum capacity cut that separates all pairs.
 \end{problem}
 
 \hyperref[prb:multi-min-cut]{Multi-min-cut} is \(\NP\)-hard even on trees. In general, it is a \(\NP\)-complete problem. Hence, we ask for an approximation algorithm instead. An \(O(k)\)-approximation algorithm is trivial by simply outputting the union of all \hyperref[prb:s-t-min-cut]{\(s_i\)-\(t_i\) min-cuts}. The goal is an \(O(\log k)\)-approximation algorithm, which also proves the multi-commodity flow-cut gap.
@@ -108,10 +108,10 @@ The primal assigns distance labels \(x_e\) to edges so that, on each path \(P\) 
 	With the ellipsoid method, we just need a separation oracle. Consider setting the length of each edge to \(x_e\) and for each pair \((s_i, t_i)\), compute the length of the shortest path between \(s_i\) and \(t_i\) and check whether it is at least \(1\). This only takes \(k\) many times compared to the previous separation oracle for the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} linear program relaxation, hence it's still polynomial time.
 \end{explanation}
 
-On the other hand, the dual variable can be interpreted as the amount of flow between \(s_i\) and \(t_i\) that is routed along the path \(P\). This is called the \emph{maximum throughput multi-commodity flow} problem, where we don't care about individual demands, but only the overall flow. The dual tries to assign an amount of flow \(y_P\) to each path \(P\) so that the total flow on each edge is at most the capacity of the edge.
+On the other hand, the dual variable can be interpreted as the amount of \hyperref[def:flow]{flow} between \(s_i\) and \(t_i\) that is routed along the path \(P\). This is called the \emph{maximum throughput multi-commodity flow} problem, where we don't care about individual demands, but only the overall \hyperref[def:flow]{flow}. The dual tries to assign an amount of \hyperref[def:flow]{flow} \(y_P\) to each path \(P\) so that the total \hyperref[def:flow]{flow} on each edge is at most the capacity of the edge.
 
 \begin{note}
-	The flow conservation constraints are automatically satisfied and the endpoints of the path \(P\) determine which kind of commodity is routed along the path.
+	The \hyperref[def:flow]{flow} \hyperref[def:flow-conservation]{conservation constraints} are automatically satisfied and the endpoints of the path \(P\) determine which kind of commodity is routed along the path.
 \end{note}
 
 \subsection{Approximation via Randomized Decomposition}
@@ -125,7 +125,7 @@ then we will get an \(\alpha \)-approximation algorithm. To do this, we consider
 \begin{algorithm}[H]\label{algo:multi-cut-random-partition}
 	\DontPrintSemicolon{}
 	\caption{Random Partition~\cite{calinescu2005approximation}}
-	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _+ \), \(\{ (s_i, t_i) \mid s_i, t_i \in V \}_{i=1}^k\)}
+	\KwData{A connected graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), \(\{ (s_i, t_i) \mid s_i, t_i \in V \}_{i=1}^k\)}
 	\KwResult{A \hyperref[prb:multi-min-cut]{multi-min-cut} \(F\)}
 	\SetKwFunction{uniform}{Uniform}
 	\SetKwFunction{LPSolve}{LP-Solve}
@@ -230,5 +230,5 @@ then we will get an \(\alpha \)-approximation algorithm. To do this, we consider
 The expected cost analysis can be used to obtain a randomized algorithm via repetition that outputs an \(O(\log k)\)-approximation with high probability. The algorithm can also be derandomized, but it's not straight forward.
 
 \begin{remark}[Flow-cut gap]
-	Recall that when \(k = 1\), we have the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. The integrality gap of the standard linear program for \hyperref[prb:multi-min-cut]{multi-min-cut} is the same as the relative gap between flow and cut when \(k\) is arbitrary. The upper bound on the integrality gap gives an upper bound on the gap.
+	Recall that when \(k = 1\), we have the \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}. The integrality gap of the standard linear program for \hyperref[prb:multi-min-cut]{multi-min-cut} is the same as the relative gap between \hyperref[def:flow]{flow} and cut when \(k\) is arbitrary. The upper bound on the integrality gap gives an upper bound on the gap.
 \end{remark}

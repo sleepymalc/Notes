@@ -14,7 +14,7 @@ Consider two new graphs \(G^B = (V, E, w^B)\) such that
 		w(e),     & \text{ if } w(e) \geq 0 ,
 	\end{dcases}
 \]
-and \(G^B_{\geq 0} = (V, E, w^B_{\geq 0})\) where \(w^B_{\geq 0} (e) = \max (0, w^B(e))\). For any subgraph \(H\) of \(G\), we will use \(H^B\) and \(H^B_{\geq 0}\) to refer to the corresponding subgraphs of \(G^B\) and \(G^B_{\geq 0}\).
+and \(G^B_{+} = (V, E, w^B_{+})\) where \(w^B_{+} (e) = \max (0, w^B(e))\). For any subgraph \(H\) of \(G\), we will use \(H^B\) and \(H^B_{+}\) to refer to the corresponding subgraphs of \(G^B\) and \(G^B_{+}\).
 
 \begin{claim}
 	If a potential \(\phi \) \hyperref[def:neutralize]{neutralizes} all negative edges in \(G^B\) without introducing additional negative edges, then \(w_{\phi } (e) \geq -B\) for all \(e \in E\).
@@ -49,17 +49,17 @@ Now, the key idea is to use \hyperref[thm:directed-LDD]{low-diameter decompositi
 	From \autoref{lma:SSSP-hop}, if the number of \hyperref[not:hop]{hops} for \(s^{\ast} \)-\(v\) shortest paths is small in \(G^B + s^{\ast} \), or even if the average is small, then we can solve the problem in near-linear time. We aim to reduce to this with \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph}, recursion, and also fixing edges that are easy to fix along the way (i.e., the case of \autoref{lma:SSSP-fix-DAG}).
 \end{intuition}
 
-Since \hyperref[thm:directed-LDD]{low-diameter decomposition} requires non-negative edge lengths, we consider applying it to \(G_{\geq 0}^B \).
+Since \hyperref[thm:directed-LDD]{low-diameter decomposition} requires non-negative edge lengths, we consider applying it to \(G_{+}^B \).
 
 \begin{lemma}\label{lma:SSSP-LDD}
-	Let \(G = (V, E)\) be a graph with edge length \(w \colon V \to \mathbb{R} \) such that \(w(e) \geq -2B\) for all \(e \in E\). Let \(\kappa _{G^B}(v)\) to be the maximum number of \hyperref[not:hop]{hops} of any \(s^{\ast} \)-\(v\) shortest path in \(G^B + s^{\ast} \), and \(\kappa _{G^B}\coloneqq \max _{v \in V} \kappa _{G^B}(v)\). Suppose \(\kappa \geq \kappa _{G^B}\), and we run \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} on \(G_{\geq 0}^B\) with \(D = \kappa B / 2\) to get an output \(E^{\prime} \). Then,
+	Let \(G = (V, E)\) be a graph with edge length \(w \colon V \to \mathbb{R} \) such that \(w(e) \geq -2B\) for all \(e \in E\). Let \(\kappa _{G^B}(v)\) to be the maximum number of \hyperref[not:hop]{hops} of any \(s^{\ast} \)-\(v\) shortest path in \(G^B + s^{\ast} \), and \(\kappa _{G^B}\coloneqq \max _{v \in V} \kappa _{G^B}(v)\). Suppose \(\kappa \geq \kappa _{G^B}\), and we run \hyperref[thm:directed-LDD]{low-diameter decomposition for directed graph} on \(G_{+}^B\) with \(D = \kappa B / 2\) to get an output \(E^{\prime} \). Then,
 	\begin{enumerate}[(i)]
 		\item\label{lma:SSSP-LDD-i} for all \(v \in V\), \(\mathbb{E}_{}[\lvert P_{v} \cap E^{\prime} \rvert ] \leq O(\log ^2 n)\), where \(P_{v}\) is a \(\kappa _{G^B}(v)\)-\hyperref[not:hop]{hop} \(s^{\ast} \)-\(v\) shortest path in \(G^B\);
 		\item\label{lma:SSSP-LDD-ii} for all SCC \(H\) in \(G - E^{\prime} \), \(\kappa _{H^{B} } \leq \kappa / 2\), where \(\kappa _{H^B}\) concerns with \(H^B + s\), similar to \(\kappa _{G^B}\).
 	\end{enumerate}
 \end{lemma}
 \begin{proof}
-	We prove \autoref{lma:SSSP-LDD-ii} first. Assume that \(H\) is an SCC in \(G - E^{\prime} \) such that there is one shortest path \(P^{H^B}_{v} = s^{\ast} \to u \to \dots \to v\) contains entirely in \(H^B\) using more than \(\kappa / 2\) negative edges w.r.t.\ \(\at{w^B}{H}{} \). Denote the corresponding \(u\)-\(v\) path as \(P \coloneqq P^H_{v} \setminus \{ s^{\ast} \}\). Observe that there is a \(v\)-\(u\) walk \(Q\) of length at most \(D\) w.r.t.\ \(w_{\geq 0}^B\) from the \hyperref[thm:directed-LDD]{low-diameter decomposition} guarantee, i.e., \(w_{\geq 0}^B(Q) \leq D\). Hence, \(w(Q) \leq D\) as well. However, we see that \(Q \cup P\) is a cycle, furthermore, its weight is negative:
+	We prove \autoref{lma:SSSP-LDD-ii} first. Assume that \(H\) is an SCC in \(G - E^{\prime} \) such that there is one shortest path \(P^{H^B}_{v} = s^{\ast} \to u \to \dots \to v\) contains entirely in \(H^B\) using more than \(\kappa / 2\) negative edges w.r.t.\ \(\at{w^B}{H}{} \). Denote the corresponding \(u\)-\(v\) path as \(P \coloneqq P^H_{v} \setminus \{ s^{\ast} \}\). Observe that there is a \(v\)-\(u\) walk \(Q\) of length at most \(D\) w.r.t.\ \(w_{+}^B\) from the \hyperref[thm:directed-LDD]{low-diameter decomposition} guarantee, i.e., \(w_{+}^B(Q) \leq D\). Hence, \(w(Q) \leq D\) as well. However, we see that \(Q \cup P\) is a cycle, furthermore, its weight is negative:
 	\[
 		w(Q \cup P)
 		= w(Q) + w(P)
@@ -69,10 +69,10 @@ Since \hyperref[thm:directed-LDD]{low-diameter decomposition} requires non-negat
 	\]
 	since we assume that \(P\) contains more than \(\kappa / 2\) negative edges w.r.t.\ \(w^B\), with the fact that \(w^B(P) = w^B(P^H_{v}) \leq w^B(\{ s^{\ast} \to v \} ) = 0\), hence its original weight is at most \((\kappa / 2 + 1) \cdot (-B)\).
 
-	We now prove \autoref{lma:SSSP-LDD-i}, consider any \(s^{\ast} \)-\(v\) shortest path \(P_{v}\) for some \(v\) in \(G^B\) of \hyperref[not:hop]{hops} \(\kappa _{G^B}(v)\). From the same reason as above, we have \(w^B(P_{v}) \leq 0\), hence \(w^B_{\geq 0}(P_{v}) \leq \kappa B\). By linear of expectation,
+	We now prove \autoref{lma:SSSP-LDD-i}, consider any \(s^{\ast} \)-\(v\) shortest path \(P_{v}\) for some \(v\) in \(G^B\) of \hyperref[not:hop]{hops} \(\kappa _{G^B}(v)\). From the same reason as above, we have \(w^B(P_{v}) \leq 0\), hence \(w^B_{+}(P_{v}) \leq \kappa B\). By linear of expectation,
 	\[
 		\mathbb{E}_{}[\lvert P_{v} \cap E^{\prime}  \rvert ]
-		\leq \frac{w_{\geq 0}^B(P_{v})}{D} O(\log ^2 n)
+		\leq \frac{w_{+}^B(P_{v})}{D} O(\log ^2 n)
 		\leq \frac{\kappa B}{D} O(\log ^2 n)
 		= O(\log ^2 n)
 	\]
@@ -109,7 +109,7 @@ With \autoref{lma:SSSP-LDD}, it's quite natural in retrospect to consider a recu
 		\Return{\(\phi \)}\;
 	}
 	\;
-	\(E^{\prime} \gets\)\LDD{\(G_{\geq 0}^B\), \(\kappa B / 2\)}\label{algo:scale-down-LDD}\;
+	\(E^{\prime} \gets\)\LDD{\(G_{+}^B\), \(\kappa B / 2\)}\label{algo:scale-down-LDD}\;
 	\(\{ H_i \} _{i=1}^{\ell }\gets\)\SCC{\(G - E^{\prime} \)}\;
 	\;
 	\For(\Comment*[f]{Recurse}){\(i = 1, \dots , \ell \)}{

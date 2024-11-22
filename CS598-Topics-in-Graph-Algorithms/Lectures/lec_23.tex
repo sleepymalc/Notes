@@ -1,0 +1,71 @@
+\lecture{23}{21 Nov.\ 11:00}{Push-Relabel Algorithm}
+The initial \hyperref[def:preflow]{preflow} is defined as \(f(e) = c(e)\) for all \(e \in \delta ^+(s)\), and \(0\) otherwise, and the initial \hyperref[def:label]{label} is defined as \(\ell (s) = n\) with \(\ell (t) = 0\), and also \(\ell (v) = 0\) for all \(v \in V \setminus \{ s, t \} \).
+
+\begin{intuition}
+	We always try to maintain the invariance that some cut is saturated, i.e., a \hyperref[def:preflow]{preflow} with value equal to some cut, hence more than the \hyperref[prb:s-t-max-flow]{max-flow}.
+\end{intuition}
+
+Define an activate set to be \(A \coloneqq \{ v \neq s, t \mid \operatorname{excess}(v) > 0 \} \). Consider two different operations:
+\begin{enumerate}[(i)]
+	\item Full push along forward edge \(e\) (w.r.t.\ the \hyperref[def:label]{label}) from \(v \in A\).
+	      \begin{itemize}
+		      \item \emph{Saturating} push: when \(\operatorname{excess}(v) > c(e)\), then we push \(c(e)\).
+		      \item \emph{Non-saturating} push: when \(\operatorname{excess}(v) \leq c(e)\), then we push \(\operatorname{excess}(v)\).
+	      \end{itemize}
+	\item If \(v \in A\) and has no forward arc, then relabel: \(\ell (v) \gets \ell (v) + 1\).
+\end{enumerate}
+
+By greedily doing the above two operations, we can prove that it'll terminate in \(O(mn^2)\) time. With a bit more careful, this is actually \(O(n^3)\). This can be further improved to \(O(n^2 \sqrt{m} )\).
+
+\begin{lemma}\label{lma:push-relabel-distance}
+	We see that \(\ell (u) - \ell (v) \leq d_{G_f}(u, v)\).
+\end{lemma}
+\begin{proof}
+	This is because we restrict that any forward arc can only have label more than \(1\).
+\end{proof}
+
+We see that since \(\ell (s) = n\) and \(\ell (t) = 0\) always, hence \(\ell (s) - \ell (t) = n \leq d_{G_f}(s, t)\), i.e., \(s\) can't reach \(t\) in \(G_f\).
+
+\begin{lemma}\label{lma:push-relabel-cut}
+	Suppose \(f\) is a \hyperref[def:preflow]{preflow} that the label invariants and \(\operatorname{excess}(v) = 0\) for all \(v \neq s, t\). Then there exists an index \(i\) such that \(U = \{ v \in V \mid \ell (v) > i \} \) induces an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
+\end{lemma}
+\begin{proof}
+	Specifically, from the Pigeonhole principle, there exists some \(i\) such that no vertices are labeled as \(i\). Then, by the flow-conservation, the cut \(U\) value is equal to the flow value (just as the classical proof of \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}), we're done.
+\end{proof}
+
+\begin{lemma}\label{lma:push-relabel-path}
+	If \(v \in A\), then there is a path from \(v\) to \(s\) in \(G_f\).
+\end{lemma}
+\begin{proof}
+	This is by induction.
+\end{proof}
+
+\begin{lemma}\label{lma:push-relabel-label}
+	For each \(v\), \(\ell (v)\)  is non-decreasing, non-negative, and is at most \(2n - 1\).
+\end{lemma}
+\begin{proof}
+	From \autoref{lma:push-relabel-path} and \autoref{lma:push-relabel-distance}, this is easy.
+\end{proof}
+
+We see that the cost of relabeling is at most \(O(n^2)\) from \autoref{lma:push-relabel-label}.
+
+\begin{lemma}
+	The number of saturating pushes is \(O(mn)\).
+\end{lemma}
+\begin{proof}
+	For any fixed arc \((u, v)\), to push, we know that \(\ell (v) = \ell (u) + 1\). To do a saturating push again along \((u, v)\), the label of \(v\) needs to be relabeled above \(u\) in the first place, i.e., \(\ell (v)\) needs to go up by at least \(2\). Hence, the total number of this can happen is \(O(n)\). There are \(O(m)\) edges in the residual graph, so we're done.
+\end{proof}
+
+\begin{lemma}
+	The number of non-saturating function is \(O(mn^2)\).
+\end{lemma}
+\begin{proof}
+	Consider a potential \(\phi = \sum_{v \in A} \ell (v)\). We see that for a saturating push, the potential can go up by at most \(2n - 2\), hence the potential can go up to at most \(O(mn^2)\). However, for every non-saturating function, one can argue that the potential decrease by at least \(1\). Hence, we're done.
+\end{proof}
+
+\begin{lemma}
+	Consider only doing operation for the vertex with the highest label. Then this is \(O(n^3)\).
+\end{lemma}
+\begin{proof}
+	We see that if we do this, then consider a fixed vertex \(u\). At each label level \(i\), \(u\) can only do \(O(n)\) non-saturating push since some vertex will need to first go higher than \(i\) and push to \(u\) again to make it active.
+\end{proof}

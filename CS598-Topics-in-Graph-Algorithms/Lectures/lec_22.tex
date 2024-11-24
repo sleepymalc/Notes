@@ -4,10 +4,10 @@ We have mentioned the \hyperref[prb:s-t-max-flow]{max-flow} problem multiple tim
 
 Notably, all the algorithms we will see are based on the \hyperref[def:augmenting-path]{augmenting path} approach, first introduced by Ford and Fulkerson~\cite{ford1956maximal}.
 
-\section{Shortest Augmenting Path}
-In this section, we first introduce the \emph{augmenting path framework} formally, and briefly talk about a naive algorithm for solving \hyperref[prb:s-t-max-flow]{max-flow} in \(O(m^2 n)\) time~\cite{dinic1970algorithm,edmonds1972theoretical} (\cite{dinic1970algorithm} includes additional techniques that reduce the running time to \(O(m n^2)\) as we will see later).
+\section{Augmenting Path Framework}
+In this section, we first introduce the \emph{augmenting path framework} formally, and briefly talk about a naive algorithm for solving \hyperref[prb:s-t-max-flow]{max-flow} in \(O(m^2 n)\) time~\cite{dinic1970algorithm,edmonds1972theoretical} (Dinitz includes additional techniques that reduce the running time to \(O(m n^2)\) as we will see later).
 
-\subsection{Augmenting Path Framework}
+\subsection{Ford-Fulkerson Algorithm}
 Consider a directed graph \(G = (V, E)\) with capacities \(c \colon E \to \mathbb{R} _{+}\). In the augmenting path framework, algorithms repeatedly find an \hyperref[def:augmenting-path]{augmenting path} (or a collection of them) in the \hyperref[def:residual-graph]{residual graph}:
 
 \begin{definition}[Augmenting path]\label{def:augmenting-path}
@@ -32,7 +32,6 @@ We then augment, i.e., add, the \hyperref[def:flow]{flow} along this path with a
 	\caption{Ford-Fulkerson Algorithm~\cite{ford1956maximal}}
 	\KwData{A connected directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), source \(s\), sink \(t\)}
 	\KwResult{\hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} \(f\)}
-	\SetKwFunction{sample}{Sample}
 	\BlankLine
 	\(f \gets 0\)\;
 	\;
@@ -62,20 +61,27 @@ There are several variants we can do when finding the \hyperref[def:augmenting-p
 With \autoref{thm:max-flow-min-cut*}, we can prove the following.
 
 \begin{theorem}\label{thm:Ford-Fulkerson}
-	\autoref{algo:Ford-Fulkerson} computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral edge capacities in \(O(m \lvert f^{\ast} \rvert)\) time, where \(f^{\ast} \) is the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} value.
+	\autoref{algo:Ford-Fulkerson} computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral edge capacities in \(O(m \lvert f^{\ast} \rvert)\) time, where \(\lvert f^{\ast} \rvert \) is the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} value.
 \end{theorem}
 \begin{proof}
 	The correctness is from \autoref{thm:max-flow-min-cut*}. For the runtime, since each \hyperref[def:augmenting-path]{augmenting path} computation can be easily done in \(O(m)\) time with BFS, and for each augmentation, the \hyperref[def:flow]{flow} value increased by at least \(1\).
 \end{proof}
 
-\begin{remark}
-	Let \(C = \max _{e \in E} c(e)\), then \autoref{algo:Ford-Fulkerson} actually runs in \(O(mnC)\).
-\end{remark}
-\begin{explanation}
-	From \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}, we know that \(\lvert f^{\ast} \rvert \) is equal to the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} cost, which is less than \(c(\delta ^+(\{ s \} ))\) for example. Then since \(c(\delta ^+(\{ s \} )) \leq n C\), we have \(\lvert f^{\ast} \rvert \leq nC\), hence the algorithm runs in \(O(mnC)\).
-\end{explanation}
+\begin{corollary}
+	There exists an integral \hyperref[prb:s-t-max-flow]{max-flow} when the graph is with integral capacities.
+\end{corollary}
+\begin{proof}
+	It is obvious from the proof of \autoref{thm:Ford-Fulkerson}.
+\end{proof}
 
-We see that \autoref{thm:Ford-Fulkerson} proves that the naive implementation of \autoref{algo:Ford-Fulkerson} does not lead to a truly polynomial time algorithm since the running time depend linearly on \(C\).
+\begin{corollary}\label{col:Ford-Fulkerson}
+	Let \(W = \max _{e \in E} c(e)\), then \autoref{algo:Ford-Fulkerson} actually runs in \(O(mn W)\).
+\end{corollary}
+\begin{proof}
+	From \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}, we know that \(\lvert f^{\ast} \rvert \) is equal to the \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut} cost, which is less than \(c(\delta ^+(\{ s \} ))\) for example. Then since \(c(\delta ^+(\{ s \} )) \leq n C\), we have \(\lvert f^{\ast} \rvert \leq nC\), hence the algorithm runs in \(O(mn W)\).
+\end{proof}
+
+We see that \autoref{col:Ford-Fulkerson} proves that the naive implementation of \autoref{algo:Ford-Fulkerson} does not lead to a truly polynomial time algorithm since the running time depend linearly on \(W\).
 
 \subsection{Maximum Bottleneck Capacity Augmenting Path}
 To be a bit more careful, the next idea is to always choose an \hyperref[def:augmenting-path]{augmenting path} \(P\) that has the maximum bottleneck capacity \(\max _{e \in P} c_f(e)\) in \autoref{algo:Ford-Fulkerson-augmenting-path}. Such an \hyperref[def:augmenting-path]{augmenting path} can be found in \(O(m \log n)\) time via binary search over the capacity of the bottleneck edge, and, for each guess, check for the \(s\)-\(t\) path in \(G_f\) after all the edges with capacity less than the guess were removed.
@@ -91,15 +97,15 @@ To see this leads to an actual improvement, we want to know how much progress ea
 \end{prev}
 
 \begin{theorem}\label{thm:Ford-Fulkerson-max-bottleneck}
-	By choosing the maximum bottleneck capacity \hyperref[def:augmenting-path]{augmenting path} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral edge capacities in \(O(m^2 \log n \log nC)\) time, where \(C = \max _{e \in E} c(e)\).
+	By choosing the maximum bottleneck capacity \hyperref[def:augmenting-path]{augmenting path} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral edge capacities in \(O(m^2 \log n \log nW)\) time, where \(W = \max _{e \in E} c(e)\).
 \end{theorem}
 \begin{proof}
 	If we apply the above observation to the maximum ``remaining'' \hyperref[def:flow]{flow}, i.e., the maximum \hyperref[def:flow]{flow} in the \hyperref[def:residual-graph]{residual graph} \(G_f\) together with an averaging argument, we can conclude that at least one of these paths carries at least \(1 / m\)-fraction of the remaining value of the \hyperref[def:flow]{flow}. Hence, each \hyperref[def:flow]{flow} augmentation reduces the remaining value of the \hyperref[def:flow]{flow} by a factor of \(1 - 1 / m\).
 
-	After \(O(m \log \lvert f^{\ast} \rvert )\) augmentations, the remaining flow would be less than \(1\). Since we have integral capacities, the obtained solution has to be optimal. We conclude that the overall running time is \(O(m \log n \cdot m \log \lvert f^{\ast} \rvert ) = O(m^2 \log n \log nC)\).
+	After \(O(m \log \lvert f^{\ast} \rvert )\) augmentations, the remaining flow would be less than \(1\). Since we have integral capacities, the obtained solution has to be optimal. We conclude that the overall running time is \(O(m \log n \cdot m \log \lvert f^{\ast} \rvert ) = O(m^2 \log n \log nW)\).
 \end{proof}
 
-\autoref{thm:Ford-Fulkerson-max-bottleneck} proves that \autoref{algo:Ford-Fulkerson} with choosing maximum bottleneck capacity \hyperref[def:augmenting-path]{augmenting path} leads to a weak polynomial time algorithm since the running time now only depend on \(\log C\), which is the same as the capacity representation. However, we can ask for more.
+\autoref{thm:Ford-Fulkerson-max-bottleneck} proves that \autoref{algo:Ford-Fulkerson} with choosing maximum bottleneck capacity \hyperref[def:augmenting-path]{augmenting path} leads to a weak polynomial time algorithm since the running time now only depend on \(\log W\), which is the same as the capacity representation. However, we can ask for more.
 
 \subsection{Shortest Augmenting Path}
 The next idea leads to a strongly polynomial time algorithm. Unlike the maximum bottleneck approach, which still depend on the value representation; instead, this algorithm runs in \(O(m^2 n)\)~\cite{edmonds1972theoretical} via a naive implementation. The whole idea is to implement \autoref{algo:Ford-Fulkerson-augmenting-path} by choosing the shortest \hyperref[def:augmenting-path]{augmenting path} (shortest w.r.t.\ the number of edges).
@@ -117,7 +123,7 @@ Therefore, as the value of the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}
 The question then is, can we make this yes/no statement quantitative to also be able to differentiate between the \hyperref[def:flow]{flows} that are ``almost maximum'' and the ones that might be ``far'' from being maximum? To this end, consider the \(s\)-\(t\) distance \(d_f(s, t)\) in \(G_f\), where each edge with positive residual capacity has length one, and every edge with zero residual capacity has length \(+\infty \). The intuition of considering \(d_f(s, t)\) is the following.
 
 \begin{intuition}
-	Any \hyperref[def:flow]{flow} in \(G_f\) has to have a fixed total volume (at most \(m\), if all capacities are \(1\)). Hence, if \(s\) and \(t\) are far apart, then not much \hyperref[def:flow]{flow} can fit in \(G_f\), as each \hyperref[def:flow]{flow} path has to utilize a lot of volume.
+	Any \hyperref[def:flow]{flow} in \(G_f\) has a fixed total volume (\(\leq m\) for unit capacity graph). Hence, if \(s\) and \(t\) are far apart, then not much \hyperref[def:flow]{flow} can fit in \(G_f\), as each \hyperref[def:flow]{flow} path has to utilize a lot of volume.
 \end{intuition}
 
 Specifically, observe that if \(d_f(s, t) \geq n\), then \(s\) and \(t\) are disconnected in \(G_f\), meaning that \(f\) is already a \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}. Hence, naturally, our new goal is to design an \hyperref[def:augmenting-path]{augmenting path} based algorithm that aims to increase the \(s\)-\(t\) distance \(d_f(s, t)\) in \(G_f\).
@@ -169,7 +175,7 @@ We note that finding the shortest \hyperref[def:augmenting-path]{augmenting path
 By symmetry, we can argue that the distance from any \(v\) to \(t\) is also non-decreasing. Hence, augmenting the \hyperref[def:flow]{flow} using shortest paths indeed does not make things worse. We can further show that we're indeed making progress.
 
 \begin{lemma}\label{lma:shortest-augmenting-path-progress}
-	There are at most \(mn / 2\) shortest path \hyperref[def:flow]{flow} augmentations can be made before \(d_f(s, t) \geq n\).
+	At most \(mn / 2\) shortest path augmentations can be made before \(d_f(s, t) \geq n\).
 \end{lemma}
 \begin{proof}
 	We first note that each augmentation saturates at least one bottlenecking edge \((u, v)\). For an already saturated edge, before it can be saturated again in some subsequent augmentation, we must have pushed some \hyperref[def:flow]{flow} via an \hyperref[def:augmenting-path]{augmenting path} that contained the opposite edge \((v, u)\).
@@ -193,37 +199,201 @@ By symmetry, we can argue that the distance from any \(v\) to \(t\) is also non-
 Hence, we have the following.
 
 \begin{theorem}\label{thm:Ford-Fulkerson-shortest-path}
-	By choosing the shortest \hyperref[def:augmenting-path]{augmenting path} (w.r.t.\ \(d_f(s, t)\)) in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral edge capacities in \(O(m^2 n)\) time.
+	By choosing the shortest \hyperref[def:augmenting-path]{augmenting path} (w.r.t.\ \(d_f(s, t)\)) in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) in \(O(m^2 n)\) time.
 \end{theorem}
 \begin{proof}
 	From \autoref{lma:shortest-augmenting-path-progress}, we know that at most \(O(mn / 2)\) augmentations is needed. Since finding each shortest \hyperref[def:augmenting-path]{augmenting path} requires \(O(m)\), the total running time takes \(O(m^2 n)\).
 \end{proof}
 
+\begin{remark}
+	\autoref{thm:Ford-Fulkerson-shortest-path} does not require any integrality of the edge capacities.
+\end{remark}
+
 \section{Blocking Flow}
-Building on the shortest \hyperref[def:augmenting-path]{augmenting path} approach (\autoref{thm:Ford-Fulkerson-shortest-path}), Dinicltz uses the \emph{blocking flow} algorithm that speed up the running time to \(O(mn^2)\)~\cite{karzanov1973finding,dinic1970algorithm,goldberg1998beyond}. The idea is not to be wasteful:
+Dinitz then consider augmenting the so-called \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson-augmenting-path}, based on the analysis of the shortest \hyperref[def:augmenting-path]{augmenting path} approach in \autoref{thm:Ford-Fulkerson-shortest-path}. It turns out that this leads to a speedup of the running time from \(O(m^2 n)\) to \(O(mn^2)\)~\cite{karzanov1973finding,dinic1970algorithm,goldberg1998beyond}. The idea is not to be wasteful:
+
+\begin{prev}
+	Previously, we recompute the shortest \hyperref[def:augmenting-path]{augmenting path} using \(O(m)\) time for each augmentation. Each search for a path via BFS gives us the whole shortest path tree, but we're only using one path from it.
+\end{prev}
+
+The reason why this is wasteful is that augmenting along a single path can take \(m\) iterations before the current shortest \(s\)-\(t\) path distance in \(G_f\) increases by one. Instead of augmenting along a single path, we try to do this for a collection of paths.
 
 \begin{intuition}
-	Previously, we recompute the shortest \hyperref[def:augmenting-path]{augmenting path} using \(O(m)\) time for each augmentation. However, each search for a path via BFS gives us the whole shortest path tree, but we're only using one path from it, which is wasteful.
+	If we find a flow \(g\) in \(G_f\) such that \(g\) \emph{blocks} all \(s\)-\(t\) shortest paths of length at most \(d\), then after adding \(g\) to \(f\) in the \hyperref[def:residual-graph]{residual graph}, the shortest path distance increases by one. This can happen at most \(n\) times, since the shortest path distance between \(s\) and \(t\) is at most \(n\).
 \end{intuition}
 
-\begin{problem*}
-	Can we use this information to augment by more than one shortest \hyperref[def:augmenting-path]{augmenting path}?
-\end{problem*}
-\begin{answer}
-	By first building the BFS layer graph structure and then do adaptive DFS search.
-\end{answer}
+This intuition leads to the so-called \hyperref[def:blocking-flow]{blocking flow}, defined as follows.
 
-\begin{theorem}[Blocking flow]\label{thm:blocking-flow}
-	The blocking \hyperref[def:flow]{flow} algorithm takes \(O(mn + \lvert f^{\ast} \rvert n)\) time when capacities are integer and \(f^{\ast} \) is the \hyperref[prb:s-t-max-flow]{max-flow} value.
-\end{theorem}
+\begin{definition}[Blocking flow]\label{def:blocking-flow}
+	An \(s\)-\(t\) \hyperref[def:flow]{flow} \(f\) is a \emph{blocking flow} if for every \(s\)-\(t\) path \(p\), at least one edge in \(p\) is saturated by \(f\).
+\end{definition}
 
-For the case of unit capacity graph, it takes \(O(m \cdot \min (\sqrt{m} , n^{2 / 3}))\)~\cite{even1975network}.
+\begin{note}
+	In other words, a \hyperref[def:blocking-flow]{blocking flow} is a maximal \hyperref[def:flow]{flow} in that one cannot add greedily add \hyperref[def:flow]{flow} to \(f\) in \(G\), which is different from a \hyperref[prb:s-t-max-flow]{max-flow}.
+\end{note}
+
+To find a \hyperref[def:blocking-flow]{blocking flow} in a general graph \(G\), we can do a simple greedy search, where in each iteration we find an \(s\)-\(t\) path and augment along the path to saturate one additional edge. The capacities along the path are reduced and those that saturated are not considered in future path selections.
+
+\begin{note}
+	We are not computing a \hyperref[def:residual-graph]{residual graph} in this process.
+\end{note}
+
+It's clear that the greedy algorithm will terminate in \(O(m)\) iterations, and a naive implementation takes \(O(m^2)\) time. We claim the following while refer the proof to \autoref{lma:blocking-flow-progress} for a special case.
+
+\begin{claim}
+	Suppose \(f\) is a \hyperref[def:blocking-flow]{blocking flow} in \(G\), then \(d_{G_f}(s, t) > d_{G}(s, t)\).
+\end{claim}
+
+The above basically just a restatement of the intuition we have. This leads to an \(O(m^2 n)\) algorithm, since we know that we only need to augment \(n\) times, where in each iteration, we find a \hyperref[def:blocking-flow]{blocking flow} \(g\) in \(G_f\) and augment along \(g\). We see that this algorithm's running time is the same as \autoref{thm:Ford-Fulkerson-shortest-path}.
+
+\subsection{Blocking Flow in Layer Graph}
+The key observation that leads to an improvement from \(O(m^2 n)\) to \(O(mn^2)\) is that instead of finding a \hyperref[def:blocking-flow]{blocking flow} in the entire graph \(G_f\), it suffices to find it only in the ``layer graph'' consisting of the ``forward edges'' in the BFS computation. We first formalize the notion of ``forward edge'' as follows.
+
+\begin{definition}[Admissible]\label{def:admissible}
+	Given a directed graph \(G = (V, E)\) and a source \(s \in V\), an edge \(e \in E\) is \emph{admissible} if it points away from \(s\), i.e., \(e\) is a part of some \(s\)-\(v\) shortest path for some \(v \in V\).
+\end{definition}
+
+We can also talk about the \hyperref[def:admissible]{admissible} graph, i.e., the graph \((V, E^{\prime} )\) where \(E^{\prime} \) is the set of all \hyperref[def:admissible]{admissible} edges.\footnote{Implicitly, we will discard edges (and nodes) with distance beyond \(d(s, t)\).} Meanwhile, the \hyperref[def:admissible]{admissible} path is a path in the \hyperref[def:admissible]{admissible} graph.
+
+\begin{note}
+	The \hyperref[def:admissible]{admissible} edges ``hop''\footnote{This is different from the previous notion of ``\hyperref[not:hop]{hop}'' for negative edges.} exactly one BFS layer, and all other edges either stay in the same layer or go back.
+\end{note}
+
+The whole reason why augmenting \hyperref[def:blocking-flow]{blocking flows} on the \hyperref[def:admissible]{admissible} graph works is because we can still guarantee that we're making progress:
+
+\begin{lemma}\label{lma:blocking-flow-progress}
+	Suppose \(g\) is a \hyperref[def:blocking-flow]{blocking flow} in the \hyperref[def:admissible]{admissible} graph of \(G_f\), then \(d_{f^{\prime} }(s, t) > d_f(s, t)\), where \(f^{\prime} = f + g\).
+\end{lemma}
+\begin{proof}
+	Let \(f\) and \(f^{\prime} \) be the \hyperref[def:flow]{flow} before and after augmentation via the \hyperref[def:blocking-flow]{blocking flow} \(g\). Since every edge on a shortest \(s\)-\(t\) path in \(G_f\) has to ``hop'' exactly one BFS layer, hence it has to be \hyperref[def:admissible]{admissible}. Furthermore, augmentation does not create in \(G_{f^{\prime} }\) any edges that would be \hyperref[def:admissible]{admissible} in \(G_f\), i.e., no new arcs in \(G_{f^{\prime} }\) would ``hop'' a BFS layer in \(G_f\).
+
+	After the augmentation, there is some \(s\)-\(t\) cut in \(G_f\) such that all its \hyperref[def:admissible]{admissible} edges are saturated. Hence, every \(s\)-\(t\) path in \(G_{f^{\prime} }\) now has to use at least one edge that would not be \hyperref[def:admissible]{admissible} in \(G_f\), so that edge would not hop a BFS layer in \(G_f\). But, every edge in \(G_{f^{\prime} }\) as well as \(G_f\) can hop at most one BFS layer in \(G_f\), so there is no way for an \(s\)-\(t\) path in \(G_{f^{\prime} }\) to make up for not hopping a \(G_f\) BFS layer at least once. All such paths had to have length larger than the \(s\)-\(t\) distance in \(G_f\), hence the \(s\)-\(t\) distance in the new graph had to increase by at least one.
+\end{proof}
+
+Hence, we can again conclude that after at most \(n\) \hyperref[def:blocking-flow]{blocking flow} computations, we will have an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}. But this time, the \hyperref[def:blocking-flow]{blocking flow} computations only need to be done on a smaller \hyperref[def:admissible]{admissible} graph. This is faster since computing \hyperref[def:blocking-flow]{blocking flow} in a layer DAG (e.g., the \hyperref[def:admissible]{admissible} graph) can be done faster than the naive greedy algorithm in a general graph by ``adaptive DFS search''.
+
+\begin{intuition}
+	Augmenting the \hyperref[def:flow]{flow} using an \hyperref[def:admissible]{admissible} path does not create new \hyperref[def:admissible]{admissible} edges in the \hyperref[def:residual-graph]{residual graph}. Hence, when we saturate an edge on an \hyperref[def:admissible]{admissible} path, we can just discard it, as the reverse arc is never \hyperref[def:admissible]{admissible}.
+\end{intuition}
+
+Next, we discuss how to do this type of adaptive DFS search formally.
+
+\subsection{Unit Capacity Graph}
+Let's first consider the case of unit capacity graph. For unit capacity graph, we observe that a \hyperref[def:blocking-flow]{blocking flow} in the \hyperref[def:admissible]{admissible} graph corresponds to a maximal collection of edge-disjoint \hyperref[def:admissible]{admissible} path. Since we're now finding maximal set, greedy is usually the best strategy. Specifically, consider running a DFS starting at \(s\):
 \begin{itemize}
-	\item suppose there is only \(d\) depth, then there exists two adjacent layers with edges between them \(O(m / d)\). this gives \(O(md + m \cdot m / d)\). Choosing \(d = \sqrt{m} \) minimizes it.
-	\item Suppose \(d \geq n^{2 / 3}\). Then one can prove that there exists two adjacent layers such that each of them have less than \(2 n^{1 / 3}\) nodes.
+	\item In each step, \emph{advance} along an unexplored outgoing \hyperref[def:admissible]{admissible} edge.
+	\item If reach \(t\), retrace the path back to \(s\) and \emph{block} it by adding it to the \hyperref[def:blocking-flow]{blocking flow} (with value to be the bottleneck) and discarding all edges on this path.
+	\item If reach a vertex \(v \neq t\) with no outgoing \hyperref[def:admissible]{admissible} edges, \emph{retreat} back along the edge we came from to \(v\) and discard it.
+	\item Once there is no admissible edges leaving \(s\), return the \hyperref[def:blocking-flow]{blocking flow}.
 \end{itemize}
 
-Scaling algorithm. Suppose \(c(e) \in \mathbb{Z} _{+}\), and \(C\) is the maximum capacity of any arc. Look at the bit representation of \(c(e)\). In the first iteration, look at the most significant bit of \(c(e)\)'s, and do the unit capacity algorithm (taking \(O(mn)\)) time. Then in the next iteration, we have \(c^{\prime} (e) = 2 c(e) + b_e\) for \(b_e \in \{ 0, 1 \} \). In this case, we have \(f^{\prime} (e) = 2 f(e)\). Then, the residual graph \(G_{f^{\prime} }\), there is a min-cut with capacity at most \(m\). Hence, we can run \autoref{thm:blocking-flow} which takes \(O(mn)\) again, hence the total running time is \(O(mn \log C)\).
+This seems much like just search for an \hyperref[def:augmenting-path]{augmenting path}, but actually this is not.
+
+\begin{intuition}
+	The key difference is that we can save information about which part of the graph we already explored, hence this is ``adaptive.''
+\end{intuition}
+
+Crucially, as we never add new \hyperref[def:admissible]{admissible} edges, once a vertex is a dead end, it stays that way. This is why it is fine for us to discard an edge upon retreat.
+
+\begin{theorem}\label{thmj:Ford-Fulkerson-blocking-flow-unit}
+	By choosing the \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with unit capacities in \(O(mn)\) time.
+\end{theorem}
+\begin{proof}
+	With \autoref{lma:blocking-flow-progress}, we only need to prove that the above adaptive DFS search takes \(O(m)\) for finding a \hyperref[def:blocking-flow]{blocking flow} in the \hyperref[def:admissible]{admissible} graph. There are three types of operations:
+	\begin{itemize}
+		\item \emph{Retreat}: There is at most \(m\) retreats, as we always discard the edge when we do that. Hence, the total cost is \(O(m)\).
+		\item \emph{Advance}: Advances can be charged to the total cost of retreats and blocks corresponding to traversing back the edge.
+		\item \emph{Block}: Each blocking of a path \(P\) takes \(O(\lvert P \rvert )\) time, but also discards \(\lvert P \rvert \) edges. Hence, with amortization, it is \(O(1)\) per edge. The total time is then \(O(m)\).
+	\end{itemize}
+	Hence, the total cost is \(O(m)\), which proves that the total runtime is \(O(mn)\).
+\end{proof}
+
+However, this is just like our naive algorithm from \autoref{col:Ford-Fulkerson}, which takes \(O(mnW) = O(mn)\) as \(W = 1\) in this case. The upshot is that our analysis can be improved:
+
+\begin{corollary}[\cite{even1975network}]\label{col:Ford-Fulkerson-blocking-flow-unit}
+	\autoref{thmj:Ford-Fulkerson-blocking-flow-unit} can be improved to \(O(m \cdot \min (\sqrt{m} , n^{2 / 3}))\).
+\end{corollary}
+\begin{proof}
+	We prove the first case and sketch the second.
+
+	\begin{claim}
+		We can improve the bound to be \(O(m^{3 / 2})\).
+	\end{claim}
+	\begin{explanation}
+		Suppose we already did \(k\) \hyperref[def:blocking-flow]{blocking flows}. Consider the \hyperref[prb:s-t-max-flow]{max-flow} in the \hyperref[def:residual-graph]{residual graph}: if we decompose it into paths, then the number of these paths will be exactly the value of the remaining \hyperref[def:flow]{flow}. Since we have done \(k\) \hyperref[def:blocking-flow]{blocking flows}, the \(s\)-\(t\) distance in the \hyperref[def:residual-graph]{residual graph} is greater than \(k\), hence, each of these \hyperref[def:flow]{flow} paths has length greater than \(k\).
+
+		Since these \hyperref[def:flow]{flow} paths are edge-disjoint, with their total volume being \(m\), the number of these \hyperref[def:flow]{flow} paths is less than \(m / k\). Each \hyperref[def:blocking-flow]{blocking flow} increases the value of the \hyperref[def:flow]{flow} by at least one, as there always is at least one \hyperref[def:admissible]{admissible} path. Hence, \(m / k\) additional \hyperref[def:blocking-flow]{blocking flows}\footnote{Or even just \hyperref[def:augmenting-path]{augmenting paths} can do the job.} suffices. Combing the above, the total running time is then \(O(m (k + m / k))\) from \autoref{thmj:Ford-Fulkerson-blocking-flow-unit}, which is minimized when \(k = \sqrt{m} \), giving \(O(m^{3 / 2})\) as desired.
+	\end{explanation}
+
+	\begin{claim}
+		We can improve the bound to be \(O(mn^{2 / 3})\).
+	\end{claim}
+	\begin{explanation}
+		Suppose \(k \geq n^{2 / 3}\). Then one can prove that there exists two adjacent layers in the BFS \hyperref[def:admissible]{admissible} graph such that each of them have less than \(2 n^{1 / 3}\) nodes. Via a similar argument, we can prove the desired \(O(mn^{2 / 3})\) bound.
+	\end{explanation}
+
+	By combining the above two cases, we're done.
+\end{proof}
+
+\subsection{General Graph}
+For general graph, as we promised at the beginning of this section, we can achieve \(O(mn^2)\) running time~\cite{karzanov1973finding,dinic1970algorithm,goldberg1998beyond}. To prove this, we look into what breaks for the adaptive DFS search for unit capacity case when we try the same analysis as in \autoref{thmj:Ford-Fulkerson-blocking-flow-unit} for general graphs.
+
+\begin{theorem}\label{thm:Ford-Fulkerson-blocking-flow-general}
+	By choosing the \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral capacities in \(O(mn^2)\) time.
+\end{theorem}
+\begin{proof}
+	From the previous adaptive DFS search algorithm, the basic idea of \emph{advance}, \emph{retreat}, and \emph{block} are still valid. In particular, every \emph{advance} is still paid for by costs of corresponding \emph{retreat} or \emph{block}. Moreover, all \emph{retreats} still cost \(O(m)\) in total.
+
+	Hence, the key problem is that augmentation might saturate only one (bottlenecking) edge on the path, and each \emph{block} now costs \(O(n)\) as only one bottlenecking edge can be discarded per \emph{block}. Therefore, the \hyperref[def:blocking-flow]{blocking flow} computation now takes \(O(mn)\) time, proving the result.
+\end{proof}
+
+\begin{intuition}
+	Using \hyperref[def:blocking-flow]{blocking flows} enables us to charge \(m\) into \(n\) because of the resulting more efficient search for \hyperref[def:augmenting-path]{augmenting paths}.
+\end{intuition}
+
+In fact, we can make the above intuition stronger via an even more careful analysis.
+
+\begin{corollary}\label{col:Ford-Fulkerson-blocking-flow-general}
+	By choosing the \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral capacities in \(O(mn + \lvert f^{\ast} \rvert n)\) time, where \(\lvert f^{\ast} \rvert \) is the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} value.
+\end{corollary}
+\begin{proof}
+	Since each \emph{block} corresponds to finding a new \hyperref[def:augmenting-path]{augmenting path}, hence, each \emph{block} increases the value of the \hyperref[def:flow]{flow} by at least \(1\). This means that the total cost of \emph{blocks} is only \(O(n \lvert f^{\ast} \rvert )\). Thus, the running time is actually \(O(mn + n \lvert f^{\ast} \rvert ) = O((m + \lvert f^{\ast} \rvert) n)\).
+\end{proof}
+
+In other words, the \hyperref[def:blocking-flow]{blocking flow} approach takes \(O(n)\) time ``per unit of flow routed,'' while the basic/naive \hyperref[def:augmenting-path]{augmenting path} approach took \(O(m)\) time (this is true even if capacities are not unit) as shown in \autoref{thm:Ford-Fulkerson-shortest-path}.
+
+\subsection{Scaling Technique}
+Since we're dealing with integral capacities, we can utilize the idea of \emph{scaling}, just like what we have seen in \autoref{algo:SSSP-scaling}. The general idea is still the same:
+
+\begin{intuition}
+	Apply the ``unit case'' algorithm to obtain a ``general numerical case'' algorithm. In particular, number consists of bits, and bits can correspond to unit case!
+\end{intuition}
+
+\begin{note}
+	One can think of scaling as a reverse process of rounding.
+\end{note}
+
+To see how this work, let's start with an optimal solution to the rounded down instance (i.e., dropping low order bits). Then we can repeatedly put back next dropped bit (starting from the highest to the lowest order bits). Then, the solution is most likely no longer optimal in this new ``perturbed'' instance, but we fix up the solution by making it optimal again. The benefit is that fixing up the solution often correspond to solving the original problem in ``unit case,'' which in some sense reduce the general case to unit case.
+
+To do this for the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} problem, we first note that the capacities are represented as \(\log W\) bit integer numbers, where \(W = \max _{e \in E} c(e)\) is the maximum capacity of any edge as before.
+
+Look at the bit representation of \(c(e)\). In the first iteration, look at the most significant bit of \(c(e)\)'s, and do the unit capacity algorithm (taking \(O(mn)\)) time. Then in the next iteration, we have \(c^{\prime} (e) = 2 c(e) + b_e\) for \(b_e \in \{ 0, 1 \} \). In this case, we have \(f^{\prime} (e) = 2 f(e)\). Then, the residual graph \(G_{f^{\prime} }\), there is a min-cut with capacity at most \(m\). Hence, we can run \autoref{thm:Ford-Fulkerson-blocking-flow-general} which takes \(O(mn)\) again, hence the total running time is \(O(mn \log W)\).
+
+We first round them down completely, i.e., start with all capacities \(0\). In this case, finding an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} is trivial. Then, we roll in one bit of capacity at a time, starting with the most significant bit and working down.
+
+Specifically, after each roll in, we update the current \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} by augmenting it to an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} solution in the new graph. The effect of rolling in one bit is that all capacities doubled and then some of them additionally increased by \(1\). This leads to a simple update rule: we first double our current flow too, which we know that it will remain a feasible flow in our graph. In the \hyperref[def:residual-graph]{residual graph}, all residual capacities double and then some of them increased by \(1\) too.
+
+The crucial observation is that since our flow was optimal before, there must have existed an \(s\)-\(t\) cut \(S^{\ast} \) with its residual capacity be \(0\) Hence, after rolling in a new bit and doubling the flow, this cut has residual capacity being at most \(m\). So, even if we use the basic augmenting path-based augmentation, after at most \(m\) such augmentation, we will find the new optimum.
+
+For the \hyperref[def:blocking-flow]{blocking flow}, we see that after the bit shifting and doubling the current flow, finding the new optimum boils down to solving \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} in a graph with a \hyperref[prb:s-t-max-flow]{max-flow} value \(\lvert f^{\ast} \rvert \leq m\). From \autoref{col:Ford-Fulkerson-blocking-flow-general}, we know that this takes \(O(mn)\) time. As there are only \(O(\log W)\) shiftings, the total running time of the algorithm is \(O(mn \log W)\). This is a big improvement compared to \autoref{col:Ford-Fulkerson-blocking-flow-general}, just that this is no longer strongly polynomial time.
+
+\begin{note}
+	In a sense, we took an algorithm that worked well only for unit capacity case (i.e., basic \hyperref[def:augmenting-path]{augmenting path}-based algorithm) and applied it in a fairly generic manner to a general-capacity case.\footnote{Observe though that the \hyperref[def:residual-graph]{residual graphs} after the roll-in do not need to be unit-capacity: we only know that about the \(s\)-\(t\) cut \(S^{\ast} \).}
+\end{note}
+
+\begin{remark}
+	One can apply the same idea to improve \autoref{thm:Ford-Fulkerson-max-bottleneck} to be \(O(m^2 \log W)\).
+\end{remark}
 
 \subsection{Link-Cut Tree}
 \begin{definition}[Link-cut tree]\label{def:link-cut-tree}
@@ -246,30 +416,3 @@ One can maintain this data structure in amortized \(O(\log n)\) time for each op
 \end{intuition}
 
 Hence, the total cost is \(O(m n \log n)\).
-
-\section{Push-Relabel}
-On the other hand, another approach utilize the so-called \hyperref[def:preflow]{preflow}.\cite{goldberg1988new}
-
-\begin{definition}[Preflow]\label{def:preflow}
-	\(f \colon E \to \mathbb{R} _{+}\) is a \emph{preflow} if
-	\begin{enumerate}[(i)]
-		\item \(0 \leq f(e) \leq c(e)\) for all \(e \in E\);
-		\item \(\sum_{e \in \delta ^-(v)} f(e) \geq \sum_{e \in \delta ^+(v)}f(e) \) for all \(v \in V\).
-	\end{enumerate}
-\end{definition}
-
-So just like \hyperref[def:flow]{flow}, \hyperref[def:preflow]{preflow} violates the \hyperref[def:flow-conservation]{flow conservation} constraint.
-
-\begin{notation}
-	For a \hyperref[def:preflow]{preflow} \(f\), the \emph{excess} at \(v\) is defined as \(\sum_{e \in \delta ^-(v)} f(e) - \sum_{e \in \delta ^+(v)} f(e)\).
-\end{notation}
-
-If the excess is \(0\) for all \(v \neq t\), then \(f\) is a \hyperref[def:flow]{flow}. The residual graph w.r.t.\ \hyperref[def:preflow]{preflow} \(f\) is the same as before.
-
-\begin{definition}[Label]\label{def:label}
-	\(\ell \colon V \to \mathbb{Z} _{+}\) is a \emph{label} if
-	\begin{enumerate}[(i)]
-		\item \(\ell (s) = n\) and \(\ell (t) = 0\);
-		\item if \((u, v) \in E(G_f)\), then \(\ell (v) \leq \ell (u) - 1\).
-	\end{enumerate}
-\end{definition}

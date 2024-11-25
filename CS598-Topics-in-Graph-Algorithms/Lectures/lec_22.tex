@@ -108,7 +108,7 @@ To see this leads to an actual improvement, we want to know how much progress ea
 \autoref{thm:Ford-Fulkerson-max-bottleneck} proves that \autoref{algo:Ford-Fulkerson} with choosing maximum bottleneck capacity \hyperref[def:augmenting-path]{augmenting path} leads to a weakly polynomial time algorithm since the running time now only depend on \(\log W\), which is the same as the capacity representation. However, we can ask for more.
 
 \subsection{Shortest Augmenting Path}
-The next idea leads to a strongly polynomial time algorithm. Unlike the maximum bottleneck approach, which still depend on the value representation; instead, this algorithm runs in \(O(m^2 n)\)~\cite{edmonds1972theoretical} via a naive implementation. The whole idea is to implement \autoref{algo:Ford-Fulkerson-augmenting-path} by choosing the shortest \hyperref[def:augmenting-path]{augmenting path} (shortest w.r.t.\ the number of edges).
+Unlike the maximum bottleneck approach, which depend on the value representation; instead, the next idea leads to an algorithm that runs in \(O(m^2 n)\)~\cite{dinic1970algorithm,edmonds1972theoretical} via a naive implementation. The key is to implement \autoref{algo:Ford-Fulkerson-augmenting-path} by choosing the shortest \hyperref[def:augmenting-path]{augmenting path} (shortest w.r.t.\ the number of edges). From now on, unless specified, the capacities are not necessarily integral.
 
 \begin{prev}
 	Maximum bottleneck capacity \hyperref[def:augmenting-path]{augmenting path} is ``primal greedy,'' i.e., it applies a greedy strategy in which we improve our current solution in each step and then lower bounded the progress made by each such step in terms of the value of the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}.
@@ -198,16 +198,12 @@ By symmetry, we can argue that the distance from any \(v\) to \(t\) is also non-
 
 Hence, we have the following.
 
-\begin{theorem}\label{thm:Ford-Fulkerson-shortest-path}
-	By choosing the shortest \hyperref[def:augmenting-path]{augmenting path} (w.r.t.\ \(d_f(s, t)\)) in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph in \(O(m^2 n)\) time.
+\begin{theorem}[\cite{dinic1970algorithm,edmonds1972theoretical}]\label{thm:Ford-Fulkerson-shortest-path}
+	By choosing the shortest \hyperref[def:augmenting-path]{augmenting path} (w.r.t.\ \(d_f(s, t)\)) in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with general capacities in \(O(m^2 n)\) time.
 \end{theorem}
 \begin{proof}
 	From \autoref{lma:shortest-augmenting-path-progress}, we know that at most \(O(mn / 2)\) augmentations is needed. Since finding each shortest \hyperref[def:augmenting-path]{augmenting path} requires \(O(m)\), the total running time takes \(O(m^2 n)\).
 \end{proof}
-
-\begin{remark}
-	\autoref{thm:Ford-Fulkerson-shortest-path} does not require any integrality of the edge capacities.
-\end{remark}
 
 \section{Blocking Flow}
 Dinitz then consider augmenting the so-called \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson-augmenting-path}, based on the analysis of the shortest \hyperref[def:augmenting-path]{augmenting path} approach in \autoref{thm:Ford-Fulkerson-shortest-path}. It turns out that this leads to a speedup of the running time from \(O(m^2 n)\) to \(O(mn^2)\)~\cite{karzanov1973finding,dinic1970algorithm,goldberg1998beyond}. The idea is not to be wasteful:
@@ -308,13 +304,13 @@ Crucially, as we never add new \hyperref[def:admissible]{admissible} edges, once
 	Hence, the total cost is \(O(m)\), which proves that the total runtime is \(O(mn)\).
 \end{proof}
 
-However, this is just like our naive algorithm from \autoref{col:Ford-Fulkerson}, which takes \(O(mnW) = O(mn)\) as \(W = 1\) in this case. The upshot is that our analysis can be improved:
+However, this is just like our naive algorithm from \autoref{col:Ford-Fulkerson}, which takes \(O(mnW) = O(mn)\) as \(W = 1\) in this case. The upshot is that our analysis can be improved for \emph{simple graph}:
 
 \begin{corollary}[\cite{even1975network}]\label{col:Ford-Fulkerson-blocking-flow-unit}
-	\autoref{thmj:Ford-Fulkerson-blocking-flow-unit} can be improved to \(O(m \cdot \min (\sqrt{m} , n^{2 / 3}))\).
+	\autoref{thmj:Ford-Fulkerson-blocking-flow-unit} can be improved to \(O(m \cdot \min (\sqrt{m} , n^{2 / 3}))\) for simple graph.
 \end{corollary}
 \begin{proof}
-	We prove the first case and sketch the second.
+	We prove the result in two cases.
 
 	\begin{claim}
 		We can improve the bound to be \(O(m^{3 / 2})\).
@@ -329,17 +325,26 @@ However, this is just like our naive algorithm from \autoref{col:Ford-Fulkerson}
 		We can improve the bound to be \(O(mn^{2 / 3})\).
 	\end{claim}
 	\begin{explanation}
-		Suppose \(k \geq n^{2 / 3}\). Then one can prove that there exists two adjacent layers in the BFS \hyperref[def:admissible]{admissible} graph such that each of them have less than \(2 n^{1 / 3}\) nodes. Via a similar argument, we can prove the desired \(O(mn^{2 / 3})\) bound.
+		Suppose we already did \(k\) \hyperref[def:blocking-flow]{blocking flows}. It's clear that there are at most \(k / 2\) different layers in the BFS \hyperref[def:admissible]{admissible} graph with vertices greater than \(2n / k\) from a counting argument. Then by the pigeonhole principle, there are two consecutive layers such that both have less than \(2n / k\) vertices. There can be at most \(O(n^2 / k^2)\) edges between these two layers. Observe that these edges form an \(s\)-\(t\) cut, hence the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} value is \(O(n^2 / k^2)\).
+
+		From a similar argument, we only need \(O(n^2 / k^2)\) additional \hyperref[def:blocking-flow]{blocking flows}, hence the total running time is \(O(m (k + n^2 / k^2))\) from \autoref{thmj:Ford-Fulkerson-blocking-flow-unit}, which is minimized when \(k = n^{2 / 3}\), giving \(O(mn^{2 / 3})\) as desired.
 	\end{explanation}
 
 	By combining the above two cases, we're done.
 \end{proof}
 
-\subsection{General Graph}
-For general graph, as we promised at the beginning of this section, we can achieve \(O(mn^2)\) running time~\cite{karzanov1973finding,dinic1970algorithm,goldberg1998beyond}. To prove this, we look into what breaks for the adaptive DFS search for unit capacity case when we try the same analysis as in \autoref{thmj:Ford-Fulkerson-blocking-flow-unit} for general graphs.
+\begin{remark}
+	The \(O(m \sqrt{m} )\) bound extends to multi-graphs, while \(O(mn^{2 / 3})\) bound does not.
+\end{remark}
+\begin{explanation}
+	This is clear from the counting argument for \(O(mn^{2 / 3})\), where we assume for two consecutive layers with each less than \(2n / k\) vertices, there are only \(O(n^2 / k^2)\) edges between them, which is not the case for multi-graphs.
+\end{explanation}
+
+\subsection{General Capacity Graph}
+For graph with general capacities, as we promised at the beginning of this section, we can achieve \(O(mn^2)\) running time~\cite{karzanov1973finding,dinic1970algorithm,goldberg1998beyond}. To prove this, we look into what breaks for the adaptive DFS search for unit capacity case when we try the same analysis as in \autoref{thmj:Ford-Fulkerson-blocking-flow-unit} for general graphs.
 
 \begin{theorem}\label{thm:Ford-Fulkerson-blocking-flow-general}
-	By choosing the \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with integral capacities in \(O(mn^2)\) time.
+	By choosing the \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with general capacities in \(O(mn^2)\) time.
 \end{theorem}
 \begin{proof}
 	From the previous adaptive DFS search algorithm, the basic idea of \hyperref[algo:adaptive-DFS-advance]{advance}, \hyperref[algo:adaptive-DFS-retreat]{retreat}, and \hyperref[algo:adaptive-DFS-block]{block} are still valid. In particular, every \hyperref[algo:adaptive-DFS-advance]{advance} is still paid for by costs of corresponding \hyperref[algo:adaptive-DFS-retreat]{retreat} or \hyperref[algo:adaptive-DFS-block]{block}. Moreover, all \hyperref[algo:adaptive-DFS-retreat]{\emph{retreats}} still cost \(O(m)\) in total.
@@ -354,7 +359,7 @@ For general graph, as we promised at the beginning of this section, we can achie
 In fact, we can make the above intuition stronger via an even more careful analysis.
 
 \begin{corollary}\label{col:Ford-Fulkerson-blocking-flow-general}
-	By choosing the \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with integral capacities in \(O(mn + \lvert f^{\ast} \rvert n)\) time, where \(\lvert f^{\ast} \rvert \) is the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} value.
+	By choosing the \hyperref[def:blocking-flow]{blocking flow} in \autoref{algo:Ford-Fulkerson}, the algorithm computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with general capacities in \(O(mn + \lvert f^{\ast} \rvert n)\) time, where \(\lvert f^{\ast} \rvert \) is the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} value.
 \end{corollary}
 \begin{proof}
 	Since each \hyperref[algo:adaptive-DFS-block]{block} corresponds to finding a new \hyperref[def:augmenting-path]{augmenting path}, hence, each \hyperref[algo:adaptive-DFS-block]{block} increases the value of the \hyperref[def:flow]{flow} by at least \(1\). This means that the total cost of \hyperref[algo:adaptive-DFS-block]{block} is only \(O(n \lvert f^{\ast} \rvert )\). Thus, the running time is actually \(O(mn + n \lvert f^{\ast} \rvert ) = O((m + \lvert f^{\ast} \rvert) n)\).
@@ -405,7 +410,7 @@ Formally, the idea of scaling leads to a weakly polynomial algorithm.
 	The same idea with \autoref{thm:Ford-Fulkerson} improves \autoref{thm:Ford-Fulkerson-max-bottleneck} to \(O(m^2 \log W)\).
 \end{remark}
 
-\subsection{Link/Cut Tree}
+\subsection{Data Structures for Blocking Flow}
 So far, our best strongly polynomial time algorithm runs in \(O(mn^2)\) (\autoref{thm:Ford-Fulkerson-blocking-flow-general}), and weakly polynomial time algorithm runs in \(O(mn \log W)\) (\autoref{thm:Ford-Fulkerson-scaling}).
 
 \begin{problem*}
@@ -416,13 +421,13 @@ So far, our best strongly polynomial time algorithm runs in \(O(mn^2)\) (\autore
 	The key bottleneck is that \emph{blocks} in the adaptive DFS search takes \(\Theta (n)\) time but might only discard a single edge from the whole \hyperref[def:admissible]{admissible} path we found.
 \end{prev}
 
-Since the pieces of this path that were not discarded are still useful, can we somehow take advantage of this fact and maintain these pieces for efficient access later? This is a data structure question, and fortunately, there is the so-called \hyperref[def:link-cut-tree]{link/cut tree} that supports nearly all operation we need~\cite{sleator1981data}! Before we introduce it formally, let's first grasp the basic idea and the operation that we might need for this data structure.
+Since the pieces of this path that were not discarded are still useful, can we somehow take advantage of this fact and maintain these pieces for efficient access later? This is a data structure question, and fortunately, there is the so-called \hyperref[def:link-cut-tree]{link/cut tree} that supports nearly all operation we need~\cite{sleator1985self}! Before we introduce it formally, let's first grasp the basic idea and the operation that we might need for this data structure.
 
 \begin{claim}\label{clm:adaptive-DFS-link-cut-tree}
 	The adaptive DFS search can be represented as a collection of arborescences.\footnote{I.e., directed trees with all edges pointing towards a single root.}
 \end{claim}
 \begin{explanation}
-	Maintain a forest of arborescences of ``block-able,'' i.e., non-saturated, \hyperref[def:admissible]{admissible} edges.
+	Maintain a forest of arborescences of ``\hyperref[algo:adaptive-DFS-block]{block}-able,'' i.e., non-saturated, \hyperref[def:admissible]{admissible} edges.
 	\begin{itemize}
 		\item Initially, all vertices are isolated in this forest, i.e., there are no edges.
 		\item When we do the adaptive DFS search for a new \(s\)-\(t\) path to be \hyperref[algo:adaptive-DFS-block]{blocked}, the ``current'' vertex is always a root of the arborescence that contains the source \(s\).
@@ -471,7 +476,7 @@ From the above discussion, we see that the \hyperref[def:link-cut-tree]{link/cut
 
 The upshot is that, a \hyperref[def:link-cut-tree]{link/cut tree} can be implemented efficiently.
 
-\begin{theorem}[\cite{sleator1981data}]\label{thm:link-cut-tree}
+\begin{theorem}[\cite{dominic1983data}]\label{thm:link-cut-tree}
 	\hyperref[def:link-cut-tree]{Link/cut tree} can be maintained in amortized \(O(\log n)\) for each operation.
 \end{theorem}
 \begin{proof}[Proof intuition]
@@ -484,6 +489,7 @@ The upshot is that, a \hyperref[def:link-cut-tree]{link/cut tree} can be impleme
 	To subtract a capacity of \(c\) on a path from some vertex \(v\) to the root of the path, splay successor of \(v\) to root, subtract \(c\) from the root of the left subtree. Similarly, one can maintain at each node the minimum capacity of its subtree (to help with \(\operatorname{findcost}(\cdot) \) operation).
 \end{proof}
 
+
 From \autoref{thm:link-cut-tree}, we have the following.
 
 \begin{theorem}\label{thm:Ford-Fulkerson-link-cut-tree}
@@ -492,3 +498,7 @@ From \autoref{thm:link-cut-tree}, we have the following.
 \begin{proof}
 	With \hyperref[def:link-cut-tree]{link/cut tree} that maintains all non-saturated and \hyperref[def:admissible]{admissible} edges as described in the \hyperref[clm:adaptive-DFS-link-cut-tree]{previous claim}, one can construct a \hyperref[def:blocking-flow]{blocking flow} in only \(O(m \log n)\) time, instead of \(O(mn)\) as in \autoref{thm:Ford-Fulkerson-blocking-flow-general}. Hence, the whole algorithm now takes only \(O(mn \log n)\) time.
 \end{proof}
+
+\begin{note}
+	\autoref{thm:link-cut-tree} has a long line of history~\cite{shiloach1978n,galil1980eviog2v,sleator1981nm,sleator1981data,dominic1983data}. With more care, the \(\log n\) factor in \autoref{thm:Ford-Fulkerson-link-cut-tree} can be improved to \(\log n^2 / m\)~\cite{goldberg1990finding}.
+\end{note}

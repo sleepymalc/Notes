@@ -1,98 +1,294 @@
 \lecture{23}{21 Nov.\ 11:00}{Push-Relabel Algorithm}
 \section{Push-Relabel}
-On the other hand, another approach utilize the so-called \hyperref[def:preflow]{preflow}.\cite{goldberg1988new}
+While the \hyperref[def:augmenting-path]{augmenting path} approach developed by Ford and Fulkerson is powerful, but there exists a very different and (in a sense) dual approach called the \emph{push-relabel} algorithm. This approach was first introduced by Goldberg~\cite{goldberg1985new}, and further developed by Goldberg and Tarjan~\cite{goldberg1988new}. As mentioned, this approach departs from the \hyperref[algo:Ford-Fulkerson]{Ford-Fulkerson framework}:
+
+\begin{note}
+	It does not augment along paths and may not obtain a feasible flow until the very end.
+\end{note}
+
+The two main components of the algorithm are a \hyperref[def:preflow]{preflow} and a set of vertex \hyperref[def:label]{labels}, which are relaxations of \hyperref[def:flow]{flows} and distance layers of the DFS search, respectively. These relaxations (defined below) are still similar enough to \hyperref[def:flow]{flows} and distance labels from DFS layer graph to allow us to define \hyperref[def:residual-graph]{residual graphs} and forwards/backwards/neutral (i.e., of same distance) edges, and similar to \hyperref[def:blocking-flow]{blocking flows}, one can explore many, and often very different, interesting ideas within this framework.
+
+\subsection{Preflow}
+An \(s\)-\(t\) \hyperref[def:preflow]{preflow} is just a relaxation of an \(s\)-\(t\) \hyperref[def:flow]{flow} where non-terminals are also allowed to have ``excess'':
 
 \begin{definition}[Preflow]\label{def:preflow}
-	\(f \colon E \to \mathbb{R} _{+}\) is a \emph{preflow} if
-	\begin{enumerate}[(i)]
-		\item \(0 \leq f(e) \leq c(e)\) for all \(e \in E\);
-		\item \(\sum_{e \in \delta ^-(v)} f(e) \geq \sum_{e \in \delta ^+(v)}f(e) \) for all \(v \in V\).
+	A \emph{preflow} is a vector \(f \colon E \to \mathbb{R} _{+}\) such that
+	\begin{enumerate}[(a)]
+		\item\label{def:preflow-capacity} \(0 \leq f(e) \leq c(e)\) for all \(e \in E\);
+		\item\label{def:preflow-conservation} \(\sum_{e \in \delta ^-(v)} f(e) \geq \sum_{e \in \delta ^+(v)}f(e) \) for all \(v \in V \setminus \{ s, t \} \).
 	\end{enumerate}
 \end{definition}
 
-So just like \hyperref[def:flow]{flow}, \hyperref[def:preflow]{preflow} violates the \hyperref[def:flow-conservation]{flow conservation} constraint.
+So instead of \hyperref[def:flow-conservation]{flow conservation}, we only have \hyperref[def:preflow-conservation]{one-sided conservation} for a \hyperref[def:preflow]{preflow}.
 
-\begin{notation}
-	For a \hyperref[def:preflow]{preflow} \(f\), the \emph{excess} at \(v\) is defined as \(\sum_{e \in \delta ^-(v)} f(e) - \sum_{e \in \delta ^+(v)} f(e)\).
-\end{notation}
+\begin{definition}[Excess]\label{def:excess}
+	The \emph{excess} \(\hat{f} (v)\) at \(v \neq s, t\) of a \hyperref[def:preflow]{preflow} \(f\) is defined as
+	\[
+		\hat{f} (v)
+		\coloneqq \sum_{e \in \delta ^-(v)} f(e) - \sum_{e \in \delta ^+(v)} f(e).
+	\]
+\end{definition}
 
-If the excess is \(0\) for all \(v \neq t\), then \(f\) is a \hyperref[def:flow]{flow}. The residual graph w.r.t.\ \hyperref[def:preflow]{preflow} \(f\) is the same as before.
+\begin{eg}
+	If \(\hat{f} (v) = 0\) for all \(v \neq s, t\), then \(f\) is a \hyperref[def:flow]{flow}.
+\end{eg}
+
+The \hyperref[def:residual-graph]{residual graph} \(G_f\) w.r.t.\ a \hyperref[def:preflow]{preflow} \(f\) is the same as before, i.e., decreasing capacities by the amount of \hyperref[def:preflow]{preflow} on the edge; increasing capacities by the amount of \hyperref[def:preflow]{preflow} on the opposite edge. In particular, we still have \(c_f (e) = c(e) - f(e) + f(e^{-1} )\). We note the following useful and obvious lemma.
+
+\begin{lemma}\label{lma:preflow}
+	Let \(f\) be a \hyperref[def:preflow]{preflow}. Then \(f\) decomposes to a path packing that contains \(\hat{f} (v)\) unit of fraction \(s\)-\(v\) paths for every \(v \in V\setminus \{ s \} \); in particular, \(f\) contains an \(s\)-\(t\) \hyperref[def:flow]{flow} of size \(\hat{f} (t)\).
+\end{lemma}
+\begin{proof}
+	Create a new auxiliary vertex \(t^{\prime} \) and connect every vertex \(v\) (including \(t\)) with \(\hat{f} (v) > 0\) to \(t^{\prime} \) with an edge with infinite capacity. Consider the \(s\)-\(t^{\prime} \) \hyperref[def:flow]{flow} \(f^{\prime} \) where we send all \(\hat{f} (v)\) to \(t^{\prime} \) via those new edges. This \hyperref[def:flow]{flow} decomposes to a fractional \(s\)-\(t^{\prime} \) path packing that includes \(\hat{f} (v)\) paths that go through the auxiliary \((v, t^{\prime} )\) edge. Removing this last edge gives the desired path decomposition.
+\end{proof}
+
+\subsection{Label}
+The next ingredient of the \emph{push-relabel} framework is the so-called \hyperref[def:label]{vertex labels}:
 
 \begin{definition}[Label]\label{def:label}
-	\(\ell \colon V \to \mathbb{Z} _{+}\) is a \emph{label} if
-	\begin{enumerate}[(i)]
-		\item \(\ell (s) = n\) and \(\ell (t) = 0\);
-		\item if \((u, v) \in E(G_f)\), then \(\ell (v) \leq \ell (u) - 1\).
+	Given a \hyperref[def:preflow]{preflow} \(f\), a source \(s\), and a sink \(t\), a \emph{label} \(\ell \colon V \to \mathbb{Z} _{+}\) satisfies
+	\begin{enumerate}[(a)]
+		\item\label{def:label-a} \(\ell (s) = n\) and \(\ell (t) = 0\);
+		\item\label{def:label-b} if \((u, v) \in E_f\), then \(\ell (v) \geq \ell (u) - 1\).
 	\end{enumerate}
 \end{definition}
 
-The initial \hyperref[def:preflow]{preflow} is defined as \(f(e) = c(e)\) for all \(e \in \delta ^+(s)\), and \(0\) otherwise, and the initial \hyperref[def:label]{label} is defined as \(\ell (s) = n\) with \(\ell (t) = 0\), and also \(\ell (v) = 0\) for all \(v \in V \setminus \{ s, t \} \).
-
 \begin{intuition}
-	We always try to maintain the invariance that some cut is saturated, i.e., a \hyperref[def:preflow]{preflow} with value equal to some cut, hence more than the \hyperref[prb:s-t-max-flow]{max-flow}.
+	\autoref{def:label} \autoref{def:label-b} means that residual edges go down towards \(t\) by at most one level.
+	\begin{center}
+		\incfig{label}
+	\end{center}
 \end{intuition}
 
-Define an activate set to be \(A \coloneqq \{ v \neq s, t \mid \operatorname{excess}(v) > 0 \} \). Consider two different operations:
-\begin{enumerate}[(i)]
-	\item Full push along forward edge \(e\) (w.r.t.\ the \hyperref[def:label]{label}) from \(v \in A\).
-	      \begin{itemize}
-		      \item \emph{Saturating} push: when \(\operatorname{excess}(v) > c(e)\), then we push \(c(e)\).
-		      \item \emph{Non-saturating} push: when \(\operatorname{excess}(v) \leq c(e)\), then we push \(\operatorname{excess}(v)\).
-	      \end{itemize}
-	\item If \(v \in A\) and has no forward arc, then relabel: \(\ell (v) \gets \ell (v) + 1\).
-\end{enumerate}
+The \emph{push-relabel} framework maintains a \hyperref[def:preflow]{preflow} and a \hyperref[def:label]{label} such that the initial \hyperref[def:label]{label} \(\ell \) is defined as
+\begin{equation}\label{eq:initialize-label}
+	\ell (v)
+	= \begin{dcases}
+		n, & \text{ if } v = s ; \\
+		0, & \text{ otherwise} ,
+	\end{dcases}
+\end{equation}
+and the initial \hyperref[def:preflow]{preflow} \(f\) is defined as
+\begin{equation}\label{eq:initialize-preflow}
+	f(e) =
+	\begin{dcases}
+		c(e), & \text{ if } e \in \delta ^+(s) ; \\
+		0,    & \text{ otherwise} ,
+	\end{dcases}
+\end{equation}
+i.e., empty \hyperref[def:flow]{flow} and saturate all edges leaving \(s\). It's easy to verify the following.
 
-By greedily doing the above two operations, we can prove that it'll terminate in \(O(mn^2)\) time. With a bit more careful, this is actually \(O(n^3)\). This can be further improved to \(O(n^2 \sqrt{m} )\).
+\begin{claim}
+	With the initial flow \(f\), \autoref{def:label} \autoref{def:label-b} is satisfied.
+\end{claim}
+\begin{explanation}
+	Since the definition of \(f\) will remove all edges \((s, v) \in E\) leaving \(s\) from the \hyperref[def:residual-graph]{residual graph}, and add the reverse edges \((v, s)\) to \(E_f\).
+\end{explanation}
+
+The invariant \autoref{def:label-b} can be interpreted as a relaxation of distances in the following sense.
 
 \begin{lemma}\label{lma:push-relabel-distance}
-	We see that \(\ell (u) - \ell (v) \leq d_{G_f}(u, v)\).
+	For all \(u, v \in V\), \(\ell (u) - \ell (v) \leq d_{G_f}(u, v)\).\footnote{Again, \(d_{G_f}(\cdot, \cdot)\) is the unweighted distance in \(G_f\).}
 \end{lemma}
 \begin{proof}
-	This is because we restrict that any forward arc can only have label more than \(1\).
+	This is because we restrict that any forward edge can only have label more than \(1\).
 \end{proof}
 
-We see that since \(\ell (s) = n\) and \(\ell (t) = 0\) always, hence \(\ell (s) - \ell (t) = n \leq d_{G_f}(s, t)\), i.e., \(s\) can't reach \(t\) in \(G_f\).
+From \autoref{lma:push-relabel-distance} and the fact that \(\ell (t) = 0\), \(\ell (v)\) is a lower bound on the distance from \(v\) to the sink \(t\). In particular, we have \(d_{G_f}(s, t) \geq \ell (s) = n\), i.e., there is no \(s\)-\(t\) path in the \hyperref[def:residual-graph]{residual graph}, so \(s\) can't reach \(t\) in \(G_f\). In this sense, the \emph{push-relabel} algorithm is dual to \hyperref[def:augmenting-path]{augmenting path}-based algorithms:
+
+\begin{intuition}
+	The \hyperref[def:preflow]{preflow} \(f\) always induces an \(s\)-\(t\) cut (via its \hyperref[def:residual-graph]{residual graph}). But since \(f\) is not an actual \hyperref[def:flow]{flow}, we cannot certify this cut as an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
+\end{intuition}
+
+That is, we always try to maintain the invariant that some cut is saturated, i.e., a \hyperref[def:preflow]{preflow} with value equal to some cut, hence more than the \hyperref[prb:s-t-max-flow]{max-flow}. This means, if \(f\) is actually a \hyperref[def:flow]{flow} (with no non-terminals with positive \hyperref[def:excess]{excess}), then it is immediately an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}. Additionally, the \hyperref[def:label]{label} \(\ell \) will induce an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}. These are proved in \autoref{lma:push-relabel-cut}.
 
 \begin{lemma}\label{lma:push-relabel-cut}
-	Suppose \(f\) is a \hyperref[def:preflow]{preflow} that the label invariants and \(\operatorname{excess}(v) = 0\) for all \(v \neq s, t\). Then there exists an index \(i\) such that \(U = \{ v \in V \mid \ell (v) > i \} \) induces an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
+	Suppose \(f\) is a \hyperref[def:preflow]{preflow} and \(\ell \) is a valid \hyperref[def:label]{label}. Suppose \(f\) is also a \hyperref[def:flow]{flow}, i.e., \(\hat{f} (v) = 0\) for all \(v \neq s, t\). Then, \(f\) is an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}, and there exists an index \(i \in [n-1]\) such that \(U = \{ v \in V \mid \ell (v) > i \} \) induces an \hyperref[prb:s-t-min-cut]{\(s\)-\(t\) min-cut}.
 \end{lemma}
 \begin{proof}
-	Specifically, from the Pigeonhole principle, there exists some \(i\) such that no vertices are labeled as \(i\). Then, by the flow-conservation, the cut \(U\) value is equal to the flow value (just as the classical proof of \hyperref[thm:max-flow-min-cut]{max-flow min-cut theorem}), we're done.
+	Since \(\ell \) is valid w.r.t.\ the \hyperref[def:preflow]{preflow} \(f\), we know that there is no \(s\)-\(t\) path in \(G_f\), as discussed above. This holds true even when \(f\) is actually a \hyperref[def:flow]{flow}, meaning that we cannot find any \hyperref[def:augmenting-path]{augmenting path}, hence \(f\) will be an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}.
+
+	Secondly, from the pigeonhole principle, there exists some \(i \in [n-1]\) such that no vertices are labeled as \(i\), meaning that there are no edges between \(V\setminus U\) and \(U\) from the invariant \autoref{def:label-b}. By the \hyperref[def:flow-conservation]{flow-conservation}, the cut value \(c(\delta ^+(U))\) is equal to the flow value, we're done.
 \end{proof}
 
-\begin{lemma}\label{lma:push-relabel-path}
-	If \(v \in A\), then there is a path from \(v\) to \(s\) in \(G_f\).
+\begin{remark}
+	\autoref{lma:push-relabel-cut} is just like the classical proof of the \hyperref[thm:max-flow-min-cut*]{max-flow min-cut theorem}.
+\end{remark}
+
+While \(\ell \colon V \to \mathbb{Z} _{+}\) is not actually a distance function, invariants \autoref{def:label-a} and \autoref{def:label-b} installs just enough structure to serve the same role.
+
+\begin{notation}
+	A residual edge \((u, v) \in E_f\) is \emph{forward} (previously \hyperref[def:admissible]{admissible}) if \(\ell (v) = \ell (u) - 1\), \emph{neutral} if \(\ell (u) = \ell (v)\), \emph{backward} if \(\ell (u) < \ell (v)\). Moreover, we say that a vertex \(u\) \emph{has a forward edge} if there is a forward edge starting from \(u\).
+\end{notation}
+
+\subsection{Generic Push-Relabel Algorithm and Analysis}
+There are many different \emph{push-relabel} algorithms, but they generally follow the same framework consisting of two types of operations, \emph{push} and \emph{relabel}. Within this framework that are different strategies for employing these operations, some of which we discuss in greater detail below.
+
+\begin{prev}
+	The only difference between a \hyperref[def:flow]{flow} and a \hyperref[def:preflow]{preflow} is that a \hyperref[def:preflow]{preflow} allows intermediate vertices to carry positive \hyperref[def:excess]{excess}.
+\end{prev}
+
+In fact, by \autoref{lma:push-relabel-cut}, this is the only difference between an \(s\)-\(t\) \hyperref[def:preflow]{preflow} and an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}. Denote the set of ``active'' vertices as \(A \coloneqq \{ v \neq s, t \mid \hat{f} (v) > 0 \} \). Loosely speaking, we try to route the \hyperref[def:excess]{excess} from active vertices, one vertex at a time, towards the sink \(t\) or the source \(s\).
+
+\begin{intuition}
+	The latter implies that there was too much \hyperref[def:flow]{flow} out for all of it to be routed to \(t\).
+\end{intuition}
+
+Given an active vertex \(v\), the algorithm executes one of the following two \textbf{local} operations at \(v\):
+\begin{enumerate}[(a)]
+	\item\label{algo:push-relabel-push} We \emph{push} along a forward edge \(e\) w.r.t.\ the \hyperref[def:label]{label} of \(v \in A\). Usually,\footnote{Some scaling algorithms do not necessarily push the maximum amount.} we push as much \hyperref[def:flow]{flow} as possible (i.e., \emph{full push}), subject to the \hyperref[def:preflow]{preflow} constraints (\autoref{def:preflow-capacity} and \autoref{def:preflow-conservation}). There are two cases:
+	      \begin{enumerate}[(i)]
+		      \item\label{algo:push-relabel-push-saturating} \emph{Saturating push}: when \(\hat{f} (v) > c_f(e)\), then we push \(c_f(e)\), saturating the residual edge.
+		      \item\label{algo:push-relabel-push-non-saturating} \emph{Non-saturating push}: when \(\hat{f} (v) \leq c(e)\), then we push \(\hat{f} (v)\), using up all the \hyperref[def:excess]{excess}.
+	      \end{enumerate}
+	\item\label{algo:push-relabel-relabel} If \(v \in A\) and has no forward edges, then \emph{relabel} \(v\)'s label to the next level, i.e., \(\ell (v) \gets \ell (v) + 1\).
+\end{enumerate}
+
+The \hyperref[algo:push-relabel]{push-relabel algorithm} simply repeats the above two operations until there are no more active vertices, i.e., \(A = \varnothing \). At that point, by \autoref{lma:push-relabel-cut}, we know that \(f\) is an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}.
+
+\begin{algorithm}[H]\label{algo:push-relabel}
+	\DontPrintSemicolon{}
+	\caption{Push-Relabel Algorithm for \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) Max-Flow}}
+	\KwData{A connected directed graph \(G = (V, E)\) with edge capacity \(c \colon E \to \mathbb{R} _{+} \), source \(s\), sink \(t\)}
+	\KwResult{An \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} \(f\)}
+	\SetKwFunction{InitializeLabel}{Initialize-\hyperref[def:label]{Label}}
+	\SetKwFunction{InitializePreflow}{Initialize-\hyperref[def:preflow]{Preflow}}
+	\SetKwFunction{Forward}{Forward-Edge}
+	\BlankLine
+	\(\ell \gets\)\InitializeLabel{\(V\), \(s\)}\Comment*[r]{Initialize \hyperref[def:label]{label} (\autoref{eq:initialize-label})}
+	\(f \gets\)\InitializePreflow{\(E\), \(c\), \(s\)}\Comment*[r]{Initialize \hyperref[def:preflow]{preflow} (\autoref{eq:initialize-preflow})}
+	\For(\Comment*[f]{Initialize \(G_f\)}){\(e \in E\)}{
+		\(c_f(e) \gets c(e) - f(e) + f(e^{-1} )\)\;
+	}
+	\;
+	\While(\label{algo:push-relabel-activate}\Comment*[f]{Assuming \(A\) is updated implicitly}){\(A = \{ v \neq s, t \mid \hat{f} (v) > 0 \}  \neq \varnothing \)}{
+		\(v \gets A[0]\)\label{algo:push-relabel-active}\Comment*[r]{Get an arbitrary active vertex}
+		\(E^{\prime} \gets\)\Forward{\(v\), \(E\), \(\ell \)}\Comment*[r]{Compute forward edges from \(v\)}
+		\uIf(\Comment*[f]{\hyperref[algo:push-relabel-relabel]{Relabel}}){\(E^{\prime} = \varnothing \)}{
+			\(\ell (v) \gets \ell (v) + 1\)\;
+		}\Else(\Comment*[f]{\hyperref[algo:push-relabel-push]{Push}}){
+			\(e = (v, u)\gets E^{\prime} [0]\)\Comment*[r]{Get an arbitrary forward edge from \(v\)}
+			\(\Delta \gets \min (\hat{f} (v), c_f(e) - f(e))\)\Comment*[r]{Compute a full push}
+			\(f(e) \gets f(e) + \Delta \)\label{algo:push-relabel-update-f}\;
+			\(c_f(e) \gets c(e) - f(e) + f(e^{-1} )\)\;
+		}
+	}
+	\Return{\(f\)}\;
+\end{algorithm}
+
+\begin{remark}
+	We assume that whenever we update \(f\) in \autoref{algo:push-relabel} (i.e., \autoref{algo:push-relabel-update-f}), \(\hat{f} \) is also automatically updated. In this was, \autoref{algo:push-relabel-activate} will also be maintained.
+\end{remark}
+
+However, it is not at all obvious that \autoref{algo:push-relabel} should terminate. At a high level, we want to extinguish all the active vertices, but pushing \hyperref[def:flow]{flow} out of one active vertex \(v\), and as to deactivate \(v\), may activate many more vertices one level below! Hence, it is not clear that we're making much progress.
+
+\begin{theorem}\label{thm:push-relabel-naive}
+	The \hyperref[algo:push-relabel]{push-relabel algorithm} computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with general capacities in \(O(mn^2)\) time.
+\end{theorem}
+\begin{proof}
+	We first analyze the \hyperref[algo:push-relabel]{push-relabel algorithm} by bounding each of the local operations, i.e., \hyperref[algo:push-relabel-push-saturating]{saturating pushes}, \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}, and \hyperref[algo:push-relabel-relabel]{relabelings}, separately. Firstly, consider \hyperref[algo:push-relabel-relabel]{relabelings}.
+
+	\begin{claim}
+		For each \(v\), \(\ell (v)\) is non-decreasing, non-negative, and is at most \(2n - 1\). Hence, the total cost of \hyperref[algo:push-relabel-relabel]{relabelings} is at most \(O(n^2)\).
+	\end{claim}
+	\begin{explanation}
+		Indeed, since if \(v \in A\), then there must be a \(v\)-\(s\) path in \(G_f\). But since \(\ell (s) = n\), so every active vertex has level \(\ell (v) \leq \ell (s) + n - 1 = 2n - 1\) from \autoref{lma:push-relabel-distance}. Finally, since only active vertices will get \hyperref[algo:push-relabel-relabel]{relabeled}, the total cost is \(O(n^2)\).
+	\end{explanation}
+
+	Next, we consider \hyperref[algo:push-relabel-push-saturating]{saturating pushes}.
+
+	\begin{claim}
+		There are at most \(n-1\) \hyperref[algo:push-relabel-push-saturating]{saturating pushes} to any fixed edge. Hence, the total cost of \hyperref[algo:push-relabel-push-saturating]{saturating pushes} is \(O(mn)\).
+	\end{claim}
+	\begin{explanation}
+		For any residual edge \((u, v) \in E_f\), when doing a \hyperref[algo:push-relabel-push-saturating]{saturating push} along \((u, v)\), we have \(\ell (u) = \ell (v) + 1\). To do it along \((u, v)\) again, \((u, v)\) need to reappear, which requires \hyperref[algo:push-relabel-push]{pushing} along \((v, u)\) first, i.e., \(\ell (v) = \ell (u) + 1\). Hence, \(v\) needs to be \hyperref[algo:push-relabel-relabel]{relabeled} from below \(\ell (u)\) to above \(\ell (u)\), with the fact that \(\ell \) is monotonically increasing, \(\ell (v)\) needs to go up by at least \(2\). But \(\ell (v)\) can only go up by at most \(2n-1\) from the previous claim, so at most \(n - 1\) \hyperref[algo:push-relabel-push-saturating]{saturating pushes} can be done on \((u, v)\). There are \(O(m)\) edges in the \hyperref[def:residual-graph]{residual graph}, so we're done.
+	\end{explanation}
+
+	Finally, we consider the trickiest case, the \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}.
+
+	\begin{claim}
+		There are at most \(O(mn^2)\) \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}.
+	\end{claim}
+	\begin{explanation}
+		Consider a potential \(\Phi = \sum_{v \in A} \ell (v)\). We observe that each
+		\begin{itemize}
+			\item \hyperref[algo:push-relabel-push-non-saturating]{non-saturating push} decreases \(\Phi \) by \(1\);
+			\item \hyperref[algo:push-relabel-push-saturating]{saturating push} increases \(\Phi \) by at most \(2n-2\);\footnote{This is via activating some \(v\) with \(\ell (v) \leq 2n - 2\) that is not in \(A\) initially.}
+			\item \hyperref[algo:push-relabel-relabel]{relabeling} increases \(\Phi \) by \(1\).
+		\end{itemize}
+
+		Since there are at most \(O(mn)\) \hyperref[algo:push-relabel-push-saturating]{saturating pushes} and \(O(n^2)\) \hyperref[algo:push-relabel-relabel]{relabelings}, \(\Phi \) can go up to at most \(O(mn^2)\). Since \(\Phi \) is initially zero, and always non-negative, by charging each \hyperref[algo:push-relabel-push-non-saturating]{non-saturating push} to decrease in \(\Phi \), there can be at most \(O(mn^2)\) \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}.
+	\end{explanation}
+
+	Putting everything together, with \autoref{lma:push-relabel-cut}, we know that after \(O(mn^2)\) \hyperref[algo:push-relabel-push]{push}/\hyperref[algo:push-relabel-relabel]{relabel} operations, \autoref{algo:push-relabel} terminates (i.e., \(A = \varnothing \)) with an \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow}. Besides these local operations, one needs to account for the running time overhead for selecting a tight vertex, and identifying a forward edge from a given vertex, and so forth. However, it is easy to see how to use some simple data structures to facilitate the operations (e.g., tracking the set of active vertices \(A\) in a list), it is easy to implement \autoref{algo:push-relabel} in \(O(mn^2)\) time.
+\end{proof}
+
+We see that just via simple local operations, \hyperref[algo:push-relabel]{push-relabel algorithms} achieve the same running time as the \hyperref[def:blocking-flow]{blocking flow} algorithm with adaptive DFS search (\autoref{thm:Ford-Fulkerson-blocking-flow-general}).
+
+\begin{remark}
+	The bottleneck is the \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}. The \hyperref[algo:push-relabel-relabel]{relabelings} and \hyperref[algo:push-relabel-push-saturating]{saturating pushes} only costs \(O(mn)\) in total are very fast.
+\end{remark}
+
+We now explore different variations of the \hyperref[algo:push-relabel]{push-relabel algorithm} that obtain better running times; each of these strategies are designed to limit the number of \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}.
+
+\subsection{Top-Down Push-Relabel Algorithm}
+\autoref{algo:push-relabel} gives a very general description and \autoref{thm:push-relabel-naive} gives a general analysis of the \hyperref[algo:push-relabel]{push-relabel algorithm}. In particular:
+
+\begin{prev}
+	We show that \emph{any} algorithm following either \hyperref[algo:push-relabel-push]{push} or \hyperref[algo:push-relabel-relabel]{relabel} operations makes \(O(mn^2)\) total operations. The bottleneck is the \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}, which in requires \(O(mn^2)\).
+\end{prev}
+
+There are many possible strategies within this framework, and perhaps different approaches can lead to different performance in practice, or better upper bounds (especially for \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}). The main decision is which active vertex to select at a given moment in time. Previously in \autoref{algo:push-relabel} \autoref{algo:push-relabel-active}, we simply select an arbitrary one. Here are a few possible strategies:
+\begin{enumerate}[(a)]
+	\item Select \(v \in A\) with the highest label \(\ell (v)\).
+	\item Select \(v \in A\) with the lowest label \(\ell (v)\).
+	\item Select \(v \in A\) in FIFO order (e.g., add vertices to a queue as they become active).
+	\item Select \(v \in A\) in LIFO order (e.g., add vertices to a stack as they become active).
+	\item Select \(v \in A\) with the greatest \hyperref[def:excess]{excess} \(\hat{f} (v)\).
+	\item Select \(v \in A\) with the lowest \hyperref[def:excess]{excess} \(\hat{f} (v)\).
+	\item Select \(v \in A\) uniformly at random.
+\end{enumerate}
+
+We consider the first strategy, i.e., always addressing the active vertex of the highest level. We refer to this strategy as \emph{top-down}.
+
+\begin{lemma}\label{lma:push-relabel-top-down}
+	With the top-down \hyperref[algo:push-relabel]{push-relabel algorithm}, there are at most \(O(n^2)\) \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes} from any fixed vertex \(v\). Therefore, there are at most \(O(n^3)\) \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}.
 \end{lemma}
 \begin{proof}
-	This is by induction.
+	Suppose we make a \hyperref[algo:push-relabel-push-non-saturating]{non-saturating push} from a vertex \(v\), making \(v\) inactive. Since \(v\) was the highest level active vertex, there is no way for \(v\) to receive \hyperref[def:flow]{flow} and become active without some vertex being increased to a higher label. Each vertex's label gets increased at most \(O(n)\) times as we have seen in \autoref{thm:push-relabel-naive}, hence in total only \(O(n^2)\) many times \(v\) can be overtaken and potentially become active again.
 \end{proof}
 
-\begin{lemma}\label{lma:push-relabel-label}
-	For each \(v\), \(\ell (v)\)  is non-decreasing, non-negative, and is at most \(2n - 1\).
-\end{lemma}
-\begin{proof}
-	From \autoref{lma:push-relabel-path} and \autoref{lma:push-relabel-distance}, this is easy.
+\autoref{lma:push-relabel-top-down} implies the following.
+
+\begin{theorem}\label{thm:push-relabel-top-down}
+	The top-down \hyperref[algo:push-relabel]{push-relabel algorithm} computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with general capacities in \(O(n^3)\) time.
+\end{theorem}
+
+We see that \autoref{thm:push-relabel-top-down} already beats the best strongly polynomial algorithm without using sophisticated data structures we have before (\autoref{thm:Ford-Fulkerson-blocking-flow-general}).
+
+\begin{note}
+	The FIFO strategy also yields an \(O(n^3)\) running time.
+\end{note}
+
+It turns out that \autoref{lma:push-relabel-top-down} is not tight. For top-down \hyperref[algo:push-relabel]{push-relabel}, one can obtain a better upper bound of \(O(n^2 \sqrt{m} )\) for \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}~\cite{cheriyan1989analysis,tunccel1994complexity}.
+
+\begin{theorem}[\cite{cheriyan1989analysis,tunccel1994complexity}]
+	The top-down \hyperref[algo:push-relabel]{push-relabel algorithm}\footnote{Somehow this is only approximately implemented.} computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph with general capacities in \(O(n^2 \sqrt{m} )\) time.
+\end{theorem}
+\begin{proof}[Proof~\cite{cheriyan1999analysis}]
+	We focus on showing that the top-down \hyperref[algo:push-relabel]{push-relabel} makes at most \(O(n^2 \sqrt{m} )\) \hyperref[algo:push-relabel-push-non-saturating]{non-saturating pushes}. Consider a potential \(\Phi \coloneqq \sum_{v \in A} \lvert \{ u \colon \ell (u) \leq \ell (v) \} \rvert\), which counts, for every active vertex \(v\), the total number of vertices ``below'' or at the same level as \(v\).
+
+	Initially, \(\Phi = 0\). A \hyperref[algo:push-relabel-relabel]{relabeling} or a \hyperref[algo:push-relabel-push-saturating]{saturating push} can increase \(\Phi \) by at most \(n\). Hence, the total increase to \(\Phi \) is at most \(O(mn^2)\). On the other hand, we have the following.
+
+	\begin{claim}
+		A \hyperref[algo:push-relabel-push-non-saturating]{non-saturating push} at \(v\) deactivates \(v\) and decreases \(\Phi \), by at least the number of \(u\) at \(v\)'s level, \(\lvert \{ u \colon \ell (u) = \ell (v) \}  \rvert \).
+	\end{claim}
+	\begin{explanation}
+		In the worst case, the \hyperref[algo:push-relabel-push-non-saturating]{non-saturating push} from \(v\) activates a new vertex \(u\). Since \(\ell (u) = \ell (v) - 1\), the difference in contribution between \(v\) and \(u\) is precisely the number of vertices at \(v\)'s level.
+	\end{explanation}
+
 \end{proof}
 
-We see that the cost of relabeling is at most \(O(n^2)\) from \autoref{lma:push-relabel-label}.
 
-\begin{lemma}
-	The number of saturating pushes is \(O(mn)\).
-\end{lemma}
-\begin{proof}
-	For any fixed arc \((u, v)\), to push, we know that \(\ell (v) = \ell (u) + 1\). To do a saturating push again along \((u, v)\), the label of \(v\) needs to be relabeled above \(u\) in the first place, i.e., \(\ell (v)\) needs to go up by at least \(2\). Hence, the total number of this can happen is \(O(n)\). There are \(O(m)\) edges in the residual graph, so we're done.
-\end{proof}
 
-\begin{lemma}
-	The number of non-saturating function is \(O(mn^2)\).
-\end{lemma}
-\begin{proof}
-	Consider a potential \(\phi = \sum_{v \in A} \ell (v)\). We see that for a saturating push, the potential can go up by at most \(2n - 2\), hence the potential can go up to at most \(O(mn^2)\). However, for every non-saturating function, one can argue that the potential decrease by at least \(1\). Hence, we're done.
-\end{proof}
-
-\begin{lemma}
-	Consider only doing operation for the vertex with the highest label. Then this is \(O(n^3)\).
-\end{lemma}
-\begin{proof}
-	We see that if we do this, then consider a fixed vertex \(u\). At each label level \(i\), \(u\) can only do \(O(n)\) non-saturating push since some vertex will need to first go higher than \(i\) and push to \(u\) again to make it active.
-\end{proof}
+\subsection{Push-Relabel with Data Structure}

@@ -363,7 +363,7 @@ However, this is just like our naive algorithm from \autoref{col:Ford-Fulkerson}
 	The \(O(m \sqrt{m} )\) bound extends to multi-graphs, while \(O(mn^{2 / 3})\) bound does not.
 \end{remark}
 \begin{explanation}
-	This is clear from the counting argument for \(O(mn^{2 / 3})\), where we assume for two consecutive layers with each less than \(2n / k\) vertices, there are only \(O(n^2 / k^2)\) edges between them, which is not the case for multi-graphs.
+	For \(O(mn^{2 / 3})\), we assume for two consecutive layers with each less than \(2n / k\) vertices, there are only \(O(n^2 / k^2)\) edges between them. This is not the case for multi-graphs.
 \end{explanation}
 
 \subsection{General Capacity Graph}
@@ -430,7 +430,7 @@ For convenience, we use the following notation to refer to \(i^{\text{th} }\) bi
 Formally, the idea of scaling leads to a weakly polynomial algorithm.
 
 \begin{theorem}\label{thm:Ford-Fulkerson-scaling}
-	There exists a scaling-based algorithm that computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral capacities in \(O(mn \log W)\) time, where \(W = \max _{e \in E} c(e)\).
+	The scaling-based \hyperref[algo:Ford-Fulkerson]{Ford-Fulkerson algorithm} that computes the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} on a directed graph \(G = (V, E)\) with integral capacities in \(O(mn \log W)\) time, where \(W = \max _{e \in E} c(e)\).
 \end{theorem}
 \begin{proof}
 	We first describe the algorithm. In the first iteration, look at the most significant bit \(c^{(1)}(e) = c_1(e) \in \{ 0, 1 \} \), which corresponds to a unit capacity graph. We then obtain the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) max-flow} \(f\) on the graph with capacity \(c^{(1)}\) via the unit capacity algorithm in \autoref{thm:Ford-Fulkerson-blocking-flow-unit}, which takes \(O(mn)\) time. In the next iteration, we consider the new capacity \(c^{(2)}(e) \in \{ 0, 1, \dots , 2^2 \} \) to be the integer represented by the first two most significant bits of \(c(e)\), i.e., \(c^{(2)} (e) = 2 c^{(1)}(e) + c_2(e)\) for some \(c_2(e) \in \{ 0, 1 \} \). We also double \(f\) as \(f^{\prime} (e) = 2 f(e)\), which is clearly feasible for \(c^{(2)}\).

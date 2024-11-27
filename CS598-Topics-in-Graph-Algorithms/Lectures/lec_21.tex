@@ -175,7 +175,7 @@ Taking these two examples into account, we consider the following notion of \hyp
 \end{definition}
 
 \begin{definition}[Width]\label{def:tree-decomposition-width}
-	The \emph{width} \(\operatorname{width}(T)\) of a \hyperref[def:tree-decomposition]{tree decomposition} \(T\) of \(G\) with the function \(B \colon V_T \to 2^V\) is defined as \(\max _{t \in V_T} \lvert B(t) \rvert \).
+	The \emph{width} of a \hyperref[def:tree-decomposition]{tree decomposition} \(T\) of \(G\) with the function \(B \colon V_T \to 2^V\) is defined as  \(\operatorname{width}(T) = \max _{t \in V_T} \lvert B(t) \rvert \).
 \end{definition}
 
 \begin{figure}[H]
@@ -330,9 +330,9 @@ Let's now see how to use the above idea to solve \hyperref[prb:MWIS]{MWIS} for g
 	Given a \hyperref[def:tree-decomposition]{tree decomposition} of \hyperref[def:tree-decomposition-width]{width} \(k\) for a graph \(G\), \hyperref[prb:MWIS]{MWIS} can be computed in \(O(k 2^{k+1} n)\) time.
 \end{eg}
 \begin{explanation}
-	Let \(T = (V_T, E_T)\) be the corresponding \hyperref[def:tree-decomposition]{tree decomposition}. For \(t \in V_T\), let \(G_t\) be the subgraph of \(G\) induced by \(S \coloneqq \bigcup_{t \in V(T_t)} B(t) \subseteq V\), i.e., nodes in bags of \(T_t\).
+	Let \(T = (V_T, E_T)\) be the corresponding \hyperref[def:tree-decomposition]{tree decomposition}. For \(t \in V_T\), let \(G_t\) be the subgraph of \(G\) induced by \(\bigcup_{t \in V(T_t)} B(t) \subseteq V\), i.e., nodes in bags of \(T_t\).
 
-	Now, let \(\OPT(t, S)\) be the value of \hyperref[prb:MWIS]{MWIS} in \(T_t\) among independent sets \(I\) such that \(I \cap X_t = S\). We see that the number of values to compute at each node \(t \in V_T\) is \(\leq 2^{k+1}\), where \(k\) is the \hyperref[def:tree-decomposition-width]{width} of \(T\). Using dynamic programming, we can compute all values from leaves to root in \(O(k 2^{k+1} N)\) time, where \(N\) is the number of nodes in \(T\), i.e., \(\lvert V_T \rvert \).
+	Now, let \(\OPT(t, S)\) be the value of \hyperref[prb:MWIS]{MWIS} in \(G_t\) among independent sets \(I\) such that \(I \cap B(t) = S\). We see that the number of values to compute at each node \(t \in V_T\) is \(\leq 2^{k+1}\), where \(k\) is the \hyperref[def:tree-decomposition-width]{width} of \(T\). Using dynamic programming, we can compute all values from leaves to root in \(O(k 2^{k+1} N)\) time, where \(N\) is the number of nodes in \(T\), i.e., \(\lvert V_T \rvert \).
 \end{explanation}
 
 The above yield a \(2^{O(\sqrt{n} )}\) time algorithm for planar graphs. However, it's worth noting that it's possible to get a fast \((1 - \epsilon )\)-approximation algorithm in planar graphs. For that, we need the following.

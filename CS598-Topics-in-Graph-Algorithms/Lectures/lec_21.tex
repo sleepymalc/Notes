@@ -312,9 +312,7 @@ Given a graph \(G = (V, E)\) with vertex capacity \(w \colon V \to \mathbb{R} \)
 \hyperref[prb:MWIS]{MWIS} is \(\NP\)-hard, even for planar graphs, and more generally, is also very hard even to approximate in general graphs. However, we can still solve it efficiently (in polynomial time) in bounded \hyperref[def:treewidth]{treewidth} graphs. To get some intuition, let's first see how to solve it for tree using dynamic programming.
 
 \begin{eg}[MWIS on tree]
-	Given a tree \(T\) with vertex capacity \(w\colon V \to \mathbb{R} \), let \(T_v\) be the sub-tree of \(T\) rooted at node \(v \in V_T\), and let \(\OPT(v)\) be the optimum value of \hyperref[prb:MWIS]{MWIS} on \(T_v\). Furthermore, let's define \(\OPT(v, 1)\) be the optimum value of \hyperref[prb:MWIS]{MWIS} on \(T_v\) that includes \(v\), and \(\OPT(v, 0)\) is defined similarly such that it does not include \(v\). Then, we have \(\OPT(v) = \max (\OPT(v, 1), \OPT(v, 0))\).
-
-	After some observation, we see that
+	Given a tree \(T\) with vertex capacity \(w\colon V \to \mathbb{R} \), \(r\) be an arbitrary root and \(T_v\) be the sub-tree of \(T\) rooted at node \(v \in V_T\). Define \(\OPT(v)\) to be the optimum value of \hyperref[prb:MWIS]{MWIS} on \(T_v\). Furthermore, let \(\OPT(v, 1)\) be the optimum value of \hyperref[prb:MWIS]{MWIS} on \(T_v\) that includes \(v\), and \(\OPT(v, 0)\) is defined similarly such that it does not include \(v\). Then, we have \(\OPT(v) = \max (\OPT(v, 1), \OPT(v, 0))\). After some observation, we see that
 	\[
 		\begin{dcases}
 			\OPT(v, 1) = w(v) + \sum_{u \text{ child of } v} \OPT(u, 0) ; \\
@@ -327,12 +325,14 @@ Given a graph \(G = (V, E)\) with vertex capacity \(w \colon V \to \mathbb{R} \)
 Let's now see how to use the above idea to solve \hyperref[prb:MWIS]{MWIS} for graphs with low \hyperref[def:treewidth]{treewidth}.
 
 \begin{eg}[MWIS on tree decomposition]\label{eg:MWIS-tree-decomposition}
-	Given a \hyperref[def:tree-decomposition]{tree decomposition} of \hyperref[def:tree-decomposition-width]{width} \(k\) for a graph \(G\), \hyperref[prb:MWIS]{MWIS} can be computed in \(O(k 2^{k+1} n)\) time.
+	Given a \hyperref[def:tree-decomposition]{tree decomposition} of \hyperref[def:tree-decomposition-width]{width} \(k\) for a graph \(G\), \hyperref[prb:MWIS]{MWIS} can be computed in \(O(2^k \poly(n))\) time.
 \end{eg}
 \begin{explanation}
-	Let \(T = (V_T, E_T)\) be the corresponding \hyperref[def:tree-decomposition]{tree decomposition}. For \(t \in V_T\), let \(G_t\) be the subgraph of \(G\) induced by \(\bigcup_{t \in V(T_t)} B(t) \subseteq V\), i.e., nodes in bags of \(T_t\).
+	Let \(T = (V_T, E_T)\) be the corresponding \hyperref[def:tree-decomposition]{tree decomposition} with an arbitrary root \(r \in V_T\). For \(t \in V_T\), let \(V_t \coloneqq \bigcup_{t^{\prime} \in V(T_t)} B(t^{\prime} ) \subseteq V\) be the vertices in all bags of \(T_t\).
 
-	Now, let \(\OPT(t, S)\) be the value of \hyperref[prb:MWIS]{MWIS} in \(G_t\) among independent sets \(I\) such that \(I \cap B(t) = S\). We see that the number of values to compute at each node \(t \in V_T\) is \(\leq 2^{k+1}\), where \(k\) is the \hyperref[def:tree-decomposition-width]{width} of \(T\). Using dynamic programming, we can compute all values from leaves to root in \(O(k 2^{k+1} N)\) time, where \(N\) is the number of nodes in \(T\), i.e., \(\lvert V_T \rvert \).
+	Now, let \(\OPT(t, S)\) be the optimum value of \hyperref[prb:MWIS]{MWIS} in \(G\) among independent sets \(I \subseteq V_t\) such that \(I \cap B(t) = S\). It's possible to define recurrence via \(\OPT(t, S)\), hence dynamic programming.
+
+	The number of values to compute at each node \(t \in V_T\) is at most \(2^{k+1}\), and each takes \(O(k)\). Hence, one can compute all values from leaves to the root in \(O(k 2^{k+1} \lvert V_T \rvert)\) time.
 \end{explanation}
 
 The above yield a \(2^{O(\sqrt{n} )}\) time algorithm for planar graphs. However, it's worth noting that it's possible to get a fast \((1 - \epsilon )\)-approximation algorithm in planar graphs. For that, we need the following.

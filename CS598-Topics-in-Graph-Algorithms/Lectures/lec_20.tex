@@ -6,7 +6,6 @@ In this chapter, we show that one can approximate \hyperref[def:expansion]{expan
 	We now have near-linear time algorithms for a \emph{constant factor approximation} to \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) flow} in undirected graphs~\cite{peng2016approximate}, and an almost-linear time \emph{exact} algorithm for \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) flow} in directed graphs~\cite{chen2022maximum}.
 \end{note}
 
-\section{Recap: Algorithm for Sparsest Cut}
 Previously, we have discussed how to check if a graph \(G\) is an \hyperref[def:expander]{expander}; more generally, how to estimate the \hyperref[def:expansion]{expansion}, \hyperref[def:conductance]{conductance}, and \hyperref[prb:sparsest-cut]{uniform sparsest cut}.\footnote{The \hyperref[def:expansion]{expansion} is within a factor of \(2\) of the \hyperref[def:sparsity]{sparsity} from the previous \hyperref[rmk:expansion-sparsity]{remark}.}
 
 \begin{prev}
@@ -253,7 +252,7 @@ Now the question is, how can we effectively minimize \(\phi _i\). In this contex
 	\phi _{i}
 	= \phi _{i-1} - \frac{1}{2} \sum_{uv \in M_i} \lVert x^{(i-1)}_u - x^{(i-1)}_v \rVert _2^2 .
 \end{equation}
-Hence, the potential reduction for an edge \(uv\) is proportional to \(\lVert x_u - x_v \rVert _2^2\), which is the square of the Euclidean distance between \(x_u\) and \(x_v\). Thus, the cut player should somehow force the matching player to pair vertices that are \emph{far apart}.
+Hence, the potential reduction for an edge \(uv\) is proportional to \(\lVert x_u - x_v \rVert _2^2\). Thus, the cut player should somehow force the matching player to pair vertices that are \emph{far apart}.
 
 \begin{prev}
 	The cut player can only give a partition \((S_i, V\setminus S_i)\) and the matching player has control of the actual matching it generates.
@@ -268,7 +267,7 @@ It's quite hard to ensure this in high dimension. The intuition is to look at th
 We formalize this as follows.
 
 \begin{lemma}\label{lma:cut-matching-potential-reduction-1-dimension}
-	For each \(u \in V\), let \(z_u \in \mathbb{R} \) be a scalar such that \(\sum_{u \in V} z_u = 0\). Suppose we partition \(V\) to be \((A, B)\) according to \(z_u\), where \(A\) and \(B\) is the first and the second half, respectively.\footnote{I.e., \(A = \{ u \colon z_u \leq \operatorname{median}(\{ z_v\} _{v \in V}) \} \) and \(B = V \setminus A\) such that \(\lvert A \rvert = \lvert B \rvert = n / 2\), with ties broken arbitrarily.} Then for every perfect matching \(M\) between \(A\) and \(B\), we have
+	For each \(u \in V\), let \(z_u \in \mathbb{R} \) be a scalar such that \(\sum_{u \in V} z_u = 0\). Suppose we partition \(V\) to be \((A, B)\) according to the magnitude of \(z_u\), where \(A\) and \(B\) is the first and the second half, respectively.\footnote{I.e., \(A = \{ u \colon z_u \leq \operatorname{median}(\{ z_v\} _{v \in V}) \} \) and \(B = V \setminus A\) such that \(\lvert A \rvert = \lvert B \rvert = n / 2\), with ties broken arbitrarily.} Then for every perfect matching \(M\) between \(A\) and \(B\), we have
 	\[
 		\sum_{uv \in M} \lVert z_u - z_v \rVert _2^2
 		= \sum_{uv \in V} (z_u - z_v)^2
@@ -276,7 +275,7 @@ We formalize this as follows.
 	\]
 \end{lemma}
 \begin{proof}
-	Let \(\beta \in \mathbb{R} \) to be the median of \(z_u\)'s. Hence, \(z_u \leq \beta \) for all \(u \in A\) and \(z_u \geq \beta \) for all \(u \in B\). Then, for any perfect matching \(M\) between \(A\) and \(B\), consider a matched edge \(uv \in M\). We have \((z_u - z_v)^2 = ((z_u - \beta) - (z_v - \beta ))^2\). Since \(z_u \leq \beta \) and \(z_v \geq \beta \), we have \(((z_u - \beta ) - (z_v - \beta ))^2 = (\lvert z_u - \beta \rvert + \lvert z_v - \beta \rvert )^2\). Summing up over all pairs in \(M\), we have
+	Let \(\beta \in \mathbb{R} \) to be the median of \(z_u\)'s. Then, for any perfect matching \(M\) between \(A\) and \(B\), consider a matched edge \(uv \in M\). We have \((z_u - z_v)^2 = ((z_u - \beta) - (z_v - \beta ))^2 = (\lvert z_u - \beta \rvert + \lvert z_v - \beta \rvert )^2\), since \(z_u \leq \beta \) and \(z_v \geq \beta \). Summing up over all pairs in \(M\), we have
 	\[
 		\sum_{uv \in M} \lVert z_u - z_v \rVert _2^2
 		= \sum_{uv \in M} (\lvert z_u - \beta \rvert + \lvert z_v - \beta \rvert )^2

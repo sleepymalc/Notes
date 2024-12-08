@@ -1,0 +1,55 @@
+\chapter{Epilogue}
+\lecture{24}{4 Dec.\ 11:00}{Global Vertex Cut}
+\section{Global Vertex Cut}
+Consider the following problem.
+
+\begin{problem}
+Find the minimum number of vertices \(\kappa (G)\) need to be removed such that we get
+\end{problem}
+
+For \(\kappa (G) \geq 1\), we're asking for whether \(G\) is connected.
+
+For \(\kappa (G) \geq 2\), we want to ask whether there exists a cut vertex.
+
+For \(\kappa (G) \geq 3\), SPQR-tree.
+
+For \(\kappa (G) \geq 4\) is a bit messy and not known. We will discuss a randomized algorithm that runs in \(O(m \kappa \poly \log n)\).
+
+Suppose there exists a \(k\)-cut \((A, B, C)\) such that \(\operatorname{vol}(A) \geq m / 10k\) and \(\operatorname{vol}(B) \geq m / 10k\). Pick \(e_1, e_2\) uniformly at random,
+\[
+	\Pr_{}(e_i \in \operatorname{vol}(A), e_j \in \operatorname{vol}(B) )
+	\geq \frac{1}{10k}.
+\]
+Hence, with \(O(mk^2 \log n)\), we can identify the cut.
+
+\subsection{Local Question}
+A harder case is that when \(A\) is small, but \(C\) is large, hence random sapling will basically not lie in \(A\). Given a graph \(G = (V, E)\) and \(s \in V\), \(k\) and a volume bound \(\nu \), is there a set \(S \subseteq V\) such that \(s \in S\) such that \(\operatorname{vol}(S) \leq \nu \) and \(\lvert N^+(s) \rvert \leq k\).
+
+\begin{theorem}
+	There exists a randomized algorithm that runs in \(O(\nu k)\) time and succeeds with probability at least \(3 / 4\) if there exists such a cut. Otherwise, outputs \(\bot\). We assume that \(\nu \leq m / 10k\).
+\end{theorem}
+
+Suppose we guess the volume \(\nu ^{\ast} \) of \(A\). If \(\nu ^{\ast} \geq m / 10k\), we know what to do. Hence, suppose \(\nu ^{\ast} < m / 10k\). Pick \(e\) uniformly at random, then for each end point \(s\) of \(e\), run the local algorithm with \(\nu ^{\ast} \). This will succeed with probability \(\nu ^{\ast} / m\), hence, we run this \(O(m \log n / \nu ^{\ast} )\) times. This gives \(O(mk^2 \log ^2 n)\).
+
+LocalCut. Given \(s\), \(G\), \(\nu \), \(k\) such that \(\nu \leq m / 10k\). We may assume that \(G\) is directed and ask for whether there exists a cut \(S\) such that \(s \in S\), \(\operatorname{vol}(S) \leq \nu \) and \(\lvert \delta ^+(S) \rvert \leq k\).
+
+The algorithm repeats the following \(k\) times.
+
+\begin{itemize}
+	\item run DFS until it discover at most \(8 \nu k\) edges or gets stuck.
+	\item let \(E_{\mathrm{DFS} }\) be the set of edges explored in this DFS tree \(T\).
+	\item If \(\lvert E_{\mathrm{DFS} } \rvert < 8 \nu k\). Then outputs \(S = V(T)\).
+	\item Else randomly sample \(e = (y^{\prime} , y) \in E_{\mathrm{DFS} }\), reverse these arcs in \(P_{s, y}\) in \(T\).
+\end{itemize}
+
+To understand the algorithm, suppose \(k = 1\).
+
+The algorithm clearly runs in \(O(\nu k^2)\) time. If \(y \in V\setminus S\), then \(\lvert \delta ^+(S) \rvert \) and \(\operatorname{vol}(S) \) go down by \(1\). If \(y \in S\), then \(\lvert \delta ^+(S) \rvert \) and \(\operatorname{vol}(S) \) remain unchanged. Hence, \(\Pr_{}(\text{algorithm is correct} ) \geq (1 - 1 / 8k)^k\).
+
+The global min-cut problem is to find the minimum number of edges such that \(G\) is not strongly connected.
+
+\begin{problem}[Rooted connectivity]
+Only interested in the minimum number of edges such that \(s\) cannot reach some vertex.
+\end{problem}
+
+The global reduces to the rooted case by running the reversal graph. We can solve it in \(O(mk \log ^2 \frac{n^2}{m})\) via edge disjoint arborescences packing (see hw1).

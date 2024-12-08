@@ -26,7 +26,7 @@ The algorithm that achieves \(O(\log ^2 n)\)-approximation for \hyperref[def:exp
 For the sake of discussion, let us consider the decision version in terms of \hyperref[def:expansion]{expansion}:
 
 \begin{problem}[Expansion]\label{prb:expansion}
-Given a graph \(G = (V, E)\) with edge capacity \(c\colon E \to \mathbb{R} _{+}\) and a parameter \(\varphi \), decide if the \hyperref[def:expansion]{expansion} of \(G\) is at least \(\varphi / \alpha \) for some approximation factor \(\alpha \geq 1\). If not, then find a corresponding \hyperref[prb:sparsest-cut]{sparse cut}, i.e., \(S \subseteq V\) such that \(\lvert \delta (S) \rvert \leq \varphi \cdot \min (\lvert S \rvert , \lvert V \setminus S \rvert )\).
+Given a graph \(G = (V, E)\) with edge capacity \(c\colon E \to \mathbb{R} _{+}\) and a parameter \(\varphi \), decide if the \hyperref[def:expansion]{expansion} of \(G\) is at least \(\varphi / \alpha \) for some approximation factor \(\alpha \geq 1\). If not, then find a corresponding \hyperref[prb:sparsest-cut]{sparse cut}, i.e., \(S \subseteq V\) such that \(c(\delta (S)) \leq \varphi \cdot \min (\lvert S \rvert , \lvert V \setminus S \rvert )\).
 \end{problem}
 
 \begin{note}
@@ -54,16 +54,16 @@ We further note that one can check if \(A, B\) are \hyperref[def:linkage]{linked
 	\end{figure}
 \end{center}
 
-From \autoref{fig:expansion-matching}, it's clear that the \hyperref[def:flow]{flow} paths of integral \hyperref[prb:s-t-max-flow]{\(s^{\ast} \)-\(t^{\ast} \) flow} will implicitly match up vertices in \(A\) to vertices in \(B\), hence inducing a perfect matching \(M_i\) if such a feasible \hyperref[def:flow]{flow} exist.
+From \autoref{fig:expansion-matching}, it's clear that the \hyperref[def:flow]{flow} paths of integral \(s^{\ast} \)-\(t^{\ast} \) \hyperref[def:flow]{flow} will implicitly match up vertices in \(A\) to vertices in \(B\), hence inducing a perfect matching \(M_i\) if such a feasible \hyperref[def:flow]{flow} exist.
 
 \begin{problem*}
 	What is the advantage of the notion of \hyperref[def:well-linked]{well-linkedness} in this context?
 \end{problem*}
 \begin{answer}
-	To prove that \(G\) is not an \hyperref[def:expander]{expander}, it suffices to exhibit an equal-sized bipartition \((S, V\setminus S)\) with \(\lvert S \rvert = n / 2\)\footnote{For simplicity, let \(n\) be even throughout this section.} and one can check via an \(s^{\ast} \)-\(t^{\ast} \) \hyperref[def:flow]{flow} computation if \(S, V\setminus S\)are not \hyperref[def:linkage]{linked}. Of course, it is much easier to exhibit a cut \(S\) which is not expanding.
+	To prove that \(G\) is not an \hyperref[def:expander]{expander}, it suffices to exhibit an equal-sized bipartition \((S, V\setminus S)\) with \(\lvert S \rvert = n / 2\)\footnote{For simplicity, let \(n\) be even throughout this section.} and one can check via an \(s^{\ast} \)-\(t^{\ast} \) \hyperref[def:flow]{flow} computation if \(S, V\setminus S\) are not \hyperref[def:linkage]{linked}. Of course, it is much easier to exhibit a cut \(S\) which is not expanding.
 \end{answer}
 
-On the other hand, if the \hyperref[prb:s-t-max-flow]{\(s^{\ast} \)-\(t^{\ast} \) flow} does perfectly match \(S\) to \(V\setminus S\), then this only says that \(G\) is not necessarily not an \hyperref[def:expander]{expander}. How to proceed?
+On the other hand, if the \(s^{\ast} \)-\(t^{\ast} \) \hyperref[def:flow]{flow} does perfectly match \(S\) to \(V\setminus S\), then this only says that \(G\) is not necessarily not an \hyperref[def:expander]{expander}. How to proceed?
 
 \begin{intuition}
 	We think of the problem as generating a certificate for the \hyperref[def:expansion]{expansion} by generating a series of partition of \(V\).
@@ -75,7 +75,7 @@ One idea is to keep selecting different sets \(S_i \subseteq V\), each of size \
 	If these matchings behave like \emph{uniformly random matchings}, then after a constant number \(k\) (e.g., \(3\)) of sets \(S_1, \dots , S_k\), we will have embedded a random \hyperref[def:expander]{expander} with \hyperref[def:congestion]{congestion} \(k\) into \(G\), certifying that \(G\) has \hyperref[def:expansion]{expansion} at least \(1 / k\) (e.g., \autoref{lma:expander-existence}).
 \end{intuition}
 
-The problem becomes that, since we treat \hyperref[prb:s-t-max-flow]{\(s^{\ast}_i\)-\(t^{\ast} _i\) flow} computation as a black-box, and there is no reason that the matchings should behave like random matchings. The upshot is that Khandekar, Rao, and Vazirani~\cite{khandekar2009graph} show how to adaptively select sets \(S_1, \dots , S_k\), where \(S_i\) depends on the matchings \(M_1, \dots , M_{i-1}\) returned in rounds \(1\) through \(i-1\) such that with high probability, after \(k = O(\log ^2 n)\) rounds, the multigraph \(H = (V, \bigcup_{i=1}^{k} M_i)\) induced by the union of \(M_1, \dots , M_k\), is a \hyperref[def:expander]{\(1\)-expander} by showing that \(H\) can route uniform multi-commodity flow: a demand of \(1 / n\) between each ordered pair of vertices \((u, v)\), which suffice for \(H\) being a \hyperref[def:expander]{\(1\)-expander}.
+The problem becomes that, since we treat the \hyperref[prb:s-t-max-flow]{\(s^{\ast}_i\)-\(t^{\ast} _i\) flow} computation as a black-box, and there is no reason that the matchings should behave like random matchings. The upshot is that Khandekar, Rao, and Vazirani~\cite{khandekar2009graph} show how to adaptively select sets \(S_1, \dots , S_k\), where \(S_i\) depends on the matchings \(M_1, \dots , M_{i-1}\) returned in rounds \(1\) through \(i-1\) such that with high probability, after \(k = O(\log ^2 n)\) rounds, the multigraph \(H = (V, \bigcup_{i=1}^{k} M_i)\) induced by the union of \(M_1, \dots , M_k\), is a \hyperref[def:expander]{\(1\)-expander} by showing that \(H\) can route uniform multi-commodity flow: a demand of \(1 / n\) between each ordered pair of vertices \((u, v)\), which suffice for \(H\) being a \hyperref[def:expander]{\(1\)-expander}.
 
 \begin{remark}
 	The above means that the \hyperref[def:expander]{\(1\)-expander} \(H\) can be embedded with \hyperref[def:congestion]{congestion} \(O(\log ^2 n)\) since each \(M_i\) is \hyperref[def:routable]{routable} in \(G\), implying that \(G\) has \hyperref[def:expansion]{expansion} at least \(1 / k = \Omega (1 / \log ^2 n)\).
@@ -102,10 +102,10 @@ We now describe the \hyperref[def:cut-matching-game]{cut-matching game} formally
 We think of ourselves as the cut player, while the matching player is some black-box \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) flow} computation algorithms that we do not have control of.
 
 \begin{intuition}
-	In reality, however, we compute the \hyperref[def:flow]{flow} ourselves and hence we're essentially also the matching player as well, just that we do not have the control of the final matching \(M_i\) (if it exists).
+	In reality, however, we compute the \hyperref[prb:s-t-max-flow]{\(s\)-\(t\) flow} ourselves, hence we're essentially the matching player as well, just that we do not have the control of the final matching \(M_i\) (if it exists).
 \end{intuition}
 
-Firstly, if there is no feasible matching \hyperref[def:flow]{flow} between \(S\) and \(V\setminus S\), then this should indicate that \(G\) is not a very good \hyperref[def:expander]{expander}. Indeed, by multi-commodity flow-cut gap (\autoref{thm:sparsest-cut-embedding}), there is a cut with \hyperref[def:expansion]{expansion} at most \(O(\log n)\). However, in this case, we can improve this bound to \(1\).
+Firstly, if there is no feasible matching \hyperref[def:flow]{flow} between \(S\) and \(V\setminus S\), then this should indicate that \(G\) is not a very good \hyperref[def:expander]{expander}. Indeed, by multi-commodity flow-cut gap (\autoref{thm:sparsest-cut-embedding}), this means that there is a cut with \hyperref[def:expansion]{expansion} at most \(O(\log n)\). However, in this case, we can improve this bound to \(1\).
 
 \begin{lemma}\label{lma:cut-matching-fail}
 	Suppose there is no feasible matching \hyperref[def:flow]{flow} between \(S\) and \(V\setminus S\) for some \(S \subseteq V\) with \(\lvert S \rvert = n / 2\). Then \(G\) has \hyperref[def:expansion]{expansion} at most \(1\).
@@ -131,7 +131,7 @@ On the other hand, if \(G\) has \hyperref[def:expansion]{expansion} at least \(1
 It's clear that by combining \autoref{lma:cut-matching-fail} and \autoref{thm:cut-matching-succeed}, we can prove the following.
 
 \begin{corollary}\label{col:cut-matching-sparsest-cut}
-	There is a randomized algorithm, that given a graph \(G\), either proves that \(G\) is not an \hyperref[def:expander]{expander}, or with high probability certifies that it is an \hyperref[def:expander]{\(\Omega (\frac{1}{\log ^2 n})\)-expander} using \(O(\log ^2 n)\) single-commodity \hyperref[def:flow]{flow} instances on \(G\). Via binary search, there is a randomized algorithm for \hyperref[prb:sparsest-cut]{uniform sparsest cut} via \(O(\log ^3 n)\) single-commodity \hyperref[def:flow]{flow}.
+	There is a randomized algorithm, that given a graph \(G\), either proves that \(G\) is not an \hyperref[def:expander]{expander}, or with high probability certifies that it is an \hyperref[def:expander]{\(\Omega (\frac{1}{\log ^2 n})\)-expander} using \(O(\log ^2 n)\) single-commodity \hyperref[def:flow]{flow} instances on \(G\). By binary search, there is a randomized algorithm for \hyperref[prb:sparsest-cut]{uniform sparsest cut} via \(O(\log ^3 n)\) single-commodity \hyperref[def:flow]{flow}.
 \end{corollary}
 \begin{proof}
 	If any \((S_i, V\setminus S_i)\) cannot be feasibly routed, then we have a cut with \hyperref[def:expansion]{expansion} at most \(1\) from \autoref{lma:cut-matching-fail}. Otherwise, from \autoref{thm:cut-matching-succeed}, with high probability, we obtain a \hyperref[def:expander]{\(1 / 2\)-expander} \(H = (V, \bigcup_{i=1}^{k} M_i)\). Since each matching \hyperref[def:flow]{flow} fits in \(G\), so the \(k\) matching \hyperref[def:flow]{flows} fit in \(G\) scaled up by a factor of \(k\), i.e., \(H\) can be embedded in \(G\) with congestion \(k = O(\log ^2 n)\), proving the corresponding \hyperref[def:expansion]{expansion}. The binary search for \hyperref[prb:sparsest-cut]{uniform sparsest cut} is trivial.

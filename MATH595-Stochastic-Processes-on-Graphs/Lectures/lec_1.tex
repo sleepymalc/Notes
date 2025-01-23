@@ -1,0 +1,196 @@
+\chapter{Introduction}
+\lecture{1}{21 Jan.\ 9:30}{Overview}
+
+\section{Emergence of Graph Structure}
+In this course, we will consider undirected, unweighted, and finite graph \(G = (V, E)\). Given a graph \(G = (V, E)\), for any \(x, y \in V\), we define \(\omega _{xy} \coloneqq \mathbbm{1}_{(x, y) \in E} \) as the indicator of \((x, y)\) in \(E\).
+
+\subsection{Structure}
+One of the fundamental structures in a graph is the \hyperref[def:connected-component]{connected component}, where we now define.
+
+\begin{definition}[Connected]\label{def:connected}
+	Given a graph \(G = (V, E)\), we say \(x, y \in V\) is \emph{connected} if there exists a path \(x = v_1, \dots, v_k = y\) such that \(\omega _{v_i v_{i+1}} = 1\) for all \(1 \leq i \leq k-1\).
+\end{definition}
+
+\begin{notation}
+	We will write \(x \to y\) if \(x\) is \hyperref[def:connected]{connected} to \(y\).
+\end{notation}
+
+It's easy to see that \(\to \) is an equivalent relation, hence, one can define the so-called \hyperref[def:connected-component]{connected component}, which is an equivalent class of \(G\) with \(\to \).
+
+\begin{definition}[Connected component]\label{def:connected-component}
+	Given a graph \(G\), a \emph{connected component} \(C \subseteq V\) is a maximal\footnote{Note the wording: it's not equivalent to maximum.} size subset of \(V\) such that for all \(x, y \in C\), \(x \to y\).
+\end{definition}
+
+\begin{notation}
+	For a particular vertex \(v \in V\), we define \(C(v, G) \coloneqq \{ u \mid u \to v \text{ in } G\} \) as the \hyperref[def:connected-component]{connected component} containing \(v\). If \(G\) is realized, we simply write \(C(v)\).
+\end{notation}
+
+\hyperref[def:connected-component]{Connected component} is an example of \emph{structure}. Other common structures include triangle, for-cycle, clique, etc. A central problem we will be asking is the following:
+
+\begin{problem*}[Property]
+	Given a graph \(G\), whether it contains a certain structure; if yes, how many?
+\end{problem*}
+
+\subsection{Random Graph and Random Graph Process}
+In this course, instead of any graph, we are interested in certain graph models such that when the number of vertices grow, some kinds of structure emerges. The most famous (and simple) random graph model is the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
+
+\begin{definition}[Erdős-Rényi random graph]\label{def:Erdős-Rényi-random-graph}
+	The \emph{Erdős-Rényi random graph} model, denoted as \(G(n, p)\), is a random graph generated on \(n\) vertices such that any two vertices are connected with probability \(p \in (0, 1)\) independently.
+\end{definition}
+
+\begin{note}
+	There are lots of independence and symmetry, leading to closed forms for many calculations.
+\end{note}
+
+To get a less restrictive model, one can also consider inhomogeneous model, where we let \(p_{xy}\) differ for different pairs of \((x , y) \in V \times V\). On the other hand,  to relax edge independence, the so-called \emph{exponential random graph model} exists.
+
+\begin{remark}
+	These model all have light-tail. There are also models with heavy tail behavior, e.g., random graph with specified degree distribution, and preferential attachment model.
+\end{remark}
+
+It's natural to view these random graph model by a random sequence of graphs, which we call graph process. People are interested in several optimization problems of such a graph process.
+
+\begin{eg}[Optimization on graph process]
+	Given a graph process, what's the (expected) number of the largest cycle, or what's the minimum spanning tree, or some maximum weight problem.
+\end{eg}
+
+On the other hand, we can also consider another layer of randomness, where we are given a fixed graph, and consider stochastic processes on this graph.
+
+\begin{eg}
+	Infection model on a social network, or a growth process.
+\end{eg}
+
+Some other more advanced topics include Gibbs measures, spin model (Ising model and its generalization Potts model), and spin glass model.
+
+\section{Erdős-Rényi Random Graph}
+Recall the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
+
+\begin{prev}
+	Let \(V = [n] \coloneqq \{ 1, \dots , n \} \) and \(p \in [0, 1]\). For every \(1 \leq i < j \leq n\), we let \(\omega _{ij} \overset{\text{i.i.d.} }{\sim } \operatorname{Ber}(p) \), which induces \(E \coloneqq \{ (i, j) \mid \omega _{ij} = 1, 1 \leq i < j \leq n\} \).
+\end{prev}
+
+Due to the independence and the simplicity, we get several immediate results.
+
+\begin{claim}
+	The number of edges converges in distribution to a standard normal, in particular,
+	\[
+		\frac{\lvert E \rvert - \binom{n}{2}p}{\sqrt{\binom{n}{2}p (1 - p)} }
+		\overset{D}{\to } \mathcal{N} (0, 1),
+	\]
+	if and only if \(\binom{n}{2}p (1 - p) \to \infty \). As a corollary, we have \(\lvert E \rvert / \binom{n}{2}p \approx 1\).
+\end{claim}
+\begin{explanation}
+	We see that \(\lvert E \rvert = \sum_{1 \leq i < j \leq n} \omega _{ij} \sim \operatorname{Bin}(\binom{n}{2}, p) \), hence, \(\mathbb{E}_{}[\lvert E \rvert ] = \binom{n}{2}p = n(n-1) p / 2\). Then, the result follows directly from the central limit theorem.
+\end{explanation}
+
+Now it's a good time to bring up another random graph model, \(G(n, m)\), where we sample a graph with \(n\) vertices and \(m\) edges uniformly. This is actually the original \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
+
+\begin{remark}
+	If we choose \(p\) such that \(m \approx \binom{n}{2}p\), the results often transfer between \(G(n, p)\) and \(G(n, m)\).
+\end{remark}
+
+\subsection{Density and Phase Transition}
+We now introduce the concept of dense and sparse graph, which is decided by the parameter \(\lvert E \rvert / \binom{n}{2} \).
+
+\begin{definition}[Dense graph]\label{def:dense-graph}
+	A graph \(G = (V, E)\) is \emph{dense} if there exists a constant \(\epsilon > 0\) such that \(\lvert E \rvert / \binom{n}{2} > \epsilon \).
+\end{definition}
+
+\begin{definition}[Sparse graph]\label{def:sparse-graph}
+	A graph \(G = (V, E)\) is \emph{sparse} if it is not \hyperref[def:dense-graph]{dense}.
+\end{definition}
+
+Putting the motivation of defining \autoref{def:dense-graph} and \autoref{def:sparse-graph} in this way aside, let's first observe an interesting property for the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model. Firstly, note that the typical degree of the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} is some constant since for \(G(n, p)\),
+\[
+	\frac{1}{\lvert V \rvert } \sum_{v \in V} \deg (v)
+	= \frac{2 \lvert E \rvert }{\lvert V \rvert }
+	\approx \frac{2 n (n-1)}{2} \frac{p}{n}
+	= (n-1) p.
+\]
+
+\begin{note}
+	Regime we consider hence depend on \(\lambda \coloneqq np\) for some \(\lambda \in (0, \infty )\).
+\end{note}
+
+Then, given a particular vertex, its degree follows \(\operatorname{Bin}(n-1, p) = \operatorname{Bin}(n-1, \lambda / n) \).
+
+\begin{claim}
+	\(\operatorname{Bin}(n-1, \lambda / n) \overset{D}{\to} \operatorname{Pois}(\lambda ) \) as \(n \to \infty \).
+\end{claim}
+\begin{explanation}
+	We see this in a straightforward way: for any \(k\), \(X \sim \operatorname{Bin}(n-1, \lambda / n) \) has a pmf
+	\[
+		\Pr_{}(X = k)
+		= \binom{n-1}{k} \cdot \left( \frac{\lambda}{n} \right) ^{k} \cdot \left( 1 - \frac{\lambda}{n} \right) ^{n-1-k}
+		\to \frac{\lambda ^k}{k!} e^{-\lambda },
+	\]
+	which is the pmf of \(\operatorname{Pois}(\lambda ) \). Hence, by definition, \(\operatorname{Bin}(n - 1, \lambda / n) \overset{D}{\to} \operatorname{Pois}(\lambda ) \). Another proof is based on the total variational distance \(d_{\mathrm{TV} }\).
+
+	\begin{prev}[Total variational distance]
+		For the discrete case, given two discrete probability distributions \(p, r\) with a finite support \(\Omega \),
+		\[
+			d_{\mathrm{TV} }((p_k)_{k \in \Omega }, (r_k)_{k \in \Omega })
+			\coloneqq \frac{1}{2} \sum_{k \in \Omega } \lvert p_k - r_k \rvert.
+		\]
+	\end{prev}
+
+	Now, consider the empirical degree distribution defined as \(d^{(n)} \coloneqq \frac{1}{n} \sum_{v} \delta _{\deg(v)}\). We see that
+	\[
+		d_{\mathrm{TV} } \left( d^{(n)} , \operatorname{Pois}(\lambda ) \right)
+		= \frac{1}{2} \sum_{k=0}^{n} \left\lvert \frac{\lvert \{ v \mid \deg(v) = k \}  \rvert }{n} - \frac{e^{-\lambda } \lambda ^k}{k!} \right\rvert ,
+	\]
+	and by Jensen's inequality,
+	\[
+		\mathbb{E}_{}\left[d_{\mathrm{TV} } \left( p^{(n)} , \operatorname{Pois}(\lambda ) \right) \right]
+		\leq \frac{1}{2} \sum_{k=0}^{n} \sqrt{ \mathbb{E}_{}\left[ \left( \frac{\lvert \{ v \mid \deg(v) = k \}  \rvert }{n} - \frac{e^{-\lambda } \lambda ^k}{k!} \right) ^2 \right] }
+		\approx \sqrt{\frac{p_k}{n}}
+		= O\left( \frac{1}{\sqrt{n} } \right) ,
+	\]
+	where \(p_k = e^{-\lambda } \lambda ^k / k!\).
+\end{explanation}
+
+The above basically gives a distance-one neighborhood characterization of \(G(n, p)\). However, this actually gives us a higher-level picture on larger neighborhoods.
+
+\begin{notation}
+	Given a graph \(G\), let \(C_{\max _i}\) denotes the \(i^{\text{th} }\) largest \hyperref[def:connected-component]{connected component} in \(G\).
+\end{notation}
+
+\begin{theorem}
+	Consider the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model \(G(n, \lambda / n)\) for some \(\lambda > 0\).
+	\begin{itemize}
+		\item If \(\lambda < 1\), the graph is disconnected with high probability such that \(\lvert C_{\max _1} \rvert = \Theta _p (\log n)\). In particular,
+		      \[
+			      \Pr_{}\left( \lvert C_{\max _1} \rvert \geq  a \log n \right)
+			      \to 0 \text{ as } n \to \infty \text{ if } a \dots .
+		      \]
+		\item If \(\lambda > 1\), \(\frac{1}{n} \lvert C_{\max _1} \rvert \) converges to a constant, i.e., there exists a giant component. Moreover, \(C_{\max _2}\) has size of \(O(\log n)\).
+		\item At \(\lambda = 1\), the random vector \(\frac{1}{n^{2 / 3}} (\lvert C_{\max _1} \rvert , \lvert C_{\max _2} \rvert , \dots )\) converges in distribution to a non-trivial limit.
+	\end{itemize}
+\end{theorem}
+
+Before we prove it formally, we first give a heuristic explanation. Consider the neighborhood structure of vertex \(1\), which should be tree-like, at least locally:
+\begin{center}
+	\incfig{Erdős-Rényi-1-neighborhood}
+\end{center}
+This is because, for any \(k \geq 2\), the expected number of cycles of length \(k\) in this structure is
+\[
+	\binom{n}{k} \cdot k! \cdot \left( \frac{\lambda}{n} \right) ^k
+	\approx n^k \frac{\lambda ^k}{n^k}
+	= \lambda ^k,
+\]
+which implies
+\[
+	\sum_{k=2}^{n} \mathbb{E}_{}[\# \text{cycle of length } k]
+	\leq \frac{1}{1 - \lambda }
+\]
+when \(\lambda < 1\). Hence, in this regime, for a random vertex \(v\), up to any finite distance \(k\), we will see no cycle. On the other hand, we can view this neighborhood structure as a branching process, and for \(\lambda < 1\),
+\[
+	\begin{split}
+		\Pr_{}\left( \lvert C_{\max _1} \rvert > a \log n \right)
+		 & \leq \sum_{v=1}^{n} \Pr_{}(\lvert C(v) \rvert > a \log n) \\
+		 & = n \Pr_{}(\lvert C(1) \rvert > a \log n)
+		\leq n \Pr_{}(\lvert \operatorname{BP}(\operatorname{Pois}(\lambda ) )  \rvert > a \log n) .
+	\end{split}
+\]
+
+Consider \(s_0 = 1\), \(s_1 = X_1 \sim \operatorname{Pois}(\lambda ) - 1\), and \(s_2 = s_1 + x_2\), etc. Then, the hitting time \(T = H^{\{ v \} }\) has the same distribution as \(\lvert \operatorname{BP}(\operatorname{Pois}(\lambda ) )  \rvert \).

@@ -4,7 +4,7 @@
 \section{Emergence of Graph Structure}
 In this course, we will consider undirected, unweighted, and finite graph \(G = (V, E)\). Given a graph \(G = (V, E)\), for any \(x, y \in V\), we define \(\omega _{xy} \coloneqq \mathbbm{1}_{(x, y) \in E} \) as the indicator of \((x, y)\) in \(E\).
 
-\subsection{Structure}
+\subsection[Structure]{Structure\protect\footnote{Later (after this section), we will will not reference back to definitions defined here due to their elementary nature.}}
 One of the fundamental structures in a graph is the \hyperref[def:connected-component]{connected component}, where we now define.
 
 \begin{definition}[Connected]\label{def:connected}
@@ -25,17 +25,35 @@ It's easy to see that \(\to \) is an equivalent relation, hence, one can define 
 	For a particular vertex \(v \in V\), we define \(C(v, G) \coloneqq \{ u \mid u \to v \text{ in } G\} \) as the \hyperref[def:connected-component]{connected component} containing \(v\). If \(G\) is realized, we simply write \(C(v)\).
 \end{notation}
 
-\hyperref[def:connected-component]{Connected component} is an example of \emph{structure}. Other common structures include triangle, for-cycle, clique, etc. A central problem we will be asking is the following:
+\hyperref[def:connected-component]{Connected component} is an example of \emph{structure}. Other common structures include triangle, cycle, clique, etc. We also define them formally for concreteness.
+
+\begin{definition}[Triangle]\label{def:triangle}
+	A \emph{triangle} \((v_1, v_2, v_3)\) in a graph \(G = (V, E)\) is such that \((v_1, v_2), (v_2, v_3)\), and \((v_3, v_1)\) are in \(E\).
+\end{definition}
+
+\begin{definition}[Cycle]\label{def:cycle}
+	A \emph{\(k\)-cycle} \((v_1, \dots , v_k)\) in a graph \(G = (V, E)\) is such that \((v_i, v_{i+1})\) and \((v_k, v_0)\) are in \(E\).
+\end{definition}
+
+\begin{definition}[Clique]\label{def:clique}
+	A \emph{\(k\)-clique} \(K_k \subseteq V\) in a graph \(G = (V, E)\) is such that for every \(v_i, v_j \in K_k\), \((v_i, v_j) \in E\).
+\end{definition}
+
+\begin{eg}
+	It's clear that a \hyperref[def:triangle]{triangle} is just a \hyperref[def:cycle]{\(3\)-cycle} while also a \hyperref[def:clique]{\(3\)-clique}.
+\end{eg}
+
+A central problem we will be asking is the following:
 
 \begin{problem*}[Property]
 	Given a graph \(G\), whether it contains a certain structure; if yes, how many?
 \end{problem*}
 
 \subsection{Random Graph and Random Graph Process}
-We are interested in certain graph models such that when the number of vertices grow, some kinds of structure emerges. The most famous (and simple) random graph model is the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
+We are interested in certain graph models where when the number of vertices grows, some structures emerge. The most famous (and simple) random graph model is the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
 
 \begin{definition}[Erdős-Rényi random graph]\label{def:Erdős-Rényi-random-graph}
-	The \emph{Erdős-Rényi random graph} model, denoted as \(G(n, p)\), is a random graph generated on \(n\) vertices such that any two vertices are connected with probability \(p \in (0, 1)\) independently.
+	The \emph{Erdős-Rényi random graph} model, denoted as \(G(n, p)\) or \(\operatorname{ER}(n, p) \), is a random graph generated on \(n\) vertices such that any two vertices are connected with probability \(p \in (0, 1)\) independently.
 \end{definition}
 
 \begin{note}
@@ -149,48 +167,40 @@ Then, given a particular vertex, its degree follows \(\operatorname{Bin}(n-1, p)
 	where \(p_k = e^{-\lambda } \lambda ^k / k!\).
 \end{explanation}
 
-The above basically gives a distance-one neighborhood characterization of \(G(n, p)\). However, this actually gives us a higher-level picture on larger neighborhoods.
+The above gives a distance-one neighborhood characterization of \(G(n, p)\). However, this actually gives a higher-level picture on larger neighborhoods, in particular, the \hyperref[def:connected-component]{connected component}.
 
 \begin{notation}
 	Given a graph \(G\), let \(C_{\max _i}\) denotes the \(i^{\text{th} }\) largest \hyperref[def:connected-component]{connected component} in \(G\).
 \end{notation}
 
-\begin{theorem}
+\begin{theorem}\label{thm:Erdős-Rényi-phase-transition}
 	Consider the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model \(G(n, \lambda / n)\) for some \(\lambda > 0\).
-	\begin{itemize}
-		\item If \(\lambda < 1\), the graph is disconnected with high probability such that \(\lvert C_{\max _1} \rvert = \Theta _p (\log n)\). In particular,
-		      \[
-			      \Pr_{}\left( \lvert C_{\max _1} \rvert \geq  a \log n \right)
-			      \to 0 \text{ as } n \to \infty \text{ if } a \dots .
-		      \]
-		\item If \(\lambda > 1\), \(\frac{1}{n} \lvert C_{\max _1} \rvert \) converges to a constant, i.e., there exists a giant component. Moreover, \(C_{\max _2}\) has size of \(O(\log n)\).
-		\item At \(\lambda = 1\), the random vector \(\frac{1}{n^{2 / 3}} (\lvert C_{\max _1} \rvert , \lvert C_{\max _2} \rvert , \dots )\) converges in distribution to a non-trivial limit.
-	\end{itemize}
+	\begin{enumerate}[(a)]
+		\item\label{thm:Erdős-Rényi-phase-transition-a} If \(\lambda < 1\), the graph is disconnected with high probability such that \(\lvert C_{\max _1} \rvert = \Theta _p (\log n)\). In particular, if \(a (\lambda - 1 - \log \lambda ) > 1\), as \(n \to \infty \), we have \(\Pr_{}\left( \lvert C_{\max _1} \rvert \geq  a \log n \right) \to 0\).
+		\item\label{thm:Erdős-Rényi-phase-transition-b} If \(\lambda > 1\), \(\frac{1}{n} \lvert C_{\max _1} \rvert \) converges to a constant, i.e., there exists a giant \hyperref[def:connected-component]{component}. Moreover, \(C_{\max _2}\) has size of \(O(\log n)\).
+		\item\label{thm:Erdős-Rényi-phase-transition-c} At \(\lambda = 1\), the random vector \(\frac{1}{n^{2 / 3}} (\lvert C_{\max _1} \rvert , \lvert C_{\max _2} \rvert , \dots )\) converges in distribution to a non-trivial limit.
+	\end{enumerate}
 \end{theorem}
 
-Before we prove it formally, we first give a heuristic explanation. Consider the neighborhood structure of vertex \(1\), which should be tree-like, at least locally:
-\begin{center}
-	\incfig{Erdős-Rényi-1-neighborhood}
-\end{center}
-This is because, for any \(k \geq 2\), the expected number of cycles of length \(k\) in this structure is
-\[
-	\binom{n}{k} \cdot k! \cdot \left( \frac{\lambda}{n} \right) ^k
-	\approx n^k \frac{\lambda ^k}{n^k}
-	= \lambda ^k,
-\]
-which implies
-\[
-	\sum_{k=2}^{n} \mathbb{E}_{}[\# \text{cycle of length } k]
-	\leq \frac{1}{1 - \lambda }
-\]
-when \(\lambda < 1\). Hence, in this regime, for a random vertex \(v\), up to any finite distance \(k\), we will see no cycle. On the other hand, we can view this neighborhood structure as a branching process, and for \(\lambda < 1\),
-\[
-	\begin{split}
-		\Pr_{}\left( \lvert C_{\max _1} \rvert > a \log n \right)
-		 & \leq \sum_{v=1}^{n} \Pr_{}(\lvert C(v) \rvert > a \log n) \\
-		 & = n \Pr_{}(\lvert C(1) \rvert > a \log n)
-		\leq n \Pr_{}(\lvert \operatorname{BP}(\operatorname{Pois}(\lambda ) )  \rvert > a \log n) .
-	\end{split}
-\]
+\autoref{thm:Erdős-Rényi-phase-transition} says that there is a phase transition right at \(\lambda = 1\). When \(\lambda < 1\), there will not exist large \hyperref[def:connected-component]{component}; if \(\lambda > 1\), the largest \hyperref[def:connected-component]{component} is of constant fractional of the entire graph, and at \(\lambda = 1\), it's something in between.
 
-Consider \(s_0 = 1\), \(s_1 = X_1 \sim \operatorname{Pois}(\lambda ) - 1\), and \(s_2 = s_1 + x_2\), etc. Then, the hitting time \(T = H^{\{ v \} }\) has the same distribution as \(\lvert \operatorname{BP}(\operatorname{Pois}(\lambda ) )  \rvert \).
+We first focus on the case when \(\lambda < 1\). Consider the following heuristic argument of why there can't exist a large \hyperref[def:connected-component]{component}.
+\begin{intuition}
+	The neighborhood structure of some vertex \(v\), which should be tree-like, at least locally. This is because, for any \(k \geq 2\), the expected number of cycles of length \(k\) in this structure is
+	\[
+		\binom{n}{k} \cdot k! \cdot \left( \frac{\lambda}{n} \right) ^k
+		\approx n^k \frac{\lambda ^k}{n^k}
+		= \lambda ^k,
+	\]
+	which implies that when \(\lambda < 1\),
+	\[
+		\sum_{k=2}^{n} \mathbb{E}_{}[\# \text{cycle of length } k]
+		\leq \frac{1}{1 - \lambda }.
+	\]
+	Hence, in this regime, for a random vertex \(v\), up to any finite distance \(k\), we will only see few cycles.
+	\begin{center}
+		\incfig{Erdős-Rényi-1-neighborhood}
+	\end{center}
+\end{intuition}
+
+Formally, by viewing the neighborhood structure as a branching process, one can bound its size.

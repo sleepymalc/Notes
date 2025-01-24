@@ -1,1 +1,132 @@
 \lecture{2}{23 Jan.\ 9:30}{Erdős-Rényi Random Graph Model}
+\begin{prev}[Types of questions]
+	We mainly focus on the following three types of questions:
+	\begin{enumerate}
+		\item Typical behavior: single/multiple points view.
+		\item Global behavior: empirical behavior.
+		\item Extremal behavior: maxima or minima.
+	\end{enumerate}
+	The degree distribution (\(\operatorname{Bin}(n - 1, \lambda / n) \overset{D}{\to} \operatorname{Pois}(\lambda ) \)) for a single vertex is a single point view.
+\end{prev}
+
+Toward proving \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-a}, we will need the following idea:
+
+\begin{definition}[Stochastic domination]\label{def:stochastic-domination}
+	Let \(X\) and \(Y\) be two real-valued random variables. We say that \(X\) is \emph{stochastically dominated} by \(Y\), denoted as \(X \preceq Y\), if there exists a coupling of \(X, Y\) such that \(X \leq Y\).
+\end{definition}
+
+The reason why \hyperref[def:stochastic-domination]{stochastic domination} is useful is because of the following:
+
+\begin{exercise}
+	\(X \preceq Y\) if and only if \(\Pr_{}(X > t) \leq \Pr_{}(Y > t) \) for all \(t \in \mathbb{R} \).
+\end{exercise}
+
+Here we give some elementary examples of \hyperref[def:stochastic-domination]{stochastic domination}.
+
+\begin{eg}
+	\(\operatorname{Bin}(n, p) \preceq \operatorname{Bin}(m, p) \) since we have \(\operatorname{Bin}(m, p) \overset{D}{=} \operatorname{Bin}(n, p) + \operatorname{Bin}(m - n, p)\).
+\end{eg}
+
+\begin{eg}
+	\(\operatorname{Ber}(p) \preceq \operatorname{Ber}(r) \) if \(p \leq r\).
+\end{eg}
+
+\begin{eg}
+	\(\operatorname{Ber}(p) \preceq \operatorname{Pois}(\theta ) \) by letting \(\theta e^{-\theta } = p\). More generally, we just need \(1 - p \geq e^{-\theta }\).
+\end{eg}
+
+As we will soon see, by using \hyperref[def:stochastic-domination]{stochastic domination}, one can provide a nice bound for proving \autoref{thm:Erdős-Rényi-phase-transition} easily.
+
+\subsection{Small Digression to Degree Distribution}
+As a warm-up toward proving \autoref{thm:Erdős-Rényi-phase-transition}, let's first look at an easier problem: the degree. When \(p = \lambda / n\), recall what we have proven.
+
+\begin{prev}
+	The expected degree of any vertex \(v\) is approximately \(\lambda \in (0, \infty )\). We also have \(\deg_{G_n}(v) \overset{D}{\to} \operatorname{Pois}(\lambda ) \) as \(n \to \infty \) where \(G_n \sim \operatorname{ER}(n, \lambda / n) \).
+\end{prev}
+
+This is for a single point, what about their joint behaviors?
+
+\begin{claim}
+	For any finite \(k\), \((\deg(1), \deg(2), \dots , \deg(k)) \overset{D}{\to} (\operatorname{Pois}(\lambda ) , \operatorname{Pois}(\lambda ), \dots , \operatorname{Pois}(\lambda ) )\).
+\end{claim}
+\begin{explanation}
+	Consider any two vertices \(i, j\), we see that \(\deg(i) = \mathbbm{1}_{(i, j) \in E} + \sum_{v \neq j} \mathbbm{1}_{(i, v) \in E} \) and \(\deg(j) = \mathbbm{1}_{(i, j) \in E} + \sum_{v \neq i} \mathbbm{1}_{(j, v) \in E}\). Note that the remaining parts, \(\sum_{v \neq j} \mathbbm{1}_{(i, v) \in E} \) and \(\sum_{v \neq i} \mathbbm{1}_{(j, v) \in E} \), are independent. The same argument generalizes to any fixed \(k\) vertices.
+
+	Moreover, for any fixed \(k\), the number of edges among these \(k\) vertices follows \(\operatorname{Bin}(\binom{k}{2}, \lambda / n) \), which goes to \(0\) as \(n \to \infty \). Hence, only the remaining parts in the above degree expression survive, which are independent. As \(k\) is finite, the remaining parts again follow \(\operatorname{Pois}(\lambda ) \).
+\end{explanation}
+
+\begin{intuition}
+	Since the graph is sparse, for any fixed, finite \(k\),  \(n \to \infty \), independence emerges.
+\end{intuition}
+
+The above is for finite \(k\), serving as the multiple points view. For a global view of the degree distribution, recall the following:
+
+\begin{prev}
+	Consider the empirical distribution of degree, defined as \(\frac{1}{n} \sum_{v=1}^{n} \delta _{\deg(v)}\), converges to \(\operatorname{Pois}(\lambda ) \) in the total variation distance.
+\end{prev}
+
+The last question is the extremal behavior, where we are interested in either bounding or approximating the maximum degree \(\deg _{\max , n} \coloneqq \max _{v \in V} \deg (v)\) for \(G \sim G(n, p)\).
+
+\begin{proposition}\label{prop:Erdős-Rényi-max-degree}
+	Consider the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model \(G(n, \lambda / n)\) for \(\lambda < 1\). Then,
+	\[
+		\Pr_{}\left( \deg _{\max , n} \geq (1 + \epsilon ) \frac{\log n}{\log \log n} \right)  \to 0
+	\]
+	as \(n \to \infty \) for all \(\epsilon > 0\).
+\end{proposition}
+\begin{proof}
+	By a simple union bound, for any \(x \in \mathbb{R} \), we have
+	\[
+		\Pr_{}\left( \max _{v \in [n]} \deg (v) \geq x\right)
+		= \Pr_{}\left( \bigcup_{v=1}^{n} \{ \deg (v) \geq x \} \right)
+		\leq n \Pr_{}(\deg (1) \geq x) .
+	\]
+	Now we focus on \(\Pr_{}(\deg (1) \geq x) \). With the Chernoff-Cramér method, for any \(\theta > 0\), we have
+	\begin{align*}
+		\Pr_{}(\deg (1) \geq x)
+		 & \leq e^{-\theta x} \mathbb{E}_{}[e^{\theta \deg (1)}]                                             \\
+		 & = e^{-\theta x} \cdot \left( 1 - \frac{\lambda}{n} + \frac{\lambda}{n} e^{\theta } \right) ^{n-1} \\
+		 & \leq \exp (-\theta x + (n-1) \frac{\lambda}{n} (e^\theta - 1))
+		\leq \exp (-\theta x + \lambda (e^\theta - 1)). \tag*{(\(1 + t \leq e^t\))}
+	\end{align*}
+	Optimizing \(\theta \), we see that \(\theta _0 = \ln (x / \lambda )\) minimizes the above, and it's positive if \(x > \lambda \). In the end, we have an upper bound \(\exp (-x \ln (x / \lambda ) + x - \lambda )\). Plugging it back, we have
+	\[
+		\Pr_{}\left( \max _{v \in [n]} \deg (v) \geq x\right)
+		\leq n \exp (- x \ln \frac{x}{\lambda } + x - \lambda ).
+	\]
+	By choosing \(x = (1 + \epsilon ) \log n / \log \log n\), the upper bound goes to \(0\) as \(n \to \infty \).
+\end{proof}
+
+\begin{remark}
+	The proof technique of \autoref{prop:Erdős-Rényi-max-degree} will be used extensively in this course.
+\end{remark}
+
+\subsection{Cluster Distribution}
+Getting back to \autoref{thm:Erdős-Rényi-phase-transition}, with a similar technique and argument, without loss of generality we consider \(\lvert C(1) \rvert \). To see how to compute the size of a connected component, consider the breadth-first search algorithm starting from vertex \(1\).
+
+\begin{intuition}
+	We see that the induced distance tree is in some sense \emph{dominated} by the tree where we do not mark the already explored vertices.
+\end{intuition}
+
+The latter is considered as a \href{https://en.wikipedia.org/wiki/Galton%E2%80%93Watson_process}{Galton-Watson branching process} with progeny \(\operatorname{Bin}(n-1, p) \), denoted as \(\operatorname{GWBP}(\operatorname{Bin}(n-1, p) ) \). The crucial observation is that, the size of this branching process \hyperref[def:stochastic-domination]{stochastically dominates} the size of \(C(1)\). We can now prove \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-a}, where we aim to show that \(\Pr_{}(\lvert C_{\max _1} \rvert \geq a \log n) \to 0\) as \(n \to \infty \) if \(a(\lambda - 1 - \log \lambda ) > 1\).
+
+\begin{proof}[Proof of \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-a}]
+	For any \(x\), \(\Pr_{}(\lvert C(1) \rvert \geq x) \leq \Pr_{}(\lvert \operatorname{GWBP}(\operatorname{Bin}(n-1, \lambda / n) )  \rvert \geq x) \). The intuition is the following.
+
+	\begin{intuition}
+		If we maintain the number of vertices in the queue when we do the breadth-first search, we see that the tree can be (uniquely) embedded in a sequence. It's clear that the size of the tree is the length of this sequence \((s_n)\) such that \(s_0 = 1\), \(s_1 = s_0 + (x_1 - 1)\), and so on.
+	\end{intuition}
+
+	The above sequence can be viewed as a random work, we see that \(\lvert T \rvert = \inf \{ n \geq 1 \mid s_n = 0 \} \), where \(T\) is the tree corresponding to \(\operatorname{GWBP}(\operatorname{Bin}(n-1, \lambda / n) ) \). At the end, we have
+	\[
+		\Pr_{}(\lvert C(1) \rvert \geq x)
+		\leq e^{-\theta x } \mathbb{E}_{}[e^{\theta \cdot H^{\{ 0 \} }}] ,
+	\]
+	where \(H^{\{ 0 \} }\) is the hitting at \(0\) for the random work \(s_0 = 1\), \(s_k = s_{k-1} + (\operatorname{Bin}(n-1, p) - 1)\).\todo{Finish}
+\end{proof}
+
+It's tempting to say that since we're considering the \hyperref[def:sparse-graph]{sparse} regime, as we have seen, very few \hyperref[def:cycle]{cycles} exist. Hence, the branching process should be pretty close to the actual breadth-first search tree. In fact, this is the case.
+
+\begin{theorem}\label{thm:Erdős-Rényi-Galton-Watson}
+	For \(G \sim \operatorname{ER}(n, \lambda / n) \) with \(\lambda < 1\), \(\lvert C(1) \rvert \overset{D}{\to} \lvert T_\lambda  \rvert \) where \(T_\lambda \sim \operatorname{GWBP}(\operatorname{Pois}(\lambda ) )\).
+\end{theorem}

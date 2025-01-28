@@ -1,0 +1,146 @@
+\lecture{3}{28 Jan.\ 9:30}{Component in Extremely Sparse Erdős-Rényi Graph}
+\begin{prev}
+	Consider \(\operatorname{ER}(n, \lambda / n) \) for some \(\lambda > 0\). As in \autoref{thm:degree-of-sparse-Erdős-Rényi-graph}, we have proved that \(\deg (1) \overset{D}{\to} \operatorname{Pois}(\lambda ) \) and \((\deg (1), \dots , \deg (k)) \overset{D}{\to} \operatorname{Pois}(\lambda ) \otimes \dots \otimes \operatorname{Pois}(\lambda ) \) as \(n \to \infty \). Also, the empirical distribution \(\frac{1}{n}\sum_{v=1}^{n} \delta _{\deg (v)} \overset{D}{\to} \operatorname{Pois}(\lambda ) \). Finally, we have a maximum degree bound such that for any \(\epsilon > 0\), \(\Pr_{}(\deg _{\max , n}) \geq (1 + \epsilon ) \log n / \log \log n \).
+\end{prev}
+
+With the build-up from the previous lecture, we are almost ready to prove \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-a}. However, as noted above, it's expected that the result will depend on \(\operatorname{Pois}(\lambda ) \) in various ways. Hence, we note the following results from standard probability analysis.
+
+\begin{exercise}
+	Let \(X_1, \dots , X_r \overset{\text{i.i.d.} }{\sim } \operatorname{Pois}(\lambda ) \). Prove the following.
+	\begin{enumerate}[(a)]
+		\item As \(n \to \infty \), we have
+		      \[
+			      \max _{i = 1, \dots , n} X_i \cdot \frac{\log \log n}{\log n}
+			      \overset{p}{\to} 1.
+		      \]
+		\item Moreover, we can show that as \(n \to \infty \),
+		      \[
+			      \log \log n \left( \max _{i = 1, \dots , n} X_i \cdot \frac{\log \log n}{\log n} - 1 \right)
+		      \]
+		      converges in distribution to some non-trivial limit.
+		\item Similarly, we can prove that as \(n \to \infty \),
+		      \[
+			      \deg _{\max , n} \cdot \frac{\log \log n}{\log n}
+			      \overset{p}{\to} 1,
+		      \]
+		      and
+		      \[
+			      \log \log n \left( \deg _{\max , n} \cdot \frac{\log \log n}{\log n} - 1\right)
+		      \]
+		      converges in distribution to some non-trivial limit.
+	\end{enumerate}
+\end{exercise}
+\begin{answer}
+	We quickly sketch the proof for \(\deg _{\max , n}\), specifically for the lower bound. Consider a bipartition \((V_1, V_2)\) of \(V\), each with \(n / 2\) vertices. Then, for any \(v \in V_1\), \(\deg _{V_2}(v)\) lower bounds \(\deg _{\max , n}\). Analyzing \(\deg _{V_2}(v)\) turns out to be manageable.
+\end{answer}
+
+Now, we're ready to prove \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-a}.
+
+\begin{lemma}[Component of extremely sparse Erdős-Rényi graph]\label{lma:component-of-extremely-sparse-Erdős-Rényi-graph}
+	Let \(G \sim \operatorname{ER}(n, \lambda / n) \) with \(\lambda < 1\).
+	\begin{enumerate}[(a)]
+		\item\label{lma:component-of-extremely-sparse-Erdős-Rényi-graph-a}  \(\mathcal{C} (1) \overset{D}{\to} \operatorname{BP}(\operatorname{Pois}(\lambda ) ) \). In particular, \(\lvert \mathcal{C} (1) \rvert \overset{D}{\to} \lvert \mathcal{T} _\lambda  \rvert \) where \(\mathcal{T} _\lambda \sim \operatorname{BP}(\operatorname{Pois}(\lambda ) )\).
+		\item\label{lma:component-of-extremely-sparse-Erdős-Rényi-graph-b} For any finite \(k\), \((\mathcal{C} (1), \dots , \mathcal{C} (k)) \overset{D}{\to} \mathcal{T} _\lambda \otimes \dots \otimes \mathcal{T} _\lambda \), where \(\mathcal{T} _\lambda \sim \operatorname{BP}(\operatorname{Pois}(\lambda ) )\).
+		\item\label{lma:component-of-extremely-sparse-Erdős-Rényi-graph-c} The empirical distribution of components converges weakly to \(\operatorname{BP}(\operatorname{Pois}(\lambda ) ) \).
+		\item\label{lma:component-of-extremely-sparse-Erdős-Rényi-graph-d} \(\lvert \mathcal{C} _{\max , n} \rvert \leq (1 / I_\lambda + \epsilon ) \cdot \log n\) with high probability where \(I_\lambda = \lambda - 1 - \log \lambda > 0\).\footnote{Note that \(I_\lambda \) equals to \(0\) at \(1\), and diverges to \(\infty \) at both \(+\infty \) and \(-\infty \).}
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	Let's prove \autoref{lma:component-of-extremely-sparse-Erdős-Rényi-graph-a} first. Last time, we have shown that \(\lvert \mathcal{C} _n(1) \rvert \preceq \lvert \operatorname{BP} (\operatorname{Bin}(n-1, p) )\rvert \) for \(p = \lambda /n\). To show that in general, \(\mathcal{C} (1) \overset{D}{\to} \operatorname{BP}(\operatorname{Pois}(\lambda ) ) \), we need to compute the pmf of \(\mathcal{C} (1)\). Obviously, the support of the distribution of \(\mathcal{C} (1)\) is on the set of connected rooted graphs \(G^{\prime}  = (V^{\prime} , E^{\prime} )\). Suppose \(G^{\prime} \) is not a tree such that \(\lvert V^{\prime} \rvert = k\) and \(\lvert E^{\prime} \rvert = d \geq k\). By a simple counting argument, we have
+	\[
+		\Pr_{}(C_n(1) = G^{\prime} )
+		= \left( \frac{\lambda }{n} \right) ^d \left( 1 - \frac{\lambda}{n} \right) ^{k (n-k) + \binom{k}{2} - d} \cdot \binom{n-1}{k-1} f(G^{\prime} )
+		\to 0,
+	\]
+	where \(f(G)\) is the number of automorphisms of \(G\), which is finite for any fixed \(G^{\prime} \). Hence, we see that only when \(k = d-1\), this probability is not \(0\). That is to say, in the limit, the component will be a tree. In fact, with the same calculation, we have the following.
+
+	\begin{claim}[Borel-Tenner distribution]
+		For \(\lambda \leq 1\), and for \(k \geq 1\), we have
+		\[
+			\Pr_{}(\lvert \mathcal{T} _\lambda \rvert = k)
+			= e^{-\lambda k} \frac{(\lambda k)^{k-1}}{k!}.
+		\]
+		Moreover, \(\Pr_{}(\mathcal{C} _n(1) = \mathcal{T} ) \to \Pr_{}(\operatorname{BP}(\operatorname{Pois}(\lambda ) ) = \mathcal{T} ) \) for all rooted finite tree \(\mathcal{T} \).
+	\end{claim}
+	\begin{explanation}
+		For a leveled tree \(\mathcal{T} \) of \(k\) vertices with \(k-1\) edges,\footnote{Note that we don't need \(f(\mathcal{T} )\) since we're considering leveled tree, which is already labeled, making it unique (in terms of automorphisms). In some sense \(f(\mathcal{T} )\) is handled by the Cayley's formula below.}
+		\[
+			\Pr_{}(\mathcal{C} (1) = \mathcal{T} )
+			= \left( \frac{\lambda}{n} \right) ^{k-1} \cdot \left( 1 - \frac{\lambda}{n} \right) ^{k(n-1) + \binom{k}{2}  - (k-1)} \cdot \binom{n-1}{k-1}
+			\to \frac{\lambda ^{k-1}}{(k-1)!} e^{-\lambda k}.
+		\]
+		From Cayley's formula, the number of leveled trees on \(k\) nodes is \(k^{k-2}\), proving the claim.
+	\end{explanation}
+
+	We omit \autoref{lma:component-of-extremely-sparse-Erdős-Rényi-graph-b} and \autoref{lma:component-of-extremely-sparse-Erdős-Rényi-graph-c} since they can be easily shown. To prove \autoref{lma:component-of-extremely-sparse-Erdős-Rényi-graph-d}, we have
+	\[
+		\Pr_{}(\lvert \mathcal{C} _{\max , n} \rvert \geq t)
+		\leq n \cdot \Pr_{}(\lvert \mathcal{C} _n(1) \rvert \geq t)
+		\leq n \cdot \Pr_{}(\lvert \operatorname{BP}(\operatorname{Bin}(n, \lambda / n) )  \rvert \geq t).
+	\]
+
+	\begin{notation}
+		Recall our algorithmic notation, where we denote the set of active vertices as \(\mathcal{A} _t\) at time \(t\), and \(A_t \coloneqq \lvert \mathcal{A} _t \rvert \).
+	\end{notation}
+
+	Specifically, we have \(A_0 = \lvert \mathcal{A} _0 \rvert = 1\), \(A_1 = \lvert \mathcal{A} _1 \rvert = X_1 + 1 - 1 = A_0 + (X_1 - 1)\), \(A_2 = A_1 + (X_2 - 1)\), etc., where \(X_i \overset{\text{i.i.d.} }{\sim } \operatorname{Bin}(n, \lambda / n) \). Then, \(\lvert \operatorname{BP}(\operatorname{Bin}(n, \lambda / n) )  \rvert \) is the hitting time at \(0\), \(H^{\{ 0 \} } = \inf \{ t \geq 1 \mid A_t = 0 \} \). Hence, we have \(\Pr_{}(\lvert \mathcal{C} _n(1) \rvert > t) \leq \Pr_{}(A_t \geq 1)\), where \(A_t = 1 + (X_1 - 1) + \dots  + (X_t - 1)\). Combining the above, for all \(\theta > 0\),
+	\[
+		\begin{split}
+			\Pr_{}(\lvert \mathcal{C} _{\max , n} \rvert \geq t)
+			 & \leq n \cdot \Pr_{}\left( \sum_{i=1}^{t} (X_i - 1) \geq 0 \right) \\
+			 & \leq n \left( \mathbb{E}_{}[e^{\theta (X_1 - 1)}]  \right) ^t
+			= n \left( e^{-\theta } \left( 1 - \frac{\lambda}{n} + \frac{\lambda}{n} e^{\theta } \right)^n \right) ^t
+			\leq n \exp (t (-\theta + \lambda (e^\theta - 1)))
+		\end{split}
+	\]
+	Minimizing over \(\theta \), we have \(\lambda e^\theta = 1\), hence \(\theta = \log 1 / \lambda > 0\), which gives
+	\[
+		n \exp (-t (-\log \lambda - 1 + \lambda ))
+		\eqqcolon n \exp (- t I_\lambda )
+		= \exp (\log n -t I_\lambda )
+	\]
+	By taking \(t = (1 / I_\lambda + \epsilon ) \log n\), the probability goes to \(0\), proving the result.
+\end{proof}
+
+\begin{note}
+	We note that for \autoref{lma:component-of-extremely-sparse-Erdős-Rényi-graph-a}, we can also prove it by observing that in the exploration tree, each vertex has \(\operatorname{Bin}(n-1-c, p) \) children where \(c\) is some constant depending on the same level. Hence, as long as we're considering a fixed level neighborhood, everything converges to \(\operatorname{Pois}(\lambda ) \). In all, for any finite connected rooted tree \(\mathcal{T} \), we have
+	\[
+		\Pr_{}(\mathcal{C} (1) = \mathcal{T} )  \to \Pr_{}(\operatorname{BP}(\operatorname{Pois}(\lambda ) ) = \mathcal{T} ).
+	\]
+\end{note}
+
+\begin{note}
+	From \autoref{lma:component-of-extremely-sparse-Erdős-Rényi-graph-b}, for \(\lambda < 1\), \(\lvert C_{\max , n} \rvert / \log n \overset{D}{\to} 1 / I_\lambda \) as \(n \to \infty \).
+\end{note}
+
+\paragraph{Regular Sparse Regime \(\lambda > 1\).}
+Next, we consider the regime when \(\lambda > 1\). Specifically, we want to show \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-b}. This is proved in \autoref{lma:component-of-regular-sparse-Erdős-Rényi-graph} below.
+
+\begin{lemma}[Component of sparse Erdős-Rényi graph]\label{lma:component-of-regular-sparse-Erdős-Rényi-graph}
+	Let \(G \sim \operatorname{ER}(n, \lambda / n) \) with \(\lambda > 1\).
+	\begin{enumerate}[(a)]
+		\item\label{lma:component-of-regular-sparse-Erdős-Rényi-graph-a} \(\lvert C_{\max _1, n} \rvert n \overset{p}{\to} \zeta _\lambda\) where \(\zeta _\lambda = \Pr_{}(\operatorname{BP}(\operatorname{Pois}(\lambda ) ) \text{ survives forever} ) \).
+		\item\label{lma:component-of-regular-sparse-Erdős-Rényi-graph-b} \(\lvert C_{\max _2, n} \rvert / \log n \overset{p}{\to} 1 / I_\lambda \) where \(I_\lambda = \lambda - 1 - \log \lambda \).
+		\item\label{lma:component-of-regular-sparse-Erdős-Rényi-graph-c} Outside \(\mathcal{C} _{\max _1, n}\), the graph looks like \(\operatorname{ER}(m, \mu / m) \) for some \(m \approx n (1 - \zeta _\lambda )\) with \(\mu < 1\).
+	\end{enumerate}
+\end{lemma}
+
+To prove \autoref{lma:component-of-regular-sparse-Erdős-Rényi-graph}, we divide it into three steps. Fix \(k = k_n \approx A \log n\) for some large \(A\). Define \(Z_{\geq k_n} \coloneqq \sum_{v=1}^{n} \mathbbm{1}_{\lvert \mathcal{C} _n(v) \rvert \geq k_n} \). Then:
+\begin{enumerate}[(i)]
+	\item \(\mathbb{E}_{}[Z_{\geq k_n}] \approx n \cdot \zeta _\lambda + o(n^{1 - \epsilon })\) and \(\Var_{}[Z_{\geq k_n}] \ll (\mathbb{E}_{}[Z_{\geq k_n}] )^2\). Then we can use the second-moment method to control \(\Pr_{}(Z_{\geq k_n} = 0) \), e.g., Chebyshev's inequality.
+	\item \(\Pr_{}(B \log n \leq \lvert \mathcal{C} (1) \rvert \leq a n) \to 0\) for some \(B > 0\) and for any \(\zeta _\lambda > a\), i.e., either the component is small or large.
+	\item \(Z_{\geq k_n} \approx \lvert \mathcal{C} _{\max , n} \rvert \). Since \(Z_{\geq k_n} = \sum_{v=1}^{n} \mathbbm{1}_{\lvert \mathcal{C} (v) \rvert \geq k_n} = \sum_{v \colon \lvert \mathcal{C} (v) \rvert \geq k_n } \lvert \mathcal{C} (v) \rvert \).
+\end{enumerate}
+
+Now, to analyze \(Z_{\geq k_n}\), we need to consider the exploration algorithm again. However, convenient, we will now maintain three sets \((\mathcal{A} , \mathcal{U} , \mathcal{R} )\), corresponding to \emph{active}, \emph{unexplored}, and \emph{already explored} set.
+
+\begin{intuition}
+	We see that:
+	\begin{itemize}
+		\item At time \(0\), \(\mathcal{A} _0 = \{ 1 \} \), \(\mathcal{U} _0 = \{ 2, \dots , n \} \), \(\mathcal{R} _0 = \varnothing \) with \(A_0 = 1\), \(U_0 = n-1\), \(R_0 = 0\).
+		\item At time \(1\), \(A_1 = A_0 + \operatorname{Bin}(U_0, p) - 1\), \(U_1 = U_0 - \operatorname{Bin}(U_0, p) - 1\), \(R_1 = 1\).
+		\item At time \(2\), \(A_2 = A_1 + \operatorname{Bin}(U_1, p) - 1\), \(U_2 = U_1 - \operatorname{Bin}(U_1, p) \), and \(R_2 = 2\).
+		\item In general, \(A_{t+1} - A_t \overset{D}{\sim } \operatorname{Bin}(U_t, p) - 1 \), \(U_{t+1} - U_t = \operatorname{Bin}(U_t, p) \), and \(R_{t+1} = t+1\) for all \(t \geq 1\).
+	\end{itemize}
+	Eventually, the above \((A, U, R)\) structure embeds the graph. Then, we can simply look at \(R_t\), and look at the parts whenever it hits \(0\) to determine the components.
+\end{intuition}

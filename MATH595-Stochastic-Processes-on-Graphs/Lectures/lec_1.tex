@@ -4,39 +4,35 @@
 \section{Emergence of Graph Structure}
 In this course, we will consider undirected, unweighted, and finite graph \(G = (V, E)\). Given a graph \(G = (V, E)\), for any \(x, y \in V\), we define \(\omega _{xy} \coloneqq \mathbbm{1}_{(x, y) \in E} \) as the indicator of \((x, y)\) in \(E\).
 
-\subsection[Structure]{Structure\protect\footnote{Later (after this section), we will will not reference back to definitions defined here due to their elementary nature.}}
+\subsection[Structure]{Structure\protect\footnote{Later (after this section), we will not reference back to definitions defined here due to their elementary nature.}}
 One of the fundamental structures in a graph is the \hyperref[def:connected-component]{connected component}, where we now define.
 
 \begin{definition}[Connected]\label{def:connected}
-	Given a graph \(G = (V, E)\), we say \(x, y \in V\) is \emph{connected} if there exists a path \(x = v_1, \dots, v_k = y\) such that \(\omega _{v_i v_{i+1}} = 1\) for all \(1 \leq i \leq k-1\).
+	Given a graph \(G = (V, E)\), we say \(x, y \in V\) is \emph{connected}, denoted as \(x \leftrightarrow y\), if there exists a path \(x = v_1, \dots, v_k = y\) such that \(\omega _{v_i v_{i+1}} = 1\) for all \(1 \leq i \leq k-1\).
 \end{definition}
 
-\begin{notation}
-	We will write \(x \to y\) if \(x\) is \hyperref[def:connected]{connected} to \(y\).
-\end{notation}
-
-It's easy to see that \(\to \) is an equivalent relation, hence, one can define the so-called \hyperref[def:connected-component]{connected component}, which is an equivalent class of \(G\) with \(\to \).
+It's easy to see that \(\leftrightarrow \) is an equivalent relation, hence, one can define the so-called \hyperref[def:connected-component]{connected component}, which is an equivalent class of \(G\) with \(\leftrightarrow \).
 
 \begin{definition}[Connected component]\label{def:connected-component}
-	Given a graph \(G\), a \emph{connected component} \(C \subseteq V\) is a maximal\footnote{Note the wording: it's not equivalent to maximum.} size subset of \(V\) such that for all \(x, y \in C\), \(x \to y\).
+	Given a graph \(G\), a \emph{connected component} \(\mathcal{C} \subseteq V\) is a maximal\footnote{Note the wording: it's not equivalent to maximum.} size subset of \(V\) such that for all \(x, y \in \mathcal{C} \), \(x \leftrightarrow y\).
 \end{definition}
 
 \begin{notation}
-	For a particular vertex \(v \in V\), we define \(C(v, G) \coloneqq \{ u \mid u \to v \text{ in } G\} \) as the \hyperref[def:connected-component]{connected component} containing \(v\). If \(G\) is realized, we simply write \(C(v)\).
+	For a particular vertex \(v \in V\), we define \(\mathcal{C} (v, G) \coloneqq \{ u \mid u \leftrightarrow v \text{ in } G\} \) as the \hyperref[def:connected-component]{connected component} containing \(v\). If \(G\) is realized, we simply write \(\mathcal{C} (v)\).
 \end{notation}
 
-\hyperref[def:connected-component]{Connected component} is an example of \emph{structure}. Other common structures include triangle, cycle, clique, etc. We also define them formally for concreteness.
+\hyperref[def:connected-component]{Connected component} is an example of \emph{structure}. We list some common structures below:
 
 \begin{definition}[Triangle]\label{def:triangle}
 	A \emph{triangle} \((v_1, v_2, v_3)\) in a graph \(G = (V, E)\) is such that \((v_1, v_2), (v_2, v_3)\), and \((v_3, v_1)\) are in \(E\).
 \end{definition}
 
 \begin{definition}[Cycle]\label{def:cycle}
-	A \emph{\(k\)-cycle} \((v_1, \dots , v_k)\) in a graph \(G = (V, E)\) is such that \((v_i, v_{i+1})\) and \((v_k, v_0)\) are in \(E\).
+	A \emph{\(n\)-cycle} \((v_1, \dots , v_n)\) in a graph \(G = (V, E)\) is such that \((v_i, v_{i+1})\) and \((v_k, v_0)\) are in \(E\).
 \end{definition}
 
 \begin{definition}[Clique]\label{def:clique}
-	A \emph{\(k\)-clique} \(K_k \subseteq V\) in a graph \(G = (V, E)\) is such that for every \(v_i, v_j \in K_k\), \((v_i, v_j) \in E\).
+	A \emph{\(n\)-clique} \(K_n \subseteq V\) in a graph \(G = (V, E)\) is such that for every \(v_i, v_j \in K_n\), \((v_i, v_j) \in E\).
 \end{definition}
 
 \begin{eg}
@@ -45,8 +41,8 @@ It's easy to see that \(\to \) is an equivalent relation, hence, one can define 
 
 A central problem we will be asking is the following:
 
-\begin{problem*}[Property]
-	Given a graph \(G\), whether it contains a certain structure; if yes, how many?
+\begin{problem*}[Subgraph count]
+	Whether a graph contains a certain structure; if yes, how many?
 \end{problem*}
 
 \subsection{Random Graph and Random Graph Process}
@@ -81,8 +77,6 @@ On the other hand, we can also consider another layer of randomness, where we ar
 Some other more advanced topics include Gibbs measures, spin model (Ising model and its generalization Potts model), and spin glass model.
 
 \section{Erdős-Rényi Random Graph}
-Recall the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
-
 \begin{prev}
 	Let \(V = [n] \coloneqq \{ 1, \dots , n \} \) and \(p \in [0, 1]\). For every \(1 \leq i < j \leq n\), we let \(\omega _{ij} \overset{\text{i.i.d.} }{\sim } \operatorname{Ber}(p) \), which induces \(E \coloneqq \{ (i, j) \mid \omega _{ij} = 1, 1 \leq i < j \leq n\} \).
 \end{prev}
@@ -101,24 +95,28 @@ Due to the independence and the simplicity, we get several immediate results.
 	We see that \(\lvert E \rvert = \sum_{1 \leq i < j \leq n} \omega _{ij} \sim \operatorname{Bin}(\binom{n}{2}, p) \), hence, \(\mathbb{E}_{}[\lvert E \rvert ] = \binom{n}{2}p = n(n-1) p / 2\). Then, the result follows directly from the central limit theorem.
 \end{explanation}
 
-Now it's a good time to bring up another random graph model, \(G(n, m)\), where we sample a graph with \(n\) vertices and \(m\) edges uniformly. This is actually the original \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
+Now it's a good time to bring up another random graph model, \(\overline{\operatorname{ER}} (n, m)\), where we sample a graph with \(n\) vertices and \(m\) edges uniformly. This is actually the original \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model.
 
 \begin{remark}
-	If we choose \(p\) such that \(m \approx \binom{n}{2}p\), the results often transfer between \(G(n, p)\) and \(G(n, m)\).
+	If \(m \approx \binom{n}{2}p\), the results often transfer between \(\operatorname{ER}(n, p)\) and \(\overline{\operatorname{ER}} (n, m)\).
 \end{remark}
 
 \subsection{Density and Phase Transition}
 We now introduce the concept of dense and sparse graph, which is decided by the parameter \(\lvert E \rvert / \binom{n}{2} \).
 
-\begin{definition}[Dense graph]\label{def:dense-graph}
-	A graph \(G = (V, E)\) is \emph{dense} if there exists a constant \(\epsilon > 0\) such that \(\lvert E \rvert / \binom{n}{2} > \epsilon \).
-\end{definition}
+\begin{definition*}
+	Consider a graph \(G = (V, E)\) with \(\lvert V \rvert = n\) and \(\lvert E \rvert = m\).
+	\begin{definition}[Dense graph]\label{def:dense-graph}
+		\(G\) is \emph{dense} if there exists a constant \(\epsilon > 0\) such that \(m / \binom{n}{2} > \epsilon \).
+	\end{definition}
 
-\begin{definition}[Sparse graph]\label{def:sparse-graph}
-	A graph \(G = (V, E)\) is \emph{sparse} if it is not \hyperref[def:dense-graph]{dense}.
-\end{definition}
+	\begin{definition}[Sparse graph]\label{def:sparse-graph}
+		\(G\) is \emph{sparse} if the average degree is constant, i.e., \(m = O(n)\).
+	\end{definition}
+\end{definition*}
 
-Putting the motivation of defining \autoref{def:dense-graph} and \autoref{def:sparse-graph} in this way aside, let's first observe an interesting property for the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model. Firstly, note that the typical degree of the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} is some constant since for \(G(n, p)\),
+
+Let's first observe an interesting property for the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model. Note that the typical degree of the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} is some constant since for \(\operatorname{ER}(n, p)\),
 \[
 	\frac{1}{\lvert V \rvert } \sum_{v \in V} \deg (v)
 	= \frac{2 \lvert E \rvert }{\lvert V \rvert }
@@ -127,13 +125,13 @@ Putting the motivation of defining \autoref{def:dense-graph} and \autoref{def:sp
 \]
 
 \begin{note}
-	Regime we consider hence depend on \(\lambda \coloneqq np\) for some \(\lambda \in (0, \infty )\).
+	Regime hence depends on \(\lambda \coloneqq np\) for some \(\lambda \). When \(\lambda \in (0, \infty )\), we are in the \hyperref[def:sparse-graph]{sparse} regime.
 \end{note}
 
-Then, given a particular vertex, its degree follows \(\operatorname{Bin}(n-1, p) = \operatorname{Bin}(n-1, \lambda / n) \).
+In particular, when \(\lambda \in (0, \infty )\), the degree of a particular vertex follows \(\operatorname{Bin}(n-1, p) = \operatorname{Bin}(n-1, \lambda / n) \).
 
 \begin{claim}
-	\(\operatorname{Bin}(n-1, \lambda / n) \overset{D}{\to} \operatorname{Pois}(\lambda ) \) as \(n \to \infty \).
+	If \(\lambda \in (0, \infty )\), \(\operatorname{Bin}(n-1, \lambda / n) \overset{D}{\to} \operatorname{Pois}(\lambda ) \) as \(n \to \infty \).
 \end{claim}
 \begin{explanation}
 	We see this in a straightforward way: for any \(k\), \(X \sim \operatorname{Bin}(n-1, \lambda / n) \) has a pmf
@@ -167,36 +165,37 @@ Then, given a particular vertex, its degree follows \(\operatorname{Bin}(n-1, p)
 	where \(p_k = e^{-\lambda } \lambda ^k / k!\).
 \end{explanation}
 
-The above gives a distance-one neighborhood characterization of \(G(n, p)\). However, this actually gives a higher-level picture on larger neighborhoods, in particular, the \hyperref[def:connected-component]{connected component}.
+The above gives a distance-one neighborhood characterization of \(\operatorname{ER}(n, p)\). However, this actually gives a higher-level picture on larger neighborhoods, in particular, the \hyperref[def:connected-component]{connected component}.
 
 \begin{notation}
-	Given a graph \(G\), let \(C_{\max _i}\) denotes the \(i^{\text{th} }\) largest \hyperref[def:connected-component]{connected component} in \(G\).
+	Given a graph \(G\), let \(\mathcal{C} _{\max _i}\) denotes the \(i^{\text{th} }\) largest \hyperref[def:connected-component]{connected component} in \(G\). For convenient, we use \(\mathcal{C} _{\max }\) to denote \(\mathcal{C} _{\max _1}\) when it's clear from the context.
 \end{notation}
 
+Our goal in this section is to prove the following theorem about the components size in \(\operatorname{ER}(n, \lambda / n) \):
+
 \begin{theorem}\label{thm:Erdős-Rényi-phase-transition}
-	Consider the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model \(G(n, \lambda / n)\) for some \(\lambda > 0\).
+	Consider the \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model \(\operatorname{ER}(n, \lambda / n)\) for some \(\lambda > 0\).
 	\begin{enumerate}[(a)]
-		\item\label{thm:Erdős-Rényi-phase-transition-a} If \(\lambda < 1\), the graph is disconnected with high probability such that \(\lvert C_{\max _1} \rvert = \Theta _p (\log n)\). In particular, if \(a (\lambda - 1 - \log \lambda ) > 1\), as \(n \to \infty \), we have \(\Pr_{}\left( \lvert C_{\max _1} \rvert \geq  a \log n \right) \to 0\).
-		\item\label{thm:Erdős-Rényi-phase-transition-b} If \(\lambda > 1\), \(\frac{1}{n} \lvert C_{\max _1} \rvert \) converges to a constant, i.e., there exists a giant \hyperref[def:connected-component]{component}. Moreover, \(C_{\max _2}\) has size of \(O(\log n)\).
-		\item\label{thm:Erdős-Rényi-phase-transition-c} At \(\lambda = 1\), the random vector \(\frac{1}{n^{2 / 3}} (\lvert C_{\max _1} \rvert , \lvert C_{\max _2} \rvert , \dots )\) converges in distribution to a non-trivial limit.
+		\item\label{thm:Erdős-Rényi-phase-transition-a} If \(\lambda < 1\), the graph is disconnected with high probability such that \(\lvert \mathcal{C} _{\max _1} \rvert = \Theta _p (\log n)\). In particular, if \(a (\lambda - 1 - \log \lambda ) > 1\), as \(n \to \infty \), we have \(\Pr_{}\left( \lvert \mathcal{C} _{\max _1} \rvert \geq  a \log n \right) \to 0\).
+		\item\label{thm:Erdős-Rényi-phase-transition-b} If \(\lambda > 1\), \(\frac{1}{n} \lvert \mathcal{C} _{\max _1} \rvert \) converges to a constant, i.e., there exists a giant \hyperref[def:connected-component]{component}. Moreover, \(\mathcal{C} _{\max _2}\) has size of \(O(\log n)\).
+		\item\label{thm:Erdős-Rényi-phase-transition-c} At \(\lambda = 1\), the random vector \(\frac{1}{n^{2 / 3}} (\lvert \mathcal{C} _{\max _1} \rvert , \lvert \mathcal{C} _{\max _2} \rvert , \dots )\) converges in distribution to a non-trivial limit.
 	\end{enumerate}
 \end{theorem}
 
-\autoref{thm:Erdős-Rényi-phase-transition} says that there is a phase transition right at \(\lambda = 1\). When \(\lambda < 1\), there will not exist large \hyperref[def:connected-component]{component}; if \(\lambda > 1\), the largest \hyperref[def:connected-component]{component} is of constant fractional of the entire graph, and at \(\lambda = 1\), it's something in between.
+\autoref{thm:Erdős-Rényi-phase-transition} says that in the \hyperref[def:sparse-graph]{sparse} regime, there is a phase transition at \(\lambda = 1\). When \(\lambda < 1\), there will not exist large \hyperref[def:connected-component]{component}; if \(\lambda > 1\), the largest \hyperref[def:connected-component]{component} is of constant fractional of the entire graph, and at \(\lambda = 1\), it's something in between.
 
-We first focus on the case when \(\lambda < 1\). Consider the following heuristic argument of why there can't exist a large \hyperref[def:connected-component]{component}.
 \begin{intuition}
-	The neighborhood structure of some vertex \(v\), which should be tree-like, at least locally. This is because, for any \(k \geq 2\), the expected number of cycles of length \(k\) in this structure is
+	Consider the extremely \hyperref[def:sparse-graph]{sparse} regime where \(\lambda < 1\). We give a heuristic argument of why there can't exist a large \hyperref[def:connected-component]{component}. The neighborhood structure of some vertex \(v\), which should be tree-like, at least locally. This is because, for any \(k \geq 2\), the expected number of cycles of length \(k\) in this structure is
 	\[
 		\binom{n}{k} \cdot k! \cdot \left( \frac{\lambda}{n} \right) ^k
-		\approx n^k \frac{\lambda ^k}{n^k}
+		\approx n^k \cdot \frac{\lambda ^k}{n^k}
 		= \lambda ^k,
 	\]
 	which implies that when \(\lambda < 1\),
-	\[
+	\begin{equation}\label{eq:Erdős-Rényi-graph-extremely-sparse-cycle-count}
 		\sum_{k=2}^{n} \mathbb{E}_{}[\# \text{cycle of length } k]
 		\leq \frac{1}{1 - \lambda }.
-	\]
+	\end{equation}
 	Hence, in this regime, for a random vertex \(v\), up to any finite distance \(k\), we will only see few cycles.
 	\begin{center}
 		\incfig{Erdős-Rényi-1-neighborhood}

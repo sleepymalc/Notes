@@ -1,0 +1,126 @@
+\lecture{5}{3 Feb.\ 9:30}{Component Size in Critical Regime}
+\begin{prev}[Sub- and supercritical regime]
+	We have shown that
+	\begin{itemize}
+		\item \(\lambda < 1\): \(\lvert \mathcal{C} _{\max } \rvert / \log n \approx I_\lambda \).
+		\item \(\lambda > 1\): \(\lvert \mathcal{C} _{\max } \rvert / n \approx \zeta _\lambda = \Pr_{}(\lvert \mathcal{T} _{\lambda } \rvert = \infty ) \), and \(\lvert \mathcal{C} _{\max _2} \rvert / \log n \approx I_\lambda \).
+	\end{itemize}
+\end{prev}
+
+What is left is the critical regime, i.e., \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-c}, where when \(\lambda = 1\), the random vector \(\frac{1}{n^{2 / 3}} (\lvert \mathcal{C} _{\max _1} \rvert , \lvert \mathcal{C} _{\max _2} \rvert , \dots )\) converges in distribution to a non-trivial limit. To analyze the component size when \(\lambda = 1\), as what we have done previously, we have \(\lvert \mathcal{C} (1) \rvert \preceq \operatorname{Bin}(n-1, 1 / n) \). Moreover,
+\begin{itemize}
+	\item \(\operatorname{Ber}(p) \preceq \operatorname{Pois}(\theta ) \) for \(\theta = - \log (1 - p)\);
+	\item \(\operatorname{Bin}(n-1, p) \preceq \operatorname{Pois}(- (n-1) \log (1 - p)) \preceq \operatorname{Pois}(1) \) with \(p = 1 / n\) since
+	      \[
+		      - (n-1) \log \left( 1 - \frac{1}{n} \right)
+		      = (n-1) \left( \frac{1}{n} + \frac{1}{2n^2} + \frac{1}{n^3} + \dots \right)
+		      \leq (n-1) \cdot \frac{1}{n} \cdot \frac{1}{1-\frac{1}{n}}
+		      = 1.
+	      \]
+\end{itemize}
+Hence, for \(\lambda = 1\), we have \(\lvert \mathcal{C} (1) \rvert \preceq \operatorname{Pois}(1) \). This gives the following.
+
+\begin{claim}
+	For any \(k > 0\), \(\Pr_{}(\lvert \mathcal{C} (1) \rvert \geq k) \leq 1 / \sqrt{k} \).
+\end{claim}
+\begin{explanation}
+	Let \(\mathcal{T} _1 \sim \operatorname{BP}(\operatorname{Pois}(1) ) \). We see that
+	\[
+		\Pr_{}(\lvert \mathcal{C} (1) \rvert \geq k)
+		\leq \Pr_{}(\lvert \mathcal{T} _1 \rvert \geq k)
+		= \sum_{i=k}^{\infty} e^{-i} \frac{(1 \cdot i)^{i-1}}{i!}
+		\leq \sum_{i=k}^{\infty} \frac{e^{-i} i^{i-1}}{\sqrt{2\pi } i^{\frac{1}{2} + i} e^{-i}}
+		= \frac{1}{\sqrt{2\pi } } \sum_{i=k}^{\infty} \frac{1}{i^{3 / 2}}
+		\leq \frac{1}{\sqrt{k} },
+	\]
+	where we use the Stirling approximation with \(i! \geq \sqrt{2 \pi i} \cdot e^{-i} \cdot i^i\).
+\end{explanation}
+
+Given the above bound, if we want to use the usual union bound to bound the maximum component size, the bound is too weak. However, we can improve upon the union bound in this case as
+\[
+	\Pr_{}(\lvert \mathcal{C} _{\max } \rvert \geq k)
+	= \Pr_{}(Z_{\geq k} \geq k)
+	\leq \frac{1}{k} \mathbb{E}_{}[Z_{\geq k}]
+	= \frac{n}{k} \Pr_{}(\lvert \mathcal{C} (1) \rvert \geq k)
+	\leq \frac{n}{k^{3 / 2}},
+\]
+hence \(k = a \cdot n^{2 / 3}\) for some \(a > 0\) suffices. We now restate and prove \autoref{thm:Erdős-Rényi-phase-transition} \autoref{thm:Erdős-Rényi-phase-transition-c} in \autoref{lma:component-of-regular-critical-Erdős-Rényi-graph}:
+
+\begin{lemma}[Component of critical Erdős-Rényi graph]\label{lma:component-of-regular-critical-Erdős-Rényi-graph}
+	Let \(G \sim \operatorname{ER}(n, \lambda / n) \) with \(\lambda = 1\).
+	\begin{enumerate}[(a)]
+		\item\label{lma:component-of-regular-critical-Erdős-Rényi-graph-a} For any \(\epsilon > 0\), for some large \(a\) depending on \(\epsilon \),
+		      \[
+			      \liminf_{n \to \infty} \Pr_{}\left( \frac{1}{a} n^{2 / 3} \leq \lvert \mathcal{C} _{\max } \rvert \leq a \cdot n^{2 / 3} \right)
+			      \geq 1 - \epsilon.
+		      \]
+		\item\label{lma:component-of-regular-critical-Erdős-Rényi-graph-b} For any \(k>0\), \(\frac{1}{n^{2 / 3}} (\lvert \mathcal{C} _{\max _1} \rvert , \lvert \mathcal{C} _{\max _2} \rvert , \dots , \lvert \mathcal{C} _{\max _k} \rvert ) \) converges in distribution to some non-degenerated random vectors as \(n \to \infty \).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	We already proved the upper bound part of \autoref{lma:component-of-regular-critical-Erdős-Rényi-graph-a}. For the lower bound, consider \(Z_{< n^{2 / 3} / a}\). We can show that it is concentrated at the mean tightly, and as \(a \to \infty \), the mean is small.
+
+	For \autoref{lma:component-of-regular-critical-Erdős-Rényi-graph-b}, recall the exploration algorithm, where we maintain \((\mathcal{A} _t, \mathcal{U} _t, \mathcal{R} _t)\). We know that \(U_t \sim \operatorname{Bin}(n-1, (1-p)^t) \) and \(A_t = n-1-U_t\) with \(A_0 = 1\). However, after we explored a component, we want to continue exploring the graph by choosing a new random vertex as the seed. Hence, consider
+	\[
+		\hat{A} _t
+		\coloneqq A_t + \text{\#0 hitting in \([0, t-1]\) in \(\hat{A}_t\)}.
+	\]
+	\begin{prev}
+		\(A_t \overset{D}{=} n-t-\operatorname{Bin}(n-1, (1-p)^t) \). We have
+		\[
+			\mathbb{E}_{}[A_t]
+			= n-t - (n-1)\left( 1 - \frac{1}{n} \right) ^t
+			\approx 1 - \frac{t}{n} - \frac{t^2}{2n} + \dots
+		\]
+		Also, we have \(\Var_{}[A_t] = (n-1)(1- 1 / n)^t (1 - (1 - 1 / n)^t) \approx t e^{-t / n}\). One can check that when \(1 \ll t \ll n\), \(A_t \approx - t^2 / 2n + \sqrt{t} \cdot \mathcal{N} (0, 1) \). Moreover, since \(U_t\) is defined recursively, we can make a martingale. With martingale CLT, one can prove that
+		\[
+			\left( \frac{1}{n^{1 / 3}} A_{\lfloor s \cdot n^{2 / 3} \rfloor } \right) _{s \geq 0}
+			\overset{D}{\to} \left( - \frac{s^2}{2} + B_s \right) _{s \geq 0},
+		\]
+		where \(B_s\) denotes the standard Brownian motion.
+	\end{prev}
+
+	What about \(\hat{A} _t\)? We claim the following.
+
+	\begin{claim}
+		\(\hat{A} _t = A_t - \min _{s < t} A_s + 1\).
+	\end{claim}
+
+	\begin{intuition}
+		Essentially, if we do not have \(- \min _{s < t} A_s\), ...
+	\end{intuition}
+
+	Then,
+	\[
+		\left( \frac{1}{n^{1 / 3}} \hat{A} _{s \cdot n^{2 / 3}} \right) _{s \geq 0}
+		\overset{D}{\to} \left( \left( B_S - \frac{s^2}{2} \right) - \inf _{t \leq s} \left( B_t - \frac{t^2}{2} \right)  \right)_{s \geq 0}.
+	\]
+\end{proof}
+
+\begin{remark}
+	If we let \(p = \frac{1}{n} \left( 1 + \frac{\theta}{n^{1 / 3}} \right) \), the above becomes
+	\[
+		\left( \frac{1}{n^{1 / 3}} A_{\lfloor s \cdot n^{2 / 3} \rfloor } \right) _{s \geq 0}
+		\overset{D}{\to} \left( - \frac{s^2}{2} + B_s + \theta s\right) _{s \geq 0},
+	\]
+	and
+	\[
+		\left( \frac{1}{n^{1 / 3}} \hat{A} _{s \cdot n^{2 / 3}} \right) _{s \geq 0}
+		\overset{D}{\to} \left( \left( B_S - \frac{s^2}{2} + \theta s\right) - \inf _{t \leq s} \left( B_t - \frac{t^2}{2} + \theta t \right)  \right)_{s \geq 0}.
+	\]
+	Hence, when \(\lambda \) is in a small window around \(1\), we're in the critical regime.
+\end{remark}
+
+\subsection{Dense}
+We have looked at \(\lambda = \Theta (1)\). We see that
+\[
+	\mathbb{E}_{}[\text{\# disconnected edge} ]
+	= \frac{n(n-1)}{2} \cdot \frac{\lambda}{n} \left( 1 - \frac{\lambda}{n} \right) ^{2 (n-2)}.
+\]
+What if we have a 3-chain? Let \(k\) be the number of vertices, and \(e\) be the number of edges of this disconnected structure. We have
+\[
+	\binom{n}{k} \left( \frac{\lambda}{n} \right) ^e \left( 1 - \frac{\lambda}{n} \right) ^{k(n-k)}
+\]
+First, we will show that as \(\lambda < \log n\), there are single vertices. After \(\lambda > \log n\), the whole graph is connected. This is still sparse.
+
+When \(\lambda = \Theta (n)\),

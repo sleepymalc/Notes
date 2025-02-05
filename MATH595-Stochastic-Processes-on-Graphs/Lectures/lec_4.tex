@@ -20,46 +20,26 @@ We see that \(\xi _{t+1} \coloneqq \lvert \mathcal{C} _{t+1} \rvert \sim \operat
 		= (n-1) \left[ 1 - \left( 1- \frac{\lambda}{n} \right) ^t \right]  - t + 1
 		\cong n \left( 1 - e^{-\lambda \cdot \frac{t}{n}} - \frac{t}{n} \right)
 	\]
-	and \(\Var_{}[A_t] = (n-1)(1 - p)^t \cdot [1 - (1 - p)^t]\).
+	and \(\Var_{}[A_t] = (n-1)(1 - p)^t \cdot [1 - (1 - p)^t] \approx \lambda t e^{-\lambda t / n}\).
 \end{claim}
 
-Let \(f_\lambda (x) = 1 - e^{-\lambda x} - x\), hence, \(\mathbb{E}_{}[A_t] \cong n f_\lambda (t / n)\). Also recall that \(I_\lambda = \lambda - 1 - \log \lambda\).
+Let \(f_\lambda (x) = 1 - e^{-\lambda x} - x\), hence, \(\mathbb{E}_{}[A_t] \cong n f_\lambda (t / n)\). Also, let \(\zeta _\lambda > 0\) be the unique positive solution of \(f_\lambda (x) = 0\), where one can easily check that when \(\lambda > 1\), \(f(x) = 0\) for \(x > 0\) has a unique solution.
 
-% \begin{tikzpicture}
-% 	\begin{axis}[
-% 			xlabel={\(x\)},
-% 			ylabel={\(f(x)\)},
-% 			grid=major,
-% 			legend pos=south east,
-% 			samples=100,
-% 			domain=-2:2
-% 		]
-% 		% Plot for lambda > 0
-% 		\addplot[blue, thick] {1 - exp(-1*x) - x};
-% 		\addlegendentry{\(\lambda = 1\)}
+\begin{intuition}
+	Since \(\Var_{}[A_t] < (\mathbb{E}_{}[A_t]) ^2 \), we may conjecture that \(A_t \neq 0\) with high probability away from \(t = 0\) and \(t = \zeta _\lambda \).
+\end{intuition}
 
-% 		% \addplot[red, thick, dashed] {1 - exp(-2*x) - x};
-% 		% \addlegendentry{\(\lambda = 2\)}
-
-% 		% Plot for lambda < 0
-% 		\addplot[green, thick, dotted] {1 - exp(1*x) - x};
-% 		\addlegendentry{\(\lambda = -1\)}
-
-% 		% \addplot[orange, thick, dash dot] {1 - exp(2*x) - x};
-% 		% \addlegendentry{\(\lambda = -2\)}
-% 	\end{axis}
-% \end{tikzpicture}
-
+We prove that this is indeed the case, i.e., there are no intermediate clusters.
 
 \begin{lemma}\label{lma:supercritical-Erdős-Rényi-graph}
-	When \(\lambda > 1\) and \(0 < t < n \zeta _{\lambda }\), \(\Pr_{}(A_t = 0) \leq \exp (-t \cdot I_{g(t / n)})\) where \(g(x) = \frac{1 - e^{-\lambda x}}{x}\).
+	When \(\lambda > 1\) and \(0 < t < n \zeta _{\lambda }\), \(\Pr_{}(A_t = 0) \leq \exp (-t \cdot I_{g(t / n)})\)\footnote{Recall that we define \(I_x = x - 1 - \log x\).} where \(g(x) = \frac{1 - e^{-\lambda x}}{x}\).
 \end{lemma}
 \begin{proof}
 	We see that
 	\begin{align*}
 		\Pr_{}(A_t = 0)
 		 & = \Pr_{}(n-1 - U_t = t-1)                                                                                                        \\
-		 & \leq \Pr_{}(\operatorname{Bin}(n-1, 1 - (1 - p)^t) \leq t-1)                                                                     \\
+		 & \leq \Pr_{}(\operatorname{Bin}(n-1, 1 - (1 - p)^t) \leq t-1) \tag*{(\(n-1 - U_t \sim \operatorname{Bin}(n-1, 1 - (1 - p)^t)\))}  \\
 		 & \leq \Pr_{}(\operatorname{Bin}(n-1, 1 - e^{-p t}) \leq t-1) \tag*{(\(1 - p \leq e^{-p}\))}                                       \\
 		 & \leq \Pr_{}(\operatorname{Bin}(n, 1 - e^{-p t}) \leq t)                                                                          \\
 		 & \leq \inf _{\theta  > 0} e^{\theta t} \cdot \left[ \mathbb{E}_{}[e^{-\theta \cdot \operatorname{Ber}(1 - e^{-p t}) }] \right] ^n \\
@@ -74,7 +54,7 @@ Let \(f_\lambda (x) = 1 - e^{-\lambda x} - x\), hence, \(\mathbb{E}_{}[A_t] \con
 			 & \leq \exp (n \theta a -  n(1 - e^{-\lambda a}) + na) \\
 			 & = \exp (-t (g(a) - 1 - \ln g(a)))
 			= \exp (-t (g(t / n) - 1 - \ln g(t / n)))
-			= I_{g(t / n)},
+			= \exp (-t I_{g(t / n)}),
 		\end{split}
 	\]
 	where \(\ln g(a) = \theta \) since \(e^\theta = g(a) = \frac{1 - e^{-\lambda a}}{a}\).
@@ -83,18 +63,21 @@ Let \(f_\lambda (x) = 1 - e^{-\lambda x} - x\), hence, \(\mathbb{E}_{}[A_t] \con
 From \autoref{lma:supercritical-Erdős-Rényi-graph}, the following is immediate.
 
 \begin{corollary}\label{col:supercritical-Erdős-Rényi-graph}
-	When \(\lambda > 1\) and \(t / n \leq \alpha < \zeta _\lambda \), \(\Pr_{}(A_t = 0) \leq e^{-t c(\alpha )} \). Moreover, for some \(k > 0\),
+	When \(\lambda > 1\) and \(t / n \leq \alpha < \zeta _\lambda \), \(\Pr_{}(A_t = 0) \leq e^{-t c(\alpha )} \) where \(c(\alpha ) \coloneqq I_{g(\alpha )}\). Moreover, this implies that for some \(k > 0\),
 	\[
 		\Pr_{}(\exists t\colon k \log n \leq t \leq \alpha n \text{ such that } A_t = 0)
 		\leq \sum_{t = k \log n}^{\alpha n} e^{-t c(\alpha )}
 		\leq \frac{n^{-k c(\alpha )}}{1 - e^{-c(\alpha )}}.
 	\]
 \end{corollary}
+\begin{proof}
+	Since \(g^{\prime} (x) = \frac{e^{-\lambda x}}{x} (1 + \lambda x - e^{\lambda x}) < 0\) when \(x < 0\), we have \(1 < g(\alpha ) \leq g(t / n)\), which implies \(I_{g(\alpha )} \leq I_{g(t / n)}\). The first result then follows from \autoref{lma:supercritical-Erdős-Rényi-graph}.
+\end{proof}
 
 By using a union bound, \autoref{col:supercritical-Erdős-Rényi-graph} leads to the following key lemma.
 
 \begin{lemma}\label{lma:intermediate-component-supercritical-Erdős-Rényi-graph}
-	When \(\lambda > 1\) and \(t / n \leq \alpha < \zeta _{\lambda }\), as \(k > 1 / c(\alpha )\), we have
+	When \(\lambda > 1\) and \(t / n \leq \alpha < \zeta _{\lambda }\), as \(k > 1 / c(\alpha )\), as \(n \to \infty \),
 	\[
 		\Pr_{}(\exists v \in [n] \colon k \log n \leq \lvert \mathcal{C} (v) \rvert \leq \alpha n)
 		\leq n \Pr_{}(k \log n \leq \lvert \mathcal{C} (1) \rvert \leq \alpha n)
@@ -103,7 +86,11 @@ By using a union bound, \autoref{col:supercritical-Erdős-Rényi-graph} leads to
 	\]
 \end{lemma}
 
-Define a random variable that counts the number of vertices having a small component:
+\begin{remark}
+	\autoref{lma:intermediate-component-supercritical-Erdős-Rényi-graph} basically proves that when \(\lambda > 1\), if a cluster survives after some initial size (\(k \log n\)), it'll stay alive until it reaches a size of a constant fraction of \(n\) with high probability.
+\end{remark}
+
+Now, we just need to worry about the size of \(\mathcal{C} _{\max }\). To do this, define a random variable that counts the number of vertices having a small component:
 \[
 	Z_{\leq k_n}
 	\coloneqq \sum_{v \in [n]} \mathbbm{1}_{\lvert \mathcal{C} (v) \rvert \leq k_n = k \log n}.
@@ -113,12 +100,12 @@ Define a random variable that counts the number of vertices having a small compo
 	When \(\lambda > 1\), \(\lvert Z_{\leq k_n} - n(1 - \zeta _\lambda ) \rvert \leq n^{1 / 2 + \epsilon }\) with high probability for all \(\epsilon > 0\).
 \end{lemma}
 \begin{proof}
-	We see that
+	Consider using mean control as our primary tool. We see that
 	\[
 		\begin{split}
 			\mathbb{E}_{}[Z_{\leq k_n}]
 			 & = n \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)                                                                                                                                                                                                  \\
-			 & = n \Pr_{}(\lvert \operatorname{BP}(\operatorname{Bin}(n, p) )  \rvert \leq k_n) + O(k_n \cdot p)                                                                                                                                                   \\
+			 & = n \Pr_{}(\lvert \operatorname{BP}(\operatorname{Bin}(n-1, p) )  \rvert \leq k_n) + O(k_n \cdot p)                                                                                                                                                 \\
 			 & = n \Pr_{}(\lvert \operatorname{BP}(\operatorname{Pois}(\lambda ) )  \rvert \leq k_n) + O(k_n \cdot p)                                                                                                                                              \\
 			 & = n ( 1 - \underbrace{\Pr_{}(\lvert \mathcal{T} _\lambda  \rvert = \infty )}_{\zeta _\lambda }  - \underbrace{\Pr_{}(k_n < \lvert \mathcal{T} _\lambda \rvert < \infty )}_{e^{-k_n \cdot I _\lambda }} ) + O\left( \frac{\lambda \log n}{n} \right)
 			= n (1 - \zeta _\lambda ) + O\left( \frac{\log n}{n} \right).
@@ -128,38 +115,66 @@ Define a random variable that counts the number of vertices having a small compo
 	\[
 		\begin{split}
 			\Var_{}[Z_{\leq k_n}]
-			 & = \sum_{u, v=1}^{n} \Cov_{}[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} , \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} ]                                                                                                                     \\
-			 & = n\mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \sum_{u=1}^{n} \left( \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)  \right)  \right]                                      \\
-			 & = n\mathbb{E}_{}\left[\lvert \mathcal{C} (1) \rvert \cdot \mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \left( \mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n) \right) \right]                   \\
-			 & \qquad + n (n-1) \mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \mathbbm{1}_{2 \not\leftrightarrow 1} \left( \mathbbm{1}_{\lvert \mathcal{C} (2) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)  \right)  \right] \\
-			 & \leq n \mathbb{E}_{}[\underbrace{\lvert \mathcal{C} (1) \rvert \cdot \mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n}}_{\leq k_n} \cdot 1 ] + n^2 \cdot \frac{\lambda k_n^2}{n}
-			\leq n (k_n + \lambda k_n^2),
+			 & = \sum_{u, v=1}^{n} \Cov_{}[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} , \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} ]                                                                                                                               \\
+			 & = n\mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \sum_{u=1}^{n} \left( \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)  \right)  \right]                                                \\
+			 & = n \mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \sum_{u=1}^{n} \mathbbm{1}_{1 \leftrightarrow u} \left( \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)  \right)  \right]             \\
+			 & \qquad + n \mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \sum_{u=1}^{n} \mathbbm{1}_{1 \not\leftrightarrow u} \left( \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)  \right)  \right].
 		\end{split}
 	\]
-	where the second bound comes from the following coupling: the intuition is that if the vertex \(2\) is not in \(\mathcal{C} (1)\), then it lies in \(\operatorname{ER}(n - \ell , p) \) where \(\ell = \lvert \mathcal{C} (1) \rvert \). The number of edges between \(\mathcal{C} (1)\) and \(\mathcal{C} (2)\) is roughly \(\operatorname{Bin}(k_n k_n, \lambda / n) \leq \operatorname{Pois}(\lambda k_n^2 / n) \). Hence, \(\Var_{}[Z_{\leq k_n}] \leq n (k \log n + \lambda k^2 \log ^2 n)\), giving
+	Let's first look at the first term, where we have
+	\[
+		\begin{split}
+			 & \mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \sum_{u=1}^{n} \mathbbm{1}_{1 \leftrightarrow u} \left( \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)  \right)  \right] \\
+			 & = \mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \sum_{u=1}^{n} \mathbbm{1}_{1 \leftrightarrow u} (1 - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n) ) \right]
+			= \mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \lvert \mathcal{C} (1) \rvert \right] ( 1 - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n) )
+			\leq k_n.
+		\end{split}
+	\]
+	As for the second term, we see that
+	\[
+		\begin{split}
+			 & \mathbb{E}_{}\left[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \sum_{u=1}^{n} \mathbbm{1}_{1 \not\leftrightarrow u} \left( \mathbbm{1}_{\lvert \mathcal{C} (u) \rvert \leq k_n} - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)  \right)  \right] \\
+			 & = \sum_{u=2}^{n} \sum_{\ell =1}^{k_n} \Pr_{}(\lvert \mathcal{C} (1) \rvert = \ell ) \cdot \Pr_{}(1 \not\leftrightarrow u \mid \lvert \mathcal{C} (1) \rvert = \ell )                                                                                        \\
+			 & \qquad \cdot \left( \Pr_{}(\lvert \mathcal{C} (u) \rvert \leq k_n \mid 1 \not\leftrightarrow u, \lvert \mathcal{C} (1) \rvert = \ell ) - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n) \right)                                                             \\
+			 & \leq \sum_{u=2}^{n} \sum_{\ell =1}^{k_n} \Pr_{}(\lvert \mathcal{C} (1) \rvert = \ell ) \cdot 1 \cdot \ell k_n \frac{\lambda}{n}                                                                                                                             \\
+			 & = \frac{(n-1) k_n \lambda}{n} \mathbb{E}_{}[\mathbbm{1}_{\lvert \mathcal{C} (1) \rvert \leq k_n} \lvert \mathcal{C} (1) \rvert ]
+			\leq \lambda k_n^2,
+		\end{split}
+	\]
+	where the first inequality comes from the fact that when \(\lvert \mathcal{C} (1) \rvert = \ell \) and \(1 \not\leftrightarrow u\), \(\lvert \mathcal{C} (u) \rvert \) follows the law of \(\lvert \mathcal{C} (1) \rvert \) in \(\operatorname{ER}(n-\ell , p) \). Then, we couple \(\operatorname{ER}(n-\ell , p) \) and \(\operatorname{ER}(n, p) \) by adding vertices \(\{ n-\ell +1, \dots , n \} \) of \(\operatorname{ER}(n-\ell , p) \) and missing edges (sampled i.i.d.\ from \(\operatorname{Ber}(p) \)). Hence,
+	\[
+		\begin{split}
+			 & \Pr_{}(\lvert \mathcal{C} (u) \rvert \leq k_n \mid 1 \not\leftrightarrow u, \lvert \mathcal{C} (1) \rvert = \ell ) - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n)               \\
+			 & = \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n \text{ in } \operatorname{ER}(n-\ell , p) ) - \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n \text{ in } \operatorname{ER}(n, p) ) \\
+			 & = \Pr_{}(\lvert \mathcal{C} (1) \rvert \leq k_n \text{ in } \operatorname{ER}(n-\ell , p) \text{ and } \lvert \mathcal{C} (1) \rvert > k_n \text{ in } \operatorname{ER}(n, p) )  \\
+			 & \leq \Pr_{}(\exists u \in \{ n-\ell +1, \dots , n \} \colon 1 \leftrightarrow u)
+			\leq \ell k_n p,
+		\end{split}
+	\]
+	since there are at most \(\ell k_n\) many edges between \(\mathcal{C} (1)\) in \(\operatorname{ER}(n-\ell , p) \) and \(\{ n-\ell +1, \dots , n \} \) in \(\operatorname{ER}(n, p) \). Putting everything together, we have, \(\Var_{}[Z_{\leq k_n}] \leq n (k \log n + \lambda k^2 \log ^2 n)\), which gives
 	\[
 		\Pr_{}(\lvert Z_{\leq k_n} - \mathbb{E}_{}[Z_{\leq k_n}]  \rvert \geq n^{1 / 2 + \epsilon })
 		\leq \frac{n \log ^2 n}{n^{1 + 2 \epsilon }}
 		\to 0
 	\]
-	from the Chebyshev's Inequality.
+	as \(n \to \infty \) from the Chebyshev's Inequality.
 \end{proof}
-
-Hence, we see that
-\begin{enumerate}[(i)]
-	\item No middle ground: no clusters between \([k \log n, \alpha n]\) for \(\alpha < \zeta _\lambda \).
-	\item The number of vertices with \(\lvert \mathcal{C} (v) \rvert \leq k \log n\) is concentrated at \(n (1 - \zeta _\lambda )\).
-	\item Everything else is in a single component.
-\end{enumerate}
 
 Combining \autoref{lma:intermediate-component-supercritical-Erdős-Rényi-graph} and \autoref{lma:small-component-supercritical-Erdős-Rényi-graph}, we have the following.
 
 \begin{corollary}
-	For \(\lambda > 1\), for all \(\alpha \) such that \(0 < \alpha < \zeta _\lambda \), \(\lvert Z_{\geq \alpha n} - n \zeta _\lambda \rvert \leq n^{1 / 2 + \epsilon }\). Moreover, \(\lvert \mathcal{C} _{\max } \rvert = Z_{\geq \alpha n}\) with high probability by choosing \(\alpha = 3 \zeta _\lambda / 4\).
+	For \(\lambda > 1\), for all \(\alpha \) such that \(0 < \alpha < \zeta _\lambda \), \(\lvert Z_{\geq \alpha n} - n \zeta _\lambda \rvert \leq n^{1 / 2 + \epsilon }\). Moreover, \(\lvert \mathcal{C} _{\max } \rvert = Z_{\geq \alpha n}\) with high probability for all \(\alpha \in (\zeta _\lambda / 2, \zeta _\lambda )\).
 \end{corollary}
 
-We can then prove \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph} \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-a} and \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-b}:
+Putting all results we have, we see that:
+\begin{enumerate}[(i)]
+	\item No middle ground: no clusters between \([k \log n, \alpha n]\) for \(\alpha < \zeta _\lambda \) (\autoref{lma:intermediate-component-supercritical-Erdős-Rényi-graph}).
+	\item The number of vertices with \(\lvert \mathcal{C} (v) \rvert \leq k \log n\) is concentrated at \(n (1 - \zeta _\lambda )\) (\autoref{lma:small-component-supercritical-Erdős-Rényi-graph}).
+	\item Everything else is in a single component.
+\end{enumerate}
+
+We can now prove \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph}, specifically, \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-a} and \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-b}:
 
 \begin{proof}[Proof of \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph} \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-a} and \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-b}]
-	We want to show that for \(\lambda > 1\) and \(G \sim \operatorname{ER}(n, \lambda / n) \), we have \(\lvert \mathcal{C} _{\max _1} \rvert / n \overset{p}{\to} \zeta _\lambda\) and \(\lvert \mathcal{C} _{\max _2} \rvert / \log n \leq \frac{1}{I _\lambda } + \epsilon \).
+	We show that for \(\lambda > 1\) and \(G \sim \operatorname{ER}(n, \lambda / n) \), we have \(\lvert \mathcal{C} _{\max _1} \rvert / n \overset{p}{\to} \zeta _\lambda\) as \(n \to \infty \) and \(\lvert \mathcal{C} _{\max _2} \rvert / \log n \leq \frac{1}{I _\lambda } + \epsilon \).
 \end{proof}

@@ -1,0 +1,137 @@
+\lecture{6}{6 Feb.\ 9:30}{}
+
+\begin{prev}
+	For \(\operatorname{ER}(n, p = \lambda / n)\) for some fixed \(\lambda \), we have
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{c|c|c|c}
+			\toprule
+			                                                     & \(\lvert \mathcal{C} _{\max _1} \rvert \) & \(\lvert \mathcal{C} _{\max _2} \rvert \) & \\
+			\midrule
+			Subcritical \(\lambda < 1\)                          & \(\log n / I_\lambda \)                   & \(\log n / I_\lambda \)                   & \\
+			Supercritical \(\lambda > 1\)                        & \(n \cdot \zeta _\lambda \)               & \(\log n /  I_\lambda \)                  & \\
+			Critical \(\lambda = 1\)                             & \(\Theta _p(n^{2 / 3})\)                  & \(\Theta _p(n^{2 / 3})\)                  & \\
+			Critical window \(\lambda = 1 + \theta / n^{1 / 3}\) & \(\Theta _p(n^{2 / 3})\)                  & \(\Theta _p(n^{2 / 3})\)                  & \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	Some common proof techniques:
+	\begin{itemize}
+		\item For some counting random variable \(Z\), \(\Pr_{}(Z > 0) = \Pr_{}(Z \geq 1) \leq \mathbb{E}_{}[Z] \). For example, we have \(\Pr_{}(\lvert \mathcal{C} _{\max } \rvert \geq k) = \Pr_{}(Z_{\geq k} \geq k) \leq \mathbb{E}_{}[Z_{\geq k} / k] \).
+		\item \(\Pr_{}(Z = 0) = \Pr_{}(Z - \mathbb{E}_{}[Z] = - \mathbb{E}_{}[Z] ) \leq \Pr_{}(\lvert Z - \mathbb{E}_{}[Z] \rvert \geq \mathbb{E}_{}[Z] ) \leq \Var_{}[Z] / (\mathbb{E}_{}[Z] )^2\).
+		\item For \(X \sim \operatorname{Pois}(\lambda ) \), \(\mathbb{E}_{}[(X)_k] \coloneqq \mathbb{E}_{}[X (X - 1) \dots (X-k+1)] = \lambda ^k\) for all \(k \geq 1\).
+	\end{itemize}
+\end{prev}
+
+\begin{lemma}
+	If \(X \in \mathbb{Z} _{\geq 0}\) and \(\mathbb{E}_{}[(X)_k] \to \lambda ^k\) for all \(k = 1, 2, \dots \), then \(X_n \overset{D}{\to} \operatorname{Pois}(\lambda ) \).
+\end{lemma}
+
+\begin{theorem}[Stein-Chen method]\label{thm:Stein-Chen-method}
+	Let \(X = \sum_{i=1}^{n} \mathbbm{1}_{A_t} \) with \(p_i = \Pr_{}(A_i) \) for all \(i \geq 1\) and \(\lambda = \mathbb{E}_{}[X] = \sum_{i=1}^{n} p_i\). If \((A_i)_{i \geq 0}\)'s are positively associated, i.e., \((A_i)_{i \neq j} \mid A_j \geq (A_i)_{i \neq j}\) for all \(j\). Then,
+	\[
+		d_{\mathrm{TV} }(X, \operatorname{Pois}(\lambda ) )
+		= \frac{1}{2} \sum_{k \geq 0} \left\lvert \Pr_{}(X = k) - e^{-\lambda } \frac{\lambda ^k }{k!}  \right\rvert
+		\leq \min ( 1, 1 / \lambda ) \left( \Var_{}[X] - \lambda + 2 \sum_{i=1}^{n} p_i^2 \right).
+	\]
+	If \((A_i)_{i\geq 1}\) are negatively associated, then
+	\[
+		d_{\mathrm{TV} }(X, \operatorname{Pois}(\lambda ) )
+		= \frac{1}{2} \sum_{k \geq 0} \left\lvert \Pr_{}(X = k) - e^{-\lambda } \frac{\lambda ^k }{k!}  \right\rvert
+		\leq \min ( 1, 1 / \lambda ) \left( \lambda - \Var_{}[X] \right).
+	\]
+\end{theorem}
+
+Consider the cycle counting problem. Fix \(k \geq 3\), we're interested in
+\[
+	X_k = \sum_{\substack{(i_1, \dots , i_k) \in [n], \text{distinct} \\ \text{modulo starting point and orientation} }} \mathbbm{1}_{(i_1, \dots , i_k) \text{ is a cycle} }
+\]
+Again, consider \(\operatorname{ER}(n, \lambda / n) \) for some \(\lambda > 0\). We see that
+\[
+	\mathbb{E}_{}[X_k]
+	= \left( \frac{\lambda}{n} \right) ^k \cdot \binom{n}{k} \frac{k!}{2 \cdot k}
+	= \frac{\lambda ^k}{n^k} \cdot \frac{n(n-1) \dots (n-k+1)}{2k}
+	= \frac{\lambda ^k}{2k} \prod_{i=1}^{k} \left( 1 - \frac{i}{n} \right)
+	\approx \frac{\lambda ^k}{2k} e^{- \frac{k (k-1)}{2n}}.
+\]
+Hence, when \(k \ll \sqrt{n} \), we have \(\mathbb{E}_{}[X_k] \lessapprox \frac{\lambda ^k}{2k}\).
+
+\begin{corollary}
+	When \(\lambda < 1\), the expected number of cycles is less than \(\sum_{k=3}^{\infty} \lambda ^k / 2k < \infty \). Moreover, the expected number of vertices in a cycle is less than \(\sum_{k=3}^{\infty} \mathbb{E}_{}[k \cdot X_k] \leq \sum_{k=3}^{\infty} \lambda ^k / 2 < \infty \).
+\end{corollary}
+
+Moreover,
+\[
+	\Var_{}[X_k]
+	= \binom{n}{k} \frac{k!}{2k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \left( \frac{\lambda}{n} \right) ^k \right) + O\left( \sum_{s=1}^{k-2} \binom{n}{k} \cdot \frac{k!}{2k} \cdot n^{k - s - 1} \cdot \left( \frac{\lambda}{n} \right)^{k + k - s} \right),
+\]
+where the second term is the covariance, which goes to \(0\) as we desired. From the \hyperref[thm:Stein-Chen-method]{Stein-Chen method}, we can show the following.
+
+\begin{theorem}
+	For \(\lambda > 0\) fixed, \(k \geq 3\) fixed, we have \(X_k \overset{D}{\to} \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \). Moreover,
+	\begin{itemize}
+		\item \((X_k)_{k = 3}^d \overset{D}{\to} \bigotimes_{k=3}^d \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \).
+		\item \(\sum_{k=3}^{d} X_k \overset{D}{\to} \operatorname{Pois}(\sum_{k=3}^{d} \lambda ^k / 2k) \) for all \(\lambda > 0\).
+		\item If \(\lambda < 1\), \(\sum_{k=3}^{\infty} X_k \overset{D}{\to} \operatorname{Pois}(\sum_{k=3}^{\infty} \lambda ^k / 2k) \).
+	\end{itemize}
+\end{theorem}
+
+Now, consider the problem of degree counting. Fix \(k \geq 0\), consider
+\[
+	N_k = \sum_{v=1}^{n} \mathbbm{1}_{\deg (v) = k}.
+\]
+We see that
+\[
+	\mathbb{E}_{}[N_k]
+	= n \cdot \binom{n}{k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \frac{\lambda}{n} \right) ^{n-1-k}
+	\approx n \cdot \frac{n^k}{k!} \cdot \frac{\lambda ^k}{n^k} e^{-\lambda }
+	\approx n \cdot \frac{\lambda ^k}{k!} e^{-\lambda }.
+\]
+Hence,
+\[
+	\frac{1}{n} \mathbb{E}_{}[N_k]
+	\to \frac{\lambda ^k}{k!} e^{-\lambda }
+\]
+as \(n \to \infty \) for all \(k \geq 0\). We also have that
+\[
+	\Var_{}[N_k]
+	= n \left( \frac{\lambda ^k e^{-\lambda }}{k!} \left( 1 - \frac{\lambda ^k e^{-\lambda }}{k!} \right) + o(1) \right) + n(n-1) \left( \Pr_{}(\deg (1) = k, \deg (2) = k) - \Pr_{}(\deg (v) = k)^2 \right)
+\]
+We see that \(\Pr_{}(\deg (v) = k)^2 = \Pr_{}(\operatorname{Bin}(n-1, p) =k)^2\) and
+\[
+	\Pr_{}(\deg (1) = k, \deg (2) = k)
+	= \frac{\lambda}{n} \Pr_{}(\operatorname{Bin}(n-2, p) = k-1 ) ^2 + \left( 1 - \frac{\lambda}{n} \right) \Pr_{}(\operatorname{Bin}(n-2, p) = k )^2.
+\]
+Overall, we have \(\Var_{}[N_k] / n \approx c_\lambda / n + \dots \).
+
+\begin{theorem}
+	\[
+		\left( \frac{N_k - \mathbb{E}_{}[N_k] }{\sqrt{n} } \right) _{k=1}^{\ell }
+		\overset{D}{\to} \mathcal{N} _\ell (0, D)
+	\]
+	where \(D \in \mathbb{R} ^{\ell \times \ell }\) is a positive definite matrix.
+\end{theorem}
+
+\begin{remark}
+	For the subgraph counting problem, the Poisson approximation holds if and only if \(\Var_{}[Z] / \mathbb{E}_{}[Z] \to 1\) as \(n \to \infty \).
+\end{remark}
+
+\begin{eg}
+	Using the same idea, we can consider any tree or any cluster of a given finite tree.
+\end{eg}
+
+Consider a tree \(T\) that is a \(3\)-chain. Then,
+\[
+	\mathbb{E}_{}[N_T]
+	= n^3 \cdot c_3 \cdot \frac{\lambda ^2}{n^2} \left( 1 - \frac{\lambda}{n} \right) ^{3 (n-3) + 1}
+	\approx n \lambda ^2 e^{-3\lambda }.
+\]
+More generally, given a tree \(T\) of \(k\) nodes,
+\[
+	\mathbb{E}_{}[N_T]
+	= n \lambda ^{k-1} e^{-k \lambda } \cdot \Theta _{k} (1)
+	= \exp (\log n - k \lambda + (k-1) \log \lambda ).
+\]
+We see that if \(\lambda > (1 + \epsilon ) \log n / k\), \(\mathbb{E}_{}[N_k] \to 0\).
+
+If \(\lambda \in (\log n / k, \log n / (k-1))\), no \(T_k\) will appear. In particular, when \(\lambda > \log n\), the graph becomes connected.

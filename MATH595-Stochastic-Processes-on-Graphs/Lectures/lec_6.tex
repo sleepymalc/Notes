@@ -50,32 +50,46 @@ With \autoref{lma:Poisson-moment-convergence}, the main tool we will be utilized
 \end{remark}
 
 \subsection{Cycle Counting}
-Consider the cycle counting problem. Fix \(k \geq 3\), we're interested in
-\[
-	X_k = \sum_{\substack{(i_1, \dots , i_k) \in [n], \text{distinct} \\ \text{modulo starting point and orientation} }} \mathbbm{1}_{(i_1, \dots , i_k) \text{ is a cycle} }
-\]
-Again, consider \(\operatorname{ER}(n, \lambda / n) \) for some \(\lambda > 0\). We see that
-\[
-	\mathbb{E}_{}[X_k]
-	= \left( \frac{\lambda}{n} \right) ^k \cdot \binom{n}{k} \frac{k!}{2 \cdot k}
-	= \frac{\lambda ^k}{n^k} \cdot \frac{n(n-1) \dots (n-k+1)}{2k}
-	= \frac{\lambda ^k}{2k} \prod_{i=1}^{k} \left( 1 - \frac{i}{n} \right)
-	\approx \frac{\lambda ^k}{2k} e^{- \frac{k (k-1)}{2n}}.
-\]
-Hence, when \(k \ll \sqrt{n} \), we have \(\mathbb{E}_{}[X_k] \lessapprox \frac{\lambda ^k}{2k}\).
+Consider the \hyperref[prb:cycle-counting]{cycle counting problem} for \(\operatorname{ER}(n, \lambda / n) \) for some \(\lambda > 0\):
 
-\begin{corollary}
+\begin{problem}[Cycle counting]\label{prb:cycle-counting}
+For some fixed \(k \geq 3\), we're interested in controlling
+\[
+	X_k
+	\coloneqq \sum_{\quotient{\substack{(v_1, \dots , v_k) \in [n] \\ v_j \neq v_{j^{\prime} } \text{ for \(j \neq j^{\prime}\) }}}{\substack{\text{starting point}\\ \text{orientation} }}} \mathbbm{1}_{(v_1, \dots , v_k) \text{ is a cycle} },
+\]
+where the summation is over all \(n\) distinct vertices modulo the starting one and the orientation.
+\end{problem}
+
+\begin{note}
+	For the \hyperref[prb:cycle-counting]{cycle counting} problem, it's okay that the \(k\)-cycle has additional edges, i.e., we care about induced subgraph rather than the exact structure.
+\end{note}
+
+The following is easy to see.
+
+\begin{lemma}\label{lma:cycle-counting-mean}
 	When \(\lambda < 1\), the expected number of cycles is less than \(\sum_{k=3}^{\infty} \lambda ^k / 2k < \infty \). Moreover, the expected number of vertices in a cycle is less than \(\sum_{k=3}^{\infty} \mathbb{E}_{}[k \cdot X_k] \leq \sum_{k=3}^{\infty} \lambda ^k / 2 < \infty \).
-\end{corollary}
+\end{lemma}
+\begin{proof}
+	By a simple counting argument, we see that
+	\[
+		\mathbb{E}_{}[X_k]
+		= \left( \frac{\lambda}{n} \right) ^k \cdot \binom{n}{k} \frac{k!}{2 \cdot k}
+		= \frac{\lambda ^k}{n^k} \cdot \frac{n(n-1) \dots (n-k+1)}{2k}
+		= \frac{\lambda ^k}{2k} \prod_{i=1}^{k} \left( 1 - \frac{i}{n} \right)
+		\approx \frac{\lambda ^k}{2k} e^{- \frac{k (k-1)}{2n}}.
+	\]
+	Hence, when \(k \ll \sqrt{n} \), we have \(\mathbb{E}_{}[X_k] \lessapprox \lambda ^k / 2k\), which becomes more vacuous as \(k\) increases.
+\end{proof}
 
-Moreover,
+We can also calculate the variance of \(X_k\). In particular, we see that
 \[
 	\Var_{}[X_k]
 	= \binom{n}{k} \frac{k!}{2k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \left( \frac{\lambda}{n} \right) ^k \right) + O\left( \sum_{s=1}^{k-2} \binom{n}{k} \cdot \frac{k!}{2k} \cdot n^{k - s - 1} \cdot \left( \frac{\lambda}{n} \right)^{k + k - s} \right),
 \]
 where the second term is the covariance, which goes to \(0\) as we desired. From the \hyperref[thm:Stein-Chen-method]{Stein-Chen method}, we can show the following.
 
-\begin{theorem}
+\begin{theorem}\label{thm:cycle-counting}
 	For \(\lambda > 0\) fixed, \(k \geq 3\) fixed, we have \(X_k \overset{D}{\to} \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \). Moreover,
 	\begin{itemize}
 		\item \((X_k)_{k = 3}^d \overset{D}{\to} \bigotimes_{k=3}^d \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \).

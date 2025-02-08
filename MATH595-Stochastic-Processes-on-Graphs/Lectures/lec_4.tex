@@ -3,9 +3,9 @@ Let's first simplify the notations. At time \(t\), we choose \(i_t \in \mathcal{
 \[
 	\mathcal{A} _{t+1} = (\mathcal{A} _t \setminus \{ i_t \} ) \cup \mathcal{C} _{t+1}, \quad
 	\mathcal{U} _{t+1} = \mathcal{U} _t \setminus \mathcal{C} _{t+1}, \quad
-	\mathcal{R} _{t+1} = \mathcal{R} _{t} + \{ i_t \} .
+	\mathcal{R} _{t+1} = \mathcal{R} _{t} \cup \{ i_t \} ,
 \]
-We see that \(\xi _{t+1} \coloneqq \lvert \mathcal{C} _{t+1} \rvert \sim \operatorname{Bin}(U_t, p) \). Hence,
+where \(\mathcal{A} _0 = \{ 1 \} \), \(\mathcal{U} _0 = [n] \setminus \mathcal{A} _0\), and \(\mathcal{R} _0 = \varnothing \). Let \(\xi _{t+1} \coloneqq \lvert \mathcal{C} _{t+1} \rvert \sim \operatorname{Bin}(U_t, p) \) where \(p = \lambda / n\), then
 \[
 	A_{t+1} = A_t - 1 + \xi _{t+1}, \quad
 	U_{t+1} = U_t - \xi _{t+1} \sim \operatorname{Bin}(U_t, 1 - p), \quad
@@ -17,8 +17,8 @@ We see that \(\xi _{t+1} \coloneqq \lvert \mathcal{C} _{t+1} \rvert \sim \operat
 	\[
 		\mathbb{E}_{}[A_t]
 		= n - t - (n - 1) \cdot (1 - p)^t
-		= (n-1) \left[ 1 - \left( 1- \frac{\lambda}{n} \right) ^t \right]  - t + 1
-		\cong n \left( 1 - e^{-\lambda \cdot \frac{t}{n}} - \frac{t}{n} \right)
+		= (n-1) \left[ 1 - \left( 1- \lambda / n \right) ^t \right]  - t + 1
+		\cong n \left( 1 - e^{-\lambda \cdot \frac{t}{n}} - t / n \right)
 	\]
 	and \(\Var_{}[A_t] = (n-1)(1 - p)^t \cdot [1 - (1 - p)^t] \approx \lambda t e^{-\lambda t / n}\).
 \end{claim}
@@ -26,7 +26,7 @@ We see that \(\xi _{t+1} \coloneqq \lvert \mathcal{C} _{t+1} \rvert \sim \operat
 Let \(f_\lambda (x) = 1 - e^{-\lambda x} - x\), hence, \(\mathbb{E}_{}[A_t] \cong n f_\lambda (t / n)\). Also, let \(\zeta _\lambda > 0\) be the unique positive solution of \(f_\lambda (x) = 0\), where one can easily check that when \(\lambda > 1\), \(f(x) = 0\) for \(x > 0\) has a unique solution.
 
 \begin{intuition}
-	Since \(\Var_{}[A_t] < (\mathbb{E}_{}[A_t]) ^2 \), we may conjecture that \(A_t \neq 0\) with high probability away from \(t = 0\) and \(t = \zeta _\lambda \).
+	Since \(\Var_{}[A_t] < (\mathbb{E}_{}[A_t]) ^2 \), so \(A_t \neq 0\) with high probability away from \(t = 0\) and \(t = \zeta _\lambda \).
 \end{intuition}
 
 We prove that this is indeed the case, i.e., there are no intermediate clusters.
@@ -63,21 +63,26 @@ We prove that this is indeed the case, i.e., there are no intermediate clusters.
 From \autoref{lma:supercritical-Erdős-Rényi-graph}, the following is immediate.
 
 \begin{corollary}\label{col:supercritical-Erdős-Rényi-graph}
-	When \(\lambda > 1\) and \(t / n \leq \alpha < \zeta _\lambda \), \(\Pr_{}(A_t = 0) \leq e^{-t c(\alpha )} \) where \(c(\alpha ) \coloneqq I_{g(\alpha )}\). Moreover, this implies that for some \(k > 0\),
+	When \(\lambda > 1\) and \(t / n \leq \alpha < \zeta _\lambda \), \(\Pr_{}(A_t = 0) \leq e^{-t c(\alpha )} \) where \(c(\alpha ) \coloneqq I_{g(\alpha )}\).
+\end{corollary}
+\begin{proof}
+	Since \(g^{\prime} (x) = \frac{e^{-\lambda x}}{x^{2} } (1 + \lambda x - e^{\lambda x}) < 0\) when \(x > 0\), we have \(1 < g(\alpha ) \leq g(t / n)\), which implies \(I_{g(\alpha )} \leq I_{g(t / n)}\). The first result then follows from \autoref{lma:supercritical-Erdős-Rényi-graph}.
+\end{proof}
+
+From \autoref{col:supercritical-Erdős-Rényi-graph}, the following is immediate.
+
+\begin{corollary}\label{col:supercritical-Erdős-Rényi-graph-intermediate-cluster}
+	When \(\lambda > 1\) and \(\alpha < \zeta _\lambda \), there is some \(k > 0\) such that
 	\[
 		\Pr_{}(\exists t\colon k \log n \leq t \leq \alpha n \text{ such that } A_t = 0)
-		\leq \sum_{t = k \log n}^{\alpha n} e^{-t c(\alpha )}
 		\leq \frac{n^{-k c(\alpha )}}{1 - e^{-c(\alpha )}}.
 	\]
 \end{corollary}
-\begin{proof}
-	Since \(g^{\prime} (x) = \frac{e^{-\lambda x}}{x} (1 + \lambda x - e^{\lambda x}) < 0\) when \(x < 0\), we have \(1 < g(\alpha ) \leq g(t / n)\), which implies \(I_{g(\alpha )} \leq I_{g(t / n)}\). The first result then follows from \autoref{lma:supercritical-Erdős-Rényi-graph}.
-\end{proof}
 
-By using a union bound, \autoref{col:supercritical-Erdős-Rényi-graph} leads to the following key lemma.
+By using a union bound, \autoref{col:supercritical-Erdős-Rényi-graph-intermediate-cluster} leads to the following key lemma.
 
 \begin{lemma}\label{lma:intermediate-component-supercritical-Erdős-Rényi-graph}
-	When \(\lambda > 1\) and \(t / n \leq \alpha < \zeta _{\lambda }\), as \(k > 1 / c(\alpha )\), as \(n \to \infty \),
+	When \(\lambda > 1\) and \(\alpha < \zeta _{\lambda }\), as \(k > 1 / c(\alpha )\), as \(n \to \infty \),
 	\[
 		\Pr_{}(\exists v \in [n] \colon k \log n \leq \lvert \mathcal{C} (v) \rvert \leq \alpha n)
 		\leq n \Pr_{}(k \log n \leq \lvert \mathcal{C} (1) \rvert \leq \alpha n)
@@ -93,8 +98,9 @@ By using a union bound, \autoref{col:supercritical-Erdős-Rényi-graph} leads to
 Now, we just need to worry about the size of \(\mathcal{C} _{\max }\). To do this, define a random variable that counts the number of vertices having a small component:
 \[
 	Z_{\leq k_n}
-	\coloneqq \sum_{v \in [n]} \mathbbm{1}_{\lvert \mathcal{C} (v) \rvert \leq k_n = k \log n}.
+	\coloneqq \sum_{v \in [n]} \mathbbm{1}_{\lvert \mathcal{C} (v) \rvert \leq k_n},
 \]
+where we let \(k_n \coloneqq k \log n\).
 
 \begin{lemma}\label{lma:small-component-supercritical-Erdős-Rényi-graph}
 	When \(\lambda > 1\), \(\lvert Z_{\leq k_n} - n(1 - \zeta _\lambda ) \rvert \leq n^{1 / 2 + \epsilon }\) with high probability for all \(\epsilon > 0\).
@@ -173,8 +179,4 @@ Putting all results we have, we see that:
 	\item Everything else is in a single component.
 \end{enumerate}
 
-We can now prove \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph}, specifically, \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-a} and \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-b}:
-
-\begin{proof}[Proof of \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph} \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-a} and \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-b}]
-	We show that for \(\lambda > 1\) and \(G \sim \operatorname{ER}(n, \lambda / n) \), we have \(\lvert \mathcal{C} _{\max _1} \rvert / n \overset{p}{\to} \zeta _\lambda\) as \(n \to \infty \) and \(\lvert \mathcal{C} _{\max _2} \rvert / \log n \leq \frac{1}{I _\lambda } + \epsilon \).
-\end{proof}
+Putting everything together, \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph} \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-a} and \autoref{lma:component-of-regular-supercritical-Erdős-Rényi-graph-b} are proved.

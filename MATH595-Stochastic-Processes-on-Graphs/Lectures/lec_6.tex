@@ -1,40 +1,43 @@
-\lecture{6}{6 Feb.\ 9:30}{}
+\lecture{6}{6 Feb.\ 9:30}{Cycle Counting, Star Counting, and Tree Counting}
+Let's first summarize some common proof techniques we have seen so far:
 
 \begin{prev}
-	For \(\operatorname{ER}(n, p = \lambda / n)\) for some fixed \(\lambda \), we have
-	\begin{table}[H]
-		\centering
-		\begin{tabular}{c|c|c|c}
-			\toprule
-			                                                     & \(\lvert \mathcal{C} _{\max _1} \rvert \) & \(\lvert \mathcal{C} _{\max _2} \rvert \) & \\
-			\midrule
-			Subcritical \(\lambda < 1\)                          & \(\log n / I_\lambda \)                   & \(\log n / I_\lambda \)                   & \\
-			Supercritical \(\lambda > 1\)                        & \(n \cdot \zeta _\lambda \)               & \(\log n /  I_\lambda \)                  & \\
-			Critical \(\lambda = 1\)                             & \(\Theta _p(n^{2 / 3})\)                  & \(\Theta _p(n^{2 / 3})\)                  & \\
-			Critical window \(\lambda = 1 + \theta / n^{1 / 3}\) & \(\Theta _p(n^{2 / 3})\)                  & \(\Theta _p(n^{2 / 3})\)                  & \\
-			\bottomrule
-		\end{tabular}
-	\end{table}
-	Some common proof techniques:
+	For some counting random variable \(Z\):
 	\begin{itemize}
-		\item For some counting random variable \(Z\), \(\Pr_{}(Z > 0) = \Pr_{}(Z \geq 1) \leq \mathbb{E}_{}[Z] \). For example, we have \(\Pr_{}(\lvert \mathcal{C} _{\max } \rvert \geq k) = \Pr_{}(Z_{\geq k} \geq k) \leq \mathbb{E}_{}[Z_{\geq k} / k] \).
+		\item \(\Pr_{}(Z > 0) = \Pr_{}(Z \geq 1) \leq \mathbb{E}_{}[Z] \). For example, \(\Pr_{}(\lvert \mathcal{C} _{\max } \rvert \geq k) = \Pr_{}(Z_{\geq k} \geq k) \leq \mathbb{E}_{}[Z_{\geq k} / k] \).
 		\item \(\Pr_{}(Z = 0) = \Pr_{}(Z - \mathbb{E}_{}[Z] = - \mathbb{E}_{}[Z] ) \leq \Pr_{}(\lvert Z - \mathbb{E}_{}[Z] \rvert \geq \mathbb{E}_{}[Z] ) \leq \Var_{}[Z] / (\mathbb{E}_{}[Z] )^2\).
-		\item For \(X \sim \operatorname{Pois}(\lambda ) \), \(\mathbb{E}_{}[(X)_k] \coloneqq \mathbb{E}_{}[X (X - 1) \dots (X-k+1)] = \lambda ^k\) for all \(k \geq 1\).
 	\end{itemize}
 \end{prev}
 
-\begin{lemma}
-	If \(X \in \mathbb{Z} _{\geq 0}\) and \(\mathbb{E}_{}[(X)_k] \to \lambda ^k\) for all \(k = 1, 2, \dots \), then \(X_n \overset{D}{\to} \operatorname{Pois}(\lambda ) \).
+\subsection{Stein-Chen Method for Poisson Approximation}
+To proceed, we will need some tools on \(\operatorname{Pois}(\lambda ) \). The following notation will be heavily used.
+
+\begin{notation}
+	For \(X, k \in \mathbb{N} \), we let \((X)_k \coloneqq X! / k! = X (X-1) \cdots (X-k+1)\).
+\end{notation}
+
+By some calculation, the following can be shown.
+
+\begin{lemma}\label{lma:Poisson-moment}
+	For \(X \sim \operatorname{Pois}(\lambda ) \), \(\mathbb{E}_{}[(X)_k] \coloneqq \mathbb{E}_{}[X (X - 1) \dots (X-k+1)] = \lambda ^k\) for all \(k \geq 1\).
 \end{lemma}
 
+Surprisingly, if all moments of a random variable converges to what is stated in \autoref{lma:Poisson-moment}, then it indeed will converge in distribution to a Poisson random variable.
+
+\begin{lemma}\label{lma:Poisson-moment-convergence}
+	For an integer random variable \(X_n\), if \(\mathbb{E}_{}[(X_n)_k] \to \lambda ^k\) as \(n \to \infty \) for all \(k = 1, 2, \dots \), then \(X_n \overset{D}{\to} \operatorname{Pois}(\lambda ) \).
+\end{lemma}
+
+With \autoref{lma:Poisson-moment-convergence}, the main tool we will be utilized can be proven (omit due to its length):
+
 \begin{theorem}[Stein-Chen method]\label{thm:Stein-Chen-method}
-	Let \(X = \sum_{i=1}^{n} \mathbbm{1}_{A_t} \) with \(p_i = \Pr_{}(A_i) \) for all \(i \geq 1\) and \(\lambda = \mathbb{E}_{}[X] = \sum_{i=1}^{n} p_i\). If \((A_i)_{i \geq 0}\)'s are positively associated, i.e., \((A_i)_{i \neq j} \mid A_j \geq (A_i)_{i \neq j}\) for all \(j\). Then,
+	Let \((A_i)_{i \geq 1}^{n}\) be a sequence of events with \(p_i = \Pr_{}(A_i) \) for all \(i \in [n]\), and let \(X = \sum_{i=1}^{n} \mathbbm{1}_{A_i} \) with \(\lambda = \mathbb{E}_{}[X] = \sum_{i=1}^{n} p_i\). If \((A_i)_{i \geq 1}^{n}\)'s are positively associated, i.e., \((A_i)_{i \neq j} \mid A_j \geq (A_i)_{i \neq j}\) for all \(j\), then,
 	\[
 		d_{\mathrm{TV} }(X, \operatorname{Pois}(\lambda ) )
 		= \frac{1}{2} \sum_{k \geq 0} \left\lvert \Pr_{}(X = k) - e^{-\lambda } \frac{\lambda ^k }{k!}  \right\rvert
 		\leq \min ( 1, 1 / \lambda ) \left( \Var_{}[X] - \lambda + 2 \sum_{i=1}^{n} p_i^2 \right).
 	\]
-	If \((A_i)_{i\geq 1}\) are negatively associated, then
+	On the other hand, if \((A_i)_{i\geq 1}^{n}\) are negatively associated, then
 	\[
 		d_{\mathrm{TV} }(X, \operatorname{Pois}(\lambda ) )
 		= \frac{1}{2} \sum_{k \geq 0} \left\lvert \Pr_{}(X = k) - e^{-\lambda } \frac{\lambda ^k }{k!}  \right\rvert
@@ -42,6 +45,11 @@
 	\]
 \end{theorem}
 
+\begin{remark}
+
+\end{remark}
+
+\subsection{Cycle Counting}
 Consider the cycle counting problem. Fix \(k \geq 3\), we're interested in
 \[
 	X_k = \sum_{\substack{(i_1, \dots , i_k) \in [n], \text{distinct} \\ \text{modulo starting point and orientation} }} \mathbbm{1}_{(i_1, \dots , i_k) \text{ is a cycle} }
@@ -76,6 +84,7 @@ where the second term is the covariance, which goes to \(0\) as we desired. From
 	\end{itemize}
 \end{theorem}
 
+\subsection{Tree Counting}
 Now, consider the problem of degree counting. Fix \(k \geq 0\), consider
 \[
 	N_k = \sum_{v=1}^{n} \mathbbm{1}_{\deg (v) = k}.

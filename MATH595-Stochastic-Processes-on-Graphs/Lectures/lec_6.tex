@@ -1,15 +1,15 @@
 \lecture{6}{6 Feb.\ 9:30}{Cycle Counting, Star Counting, and Tree Counting}
+\subsection{Stein-Chen Method for Poisson Approximation}
 Let's first summarize some common proof techniques we have seen so far:
 
 \begin{prev}
-	For some counting random variable \(Z\):
+	For some counting random variable \(Z\) (i.e., non-negative integer-valued):
 	\begin{itemize}
-		\item \(\Pr_{}(Z > 0) = \Pr_{}(Z \geq 1) \leq \mathbb{E}_{}[Z] \). For example, \(\Pr_{}(\lvert \mathcal{C} _{\max } \rvert \geq k) = \Pr_{}(Z_{\geq k} \geq k) \leq \mathbb{E}_{}[Z_{\geq k} / k] \).
+		\item \(\Pr_{}(Z > 0) = \Pr_{}(Z \geq 1) \leq \mathbb{E}_{}[Z] \). For example, \(\Pr_{}(\lvert \mathcal{C} _{\max } \rvert \geq k) = \Pr_{}(Z_{\geq k} \geq k) \leq \mathbb{E}_{}[Z_{\geq k}] / k\).
 		\item \(\Pr_{}(Z = 0) = \Pr_{}(Z - \mathbb{E}_{}[Z] = - \mathbb{E}_{}[Z] ) \leq \Pr_{}(\lvert Z - \mathbb{E}_{}[Z] \rvert \geq \mathbb{E}_{}[Z] ) \leq \Var_{}[Z] / (\mathbb{E}_{}[Z] )^2\).
 	\end{itemize}
 \end{prev}
 
-\subsection{Stein-Chen Method for Poisson Approximation}
 To proceed, we will need some tools on \(\operatorname{Pois}(\lambda ) \). The following notation will be heavily used.
 
 \begin{notation}
@@ -19,13 +19,13 @@ To proceed, we will need some tools on \(\operatorname{Pois}(\lambda ) \). The f
 By some calculation, the following can be shown.
 
 \begin{lemma}\label{lma:Poisson-moment}
-	For \(X \sim \operatorname{Pois}(\lambda ) \), \(\mathbb{E}_{}[(X)_k] \coloneqq \mathbb{E}_{}[X (X - 1) \dots (X-k+1)] = \lambda ^k\) for all \(k \geq 1\).
+	For \(X \sim \operatorname{Pois}(\lambda ) \), \(\mathbb{E}_{}[(X)_k] \coloneqq \mathbb{E}_{}[X (X - 1) \dots (X-k+1)] = \lambda ^k\) for all \(k = 1, 2, \dots \).
 \end{lemma}
 
 Surprisingly, if all moments of a random variable converges to what is stated in \autoref{lma:Poisson-moment}, then it indeed will converge in distribution to a Poisson random variable.
 
 \begin{lemma}\label{lma:Poisson-moment-convergence}
-	For an integer random variable \(X_n\), if \(\mathbb{E}_{}[(X_n)_k] \to \lambda ^k\) as \(n \to \infty \) for all \(k = 1, 2, \dots \), then \(X_n \overset{D}{\to} \operatorname{Pois}(\lambda ) \).
+	For a non-negative integer random variable \(X_n\), if \(\mathbb{E}_{}[(X_n)_k] \to \lambda ^k\) as \(n \to \infty \) for all \(k = 1, 2, \dots \), then \(X_n \overset{D}{\to} \operatorname{Pois}(\lambda ) \).
 \end{lemma}
 
 With \autoref{lma:Poisson-moment-convergence}, the main tool we will be utilized can be proven (omit due to its length):
@@ -37,17 +37,13 @@ With \autoref{lma:Poisson-moment-convergence}, the main tool we will be utilized
 		= \frac{1}{2} \sum_{k \geq 0} \left\lvert \Pr_{}(X = k) - e^{-\lambda } \frac{\lambda ^k }{k!}  \right\rvert
 		\leq \min ( 1, 1 / \lambda ) \left( \Var_{}[X] - \lambda + 2 \sum_{i=1}^{n} p_i^2 \right).
 	\]
-	On the other hand, if \((A_i)_{i\geq 1}^{n}\) are negatively associated, then
+	On the other hand, if \((A_i)_{i\geq 1}^{n}\) are negatively associated, i.e., \((A_i)_{i \neq j} \mid A_j \leq (A_i)_{i \neq j}\)  for all \(j\), then
 	\[
 		d_{\mathrm{TV} }(X, \operatorname{Pois}(\lambda ) )
 		= \frac{1}{2} \sum_{k \geq 0} \left\lvert \Pr_{}(X = k) - e^{-\lambda } \frac{\lambda ^k }{k!}  \right\rvert
 		\leq \min ( 1, 1 / \lambda ) \left( \lambda - \Var_{}[X] \right).
 	\]
 \end{theorem}
-
-\begin{remark}
-
-\end{remark}
 
 \subsection{Cycle Counting}
 Consider the \hyperref[prb:cycle-counting]{cycle counting problem} for \(\operatorname{ER}(n, \lambda / n) \) for some \(\lambda > 0\):
@@ -56,9 +52,9 @@ Consider the \hyperref[prb:cycle-counting]{cycle counting problem} for \(\operat
 For some fixed \(k \geq 3\), we're interested in controlling
 \[
 	X_k
-	\coloneqq \sum_{\quotient{\substack{(v_1, \dots , v_k) \in [n] \\ v_j \neq v_{j^{\prime} } \text{ for \(j \neq j^{\prime}\) }}}{\substack{\text{starting point}\\ \text{orientation} }}} \mathbbm{1}_{(v_1, \dots , v_k) \text{ is a cycle} },
+	\coloneqq \sum_{\quotient{\substack{(v_1, \dots , v_k), v_i \in [n] \\ v_i \neq v_{i^{\prime} } \text{ for \(i \neq i^{\prime}\) }}}{\substack{\text{starting point}\\ \text{orientation} }}} \mathbbm{1}_{(v_1, \dots , v_k) \text{ is a \(k\)-cycle} },
 \]
-where the summation is over all \(n\) distinct vertices modulo the starting one and the orientation.
+where the summation is over all \(k\) distinct vertices modulo the starting one and the orientation.
 \end{problem}
 
 \begin{note}
@@ -68,7 +64,7 @@ where the summation is over all \(n\) distinct vertices modulo the starting one 
 The following is easy to see.
 
 \begin{lemma}\label{lma:cycle-counting-mean}
-	When \(\lambda < 1\), the expected number of cycles is less than \(\sum_{k=3}^{\infty} \lambda ^k / 2k < \infty \). Moreover, the expected number of vertices in a cycle is less than \(\sum_{k=3}^{\infty} \mathbb{E}_{}[k \cdot X_k] \leq \sum_{k=3}^{\infty} \lambda ^k / 2 < \infty \).
+	Let \(G \sim \operatorname{ER}(n, \lambda / n) \). When \(\lambda < 1\), the expected number of cycles is less than \(\sum_{k=3}^{\infty} \lambda ^k / 2k < \infty \). Moreover, the expected number of vertices in a cycle is less than \(\sum_{k=3}^{\infty} \mathbb{E}_{}[k \cdot X_k] \leq \sum_{k=3}^{\infty} \lambda ^k / 2 < \infty \).
 \end{lemma}
 \begin{proof}
 	By a simple counting argument, we see that
@@ -87,35 +83,42 @@ We can also calculate the variance of \(X_k\). In particular, we see that
 	\Var_{}[X_k]
 	= \binom{n}{k} \frac{k!}{2k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \left( \frac{\lambda}{n} \right) ^k \right) + O\left( \sum_{s=1}^{k-2} \binom{n}{k} \cdot \frac{k!}{2k} \cdot n^{k - s - 1} \cdot \left( \frac{\lambda}{n} \right)^{k + k - s} \right),
 \]
-where the second term is the covariance, which goes to \(0\) as we desired. From the \hyperref[thm:Stein-Chen-method]{Stein-Chen method}, we can show the following.
+where the big-\(O\) (second) term is the covariance: If two cycles don't share edges, then the covariance is \(0\). Otherwise, it is strictly greater than \(0\), with \(s\) being the number of shared edges between these two cycles. In particular, we can show that as \(n \to \infty \), we have
+\[
+	\sum_{s=1}^{k-2} \binom{n}{k} \cdot \frac{k!}{2k} \cdot n^{k - s - 1} \left( \frac{\lambda }{n} \right) ^{k + k - s}
+	\leq \sum_{s=1}^{k-2} \frac{\lambda ^{2k - s}}{2k} \cdot \frac{1}{n} \to 0.
+\]
+
+From the \hyperref[thm:Stein-Chen-method]{Stein-Chen method}, we can show the following.
 
 \begin{theorem}\label{thm:cycle-counting}
-	For \(\lambda > 0\) fixed, \(k \geq 3\) fixed, we have \(X_k \overset{D}{\to} \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \). Moreover,
+	Let \(G \sim \operatorname{ER}(n, \lambda / n) \). For a fixed \(\lambda > 0\) and \(k \geq 3\), we have
 	\begin{itemize}
-		\item \((X_k)_{k = 3}^d \overset{D}{\to} \bigotimes_{k=3}^d \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \).
-		\item \(\sum_{k=3}^{d} X_k \overset{D}{\to} \operatorname{Pois}(\sum_{k=3}^{d} \lambda ^k / 2k) \) for all \(\lambda > 0\).
-		\item If \(\lambda < 1\), \(\sum_{k=3}^{\infty} X_k \overset{D}{\to} \operatorname{Pois}(\sum_{k=3}^{\infty} \lambda ^k / 2k) \).
+		\item \(X_k \overset{D}{\to} \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \).
+		\item For any fixed \(d\), \((X_k)_{k = 3}^d \overset{D}{\to} \bigotimes_{k=3}^d \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \).
+		\item For any fixed \(d\), \(\sum_{k=3}^{d} X_k \overset{D}{\to} \operatorname{Pois}(\sum_{k=3}^{d} \lambda ^k / 2k) \) for all \(\lambda > 0\).
+		\item If \(\lambda < 1\), the above converges, i.e., \(\sum_{k=3}^{\infty} X_k \overset{D}{\to} \operatorname{Pois}(\sum_{k=3}^{\infty} \lambda ^k / 2k) \).
 	\end{itemize}
 \end{theorem}
 
 \subsection{Tree Counting}
-Now, consider the problem of degree counting. Fix \(k \geq 0\), consider
+The next elementary object after cycles might be trees. Let \(G \sim \operatorname{ER}(n, \lambda / n) \), consider the problem of degree counting, which simply corresponds to the star graph. Fix \(k \geq 0\), then the number of vertices with degree \(k\) is defined as
 \[
 	N_k = \sum_{v=1}^{n} \mathbbm{1}_{\deg (v) = k}.
 \]
 We see that
 \[
 	\mathbb{E}_{}[N_k]
-	= n \cdot \binom{n}{k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \frac{\lambda}{n} \right) ^{n-1-k}
+	= n \cdot \binom{n-1}{k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \frac{\lambda}{n} \right) ^{n-1-k}
 	\approx n \cdot \frac{n^k}{k!} \cdot \frac{\lambda ^k}{n^k} e^{-\lambda }
-	\approx n \cdot \frac{\lambda ^k}{k!} e^{-\lambda }.
+	= n \cdot \frac{\lambda ^k}{k!} e^{-\lambda }.
 \]
-Hence,
+Hence, for all \(k \geq 0\), as \(n \to \infty \),
 \[
 	\frac{1}{n} \mathbb{E}_{}[N_k]
-	\to \frac{\lambda ^k}{k!} e^{-\lambda }
+	\to \frac{\lambda ^k}{k!} e^{-\lambda }.
 \]
-as \(n \to \infty \) for all \(k \geq 0\). We also have that
+We can also calculate the variance of \(N_k\), which is
 \[
 	\Var_{}[N_k]
 	= n \left( \frac{\lambda ^k e^{-\lambda }}{k!} \left( 1 - \frac{\lambda ^k e^{-\lambda }}{k!} \right) + o(1) \right) + n(n-1) \left( \Pr_{}(\deg (1) = k, \deg (2) = k) - \Pr_{}(\deg (v) = k)^2 \right)
@@ -125,36 +128,78 @@ We see that \(\Pr_{}(\deg (v) = k)^2 = \Pr_{}(\operatorname{Bin}(n-1, p) =k)^2\)
 	\Pr_{}(\deg (1) = k, \deg (2) = k)
 	= \frac{\lambda}{n} \Pr_{}(\operatorname{Bin}(n-2, p) = k-1 ) ^2 + \left( 1 - \frac{\lambda}{n} \right) \Pr_{}(\operatorname{Bin}(n-2, p) = k )^2.
 \]
-Overall, we have \(\Var_{}[N_k] / n \approx c_\lambda / n + \dots \).
+Overall, we have \(\Pr_{}(\deg (1) = k, \deg (2) = k) - \Pr_{}(\deg (v) = k)^2 \approx c_\lambda / n + \dots \).
 
 \begin{theorem}
+	Let \(G \sim \operatorname{ER}(n, \lambda / n) \). For any fixed \(k \geq 0\), \(\lambda > 0\), and \(\ell \geq 1\), as \(n \to \infty \), we have
 	\[
 		\left( \frac{N_k - \mathbb{E}_{}[N_k] }{\sqrt{n} } \right) _{k=1}^{\ell }
 		\overset{D}{\to} \mathcal{N} _\ell (0, D)
 	\]
-	where \(D \in \mathbb{R} ^{\ell \times \ell }\) is a positive definite matrix.
+	where \(D \in \mathbb{R} ^{\ell \times \ell }\) is a positive definite covariance matrix.
 \end{theorem}
 
+\begin{note}
+	In the above calculation, we assume that there can be edges presented between the non-center vertices of the star.
+\end{note}
+
 \begin{remark}
-	For the subgraph counting problem, the Poisson approximation holds if and only if \(\Var_{}[Z] / \mathbb{E}_{}[Z] \to 1\) as \(n \to \infty \).
+	For the counting problem, the Poisson approximation holds if and only if \(\Var_{}[Z] / \mathbb{E}_{}[Z] \to 1\) as \(n \to \infty \).
 \end{remark}
 
+Using the same idea, we can consider any given tree structure.
+
+\begin{intuition}
+	Consider the following tree with \(5\) vertices and \(4\) edges:
+	\begin{center}
+		\incfig{subgraph-count-1}
+	\end{center}
+	We see that the number of components with this tree structure has mean \(\approx n^5 \cdot \lambda ^4 / n^4 = n \lambda ^4\).
+\end{intuition}
+
+One can actually consider a more restrictive version of the structure counting, where we require the structure to be presented \emph{exactly}, i.e., in the induced subgraph-sense. In general, one can show that for any tree \(\mathcal{T} \),
+\[
+	\left( \frac{N_{\mathcal{T} } - \mathbb{E}_{}[N_{\mathcal{T} }] }{\sqrt{n} } \right) _{\mathcal{T} }
+	\overset{D}{\to} \mathcal{N} _\ell (0, D)
+\]
+for some non-degenerate \(D\), where \(\ell \) is the number of trees \(\mathcal{T} \)'s we considered jointly.
+
 \begin{eg}
-	Using the same idea, we can consider any tree or any cluster of a given finite tree.
+	Consider a tree \(\mathcal{T} \) that is a \(3\)-chain. Then, \(\mathbb{E}_{}[N_{\mathcal{T} }] \approx n \lambda ^2 e^{-3\lambda }\), where \(N_{\mathcal{T} } \) counts the number of induced subgraph of \(3\) vertices being \(\mathcal{T} \).
+	\begin{center}
+		\incfig{subgraph-count-2}
+	\end{center}
+\end{eg}
+\begin{explanation}
+	We see that by a similar calculation,
+	\[
+		\mathbb{E}_{}[N_{\mathcal{T} } ]
+		= \binom{n}{3} \cdot 3! \cdot \left( \frac{\lambda }{n} \right) ^{2} \left( 1 - \frac{\lambda}{n} \right) ^{3(n-3) + 1}
+		\approx n \lambda ^2 e^{-3\lambda },
+	\]
+	with the difference being not allowing extra edges present between the two vertices at the end.
+\end{explanation}
+
+\begin{eg}
+	More generally, given a cluster \(\mathcal{T} _k\) of \(k\) nodes and \(k-1\) edges, for some small constant \(c_k\),
+	\[
+		\mathbb{E}_{}[N_{\mathcal{T} _k} ]
+		= n \lambda ^{k-1} e^{-k \lambda } \cdot \Theta _{k} (1)
+		= \exp (\log n - k \lambda + (k-1) \log \lambda + c_k).
+	\]
 \end{eg}
 
-Consider a tree \(T\) that is a \(3\)-chain. Then,
-\[
-	\mathbb{E}_{}[N_T]
-	= n^3 \cdot c_3 \cdot \frac{\lambda ^2}{n^2} \left( 1 - \frac{\lambda}{n} \right) ^{3 (n-3) + 1}
-	\approx n \lambda ^2 e^{-3\lambda }.
-\]
-More generally, given a tree \(T\) of \(k\) nodes,
-\[
-	\mathbb{E}_{}[N_T]
-	= n \lambda ^{k-1} e^{-k \lambda } \cdot \Theta _{k} (1)
-	= \exp (\log n - k \lambda + (k-1) \log \lambda ).
-\]
-We see that if \(\lambda > (1 + \epsilon ) \log n / k\), \(\mathbb{E}_{}[N_k] \to 0\).
+The above calculation has some interesting implications. If \(\lambda > (1 + \epsilon ) \log n / k\): \(\mathbb{E}_{}[N_{\mathcal{T} _k}] \to 0\) as \(n \to \infty \), i.e., no \(\mathcal{T} _k\) will appear. In particular, when \(k = 1\), we see that as \(\lambda > \log n\), the graph becomes connected since no isolating vertices (i.e., the \(\mathcal{T} _1\) structure) will appear.
 
-If \(\lambda \in (\log n / k, \log n / (k-1))\), no \(T_k\) will appear. In particular, when \(\lambda > \log n\), the graph becomes connected.
+\begin{theorem}
+	Let \(\lambda = \log n + c\) for some constant \(c > 0\). Then, as \(n \to \infty \)
+	\[
+		\Pr_{}\left(G \sim \operatorname{ER}(n, \lambda / n) \text{ is connected} \right)
+		\to e^{-e^{-c}}.
+	\]
+	Moreover, let \(N_1 \coloneqq N_{\mathcal{T} _1}\) be the number of isolating vertices. Then as \(n \to \infty \),
+	\[
+		N_1
+		\overset{D}{\to} \operatorname{Pois}(e^{-c}) .
+	\]
+\end{theorem}

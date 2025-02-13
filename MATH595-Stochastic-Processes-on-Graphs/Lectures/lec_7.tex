@@ -1,35 +1,41 @@
-\lecture{7}{11 Feb.\ 9:30}{}
+\lecture{7}{11 Feb.\ 9:30}{Connectivity Threshold from Counting}
 \begin{prev}
-	When \(\lambda = pn > 1\), we see giant component. When \(\lambda > \log n / k\), we start to see cluster of size \(k\) vanish since
-	\[
-		\begin{split}
-			\mathbb{E}_{}[\text{\# clusters of size \(k\)}]
-			 & \leq \mathbb{E}_{}[\text{\# spanning trees of size \(k\) which is a cluster} ]                                                \\
-			 & \leq k^{k-2} \cdot \binom{n}{k} \cdot \left( \frac{\lambda }{n} \right) ^{k-1} \left( 1 - \frac{\lambda}{n} \right) ^{k(n-k)} \\
-			 & \leq k^{k-2} \cdot \frac{n^k}{e^{-k} k^{k + 1 / 2}} \cdot \frac{\lambda ^{k-1}}{n^{k-1}} \cdot e^{- \lambda k(n-k) / n}
-			= \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{- \frac{\lambda (n-k)}{n}} \right) ^k.
-		\end{split}
-	\]
-	When \(k\) is fixed and \(\lambda k^2 \ll n\), the above is bounded by \(\frac{n}{\lambda } (e \lambda e^{-\lambda })^k\). Hence, when \(\lambda = (1 + \epsilon ) \log n / k\) for some \(\epsilon > 0\), this bound goes to \(0\) as \(n \to \infty \).
+	When \(\lambda = pn > 1\), a giant component exists.
 \end{prev}
 
-\begin{theorem}
-	Let \(G \sim \operatorname{ER}(n, \lambda / n)\) with \(\lambda = \log n + c\) for some constant \(c > 0\). Let \(Z \coloneqq N_{\mathcal{T} _1}\) be the number of isolating vertices in \(G\). Then, as \(n \to \infty \), \(Z \overset{D}{\to} \operatorname{Pois}(e^{-c})\), and in particular, \(\Pr_{}\left(\text{no isolated vertices} \right) \to e^{-e^{-c}}\).
+Now, let's formalize the cluster counting calculation: when \(\lambda > \log n / k\) for any fixed \(k \geq 1\),
+\begin{equation}\label{eq:Erdős-Rényi-cluster-size}
+	\begin{split}
+		\mathbb{E}_{}[\text{\#clusters of size \(k\)}]
+		 & \leq \mathbb{E}_{}[\text{\#clusters having a spanning tree of size \(k\)} ]                                                   \\
+		 & \leq k^{k-2} \cdot \binom{n}{k} \cdot \left( \frac{\lambda }{n} \right) ^{k-1} \left( 1 - \frac{\lambda}{n} \right) ^{k(n-k)} \\
+		 & \leq k^{k-2} \cdot \frac{n^k}{e^{-k} k^{k + 1 / 2}} \cdot \frac{\lambda ^{k-1}}{n^{k-1}} \cdot e^{- \lambda k(n-k) / n}
+		= \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{- \frac{\lambda (n-k)}{n}} \right) ^k.
+	\end{split}
+\end{equation}
+When \(k\) is fixed and \(\lambda k^2 \ll n\), the above is bounded by \(\frac{n}{\lambda } (e \lambda e^{-\lambda })^k\). Hence, when \(\lambda = (1 + \epsilon ) \log n / k\) for some \(\epsilon > 0\), this bound goes to \(0\) as \(n \to \infty \).
+
+\begin{remark}
+	When \(\lambda > \log n / k\), we start to see clusters of size \(k\) vanish.
+\end{remark}
+
+\begin{theorem}\label{thm:Erdős-Rényi-isolating-vertex}
+	Let \(G \sim \operatorname{ER}(n, \lambda / n)\) with \(\lambda = \log n + c\) for some constant \(c > 0\). Let \(Z\) be the number of isolating vertices in \(G\). Then, as \(n \to \infty \), \(Z \overset{D}{\to} \operatorname{Pois}(e^{-c})\), and in particular, \(\Pr_{}\left(\text{no isolated vertices} \right) \to e^{-e^{-c}}\).
 \end{theorem}
 \begin{proof}
-	We see that
+	One can use \hyperref[thm:Stein-Chen-method]{Stein-Chen method} or moment method. However, here we consider computing the falling factorial moment directly. Firstly,
 	\[
-		\mathbb{E}_{}[N_1]
+		\mathbb{E}_{}[Z]
 		= n \Pr_{}\left(\text{vertex \(1\) is isolated} \right)
 		= n (1 - p)^{n-1}
 		= n \left( 1 - \frac{\log n + c}{n} \right) ^{n-1}
 		\approx n e^{-\log n - c + o(1)}
 		\to e^{-c}.
 	\]
-	One can use \hyperref[thm:Stein-Chen-method]{Stein-Chen method} or moment method. Fix \(k \geq 2\). Then,
+	In general, for a fixed \(k \geq 2\), we have
 	\[
 		\begin{split}
-			\mathbb{E}_{}[(N_1)_k]
+			\mathbb{E}_{}[(Z)_k]
 			 & = \mathbb{E}_{}\left[\sum_{i_1, \dots , i_k \in [n]} \mathbbm{1}_{i_1, \dots , i_k \text{ are isolated} } \right] \\
 			 & = (n)_k \cdot \Pr_{}\left(\text{vertices } 1, 2, \dots , k \text{ are isolated} \right)                           \\
 			 & \approx n^k (1-p)^{k (n-k)} (1 + o(1))
@@ -40,8 +46,9 @@
 	Since this is true for all \(k\), from \autoref{lma:Poisson-moment-convergence}, we're done.
 \end{proof}
 
+It turns out that our intuition is correct: i.e., when isolating vertices stop showing, the whole graph becomes connected.
 
-\begin{theorem}
+\begin{theorem}\label{thm:Erdős-Rényi-connectivity-threshold}
 	Let \(G \sim \operatorname{ER}(n, \lambda / n)\) with \(\lambda = \log n + c\) for some constant \(c > 0\). Then, as \(n \to \infty \),
 	\[
 		\Pr_{}\left(G \text{ is connected} \right)
@@ -49,22 +56,31 @@
 	\]
 \end{theorem}
 \begin{proof}
-	Since \(\{ \text{connected} \} \subseteq \{ \text{no isolated vertices}  \} \), we see that
+	It's clear that \(\{ \text{\(G\) is connected} \} \subseteq \{ \text{\(G\) has  no isolated vertices}  \} \),
+	\begin{align*}
+		0
+		 & \leq \Pr_{}(\text{\(G\) has no isolated vertices} ) - \Pr_{}(\text{\(G\) is connected} )                                                  \\
+		 & = \Pr_{}(\exists \text{clusters of size \(k\) for \(k \in \{ 2, 3, \dots , \lceil n / 2 \rceil  \}\)}  )                                  \\
+		 & \leq \sum_{k=2}^{n / 2} \mathbb{E}_{}[\text{\#clusters of size } k], \intertext{then from \autoref{eq:Erdős-Rényi-cluster-size}, we have}
+		 & \leq \sum_{k=2}^{n / 2} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k
+		= \sum_{k=2}^{c} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k + \sum_{k=c+1}^{n / 2} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k,
+	\end{align*}
+	where we split the sum into two at \(k = c\) for some constant \(c\). It's easy to see that the first term goes to \(0\) as \(n \to \infty \), while the second term is \(\leq n (e \lambda e^{-\lambda / 2})^{c} \), which also goes to \(0\) as \(n \to \infty \). Hence, we conclude that
 	\[
-		\begin{split}
-			0
-			 & \leq \Pr_{}\left(\text{no isolated vertices} \right) - \Pr_{}(\text{connected} )                                                                                                                                                                                                                     \\
-			 & = \Pr_{}(\exists \text{a cluster of size } k \in \{ 2, 3, \dots , \lceil n / 2 \rceil  \} )                                                                                                                                                                                                          \\
-			 & \leq \sum_{k=2}^{n / 2} \mathbb{E}_{}[\text{\# clusters of size } k]                                                                                                                                                                                                                                 \\
-			 & \leq \sum_{k=2}^{n / 2} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k                                                                                                                                                                                         \\
-			 & = \underbrace{\sum_{k=2}^{10} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k}_{\to 0} + \underbrace{\sum_{k=11}^{n / 2} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k}_{\leq n (e \lambda e^{-\lambda / 2})^{10} \to 0}
-			\to 0.
-		\end{split}
+		\Pr_{}(\text{\(G\) is connected} )
+		= \Pr_{}(\text{\(G\) has no isolated vertices} )
+		\to e^{-e^{-c}}
 	\]
+	from \autoref{thm:Erdős-Rényi-isolating-vertex}, proving the result.
 \end{proof}
 
-\begin{prev}
-	Now, fix \(k \geq 1\), recall that \(N_k \coloneqq \sum_{v=1}^{n} \mathbbm{1}_{\deg (v) = k} \). Then,
+In fact, not only the number of isolating vertices follows \(\operatorname{Pois}(e^{-c}) \) (assuming \(\lambda = \log n + c\)). Under suitable regime of \(\lambda \), the number of degree \(k\) vertices also follows \(\operatorname{Pois}(e^{-c}) \):
+
+\begin{theorem}
+	For \(G \sim \operatorname{ER}(n, \lambda / n) \) with \(\lambda = \log n + k \log \log n + c\) for some fixed \(c \in \mathbb{R} \). Then, \(N_k \overset{D}{\to} \operatorname{Pois}(e^{-c}) \) for any fixed \(k \geq 0\), where \(N_k \coloneqq \sum_{v=1}^{n} \mathbbm{1}_{\deg (v) = k} \).
+\end{theorem}
+\begin{proof}
+	From \autoref{eq:Erdős-Rényi-degree-counting-mean}, with a more careful calculation,
 	\[
 		\mathbb{E}_{}[N_k]
 		= n \cdot \Pr_{}(\deg (1) = k)
@@ -72,57 +88,81 @@
 		\approx n \frac{n^k}{k!} \frac{\lambda ^k}{n^k} \cdot e^{-\lambda (1 - \frac{k+1}{n})}.
 	\]
 	We want \(n \lambda ^k e^{-\lambda } = \Theta (1)\), hence \(\lambda = \log n + \log \log^k n + c\). When we choose this \(\lambda \), \(\mathbb{E}_{}[N_k] \to e^{-c}\).
-\end{prev}
+\end{proof}
 
-\begin{theorem}
-	For \(G \sim \operatorname{ER}(n, \lambda / n) \) with \(\lambda = \log n + k \log \log n + c\) for some fixed \(c \in \mathbb{R} \). Then, \(N_k \overset{D}{\to} \operatorname{Pois}(e^{-c}) \) for any fixed \(k \geq 0\).
-\end{theorem}
+\begin{remark}
+	In general, \emph{rare} events are modeled by Poisson.
+\end{remark}
+
+Here, we mention one last example about \hyperref[def:Hamiltonian-cycle]{Hamiltonian cycle} without proving it.
 
 \begin{definition}[Hamiltonian cycle]\label{def:Hamiltonian-cycle}
 	A \emph{Hamiltonian cycle} in a graph \(G = (V, E)\) is an \hyperref[def:cycle]{\(n\)-cycle} with \(n = \lvert V \rvert \), i.e., a \hyperref[def:cycle]{cycle} passing through all vertices.
 \end{definition}
 
-It's obvious that \(\{ \text{existence of \hyperref[def:Hamiltonian-cycle]{Hamiltonian cycle}} \} \subseteq \{ \deg (v) \geq 2 \text{ for all } v \in [n] \} = \{ N_0 = N_1 = 0\} \).
-
 \begin{theorem}
 	For \(G \sim \operatorname{ER}(n, \lambda / n) \) with \(\lambda = \log n + \log \log n + c\) for some fixed \(c \in \mathbb{R} \),
 	\[
-		\Pr_{}(G\text{ is \hyperref[def:Hamiltonian-cycle]{Hamiltonian}} )
+		\Pr_{}(G\text{ contains a \hyperref[def:Hamiltonian-cycle]{Hamiltonian cycle}} )
 		\to e^{-e^{-c}}.
 	\]
 \end{theorem}
+\begin{proof}[Proof idea]
+	It's obvious that
+	\[
+		\{G \text{ contains a \hyperref[def:Hamiltonian-cycle]{Hamiltonian cycle}} \}
+		\subseteq \{ \deg (v) \geq 2 \text{ for all } v \in [n] \}
+		= \{ N_0 = N_1 = 0\}.
+	\]
+	It turns out that \(N_1\) dominates, and hence the probability converges to \(e^{-e^{-c}}\) as desired.
+\end{proof}
 
-When \(p\) increases, small clusters will vanish, small degree will vanish, ``more structure'' will appear.
+\begin{note}
+	When \(p\) increases, small clusters and small degree vertices will vanish, while ``more structure'' will appear.
+\end{note}
 
-Fix a triangle graph \(H = \triangle\). Then, we're interested in \(N_H\), the number of copies of \(H\) in the graph \(G\). We see that
-\[
-	N_{\triangle}
-	= \sum_{1 \leq i < j < k \leq n} \mathbbm{1}_{(i, j), (j, k), (k, i) \in E}.
-\]
-It's easy to see that
-\[
-	\mathbb{E}_{}[N_{\triangle}]
-	= \binom{n}{3} p^3
-	\approx \frac{(np)^3}{6}
-\]
-What about the variance?
+\section{Existence Threshold with Chaos Decomposition}
+We have looked at the counting problem of a given injective structure (e.g., cycles, trees), which leads to the characterization of connectivity threshold of \(G \sim \operatorname{ER}(n, p) \) (\autoref{thm:Erdős-Rényi-connectivity-threshold}).
+
+\begin{prev}[Cycle]
+	For the \hyperref[prb:cycle-counting]{cycle counting} with random variable \(X_k\), \autoref{lma:Erdős-Rényi-cycle-counting-mean} and \autoref{lma:Erdős-Rényi-cycle-counting-variance} gives \(\mathbb{E}_{}[X_k] \) and \(\Var_{}[X_k] \).
+\end{prev}
+
+\begin{prev}[Degree]
+	For the degree counting with random variable \(N_k\), \autoref{eq:Erdős-Rényi-degree-counting-mean} and \autoref{eq:Erdős-Rényi-degree-counting-variance} gives \(\mathbb{E}_{}[N_k] \) and \(\Var_{}[X_k] \).
+\end{prev}
+
+However, for general structure of size \(k\), computing the variance of the counting random variable becomes intractable due to the correlations, unlike the case for cycles and trees. To get a finer control on the counting random variable, e.g., concentration, we introduce the so-called \emph{chaos decomposition}.
 
 \subsection{Chaos Decomposition}
-Recall that \(\omega _{ij} = \mathbbm{1}_{(i, j) \in E} \overset{\text{i.i.d.} }{\sim } \operatorname{Ber}(p) \) for all \(i < j\). Hence,
-\[
+We consider the triangle graph as our running example.
+
+\begin{eg}[Running example]
+	Fix a triangle graph \(H = \triangle\). Then, we're interested in \(N_H\), the number of copies (in the injective-sense) of \(H\) in the graph \(G \sim \operatorname{ER}(n, p) \). We see that
+	\[
+		N_{\triangle}
+		= \sum_{1 \leq i < j < k \leq n} \mathbbm{1}_{(i, j), (j, k), (k, i) \in E}.
+	\]
+\end{eg}
+
+It's easy to see that \(\mathbb{E}_{}[N_{\triangle}] = \binom{n}{3} p^3 \approx \frac{(np)^3}{6}\). But what about its variance?
+
+\begin{prev}
+	Recall that \(\omega _{ij} = \mathbbm{1}_{(i, j) \in E} \overset{\text{i.i.d.} }{\sim } \operatorname{Ber}(p) \) for all \(i < j\).
+\end{prev}
+
+The \emph{chaos decomposition} starts by \textbf{centering} \(\omega _{ij}\):
+\begin{align*}
 	N_{\triangle}
-	= \sum_{i < j < k \in [n]} \omega _{ij} \omega _{jk} \omega _{ki}
-	= \sum_{i < j < k \in [n]} ( \overline{\omega }_{ij} + p ) ( \overline{\omega }_{jk} + p ) ( \overline{\omega }_{ki} + p ) ,
-\]
-where \(\overline{\omega } \coloneqq \omega - p\). It's easy to see that
-\[
-	N_{\triangle}
-	= \underbrace{\sum_{i < j < k} \overline{\omega }_{ij}\overline{\omega }_{jk}\overline{\omega }_{ki}}_{A_3}
+	= \sum_{i < j < k} \omega _{ij} \omega _{jk} \omega _{ki}
+	 & = \sum_{i < j < k} ( \overline{\omega } _{ij} + p ) ( \overline{\omega } _{jk} + p ) ( \overline{\omega } _{ki} + p )                                                                                                                                                                                                                                                                                                                                                              \\
+	 & = \sum_{i < j < k} \overline{\omega } _{ij} \overline{\omega } _{jk} \overline{\omega } _{ki} + p(\overline{\omega } _{ij} \overline{\omega } _{jk} + \overline{\omega } _{ij} \overline{\omega } _{ki} + \overline{\omega } _{jk} \overline{\omega } _{ki} ) + p^2 (\overline{\omega } _{ij} + \overline{\omega } _{jk} + \overline{\omega } _{ki} ) + p^3,\intertext{where \(\overline{\omega } \coloneqq \omega - p\). By regrouping, we then have the following decomposition}
+	 & = \underbrace{\sum_{i < j < k} \overline{\omega }_{ij}\overline{\omega }_{jk}\overline{\omega }_{ki}}_{A_3}
 	+ \underbrace{p \sum_{i, j < k} \overline{\omega }_{ij} \overline{\omega }_{ik} }_{A_2}
 	+ \underbrace{(n-2) p^2 \sum_{i < j} \overline{\omega }_{ij} }_{A_1}
-	+ \binom{n}{2}p^3.
-\]
-We see that
+	+ \binom{n}{3}p^3,
+\end{align*}
+which is the so-called \emph{chaos decomposition}. We see that
 \[
 	\begin{dcases}
 		\mathbb{E}_{}[A_3] = 0, & \Var_{}[A_3] = \binom{n}{3} p^3 (1 - p)^3 \approx n^3 p^3 = (np)^3;                            \\
@@ -131,26 +171,26 @@ We see that
 	\end{dcases}
 \]
 
-\begin{theorem}
+\begin{claim}
 	Let \(np^2 \to \infty \), and \(n^2 p(1 - p) \to \infty \), then
 	\[
 		\frac{N_{\triangle} - \binom{n}{3}p^3}{\sqrt{\Var_{}[A_1] } }
 		\overset{D}{\to} \mathcal{N} (0, 1).
 	\]
-\end{theorem}
-\begin{proof}
+\end{claim}
+\begin{explanation}
 	Since we have
 	\[
 		\frac{\overline{N} _{\triangle}}{\sqrt{\Var_{}[A_1] } }
 		= \frac{A_3}{\sqrt{\Var_{}[A_1] } } + \frac{A_2}{\sqrt{\Var_{}[A_1] } } + \frac{A_1}{\sqrt{\Var_{}[A_1] } }.
 	\]
-	For the first term, we see that it is \(\mathbb{E}_{}[A_3] ^2 = \frac{\Var_{}[A_3] }{\Var_{}[A_1] } \to 0\), same for the second term. However, for the last term, we have
+	For the first term, we see that it is \(\mathbb{E}_{}[A_3] ^2 = \Var_{}[A_3] / \Var_{}[A_1] \to 0\), same for the second term. However, for the last term, we have
 	\[
 		\frac{A_1}{\sqrt{\Var_{}[A_1] } }
 		= \frac{\sum_{i < j} \overline{\omega }_{ij} }{\sqrt{\binom{n}{2} p (1 - p)} },
 	\]
 	where \(\sum_{i < j} \overline{\omega }_{ij} \sim \operatorname{Bin}(\binom{n}{2}, p) - \binom{n}{2}p \), and CLT applies.
-\end{proof}
+\end{explanation}
 
 \begin{exercise}
 	Find the CLT threshold for \(N_H\) for a fixed connected graph \(H\).

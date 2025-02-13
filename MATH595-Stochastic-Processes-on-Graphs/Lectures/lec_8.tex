@@ -1,0 +1,151 @@
+\lecture{8}{13 Feb.\ 9:30}{Existence Threshold of Subgraph}
+
+Now, fix a finite connected graph \(F\) with \(v_F\) many vertices and \(e_F\) many edges. We're interested in the \emph{injective} subgraph rather than the induced subgraph. Let \(X_n(F)\) be the number of copies of \(F\) in \(\operatorname{ER}(n, p) \), which is
+\[
+	X_n(F)
+	= \sum_{i_1, \dots , i_v \text{ distinct, modulo } \operatorname{Aut}(F) } \mathbbm{1}_{(i_1, \dots , i_v)\text{ contains edges in } F}.
+\]
+The maximum value of \(X_n(F)\) is \((n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert \), and the density of \(F\) in \(\operatorname{Er}(n, p) \) is
+\[
+	\frac{X_n(F)}{(n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert },
+\]
+with
+\[
+	\mathbb{E}_{}[X_n(F)]
+	= \frac{(n)_{v_F}}{\lvert \operatorname{Aut}(F)  \rvert } p^{e_F}
+	\approx n^{v_F} p^{e_F}.
+\]
+\begin{note}
+	\(n^{v_F} p^{e_F} \to 0\) if and only if \(p \ll 1 / n^{v_F / e_F}\).
+\end{note}
+If \(F\) is a tree, \(v_F / e_F = v_F / (v_F - 1) = 1 + 1 / (v_F - 1) > 1\). If \(F\) is not a tree (but still connected), \(v_F / e_F \leq v_F / v_F = 1\).
+
+Next, we have
+\[
+	X_n(F) - \mathbb{E}_{}[X_n(F)]
+	= \sum_{\varnothing \neq H \subseteq F} n^{v_F - v_H} \cdot p^{e_F - e_H} \cdot c_n(H, F) \cdot \hat{X} _n(H),
+\]
+where \(\hat{X} _n(H) = \sum_{i_1, \dots , i_{v_H}}  (\omega _{i_1 i_2} - p) (\omega _{i_2 i_3} - p) \cdots (\omega _{i_{v_H} i_1} - p)\) and \(c_n(H, F)\) is some constant depends only on \(H\) and \(F\). Hence,
+\[
+	\Var_{}[X_n(F)]
+	= \sum_{\varnothing \neq H \subseteq F} c_n(H, R)^2 n^{2 (v_F - v_H)} p^{2(e_F - e_H)} n^{v_H} p^{e_H} (1 - p)^{e_H}
+	\approx \sum_{_{\varnothing \neq H \subseteq F}} n^{2 v_F - v_H} p^{2 e_F - e_H} (1 - p)^{e_H}.
+\]
+For \(p < 1 - \epsilon \), we have
+\[
+	\frac{\Var_{}[X_n(F)] }{(\mathbb{E}_{}[X_n(F)] )^2}
+	\approx \sum_{\varnothing \neq H \subseteq F} \frac{1}{n^{v_H} p^{e_H}}.
+\]
+Hence, if we want concentration for \(X_n(F) / \mathbb{E}_{}[X_n(F)] \), we need
+\[
+	n^{v_H} p_{e_H} \to \infty
+\]
+for all \(\varnothing \neq H \subseteq F\). Equivalently,
+\[
+	n \cdot \min _{\varnothing \neq H \subseteq F} p^{e_H / v_H}
+	= n \cdot p^{\max _{\varnothing \neq H \subseteq F} e_H / v_H}
+	\to \infty.
+\]
+By letting \(\theta (F) \coloneqq \max _{\varnothing \neq H \subseteq F} e_H / v_H \geq e_F / v_F\), the above is equivalent to \(n p^\theta \to \infty \) or \(p \gg 1 / n^{1 / \theta }\).
+
+\begin{remark}[Balanced subgraph]
+	If the above maximum is taken when \(H = F\) with \(\theta _F = e_F / v_F\), then \(1 / n^{v_F / e_F} = 1 / n^{1 / \theta }\) and the concentration threshold and existence threshold are the same. In this case, we say \(F\) is balanced.
+
+	However, for an unbalanced \(F\), then there is a gap between the ``existence'' threshold and concentration threshold. We need to look at the maximum \(H \subsetneq F\),
+\end{remark}
+
+We see that
+\[
+	\frac{\Var_{}[X_n(F)] }{n^{2v_F - 2} p^{2e_F - 1}}
+	\approx \Theta (1) + \sum_{\substack{H \subseteq F \\ e_H > 1}} e^{2 - v_H} p^{1 - e_H}.
+\]
+The edge count will dominate \(X_n(F)\) variance when \(n^{v_H - 2} p^{e_H - 1} \to \infty \) for all \(H \subseteq F\) and \(e_H > 1\) and \(\min _{H \subseteq F, e_H > 1} p^{\frac{e_H - 1}{v_H - 2}} \to \infty \).
+
+\[
+	\theta _1(F)
+	\coloneqq \max _{\substack{H \subseteq F \\ e_H > 1}} \frac{e_H - 1}{v_H - 2}
+	\geq \theta (F),
+\]
+where the last inequality is an exercise.
+
+
+When \(p \in (0, 1)\) is fixed,
+\[
+	\Var_{}\left[\frac{X_n(F)}{\mathbb{E}_{}[X_n(F)] }\right]
+	\leq \frac{c \cdot n^{2v_F - 2} p^{2e_F - 1}}{n^{2v_F p^{2e_F}}}
+	\leq \frac{c_F}{n^{2} p}
+\]
+and
+\[
+	\mathbb{E}_{}[X_n(F)]
+	= \frac{(n)_{v_F}}{\lvert \operatorname{Aut}(F)  \rvert } \cdot p^{e_F}
+	\approx n^{v_F}
+\]
+for all fixed finite connected graph \(F\). Hence, the density of \(F\) converges in probability to \(p^{e_F}\) as \(n \to \infty \) for all \(F\).
+
+\section{Graphon}
+\begin{definition}[Graphon]\label{def:graphon}
+	A \emph{graphon} is a symmetric measurable function \(W \colon [0, 1]^2 \to [0, 1]\), i.e., \(W(x, y) = W(y, x)\) for all \(x, y\).
+\end{definition}
+
+\begin{eg}[Triangle]
+
+\end{eg}
+
+\begin{eg}[Crossing]
+
+\end{eg}
+
+We see that we can embed any fixed, simple graph \(F\) as a \hyperref[def:graphon]{graphon} \(W_F\).
+
+\begin{definition}[Graphon space]\label{def:graph-space}
+	The \emph{graphon space} is defined as
+	\[
+		\left\{ W\colon [0, 1]^2 \to [0, 1] \mid W\text{ is measurable and symmetric, modulo} (W(x, y)) = (W(\varphi _x, \varphi _y)), \text{ where \(\varphi \colon [0, 1] \to [0, 1] \) is the bijection}  \right\}.
+	\]
+\end{definition}
+
+\begin{definition}[Cut metric]\label{def:cut-metric}
+	The \emph{cut metric} on \(W\) is defined as
+	\[
+		\lVert W \rVert _{\square }
+		= \sup _{S, T \subseteq [0, 1]} \left\lvert \int _{S \times T} W(x, y) \,\mathrm{d} x \,\mathrm{d} y \right\rvert .
+	\]
+\end{definition}
+
+For \(\widetilde{W} , \widetilde{Y} \in \) graphon space, \(d_{\square}(\widetilde{W} , \widetilde{Y} ) = \inf _{\varphi \colon [0, 1] \to [0, 1]} \lVert W - Y \circ \varphi \rVert _{\square}\).
+
+If \(W\) is a graphon, the \(F\)-density in \(W\) is defined as
+\[
+	t(F, W)
+	= \int_{x_1, \dots , x_{v_F}} \prod_{(i, j) \in E(F)} W(x_i, x_j) \,\mathrm{d} x_i \cdots \,\mathrm{d} x_{v_F},
+\]
+which is the continuous version of \(F\) density in a graph.
+
+\begin{theorem}
+	In the graphon space, \(d_{\square}(W_n, W) \to 0\) as \(n \to \infty \) if and only if \(t(F, W_n) \to t(F, W)\) for all finite connected graph \(F\).
+\end{theorem}
+
+What we prove is that, for \(G_n \sim \operatorname{ER}(n, p) \) with a fixed \(p \in (0, 1)\), then
+\[
+	d_{\square} (G_n, p \cdot 1)
+	\overset{p}{\to} 0
+\]
+as \(n \to \infty \).
+
+\begin{proof}
+	For any fixed finite connected graph \(F\),
+	\[
+		t(F, \operatorname{Er}(n, p) )
+		\overset{p}{\to} p^{e_F}.
+	\]
+	If \(W \equiv p\), a constant function, then
+	\[
+		t(F, W) = p^{e_F}
+	\]
+	as well. Then,
+	\[
+		d_{\square}(\operatorname{ER}(n, p) , p \cdot 1)
+		\overset{p}{\to} 0.
+	\]
+\end{proof}

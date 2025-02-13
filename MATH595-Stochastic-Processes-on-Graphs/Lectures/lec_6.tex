@@ -1,4 +1,4 @@
-\lecture{6}{6 Feb.\ 9:30}{Cycle Counting, Star Counting, and Tree Counting}
+\lecture{6}{6 Feb.\ 9:30}{Subgraph Counting in Sparse Regime}
 \subsection{Stein-Chen Method for Poisson Approximation}
 Let's first summarize some common proof techniques we have seen so far:
 
@@ -45,7 +45,7 @@ With \autoref{lma:Poisson-moment-convergence}, the main tool we will be utilized
 	\]
 \end{theorem}
 
-\subsection{Cycle Counting}
+\subsection{Injective Cycle Counting}
 Consider the \hyperref[prb:cycle-counting]{cycle counting problem} for \(\operatorname{ER}(n, \lambda / n) \) for some \(\lambda > 0\):
 
 \begin{problem}[Cycle counting]\label{prb:cycle-counting}
@@ -63,7 +63,7 @@ where the summation is over all \(k\) distinct vertices modulo the starting one 
 
 The following is easy to see.
 
-\begin{lemma}\label{lma:cycle-counting-mean}
+\begin{lemma}\label{lma:Erdős-Rényi-cycle-counting-mean}
 	Let \(G \sim \operatorname{ER}(n, \lambda / n) \). When \(\lambda < 1\), the expected number of cycles is less than \(\sum_{k=3}^{\infty} \lambda ^k / 2k < \infty \). Moreover, the expected number of vertices in a cycle is less than \(\sum_{k=3}^{\infty} \mathbb{E}_{}[k \cdot X_k] \leq \sum_{k=3}^{\infty} \lambda ^k / 2 < \infty \).
 \end{lemma}
 \begin{proof}
@@ -79,10 +79,10 @@ The following is easy to see.
 \end{proof}
 
 We can also calculate the variance of \(X_k\). In particular, we see that
-\[
+\begin{equation}\label{lma:Erdős-Rényi-cycle-counting-variance}
 	\Var_{}[X_k]
 	= \binom{n}{k} \frac{k!}{2k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \left( \frac{\lambda}{n} \right) ^k \right) + O\left( \sum_{s=1}^{k-2} \binom{n}{k} \cdot \frac{k!}{2k} \cdot n^{k - s - 1} \cdot \left( \frac{\lambda}{n} \right)^{k + k - s} \right),
-\]
+\end{equation}
 where the big-\(O\) (second) term is the covariance: If two cycles don't share edges, then the covariance is \(0\). Otherwise, it is strictly greater than \(0\), with \(s\) being the number of shared edges between these two cycles. In particular, we can show that as \(n \to \infty \), we have
 \[
 	\sum_{s=1}^{k-2} \binom{n}{k} \cdot \frac{k!}{2k} \cdot n^{k - s - 1} \left( \frac{\lambda }{n} \right) ^{k + k - s}
@@ -91,7 +91,7 @@ where the big-\(O\) (second) term is the covariance: If two cycles don't share e
 
 From the \hyperref[thm:Stein-Chen-method]{Stein-Chen method}, we can show the following.
 
-\begin{theorem}\label{thm:cycle-counting}
+\begin{theorem}\label{thm:Erdős-Rényi-cycle-counting}
 	Let \(G \sim \operatorname{ER}(n, \lambda / n) \). For a fixed \(\lambda > 0\) and \(k \geq 3\), we have
 	\begin{itemize}
 		\item \(X_k \overset{D}{\to} \operatorname{Pois}(\lambda ^k / 2k) \) as \(n \to \infty \).
@@ -101,28 +101,31 @@ From the \hyperref[thm:Stein-Chen-method]{Stein-Chen method}, we can show the fo
 	\end{itemize}
 \end{theorem}
 
-\subsection{Tree Counting}
+\subsection{Injective Tree Counting}
 The next elementary object after cycles might be trees. Let \(G \sim \operatorname{ER}(n, \lambda / n) \), consider the problem of degree counting, which simply corresponds to the star graph. Fix \(k \geq 0\), then the number of vertices with degree \(k\) is defined as
 \[
 	N_k = \sum_{v=1}^{n} \mathbbm{1}_{\deg (v) = k}.
 \]
 We see that
-\[
+\begin{equation}\label{eq:Erdős-Rényi-degree-counting-mean}
 	\mathbb{E}_{}[N_k]
 	= n \cdot \binom{n-1}{k} \cdot \left( \frac{\lambda}{n} \right) ^k \left( 1 - \frac{\lambda}{n} \right) ^{n-1-k}
 	\approx n \cdot \frac{n^k}{k!} \cdot \frac{\lambda ^k}{n^k} e^{-\lambda }
 	= n \cdot \frac{\lambda ^k}{k!} e^{-\lambda }.
-\]
+\end{equation}
 Hence, for all \(k \geq 0\), as \(n \to \infty \),
 \[
 	\frac{1}{n} \mathbb{E}_{}[N_k]
 	\to \frac{\lambda ^k}{k!} e^{-\lambda }.
 \]
 We can also calculate the variance of \(N_k\), which is
-\[
-	\Var_{}[N_k]
-	= n \left( \frac{\lambda ^k e^{-\lambda }}{k!} \left( 1 - \frac{\lambda ^k e^{-\lambda }}{k!} \right) + o(1) \right) + n(n-1) \left( \Pr_{}(\deg (1) = k, \deg (2) = k) - \Pr_{}(\deg (v) = k)^2 \right)
-\]
+\begin{equation}\label{eq:Erdős-Rényi-degree-counting-variance}
+	\begin{split}
+		\Var_{}[N_k]
+		 & = n \left( \frac{\lambda ^k e^{-\lambda }}{k!} \left( 1 - \frac{\lambda ^k e^{-\lambda }}{k!} \right) + o(1) \right) \\
+		 & \qquad\qquad + n(n-1) \left( \Pr_{}(\deg (1) = k, \deg (2) = k) - \Pr_{}(\deg (v) = k)^2 \right).
+	\end{split}
+\end{equation}
 We see that \(\Pr_{}(\deg (v) = k)^2 = \Pr_{}(\operatorname{Bin}(n-1, p) =k)^2\) and
 \[
 	\Pr_{}(\deg (1) = k, \deg (2) = k)
@@ -157,7 +160,8 @@ Using the same idea, we can consider any given tree structure.
 	We see that the number of components with this tree structure has mean \(\approx n^5 \cdot \lambda ^4 / n^4 = n \lambda ^4\).
 \end{intuition}
 
-One can actually consider a more restrictive version of the structure counting, where we require the structure to be presented \emph{exactly}, i.e., in the induced subgraph-sense. In general, one can show that for any tree \(\mathcal{T} \),
+\subsection{Connected Component Counting and Connectivity Threshold}
+One can actually consider a more restrictive version of the structure counting, where we require the structure to be presented \emph{exactly}, i.e., in the exact connected component sense. In general, one can show that for any tree \(\mathcal{T} \), let \(N_{\mathcal{T} } \) to be the number of clusters that look like \(\mathcal{T} \) in \(\operatorname{ER}(n, p) \). Then,
 \[
 	\left( \frac{N_{\mathcal{T} } - \mathbb{E}_{}[N_{\mathcal{T} }] }{\sqrt{n} } \right) _{\mathcal{T} }
 	\overset{D}{\to} \mathcal{N} _\ell (0, D)
@@ -171,10 +175,10 @@ for some non-degenerate \(D\), where \(\ell \) is the number of trees \(\mathcal
 	\end{center}
 \end{eg}
 \begin{explanation}
-	We see that by a similar calculation,
+	We see that since there are \(3\) possible edge configurations for \(\mathcal{T} \) among three vertices,
 	\[
 		\mathbb{E}_{}[N_{\mathcal{T} } ]
-		= \binom{n}{3} \cdot 3! \cdot \left( \frac{\lambda }{n} \right) ^{2} \left( 1 - \frac{\lambda}{n} \right) ^{3(n-3) + 1}
+		= \binom{n}{3} \cdot 3 \cdot \left( \frac{\lambda }{n} \right) ^{2} \left( 1 - \frac{\lambda}{n} \right) ^{3(n-3) + 1}
 		\approx n \lambda ^2 e^{-3\lambda },
 	\]
 	with the difference being not allowing extra edges present between the two vertices at the end.
@@ -189,4 +193,8 @@ for some non-degenerate \(D\), where \(\ell \) is the number of trees \(\mathcal
 	\]
 \end{eg}
 
-The above calculation has some interesting implications. If \(\lambda > (1 + \epsilon ) \log n / k\): \(\mathbb{E}_{}[N_{\mathcal{T} _k}] \to 0\) as \(n \to \infty \), i.e., no \(\mathcal{T} _k\) will appear. In particular, when \(k = 1\), we see that as \(\lambda > \log n\), the graph becomes connected since no isolating vertices (i.e., the \(\mathcal{T} _1\) structure) will appear.
+The above calculation has some interesting implications. If \(\lambda > (1 + \epsilon ) \log n / k\), then \(\mathbb{E}_{}[N_{\mathcal{T} _k}] \to 0\) as \(n \to \infty \), i.e., no \(\mathcal{T} _k\) will appear. In particular, we will show that as \(\lambda > \log n\), i.e., when isolating vertices stop appearing, \(G\) becomes connected.
+
+\begin{intuition}
+	Consider \(\lambda >(1 + \epsilon ) \log n / k\) and \(k\) decreases from a large number until \(k = 1\). We see that \(\mathcal{T} _k\) stop showing in order, and in the end, the graph becomes connected.
+\end{intuition}

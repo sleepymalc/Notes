@@ -1,31 +1,46 @@
-\lecture{8}{13 Feb.\ 9:30}{Existence Threshold of Subgraph}
+\lecture{8}{13 Feb.\ 9:30}{Existence Threshold using Chaos Decomposition}
+\subsection{Existence Threshold for General Structure}
+We now consider any finite connected graph \(F = (V_F, E_F)\) with \(v_F = \lvert V_F \rvert \) and \(e_F = \lvert E_F \rvert\).
 
-Now, fix a finite connected graph \(F\) with \(v_F\) many vertices and \(e_F\) many edges. We're interested in the \emph{injective} subgraph rather than the induced subgraph. Let \(X_n(F)\) be the number of copies of \(F\) in \(\operatorname{ER}(n, p) \), which is
+\begin{note}
+	We're interested in the \emph{injective} subgraph rather than the induced subgraph.
+\end{note}
+
+Let \(X_n(F)\) be the number of copies of \(F\) in a graph \(G = (V, E)\) with \(n = \lvert V \rvert \), which is
 \[
 	X_n(F)
-	= \sum_{i_1, \dots , i_v \text{ distinct, modulo } \operatorname{Aut}(F) } \mathbbm{1}_{(i_1, \dots , i_v)\text{ contains edges in } F}.
+	= \sum_{\quotient{i_1, \dots , i_{v_F} \text{ distinct}}{\operatorname{Aut}(F)}} \mathbbm{1}_{(i_1, \dots , i_{v_F})\text{ contains edges in } F}.
 \]
-The maximum value of \(X_n(F)\) is \((n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert \), and the density of \(F\) in \(\operatorname{Er}(n, p) \) is
-\[
-	\frac{X_n(F)}{(n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert },
-\]
-with
+\begin{remark}[\(F\)-density]
+	Clearly, the maximum value of \(X_n(F)\) is \((n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert \) when \(G\) is a complete graph. Hence, we can define the density of \(F\) (called \(F\)-density) in \(G\) as
+	\[
+		t(F, G)
+		\coloneqq \frac{X_n(F)}{(n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert }.
+	\]
+\end{remark}
+
+If \(G \sim \operatorname{ER}(n, p) \), then the expectation of \(X_n(F)\) is
 \[
 	\mathbb{E}_{}[X_n(F)]
 	= \frac{(n)_{v_F}}{\lvert \operatorname{Aut}(F)  \rvert } p^{e_F}
 	\approx n^{v_F} p^{e_F}.
 \]
-\begin{note}
-	\(n^{v_F} p^{e_F} \to 0\) if and only if \(p \ll 1 / n^{v_F / e_F}\).
-\end{note}
-If \(F\) is a tree, \(v_F / e_F = v_F / (v_F - 1) = 1 + 1 / (v_F - 1) > 1\). If \(F\) is not a tree (but still connected), \(v_F / e_F \leq v_F / v_F = 1\).
+We see that to decide the existence threshold for the first moment, we want to see \(n^{v_F} p^{e_F} \to 0\), which happens if and only if \(p \ll 1 / n^{v_F / e_F}\).
 
-Next, we have
+\begin{eg}
+	If \(F\) is a tree, \(v_F / e_F = v_F / (v_F - 1) = 1 + 1 / (v_F - 1) > 1\).
+\end{eg}
+
+\begin{eg}
+	If \(F\) is not a tree (but still connected), \(v_F / e_F \leq v_F / v_F = 1\).
+\end{eg}
+
+To compute the variance, we first consider
 \[
 	X_n(F) - \mathbb{E}_{}[X_n(F)]
 	= \sum_{\varnothing \neq H \subseteq F} n^{v_F - v_H} \cdot p^{e_F - e_H} \cdot c_n(H, F) \cdot \hat{X} _n(H),
 \]
-where \(\hat{X} _n(H) = \sum_{i_1, \dots , i_{v_H}}  (\omega _{i_1 i_2} - p) (\omega _{i_2 i_3} - p) \cdots (\omega _{i_{v_H} i_1} - p)\) and \(c_n(H, F)\) is some constant depends only on \(H\) and \(F\). Hence,
+where \(\hat{X} _n(H) = \sum_{i_1, \dots , i_{v_H}}  (\omega _{i_1 i_2} - p) (\omega _{i_2 i_3} - p) \cdots (\omega _{i_{v_H} i_1} - p)\) and \(c_n(H, F)\) is some constant depends only on \(H\) and \(F\). This is the chaos decomposition, and we have nice independence. Hence,
 \[
 	\Var_{}[X_n(F)]
 	= \sum_{\varnothing \neq H \subseteq F} c_n(H, R)^2 n^{2 (v_F - v_H)} p^{2(e_F - e_H)} n^{v_H} p^{e_H} (1 - p)^{e_H}
@@ -36,11 +51,7 @@ For \(p < 1 - \epsilon \), we have
 	\frac{\Var_{}[X_n(F)] }{(\mathbb{E}_{}[X_n(F)] )^2}
 	\approx \sum_{\varnothing \neq H \subseteq F} \frac{1}{n^{v_H} p^{e_H}}.
 \]
-Hence, if we want concentration for \(X_n(F) / \mathbb{E}_{}[X_n(F)] \), we need
-\[
-	n^{v_H} p_{e_H} \to \infty
-\]
-for all \(\varnothing \neq H \subseteq F\). Equivalently,
+Hence, if we want concentration for \(X_n(F) / \mathbb{E}_{}[X_n(F)] \), we need \(n^{v_H} p_{e_H} \to \infty\) for all \(\varnothing \neq H \subseteq F\). Equivalently,
 \[
 	n \cdot \min _{\varnothing \neq H \subseteq F} p^{e_H / v_H}
 	= n \cdot p^{\max _{\varnothing \neq H \subseteq F} e_H / v_H}
@@ -98,54 +109,70 @@ for all fixed finite connected graph \(F\). Hence, the density of \(F\) converge
 
 We see that we can embed any fixed, simple graph \(F\) as a \hyperref[def:graphon]{graphon} \(W_F\).
 
-\begin{definition}[Graphon space]\label{def:graph-space}
-	The \emph{graphon space} is defined as
+\subsection{Space of Graphon}
+Since this embedding is not unique due to various vertex relabeling, we define the space of \hyperref[def:graphon]{graphons} as follows.
+
+\begin{definition}[Graphon space]\label{def:graphon-space}
+	The \emph{graphon space}, denoted as \(\widetilde{\mathcal{W} } \), is defined as
 	\[
-		\left\{ W\colon [0, 1]^2 \to [0, 1] \mid W\text{ is measurable and symmetric, modulo} (W(x, y)) = (W(\varphi _x, \varphi _y)), \text{ where \(\varphi \colon [0, 1] \to [0, 1] \) is the bijection}  \right\}.
+		\begin{split}
+			\widetilde{\mathcal{W} }
+			\coloneqq \{ W\colon [0, 1]^2 \to [0, 1] \mid W \text{ is a \hyperref[def:graphon]{graphon}}, & \text{ modulo \( \big( W(x, y) \big) = \big( W(\varphi _x, \varphi _y) \big) \)}, \\
+			                                                                                              & \text{where \(\varphi \colon [0, 1] \to [0, 1] \) is a bijection} \}.
+		\end{split}
 	\]
 \end{definition}
 
-\begin{definition}[Cut metric]\label{def:cut-metric}
-	The \emph{cut metric} on \(W\) is defined as
+Now, to introduce the distance over the \hyperref[def:graphon-space]{graphon space}, we introduce the following first.
+
+\begin{definition}[Cut norm]\label{def:cut-norm}
+	The \emph{cut norm} of a \hyperref[def:graphon]{graphon} \(W\) is defined as
 	\[
 		\lVert W \rVert _{\square }
 		= \sup _{S, T \subseteq [0, 1]} \left\lvert \int _{S \times T} W(x, y) \,\mathrm{d} x \,\mathrm{d} y \right\rvert .
 	\]
 \end{definition}
 
-For \(\widetilde{W} , \widetilde{Y} \in \) graphon space, \(d_{\square}(\widetilde{W} , \widetilde{Y} ) = \inf _{\varphi \colon [0, 1] \to [0, 1]} \lVert W - Y \circ \varphi \rVert _{\square}\).
+It's probably trivial to see that in \autoref{def:cut-norm}, the definition is a bit redundant since we only care about \hyperref[def:graphon]{graphons}, which is non-negative, i.e., we always have
+\[
+	\lVert W \rVert _{\square }
+	= \int_{[0, 1]^2} W(x, y) \,\mathrm{d}x \,\mathrm{d} y.
+\]
+However, what we really care is the ``metric'' induced by this norm:
 
-If \(W\) is a graphon, the \(F\)-density in \(W\) is defined as
+\begin{definition}[Cut metric]\label{def:cut-metric}
+	The \emph{cut metric} between two \hyperref[def:graphon]{graphons} \(\widetilde{W} , \widetilde{Y} \in \widetilde{\mathcal{W} } \) is defined as
+	\[
+		d_{\square}(\widetilde{W} , \widetilde{Y} ) = \inf _{\varphi \colon [0, 1] \to [0, 1]} \lVert W - Y \circ \varphi \rVert _{\square},
+	\]
+	where \(W\) and \(Y\) are any representation \hyperref[def:graphon]{graphon} of \(\widetilde{W} \) and \(\widetilde{Y} \), respectively.
+\end{definition}
+
+\begin{remark}
+	It's also possible to consider defining \hyperref[def:graphon-space]{graphon space} by first defining the \hyperref[def:cut-metric]{cut metric} and identify two \hyperref[def:graphon]{graphons} \(W_1, W_2\) to be the same when \(d_{\square }(W_1 , W_2) = 0\).
+\end{remark}
+
+\subsection{Subgraph Density}
+If \(W\) is a \hyperref[def:graphon]{graphon}, we can define the \(F\)-density in \(W\) similarly as in the usual graph \(G\):
 \[
 	t(F, W)
-	= \int_{x_1, \dots , x_{v_F}} \prod_{(i, j) \in E(F)} W(x_i, x_j) \,\mathrm{d} x_i \cdots \,\mathrm{d} x_{v_F},
+	\coloneqq \int_{x_1, \dots , x_{v_F}} \prod_{(i, j) \in E(F)} W(x_i, x_j) \,\mathrm{d} x_i \cdots \,\mathrm{d} x_{v_F},
 \]
-which is the continuous version of \(F\) density in a graph.
+which is the continuous version of the \(F\)-density in a graph. It turns out that the \(F\)-density characterizes a \hyperref[def:graphon]{graphon} exactly:
 
 \begin{theorem}
-	In the graphon space, \(d_{\square}(W_n, W) \to 0\) as \(n \to \infty \) if and only if \(t(F, W_n) \to t(F, W)\) for all finite connected graph \(F\).
+	Given a \hyperref[def:graphon]{graphon} sequence \((W_n) \in \widetilde{\mathcal{W}} \), \(d_{\square}(W_n, W) \to 0\) as \(n \to \infty \) if and only if \(t(F, W_n) \to t(F, W)\) for all finite connected graph \(F\).
 \end{theorem}
-
-What we prove is that, for \(G_n \sim \operatorname{ER}(n, p) \) with a fixed \(p \in (0, 1)\), then
-\[
-	d_{\square} (G_n, p \cdot 1)
-	\overset{p}{\to} 0
-\]
-as \(n \to \infty \).
-
-\begin{proof}
-	For any fixed finite connected graph \(F\),
+\begin{proof}[Proof idea]
+	What we will prove here is that, for \(G_n \sim \operatorname{ER}(n, p) \) with a fixed \(p \in (0, 1)\), then
 	\[
-		t(F, \operatorname{Er}(n, p) )
+		d_{\square} (G_n, p \cdot 1)
+		\overset{p}{\to} 0
+	\]
+	as \(n \to \infty \). Indeed, For any fixed finite connected graph \(F\),
+	\[
+		t(F, \operatorname{ER}(n, p) )
 		\overset{p}{\to} p^{e_F}.
 	\]
-	If \(W \equiv p\), a constant function, then
-	\[
-		t(F, W) = p^{e_F}
-	\]
-	as well. Then,
-	\[
-		d_{\square}(\operatorname{ER}(n, p) , p \cdot 1)
-		\overset{p}{\to} 0.
-	\]
+	If \(W \equiv p\), a constant function, then \(t(F, W) = p^{e_F}\) as well. Then, \(d_{\square}(\operatorname{ER}(n, p) , p \cdot 1) \overset{p}{\to} 0\).
 \end{proof}

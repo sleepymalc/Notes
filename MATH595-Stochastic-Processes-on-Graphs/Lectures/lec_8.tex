@@ -1,6 +1,6 @@
 \lecture{8}{13 Feb.\ 9:30}{Existence Threshold using Chaos Decomposition}
 \subsection{Existence Threshold for General Structure}
-We now consider any finite connected graph \(F = (V_F, E_F)\) with \(v_F = \lvert V_F \rvert \) and \(e_F = \lvert E_F \rvert\).
+We now consider using chaos decomposition to compute the subgraph counts of any finite connected graph \(F = (V_F, E_F)\) with \(v_F = \lvert V_F \rvert \) and \(e_F = \lvert E_F \rvert\).
 
 \begin{note}
 	We're interested in the \emph{injective} subgraph rather than the induced subgraph.
@@ -12,7 +12,7 @@ Let \(X_n(F)\) be the number of copies of \(F\) in a graph \(G = (V, E)\) with \
 	= \sum_{\quotient{i_1, \dots , i_{v_F} \text{ distinct}}{\operatorname{Aut}(F)}} \mathbbm{1}_{(i_1, \dots , i_{v_F})\text{ contains edges in } F}.
 \]
 \begin{remark}[\(F\)-density]
-	Clearly, the maximum value of \(X_n(F)\) is \((n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert \) when \(G\) is a complete graph. Hence, we can define the density of \(F\) (called \(F\)-density) in \(G\) as
+	Clearly, the maximum value of \(X_n(F)\) is \((n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert \) when \(G\) is a complete graph. Hence, we can define the density of \(F\) (called \emph{\(F\)-density}) in \(G\) as
 	\[
 		t(F, G)
 		\coloneqq \frac{X_n(F)}{(n)_{v_F} / \lvert \operatorname{Aut}(F)  \rvert }.
@@ -25,89 +25,118 @@ If \(G \sim \operatorname{ER}(n, p) \), then the expectation of \(X_n(F)\) is
 	= \frac{(n)_{v_F}}{\lvert \operatorname{Aut}(F)  \rvert } p^{e_F}
 	\approx n^{v_F} p^{e_F}.
 \]
-We see that to decide the existence threshold for the first moment, we want to see \(n^{v_F} p^{e_F} \to 0\), which happens if and only if \(p \ll 1 / n^{v_F / e_F}\).
+We see that to decide the existence threshold for the first moment, we want to see \(n^{v_F} p^{e_F} \to 0\), which happens if and only if \(p \ll 1 / n^{v_F / e_F}\). Hence, the existence threshold of \(F\) is \(p = 1 / n^{v_F / e_F}\).
 
 \begin{eg}
-	If \(F\) is a tree, \(v_F / e_F = v_F / (v_F - 1) = 1 + 1 / (v_F - 1) > 1\).
+	If \(F\) is a tree, \(v_F / e_F = v_F / (v_F - 1) = 1 + 1 / (v_F - 1) > 1\), hence \(1 / n^{v_F / e_F} \ll 1 / n\). This implies that trees always exist in all regimes when \(p \cdot n\) is bounded away from \(0\).
 \end{eg}
 
 \begin{eg}
-	If \(F\) is not a tree (but still connected), \(v_F / e_F \leq v_F / v_F = 1\).
+	If \(F\) is connected but not a tree, \(v_F / e_F \leq v_F / v_F = 1\), hence \(1 / n^{v_F / e_F} \geq 1 / n\). This means that the regime must be super-critical for non-tree components to exist with positive probability.
 \end{eg}
 
-To compute the variance, we first consider
+To get concentration of \(X_n\), we need to compute the variance. First, we have
 \[
-	X_n(F) - \mathbb{E}_{}[X_n(F)]
+	\hat{X} _n(F)
+	\coloneqq X_n(F) - \mathbb{E}_{}[X_n(F)]
 	= \sum_{\varnothing \neq H \subseteq F} n^{v_F - v_H} \cdot p^{e_F - e_H} \cdot c_n(H, F) \cdot \hat{X} _n(H),
 \]
-where \(\hat{X} _n(H) = \sum_{i_1, \dots , i_{v_H}}  (\omega _{i_1 i_2} - p) (\omega _{i_2 i_3} - p) \cdots (\omega _{i_{v_H} i_1} - p)\) and \(c_n(H, F)\) is some constant depends only on \(H\) and \(F\). This is the chaos decomposition, and we have nice independence. Hence,
+where \(c_n(H, F)\) is the number of copies of \(H\) in \(F\).
+
+\begin{note}
+	We can interpret that \(\hat{X} _n(\cdot)\) being the version of \(X_n(\cdot)\) where all edge variables \(\omega \) is replaced by its centered version \(\omega - p\).
+\end{note}
+
+From the chaos decomposition, we have independence, and hence
 \[
 	\Var_{}[X_n(F)]
-	= \sum_{\varnothing \neq H \subseteq F} c_n(H, R)^2 n^{2 (v_F - v_H)} p^{2(e_F - e_H)} n^{v_H} p^{e_H} (1 - p)^{e_H}
+	= \sum_{\varnothing \neq H \subseteq F} c_n(H, F)^2 n^{2 (v_F - v_H)} p^{2(e_F - e_H)} n^{v_H} p^{e_H} (1 - p)^{e_H}
 	\approx \sum_{_{\varnothing \neq H \subseteq F}} n^{2 v_F - v_H} p^{2 e_F - e_H} (1 - p)^{e_H}.
 \]
-For \(p < 1 - \epsilon \), we have
+For \(p\) bounded away from \(1\), we have \((1 - p)^{e_H} \approx 1\). Hence, the ratio of the variance to the square of the mean is
 \[
 	\frac{\Var_{}[X_n(F)] }{(\mathbb{E}_{}[X_n(F)] )^2}
 	\approx \sum_{\varnothing \neq H \subseteq F} \frac{1}{n^{v_H} p^{e_H}}.
 \]
-Hence, if we want concentration for \(X_n(F) / \mathbb{E}_{}[X_n(F)] \), we need \(n^{v_H} p_{e_H} \to \infty\) for all \(\varnothing \neq H \subseteq F\). Equivalently,
+From Chebyshev's inequality, for any \(\epsilon > 0\), we have
+\[
+	\Pr_{}\left(\left\lvert \frac{X_n(F)}{\mathbb{E}_{}[X_n(F)] } - 1 \right\rvert > \epsilon \right)
+	= \Pr_{}\left(\lvert X_n(F) - \mathbb{E}_{}[X_n(F)] \rvert > \epsilon \mathbb{E}_{}[X_n(F)] \right)
+	\leq \frac{\Var_{}[X_n(F)] }{\epsilon ^2 (\mathbb{E}_{}[X_n(F)] )^2}.
+\]
+Combining the above, if we want concentration for \(X_n(F)\) to \(\mathbb{E}_{}[X_n(F)]\), we need \(n^{v_H} p_{e_H} \to \infty\) for all \(\varnothing \neq H \subseteq F\). Equivalently,
 \[
 	n \cdot \min _{\varnothing \neq H \subseteq F} p^{e_H / v_H}
 	= n \cdot p^{\max _{\varnothing \neq H \subseteq F} e_H / v_H}
 	\to \infty.
 \]
-By letting \(\theta (F) \coloneqq \max _{\varnothing \neq H \subseteq F} e_H / v_H \geq e_F / v_F\), the above is equivalent to \(n p^\theta \to \infty \) or \(p \gg 1 / n^{1 / \theta }\).
+
+\begin{notation}
+	Define the \emph{concentration parameter} \(\theta (F) \coloneqq \max _{\varnothing \neq H \subseteq F} e_H / v_H \geq e_F / v_F\).
+\end{notation}
+
+We can then rewrite the condition for concentration as \(n p^{\theta (F)} \to \infty \), or equivalently, \(p \gg 1 / n^{1 / \theta (F)}\). Hence, we conclude that the concentration threshold of \(X_n(F)\) is \(p = 1 / n^{1 / \theta (F)}\).
 
 \begin{remark}[Balanced subgraph]
-	If the above maximum is taken when \(H = F\) with \(\theta _F = e_F / v_F\), then \(1 / n^{v_F / e_F} = 1 / n^{1 / \theta }\) and the concentration threshold and existence threshold are the same. In this case, we say \(F\) is balanced.
+	If the above maximum is taken when \(H = F\) with \(\theta _F = e_F / v_F\), then \(1 / n^{v_F / e_F} = 1 / n^{1 / \theta (F)}\), i.e., the concentration threshold and existence threshold are the same. In this case, we say \(F\) is balanced.
 
-	However, for an unbalanced \(F\), then there is a gap between the ``existence'' threshold and concentration threshold. We need to look at the maximum \(H \subsetneq F\),
+	However, for an unbalanced \(F\), then there is a gap between the existence threshold and concentration threshold. We need to look at the maximum \(H \subsetneq F\) in this case.
 \end{remark}
 
-We see that
+If we now consider the contribution to the variance from edges (i.e., \(H\) with \(v_H=2\) and \(e_H=1\)), that is, \(n^{2v_F - 2} p^{2e_F - 1} (1 - p) = O(n^{2v_F - 2} p^{2e_F - 1})\), we see that its contribution to \(\Var_{}[X_n(F)] \) is of order
 \[
 	\frac{\Var_{}[X_n(F)] }{n^{2v_F - 2} p^{2e_F - 1}}
-	\approx \Theta (1) + \sum_{\substack{H \subseteq F \\ e_H > 1}} e^{2 - v_H} p^{1 - e_H}.
+	\approx \Theta (1) + \sum_{H \subseteq F\colon e_H > 1} n^{2 - v_H} p^{1 - e_H}.
 \]
-The edge count will dominate \(X_n(F)\) variance when \(n^{v_H - 2} p^{e_H - 1} \to \infty \) for all \(H \subseteq F\) and \(e_H > 1\) and \(\min _{H \subseteq F, e_H > 1} p^{\frac{e_H - 1}{v_H - 2}} \to \infty \).
-
+We see that the term from edges will dominate \(\Var_{}[X_n(F)]\) when \(n^{v_H - 2} p^{e_H - 1} \to \infty \) for all \(H \subseteq F\) with \(e_H > 1\), or equivalently, as \(n \to \infty \),
 \[
-	\theta _1(F)
-	\coloneqq \max _{\substack{H \subseteq F \\ e_H > 1}} \frac{e_H - 1}{v_H - 2}
-	\geq \theta (F),
+	n \cdot \min _{H \subseteq F\colon e_H > 1} p^{\frac{e_H - 1}{v_H - 2}}
+	\to \infty.
 \]
-where the last inequality is an exercise.
 
+\begin{notation}
+	Define the \emph{edge-dominant parameter} \(\theta _1(F) \coloneqq \max _{H \subseteq F \colon e_H > 1} \frac{e_H - 1}{v_H - 2} \geq \theta (F)\).
+\end{notation}
 
-When \(p \in (0, 1)\) is fixed,
+Now, recall that \(	\mathbb{E}_{}[X_n(F)] \approx n^{v_F} p^{e_F}\), hence as the edge term is dominating in \(\Var_{}[X_n(F)] \), we have
 \[
 	\Var_{}\left[\frac{X_n(F)}{\mathbb{E}_{}[X_n(F)] }\right]
-	\leq \frac{c \cdot n^{2v_F - 2} p^{2e_F - 1}}{n^{2v_F p^{2e_F}}}
+	\leq \frac{c_F \cdot n^{2v_F - 2} p^{2e_F - 1}}{n^{2v_F p^{2e_F}}}
 	\leq \frac{c_F}{n^{2} p}
+	\to 0
 \]
-and
+for some constant \(c_F\) as \(n \to \infty \). Now, observe that for a fixed \(p \in (0, 1)\), \(\mathbb{E}_{}[X_n(F)] \approx n^{v_F}\). Hence, we conclude that the density of \(F\) converges in probability to \(p^{e_F}\) as \(n \to \infty \) for all \(F\), i.e., as \(n \to \infty \),
 \[
-	\mathbb{E}_{}[X_n(F)]
-	= \frac{(n)_{v_F}}{\lvert \operatorname{Aut}(F)  \rvert } \cdot p^{e_F}
-	\approx n^{v_F}
+	\frac{X_n(F)}{\mathbb{E}_{}[X_n(F)]}
+	\overset{p}{\to} p^{e_F}.
 \]
-for all fixed finite connected graph \(F\). Hence, the density of \(F\) converges in probability to \(p^{e_F}\) as \(n \to \infty \) for all \(F\).
 
-\section{Graphon}
+\section{Dense Graph Limit}
+We digress a bit to talk about a limit of the dense graph sequence. The motivation is that consider a sequence of dense graphs \(G_n\) with increasing number of vertices, and we want to have a unified way to define the limiting object for such a sequence. \hyperref[def:graphon]{Graphon} normalized vertex set to \([0, 1]\) and define a function \(W(x, y)\) on \([0, 1]^2\) that generalizes the adjacency matrix structure.
+
 \begin{definition}[Graphon]\label{def:graphon}
-	A \emph{graphon} is a symmetric measurable function \(W \colon [0, 1]^2 \to [0, 1]\), i.e., \(W(x, y) = W(y, x)\) for all \(x, y\).
+	A \emph{graphon} is a symmetric measurable function \(W \colon [0, 1]^2 \to [0, 1]\), i.e., \(W(x, y) = W(y, x)\) for all \(x, y \in [0, 1]\).
 \end{definition}
 
-\begin{eg}[Triangle]
-
-\end{eg}
-
-\begin{eg}[Crossing]
-
-\end{eg}
-
 We see that we can embed any fixed, simple graph \(F\) as a \hyperref[def:graphon]{graphon} \(W_F\).
+
+\begin{eg}
+	For a finite simple graph \(G = (V, E)\) with \(V = [n]\), its associated graphon \(W_G(x, y)\) can be defined as
+	\[
+		W_G(x, y)
+		\coloneqq \begin{dcases}
+			0, & \text{ if \(x, y\) belongs to a region representing an edge} ; \\
+			1, & \text{ otherwise} .
+		\end{dcases}
+	\]
+	That is, we partition \([0, 1]\) into \(n\) equal-length intervals \(I_i = [(i-1) / n, i / n]\) for \(i \in [n]\), and define \(W_G(x, y) = 1\) if and only if \((i, j) \in E\) for \(x \in I_i\) and \(y \in I_j\).
+\end{eg}
+
+\begin{eg}[Constant graphon]
+	An important \hyperref[def:graphon]{graphon} is the constant \hyperref[def:graphon]{graphon} \(W(x, y) = p\cdot \mathbbm{1}_{[0, 1]^2} \) with some \(p \in (0, 1)\).
+\end{eg}
+
+Intuitively, a constant \hyperref[def:graphon]{graphon} should correspond to a uniform random graph where each edge is present independently with probability \(p\), i.e., \(\operatorname{ER}(n, p) \). We will see this later.
 
 \subsection{Space of Graphon}
 Since this embedding is not unique due to various vertex relabeling, we define the space of \hyperref[def:graphon]{graphons} as follows.
@@ -115,12 +144,10 @@ Since this embedding is not unique due to various vertex relabeling, we define t
 \begin{definition}[Graphon space]\label{def:graphon-space}
 	The \emph{graphon space}, denoted as \(\widetilde{\mathcal{W} } \), is defined as
 	\[
-		\begin{split}
-			\widetilde{\mathcal{W} }
-			\coloneqq \{ W\colon [0, 1]^2 \to [0, 1] \mid W \text{ is a \hyperref[def:graphon]{graphon}}, & \text{ modulo \( \big( W(x, y) \big) = \big( W(\varphi _x, \varphi _y) \big) \)}, \\
-			                                                                                              & \text{where \(\varphi \colon [0, 1] \to [0, 1] \) is a bijection} \}.
-		\end{split}
+		\widetilde{\mathcal{W} }
+		\coloneqq \quotient{\{ W\colon [0, 1]^2 \to [0, 1] \mid W \text{ is a \hyperref[def:graphon]{graphon}} \}}{\sim } ,
 	\]
+	where the equivalence reaction \(W \sim W^{\prime} \) holds if there exists a measure-preserving bijection \(\varphi \colon [0, 1] \to [0, 1]\) such that \(W^{\prime} (x, y) = W(\varphi (x), \varphi (y))\) for almost all \((x, y) \in [0, 1]^2\).
 \end{definition}
 
 Now, to introduce the distance over the \hyperref[def:graphon-space]{graphon space}, we introduce the following first.
@@ -145,34 +172,33 @@ However, what we really care is the ``metric'' induced by this norm:
 	\[
 		d_{\square}(\widetilde{W} , \widetilde{Y} ) = \inf _{\varphi \colon [0, 1] \to [0, 1]} \lVert W - Y \circ \varphi \rVert _{\square},
 	\]
-	where \(W\) and \(Y\) are any representation \hyperref[def:graphon]{graphon} of \(\widetilde{W} \) and \(\widetilde{Y} \), respectively.
+	where the infimum is taken over all measure-preserving bijections \(\varphi \) and \(W\) and \(Y\) are any representation \hyperref[def:graphon]{graphon} of \(\widetilde{W} \) and \(\widetilde{Y} \), respectively.
 \end{definition}
 
 \begin{remark}
 	It's also possible to consider defining \hyperref[def:graphon-space]{graphon space} by first defining the \hyperref[def:cut-metric]{cut metric} and identify two \hyperref[def:graphon]{graphons} \(W_1, W_2\) to be the same when \(d_{\square }(W_1 , W_2) = 0\).
 \end{remark}
 
-\subsection{Subgraph Density}
-If \(W\) is a \hyperref[def:graphon]{graphon}, we can define the \(F\)-density in \(W\) similarly as in the usual graph \(G\):
+\subsection{Homomorphism Density}
+If \(W\) is a \hyperref[def:graphon]{graphon}, we can define the \emph{\(F\)-density} (or \emph{homomorphism density}) in \(W\) similarly as in the usual graph \(G\):
 \[
 	t(F, W)
-	\coloneqq \int_{x_1, \dots , x_{v_F}} \prod_{(i, j) \in E(F)} W(x_i, x_j) \,\mathrm{d} x_i \cdots \,\mathrm{d} x_{v_F},
+	\coloneqq \int_{[0, 1]^{v_F}} \prod_{(i, j) \in E(F)} W(x_i, x_j) \,\mathrm{d} x_i \cdots \,\mathrm{d} x_{v_F},
 \]
-which is the continuous version of the \(F\)-density in a graph. It turns out that the \(F\)-density characterizes a \hyperref[def:graphon]{graphon} exactly:
+which is the continuous version of the \(F\)-density in a graph.
 
-\begin{theorem}
+\begin{intuition}
+	This again measures how frequently a given finite simple graph \(F\) appears as a subgraph within a \hyperref[def:graphon]{graphon} \(W\).
+\end{intuition}
+
+It turns out that the \(F\)-density characterizes a \hyperref[def:graphon]{graphon} exactly:
+
+\begin{theorem}[Graphon convergence]\label{thm:graphon-convergence}
 	Given a \hyperref[def:graphon]{graphon} sequence \((W_n) \in \widetilde{\mathcal{W}} \), \(d_{\square}(W_n, W) \to 0\) as \(n \to \infty \) if and only if \(t(F, W_n) \to t(F, W)\) for all finite connected graph \(F\).
 \end{theorem}
-\begin{proof}[Proof idea]
-	What we will prove here is that, for \(G_n \sim \operatorname{ER}(n, p) \) with a fixed \(p \in (0, 1)\), then
-	\[
-		d_{\square} (G_n, p \cdot 1)
-		\overset{p}{\to} 0
-	\]
-	as \(n \to \infty \). Indeed, For any fixed finite connected graph \(F\),
-	\[
-		t(F, \operatorname{ER}(n, p) )
-		\overset{p}{\to} p^{e_F}.
-	\]
-	If \(W \equiv p\), a constant function, then \(t(F, W) = p^{e_F}\) as well. Then, \(d_{\square}(\operatorname{ER}(n, p) , p \cdot 1) \overset{p}{\to} 0\).
-\end{proof}
+
+\begin{prev}
+	For a fixed \(p \in (0, 1)\), \(X_n(F) / \mathbb{E}_{}[X_n(F)] \overset{p}{\to} p^{e_F}\) in \(G_n \sim \operatorname{ER}(n, p) \).
+\end{prev}
+
+The above is equivalent to \(t(F, G_n) \overset{p}{\to} p^{e_F}\). Now, let \(W \equiv p\), a constant function, then \(t(F, W) = p^{e_F}\) as well. Then, from \autoref{thm:graphon-convergence}, \(d_{\square} (G_n, p \cdot \mathbbm{1}_{[0, 1]^2} ) \overset{p}{\to} 0\) as \(n \to \infty \).

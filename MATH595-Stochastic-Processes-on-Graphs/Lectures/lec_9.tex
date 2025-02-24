@@ -1,1 +1,191 @@
-\lecture{9}{18 Feb.\ 9:30}{}
+\lecture{9}{18 Feb.\ 9:30}{Minimum Spanning Tree in Erdős-Rényi Graph}
+\section{Minimum Spanning Tree}
+Consider the complete graph \(K_n\) on \([n]\) nodes. Let \(\omega _e = \omega _{ij} = \omega _{ji} \overset{\text{i.i.d.} }{\sim } F\) on \([0, \infty )\) with \(e = (i, j)\) for all \(1 \leq i < j \leq n\). Let \(\mathcal{T} _n\) be the set of all spanning trees on \([n]\).
+
+\begin{note}
+	\(\lvert \mathcal{T} _n \rvert = n^{n-2}\).
+\end{note}
+
+We want to minimize \(W(\tau ) = \sum_{e \in \tau } \omega _e \) on \(\tau \in \mathcal{T} _n\). All spanning tree has \((n-1)\) many edges.
+
+\begin{note}
+	Without loss of generality, let \(0 \in \operatorname{supp}(F) \).
+\end{note}
+
+We may assume that \(F\) is continuous and
+\[
+	\frac{F(x)}{x^d}
+	\to 1
+\]
+as \(x \searrow 0^+\) for some \(d > 0\).
+
+\begin{eg}
+	\(d=1\) for \(\mathcal{U} (0, 1)\) and \(\operatorname{Exp}(1) \).
+\end{eg}
+
+Define \(W_n \coloneqq \min _{\tau \in \mathcal{T} _n} W(\tau )\).
+
+\begin{remark}
+	A related question is the structure of the tree of the MST.
+\end{remark}
+
+\begin{theorem}
+	When \(d = 1\),	\(\mathbb{E}_{}[W_n] \to \zeta (3) = \sum_{k=1}^{\infty} 1 / k^3\) and \(\sqrt{n} (W_n - \zeta (3)) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\) for some \(\sigma ^2 > 0\) as \(n \to \infty \).
+
+	For general \(d > 0\), we have
+	\[
+		n^{1 / d - 1} \mathbb{E}_{}[W_n]
+		\to \sum_{k=1}^{\infty} \frac{1}{dk^3} \frac{\Gamma (k + 1 / d - 1)}{\Gamma () k^{1 / d - }}
+		\eqqcolon c_d,
+	\]
+	and
+	\[
+		\frac{1}{\sqrt{n} } (n^{1 / d} W_n - n c_d)
+		\overset{D}{\to} \mathcal{N} (0, \sigma _d^2)
+	\]
+	for some \(\sigma _d^2 > 0\).
+\end{theorem}
+\begin{proof}
+	Consider the MST \(\tau _n^{\ast} \) created by the Kruskal's algorithm.
+
+	\begin{prev}[Kruskal's algorithm]
+		We sequentially (w.r.t. the edge weight) add edges with the largest weight as long as no cycle is created.
+	\end{prev}
+
+	Focus on the case of \(d = 1\) such that \(F(x) = x\) for all \(0 \leq x \leq 1\). Then, we see that
+	\[
+		W_n
+		= \sum_{e \in \tau _n^{\ast} } \omega _e
+		= \sum_{e \in \tau _n^{\ast} } \int_{0}^{1} \mathbbm{1}_{x \leq \omega _e} \,\mathrm{d}x
+		= \int_{0}^{1} \sum_{e \in \tau _n^{\ast} } (1 - \mathbbm{1}_{x > \omega _e} ) \,\mathrm{d}x
+		= \int_{0}^{1} \left( n-1 - \sum_{e \in \tau _n^{\ast} } \mathbbm{1}_{\omega _e < x} \right) \,\mathrm{d}x .
+	\]
+	We see that all edges \(\{ e \colon \omega _e \leq x \} \) gives the edge set of \(\operatorname{ER}(n, F(x) = x) \). It's easy to see that \(n - \sum_{\mathcal{C} } \lvert E(\mathcal{C} ) \rvert \) is the total number of components, where the sum is over all component \(\mathcal{C} \). Hence, the above integral is further equal to
+	\[
+		W_n
+		= \int_{0}^{1} \left( \text{\#Component in } \operatorname{ER}(n, x) - 1 \right) \,\mathrm{d}x
+		= \int_{0}^{1} (K_n(x) - 1) \,\mathrm{d}x ,
+	\]
+	where \(K_n(x)\) denotes the number of components in \(\operatorname{ER}(n, x) \).
+
+	\begin{note}
+		For general \(F\), we have \(W_n = \int_{0}^{1} (K_n(x) - 1) \,\mathrm{d}F^{-1} (x) \).
+	\end{note}
+
+	Consider decomposing the integral into
+	\[
+		W_n
+		= \int_{0}^{A \log n / n} K_n(x) \,\mathrm{d}x
+		- \underbrace{\int_{0}^{A \log n / n} 1 \,\mathrm{d}x}_{A \log n / n}
+		+ \int_{A \log n / n}^{1} (K_n(x) - 1) \,\mathrm{d}x
+	\]
+	for some \(A > 1\), to be chosen. For the last quantity, we see that
+	\[
+		\begin{split}
+			\int_{A \log n / n}^{1} (K_n(x) - 1) \,\mathrm{d}x
+			 & = \int_{A \log n / n}^{1} \mathbb{E}_{}[\lvert K_n(x) - 1 \rvert ]  \,\mathrm{d}x                                  \\
+			 & \leq \int_{A \log n / n}^{1} n \Pr_{}\left(\operatorname{ER}(n, x) \text{ is not connected} \right)  \,\mathrm{d}x
+			\leq n^{2 - A}
+		\end{split}
+	\]
+	from \autoref{thm:Erdős-Rényi-connectivity-threshold}. Take \(A = 3\), and let \(x = \lambda / n\), the first integral becomes
+	\[
+		\int_{0}^{3 \log n / n} K_n(x) \,\mathrm{d}x
+		= \int_{0}^{3 \log n} \frac{1}{n} K_n(\lambda / n) \,\mathrm{d}\lambda .
+	\]
+	Since we care about the number of components, in this regime (i.e., \(\lambda \in (0, 3 \log n)\)), we know that only one giant component can exist, which doesn't matter since it contributes only \(1 / n\), we're really interested in the number of small components.
+
+	Consider \(K_n(\lambda / n)\) to be the number of components that are trees plus the number of components that are non-trees. The second quantity, in expectation, is bounded by \(O(1+ 1 / n)\). While for the first quantity, we see that
+	\[
+		\sum_{k=1}^{n} \underbrace{( \text{\#tree-component of size \(k\)} )}_{N_n(k, \lambda )} + O_p(1),
+	\]
+	where \(N_n(k, \lambda )\) is the number of tree-components of size \(k\) in \(\operatorname{ER}(n, \lambda / n) \). Overall, we have
+	\[
+		W_n
+		= \Theta \left( \frac{\log n}{n} \right) + \sum_{k=1}^{n} \int_{0}^{3 \log n} \frac{1}{n} N_n(k, \lambda ) \,\mathrm{d}\lambda.
+	\]
+	Since
+	\[
+		\mathbb{E}_{}[N_n(k, \lambda )]
+		= k^{k-2} \binom{n}{k} \left( \frac{\lambda}{n} \right) ^{k-1} \left( 1 - \frac{\lambda}{n} \right) ^{k(n-k) + \binom{k}{2} - k + 1},
+	\]
+	as \(n \to \infty \), we have
+	\[
+		\mathbb{E}_{}[W_n]
+		\to \sum_{k=1}^{\infty} \frac{k^{k-2}}{k!} \int_{0}^{\infty} \lambda ^{k-1} e^{-\lambda k} \,\mathrm{d}x
+		= \sum_{k=1}^{\infty} \frac{k^{k-2}}{k!} k^{- k} (k-1)!
+		= \sum_{k=1}^{\infty} \frac{1}{k^3}
+		= \zeta (3).
+	\]
+
+	Now, for \(k\) and \(\lambda \) fixed, we know that as \(n \to \infty \),
+	\[
+		\frac{1}{n}\mathbb{E}_{}[N_n(k, \lambda )]
+		\to \frac{k^{k-2}}{k!} \lambda ^{k-1} e^{-\lambda k}
+		\eqqcolon m(k, \lambda )
+	\]
+	and
+	\[
+		\frac{1}{n} \Var_{}[N_n(k, \lambda )]
+		\to \sigma _{k, \lambda }^2
+		> 0.
+	\]
+	Then, we have
+	\[
+		\frac{N_n(k, \lambda ) - n \cdot m(k, \lambda )}{\sqrt{n} }
+		\overset{D}{\to} \mathcal{N} (0, \sigma _{k, \lambda }^2).
+	\]
+	Moreover, we can let \(\lambda \) varies and make the above a process of \(\lambda \), and one can show that this actually converges:
+	\[
+		\left( \frac{N_n(k, \cdot ) - n \cdot m(k, \cdot )}{\sqrt{n} } \right) _{\lambda \in (0, \infty )}
+		\overset{D}{\to} \operatorname{GP}(0, \Sigma ),
+	\]
+	i.e., some mean zero Gaussian process with certain covariance structure. One can further consider all \(k\), and the above further becomes
+	\[
+		\left( \left( \frac{N_n(\cdot , \cdot ) - n \cdot m(\cdot, \cdot )}{\sqrt{n} } \right) _{\lambda \in (0, \infty )} \right) _{k = 1, 2, \dots }
+		\overset{D}{\to} \left( \operatorname{GP}(0, \Sigma ) \right) _{k = 1, 2, \dots }.
+	\]
+\end{proof}
+
+\begin{exercise}
+	Give a simple proof with a rate of convergence.
+\end{exercise}
+
+\begin{problem*}[Open problem]
+	Let \(0 < \beta < \infty \). The Gibbs measure on \(\mathcal{T} _n\) is defined as
+	\[
+		\mathbb{P} _{\beta , n}(\tau )
+		= \frac{\exp (-\beta \cdot n \cdot W(\tau ))}{Z_n(\beta )}
+	\]
+	for \(\tau \in \mathcal{T} _n\) with the partition function \(Z_n(\beta ) = \sum_{\tau \in \mathcal{T} _n} e^{-\beta n W(\tau )}\).
+
+	\begin{intuition}
+		This measure interpolates the uniform spanning tree and the minimum spanning tree.
+	\end{intuition}
+
+	If we sample \(\tau _n^{\ast} \) from \(\mathbb{P} _{\beta , n}\), what is \(\lim_{n \to \infty} \mathbb{E}_{}[W(\tau _n^{\ast} )] \)? What is \(\lim_{n \to \infty} \frac{1}{n} \log Z_n(\beta )\) and the \(\sigma ^2\) in \(\frac{1}{\sqrt{n} } (\log Z_n(\beta ) - \mathbb{E}_{}[\log Z_n(\beta )] ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\)?
+
+	Finally, what is the structure of \(\tau _n^{\ast} \) (local sense/metric sense)?
+\end{problem*}
+
+\chapter{Other Random Graph Models}
+\section{Exponential Random Graph}
+Consider \(G \sim \operatorname{ER}(n, p) \) for some \(p \in (0, 1)\). We see that
+\[
+	\Pr_{}\left(G\right)
+	= p^{m} (1 - p)^{\binom{n}{2} - m}
+	= (1 - p)^{\binom{n}{2}} e^{\log \frac{p}{1-p} \cdot m}.
+\]
+Let \(\beta (p) \coloneqq \log (p / (1 - p))\) where \(\beta \colon [0, 1] \to (-\infty , \infty )\). Given \(\beta \), \(\operatorname{ER}(n, p = e^\beta / (1 + e^{\beta })) \) is the same model \(\Pr_{}\left(G\right) \propto e^{\beta \cdot m}\).
+
+Fix some finite subgraphs \(H_1, \dots , H_k\), let
+\[
+	\Pr_{}\left(G\right)
+	\propto \exp (n^2 \left[ \beta _1 \frac{\text{\#\(H_1\) in \(G\)}}{\text{\#\(H_1\) in \(K_n\)}} + \beta _2 \frac{\text{\#\(H_2\) in \(G\)}}{\text{\#\(H_2\) in \(K_n\)}} + \dots  \right] )
+	= \exp (n^2 \left[ \beta _1 t(H_1, G) + \beta _2 t(H_2, G) + \dots  \right] )
+\]
+for \(\beta _1, \dots , \beta _k \in (-\infty , \infty )\). This model is denoted as \(\operatorname{ERGM}(\beta _1, \dots , \beta _k \geq 0) \).
+
+\begin{problem*}[Open problem]
+	CLt for subgraph count in \(\operatorname{ERGM}(\beta _1, \dots , \beta _k \geq 0) \).
+\end{problem*}

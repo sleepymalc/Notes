@@ -1,0 +1,134 @@
+\lecture{10}{20 Feb.\ 9:30}{Other Random Graph Model}
+\section{Inhomogeneous Random graph}
+Let \(V_n = [n]\), and \(\omega _{ij} = \mathbbm{1}_{(i, j) \in E} \overset{\text{ind} }{\sim } \operatorname{Ber}(p_{ij}) \) for some \(p_{ij} > 0\) for all \(i < j\).
+
+In this case, we again know that \(\deg (i) = \sum_{j \in [n] \setminus \{ i \} } \omega _{ij}\). From the \hyperref[thm:Stein-Chen-method]{Stein-Chen method},
+\[
+	d_{\mathrm{TV} }\Big(\deg (i) , \operatorname{Pois}\big(\underbrace{\sum\nolimits_{j \neq i} p_{ij}}_{\lambda _i} \big) \Big)
+	\leq \min (1 , 1 / \lambda _i) \sum_{j \neq i} p_{ij}^2
+	\leq \min (1, \lambda _i) \cdot \max _{j \neq i} p_{ij}.
+\]
+\begin{note}
+	We have \(d_{\mathrm{TV} }(\operatorname{Pois}(\lambda ) , \operatorname{Pois}(\lambda ^{\prime} ) ) \leq \lvert \lambda - \lambda ^{\prime} \rvert \).
+\end{note}
+
+Hence, we want \(\max _{i, j} p_{ij} \ll 1\). To have bounded degree, or at least have finite mean of every \(\operatorname{Pois}(\lambda _i) \), we also want \(\sum_{i, j} p_{ij} < \infty \).
+
+Consider using a kernel. Let \(i \in [n] \mapsto x_i \in S\), where \(x_i\) is called a \emph{type}.
+
+\begin{eg}
+	\(S = [0, 1]\) or \(\mathbb{R} ^+\).
+\end{eg}
+
+And we let \(p_{ij} \approx \kappa _n(x_i, x_j) / n\), where \(\kappa _n \colon S \times S \to [0, \infty )\) is a symmetric kernel. We assume that \((S, \mu _n, \kappa _n)\) satisfies:
+\begin{itemize}
+	\item The discrete measure on the type converges, i.e., \(\mu _n = \frac{1}{n} \sum_{i=1}^{n} \delta _{x_i} \overset{D}{\to} \mu \) on \(S\) as \(n \to \infty \). Furthermore, \(\frac{1}{n} \sum_{i=1}^{n} x_i \to \int x \mu (\mathrm{d} x)\).
+	\item \(\kappa _n\) is \emph{graphical} on \(S\) with a limiting kernel \(\kappa \) if
+	      \begin{enumerate}
+		      \item \(\kappa \) is a continuous in both arguments.
+		      \item \(\kappa _n(a_n, b_n) \to \kappa (a, b)\) \(\mu \times \mu \)-almost surely as \(n \to \infty \) when \(a_n \to a\) and \(b_n \to b\).
+		      \item \(\frac{1}{n} \sum_{j} \kappa _n(x, x_j) \to \int _y \kappa (x, y) \mu (\mathrm{d} y) \eqqcolon \kappa (x, \cdot ) \) is well-defined \(\mu \)-almost everywhere. Moreover, \(\frac{1}{n} \sum_{i < j} \kappa _n(x_i, x_j) \to \frac{1}{2} \iint \kappa (x, y) \mu (\mathrm{d} x) \mu (\mathrm{d} y) < \infty \).
+	      \end{enumerate}
+\end{itemize}
+
+\begin{eg}[Single type]
+	Consider only one type exists, say \(S = \{ 1 \} \). Then \(\mu _n = \delta _1\) and \(\kappa _n(1, 1) = \lambda \). Then we get back \(\operatorname{ER}(n, \lambda / n) \).
+\end{eg}
+
+To make sure that \(p_{ij} < 1\), we consider the following different (basically equivalent) models:
+\begin{enumerate}[(a)]
+	\item Chang-Lu '02: \(p_{ij} = \min (\kappa _n(x_i, x_j) / n , 1)\).
+	\item Norros-Reittu '06 (Poisson Graph Process): \(p_{ij} = 1 - e^{- \kappa (x_i, x_j) / n}\).
+	\item Boritton-Martin-Lof (Generalized Random Graph) \(p_{ij} / (1 - p_{ij}) = \kappa _n(x_i, x_j) / n\), or equivalently, \(p_{ij} = \frac{\kappa _n(x_i, x_j)}{n + \kappa _n(x_i, x_j)}\).
+\end{enumerate}
+
+\begin{eg}[Finite type]
+	Consider \(S = [r]\), \(\mu = (\lambda _1, \dots , \lambda _r)\) such that \(\sum_{i=1}^{r} \lambda _i = 1\) with \(\lambda _i > 0\). In this case, \(\big(\kappa (i, j)\big)_{i, j \in [r]}\) is an \(r \times r\) symmetric matrix.
+
+	Basically, we have \(r\) blocks \(B_i\)'s, with each of the size \(n_i\) such that \(n_i / n \approx \lambda _i\). Between blocks \(i, j\), the edge probability follows \(\kappa (i, j) / n\), while within a block \(i\), edges form with probability \(\kappa (i, i) / n\).
+\end{eg}
+
+Rank-1 IRG model: \(\kappa (x, y) \approx \varphi (x) \cdot \varphi (y)\) for \(x, y \in S\) with \(\varphi \colon S \to [0, \infty )\), and \(\hat{S} = \varphi (S)\). By reparametrization, we can simply consider \(\kappa (x, y) \coloneqq xy\) for \(x, y \in \varphi (S) = [0, \infty )\).
+
+Now, consider the simplification: let every vertex \(i\) having a type \(w_i \coloneqq \varphi (x_i)\). Then \(\frac{1}{n}\sum_{i=1}^{n} \delta _{w_i} \overset{D}{\to} F\), where \(F\) is just some cdf of \(\mu \) on \([0, \infty )\), i.e., \(\frac{1}{n}\#\{ w_i \leq x \} \to F(x)\) for all continuity point \(x\) of \(F\). Also, \(\frac{1}{n} \sum_{i=1}^{n} w_i \to \mathbb{E}_{}[W] \) where \(W \sim F\).
+
+Consider \(p_{ij} = \frac{w_i w_j}{n + w_i w_j}\). Then,
+\[
+	\sum_{j \neq i} p_{ij}
+	= w_i \cdot \left( \frac{1}{n}\sum_{j=1}^{n} w_j \right).
+\]
+We see that we can choose \((w_i)_{i \in [n]}\) satisfying the above assumptions, such that
+\[
+	p_{ij}
+	= \frac{w_i w_j}{\sum_{k=1}^{n} w_k + w_i w_j}
+\]
+for \(i < j\). Then, \(w_i\) gives the degree sequence. One can show that \(\deg (i) \approx \operatorname{Pois}(w_i) \), hence \(\mathbb{E}_{}[\deg (i)] = \mathbb{E}_{}[w_i] \).
+
+What about the general degree distribution? Choose \(v_n \sim \mathcal{U} ([n])\). Then for any fixed \(k=0, 1, 2, \dots \),
+\[
+	\Pr_{}\left(\deg (v_n) = k\right)
+	= \frac{1}{n} \sum_{i=1}^{n} \Pr_{}\left(\deg (i) = k\right)
+	\cong \frac{1}{n} \sum_{i=1}^{n} e^{-w_i} \cdot \frac{w_i^k}{k!}
+	\to \mathbb{E}_{}\left[ e^{-W} \frac{W^k}{k!} \right] ,
+\]
+which is called a mixed Poisson distribution, which is not the original degree distribution, i.e., \(W\), we want.
+
+In general, we have the following.
+
+\begin{theorem}
+	Let \(v_1^{(n)}, \dots , v_{\ell }^{(n)} \) be \(\ell \) many samples from \([n]\) chosen uniformly at random without replacement. Then, under this rank-1 model, \((\deg (v_1^{(n)}), \dots , \deg (v_{\ell } ^{(n)})) \overset{D}{\to} \bigotimes _{i=1}^{\ell} \operatorname{MixedPois}(W) \).
+\end{theorem}
+
+In a general \((S, \mu , \kappa )\),
+\[
+	\Pr_{}\left(\deg (v^{(n)}) = k\right)
+	\to \int _S e^{-\kappa (x, \cdot)} \frac{\kappa (x, \cdot)^k}{k!} \mu (\mathrm{d} x).
+\]
+\begin{remark}
+	This is still a thin-tailed degree distribution. For real-life network, degree distribution is often heavy-tailed.
+\end{remark}
+
+We can also look at the cluster structure. In this case, we will be looking into the so-called \emph{multi-type branching process}. Consider \((S, \mu , \kappa )\). Given any vertex \(x\), we know that the number of children follows \(\operatorname{Pois}(\kappa (x, \cdot)) = \int \kappa (x, y) \mu (\mathrm{d} y)\). Then, for each child \(y_i\), the probability follows \(\kappa (x, y_i) / \kappa (x, \cdot)\).
+
+\begin{intuition}
+	\[
+		\tau _\kappa f(x)
+		= \int \kappa (x, y) f(y) \mu (\mathrm{d} y)
+	\]
+	is a positive integral operator on \(L^1(S, \mu )\), with the operator norm being
+	\[
+		\lVert \tau _{\kappa } \rVert _{\mathrm{op} }
+		= \sup _{f > 0} \frac{\lVert \tau _\kappa f \rVert _2}{\lVert f \rVert _2}.
+	\]
+	The MTBP survives with positive probability if and only if \(\lVert \tau _{\kappa } \rVert _{\mathrm{op} } > 1\).
+
+	Similar to the previous case, when \(\lVert \tau _{\kappa } \rVert _{\mathrm{op} } > 1\), then what's the survival probability of this MTBP? Let \(\Phi f \coloneqq 1 - e^{- \tau _{\kappa } f}\). One can check that there exists a unique non-negative maximum solution \(\rho \) of \(f = \Phi f\), such that the survival probability starting at type \(x\) is \(\rho (x)\).
+
+	\begin{theorem}
+		Under the \((S, \mu , k)\) model and all the assumptions.
+		\begin{enumerate}[(a)]
+			\item If \(\lVert \tau _{\kappa } \rVert _{\mathrm{op} } < 1\), \(\lvert \mathcal{C} _{\max } \rvert / n \overset{p}{\to} 0\).
+			\item If \(\lVert \tau _{\kappa } \rVert _{\mathrm{op} } > 1\),
+			      \[
+				      \frac{\lvert \mathcal{C} _{\max _1} \rvert }{n}
+				      \to \int _S \rho (x) \mu (\mathrm{d} x) \in (0, 1),
+			      \]
+			      and
+			      \[
+				      \frac{\lvert \mathcal{C} _{\max _2} \rvert }{n} \overset{p}{\to} 0.
+			      \]
+		\end{enumerate}
+	\end{theorem}
+\end{intuition}
+
+\begin{eg}
+	For the rank-1 IRG, let \(\kappa (x, y) = xy / \mathbb{E}_{}[W] \) where \(x_i \sim \mu _n \approx W\). The only unit eigenvector is \(y / \sqrt{\mathbb{E}_{}[W^2] } \), with \(\lVert \tau _{\kappa } \rVert _{\mathrm{op} }= \sqrt{\mathbb{E}_{}[W^2] / \mathbb{E}_{}[W] } \). We claim that \(\mathbb{E}_{}[W^2] < \mathbb{E}_{}[W] \), then it's sub-critical with all components of size \(o(n)\). If \(\mathbb{E}_{}[W^2] > \mathbb{E}_{}[W] \), then there exists one giant component with all other components of size \(o(n)\). For the critical regime, it depends on \(\mathbb{E}_{}[W^3] \). If it's finite, then we have the previous behavior (all components are of order \(\Theta (n^{2 / 3})\)); otherwise, the exponent varies.
+\end{eg}
+
+\begin{remark}
+	When the edge probability follows Bernoulli, the degree is the sum over these independent Bernoulli random variables, which makes it highly concentrated. To escape this, we need to avoid this mean-field structure.
+\end{remark}
+
+\begin{eg}
+	Consider \(\kappa (x, y) = c / \max (x, y)\), \(S = [0, 1]\), and \(\mu \sim \mathcal{U} (0, 1)\). Intuitively, the \(j^{\text{th} }\) vertex will connect to \(i < j\) with probability \(p_{ij} = c / i \vee j\).
+\end{eg}

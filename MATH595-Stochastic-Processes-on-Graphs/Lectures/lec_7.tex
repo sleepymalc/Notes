@@ -13,10 +13,10 @@ Now, let's formalize the cluster counting calculation: when \(\lambda > \log n /
 		= \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{- \frac{\lambda (n-k)}{n}} \right) ^k.
 	\end{split}
 \end{equation}
-When \(k\) is fixed and \(\lambda k^2 \ll n\), the above is bounded by \(\frac{n}{\lambda } (e \lambda e^{-\lambda })^k\). Hence, when \(\lambda = (1 + \epsilon ) \log n / k\) for some \(\epsilon > 0\), this bound goes to \(0\) as \(n \to \infty \).
+When \(k \geq 1\) is fixed and \(\lambda k^2 \ll n\), the above is bounded by \(\frac{n}{\lambda } (e \lambda e^{-\lambda })^k\). Hence, when \(\lambda = (1 + \epsilon ) \log n / k\) for some \(\epsilon > 0\), this bound goes to \(0\) as \(n \to \infty \).
 
 \begin{remark}
-	When \(\lambda > \log n / k\), we start to see clusters of size \(k\) vanish.
+	When \(\lambda > \log n / k\), we start to see clusters of size \(k\) vanish as \(n \to \infty \).
 \end{remark}
 
 \begin{theorem}\label{thm:Erdős-Rényi-isolating-vertex}
@@ -59,13 +59,13 @@ It turns out that our intuition is correct: i.e., when isolating vertices stop s
 	It's clear that \(\{ \text{\(G\) is connected} \} \subseteq \{ \text{\(G\) has  no isolated vertices}  \} \),
 	\begin{align*}
 		0
-		 & \leq \Pr_{}(\text{\(G\) has no isolated vertices} ) - \Pr_{}(\text{\(G\) is connected} )                                                  \\
-		 & = \Pr_{}(\exists \text{clusters of size \(k\) for \(k \in \{ 2, 3, \dots , \lceil n / 2 \rceil  \}\)}  )                                  \\
-		 & \leq \sum_{k=2}^{n / 2} \mathbb{E}_{}[\text{\#clusters of size } k], \intertext{then from \autoref{eq:Erdős-Rényi-cluster-size}, we have}
-		 & \leq \sum_{k=2}^{n / 2} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k
-		= \sum_{k=2}^{c} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k + \sum_{k=c+1}^{n / 2} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k,
+		 & \leq \Pr_{}(\text{\(G\) has no isolated vertices} ) - \Pr_{}(\text{\(G\) is connected} )                                                                 \\
+		 & = \Pr_{}(\exists \text{clusters of size \(k\) for \(k \in \{ 2, 3, \dots , \lceil n / 2 \rceil  \}\)}  )                                                 \\
+		 & \leq \sum_{k=2}^{\lceil n / 2 \rceil } \mathbb{E}_{}[\text{\#clusters of size } k], \intertext{then from \autoref{eq:Erdős-Rényi-cluster-size}, we have}
+		 & \leq \sum_{k=2}^{\lceil n / 2 \rceil } \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k
+		= \sum_{k=2}^{c} \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k + \sum_{k=c+1}^{\lceil n / 2 \rceil } \frac{n}{\lambda k^{5 / 2}} \left( e \lambda e^{-\frac{\lambda (n-k)}{n}} \right) ^k,
 	\end{align*}
-	where we split the sum into two at \(k = c\) for some constant \(c\). It's easy to see that the first term goes to \(0\) as \(n \to \infty \), while the second term is \(\leq n (e \lambda e^{-\lambda / 2})^{c} \), which also goes to \(0\) as \(n \to \infty \). Hence, we conclude that
+	where we split the sum into two at \(k = c\) for some constant \(c\). It's easy to see that the first term goes to \(0\) as \(n \to \infty \), while the second term is upper bounded by \( n / \lambda (e \lambda e^{-\lambda / 2})^{c} \). By selecting \(c \geq 3\), this also goes to \(0\) as \(n \to \infty \). Hence, we conclude that
 	\[
 		\Pr_{}(\text{\(G\) is connected} )
 		= \Pr_{}(\text{\(G\) has no isolated vertices} )
@@ -138,14 +138,14 @@ However, for general structure of size \(k\), computing the variance of the coun
 We consider the triangle graph as our running example to illustrate the idea of \emph{chaos decomposition}.
 
 \begin{eg}[Running example]
-	Fix a triangle graph \(H = \triangle\). Then, we're interested in \(N_H\), the number of copies (in the injective-sense) of \(H\) in the graph \(G \sim \operatorname{ER}(n, p) \). We see that
+	Fix a triangle graph \(H = \triangle\). Then, we're interested in \(X_n(H)\), the number of copies (in the injective-sense) of \(H\) in the graph \(G \sim \operatorname{ER}(n, p) \). We see that
 	\[
-		N_{\triangle}
+		X_n(\triangle )
 		= \sum_{1 \leq i < j < k \leq n} \mathbbm{1}_{(i, j), (j, k), (k, i) \in E}.
 	\]
 \end{eg}
 
-It's easy to see that \(\mathbb{E}_{}[N_{\triangle}] = \binom{n}{3} p^3 \approx \frac{(np)^3}{6}\). But what about its variance?
+It's easy to see that \(\mathbb{E}_{}[X_n(\triangle )] = \binom{n}{3} p^3 \approx \frac{(np)^3}{6}\). But what about its variance?
 
 \begin{prev}
 	Recall that \(\omega _{ij} = \mathbbm{1}_{(i, j) \in E} \overset{\text{i.i.d.} }{\sim } \operatorname{Ber}(p) \) for all \(i < j\).
@@ -153,7 +153,7 @@ It's easy to see that \(\mathbb{E}_{}[N_{\triangle}] = \binom{n}{3} p^3 \approx 
 
 The chaos decomposition starts by \textbf{centering} \(\omega _{ij}\):
 \begin{align*}
-	N_{\triangle}
+	X_n(\triangle )
 	= \sum_{i < j < k} \omega _{ij} \omega _{jk} \omega _{ki}
 	 & = \sum_{i < j < k} ( \overline{\omega } _{ij} + p ) ( \overline{\omega } _{jk} + p ) ( \overline{\omega } _{ki} + p )                                                                                                                                                                                                                                                                                                                                                              \\
 	 & = \sum_{i < j < k} \overline{\omega } _{ij} \overline{\omega } _{jk} \overline{\omega } _{ki} + p(\overline{\omega } _{ij} \overline{\omega } _{jk} + \overline{\omega } _{ij} \overline{\omega } _{ki} + \overline{\omega } _{jk} \overline{\omega } _{ki} ) + p^2 (\overline{\omega } _{ij} + \overline{\omega } _{jk} + \overline{\omega } _{ki} ) + p^3,\intertext{where \(\overline{\omega } \coloneqq \omega - p\). By regrouping, we then have the following decomposition}
@@ -174,14 +174,14 @@ which is the so-called \emph{chaos decomposition}. This is useful since \(\overl
 \begin{claim}
 	Let \(np^2 \to \infty \), and \(n^2 p(1 - p) \to \infty \), then
 	\[
-		\frac{N_{\triangle} - \binom{n}{3}p^3}{\sqrt{\Var_{}[A_1] } }
+		\frac{X_n(\triangle ) - \binom{n}{3}p^3}{\sqrt{\Var_{}[A_1] } }
 		\overset{D}{\to} \mathcal{N} (0, 1).
 	\]
 \end{claim}
 \begin{explanation}
 	Since we have
 	\[
-		\frac{\overline{N} _{\triangle}}{\sqrt{\Var_{}[A_1] } }
+		\frac{\overline{X} _n(\triangle )}{\sqrt{\Var_{}[A_1] } }
 		= \frac{A_3}{\sqrt{\Var_{}[A_1] } } + \frac{A_2}{\sqrt{\Var_{}[A_1] } } + \frac{A_1}{\sqrt{\Var_{}[A_1] } }.
 	\]
 	For the first term, we see that it is \(\mathbb{E}_{}[A_3] ^2 = \Var_{}[A_3] / \Var_{}[A_1] \to 0\), same for the second term. However, for the last term, we have

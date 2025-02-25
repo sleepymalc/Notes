@@ -78,9 +78,7 @@ Combining the above, if we want concentration for \(X_n(F)\) to \(\mathbb{E}_{}[
 We can then rewrite the condition for concentration as \(n p^{\theta (F)} \to \infty \), or equivalently, \(p \gg 1 / n^{1 / \theta (F)}\). Hence, we conclude that the concentration threshold of \(X_n(F)\) is \(p = 1 / n^{1 / \theta (F)}\).
 
 \begin{remark}[Balanced subgraph]
-	If the above maximum is taken when \(H = F\) with \(\theta _F = e_F / v_F\), then \(1 / n^{v_F / e_F} = 1 / n^{1 / \theta (F)}\), i.e., the concentration threshold and existence threshold are the same. In this case, we say \(F\) is balanced.
-
-	However, for an unbalanced \(F\), then there is a gap between the existence threshold and concentration threshold. We need to look at the maximum \(H \subsetneq F\) in this case.
+	If the above maximum is taken when \(H = F\) with \(\theta _F = e_F / v_F\), then \(1 / n^{v_F / e_F} = 1 / n^{1 / \theta (F)}\), i.e., the concentration threshold and existence threshold are the same. In this case, we say \(F\) is balanced. However, for an unbalanced \(F\), there is a gap between the existence threshold and concentration threshold. We need to look at the maximum \(H \subsetneq F\) in this case.
 \end{remark}
 
 If we now consider the contribution to the variance from edges (i.e., \(H\) with \(v_H=2\) and \(e_H=1\)), that is, \(n^{2v_F - 2} p^{2e_F - 1} (1 - p) = O(n^{2v_F - 2} p^{2e_F - 1})\), we see that its contribution to \(\Var_{}[X_n(F)] \) is of order
@@ -111,8 +109,8 @@ for some constant \(c_F\) as \(n \to \infty \). Now, observe that for a fixed \(
 	\overset{p}{\to} p^{e_F}.
 \]
 
-\section{Dense Graph Limit}
-We digress a bit to talk about a limit of the dense graph sequence. The motivation is that consider a sequence of dense graphs \(G_n\) with increasing number of vertices, and we want to have a unified way to define the limiting object for such a sequence. \hyperref[def:graphon]{Graphon} normalized vertex set to \([0, 1]\) and define a function \(W(x, y)\) on \([0, 1]^2\) that generalizes the adjacency matrix structure.
+\subsection{Subgraph Density from Dense Graph Limit Point of View}
+We digress a bit to talk about a limit of the dense graph sequence. The motivation is that consider a sequence of dense graphs \(G_n\) with increasing number of vertices, and we want to have a unified way to define the limiting object for such a sequence. In particular, we can study various properties of this limiting object, e.g., the subgraph density \(t(F, G)\). \hyperref[def:graphon]{Graphon} normalized vertex set to \([0, 1]\) and define a function \(W(x, y)\) on \([0, 1]^2\) that generalizes the adjacency matrix structure.
 
 \begin{definition}[Graphon]\label{def:graphon}
 	A \emph{graphon} is a symmetric measurable function \(W \colon [0, 1]^2 \to [0, 1]\), i.e., \(W(x, y) = W(y, x)\) for all \(x, y \in [0, 1]\).
@@ -121,7 +119,7 @@ We digress a bit to talk about a limit of the dense graph sequence. The motivati
 We see that we can embed any fixed, simple graph \(F\) as a \hyperref[def:graphon]{graphon} \(W_F\).
 
 \begin{eg}
-	For a finite simple graph \(G = (V, E)\) with \(V = [n]\), its associated graphon \(W_G(x, y)\) can be defined as
+	For a finite simple graph \(G = (V, E)\) with \(V = [n]\), we can associate a graphon
 	\[
 		W_G(x, y)
 		\coloneqq \begin{dcases}
@@ -133,13 +131,10 @@ We see that we can embed any fixed, simple graph \(F\) as a \hyperref[def:grapho
 \end{eg}
 
 \begin{eg}[Constant graphon]
-	An important \hyperref[def:graphon]{graphon} is the constant \hyperref[def:graphon]{graphon} \(W(x, y) = p\cdot \mathbbm{1}_{[0, 1]^2} \) with some \(p \in (0, 1)\).
+	An important \hyperref[def:graphon]{graphon} is the constant \hyperref[def:graphon]{graphon} \(W(x, y) = p\cdot \mathbbm{1}_{[0, 1]^2} \) with some \(p \in (0, 1)\). Intuitively, a constant \hyperref[def:graphon]{graphon} should correspond to a uniform random graph where each edge is present independently with probability \(p\), i.e., \(\operatorname{ER}(n, p) \). We will see this later.
 \end{eg}
 
-Intuitively, a constant \hyperref[def:graphon]{graphon} should correspond to a uniform random graph where each edge is present independently with probability \(p\), i.e., \(\operatorname{ER}(n, p) \). We will see this later.
-
-\subsection{Space of Graphon}
-Since this embedding is not unique due to various vertex relabeling, we define the space of \hyperref[def:graphon]{graphons} as follows.
+Next, since the described embedding is not unique due to various vertex relabeling, we define the space of \hyperref[def:graphon]{graphons} by identifying two \hyperref[def:graphon]{graphons} when one is a relabeling version of another:
 
 \begin{definition}[Graphon space]\label{def:graphon-space}
 	The \emph{graphon space}, denoted as \(\widetilde{\mathcal{W} } \), is defined as
@@ -179,26 +174,22 @@ However, what we really care is the ``metric'' induced by this norm:
 	It's also possible to consider defining \hyperref[def:graphon-space]{graphon space} by first defining the \hyperref[def:cut-metric]{cut metric} and identify two \hyperref[def:graphon]{graphons} \(W_1, W_2\) to be the same when \(d_{\square }(W_1 , W_2) = 0\).
 \end{remark}
 
-\subsection{Homomorphism Density}
-If \(W\) is a \hyperref[def:graphon]{graphon}, we can define the \emph{\(F\)-density} (or \emph{homomorphism density}) in \(W\) similarly as in the usual graph \(G\):
+Now, given a \hyperref[def:graphon]{graphon} \(W\), we can define the \emph{\(F\)-density} (or \emph{homomorphism density}) in \(W\) similarly as in the usual graph \(G\), which is the continuous version of the \(F\)-density in a finite graph:
 \[
 	t(F, W)
-	\coloneqq \int_{[0, 1]^{v_F}} \prod_{(i, j) \in E(F)} W(x_i, x_j) \,\mathrm{d} x_i \cdots \,\mathrm{d} x_{v_F},
+	\coloneqq \int_{[0, 1]^{v_F}} \prod_{(i, j) \in E(F)} W(x_i, x_j) \,\mathrm{d} x_i \cdots \,\mathrm{d} x_{v_F}.
 \]
-which is the continuous version of the \(F\)-density in a graph.
-
-\begin{intuition}
-	This again measures how frequently a given finite simple graph \(F\) appears as a subgraph within a \hyperref[def:graphon]{graphon} \(W\).
-\end{intuition}
-
-It turns out that the \(F\)-density characterizes a \hyperref[def:graphon]{graphon} exactly:
+This again measures how frequently a given finite simple graph \(F\) appears as a subgraph within a \hyperref[def:graphon]{graphon} \(W\). It turns out that the \(F\)-density characterizes a \hyperref[def:graphon]{graphon} exactly:
 
 \begin{theorem}[Graphon convergence]\label{thm:graphon-convergence}
 	Given a \hyperref[def:graphon]{graphon} sequence \((W_n) \in \widetilde{\mathcal{W}} \), \(d_{\square}(W_n, W) \to 0\) as \(n \to \infty \) if and only if \(t(F, W_n) \to t(F, W)\) for all finite connected graph \(F\).
 \end{theorem}
 
-\begin{prev}
-	For a fixed \(p \in (0, 1)\), \(X_n(F) / \mathbb{E}_{}[X_n(F)] \overset{p}{\to} p^{e_F}\) in \(G_n \sim \operatorname{ER}(n, p) \).
-\end{prev}
+This leads to the following.
 
-The above is equivalent to \(t(F, G_n) \overset{p}{\to} p^{e_F}\). Now, let \(W \equiv p\), a constant function, then \(t(F, W) = p^{e_F}\) as well. Then, from \autoref{thm:graphon-convergence}, \(d_{\square} (G_n, p \cdot \mathbbm{1}_{[0, 1]^2} ) \overset{p}{\to} 0\) as \(n \to \infty \).
+\begin{corollary}[Erdős-Rényi random graphs converge to constant graphon]\label{col:Erdős-Rényi-random-graphs-converge-to-constant-graphon}
+	Let \(G_n \sim \operatorname{ER}(n, p) \) for \(p \in (0, 1)\) be a sequence of \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graphs}. Then, \(d_{\square} (G_n, p \cdot \mathbbm{1}_{[0, 1]^2} ) \overset{p}{\to} 0\) as \(n \to \infty \).
+\end{corollary}
+\begin{proof}
+	For a fixed \(p \in (0, 1)\), we have proven that \(X_n(F) / \mathbb{E}_{}[X_n(F)] \overset{p}{\to} p^{e_F}\) in \(G_n \sim \operatorname{ER}(n, p) \). This is equivalent to \(t(F, G_n) \overset{p}{\to} p^{e_F}\). On the other hand, let \(W \equiv p\), a constant function, then \(t(F, W) = p^{e_F}\) as well. From \autoref{thm:graphon-convergence}, the result follows.
+\end{proof}

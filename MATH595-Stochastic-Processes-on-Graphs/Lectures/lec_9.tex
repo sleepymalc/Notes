@@ -1,58 +1,45 @@
 \lecture{9}{18 Feb.\ 9:30}{Minimum Spanning Tree in Erdős-Rényi Graph}
 \section{Minimum Spanning Tree}
-Consider the complete graph \(K_n\) on \([n]\) nodes. Let \(\omega _e = \omega _{ij} = \omega _{ji} \overset{\text{i.i.d.} }{\sim } F\) on \([0, \infty )\) with \(e = (i, j)\) for all \(1 \leq i < j \leq n\). Let \(\mathcal{T} _n\) be the set of all spanning trees on \([n]\).
+Let \(\mathcal{T} _n\) be the set of all spanning trees on \([n]\), with \(\lvert \mathcal{T} _n \rvert = n^{n-2}\) from Cayley's formula.
 
 \begin{note}
-	\(\lvert \mathcal{T} _n \rvert = n^{n-2}\).
+	All spanning trees \(\tau \in \mathcal{T} _n\) has \((n-1)\) many edges.
 \end{note}
 
-We want to minimize \(W(\tau ) = \sum_{e \in \tau } \omega _e \) on \(\tau \in \mathcal{T} _n\). All spanning tree has \((n-1)\) many edges.
+We are now interested in the \hyperref[prb:MST]{minimum spanning tree} problem:
 
-\begin{note}
-	Without loss of generality, let \(0 \in \operatorname{supp}(F) \).
-\end{note}
+\begin{problem}[Minimum spanning tree]\label{prb:MST}
+Given a connected graph \(G=(V, E)\) with edge capacity \(\omega \colon E \to \mathbb{R} _{+} \), the \emph{minimum spanning tree} (MST) problem aims to find the min-cost spanning tree \(\tau ^{\ast} \in \mathcal{T} _n\) with cost \(W_n \coloneqq \min _{\tau \in \mathcal{T} _n} W(\tau ) = W(\tau ^{\ast} )\), where \(W(\tau ) \coloneqq \sum_{e \in \tau } \omega _e \).
+\end{problem}
 
-We may assume that \(F\) is continuous and
-\[
-	\frac{F(x)}{x^d}
-	\to 1
-\]
-as \(x \searrow 0^+\) for some \(d > 0\).
+\hyperref[prb:MST]{MST} is a well-studied problem in combinatorial optimization. We will focus on one famous algorithm called the Kruskal's algorithm, which works by sequentially (w.r.t. the edge weight) add edges with the largest weight as long as no cycle is created.
+
+\subsection{Thresholding View of Erdős-Rényi Graph}
+In particular, consider the complete graph \(G_n = K_n\) on \([n]\) nodes. Given a cdf \(F\), let \(\omega _e = \omega _{ij} = \omega _{ji} \overset{\text{i.i.d.} }{\sim } F\) on \([0, \infty )\) with \(e = (i, j)\) for all \(1 \leq i < j \leq n\). Without loss of generality, let \(0 \in \operatorname{supp}(F) \), and we may assume that \(F\) is continuous and \(F(x) / x^d \to 1\) as \(x \searrow 0^+\) for some \(d > 0\).
+
+\begin{intuition}
+	This means that the cdf generating the edge weight follows a polynomial decay.
+\end{intuition}
 
 \begin{eg}
-	\(d=1\) for \(\mathcal{U} (0, 1)\) and \(\operatorname{Exp}(1) \).
+	For \(\mathcal{U} (0, 1)\) and \(\operatorname{Exp}(1) \), the assumption holds for \(d=1\).
 \end{eg}
 
-Define \(W_n \coloneqq \min _{\tau \in \mathcal{T} _n} W(\tau )\).
-
-\begin{remark}
-	A related question is the structure of the tree of the MST.
-\end{remark}
-
 \begin{theorem}
-	When \(d = 1\),	\(\mathbb{E}_{}[W_n] \to \zeta (3) = \sum_{k=1}^{\infty} 1 / k^3\) and \(\sqrt{n} (W_n - \zeta (3)) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\) for some \(\sigma ^2 > 0\) as \(n \to \infty \).
-
-	For general \(d > 0\), we have
-	\[
-		n^{1 / d - 1} \mathbb{E}_{}[W_n]
-		\to \sum_{k=1}^{\infty} \frac{1}{dk^3} \frac{\Gamma (k + 1 / d - 1)}{\Gamma () k^{1 / d - }}
-		\eqqcolon c_d,
-	\]
-	and
-	\[
-		\frac{1}{\sqrt{n} } (n^{1 / d} W_n - n c_d)
-		\overset{D}{\to} \mathcal{N} (0, \sigma _d^2)
-	\]
-	for some \(\sigma _d^2 > 0\).
+	Let \(G_n\) be the complete graph with \(n\) vertices and edge weight generated from \(F(x) / x^d \to 1\) as \(x \searrow 0^+\) for some \(d > 0\). The following convergences hold as \(n \to \infty \).
+	\begin{itemize}
+		\item When \(d = 1\),	\(\mathbb{E}_{}[W_n] \to \zeta (3) = \sum_{k=1}^{\infty} 1 / k^3\) and \(\sqrt{n} (W_n - \zeta (3)) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\) for some \(\sigma ^2 > 0\).
+		\item For general \(d > 0\), we have
+		      \[
+			      n^{1 / d - 1} \mathbb{E}_{}[W_n]
+			      \to \sum_{k=1}^{\infty} \frac{1}{dk^3} \frac{\Gamma (k + 1 / d - 1)}{\Gamma () k^{1 / d - }}
+			      \eqqcolon c_d,
+		      \]
+		      and \(\frac{1}{\sqrt{n} } (n^{1 / d} W_n - n c_d) \overset{D}{\to} \mathcal{N} (0, \sigma _d^2)\) for some \(\sigma _d^2 > 0\).
+	\end{itemize}
 \end{theorem}
 \begin{proof}
-	Consider the MST \(\tau _n^{\ast} \) created by the Kruskal's algorithm.
-
-	\begin{prev}[Kruskal's algorithm]
-		We sequentially (w.r.t. the edge weight) add edges with the largest weight as long as no cycle is created.
-	\end{prev}
-
-	Focus on the case of \(d = 1\) such that \(F(x) = x\) for all \(0 \leq x \leq 1\). Then, we see that
+	Consider the \hyperref[prb:MST]{MST} \(\tau _n^{\ast} \) created by the Kruskal's algorithm. Focus on the case of \(d = 1\) such that \(F(x) = x\) for all \(0 \leq x \leq 1\). Then, we see that
 	\[
 		W_n
 		= \sum_{e \in \tau _n^{\ast} } \omega _e
@@ -60,7 +47,7 @@ Define \(W_n \coloneqq \min _{\tau \in \mathcal{T} _n} W(\tau )\).
 		= \int_{0}^{1} \sum_{e \in \tau _n^{\ast} } (1 - \mathbbm{1}_{x > \omega _e} ) \,\mathrm{d}x
 		= \int_{0}^{1} \left( n-1 - \sum_{e \in \tau _n^{\ast} } \mathbbm{1}_{\omega _e < x} \right) \,\mathrm{d}x .
 	\]
-	We see that all edges \(\{ e \colon \omega _e \leq x \} \) gives the edge set of \(\operatorname{ER}(n, F(x) = x) \). It's easy to see that \(n - \sum_{\mathcal{C} } \lvert E(\mathcal{C} ) \rvert \) is the total number of components, where the sum is over all component \(\mathcal{C} \). Hence, the above integral is further equal to
+	We see that all edges \(\{ e \colon \omega _e \leq x \} \) gives the edge set of \(\operatorname{ER}(n, F(x) = x) \). It's easy to see that \(n - \sum_{\mathcal{C} } \lvert E(\mathcal{C} ) \rvert \) is the total number of components, where the sum is over all components \(\mathcal{C} \). Hence, the above integral is further equal to
 	\[
 		W_n
 		= \int_{0}^{1} \left( \text{\#Component in } \operatorname{ER}(n, x) - 1 \right) \,\mathrm{d}x
@@ -151,22 +138,25 @@ Define \(W_n \coloneqq \min _{\tau \in \mathcal{T} _n} W(\tau )\).
 	Give a simple proof with a rate of convergence.
 \end{exercise}
 
-\begin{problem*}[Open problem]
-	Let \(0 < \beta < \infty \). The Gibbs measure on \(\mathcal{T} _n\) is defined as
-	\[
-		\mathbb{P} _{\beta , n}(\tau )
-		= \frac{\exp (-\beta \cdot n \cdot W(\tau ))}{Z_n(\beta )}
-	\]
-	for \(\tau \in \mathcal{T} _n\) with the partition function \(Z_n(\beta ) = \sum_{\tau \in \mathcal{T} _n} e^{-\beta n W(\tau )}\).
+\begin{remark}
+	A related question is the structure of the \hyperref[prb:MST]{MST}.
+\end{remark}
 
-	\begin{intuition}
-		This measure interpolates the uniform spanning tree and the minimum spanning tree.
-	\end{intuition}
+\subsection{Extension}
+Let \(0 < \beta < \infty \). The Gibbs measure on \(\mathcal{T} _n\) is defined as
+\[
+	\mathbb{P} _{\beta , n}(\tau )
+	= \frac{\exp (-\beta \cdot n \cdot W(\tau ))}{Z_n(\beta )}
+\]
+for \(\tau \in \mathcal{T} _n\) with the partition function \(Z_n(\beta ) = \sum_{\tau \in \mathcal{T} _n} e^{-\beta n W(\tau )}\).
 
-	If we sample \(\tau _n^{\ast} \) from \(\mathbb{P} _{\beta , n}\), what is \(\lim_{n \to \infty} \mathbb{E}_{}[W(\tau _n^{\ast} )] \)? What is \(\lim_{n \to \infty} \frac{1}{n} \log Z_n(\beta )\) and the \(\sigma ^2\) in \(\frac{1}{\sqrt{n} } (\log Z_n(\beta ) - \mathbb{E}_{}[\log Z_n(\beta )] ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\)?
+\begin{intuition}
+	This measure interpolates the uniform spanning tree and the minimum spanning tree.
+\end{intuition}
 
-	Finally, what is the structure of \(\tau _n^{\ast} \) (local sense/metric sense)?
-\end{problem*}
+If we sample \(\tau _n^{\ast} \) from \(\mathbb{P} _{\beta , n}\), what is \(\lim_{n \to \infty} \mathbb{E}_{}[W(\tau _n^{\ast} )] \)? What is \(\lim_{n \to \infty} \frac{1}{n} \log Z_n(\beta )\) and the \(\sigma ^2\) in \(\frac{1}{\sqrt{n} } (\log Z_n(\beta ) - \mathbb{E}_{}[\log Z_n(\beta )] ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\)?
+
+Finally, what is the structure of \(\tau _n^{\ast} \) (local sense/metric sense)?
 
 \chapter{Other Random Graph Models}
 \section{Exponential Random Graph}
@@ -187,5 +177,5 @@ Fix some finite subgraphs \(H_1, \dots , H_k\), let
 for \(\beta _1, \dots , \beta _k \in (-\infty , \infty )\). This model is denoted as \(\operatorname{ERGM}(\beta _1, \dots , \beta _k \geq 0) \).
 
 \begin{problem*}[Open problem]
-	CLt for subgraph count in \(\operatorname{ERGM}(\beta _1, \dots , \beta _k \geq 0) \).
+	CLT for subgraph count in \(\operatorname{ERGM}(\beta _1, \dots , \beta _k \geq 0) \).
 \end{problem*}

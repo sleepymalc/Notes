@@ -1,6 +1,6 @@
 \lecture{9}{18 Feb.\ 9:30}{Minimum Spanning Tree in Erdős-Rényi Graph}
 \section{Minimum Spanning Tree}
-Let \(\mathcal{T} _n\) be the set of all spanning trees on \([n]\), with \(\lvert \mathcal{T} _n \rvert = n^{n-2}\) from Cayley's formula.
+Let \(\mathcal{T} _n\) be the set of all spanning trees on \([n]\), with \(\lvert \mathcal{T} _n \rvert = n^{n-2}\) from \hyperref[thm:Cayley-formula]{Cayley's formula}.
 
 \begin{note}
 	All spanning trees \(\tau \in \mathcal{T} _n\) has \((n-1)\) many edges.
@@ -39,7 +39,7 @@ In particular, consider the complete graph \(G_n = K_n\) on \([n]\) nodes. Given
 	\end{itemize}
 \end{theorem}
 \begin{proof}
-	Consider the \hyperref[prb:MST]{MST} \(\tau _n^{\ast} \) created by the Kruskal's algorithm. Focus on the case of \(d = 1\) such that \(F(x) = x\) for all \(0 \leq x \leq 1\). Then, we see that
+	Consider the \hyperref[prb:MST]{MST} \(\tau _n^{\ast} \) found by the Kruskal's algorithm. Focus on the case of \(d = 1\) such that \(F(x) = x\) for all \(0 \leq x \leq 1\). Then, we see that
 	\[
 		W_n
 		= \sum_{e \in \tau _n^{\ast} } \omega _e
@@ -47,42 +47,45 @@ In particular, consider the complete graph \(G_n = K_n\) on \([n]\) nodes. Given
 		= \int_{0}^{1} \sum_{e \in \tau _n^{\ast} } (1 - \mathbbm{1}_{x > \omega _e} ) \,\mathrm{d}x
 		= \int_{0}^{1} \left( n-1 - \sum_{e \in \tau _n^{\ast} } \mathbbm{1}_{\omega _e < x} \right) \,\mathrm{d}x .
 	\]
-	We see that all edges \(\{ e \colon \omega _e \leq x \} \) gives the edge set of \(\operatorname{ER}(n, F(x) = x) \). It's easy to see that \(n - \sum_{\mathcal{C} } \lvert E(\mathcal{C} ) \rvert \) is the total number of components, where the sum is over all components \(\mathcal{C} \). Hence, the above integral is further equal to
+	We see that:
+	\begin{itemize}
+		\item all edges \(e\) with weight \(\omega _e \leq x\) gives the edge set of \(\operatorname{ER}(n, x) \);
+		\item \(n - \sum_{\mathcal{C} \colon \tau \text{ spans } \mathcal{C} } \lvert E(\tau ) \rvert \) is the total number of components.
+	\end{itemize}
+	Hence, by letting \(C_n(x)\) denotes the number of components in \(\operatorname{ER}(n, x) \), we further have
 	\[
 		W_n
-		= \int_{0}^{1} \left( \text{\#Component in } \operatorname{ER}(n, x) - 1 \right) \,\mathrm{d}x
-		= \int_{0}^{1} (K_n(x) - 1) \,\mathrm{d}x ,
+		= \int_{0}^{1} \left( \text{\#components in } \operatorname{ER}(n, x) - 1 \right) \,\mathrm{d}x
+		= \int_{0}^{1} (C_n(x) - 1) \,\mathrm{d}x .
 	\]
-	where \(K_n(x)\) denotes the number of components in \(\operatorname{ER}(n, x) \).
-
 	\begin{note}
-		For general \(F\), we have \(W_n = \int_{0}^{1} (K_n(x) - 1) \,\mathrm{d}F^{-1} (x) \).
+		For general \(F\), we have \(W_n = \int_{0}^{1} (C_n(x) - 1) \,\mathrm{d}F^{-1} (x) \).
 	\end{note}
 
-	Consider decomposing the integral into
+	For some \(A > 1\) chosen later, consider decomposing the integral into
 	\[
 		W_n
-		= \int_{0}^{A \log n / n} K_n(x) \,\mathrm{d}x
+		= \int_{0}^{A \log n / n} C_n(x) \,\mathrm{d}x
 		- \underbrace{\int_{0}^{A \log n / n} 1 \,\mathrm{d}x}_{A \log n / n}
-		+ \int_{A \log n / n}^{1} (K_n(x) - 1) \,\mathrm{d}x
+		+ \int_{A \log n / n}^{1} (C_n(x) - 1) \,\mathrm{d}x .
 	\]
-	for some \(A > 1\), to be chosen. For the last quantity, we see that
+	The last integral can be bounded with \autoref{thm:Erdős-Rényi-connectivity-threshold} as
 	\[
 		\begin{split}
-			\int_{A \log n / n}^{1} (K_n(x) - 1) \,\mathrm{d}x
-			 & = \int_{A \log n / n}^{1} \mathbb{E}_{}[\lvert K_n(x) - 1 \rvert ]  \,\mathrm{d}x                                  \\
+			\int_{A \log n / n}^{1} (C_n(x) - 1) \,\mathrm{d}x
+			 & = \int_{A \log n / n}^{1} \mathbb{E}_{}[\lvert C_n(x) - 1 \rvert ]  \,\mathrm{d}x                                  \\
 			 & \leq \int_{A \log n / n}^{1} n \Pr_{}\left(\operatorname{ER}(n, x) \text{ is not connected} \right)  \,\mathrm{d}x
-			\leq n^{2 - A}
+			\leq n^{2 - A}.
 		\end{split}
 	\]
-	from \autoref{thm:Erdős-Rényi-connectivity-threshold}. Take \(A = 3\), and let \(x = \lambda / n\), the first integral becomes
+	Take \(A = 3\), and let \(x = \lambda / n\), the first integral becomes
 	\[
-		\int_{0}^{3 \log n / n} K_n(x) \,\mathrm{d}x
-		= \int_{0}^{3 \log n} \frac{1}{n} K_n(\lambda / n) \,\mathrm{d}\lambda .
+		\int_{0}^{3 \log n / n} C_n(x) \,\mathrm{d}x
+		= \int_{0}^{3 \log n} \frac{1}{n} C_n(\lambda / n) \,\mathrm{d}\lambda .
 	\]
 	Since we care about the number of components, in this regime (i.e., \(\lambda \in (0, 3 \log n)\)), we know that only one giant component can exist, which doesn't matter since it contributes only \(1 / n\), we're really interested in the number of small components.
 
-	Consider \(K_n(\lambda / n)\) to be the number of components that are trees plus the number of components that are non-trees. The second quantity, in expectation, is bounded by \(O(1+ 1 / n)\). While for the first quantity, we see that
+	Next, consider decomposing \(C_n(\lambda / n)\) into the number of components that are trees plus the number of components that are non-trees. The second quantity, in expectation, is bounded by \(O(1+ 1 / n)\). While for the first quantity, we see that
 	\[
 		\sum_{k=1}^{n} \underbrace{( \text{\#tree-component of size \(k\)} )}_{N_n(k, \lambda )} + O_p(1),
 	\]
@@ -91,7 +94,7 @@ In particular, consider the complete graph \(G_n = K_n\) on \([n]\) nodes. Given
 		W_n
 		= \Theta \left( \frac{\log n}{n} \right) + \sum_{k=1}^{n} \int_{0}^{3 \log n} \frac{1}{n} N_n(k, \lambda ) \,\mathrm{d}\lambda.
 	\]
-	Since
+	From \hyperref[thm:Cayley-formula]{Cayley's formula},
 	\[
 		\mathbb{E}_{}[N_n(k, \lambda )]
 		= k^{k-2} \binom{n}{k} \left( \frac{\lambda}{n} \right) ^{k-1} \left( 1 - \frac{\lambda}{n} \right) ^{k(n-k) + \binom{k}{2} - k + 1},
@@ -138,44 +141,66 @@ In particular, consider the complete graph \(G_n = K_n\) on \([n]\) nodes. Given
 	Give a simple proof with a rate of convergence.
 \end{exercise}
 
-\begin{remark}
-	A related question is the structure of the \hyperref[prb:MST]{MST}.
-\end{remark}
-
 \subsection{Extension}
-Let \(0 < \beta < \infty \). The Gibbs measure on \(\mathcal{T} _n\) is defined as
+One can also consider the Gibbs measure on \(\mathcal{T} _n\): let \(0 < \beta < \infty \), then for \(\tau \in \mathcal{T} _n\), define
 \[
 	\mathbb{P} _{\beta , n}(\tau )
 	= \frac{\exp (-\beta \cdot n \cdot W(\tau ))}{Z_n(\beta )}
 \]
-for \(\tau \in \mathcal{T} _n\) with the partition function \(Z_n(\beta ) = \sum_{\tau \in \mathcal{T} _n} e^{-\beta n W(\tau )}\).
+with the partition function \(Z_n(\beta ) = \sum_{\tau \in \mathcal{T} _n} e^{-\beta n W(\tau )}\).
 
 \begin{intuition}
-	This measure interpolates the uniform spanning tree and the minimum spanning tree.
+	This measure interpolates the uniform spanning tree and the minimum spanning tree:
+	\begin{itemize}
+		\item when \(\beta \to 0\), all \(\tau \in \mathcal{T} _n\) receives the same probability mass, hence sampling from \(\mathbb{P} _{\beta , n}\) gives a uniformly random spanning tree;
+		\item when \(\beta \to \infty \), the difference between \(W(\theta )\) is amplified, hence the \hyperref[prb:MST]{MST} \(\tau ^{\ast} \) with \(W_n\) receives the largest probability mass.
+	\end{itemize}
 \end{intuition}
 
-If we sample \(\tau _n^{\ast} \) from \(\mathbb{P} _{\beta , n}\), what is \(\lim_{n \to \infty} \mathbb{E}_{}[W(\tau _n^{\ast} )] \)? What is \(\lim_{n \to \infty} \frac{1}{n} \log Z_n(\beta )\) and the \(\sigma ^2\) in \(\frac{1}{\sqrt{n} } (\log Z_n(\beta ) - \mathbb{E}_{}[\log Z_n(\beta )] ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\)?
+More questions can be asked in this context:
 
-Finally, what is the structure of \(\tau _n^{\ast} \) (local sense/metric sense)?
+\begin{problem*}
+	If we sample \(\tau _n^{\ast} \) from \(\mathbb{P} _{\beta , n}\),
+	\begin{enumerate}[(a)]
+		\item What is \(\lim_{n \to \infty} \mathbb{E}_{}[W(\tau _n^{\ast} )] \)?
+		\item What is \(\lim_{n \to \infty} \frac{1}{n} \log Z_n(\beta )\) and the \(\sigma ^2\) in \(\frac{1}{\sqrt{n} } (\log Z_n(\beta ) - \mathbb{E}_{}[\log Z_n(\beta )] ) \overset{D}{\to} \mathcal{N} (0, \sigma ^2)\)?
+		\item What is the structure of \(\tau _n^{\ast} \) (local sense/metric sense)?
+	\end{enumerate}
+\end{problem*}
 
 \chapter{Other Random Graph Models}
-\section{Exponential Random Graph}
+We have a thorough discussion on \hyperref[def:Erdős-Rényi-random-graph]{Erdős-Rényi random graph} model. However, as we have seen, the degree distribution is thin-tailed: due to the independent structure of various random variables involved. Real-life networks oftentimes are heavy-tailed, especially the degree distribution. In this chapter, we aim to explore other random graph models that exhibit heavy-tailed behaviors.
+
+\section{Some Proposed Models}
+Let's begin by first looking at a closely related model called exponential random graph model, which, unfortunately, is still thin-tailed. In some sense, it tries to specific the subgraph densities for various subgraphs. Next, we look at the inhomogeneous random graph model, which tries to directly specify the degrees. However, both of the proposals fail to generate heavy-tailed behaviors.
+
+\subsection{Exponential Random Graph}
 Consider \(G \sim \operatorname{ER}(n, p) \) for some \(p \in (0, 1)\). We see that
 \[
 	\Pr_{}\left(G\right)
 	= p^{m} (1 - p)^{\binom{n}{2} - m}
 	= (1 - p)^{\binom{n}{2}} e^{\log \frac{p}{1-p} \cdot m}.
 \]
-Let \(\beta (p) \coloneqq \log (p / (1 - p))\) where \(\beta \colon [0, 1] \to (-\infty , \infty )\). Given \(\beta \), \(\operatorname{ER}(n, p = e^\beta / (1 + e^{\beta })) \) is the same model \(\Pr_{}\left(G\right) \propto e^{\beta \cdot m}\).
 
-Fix some finite subgraphs \(H_1, \dots , H_k\), let
-\[
-	\Pr_{}\left(G\right)
-	\propto \exp (n^2 \left[ \beta _1 \frac{\text{\#\(H_1\) in \(G\)}}{\text{\#\(H_1\) in \(K_n\)}} + \beta _2 \frac{\text{\#\(H_2\) in \(G\)}}{\text{\#\(H_2\) in \(K_n\)}} + \dots  \right] )
-	= \exp (n^2 \left[ \beta _1 t(H_1, G) + \beta _2 t(H_2, G) + \dots  \right] )
-\]
-for \(\beta _1, \dots , \beta _k \in (-\infty , \infty )\). This model is denoted as \(\operatorname{ERGM}(\beta _1, \dots , \beta _k \geq 0) \).
+\begin{notation}
+	Let \(\beta (p) \coloneqq \log (p / (1 - p))\) where \(\beta \colon [0, 1] \to (-\infty , \infty )\).
+\end{notation}
+
+Hence, given \(\beta \), \(\operatorname{ER}(n, p) \) with \(p = e^\beta / (1 + e^{\beta })\), which is the same model \(\Pr_{}\left(G\right) \propto e^{\beta \cdot m}\). This motivates us to define the following random graph model:
+
+\begin{definition}[Exponential random graph]\label{def:exponential-ranom-graph}
+	Fix some finite subgraphs \(H_1, \dots , H_k\) with \(\beta _1, \dots , \beta _k \in (-\infty , \infty )\). Then, the \emph{exponential random graph}, denoted as \(G \sim \operatorname{ERGM}(\beta _1, \dots , \beta _k) \), satisfies
+	\[
+		\Pr_{}\left(G\right)
+		\propto \exp (n^2 \sum_{i=1}^{k} \beta _i \frac{\text{\#\(H_i\) in \(G\)}}{\text{\#\(H_i\) in \(K_n\)}} )
+		= \exp (n^2 \sum_{i=1}^{k} \beta _k t(H_k, G) ).
+	\]
+\end{definition}
+
+\begin{intuition}
+	By specifying the probability \(p(\beta _i)\), \(\operatorname{ER}(n, p(\beta _i)) \) gives a graph with probability \(e^{\beta m}\). Here, we do the similar construction such that by specifying all the desired subgraphs \(H_i\) and \(\beta _i\), \(\operatorname{ERGM}(\beta _1, \dots , \beta _k) \) encourages each \(H_i\) appear with the desired subgraph density according to \(\beta _i\).
+\end{intuition}
 
 \begin{problem*}[Open problem]
-	CLT for subgraph count in \(\operatorname{ERGM}(\beta _1, \dots , \beta _k \geq 0) \).
+	CLT for subgraph count in \(\operatorname{ERGM}(\beta _1, \dots , \beta _k) \).
 \end{problem*}

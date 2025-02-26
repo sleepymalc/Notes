@@ -1,0 +1,185 @@
+\lecture{11}{25 Feb.\ 9:30}{Configuration Model}
+\section{Configuration Model}
+Now, we want to sample a random graph on \(n\) vertices with degree sequence \(d_1, d_2, \dots , d_n\). We first look at the existence theorem.
+
+\begin{theorem}[Erdős-Gallai theorem]\label{thm:Erdős-Gallai}
+	Let \(\ell _n \coloneqq \sum_{i=1}^{n} d_i\) is even and for all \(k = 1, 2, \dots , n\), \(\sum_{i=1}^{n} d_{(i)} \leq k(k-1) + \sum_{i=k+1}^{n} k \land d_{(i)}\), where \(d_{(i)}\)'s are the order statistics of \(d_i\)'s. Then, a graph with degree sequence \((d_1, \dots , d_n)\) exists if and only if the above holds.
+\end{theorem}
+
+\begin{problem*}
+	How to create a random \(d\)-regular graph?
+\end{problem*}
+\begin{answer}
+	Simply conditioning doesn't work since the probability is exponentially small. On the other hand, random adjacency matrix \(A = (\mathbbm{1}_{(i, j) \in E} )_{i, j \in [n]}\) that is symmetric, \(0\)-\(1\) matrices with all diagonals \(0\). This is actually possible by permutation matrix \(P_{\pi } = (\mathbbm{1}_{j = \pi _i} )_{i, j}\) with a permutation \(\pi \colon [n] \to [n]\) with \(i \mapsto \pi _i\). Then, sum of \(d\) many i.i.d.\ permutation matrices will be a random adjacency matrix for \(d\)-regular graph with positive probability that is bounded below. Hence, conditioning works here.
+\end{answer}
+
+Finally, the configuration method. Given a degree sequence \((d_1, \dots , d_n)\) satisfying the requirements. Next, consider attaching \(d_i\) ``half-edges'' of the form \((i, a)\) for vertex \(i\) with \(1 \leq a \leq d_i\). By choosing a random matching between all the half edges, we're done. More specifically, if \((i, a)\) and \((j, b)\) is matched, then we connect \(i\) and \(j\) by an edge.
+
+\begin{note}
+	It's easy to see that the number of possible matchings are \((\ell _n - 1)!!\).
+\end{note}
+
+However, since this will potentially give us a non-simple graph. One can again condition given that the probability is strictly positive. Another way is to fix these self-loops or multi-edges.
+
+\begin{problem*}
+	The latter will causes the resulting graph doesn't satisfy the desired degree sequence.
+\end{problem*}
+
+Consider a multi-graph (i.e., self-loops and multi-edges), let \(x_{ii}\) be the number of self-loops and \(x_{ij}\) be the number of edges between vertices \(i\) and \(j\).
+
+\begin{eg}
+	For a simple graph, \(x_{ii} = 0\) and \(x_{ij} \in \{ 0, 1 \} \).
+\end{eg}
+
+We see that \(\deg (i) = 2 x_{ii} + \sum_{j \neq i} x_{ij} = x_{ii} + \sum_{j=1}^{n} x_{ij}\). Let \(S_n \coloneqq \sum_{i=1}^{n} x_{ii}\) is the total number of self-loops, and \(M_n \coloneqq \sum_{i < j} (x_{ij} - 1) \mathbbm{1}_{x_{ij} \geq 2} \) is the total number of multi-edges.
+
+How to choose the degree sequence? Consider there exists a \(D\) such that
+\[
+	\frac{1}{n}\sum_{i=1}^{n} \delta _{d_i}
+	\overset{\text{w} }{\to} D
+	\iff \sum_{k=0}^{\infty} \left\lvert \frac{1}{n} \lvert \{ i \mid d_i = k \} \rvert - \Pr_{}\left(D = k\right) \right\rvert,
+\]
+where the equivalence is due to the fact that we're considering countable elements.
+
+A deterministic way is that given \(D\) put \(n_k\) many \(k\)'s for \(k \geq 0\) where \(n_k \approx n \cdot \Pr_{}\left(D = k\right) \).
+
+\begin{eg}
+	\(\lceil n \cdot \Pr_{}\left(D \leq k\right) \rceil - \lceil n \cdot \Pr_{}\left(D \leq k-1\right) \rceil\).
+\end{eg}
+
+A random way is that given \(d_i, \dots , d_n \overset{\text{i.i.d.} }{\sim } D\).
+
+We also assume \(\mathbb{E}_{}[D] < \infty \) and \(\frac{1}{n}\sum_{i=1}^{n} d_i \to \mathbb{E}_{}[D] \) as \(n \to \infty \).
+
+Then, \(\ell _n = \sum_{i=1}^{n} d_i \approx n \cdot \mathbb{E}_{}[D] \).
+
+We now compute the probability of getting a specific multi-graph.:
+\[
+	\Pr_{}\left(\operatorname{CM}((d_i)_{i \in [n]}) \text{ gives } (x_{ij} )_{i \leq j} \right)
+	= \frac{1}{(\ell _n - 1) !!} \frac{\prod_{i=1}^{n} d_i !}{\prod_{i=1}^{n} 2^{x_{ii}} \prod_{i \leq j} x_{ij} !},
+\]
+where we note that \(d_i = x_{ii} + \sum_{j} x_{ij}\).
+
+\begin{intuition}
+	If we condition on the fact that the graph \((x_{ij})_{ij}\) needs to be simple, it's clear that
+	\[
+		\Pr_{}\left(\operatorname{CM}((d_i)_{i \in [n]}) \text{ is simple} \right)
+		= \frac{\prod_{i=1}^{n} d_i !}{(\ell _n - 1)!!},
+	\]
+	which is truly uniform.
+\end{intuition}
+
+Next, we want to see what's the probability exactly. First, \(\mathbb{E}_{}[S_n] = \sum_{i=1}^{n} \mathbb{E}_{}[X_{ii}] \), where
+\[
+	X_{ii}
+	= \sum_{1 \leq a < b \leq d_i} \mathbbm{1}_{(i, a) \text{ matched to } (i, b)} .
+\]
+We see that \(\mathbb{E}_{}[X_{ii}] = \frac{d_i (d_i - 1)}{2 (\ell _n - 1)}\), and hence
+\[
+	\mathbb{E}_{}[S_n]
+	= \frac{1}{2 (\ell _n - 1)} \sum_{i=1}^{n} d_i (d_i - 1).
+\]
+If we have second moment convergence as well, then
+\[
+	\mathbb{E}_{}[S_n]
+	\approx \frac{\mathbb{E}_{}[D (D-1)] }{2 \mathbb{E}_{}[D] }.
+\]
+
+Next, consider \(M_n = \sum_{i < j} (x_{ij} - 1) \mathbbm{1}_{x_{ij} \geq 2} \).
+\begin{note}
+	\((x_{ij} - 1) \mathbbm{1}_{x_{ij} \geq 2} \leq (x_{ij} - 1) \frac{x_{ij}}{2}\) with the equality holds if \(x_{ij} \in \{ 0, 1, 2 \} \).
+\end{note}
+Hence,
+\[
+	M_n
+	\leq \frac{1}{2} \sum_{i < j} x_{ij} (x_{ij} - 1)
+\]
+with
+\[
+	\mathbb{E}_{}[M_n]
+	= \frac{1}{2} \sum_{i < j} \sum_{1 \leq a < b \leq d_i} \sum_{1 \leq c \neq f \leq d_j} \frac{1}{(\ell _n - 1) (\ell _n - 3)}
+	= \frac{1}{4} \sum_{i \neq j} \frac{d_j (d_j - 1) d_i (d_i - 1)}{(\ell _n - 1) (\ell _n - 3)}
+	\approx (\mathbb{E}_{}[S_n] )^2.
+\]
+
+\begin{lemma}
+	If \(\mathbb{E}_{}[D^2] < \infty \) and all the assumptions hold., then with \(\nu = \mathbb{E}_{}[D (D-1)] / \mathbb{E}_{}[D] \), as \(n \to \infty \),
+	\[
+		(S_n, M_n)
+		\overset{D}{\to} \operatorname{Pois}(\nu / 2) \otimes \operatorname{Pois}(\nu ^2 / 4).
+	\]
+	In particular, \(\Pr_{}\left(\operatorname{CM}((d_i)_{i \in [n]}) \text{ is simple} \right) \to e^{-\nu / 2 - \nu ^2 / 4}\) as \(n \to \infty \).
+\end{lemma}
+
+Hence, we see that
+\[
+	\frac{\prod_{i=1}^{n} d_i}{(\ell _n - 1)!!} \cdot \lvert \{ \text{simple graphs with degree sequence } (d_1, \dots , d_n) \} \rvert
+	= \Pr_{}\left(\operatorname{CM}((d_i)_{i \in [n]}) \text{ is simple} \right)
+	\approx e^{-\nu / 2 - \nu ^2 / 4},
+\]
+which implies the number of simple graphs with degree sequence \((d_i)_{i \in [n]}\) is
+\[
+	e^{-\nu / 2 - \nu ^2 / 4} \cdot \frac{(\ell _n - 1)!!}{\prod_{i=1}^{n} d_i}(1 + o(1)).
+\]
+
+\begin{note}
+	If \(\Pr_{}\left(B\right) \to 1\) (or equivalently, \(\Pr_{}\left(B^{c} \right) \to 0\)), then
+	\[
+		\Pr_{}\left(B \mid A\right)
+		= 1 - \Pr_{}\left(B^{c} \mid A\right)
+		= 1 - \frac{\Pr_{}\left(B^{c} \cap A\right) }{\Pr_{}\left(A\right) }
+		= 1 - O(\Pr_{}\left(B^{c} \right) )
+		\to 1.
+	\]
+	Hence, for \(A\) being hte even of simple graphs, it's okay to prove what we have shown.
+\end{note}
+
+\subsection{Erased Configuration Model}
+Remove self-loops and keep only \(1\) of multiple edges. That is, \(x_{ii} \mapsto 0 \eqqcolon \widetilde{x} _{ii}\), and \(x_{ij} \mapsto x_{ij} \land 1 \eqqcolon \widetilde{x} _{ij}\). Then,
+\[
+	d_i
+	= x_{ii} + \sum_{j=1}^{n} x_{ij}
+	\mapsto \widetilde{d} _i
+	= \sum_{j=1}^{n} x_{ij} \land 1
+\]
+
+\begin{problem*}
+	Without the second moment convergence assumption, can we show
+	\[
+		\sum_{k=0}^{\infty} \left\lvert \frac{1}{n}\lvert \{ i \mid \widetilde{d} _i = k \} \rvert - \Pr_{}\left(D = k\right) \right\rvert
+		\to 0?
+	\]
+\end{problem*}
+
+\begin{lemma}
+	The above is actually true!
+\end{lemma}
+\begin{proof}
+	\(0 \leq d_i - \widetilde{d} _i \leq 2 x_{ii} + \sum_{j \neq i} (x_{ij} - 1) \mathbbm{1}_{x_{ij} \geq 2} \), and hence
+	\[
+		\sum_{i=1}^{n} \lvert d_i - \widetilde{d} _i \rvert
+		\leq \sum_{i=1}^{n} 2 x_{ii} + \sum_{i=1}^{n} \sum_{j \neq i} (x_{ij} - 1) \mathbbm{1}_{x_{ij} \geq 2}
+		= 2(S_n + M_n).
+	\]
+	One can also check that
+	\[
+		\sum_{k=0}^{\infty} \left\lvert \frac{1}{n}\lvert \{ i \mid \widetilde{d} _i = k \} \rvert - \Pr_{}\left(D = k\right) \right\rvert
+		\leq \frac{1}{n} \sum_{i=1}^{n} (d_i - \widetilde{d} _i)
+		\leq \frac{2}{n} (S_n + M_n).
+	\]
+	We have
+	\[
+		\frac{1}{n} \mathbb{E}_{}[S_n]
+		= \frac{\sum_{i=1}^{n} d_i (d_i - 1)}{2n(\ell _n - 1)}
+		\leq \frac{d_{\max } \ell _n}{n \ell _n}
+		\leq \frac{d_{\max }}{n}
+		\to 0
+	\]
+	under the assumptions.
+
+	\begin{exercise}
+		If \(X_i, \dots , X_n \overset{\text{i.i.d.} }{\sim } X\) and \(\mathbb{E}_{}[X] < \infty \), then \(\max \lvert X \rvert / n \overset{p}{\to} 0\) as \(n \to \infty \).
+	\end{exercise}
+
+	One can also control \(\mathbb{E}_{}[M_n] / n\) by a careful cut-off argument and show that it also converges to \(0\) as \(n \to \infty \), hence \(\mathbb{E}_{}[S_n + M_n] / n \to 0\).
+\end{proof}

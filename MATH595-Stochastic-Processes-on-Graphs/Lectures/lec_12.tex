@@ -1,0 +1,173 @@
+\lecture{12}{27 Feb.\ 9:30}{}
+\begin{prev}
+	\begin{enumerate}[(a)]
+		\item \(D_n \sim \frac{1}{n} \sum_{i=1}^{n} \delta _{d_i} \overset{D}{\to} \alpha (D)\)
+		\item \(\frac{1}{n}\sum_{i=1}^{n} d_i = \ell _n / n = \mathbb{E}_{}[D_n] \to \mathbb{E}_{}[D] \).
+		\item \(\frac{1}{n} \sum_{i=1}^{n} d_i^2 = \mathbb{E}_{}[D_n^2] \to \mathbb{E}_{}[D^2] \).
+	\end{enumerate}
+\end{prev}
+
+Under all assumptions,
+\[
+	\Pr_{}\left(\operatorname{CM}(d) \text{ is simple} \right)
+	= \Pr_{}\left(\text{no self-loops \& no multiple edges} \right)
+	\to \exp (-\nu / 2 - \nu ^2 / 4)
+\]
+where \(\nu = \mathbb{E}_{}[D (D-1)] / \mathbb{E}_{}[D] \).
+
+\begin{intuition}
+	Say \(D \in \{ 0, 1, 2, \dots  \} \) is a random variable. The \emph{size-biased} transform \(\hat{D} \) of \(D\) is defined as
+	\[
+		\Pr_{}\left(\hat{D} = k\right)
+		= \frac{k \cdot \Pr_{}\left(D = k\right) }{\mathbb{E}_{}[D] },\quad k = 0, 1, \dots.
+	\]
+	We see that
+	\[
+		\mathbb{E}_{}[\hat{D} - 1 ]
+		= \sum_{k=0}^{\infty} (k-1) \cdot k \cdot \frac{\Pr_{}\left(D = k\right) }{\mathbb{E}_{}[D] }
+		= \frac{\mathbb{E}_{}[D (D-1)] }{\mathbb{E}_{}[D] }.
+	\]
+\end{intuition}
+
+\begin{remark}
+	If \(D \sim \operatorname{Pois}(\lambda ) \), then \(\hat{D} - 1 \sim \operatorname{Pois}(\lambda ) \).
+\end{remark}
+\begin{explanation}
+	We see that for all \(k \geq 0 \), we have
+	\[
+		\Pr_{}\left(\hat{D} - 1 = k\right)
+		= \Pr_{}\left(\hat{D} = k + 1\right)
+		= \frac{(k+1)}{\lambda } \frac{e^{-\lambda }\lambda ^{k+1}}{(k+1)!}
+		= e^{-\lambda } \frac{\lambda ^k}{k!}.
+	\]
+\end{explanation}
+
+\begin{exercise}
+	If \(D \in \{ 0, 1, \dots  \} \) and \(D \overset{D}{=} \hat{D} - 1\), then \(D\) must be \(\operatorname{Pois}(\lambda ) \) for some \(\lambda > 0\).
+\end{exercise}
+
+Let \(D_1, \dots , D_n\) all i.i.d.\ from some distribution be the degree sequence.
+\begin{exercise}
+	We see that:
+	\begin{itemize}
+		\item Choose a random node and observe its degree. We will see the \(D_i\) distribution.
+		\item Choose a half-edge uniformly at random and observe the degree of the corresponding node. We will see \(\hat{D} \) distribution instead.
+	\end{itemize}
+\end{exercise}
+\begin{answer}
+	The number of degree \(k\) nodes is roughly \(n \cdot \Pr_{}\left(D = k\right) \). Hence, \(\Pr_{}\left(\text{observe degree }k  \right) = \frac{k \cdot n \cdot \Pr_{}\left(D = k\right) }{\sum_{i=1}^{n} D_i} \approx \frac{k \cdot \Pr_{}\left(D = k\right) }{\mathbb{E}_{}[D] }\).
+\end{answer}
+
+\begin{remark}[Branching process]
+	Say we choose one of the random node. Then it will have \(D\) children. Now, choose one of its random child, its new degree will be \(\hat{D} - 1\). Hence, we get \(\operatorname{BP}(D) \) at the root and \(\operatorname{BP}(\hat{D} - 1) \) for everything else.
+
+	One can check that this exploration tree will extinct with probability \(1\) if and only if \(\mathbb{E}_{}[\hat{D} - 1] \leq 1\).
+\end{remark}
+
+\begin{theorem}
+	For the configuration model under all assumptions, we have
+	\begin{enumerate}[(a)]
+		\item \(\frac{1}{n}\lvert \mathcal{C} _{\max } \rvert \to 0\) almost surely if \(\nu = \mathbb{E}_{}[D (D-1)] / \mathbb{E}_{}[D] \leq 1\).
+		\item If \(\nu > 1\), then \(\frac{1}{n} \lvert \mathcal{C} _{\max } \rvert \to \Pr_{}\left(\text{root survive in the \(2\)-step branching process} \right) \).
+	\end{enumerate}
+\end{theorem}
+
+\begin{exercise}
+	If \(\mathbb{E}_{}[\hat{D} ^2] < \infty \) or \(\mathbb{E}_{}[D^3] < \infty \), then the universality holds at \(\nu = 1\) (all clusters have size \(n^{2 / 3}\)).
+\end{exercise}
+
+\begin{eg}
+	We can also count the number of triangles. Let
+	\[
+		N_{\triangle }
+		= \sum_{1 \leq i < j < k \leq n} \mathbbm{1}_{(i, j) , (j, k), (k, i) \in E},
+	\]
+	with
+	\[
+		\mathbb{E}_{}[N_{\triangle }]
+		\approx \frac{n^3}{6} \cdot \mathbb{E}_{}\left[\frac{D_1 D_2}{n \mathbb{E}_{}[D] } \cdot \frac{(D_1 - 1) D_3}{n \mathbb{E}_{}[D] } \cdot \frac{(D_2 - 1) (D_3 - 1)}{n \mathbb{E}_{}[D] }\right]
+		\approx \frac{1}{6} \left( \frac{\mathbb{E}_{}[D (D-1)] }{\mathbb{E}_{}[D] } \right) ^3
+		= \frac{\nu ^3}{6}.
+	\]
+\end{eg}
+
+\begin{exercise}
+	\(N_{\triangle } \overset{D}{\to} \operatorname{Pois}(\nu ^3 / 6) \) as \(n \to \infty \).
+\end{exercise}
+
+Under (a) + (b), erase the self-loops and keep only one edge (out of many multiple edges).
+
+\begin{lemma}
+	The empirical degree distribution \((\hat{d} _i)_{i=1}^n \overset{D}{\to} D\).
+\end{lemma}
+
+Fix \(D\), and take \(d_1, \dots , d_n\). Let \(\Pr_{}\left(D \geq k\right) = k^{-(\tau - 1)} L(k)\) as \(k \to \infty \) where \(L\) is a slowly varying function such that \(L(a k) / L(k) \to 1\) as \(k \to \infty \) for all \(a > 0\). Then,
+\[
+	\Pr_{}\left(D=k\right)
+	\approx \frac{1}{k^{\tau }}
+\]
+as \(k \to \infty \).
+
+\begin{itemize}
+	\item If \(\tau \in (2, \infty )\), then \(\mathbb{E}_{}[D] = \sum_{i=1}^{\infty} k 1 / k^{\tau } < \infty \).
+	\item If \(\tau \in (3, \infty )\), then \(\mathbb{E}_{}[D^2] < \infty \).
+	\item If \(\tau \in (2, 3)\), then \(\mathbb{E}_{}[D] < \infty \) but \(\mathbb{E}_{}[D^2] \) diverges to \(\infty \).
+\end{itemize}
+
+Let \(d_{\max }^{(n)} \coloneqq \max _{i \in [n]} d_i \approx \overline{F} ^{-1} (1 / n)\) if \(\overline{F} (x) = \Pr_{}\left(D \geq x\right) \).
+
+A heuristic argument is that
+\[
+	\Pr_{}\left(d_{\max }^{(n)} \leq \overline{F} ^{-1} (1 / n)\right)
+	= \Pr_{}\left(d_1 \leq \overline{F} ^{-1} (1 / n)\right) ^n
+	= \left( 1 - \overline{F} (\overline{F} ^{-1} (1 / n)) \right) ^n
+	= \left( 1 - 1 / n \right) ^n
+	\approx e^{-1}.
+\]
+When \(\tau \in (2, 3)\), \(d_{\max }^{(n)} = n^{\frac{1}{\tau - 1}} \gg \sqrt{n} \).
+
+\begin{note}
+	\(\lvert \{ i \mid d_i \geq \sqrt{n} \} \rvert \sim \operatorname{Bin}(n, \overline{F} (\sqrt{n} )) = \Theta (n^{1 - \frac{\tau - 1}{2}}) = o(n)\) where \(\overline{f} (\sqrt{n} ) = 1 / n^{\frac{\tau -1}{2}}\).
+\end{note}
+
+\begin{intuition}
+	Since we're assuming \(\mathbb{E}_{}[D] < \infty \), the behavior is not dominated by \(d_{\max }^{(n)}\). Hence, the above argument works, and the behavior is similar to \(\operatorname{ER}(n, p) \).
+\end{intuition}
+
+However, what if \(\mathbb{E}_{}[D] \) also diverges? That is, \(\mathbb{E}_{}[D] = \infty \) with \(\tau \in (1, 2)\), where \(\Pr_{}\left(D = k\right) \approx 1 / k^{\tau }\) as \(k \to \infty \).
+\begin{itemize}
+	\item \(\ell _n = \sum_{i=1}^{n} (d_i \land n)\), and hence \(d_{\max }^{(n)} \approx n^{\frac{1}{\tau - 1}} \geq n\). With some heuristic argument, since \(\ell _n = \sum_{i=1}^{n} d_i \approx n^{\frac{1}{\tau -1}}\), from extremal value theory,
+	      \[
+		      \frac{1}{n^{\frac{1}{\tau -1}}} \cdot d_{(1)}
+		      \geq d_{(1)}
+		      \geq d_{(2)}
+		      \geq \dots
+		      \overset{D}{\to} (\xi _1 > \xi _2 > \dots ) \sim \operatorname{PPP}( )
+	      \]
+	      and \(\frac{\ell _n}{n^{\frac{1}{\tau -1}}} \overset{D}{\to} \sum_{i=1}^{\infty } \xi _i\).
+	\item Hub dominate (no bulk influence).
+	\item
+	      \[
+		      \left( \frac{d_{(1)}}{\ell _n}, \dots , \frac{d_{(n)}}{\ell _n} \right)
+		      \overset{D}{\to} \left( \frac{\xi _1}{\sum_{i=1}^{n} \xi _i} , \dots , \frac{\xi _n}{\sum_{i=1}^{n} \xi _i}\right)
+	      \]
+\end{itemize}
+
+\begin{theorem}
+	The degree of a typical node has a limit given by the number of non-zero values in \(\operatorname{Multinomial}(D, (\xi _1 / \sum_{i=1}^{n} \xi _i, \xi _n / \sum_{i=1}^{n} \xi _i)) \).
+\end{theorem}
+
+\subsection{Preferential Attachment Model}
+At each time \(t\), for \(v = v_1, \dots , v_{t-1}\), \(\Pr_{t}\left(v_t \to v\right) = \deg _{t-1}(v) / \sum_{i=1}^{t-1} \deg _{t-1} (v_i) = \deg _{t-1}(v) / 2(t-1)\) as \(t \to \infty \).
+
+\begin{note}
+	We can also consider \(\Pr_{t}\left(v_t \to v\right) = f(\deg _{t-1} (v)) / \sum_{i=1}^{t-1} f(\deg _{t-1}(v_i))\).
+\end{note}
+
+\begin{theorem}
+	As \(n \to \infty \), with \(q_k \approx 1 / k^3\) as \(k \to \infty \),
+	\[
+		\left( \frac{1}{t} \lvert \{ v \mid \deg _t(v) = k \} \rvert  \right) _{k \geq 0}
+		\overset{D \text{ in } p}{\to} (q_k)_{k\geq 0}.
+	\]
+\end{theorem}

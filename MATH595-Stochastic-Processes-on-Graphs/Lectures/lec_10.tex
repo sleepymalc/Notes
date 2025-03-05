@@ -3,7 +3,7 @@
 The next model we will be looking at is the so-called \hyperref[def:inhomogeneous-random-graph]{inhomogeneous random graph}. We first state its simplest form and abstract from it along the way.
 
 \begin{definition}[Inhomogeneous random graph]\label{def:inhomogeneous-random-graph}
-	The \emph{inhomogeneous random graph} \(G = (V_n, E_n)\) is defined with \(V_n = [n]\), and \(\omega _{ij} = \mathbbm{1}_{(i, j) \in E_n} \overset{\text{ind} }{\sim } \operatorname{Ber}(p_{ij}) \) for some \(p_{ij} > 0\) for all \(i < j\).
+	The \emph{inhomogeneous random graph} \(\operatorname{IRG}(n, (p_{ij})_{i, j \in V})\) is defined with \(V = [n]\) and \(\omega _{ij} = \mathbbm{1}_{(i, j) \in E} \overset{\text{ind.} }{\sim } \operatorname{Ber}(p_{ij}) \) for some \(p_{ij} > 0\) for all \(i < j\).
 \end{definition}
 
 We see that it is just like \(\operatorname{ER}(n, p) \), but now we have different \(p = p_{ij} \) for every pair \((i, j) \in V \times V\).
@@ -17,23 +17,19 @@ We see that it is just like \(\operatorname{ER}(n, p) \), but now we have differ
 	\]
 \end{prev}
 
-\begin{note}
-	We have \(d_{\mathrm{TV} }(\operatorname{Pois}(\lambda ) , \operatorname{Pois}(\lambda ^{\prime} ) ) \leq \lvert \lambda - \lambda ^{\prime} \rvert \).
-\end{note}
+By some calculation, we have \(d_{\mathrm{TV} }(\operatorname{Pois}(\lambda ) , \operatorname{Pois}(\lambda ^{\prime} ) ) \leq \lvert \lambda - \lambda ^{\prime} \rvert \). Hence, we want \(\max _{i, j} p_{ij} \ll 1\). To have bounded degree, or at least have finite mean of every \(\operatorname{Pois}(\lambda _i) \), we also want \(\sum_{i, j} p_{ij} < \infty \).
 
-Hence, we want \(\max _{i, j} p_{ij} \ll 1\). To have bounded degree, or at least have finite mean of every \(\operatorname{Pois}(\lambda _i) \), we also want \(\sum_{i, j} p_{ij} < \infty \).
-
-Consider using a kernel. Let \(i \in [n] \mapsto x_i \in S\), where \(x_i\) is called a \emph{type}.
+To choose \(p_{ij}\), consider using a \emph{kernel} \(\kappa (\cdot , \cdot )\), which gives the probability between two nodes of specified \emph{types}: specifically, let \(i \in [n] \mapsto x_i \in S\), where \(x_i\) is called a type.
 
 \begin{eg}
-	\(S = [0, 1]\) or \(\mathbb{R} ^+\).
+	\(S = [0, 1]\) or \(\mathbb{R} ^+\), i.e., types can be \(0.02\), \(784329\), etc.
 \end{eg}
 
-And we let \(p_{ij} \approx \kappa _n(x_i, x_j) / n\), where \(\kappa _n \colon S \times S \to [0, \infty )\) is a symmetric kernel. We assume that \((S, \mu _n, \kappa _n)\) satisfies:
+Now, let \(p_{ij} \approx \kappa _n(x_i, x_j) / n\), where \(\kappa _n \colon S \times S \to [0, \infty )\) is a symmetric kernel. Define the empirical distribution of types as \(\mu _n = \frac{1}{n} \sum_{i=1}^{n} \delta _{x_i} \), then, we assume that \((S, \mu _n, \kappa _n)\) satisfies the following.
 \begin{itemize}
-	\item The discrete measure on the type converges, i.e., \(\mu _n = \frac{1}{n} \sum_{i=1}^{n} \delta _{x_i} \overset{D}{\to} \mu \) on \(S\) as \(n \to \infty \). Furthermore, \(\frac{1}{n} \sum_{i=1}^{n} x_i \to \int x \mu (\mathrm{d} x)\).
-	\item \(\kappa _n\) is \emph{graphical} on \(S\) with a limiting kernel \(\kappa \) if
-	      \begin{enumerate}
+	\item The discrete measure on the type converges, i.e., \(\mu _n \overset{D}{\to} \mu \) on \(S\) as \(n \to \infty \). Furthermore, \(\frac{1}{n} \sum_{i=1}^{n} x_i \to \int x \mu (\mathrm{d} x)\).
+	\item \(\kappa _n\) is \emph{graphical} on \(S\) with a limiting kernel \(\kappa \), i.e.,
+	      \begin{enumerate}[(a)]
 		      \item \(\kappa \) is a continuous in both arguments.
 		      \item \(\kappa _n(a_n, b_n) \to \kappa (a, b)\) \(\mu \times \mu \)-almost surely as \(n \to \infty \) when \(a_n \to a\) and \(b_n \to b\).
 		      \item \(\frac{1}{n} \sum_{j} \kappa _n(x, x_j) \to \int _y \kappa (x, y) \mu (\mathrm{d} y) \eqqcolon \kappa (x, \cdot ) \) is well-defined \(\mu \)-almost everywhere. Moreover, \(\frac{1}{n} \sum_{i < j} \kappa _n(x_i, x_j) \to \frac{1}{2} \iint \kappa (x, y) \mu (\mathrm{d} x) \mu (\mathrm{d} y) < \infty \).
@@ -41,7 +37,7 @@ And we let \(p_{ij} \approx \kappa _n(x_i, x_j) / n\), where \(\kappa _n \colon 
 \end{itemize}
 
 \begin{eg}[Single type]
-	Consider only one type exists, say \(S = \{ 1 \} \). Then \(\mu _n = \delta _1\) and \(\kappa _n(1, 1) = \lambda \). Then we get back \(\operatorname{ER}(n, \lambda / n) \).
+	Consider only one type exists, say \(S = \{ 1 \} \). Then \(\mu _n = \delta _1\) and \(\kappa _n(1, 1) = \lambda \). This gives back \(\operatorname{ER}(n, \lambda / n) \).
 \end{eg}
 
 To make sure that \(p_{ij} < 1\), we consider the following different (basically equivalent) models:

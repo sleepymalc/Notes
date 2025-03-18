@@ -1,0 +1,151 @@
+\lecture{16}{13 Mar.\ 9:30}{Random Recursive Tree/Uniform Attachment Model}
+\begin{definition}[Random recursive tree]\label{def:random-recursive-tree}
+	The \emph{random recursive tree} (RRT) is a model such that given the tree \(\mathcal{T} _{n-1}\) at time \(n-1\), choose \(v_n \sim \mathcal{U} (V_{n-1})\) and connect a new node \(n \to v_n\).
+\end{definition}
+
+\begin{note}
+	We see that for \hyperref[def:random-recursive-tree]{random recursive tree}, we have \(V_1 = [1], \dots , V_n = [n]\).
+\end{note}
+
+\begin{definition}[Uniform attachment model]\label{def:uniform-attachment-model}
+	The \emph{uniform attachment model}, denoted as \(\operatorname{UA}_n(m) \) is a model such that at time \(n\), a new vertex \(n\) has \(m \geq 2\) many out-going edges such that the end points are chosen from \(\mathcal{U} ([n-1])\) independently.
+
+	Equivalently, create \hyperref[def:random-recursive-tree]{random recursive tree} up to time \(m \cdot n\) such that nodes \(\{ m(k-1)+1, m(k-1)+2, \dots , mk \} \) are merged to create a vertex \(k^{\prime} \coloneqq (k)\) for \(k = 1, \dots , n\).
+\end{definition}
+
+This is the limit of the \hyperref[def:preferential-attachment-model]{preferential attachment model}, \(\operatorname{PA}(m, \delta ) \), as \(\delta \to \infty \) since
+\[
+	\lim_{\delta \to \infty} \frac{D_t(v) + \delta }{(2 + \delta ) t}
+	= \frac{1}{t}.
+\]
+\begin{prev}
+	Recall that \(D_t(1) \approx t^{\frac{1}{2 + \delta }}\).
+\end{prev}
+
+Consider \(\operatorname{RRT} = \operatorname{UA}(1) \), and we have
+\[
+	D_n(1)
+	= \sum_{v=2}^{n} \mathbbm{1}_{v \to 1},
+\]
+where \(\mathbbm{1}_{v \to 1} \sim \operatorname{Ber}(1 / (v-1)) \). Hence,
+\[
+	\mathbb{E}_{}[D_n(1)]
+	= \sum_{v=2}^{n} \frac{1}{v-1}
+	\approx \log n,
+\]
+also, from the \hyperref[thm:Stein-Chen-method]{Stein-Chen method},
+\[
+	d_{\mathrm{TV} }\left( D_n(1), \operatorname{Pois}\left( \sum_{k=1}^{n-1} \frac{1}{k} \right) \right)
+	\leq \min (1, 1 / \lambda _n) \sum_{k=1}^{n-1} \left( \frac{1}{k} \right) ^2
+	\leq \frac{c}{\log n} \to 0
+\]
+
+\begin{lemma}
+	Given a fixed \(k\), as \(n \to \infty \), we have
+	\[
+		d_{\mathrm{TV} }\left( (D_n(1), \dots , D_n(k)) , \bigotimes_{i=1}^{k} \operatorname{Pois}(\log n)  \right)
+		\to 0.
+	\]
+	In particular, as \(n \to \infty \),
+	\[
+		\left( \frac{D_n(i) - \log n}{\sqrt{\log n} } \right) _{i \in [n]}
+		\overset{D}{\to} \mathcal{N} _k(0, I_k)
+	\]
+\end{lemma}
+
+\begin{remark}
+	For any constant \(m\), the same calculation goes through for \(\operatorname{UA}_n(m) \). But since \(m\) is a constant, as \(n \to \infty \), the above still holds.
+\end{remark}
+
+Now, we want to understand the typical degree distribution for a uniformly chosen random node \(I_n \sim \mathcal{U} ([n])\) at time \(n\). Consider \(m = 1\) again, then
+\[
+	D_n(I_n)
+	\overset{D}{=} \sum_{v=I_n + 1}^{n} \mathbbm{1}_{v \to I_n} + 1.
+\]
+From the above lemma, let \(u \sim \mathcal{U} (0, 1)\), we have \(I_n \overset{D}{\approx } \lceil n u \rceil \), hence
+\[
+	\sum_{v=I_n + 1}^{n} \mathbbm{1}_{v \to I_n} \mathbbm{1}_{v \to I_n}
+	\sim \operatorname{Pois}(\log n / I_n)
+	\overset{D}{\approx } \operatorname{Pois}(\log 1 / u).
+\]
+Hence, for \(k \geq 0\),
+\[
+	\Pr_{}\left(D_n(I_n) = k + 1\right)
+	= \mathbb{E}_{y \sim \operatorname{Exp}(1) }[\underbrace{\Pr_{}(\operatorname{Pois}(y) = k )}_{e^{-y} \cdot y^k / k!}]
+	= \frac{1}{k!} \int_{0}^{\infty} e^{-y} y^k e^{-y} \,\mathrm{d}y
+	= \frac{1}{2^k}.
+\]
+
+\begin{exercise}
+	For \(\operatorname{UA}_n(m) \) for a general \(m > 1\), show that as \(n \to \infty \),
+	\[
+		(\#\text{self-loops} , \#\text{extra multi-edges} )
+		\overset{D}{\to} \operatorname{Pois}(\lambda _1) \otimes \operatorname{Pois}(\lambda _2) .
+	\]
+\end{exercise}
+
+We can also view the model from an embedding viewpoint. Consider embed in a continuous time branching process (CTBP). We know that previously, our time goes like \(0, 1, 2, \dots \). However, since we now know that the corresponding RRT will be a Yule tree.
+
+\begin{figure}[H]
+	\centering
+	\incfig{CTBP}
+	\caption{title}
+	\label{fig:CTBP}
+\end{figure}
+
+This is a RRT with \(\operatorname{Exp}(k) \) intended waiting time for \((k+1)^{\text{th} }\) node. Let \(N_t\) be the number of nodes at time \(t\), then \((e^{-t} N_t)_{t \geq 0}\) is a continuous time martingale.
+
+\begin{note}
+	One can show that \((e^{-t} N_t)_{t \geq 0}\) is a positive martingale and \(e^{-t} N_t \to Z_{\infty } \sim \operatorname{Exp}(1) \) almost surely (or in \(L_1\)) as \(t \to \infty \).
+\end{note}
+
+\begin{lemma}
+	\(\operatorname{YT}(\gamma _n) \overset{D}{=} \operatorname{RRT}_n \) where \(\gamma _n \coloneqq \min \{ t \geq 0 \mid N_t = n \} \).
+\end{lemma}
+
+For large \(t\), heuristically, we have \(N_t \approx e^t \cdot Z_{\infty } \) where \(Z_{\infty } \sim \operatorname{Exp}(1) \). Hence, at time \(t_n = \log n - \log Z_{\infty }\), \(N_{t_n} \approx n\). As for a typical node which has an index \(\lceil n \cdot u \rceil \approx n u\) with \(u \sim \mathcal{U} (0, 1)\), in this case, for
+\[
+	t^{\prime} _n
+	\approx \log \lceil n u \rceil - \log Z_{\infty }
+	= \log n - \log Z_\infty - \log \frac{1}{u}
+	\eqqcolon \log n - \log Z_\infty - \eta
+\]
+where \(\eta \sim \operatorname{Exp}(1) \), we have \(N_{t^{\prime} _n} \approx \lceil n u \rceil \).
+
+\begin{intuition}
+	The intuition is that the size of the tree grows exponentially fast, and if we want to find a uniformly random node, we simply need to look at the time just above \(t_n\) by \(\eta \), i.e., most of the nodes are concentrated at leaves.
+\end{intuition}
+
+The picture of the tree viewed from a typical vertex (as \(n \to \infty \)) is exactly the same as the root vertex \(1\), i.e.,
+\begin{figure}[H]
+	\centering
+	\incfig{CTBP-typical-vertex}
+	\caption{title}
+	\label{fig:CTBP-typical-vertex}
+\end{figure}
+
+Since we want to look at time \(t_n\), and we're starting at time \(t_n - \eta \), we look at the cut-off at time \(\eta \). We have
+\[
+	\Pr_{}\left(\deg (v) \geq 1 + k\right)
+	= \Pr_{}\left(\sum_{i=1}^{k} \eta _i \leq \eta \right)
+	= \mathbb{E}_{}[e^{- \eta _1 - \eta _2 - \dots - \eta _k}]
+	= \left( \mathbb{E}_{}[e^{ac;e_1} ] \right) ^k
+	= \frac{1}{2^k},
+\]
+where \(\eta _i \overset{\text{i.i.d.} }{\sim } \operatorname{Exp}(1) \).
+
+\begin{theorem}
+	The tree rooted at \(v_n \sim \mathcal{U} ([n])\) converges in distribution as the Yule tree stopped at \(\eta \sim \operatorname{Exp}(1) \).
+\end{theorem}
+
+\begin{figure}[H]
+	\centering
+	\incfig{CTBP-ancestor}
+	\caption{}
+	\label{fig:CTBP-ancestor}
+\end{figure}
+
+\begin{itemize}
+	\item Ancestor line, starting from a uniform at random node to the root
+	\item Tree hanging below any node on the line (remove descendant line).
+\end{itemize}

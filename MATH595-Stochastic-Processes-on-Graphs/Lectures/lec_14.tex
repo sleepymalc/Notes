@@ -1,0 +1,139 @@
+\lecture{14}{6 Mar.\ 9:30}{Degree Distribution in Preferential Attachment Model}
+\begin{prev}
+	\(\operatorname{PA}(m = 1, \delta ) \) model. At time \(1\), there's a self loop at vertex \(1\), and for \(i \in [t]\),
+	\[
+		\Pr_{}\left(t + 1 \to i \mid \mathcal{F} _t\right)
+		= \frac{D_i (t) + \delta }{(2 + \delta )t}.
+	\]
+	We have shown that
+	\begin{itemize}
+		\item \(\frac{1}{t^{1 / 2 + \delta }} (D_1(t), D_2(t), \dots , D_k(t)) \overset{\text{a.s.}}{\to} (\hat{\xi} _1, \dots , \hat{\xi} _k)\) for all \(k\) as \(t \to \infty \).
+		\item \(\Pr_{}\left(\max _{k \geq 1} \lvert N_k(t) - \mathbb{E}_{}[N_k(t)] \rvert \geq c \sqrt{t \log t} \right) \leq t^{1 - c^2 / 8} \).
+		\item \(P_k(t) = N_k(t) / t \approx \mathbb{E}_{}[P_k(t)] + O_p(\sqrt{\log t / t} )\) where the last term is uniform in \(k\).
+	\end{itemize}
+\end{prev}
+
+\begin{theorem}
+	For all \(k \geq 1\), \(\mathbb{E}_{}[P_k(t)] \to P_k\) as \(t \to \infty \) where \(P_k = \cdot P_{k-1}\) for \(k \geq 2\) and \(P_1 = \), and \((P_1, P_2, \dots )\) is a pmf.
+\end{theorem}
+
+\subsection{Heuristic Approach}
+Let
+\[
+	P_k(t) = \frac{1}{t} \sum_{i=1}^{t} \mathbbm{1}_{D_i(t) = k} ,
+\]
+hence \(\mathbb{E}_{}[P_k(t)] \) is the probability that a uniform at random chosen node at time \(t\) has degree \(k\). Fix some \(t\), choose a uniform at random node \(\approx t_0 = \lceil t \cdot u \rceil \) for \(u \sim \mathcal{U} (0, 1)\). Let \(t_i\) be the node that is \(i^{\text{th} }\) connected to \(t_0\), and let \(T_i\)'s be the corresponding random variables. We see that for \(x > 1\),
+\[
+	\Pr_{}\left(\frac{T}{t_0} \geq x\right)
+	= \Pr_{}\left(T_1 \geq x \cdot t_0\right)
+	= \prod_{t=t_0 + 1}^{\lceil x \cdot t_0 \rceil } \left( 1 - \frac{1 + \delta }{(2 + \delta ) t} \right)
+	\approx \exp (- \frac{1 + \delta }{2 + \delta } \sum_{t=t_0 + 1}^{\lceil x \cdot t_0 \rceil } \frac{1}{t} )
+	\approx \exp (- \frac{1 + \delta }{2 + \delta } \log x).
+\]
+Equivalently, we may write \(\Pr_{}\left(T_1 / t_0 \geq e^y\right) \approx e^{- \frac{1 + \delta }{2 + \delta } y}\) for \(y > 0\) for large \(t_0\). Hence,
+\[
+	\log T_1 - \log t_0
+	\approx \exp (\frac{1 + \delta }{2 + \delta }).
+\]
+
+\begin{lemma}
+	Consider a node at time \(t_0 \eqqcolon T_{-1 \to 0}\). Let \(T_{k-1 \to k}\)  be the time when the degree of the node changes from \(k-1\) to \(k\). Then, as \(t_0 \to \infty \),
+	\[
+		(\log T_{k-1 \to k} - \log T_{k-2 \to k-1})_{k \geq 2}
+		\overset{D}{\to} \left( \operatorname{Exp} \left( \frac{k-1 + \delta }{2 + \delta } \right) \right) _{k \geq 2}.
+	\]
+\end{lemma}
+
+Denote \(X_{k} \coloneqq \operatorname{Exp} (\frac{k+\delta }{2 + \delta })\), then starting from \(t_0\), at time \(t_0 \cdot \exp (X_1)\), a new vertex is connected, and this goes on with \(t_0 \exp (X_1 + X_2 + \dots )\).
+
+\begin{remark}
+	\(X_i\)'s are independent as long as \(t_0 \to \infty \) as each \(X_i\) converges to the same limit regardless of the starting time.
+\end{remark}
+
+We see that as \(t \approx t_0 / u \approx t_0 e^{- \log u} = t_0 e^{X}\) for \(u \sim \mathcal{U} (0, 1)\) and \(X \sim \operatorname{Exp}(1) \). Hence,
+\[
+	\begin{split}
+		P_k
+		 & \approx \Pr_{}\left(\text{a uniform at random chosen node has degree \(k\) at time \(t\)} \right) \\
+		 & \approx \Pr_{}\left(X_1 + X_2 + \dots + X_{k-1} \leq X < X_1 + \dots + X_k\right).
+	\end{split}
+\]
+Let \(P_{\geq k} \coloneqq \Pr_{}\left(X \geq X_1 + \dots + X_{k-1}\right) \), then
+\[
+	P_{\geq k}
+	= \mathbb{E}_{}[e^{-(X_1 + \dots + X_{k-1})}]
+	= \prod_{i=1}^{k-1} \mathbb{E}_{}[e^{-X_i}]
+	= \prod_{i=1}^{k-1} \frac{\frac{i+\delta }{2 + \delta }}{1 + \frac{i + \delta }{2 + \delta }}.
+	= \prod_{i=1}^{k-1} \frac{i + \delta }{2 + i + 2\delta }.
+\]
+
+\begin{eg}
+	\(P_1 = \Pr_{}\left(X < X_1\right) = \frac{1}{1 + \frac{1 + \delta }{2 + \delta }} = \frac{2 + \delta }{3 + 2\delta }\).
+\end{eg}
+
+\subsection{Martingale Approach}
+Consider \((N_1(t))_{t \geq 0}\) with \(N_1(1) = 0\), and \(N_1(2) = 1\). Then,
+\[
+	\mathbb{E}_{}[N_1(t+1) - N_1(t) \mid \mathcal{F} _t]
+	= 1 - \frac{1 + \delta }{(2 + \delta ) t} N_1(t)
+	\implies \mathbb{E}_{t}[N_1(t+1)]
+	= 1 + \left( 1 - \frac{1+\delta }{2 + \delta } \frac{1}{t} \right) \cdot N_1(t)
+\]
+for all \(t \geq 0\). Hence,
+\[
+	\begin{split}
+		\mathbb{E}_{}[N_1(t+1)]
+		 & = 1 + \left( 1 - \frac{1+\delta }{2 + \delta } \frac{1}{t} \right) + \left( 1 - \frac{1+\delta }{2 + \delta } \frac{1}{t} \right) \left( 1 - \frac{1+\delta }{2 + \delta } \frac{1}{t-1} \right) + \dots \\
+		 & = \sum_{i=0}^{t} \prod_{j=t+1}^{t} \left( 1 - \frac{1 + \delta }{2 + \delta } \frac{1}{j} \right) .
+	\end{split}
+\]
+We then get
+\[
+	\mathbb{E}_{}[P_1(t+1)]
+	= \frac{1}{t+1} \sum_{i=0}^{t} \prod_{j=t+1}^{t} \left( 1 - \frac{1 + \delta }{2 + \delta } \frac{1}{j} \right)
+	\approx \frac{1}{t+1} \sum_{i=1}^{t} \left( \frac{i}{t} \right) ^{\frac{1+\delta }{2 + \delta }}
+	\to \int_{0}^{1} x^{\frac{1+\delta }{2 + \delta }} \,\mathrm{d}x
+	= \frac{1}{1 + \frac{1+\delta }{2 + \delta }}
+	= \frac{2+\delta }{3 + 2\delta }
+\]
+as \(t \to \infty \). Fix \(k \geq 2\), and consider induction on \(k\), we have
+\[
+	\mathbb{E}_{t}[N_k(t+1) - N_k(t)]
+	= 1 \frac{k-1+\delta }{(2 + \delta ) t} N_{k-1}(t) - \frac{k+\delta }{(2 + \delta )t} N_k(t),
+\]
+hence
+\[
+	\begin{split}
+		 & \mathbb{E}_{}[N_k(t+1)]                                                                                                                                                                                                                                                    \\
+		 & = \left( 1 - \frac{k+\delta }{(2 + \delta )t} \right) \mathbb{E}_{}[N_k(t)] + \frac{k-1+\delta }{2+\delta } \mathbb{E}_{}\left[ \frac{N_{k-1}(t)}{t} \right]                                                                                                               \\
+		 & = \frac{k-1+\delta }{2 + \delta } \left[ \mathbb{E}_{}[P_{k-1}(t)] + \left( 1 - \frac{k+\delta }{(2 + \delta )t} \mathbb{E}_{}[P_{k-1} (t-1)] + \dots + \left( 1 - \frac{1}{t} \right) \cdots \left( 1 - \frac{1}{i} \right) \mathbb{E}_{}[P_{k-1} (i+1)] \right)  \right] \\
+		 & = \frac{k-1+\delta }{2 + \delta } \sum_{i=0}^{t} \prod_{j=i+1}^{t} \left( 1 - \frac{k+\delta }{2 + \delta } \frac{1}{j} \mathbb{E}_{}[P_{k-1} (i)] \right) ,
+	\end{split}
+\]
+which gives
+\[
+	\mathbb{E}_{}[P_{k}(t+1)]
+	= \frac{k-1+\delta }{2 + \delta } \frac{1}{t+1} \sum_{i=0}^{t} \left( \frac{i}{t} \right) ^{\frac{k+\delta }{2 + \delta }} \mathbb{E}_{}[P_{k-1}(i)]
+	\to \frac{k-1+\delta }{2 e \delta } \int_{0}^{1} x^{\frac{k+\delta }{2 + \delta }} \,\mathrm{d}x P_{k-1}
+	= \frac{k-1+\delta }{k+2+2\delta }P_{k-1}
+\]
+as \(t \to \infty \).
+
+\begin{remark}
+	\(P_k = \frac{k-1+\delta }{k + 2 + 2\delta } P_{k-1}\) and \(P_1 = \frac{2+\delta }{2 + 2\delta }\).
+\end{remark}
+
+\begin{lemma}
+	\(\log P_{\geq k} / \log k \to -(2 + \delta )\) as \(k \to \infty \). In particular, \((P_k)_{k \geq 1}\) has \((2 + \delta - \epsilon )^{\text{th} }\) moment finite, but \((2+\delta )^{\text{th} }\) moment infinity.
+\end{lemma}
+\begin{proof}
+	\(P_{\geq k} = \prod_{i=1}^{k-1} \frac{i+\delta }{i + 2 + 2\delta } = \prod_{i=1}^{k-1} \left( 1 + \frac{2+\delta }{i + \delta } \right)^{-1} \approx \exp (- (2 + \delta ) \sum_{i=1}^{k-1} \frac{1}{i + \delta }) \approx k^{- (2 + \delta )}\).
+\end{proof}
+
+\subsection{General}the general \(\operatorname{PA}(m, \delta ) \) can be connected out of \(\operatorname{PA}(1, \delta / m) \) model:
+\[
+	\underbrace{1, 2, \dots , m}_{[1]} , \underbrace{m+1, \dots , 2m}_{[2]}, \underbrace{2m+1, \dots , 3m}_{[3]}, \dots
+\]
+where we contract every block of size \(m\) into one super node.
+
+Also, for \(\operatorname{PA}(1, \delta ) \), as \(\delta \to \infty \), we have the so-called uniform attachment tree, where \(\Pr_{t}\left(t+1 \to i\right) = 1 / t\). This is also called a random recursive tree.

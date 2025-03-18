@@ -1,0 +1,121 @@
+\lecture{15}{11 Mar.\ 9:30}{Mean Field First Passage Percolation}
+Given a connected finite graph \(G = (V, E)\) with \(\omega _e \overset{\text{i.i.d.} }{\sim } \operatorname{Exp}(1) \) for \(e \in E\).
+
+\begin{prev}
+	For \(\omega \sim \operatorname{Exp}(\lambda ) \), then \((\omega \mid \omega > x) \overset{D}{=} x + \operatorname{Exp}(\lambda ) \).
+\end{prev}
+
+Let \(X_{ij} \coloneqq \min _{\Pi \colon i \to j} \sum_{e \in \Pi } \omega _e\) be the ``minimum'' distance between \(i\) and \(j\) in the randomly weighted graph. Also, let \(X_{i \ast} = \max _j X_{ij}\) and \(X_{\ast\ast} = \max _{i, j} X_{ij}\).
+
+\begin{theorem}
+	Focus on \(\operatorname{ER}(n, p_n) \) with \(n p_n \gg \log ^A n\) for some large \(A\), then
+	\begin{itemize}
+		\item \(np_n X_{ij} / \log n \overset{p}{\to} 1\) and \(n p_n \cdot X_{ij} - \log n \overset{D}{\to} ?\).
+		\item \(n p_n X_{i \ast} / \log n \overset{p}{\to} 2\), and \(n p_n X_{i \ast} - 2 \log n \overset{D}{\to} ?\).
+		\item \(n p_n X_{\ast\ast} / \log n \overset{p}{\to} 3\), and \(n p_n X_{\ast\ast} - 3 \log n \overset{D}{\to} ?\).
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	Consider \(X_{1\ast}\) in \(K_n = \operatorname{ER}(n, 1) \). We see that since \(1\) has \(n-1\) many neighbors, \(\min _j \omega _{1j} \sim \frac{1}{n-1} \operatorname{Exp}(1) \). Consider the exploration process from \(1\), and let \(\hat{X} _k\) be the size of the exploration tree at time \(k\). We see that at time \(0\), \(\hat{X} _0 = 1\). Assuming time \(t\) flows in a uniform rate, at \(i\), the vertex \(j\) is revealed when the time further exceeds \(\omega _{ij}\). It's easy to see that the waiting time for \(\hat{X} _1 = 2\) is \(\operatorname{Exp}(n-1) \), and for \(\hat{X} _2 = 3\) is \(\operatorname{Exp}(2 (n-2)) \). In general, the waiting time for \(\hat{X} _{k-1} = k\) to \(\hat{X} _k = k+1\) is \(\operatorname{Exp}(k (n-k)) \).
+
+	Let \(X_{1 \ast}\) be the sum of independent \(\operatorname{Exp}(k (n-k)) \) random variables for \(k = 1, 2, \dots , n-1\). We see that with \(\xi _k \overset{\text{i.i.d.} }{\sim } \operatorname{Exp}(1) \)
+	\[
+		n X_{1 \ast}
+		\overset{D}{=} n \sum_{k=1}^{n-1} \frac{1}{k (n-k)}\cdot \xi _k
+		= n \sum_{k=1}^{n-1} \frac{1}{k (n-k)}(\xi _k - 1) + \sum_{k=1}^{n-1} \underbrace{\frac{n-k+k}{k(n-k)}}_{\frac{1}{k} + \frac{1}{n-k}},
+	\]
+	and hence \(n \mathbb{E}_{}[X_{1 \ast}] = 2 \sum_{k=1}^{n-1} 1 / k \sim 2 \log n\). Moreover,
+	\[
+		\Var_{}[n X_{1 \ast}]
+		= \sum_{k=1}^{n-1} \frac{n^2}{k^2 (n-k)^2}
+		= 2 \sum_{k=1}^{\lfloor n / 2 \rfloor } \frac{n^2}{k^2 (n-k)^2} + o(1)
+		\leq 8 \sum_{k=1}^{\lfloor n / 2 \rfloor } \frac{1}{k^2}
+		\leq \pi ^2.
+	\]
+	Hence, from Chebyshev's inequality, \(n X_{1 \ast} / \log n \overset{p}{\to} 2\) as \(n \to \infty \). Moreover,
+	\[
+		\begin{split}
+			 & n X_{1 \ast} - 2 \log n                                                                                                                                                                                                                                                          \\
+			 & = \sum_{k=1}^{n-1} \frac{n - k + k}{n(n-k)} (\xi _k - 1) + 2 H_{n-1} - 2 \log n                                                                                                                                                                                                  \\
+			 & = \sum_{k=1}^{n-1} \frac{1}{k} (\xi _k - 1) + \sum_{k=1}^{n-1} \frac{1}{n-k} (\xi _k - 1) + 2 (H_{n-1 - \log n})                                                                                                                                                                 \\
+			 & = \sum_{k=1}^{n-1} \frac{1}{k} (\xi _k - 1) + \sum_{k=1}^{n-1} \frac{1}{k} (\xi _{n-k} - 1) + 2 (H_{n-1 - \log n})                                                                                                                                                               \\
+			 & = \sum_{k=1}^{n / 2} \frac{1}{k} (\xi _k - 1) + \underbrace{\sum_{k=n / 2 + 1}^{n - 1} \frac{1}{k} (\xi _k - 1)}_{\to 0} + \sum_{k=1}^{n / 2} \frac{1}{k} (\xi _{n-k} - 1) + \underbrace{\sum_{k=n / 2 + 1}^{n-1} \frac{1}{k} (\xi _{n-k} - 1)}_{\to 0} + 2 (H_{n-1 - \log n}) .
+		\end{split}
+	\]
+	Observe that the remaining terms are independent since they are the first and the second half of \(\xi _i\)'s.
+
+	\begin{claim}
+		\(\sum_{k=1}^{n} \xi _k / k \overset{D}{=} \max _{i \in [n]} \xi _i\).
+	\end{claim}
+	\begin{explanation}
+		Starting from \(0\), the first gap is given by \(\operatorname{Exp}(1) / n\), and the second will be \(\operatorname{Exp}(1) / (n-1)\), and so on. Hence, by summing over all gaps starting from \(0\), it's exactly \(\sum_{k=1}^{n} \xi _k / k\), which is the same as the maximum over all \(\xi _i\)'s.
+	\end{explanation}
+
+	Hence,
+	\[
+		\Pr_{}\left(\max _{i \in [n]} \xi _i - \log n \leq x\right)
+		= \left( \Pr_{}\left(\xi \leq \log n + x \right) \right) ^n
+		= \left( 1 - \frac{1}{n} e^{-x} \right) ^n
+		\to e^{-e^{-x}}.
+	\]
+	We conclude that \(n X_{1 \ast} - 2 \log n \overset{D}{\to} \) sum of two i.i.d.\ Gumbel distributions.
+
+	\begin{exercise}
+		\(\Pr_{}\left(n X_{1 \ast} \geq (2 + \epsilon ) \log n \leq A_{\epsilon } \log ^2 n / n^{\epsilon }\right) \) for all \(\epsilon > 0\) and some constant \(A_{\epsilon }\). As a corollary,
+		\[
+			\Pr_{}\left( X_{\ast\ast} = \max _{i \in [n]} n X_{i \ast} \geq (2 + 1 + \epsilon ) \log n\right)
+			\leq n \frac{A_{\epsilon } \log ^2 n}{n^{1 + \epsilon }}
+			\to 0
+		\]
+		as \(n \to \infty \), hence \(n X_{\ast\ast} / \log n \leq 3 + \epsilon \) with high probability.
+	\end{exercise}
+
+	Now, for \(X_{12}\), we have
+	\[
+		X_{12}
+		\overset{D}{\to} \sum_{k=1}^{U_n} \frac{1}{k (n-k)} \xi _k
+		= \sum_{k=1}^{n-1} \frac{1}{k (n-k)} \xi _k \mathbbm{1}_{k \leq U_n}
+	\]
+	for \(U_n \sim \mathcal{U} ([n-1])\). Hence,
+	\[
+		\mathbb{E}_{}[n X_{12}]
+		= \sum_{k=1}^{n-1} \frac{n}{k (n-k)} \cdot 1 \cdot \frac{n-k}{n-1}
+		= \frac{n}{n-1} H_{n-1}
+		\approx \log n.
+	\]
+	To compute the variance, we can first center \(X_{12}\) by
+	\[
+		X_{12}
+		= \sum_{k=1}^{n-1} \frac{1}{k (n-k)} (\xi _k - 1) \mathbbm{1}_{k \leq U_n} + \sum_{k=1}^{n-1} \frac{1}{k (n-k)} \mathbbm{1}_{k \leq U_n} ,
+	\]
+	and we have \(\Var_{}[n X_{12}] \) is bounded by some constant.
+
+	\begin{note}
+		The first term will disappear since \(\xi _k\) is independent of \(U_n\), and since \(\xi _k - 1\) has mean \(0\), any cross-products will disappear.
+	\end{note}
+
+	One can then check that
+	\[
+		n X_{12} - \log n
+		\cong \underbrace{\sum_{k=1}^{n-1} \frac{1}{k} \xi _k}_{ \max _{i \in [n-1]} \xi _i - \log n} + \underbrace{(H_{U_n - 1} - H_{n - U_n - 1})}_{\log \frac{U_n - 1}{n - U_n - 1} \to \log \frac{U}{1 - U}, U \sim \mathcal{U} (0, 1)}
+		\overset{D}{\to} \operatorname{Gumbel}_1 + \log \frac{U}{1 - U}
+	\]
+
+	\begin{intuition}
+
+	\end{intuition}
+\end{proof}
+
+\begin{remark}
+	We can also consider \(\operatorname{ER}(n, p) \), then the number of edges of the exploration process is \(\operatorname{Bin}(k (n-k), p) \), all correlated between each time step \(k\). Hence,
+	\[
+		np X_{1 \ast}
+		= \sum_{k=1}^{n-1} \underbrace{\frac{p k (n-k)}{\operatorname{Bin}(k (n - k) , p) }}_{\frac{p}{p + \frac{\mathcal{N} (0, 1)}{\sqrt{k (n - k) p \dots } }}} \cdot \xi _k \cdot \frac{n}{k (n-k)},
+	\]
+	which is again the sum of two Gumbels.
+\end{remark}
+
+\begin{problem*}[Open problem]
+	Suppose \(n_1, \dots , n_d\) such that \(n_i / n \approx \lambda _i\) for \(i \in [d]\) with \(\sum_{i=1}^{d} \lambda _i = 1\) and \(P = (P_{ij})_{i, j \in [d]}\) be the edge probability matrix. Then, we don't know whether \(n \cdot X_{IJ} / \log n \overset{p}{\to} C(\lambda , P)\) and \(n X_{IJ} - C(\lambda , P) \log n \overset{D}{\to} ?\).
+\end{problem*}
+

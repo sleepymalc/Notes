@@ -1,0 +1,154 @@
+\chapter{Local Convergence}
+\lecture{17}{25 Mar.\ 9:30}{Local Convergence of Random Graphs}
+Given a rooted graph \(G = (V, E)\) with a root \(o \in V\), and we denote it as \((G, o)\). Let the \(r\)-neighborhood (\(r\)-ball) be \(B_r^{(G)}(o) = (V_r(o), E_r(o))\) where
+\[
+	V_r(o)
+	= \{ v \in V \mid d_G(v, o) \leq r \},\quad
+	E_r(o)
+	= \{ (u, v) \in E \mid u, v \in V_r(o) \} .
+\]
+Also, let the boundary \(\partial B_r(o)\) of the \(r\)-ball \(B_r(o)\) be \(B_r(o) \setminus B_{r-1}(o)\).
+
+\begin{note}
+	Isomorphisms between two rooted graphs \((G_1, o_1), (G_2, o_2)\) are some bijection \(\phi \colon V(G_1) \to V(G_2)\) such that \(\phi (o_1) = o_2\) and \((u, v) \in E(G_1)\) if and only if \((\phi (u), \phi (v)) \in E(G_2)\).
+\end{note}
+
+Let \(\mathcal{F} _{\ast} \) be the set of rooted connected, locally finite\footnote{I.e., in any finite distance, the graph is finite.} graphs modulo the isomorphisms. We can define a metric that focuses on the local structure in the following way:
+
+\begin{definition}[Local metric]\label{def:local-metric}
+	Given two rooted graphs \((G_1, o_1), (G_2, o_2)\), let \(R^{\ast} \coloneqq \sup \{ r \geq 0 \mid B_r^{(G_1)}(o_1) \cong B_r^{(G_2)}(o_2) \}\). Then, the \emph{local metric} between them is defined as
+	\[
+		d_{\ast} ((G_1, o_1) , (G_2, o_2))
+		\coloneqq \frac{1}{1 + R^{\ast} }.
+	\]
+\end{definition}
+
+\begin{theorem}
+	\(d_{\ast} \) is an ultra-metric on \(\mathcal{F} _{\ast} \), and \((\mathcal{F} _{\ast} , d_{\ast} )\) is complete and separable.
+\end{theorem}
+\begin{proof}
+	First, to check \(d_{\ast} \) is an ultra-metric, we need to check that:
+	\begin{enumerate}[(i)]
+		\item \(d_{\ast} ((G_1, o_1), (G_2, o_2)) = 0\) if and only if \((G_1, o_1) \cong (G_2, o_2)\). We prove that when \(R^{\ast} = \infty \) implies that \((G_1, o_1) \cong (G_2, o_2)\). Indeed, when \(R^{\ast} = \infty \), for all \(r \in \mathbb{N} \), \(\varphi _r \colon B_r^{(G_1)}(o_1) \to B_r^{(G_2)}(o_2)\) can be defined consistently as \(r\) increases, i.e., we can extend the previous isomorphism by considering \(\partial B_{r+1}^{(G_1)}(o_1) \to \partial B_{r+1}^{(G_2)}(o_2)\). This gives us a consistent family of \(\psi _r\) such that \(\at{\psi _r}{\text{\(s\)-ball} }{} = \psi _s\) for \(s \leq r\). Then, the final map will be \(\psi (v) \coloneqq \sum_{r=0}^{\infty} \mathbbm{1}_{v \in \partial B_r^{(G_1)}(o_1) } \cdot \psi _r(v)\).
+		\item symmetric.
+		\item \(d_{\ast} ((G_1, o_1), (G_2, o_2)) \leq \max (d_{\ast} ((G_1, o_1), (G_3, o_3)), d_{\ast} ((G_2, o_2), (G_3, o_3)))\) for any \((G_3, o_3)\). It's enough to check that \(R^{\ast} ((G_1, o_1), (G_2, o_2)) \geq \min (R^{\ast} (G_1, o_1), (G_3, o_3), R^{\ast} ((G_2, o_2), (G_3, o_3)))\). But then this is obvious from the definition of \(R^{\ast} \).
+	\end{enumerate}
+\end{proof}
+
+\begin{eg}[Ultra-metric]
+	Consider the space of connected, locally finite tree graphs. Then, the usual graph metric is an ultra-metric.
+\end{eg}
+
+Obviously, the \hyperref[def:local-metric]{local metric} only gives us the local structure within finite distance. Nevertheless, since \(d_{\ast} \) is complete and separable, we can define the corresponding probability measure, which gives us a way to sample random rooted graphs.
+
+Given a finite graph \(G = (V, E)\), define
+\[
+	\mu _n
+	\coloneqq \frac{1}{\lvert V \rvert } \sum_{v \in V} \delta _{(G, v)}.
+\]
+We can then talk about the local convergence.
+
+\begin{definition}[Local convergence]\label{def:local-convergence}
+	A sequence of finite graph \(G_n\) \emph{locally converges} to a probability measure \(\mu \) on \((\mathcal{F} _{\ast} , d_{\ast} )\) if \(\mu _n \overset{\text{w} }{\to} \mu \) as \(n \to \infty \).
+\end{definition}
+
+\begin{note}
+	Recall that \(\mu _n \overset{\text{w} }{\to} \mu \) means that for every bounded and continuous function \(h \colon \mathcal{F} _{\ast} \to \mathbb{R} \), \(\mathbb{E}_{\mu _n}[h(\cdot)] \to \mathbb{E}_{\mu }[h(\cdot)] \) as \(n \to \infty \).
+\end{note}
+
+Due to the definition of \(R^{\ast} \) (i.e., \(d_{\ast} \) takes only discrete values), looking at the following suffices.
+
+\begin{claim}
+	In \((\mathcal{F} _{\ast} , d_{\ast} )\), \(\epsilon \)-ball for any \(\epsilon \in (0, 1)\) around a \((H, o_H) \in \mathcal{F} _{\ast} \) is
+	\[
+		\begin{split}
+			 & \{ (G, o_G) \in \mathcal{F} _{\ast} \mid R_{\ast} ((G, o_G), (H, o_H)) > 1 / \epsilon - 1 \}                                              \\
+			 & = \{ (G, o_G) \in \mathcal{F} _{\ast} \mid (G, o_G) \cong (H, o_H)\text{ up to \(r\)-distance where } r = \lceil 1 / \epsilon  \rceil \}.
+		\end{split}
+	\]
+\end{claim}
+
+\begin{theorem}
+	\(G_n\) \hyperref[def:local-convergence]{locally converges} to \(\mu \) on \((F_{\ast} , d_{\ast} )\) if and only if for all \((H, o_H)\), as \(n \to \infty \),
+	\[
+		\frac{1}{\lvert V_n \rvert } \sum_{v \in V_n} \mathbbm{1}_{(G_n, v) \cong (H, o_H)}
+		\to \mu ((H, o_H))
+	\]
+	where \((H, o_H) \in \mathcal{F} _{\ast} \) and \((H, o) = B_r^{(H)}(o)\).
+\end{theorem}
+
+Hence, instead of checking any bounded continuous function, we just need to look at this simple class of functions. Moreover, we don't need to look at all \((H, o_H)\).
+
+\begin{lemma}
+	If a probability measure \(\mu \) is supported on \(\mathcal{H} _{\ast} \subseteq \mathcal{F} _{\ast} \), then to check \hyperref[def:local-convergence]{local convergence}, it's enough to check for \((H, o_H)\) that are finite restriction of graphs from \(\mathcal{H} _{\ast} \).
+\end{lemma}
+
+\begin{note}
+	In the above discussion, the graph sequence is deterministic, and the randomness comes from the randomness of root of \(G_n\).
+\end{note}
+
+\begin{eg}[Torus]
+	Consider the \(d\)-dimensional torus \(\quotient{\mathbb{Z} ^d }{(n \mathbb{Z} )^d} = (\{ [n-1]^d, \dots \} )\). This converges locally to \((\mathbb{Z} ^d, \cdot)\) as \(n \to \infty \).
+\end{eg}
+
+\begin{eg}[Box]
+	Consider the \(d\)-dimensional \(n\)-box \(([n-1]^d, \dots )\), since most of the node will be in the interior, although the boundary is not identified, it still converges locally to \((\mathbb{Z} ^d, \cdot)\) as \(n \to \infty \) since we will never see the boundary as we randomly choose the root.
+\end{eg}
+
+In the above two examples, the limiting distribution is a point mass, i.e., not random. However, this might not always be the case as the following example shows.
+
+\begin{eg}[Tree]
+	Consider the \(d\)-ary tree up to level \(n\), denoted as \(T_{d, n}\). At level \(0\), we have \(1\) node; at level \(1\), we have \(d\) nodes; at level \(2\), we have \(d (d-1)\) nodes. In the final (\(n\)) level, we have \(d(d-1)^{n-1}\) nodes.
+
+	Hence, the total number of nodes is
+	\[
+		1 + d\cdot \frac{(d-1)^n - 1}{d-2}
+		= \frac{d(d-1)^n}{d-2}
+		= \frac{2}{d - 2}.
+	\]
+	Then, a uniformly random node is at level \(n\) with probability \(\frac{d-2}{d-1}\), and at level \(n-k\), it's \((d-2)(d-1)^{-k-1}\). Hence, for a uniformly at random vertex \(v_{\ast} \) at level \(n\) follows \(\operatorname{Geom}(1 - \frac{1}{d-1}) \).
+
+	By looking at the leaf as the root, we see that \(T_{n, d}\) locally converges to \(\mu \) where
+	\[
+		\mu ((T_{\infty , d}, v_k))
+		= (d-2)(d-1)^{-k}
+	\]
+	with \(T_{\infty , d}\) being
+
+
+\end{eg}
+
+\begin{intuition}
+	Basically, the above is because the root is not dominating enough, and the structure actually looks different at different levels.
+\end{intuition}
+
+On \((\mathcal{F} _{\ast} , d_{\ast} )\), tightness follows that if \((d_{G_n}(o_n))_{n \geq 1}\) is uniformly integrable.
+
+\section{Local Convergence for Random Graph}
+
+Let \(G_n\) be a sequence of \emph{random} graph. Now, we can talk about how the local convergence ``converges.'' We say that \(G_n\) converges locally weakly to \(\mu \) on \((\mathcal{F} _{\ast} , d_{\ast} )\) if
+\[
+	\mathbb{E}_{G_n}[\mathbb{E}_{\mu _n}[h(G_n, o_n)] ]
+	\to \mathbb{E}_{\mu }[h(\cdot)]
+\]
+for all bounded and continuous \(h\) on \((\mathcal{F} _{\ast} , d_{\ast} )\). We can also say \(G_n\) converges locally in probability to \(\mu \) if as \(n \to \infty \),
+\[
+	\mathbb{E}_{o_n}[h(G_n, o_n)]
+	\overset{p}{\to} h(G, o)
+\]
+where \((G, o) \sim \mu \).
+
+Moreover, we can also say that \(G_n\) converges locally almost surely to \(\mu \) if as \(n \to \infty \)
+\[
+	\mathbb{E}_{o_n}[h(G_n, o_n)]
+	\overset{\text{a.s.} }{\to} h(G, o)
+\]
+where \((G, o) \sim \mu \).
+
+\begin{eg}
+	For \(G_n \sim \operatorname{ER}(n, \lambda / n) \), we proved that for some finite tree \(\tau \), as \(n \to \infty \),
+	\[
+		\frac{1}{n} \sum_{v=1}^{n} \mathbbm{1}_{B_r^{(G_n)}(v) \cong \tau }
+		\overset{p}{\to} \Pr_{}\left(\operatorname{BP}(\operatorname{Pois}(\lambda ) ) \text{ up to distance \(r\) gives the tree \(\tau\)}  \right).
+	\]
+\end{eg}

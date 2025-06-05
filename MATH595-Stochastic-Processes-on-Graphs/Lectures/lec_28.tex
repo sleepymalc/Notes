@@ -1,0 +1,59 @@
+\lecture{28}{1 May\ 9:30}{}
+\subsection{Not Covered}
+\begin{itemize}
+	\item Geometric random graph
+	\item spatial random graph
+	\item exponential random graph: \(\Pr_{}\left(G\right) \propto \exp (\text{finite linear count of subgraph counts} )\). We note that the subgraph counts are sufficient statistic. This is also called \emph{Grand canonical ensemble}.
+\end{itemize}
+
+Estimation:
+\begin{itemize}
+	\item \(\operatorname{LPAM}(m, \delta ) \): \(\Pr_{}\left(t+1 \to v \mid \mathcal{F} _t \right) = \frac{f(\deg _v(t))}{\sum_{u} f(\deg _u(t))}\). We can use generalized branching process, e.g., C-M-J process.
+	\item Spectral PAM: by looking at \(A_t\), we can look at the eigenvector \(x(t)\) that corresponds to the largest eigenvalue. Then, consider \(\Pr_{}\left(t+1 \to v \mid \mathcal{F} _t \right) \propto f(x_v(t))\), where \(f(x) = x + \delta \).
+	\item PA with delay: consider \(\Pr_{}\left(t+1 \to v \mid \mathcal{F} _t \right) = \frac{f(\deg _v(\operatorname{delay}(t) ))}{\sum_{u} f(\deg _u(\operatorname{delay}(t) ))}\), where \(\operatorname{delay}(t) = t^\theta \cdot \xi _t\) for some \(0 \leq \theta \leq 1\).
+	      \begin{itemize}
+		      \item \(\theta = 0\): microscopic
+		      \item \(\theta \in (0, 1)\): mesoscopic, largest degree changes
+		      \item \(\theta = 1\): macroscopic
+	      \end{itemize}
+	      Again we can consider linear \(f(x)\) such as \(f(x) = x + \delta \). If \(f\) is non-linear, nearly nothing is known.
+	\item If \(\Pr_{}\left(t + 1 \to v \mid \mathcal{F} _t \right) = \frac{f(\deg _v(t))}{\sum_{u} f(\deg _u(t))}\), where \(v \in [\operatorname{delay}(t) , t]\).
+\end{itemize}
+
+Now, looking back at SI model (Monotone), we can also consider the SIS model or the contact process, and also the SIR model. Usually, we understand them by analyzing some martingale/differential equation. For the differential equation, consider a complete graph and \(I_0\) be the initial infected size, \(S_0 = n - I_0\), and \(R_0 =0\).
+
+Typically, with rate \(\lambda / n\) an infected node infects a susceptible node with rate \(0\) and infected node becomes recovered. So, we just consider the process \((I_t, S_t, R_t)\) such that \(I_t + S_t + R_t = n\). We can consider the discrete case \((\hat{I} _k, \hat{S} _k, \hat{R} _k)\) with \(k\) many changes. Then, one can show \(\hat{I} _k + 2 \hat{R} _k \approx k\), hence \(\hat{R} _k = (k - \hat{I} _k) / 2\), \(\hat{S} _k = n - \hat{I} _k - \hat{R} _k = n - k / 2 - \hat{I} _k / 2\). We have
+\[
+	\mathbb{E}_{}[\hat{I} _{k+1} - \hat{I} _k \mid \mathcal{F} _k]
+	= \frac{\frac{\lambda }{n} \cdot \hat{S} _k \cdot \hat{I} _k - \hat{I} _k}{\frac{\lambda }{n} \cdot \hat{S} _k \cdot \hat{I} _k + 1 \cdot \hat{I} _k}
+	= \frac{\lambda \cdot \frac{\hat{S} _k}{n} \cdot \frac{\hat{I} _k}{n} - \frac{\hat{I} _k}{n}}{\lambda \cdot \frac{\hat{S} _k}{n} \cdot \frac{\hat{I} _k}{n} + 1 \cdot \frac{\hat{I} _k}{n}}.
+\]
+Let \(f(\alpha ) = \mathbb{E}_{}[\hat{I} _{\lfloor \alpha n \rfloor } / n] \) for \(\alpha \geq 0\). Then,
+\[
+	f^{\prime} (\alpha )
+	\approx \frac{\lambda (1 - \frac{\lambda }{2} - \frac{1}{2} \cdot f(\alpha )) \cdot f(\alpha ) - f(\alpha )}{\lambda (1 - \frac{\lambda }{2} - \frac{1}{2} \cdot f(\alpha )) \cdot f(\alpha ) + f(\alpha )}
+	= \frac{\lambda (1 - \frac{\lambda }{2} - \frac{1}{2} \cdot f(\alpha )) - 1}{\lambda (1 - \frac{\lambda }{2} - \frac{1}{2} \cdot f(\alpha )) + 1}.
+\]
+
+\begin{eg}[\(d\)-regular tree]
+	Let \(A_t\) be the number of infected nodes. Then,
+	\[
+		\mathbb{E}_{}[\hat{A} _{k+1} - \hat{A} _k \mid \mathcal{F} _k]
+		= (\lambda (d-1) - 1) \hat{A} _k .
+	\]
+	If \(\lambda < \lambda _c \approx \frac{c-1}{d}\), infection set stays bounded.
+
+	On the other hand, consider \(I_0 = \{ r \} \), \(\alpha > 1\), \(M_t \coloneqq \sum_{v \in I_t} \alpha ^{- \dist(r, v)}\), and
+	\[
+		\mathbb{E}_{}\left[\frac{M_{t + \epsilon } - M_t}{\epsilon } \mid \mathcal{F} _t\right]
+		\approx - \left( 1 - \lambda \left( \frac{d-1}{\alpha } + \alpha  \right)  \right) M_t.
+	\]
+	Balancing, when \(\frac{1}{d-1} < \lambda < \frac{1}{2 \sqrt{d - 1} }\), \(A_t \to \infty \) while \(M_t \to 0\), which is different from the mean-filed behavior.
+	\begin{itemize}
+		\item \(\lambda < O(1 / d)\): eventually infection will disappear (\(\log n\))
+		\item \(\lambda > \Theta (1 / \sqrt{d} )\):infection will survive.
+		\item \(1 / d < \lambda < 1 / \sqrt{d} \): infection will disappear after a long time (exponential).
+	\end{itemize}
+\end{eg}
+
+Finally, we haven't talked about combinatorial optimization problem.

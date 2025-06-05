@@ -1,0 +1,225 @@
+\lecture{23}{15 Apr.\ 9:30}{Sherrington-Kirkpatrick Spin Glass Model}
+Let \(G_n = K_n\), and let \(\beta \geq 0\) be the inverse temperature, \(B \geq 0\) be the external field, and \(J_{ij} \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\) be the disorder, and the Hamiltonian
+\[
+	H_n(\sigma )
+	= \frac{\beta }{\sqrt{n} }\sum_{i < j} J_{ij} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i.
+\]
+Hence,
+\[
+	\Pr_{\beta , B, J, n}\left(\sigma \right)
+	= \frac{1}{2^n} \exp (H_n(\sigma )) / Z_n(\beta , B).
+\]
+
+\begin{notation}
+	We let \(\langle \cdot \rangle _{\beta , B}\) be the expectation \(\mathbb{E}_{}[\cdot] \) w.r.t.\ the measure \(\Pr_{\beta , B, n} \).
+\end{notation}
+
+We want to understand the log-partition function \(\log Z_n(\beta , B) / n\), which is a function of \(J_{ij}\)'s, and
+\[
+	Z_n(\beta , B)
+	= \frac{1}{2^n} \sum_{\sigma \in \{ \pm 1 \} ^n} \exp (H_n(\sigma )).
+\]
+
+\begin{lemma}
+	When \(J_{ij}\) follows a distribution with mean \(0\) and variance \(1\), we have
+	\[
+		\frac{1}{n} \log Z_n(\beta , B)
+		\approx \frac{1}{n} \mathbb{E}_{}[\log Z_n(\beta , B)] .
+	\]
+\end{lemma}
+
+\begin{theorem}[Efren-Stein inequality]
+	Let \(X_1, \dots , X_n\) be i.i.d.\ and consider a function \(f\colon \mathbb{R} ^n \to \mathbb{R} \) with \(\mathbb{E}_{}[f(X_1, \dots , X_n)^2] < \infty \). Then for every \(i = 1, \dots , n\),
+	\[
+		\Var_{}[f(X_1, \dots , X_n)]
+		\leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}_{}\left[\left( f(X_1, \dots , X_i, \dots , X_n) - f(X_1, \dots , X_i^{\prime} , \dots , X_n)\right) ^2 \right] ,
+	\]
+	where \(X_i^{\prime} \overset{\text{i.i.d.} }{\sim } X_i\) and independent of everything.
+\end{theorem}
+\begin{proof}
+	Let \(X^{\prime} = (X_1^{\prime} , \dots , X_n^{\prime} )\) and \(X = (X_1, \dots , X_n)\), we see that for every \(i = 1, \dots , n\),
+	\[
+		\begin{split}
+			 & \Var_{}[f(X)]                                                                                                                                                                                                                                                      \\
+			 & = \mathbb{E}_{}[f(X) (f(X) - f(X^{\prime} ))]                                                                                                                                                                                                                      \\
+			 & = \mathbb{E}_{}\left[\sum_{i=1}^{n} f(X) \left( f(X_1, \dots , X_i, X_{i+1}^{\prime} , \dots , X_n^{\prime} ) - f(X_1, \dots , X_{i-1} , X_i^{\prime} , \dots , X_n^{\prime} ) \right) \right]                                                                     \\
+			 & = \mathbb{E}_{}\left[\sum_{i=1}^{n} f(X_1, \dots , X_{i-1}, X_i^{\prime} , X_{i+1}, \dots , X_n) \left( f(X_1, \dots , X_i^{\prime} , \dots , X_n^{\prime} ) - f(X_1, \dots , X_i , X_{i+1}^{\prime} , \dots , X_n^{\prime} ) \right) \right]                      \\
+			 & = - \mathbb{E}_{}\left[\sum_{i=1}^{n} f(X_1, \dots , X_{i-1}, X_i^{\prime} , X_{i+1}, \dots , X_n) \left( f(X_1, \dots , X_i , X_{i+1}^{\prime} , \dots , X_n^{\prime} ) - f(X_1, \dots , X_i^{\prime} , \dots , X_n^{\prime} ) \right) \right]                    \\
+			 & = \frac{1}{2} \mathbb{E}_{}\left[\sum_{i=1}^{n} (f(X) - f(X_1, \dots , X_{i-1}, X_i^{\prime} , X_{i+1}, \dots , X_n)) \left( f(X_1, \dots , X_i , X_{i+1}^{\prime} , \dots , X_n^{\prime} ) - f(X_1, \dots , X_i^{\prime} , \dots , X_n^{\prime} ) \right) \right] \\
+			 & \leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}_{}\left[\left( f(X) - f(X_1, \dots , X_{i-1} , X_i^{\prime} , X_{i+1}, \dots , X_n) \right) ^2 \right] ,
+		\end{split}
+	\]
+	where the last inequality follows from Cauchy-Schwartz.
+\end{proof}
+
+Now, consider \(f(J) = \log Z_n(\beta , B, J) / n\). Then, for \(i < j\), let \(J_{ij}^{\prime} \overset{\text{i.i.d.} }{\sim } J_{ij}\) and consider \(f(J) - f(J^{-(i, j)}, J_{ij}^{\prime} )\), which can be written as
+\[
+	\int_{0}^{1} \frac{\partial }{\partial J_{ij}}  f(J^{-(i, j)}, tJ_{ij} + (1 - t)J_{ij}^{\prime} ) \cdot (J_{ij} - J_{ij}^{\prime} )\,\mathrm{d}t.
+\]
+
+\begin{remark}
+	For any function \(f\), we have
+	\[
+		f(x) - f(y)
+		= \int_{0}^{1} f^{\prime} (tx + (1 - t)y) (x-y) \,\mathrm{d}t.
+	\]
+\end{remark}
+
+Hence, we have
+\[
+	\left\lvert f(J) - f(J^{-(i, j)}, J_{ij}^{\prime} ) \right\rvert
+	\leq \int_{0}^{1} \left\lvert \frac{\partial }{\partial J_{ij}}  f(J^{-(i, j)}, tJ_{ij} + (1 - t)J_{ij}^{\prime} ) \right\rvert \cdot \left\lvert J_{ij} - J_{ij}^{\prime} \right\rvert \,\mathrm{d}t.
+\]
+By simple calculation, we have
+\[
+	\frac{\partial }{\partial J_{ij}} f(J)
+	= \frac{1}{n} \frac{1}{Z_n(\beta , B, J)}\frac{1}{2^n} \sum_{\sigma \in \{ \pm 1 \} ^n} \exp (H_n(\sigma )) \cdot \frac{\beta }{\sqrt{n} } \sigma _i \sigma _j
+	= \frac{1}{n}\frac{\beta }{\sqrt{n} } \langle \sigma _i \sigma _j \rangle _{\beta , B},
+\]
+and hence \(\lvert \partial f(J) / \partial J_{ij} \rvert = \lvert \langle \sigma _i \sigma _j \rangle _{\beta , B} \cdot \beta / n^{3 / 2} \rvert \leq \beta / n^{3 / 2}\), and hence we have
+\[
+	\left\lvert f(J) - f(J^{-(i, j)}, J_{ij}^{\prime} ) \right\rvert
+	\leq \frac{\beta }{n^{3 / 2}} \lvert J_{ij} - J_{ij}^{\prime} \rvert.
+\]
+By the Efren-Stein inequality, we have
+\[
+	\Var_{}\left[\frac{1}{n} \log Z_n(\beta , B)\right]
+	\leq \frac{1}{2} \frac{n(n-1)}{2} \frac{\beta ^2}{n^3} \mathbb{E}_{}[(J_{12} - J_{12}^{\prime} )^2 ]
+	= \frac{\beta ^2}{2n} \Var_{}[J_{12}] .
+\]
+
+\begin{exercise}
+	If \(J_{ij} \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1), \mathcal{U} (\{ \pm 1 \} ), \dots \), for all \(t > 0\),
+	\[
+		\Pr_{}\left(\left\lvert \frac{1}{n}\log Z_n(\beta , B) - \mathbb{E}_{}\left[\frac{1}{n}\log Z_n(\beta , B)\right] \right\rvert \geq t \right)
+		\leq 2e^{- c_\beta n t^2}.
+	\]
+\end{exercise}
+
+Now, we just focus on the free-energy \(F_n(\beta , B) \coloneqq \mathbb{E}_{}[\log Z_n(\beta , B)] / n\). We have shown that, using Jensen's inequality,
+\[
+	F_n(\beta , B)
+	\leq \frac{1}{n} \log \mathbb{E}_{}[Z_n(\beta , B)]
+	= \frac{\beta ^2}{4} \left( 1 - \frac{1}{n} \right) + \log \cosh(B),
+\]
+since
+\[
+	Z_n(\beta , B)
+	= \frac{1}{2^n} \sum_{\sigma \in \{ \pm 1 \} ^n} \exp (\frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i).
+\]
+\begin{note}
+	This bound is good only when \(\beta \in [0, 1)\) and \(B = 0\).
+\end{note}
+
+\begin{theorem}[Guerra's replica symmetric bound]
+	For \(\eta \sim \mathcal{N} (0, 1)\), and for all \(q, \beta , B \geq 0\), we have
+	\[
+		F_n(\beta , B)
+		\leq \log \cosh(B + \beta \eta \cdot \sqrt{q} ) + \frac{\beta ^2}{4} (1 - q)^2.
+	\]
+\end{theorem}
+
+\begin{remark}
+	We note that
+	\[
+		\log \cosh(B + \beta \eta \cdot \sqrt{q} ) + \frac{\beta ^2}{4} (1 - q)^2
+		= \lim_{n \to \infty} \frac{1}{n} \mathbb{E}_{}\left[\log \frac{1}{2^n} \sum_{\sigma \in \{ \pm 1 \} ^n}  \exp (\beta \sqrt{q} \sum_{i=1}^{n} \eta _i \sigma _i + B \sum_{i=1}^{n} \sigma _i + \frac{n \beta ^2}{4} (1 + q)^2 )\right]
+	\]
+\end{remark}
+
+In the high-temperature regime (\(\beta < 1\)) and the zero-external field (\(B = 0\)),
+\[
+	H_n(\sigma )
+	= \frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \sigma _i \sigma _j ,
+\]
+we have
+\[
+	Z_n(\beta , B)
+	= \frac{1}{2^n} \sum_{\sigma \in \{ \pm 1 \} ^n} \exp (\frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \sigma _i \sigma _j).
+\]
+
+Consider the cluster expansion: for some \(a \in \mathbb{R} \) and \(\epsilon \in \{ \pm 1 \} \), we can write
+\[
+	a^{a \epsilon }
+	= \cosh (a) + \epsilon \sinh (a)
+	= \cosh a(1 + \epsilon \tanh (a)).
+\]
+Then,
+\[
+	\begin{split}
+		Z_n(\beta , 0)
+		 & = \frac{1}{2^n} \prod_{i<j} \cosh(\frac{\beta J_{ij}}{\sqrt{n} }) \sum_{\sigma \in \{ \pm 1 \} ^n} \prod_{i<j} \left( 1 + \sigma _i \sigma _j \tanh(\frac{\beta J_{ij}}{\sqrt{n} }) \right)        \\
+		 & = \left( \prod_{i<j} \cosh(\frac{\beta J_{ij}}{\sqrt{n} }) \right) \cdot \mathbb{E}_{\sigma }\left[\prod_{i<j}\left( 1 + \sigma _i \sigma _j \tanh(\frac{\beta J_{ij}}{\sqrt{n} }) \right) \right]
+		\eqqcolon \hat{Z} _n(\beta , 0) \cdot \left( \prod_{i<j} \cosh(\frac{\beta J_{ij}}{\sqrt{n} }) \right),
+	\end{split}
+\]
+where we let \(\hat{Z} _n (\beta , 0)\) be the expectation term. Hence,
+\[
+	\frac{1}{n} \log Z_n(\beta , 0)
+	= \frac{1}{n}\sum_{i < j} \log \cosh (\frac{\beta J_{ij}}{\sqrt{n} }) + \frac{1}{n}\log \hat{Z} _n(\beta , 0).
+\]
+When \(x \to 0\), we have \(\log \cosh (x) \approx x^2 / 2 + O(x^4)\), hence,
+\[
+	\frac{1}{n}\log Z_n(\beta , 0)
+	\cong \frac{1}{n} \frac{\beta ^2}{2n} \sum_{i < j} J_{ij}^2 + \frac{1}{n} \log \hat{Z} _n(\beta , 0)
+	\to \frac{\beta ^2}{4} + 0
+\]
+by the law of the large number.
+
+\begin{claim}
+	For \(\beta < 1\), \(\hat{Z} _n(\beta , B) \overset{D}{\to} Z\) for some non-trivial \(Z\) such that \(Z > 0\) almost surely.
+\end{claim}
+\begin{explanation}
+	Let \(\tanh (\beta J_{ij} / \sqrt{n} ) \eqqcolon \omega _{ij}\). By viewing \(ij\) as the edge in the complete graph \(K_n\), we write
+	\[
+		\hat{Z} _n(\beta , 0)
+		= \sum_{H \subseteq K_n} \prod_{\substack{i<j \\ (i, j) \in E(H)}} \sigma _i \sigma _j \tanh \frac{\beta J_{ij}}{\sqrt{n} }
+		= 1 + \sum_{\varnothing \neq H \subseteq K_n} \sum_{e \in E(H)} \tanh(\frac{\beta J_e}{\sqrt{n} }) \mathbb{E}_{\sigma }\left[ \prod_{i=1}^{n} \sigma _i ^{\deg _H(i)} \right].
+	\]
+	Since
+	\[
+		\mathbb{E}_{\sigma }\left[ \prod_{i=1}^{n} \sigma _i ^{\deg _H(i)} \right]
+		=\begin{dcases}
+			1, & \text{ if all \(\deg _i(H)\) are even}  ; \\
+			0, & \text{ otherwise} ,
+		\end{dcases}
+	\]
+	we have
+	\[
+		\begin{split}
+			\hat{Z} _n(\beta , 0)
+			 & = 1 + \sum_{\substack{\varnothing \neq H \subseteq K_n          \\ \text{all even degree} }} \prod_{e \in E(H)} \tanh (\frac{\beta J_e}{\sqrt{n} }) \\
+			 & = 1 + \sum_{k=1}^{\binom{n}{2}} \sum_{\substack{H \subseteq K_n \\ \text{all even degree} \\ \lvert E(H) \rvert = k}} \prod_{e \in E(H)} \tanh (\frac{\beta J_e}{\sqrt{n} })
+			\approx \prod_{\ell = 3}^{n} \left( 1 + \sum_{H \colon \ell \text{ cycles} } \prod_{e \in E(H)} \tanh (\frac{\beta J_e}{\sqrt{n} }) \right),
+		\end{split}
+	\]
+	when \(\beta < 1\).
+
+	\begin{exercise}
+		A graph on \(n\) nodes with all degrees even, it can be written as an edge-disjoint union of cycles.
+	\end{exercise}
+
+	Hence,
+	\[
+		\log \hat{Z} _n
+		\approx \sum_{\ell =3}^{n} \log (1 + \sum_{H\colon \ell \text{ cycles} } \prod_{e \in E(H)} \tanh \frac{\beta J_e}{\sqrt{n} }).
+	\]
+	Again using the fact that \(\tanh (x) \approx x\) as \(x \to 0\), \(\sum_{H\colon \ell \text{ cycles} } \prod_{e \in E(H)} \tanh \frac{\beta J_e}{\sqrt{n} }\) has mean \(0\), variance
+	\[
+		\frac{(n)_{\ell } }{2 \ell } \left( \frac{\beta ^2}{n} \cdot 1\right) ^\ell
+		\approx \frac{\beta ^{2 \ell }}{2 \ell }.
+	\]
+
+	Finally, we have \(\mathbb{E}_{}[\hat{Z} _n(\beta , 0)] = 1\) and
+	\[
+		\begin{split}
+			\Var_{}[\hat{Z} _n]
+			 & = \sum_{\substack{\varnothing \neq H \subseteq K_n                                                                              \\ \text{all even degree} }} \Var_{}\left[\prod_{e \in E(H)} \tanh (\frac{\beta J_e}{\sqrt{n} })\right] \\
+			 & = \sum_{k=3}^{\infty} \frac{\beta ^{2k}}{n^k} \cdot \lvert \{ H \mid \lvert E(H) \rvert = k, \text{ all degrees even} \} \rvert \\
+			 & = \sum_{\substack{\varnothing \neq H \subseteq K_n                                                                              \\ \text{all even degree} }} \prod_{e \in E(H)} \frac{\beta ^2}{n}
+			= \mathbb{E}_{\sigma }\left[ \prod_{i < j} \left( 1 + \sigma _i \sigma _j \frac{\beta ^2}{n} \right) \right]
+			\leq \mathbb{E}_{\sigma }\left[ \exp (\frac{\beta ^2}{n} \sum_{i < j} \sigma _i \sigma _j) \right],
+		\end{split}
+	\]
+	which is the CW Ising model free-energy, which can be further bounded when \(\beta < 1\).
+\end{explanation}

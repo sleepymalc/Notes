@@ -1,0 +1,116 @@
+\lecture{19}{1 Apr.\ 9:30}{Ising Model}
+Given a finite and connected graph \(G = (V, E)\), with a spin \(\sigma = (\sigma _v)_{v \in V} \in \{ \pm 1 \} ^V\), the Hamiltonian is given by \(H(\sigma ) = \sum_{(i, j) \in E} \sigma _i \sigma _j\) such that
+\[
+	\Pr_{\beta , B, G}\left(\sigma \right)
+	= \frac{\exp (\beta H(\sigma ) + B \sum_{v \in V} \sigma _v)}{Z(\beta , B, G)},
+\]
+where \(\beta \geq 0\), \(B \in \mathbb{R} \), and
+\[
+	Z(\beta , B, G)
+	= \sum_{\sigma \in \{ \pm 1 \} ^V} \exp (\beta H(\sigma ) + B \sum_{v \in V} \sigma _v).
+\]
+
+\begin{notation}
+	\(\beta \) is the so-called \emph{inverse temperature} defined as \(\frac{1}{2kT}\).
+\end{notation}
+
+\begin{notation}
+	\(B\) is called the \emph{external field}.
+\end{notation}
+
+If \(\beta = 0\) (as \(T = \infty \)),
+\[
+	\Pr_{0, B, G}\left(\sigma \right)
+	= \prod_{v \in V} \frac{e^B \sigma _v}{e^B +e^{-B}},
+\]
+which means that \(\sigma _v\) is i.i.d.\ \(\pm 1\) with probability \((\frac{e^B}{e^B + e^{-B}}, \frac{e^{-B}}{e^B + e^{-B}})\).
+
+We're interested in the \emph{query temperature} \(\beta _c\) corresponds to the phase transition point. Informally, when \(\beta < \beta _c\), spins are ``independent,'' and not anymore as \(\beta \geq \beta _c\),
+
+\subsection{Ising Model}
+In the original Ising model, we consider the \(1\)-dimensional case, which corresponds to the cycle graph \(C_n\). As \(B = 0\), we see that given \(\sigma \),
+\[
+	\Pr_{\beta , 0, C_n}\left(\sigma \right)
+	\sim \prod_{i=1}^{n} \exp (\beta \sigma _i \sigma _{i+1})
+	\eqqcolon \prod_{i=1}^{n} \exp (\beta \tau _i).
+\]
+We see that this is independent, thus, \(\beta _c = \infty \). However, this is a special case; in general, nearly all other graphs (e.g., \(d\)-dimensional form) have a finite \(\beta _c \in (0 , \infty )\).
+
+\begin{intuition}
+	The intuition is that given a center vertex \(o\), if for all \(v \in \partial B_r(o)\) all have the same \(\sigma _v\), e.g., \(+1\), whether as \(r \to \infty \),
+	\[
+		\left\lvert \Pr_{}\left(\sigma _o = +1 \mid \sigma _{\partial B_r(o)} = 1 \right) - \Pr_{}\left(\sigma _o = +1 \mid \sigma _{\partial B_r(o)} = -1 \right) \right\rvert
+		\to 0,
+	\]
+	i.e., the boundary has no effects on the distribution of \(\sigma _o\). The uniqueness regime is as \(\beta < \beta _c\) where the above holds.
+\end{intuition}
+
+\begin{eg}[Curie-Weiss model]
+	Consider the Ising model on the complete graph \(K_n\), where we have
+	\[
+		\begin{split}
+			\Pr_{\beta , B, n}\left(\sigma \right)
+			 & = \exp (\frac{\beta }{n} \sum_{i < j} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i)                                                         \\
+			 & = \exp (\frac{\beta }{2n} \sum_{i \neq j} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i )                                                    \\
+			 & = \exp (\frac{\beta }{2n} \left( \left( \sum_{i=1}^{n} \sigma _i \right) ^2 - \sum_{i=1}^{n} \sigma _i^2 \right) + B \sum_{i=1}^{n} \sigma _i )
+			= e^{-\beta / 2} \exp (\frac{\beta }{2n} \left( \sum_{i=1}^{n} \sigma _i \right) ^2 + B \sum_{i=1}^{n} \sigma _i),
+		\end{split}
+	\]
+	where we scale \(\beta \) due to the order difference between the two terms. Then, the partition function is given by
+	\[
+		\begin{split}
+			Z_n(\beta , B)
+			 & \propto \sum_{\sigma \in \{ \pm 1 \} ^n} \exp (\frac{\beta }{2n} \left( \sum_{i=1}^{n} \sigma _i \right) ^2 + B \sum_{i=1}^{n} \sigma _i ) \\
+			 & = \sum_{k=-n}^{n} e^{\frac{\beta }{2n} k^2 + Bk} \cdot \left\lvert \left\{ \sigma \mid \sum_{i=1}^{n} \sigma _i = k \right\} \right\rvert
+			= 2^n \sum_{k=-n}^{n} \underbrace{e^{\frac{\beta }{2n} k^2 + Bk}}_{\text{energy} } \cdot \underbrace{\frac{\lvert \{ \sigma \mid \sum_{i=1}^{n} \sigma _i = k \}  \rvert }{2^n}}_{\text{entropy: } \Pr_{}\left(X_1 + \dots + X_n = k\right) }
+		\end{split}
+	\]
+	where \(X_i \overset{\text{i.i.d.} }{\sim } \pm 1\). We have that \(\lvert \sigma \mid \sum_{i=1}^{n} \sigma _i = k \rvert / 2^n \approx e^{-n I(k / n)}\), we finally have
+	\[
+		Z_n(\beta , B)
+		\propto 2^n \sum_{k=-n}^{n} e^{n \left( \frac{\beta }{2}\left( \frac{k}{n} \right) ^2 + B \frac{k}{n} - I(\frac{k}{n}) \right) },
+	\]
+	hence, we have the \emph{free energy} defined as
+	\[
+		\frac{1}{n} \log Z_n(\beta , B)
+		\approx \sup _{-1 \leq t \leq 1} \left( \frac{\beta}{2} t^2 + Bt - I(t) \right) + \log 2.
+	\]
+	When \(B = 0\):
+	\begin{itemize}
+		\item \(\beta < 1\): \(t^{\ast} = 0\) is the optimizer.
+		\item \(\beta > 1\): \(t^{\ast} \in \{ -m^{\ast} , m^{\ast} \} \) is the optimizer where \(m^{\ast} > 0\) is the unique solution of \(\tanh (\beta m^{\ast} ) = m^{\ast} \).
+	\end{itemize}
+\end{eg}
+
+The above is the only model that we know how to write everything in closed-forms. The bottleneck is that we're unable to write \(\sum_{i \neq j} \sigma _i \sigma _j = (\sum_{i=1}^{n} \sigma _i)^2 - \sum_{i=1}^{n} \sigma _i^2\).
+
+What about trees? For instance, the limiting branching process \(\operatorname{GWBP}(\operatorname{Pois}(\lambda ) ) \) for \(\operatorname{ER}(n, \lambda / n) \), or the \(\operatorname{CM}(\undertilde{d} \sim D) \) where the root has \(D\) children, and all others have \(\hat{D} - 1\) children. Since these are infinite graphs, we need to define Ising model on infinite graphs.
+
+\begin{intuition}
+	Consider a root \(o\), and look at \(B_r(o)\) and put some boundary condition such as \(\sigma _v = 1\) for all \(v \in \partial B_r(o) \). Then, we look at the Ising model of \(B_r(o)\) with the specified boundary condition. We say that \(\mu _\infty \) is an \emph{infinite volume Ising measure} with \((\beta , B)\) on the infinite graph, if
+	\[
+		\mu _\infty (\cdot \mid \partial B_r(o) = \tau )
+	\]
+	is an Ising model with \((\beta , B)\) on the \(B_r(o)\) with boundary condition \(\tau \).
+\end{intuition}
+
+If the graph is locally finite, \(\mu _\infty \) actually exists but might not be unique. The uniqueness only come when \(\beta < \beta _c\), i.e., the uniqueness regime.
+
+\begin{eg}[\(d\)-regular tree]
+	Consider the \(d\)-regular tree, or for simplicity, let \(d = 2\). Again, we know that
+	\[
+		\Pr_{}\left(\sigma \right)
+		\propto \exp (\beta \sum_{i \sim j} \sigma _i \sigma _j + B \sum_{i \in V} \sigma _i),
+	\]
+	by ignoring the partition function. To avoid evaluating it, we can look at the ratio, e.g., consider the root \(\phi \), with children \(v_1\) and \(v_2\) with their corresponding trees being \(T_1\) and \(T_2\), we have
+	\[
+		\begin{split}
+			R_{\phi }^{(r)}
+			 & = \frac{\Pr_{}\left(\sigma _\phi = 1\right) }{\Pr_{}\left(\sigma _\phi = -1\right) }                                                                                                                                                                                                                      \\
+			 & = \frac{\sum_{\sigma \colon \sigma _\phi = 1} \exp (\beta \sum_{i \sim j} \sigma _i \sigma _j + B \sum_{i \in V} \sigma _i)}{\sum_{\sigma \colon \sigma _\phi = -1} \exp (\beta \sum_{i \sim j} \sigma _i \sigma _j + B \sum_{i \in V} \sigma _i)}                                                        \\
+			 & = \frac{e^B}{e^{-B}} \frac{\sum_{i} \left( \exp (\beta \sum_{i \sim j \in T_1} \sigma _i \sigma _j + B \sum_{i \in T_1} \sigma _i + \beta \sigma _{v_1}) \right) \sum_{i} \left( \exp (\beta \sum_{i \sim j \in T_1} \sigma _i \sigma _j + B \sum_{i \in T_1} \sigma _i + \beta \sigma _{v_2}) \right)}{} \\
+			 & = \prod_{i=1}^{\xi _\phi } ,
+		\end{split}
+	\]
+	where \(\xi _i\) denotes the number of children of vertex \(i\), which in this case is \(d = 2\).
+\end{eg}

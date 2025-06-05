@@ -1,0 +1,165 @@
+\lecture{26}{24 Apr.\ 9:30}{\(q\)-Potts Spin-Glass Model}
+Consider now \(\sigma \in \{ 1, \dots , q \} ^n\) for some \(q \geq 3\) such that
+\[
+	H_n(\sigma )
+	= \frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \cdot (q \mathbbm{1}_{\sigma _i = \sigma _j} - 1).
+\]
+As we can see, for \(q = 2\), this falls back to the previous case for \(\sigma \in \{ \pm 1 \} ^n\). Let \(e_k\) be the \(k^{\text{th} }\) unit vector in \(\mathbb{R} ^q\), then \(\mathbbm{1}_{\sigma _i = \sigma _j} = \langle e_{\sigma _i}, e_{\sigma _j} \rangle \). Hence, essentially we're considering
+\[
+	H_n(\sigma )
+	= \frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \cdot (q \langle e_{\sigma _i}, e_{\sigma _j} \rangle  - 1).
+\]
+\begin{remark}
+	We can consider general vector-valued spins.
+\end{remark}
+
+\begin{note}
+	To normalize it to standard normal, consider
+	\[
+		\mathbbm{1}_{\sigma _i = \sigma _j} - \frac{1}{q}
+		= \langle e_{\sigma _i}, e_{\sigma _j} \rangle - \frac{1}{q}
+		= \left\langle e_{\sigma _i} - \frac{1}{q} , e_{\sigma _j} - \frac{1}{q} \right\rangle .
+	\]
+\end{note}
+
+For general vector spin-glass, consider \(\sigma \in (S, \mu )\) such that \(\int \sigma \,\mathrm{d} \mu = 0\), with
+\[
+	H(\sigma )
+	= \frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \langle \sigma _i, \sigma _j \rangle .
+\]
+
+\begin{problem}[Open]
+For \(B=0\), what is \(\beta _c\)? When \(0 < \beta < \beta _c\), or simply \(0 < \beta < \epsilon \), does CLT hold for \(\log Z_n\)?
+\end{problem}
+
+\section{Hopfield Network}
+\begin{figure}[H]
+	\centering
+	\incfig{Hopfield-network}
+	\caption{title}
+	\label{fig:Hopfield-network}
+\end{figure}
+where \(J_{ij}\) is independent between \(i^{\text{th} }\) and \(j^{\text{th} }\) neuron. Choose \(I \sim \mathcal{U} ([n])\). Let
+\[
+	h_i(t)
+	= \sum_{j \neq i} J_{j, i} \sigma _j
+\]
+with
+\[
+	\sigma _{I }(t + 1)
+	= \begin{dcases}
+		1,  & \text{ w.p.\ } p(\sigma _{I }(t), h_I(t)) ;   \\
+		-1, & \text{ w.p.\ } 1 - p(\sigma _{I }(t), h_I(t))
+	\end{dcases}
+\]
+where
+\begin{itemize}
+	\item \emph{Deterministic}: \(p(\sigma _I(t), h_I(t)) = \mathbbm{1}_{h_I(t) > 0} \).
+	\item \emph{``Random''}: \(p(\sigma , h) = \frac{e^{\beta h}}{1 + e^{\beta h}}\).
+\end{itemize}
+
+\begin{note}
+	When \(\beta \to \infty \), the ``random'' case converges to the deterministic case.
+\end{note}
+
+\subsection{Glauber Dynamics}
+With
+\[
+	\Pr_{}\left(\sigma \right)
+	\propto \exp (\frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \sigma _i \sigma _j).
+\]
+Let \(I \sim \mathcal{U} ([n])\), then
+\[
+	\sigma _i(t + 1)
+	= \begin{dcases}
+		\sigma _i (t),                                                                                & \text{ if } i \neq I ; \\
+		\begin{dcases}
+			1,  & \text{ w.p.\ } \Pr_{}\left(\sigma _I=1 \mid \{ \sigma _i \} _{i \neq I}\right)  ;    \\
+			-1, & \text{ w.p.\ } 1 - \Pr_{}\left(\sigma _I=1 \mid \{ \sigma _i \} _{i \neq I}\right) ; \\
+		\end{dcases}, & \text{ if } i = I.
+	\end{dcases}
+\]
+We see that
+\[
+	\begin{split}
+		\Pr_{\beta }\left(\sigma _k = 1 \mid \{ \sigma _i = \epsilon _i \}_{i \neq k} \right)
+		 & = \frac{\Pr_{\beta }\left(\sigma _k = 1, \{ \sigma _i = \epsilon _i \}_{i \neq k}\right) }{\Pr_{\beta }\left(\sigma _k = 1, \{ \sigma _i = \epsilon _i \}_{i \neq k}\right) + \Pr_{\beta }\left(\sigma _k = -1, \{ \sigma _i = \epsilon _i \}_{i \neq k}\right) } \\
+		 & = \frac{\exp (1 \cdot \frac{\beta }{\sqrt{n} } \sum_{j \neq i} J_{ij} \sigma _j)}{\exp (1 \cdot \frac{\beta }{\sqrt{n} } \sum_{j \neq i} J_{ij} \sigma _j) + \exp (-1 \cdot \frac{\beta }{\sqrt{n} } \sum_{j \neq i} J_{ij} \sigma _j)}.
+	\end{split}
+\]
+
+\subsection{Memory}
+Say we have \(N\) neurons with \(M\) patterns to memorize. Consider \(\xi _k \sim \{ \pm 1 \} ^N\) for \(k \in [M]\) such that
+\[
+	H_{N, M}(\sigma )
+	= \frac{\beta \cdot N}{2} \sum_{k=1}^{M} \left( \frac{1}{N} (\xi _k, \sigma ) \right) ^2.
+\]
+When \(M = 1\), with \(\xi = (1, 1, \dots , 1)\), this is the CW model. In general, for \(\xi \in \{ \pm 1 \} ^N\), we will have \((\xi _i \sigma _i)_{i=1}^{N} \sim (1, 1, \dots , 1)\) as \(\beta > \beta _c = 1\).
+
+From simulation, \(M \approx \alpha N\) with \(\alpha \approx 0.14\).
+
+\begin{problem*}
+	Is it true that when \(\beta < \beta _c (\alpha )\), there is no memory phenomenon, and when \(\beta > \beta _c(\alpha )\), \(\lvert \langle \alpha , \xi _k \rangle  \rvert > C\) for exactly one \(k \in [M]\)?
+\end{problem*}
+
+We note that we can write
+\[
+	H_{N, M}(\sigma )
+	= \frac{\beta }{2 \sqrt{N} } \sum_{i, j} \sigma _i \sigma _j \left( \frac{1}{\sqrt{N} } \sum_{k=1}^{M} \xi _k(i) \xi _k(j)\right),
+\]
+with \(J_{ij} = \sum_{k=1}^{M} \xi _k(i) \xi _k(j)\) being the \emph{Hebb's learning rule}.
+
+\begin{theorem}
+	\begin{itemize}
+		\item If \(M\ll N\):
+		      \begin{itemize}
+			      \item \(\beta < 1\): high-temperature regime (no memory).
+			      \item \(\beta > 1\): memory will be retained.
+		      \end{itemize}
+		\item \(M \cong \alpha N\) for \(0 < \alpha < 1\), \(\beta _c = \frac{1}{1 + \sqrt{\alpha } }\).
+	\end{itemize}
+\end{theorem}
+
+Now, consider the Hubbard-Stratonovich transformation. We can linearize the following quadratic form:
+\[
+	Z_{N, M}
+	= \frac{1}{2^n} \sum_{\sigma \in \{ \pm 1 \} ^n} \exp (\frac{\beta N}{2} \sum_{k=1}^{M} \frac{1}{N^2} \langle \xi _k, \sigma  \rangle ^2)
+	= \frac{1}{2^n} \sum_{\sigma \in \{ \pm 1 \} ^n} \prod_{k=1}^{M} \exp (\frac{\beta N}{2} \frac{1}{N^2} \langle \xi _k, \sigma  \rangle ^2).
+\]
+The idea is to consider \(\eta _k \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\), we have
+\[
+	\begin{split}
+		Z_{N, M}
+		 & = \frac{1}{2^{n} } \sum_{\sigma \in \{ \pm 1 \} ^n} \prod_{k=1}^{M} \mathbb{E}_{\eta _k}\left[ \exp (\sqrt{\frac{\beta }{N}} \cdot \eta _k \cdot \langle \xi _k, \sigma  \rangle ) \right]                  \\
+		 & = \mathbb{E}_{\eta }\left[ \frac{1}{2^{n} } \sum_{\sigma \in \{ \pm 1 \} ^n} \prod_{k=1}^{M} \exp (\sigma _i \cdot \left( \sqrt{\frac{\beta }{N}} \sum_{k=1}^{M} \eta _k \cdot \xi _k(i) \right) ) \right],
+	\end{split}
+\]
+where we let \(\eta \sim \mathcal{N} _{M}(0, I)\), we further have
+\[
+	\begin{split}
+		Z_{N, M}
+		 & = \mathbb{E}_{\eta }\left[ \prod_{i=1}^{N} \cosh (\sqrt{\frac{\beta }{N}} \sum_{k=1}^{M} \xi _k(i) \eta _k) \right]                                                                                           \\
+		 & = \int _{\mathbb{R} ^M} \frac{1}{(2\pi )^{M / 2}}\exp (\sum_{i=1}^{N} \log \cosh (\sqrt{\frac{\beta }{N}} \sum_{i=1}^{M} \xi _k(i) x_k) - \frac{1}{2} \sum_{i=1}^{M} x_k^2) \,\prod_{k=1}^{M} \mathrm{d} x_k.
+	\end{split}
+\]
+Let \(y_k = x_k / \sqrt{\beta N} \), we finally have
+\[
+	Z_{N, M}
+	= \int _{\mathbb{R} ^M} \exp (- \frac{\beta N}{2} \lVert y \rVert _2^2 + \sum_{i=1}^{N} \log \cosh (\beta (x \cdot \xi (i)))) \,\prod_{k=1}^{M} \mathrm{d} x_k.
+\]
+
+\begin{theorem}
+	For \(\alpha _0, \beta _0 < 1 / 2\) and \(\beta _0(1 + \sqrt{\alpha _0} ) < 1\), then the high-temperature behavior holds.
+\end{theorem}
+
+\begin{remark}
+	One can also generalize the above from \(\sum_{k=1}^{M} (\frac{1}{N} \langle \xi _k, \sigma \rangle )^2\) to \(G(\frac{1}{N} \langle \xi _1, \sigma \rangle , \dots , \frac{1}{N} \langle \xi _k, \sigma \rangle )\) with some strictly convex function \(G \colon \mathbb{R} ^M \to \mathbb{R} _+\).
+\end{remark}
+
+\begin{remark}
+	We can consider any graph instead of complete graph by replacing the sum by \(\sum_{i <j} \mathbbm{1}_{i \sim j} \).
+\end{remark}
+
+\begin{remark}[Edward-Anderson short range spin-glass model]
+	Instead of looking at the mean-field structure, one can consider \(\quotient{\mathbb{Z} ^d}{n \mathbb{Z} ^d} \).
+\end{remark}

@@ -1,0 +1,131 @@
+\lecture{22}{10 Apr.\ 9:30}{Ising Model on Random Dense Graphs}
+Consider \(G_n = K_n = ([n], \{(i, j) \mid 1 \leq i < j \leq n \} )\), and the Ising model with \(\beta \geq 0\) and \(B \in \mathbb{R} \). Create \(X_n\) from some given density (depends on \(n\)), and \((\sigma _1, \dots , \sigma _n)\) given that \(X_n = x \overset{\text{i.i.d.} }{\sim } \pm 1\) with mean \(\tanh(B + \sqrt{\beta } \cdot x )\), which is equivalent to say that \((\sigma _1, \dots , \sigma _n)\) follows an Ising model with parameter \((\beta , B)\).
+
+\begin{prev}
+	\begin{itemize}
+		\item Paramagnetic \(B = 0\), \(\beta < 1\): We have \(X_n \overset{p}{\to} 0\) and \(\sqrt{n} X_n \overset{D}{\to} \mathcal{N} (0, \frac{1}{1 - \beta })\). Moreover,
+		      \[
+			      \frac{1}{\sqrt{n} } \sum_{i=1}^{n} \sigma _i
+			      = \sqrt{n} m_n(\sigma )
+			      \overset{D}{\to} \mathcal{N} \left( 0, \frac{1}{1 - \beta } \right).
+		      \]
+		\item Ferromagnetic \(B = 0, \beta > 1\): \(\lvert X_n \rvert \overset{p}{\to} x^{\ast} (\beta )\), where \(x^{\ast} (\beta ) / \sqrt{\beta } \) is the unique positive solution to the equation \(x = \tanh(B + \beta x)\), and \(\sqrt{n(\lvert X_n \rvert - x^{\ast} (\beta ))} \overset{D}{\to} \mathcal{N} (0, \cdot )\). Moreover,
+		      \[
+			      \lvert m_n(\sigma ) \rvert
+			      = \left\lvert \frac{1}{n}\sum_{i=1}^{n} \sigma _i \right\rvert
+			      \to \tanh(B + \beta \cdot \left( \frac{x^{\ast} (\beta )}{\sqrt{\beta } } \right) ).
+		      \]
+		\item \(B > 0, \beta > 0\): There exists a unique positive solution \(x^{\ast} \) to \(x = \tanh(B + \beta x)\), and \(X_n \overset{D}{\to} \sqrt{\beta } \cdot x^{\ast} \).
+	\end{itemize}
+\end{prev}
+
+Now, consider \(G_n \sim \operatorname{ER}(n, p) \),
+\[
+	\Pr_{\beta , B, G_n}\left(\sigma \right)
+	= \frac{1}{Z_{G_n}(\beta , B)} \exp (\frac{\beta }{np} \sum_{(i, j) \in E(G_n)} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i).
+\]
+
+\begin{theorem}
+	When \(np \to \infty \), the limiting and the fluctuation of the magnetization are the same on the \(\operatorname{CW} \) with the same \((\beta , B)\).
+\end{theorem}
+\begin{proof}
+	Let \(A_n = (\mathbbm{1}_{i \sim j} )_{i, j}\), \(\mathbb{E}_{}[A_n] = p 1_{n \times n} - p I\). Then, the Hamiltonian is given by
+	\[
+		\frac{\beta }{2np} \sigma ^{\top} A_n \sigma + B \sum_{i=1}^{n} \sigma _i
+		= \frac{\beta }{2np} \sigma ^{\top} \overline{A} _n \sigma + p \frac{\beta }{2np} \left( \sum_{i=1}^{n} \sigma _i \right) ^2 - p \frac{\beta }{2np} n + B \sum_{i=1}^{n} \sigma _i,
+	\]
+	where \(\overline{A} _n \coloneqq A_n - \mathbb{E}_{}[A_n] \). By some cancellation and calculation, we have
+	\[
+		\frac{\beta }{2} \sigma ^{\top} \left( \frac{\overline{A} _n}{np} \right) \sigma + \frac{\beta }{n} \sum_{i < j} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i.
+	\]
+	We see that \(\overline{A} _n\) can be written as \(\sqrt{p (1 - p)} B_n\), where \((B_n)_{i i} = 0\) and all the off-diagonal elements follows i.i.d.\ \((\operatorname{Ber}(p) - p) / \sqrt{p(1 - p)} \).
+
+	\begin{theorem}
+		For any matrix \(A\) with \(A_{i i} = 0\) and all the off-diagonal elements follows i.i.d.\ mean \(0\), variance \(1\), and finite \(6^{\text{th} }\) moments random variables, we have
+		\[
+			\frac{1}{\sqrt{n} } \lVert A \rVert
+			= O_p(1)
+			\overset{p}{\to} 2.
+		\]
+	\end{theorem}
+
+	Hence, we have
+	\[
+		\frac{\overline{A} _n}{np}
+		= \sqrt{\frac{1 - p}{np}} \cdot \frac{1}{\sqrt{n} } C_n,
+	\]
+	where \(C_n\) is a symmetric, diagonal zero, with off-diagonal elements follows i.i.d.\ mean \(0\) variance \(1\) random variables.
+\end{proof}
+
+\begin{lemma}
+	The Ising model with Hamiltonian
+	\[
+		\frac{\beta }{2} \sigma ^{\top} (W_n) \sigma + \frac{\beta }{n} \sum_{i < j} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i
+	\]
+	behaves (in terms of the magnetization) in the same way as the \(\operatorname{CW}(\beta , B) \) when \(\lvert W_n \rvert \overset{p}{\to} 0\).
+\end{lemma}
+
+The following Hamiltonian
+\[
+	H_n(\sigma )
+	= \frac{\beta }{2} \sigma ^{\top} \left( \frac{W_n}{\sqrt{n} } \right) \sigma + B \sum_{i=1}^{n} \sigma _i
+	= \frac{\beta }{\sqrt{n} } \sum_{i < j} (W_n)_{ij} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i,
+\]
+where \(W_n\) is a Winer matrix, i.e., symmetric, diagonal zero, and off-diagonal follows i.i.d.\ mean \(0\) and variance \(1\). Now, \(\lVert W_n / \sqrt{n} \rVert \to 2\). This is the so-called Sherrington-Kirkpatrick Spin Glass model \((\beta , B)\).
+
+The heuristic. Consider
+\[
+	Z_n(\beta , B; J)
+	= \sum_{\sigma } \exp (\frac{\beta }{\sqrt{n} } \sum_{i < j} J_{ij} \sigma _i \sigma _j + B \sum_{i=1}^{n} \sigma _i),
+\]
+and let
+\[
+	F_n(\beta , B; J)
+	\coloneqq \frac{1}{n} \log Z_n(\beta , B; J).
+\]
+
+\begin{theorem}
+	For all \(t > 0\), with some \(c(p) > 0\), we have
+	\[
+		\Pr_{}\left(\lvert F_n(\beta , B; J) - \mathbb{E}_{}[F_n(\beta , B; J)] \rvert \geq t \right)
+		\leq e^{- \frac{n t^2}{c(\beta )}}.
+	\]
+\end{theorem}
+
+Hence, we only need to understand the mean behavior, i.e., \(\mathbb{E}_{}[F_n(\beta , B; J)] = \frac{1}{n} \mathbb{E}_{}[\log Z_n(\beta , B; J)] \). From Jensen's inequality,
+\[
+	\mathbb{E}_{}[F_n(\beta , B; J)]
+	\leq \frac{1}{n} \log \mathbb{E}_{}[Z_n(\beta , B; J)].
+\]
+
+\begin{eg}
+	\[
+		\begin{split}
+			\mathbb{E}_{}[Z_n(\beta , B; J = (\mathcal{N} (0, 1)))]
+			 & = \sum_{\sigma } e^{B \sum_{i=1}^{n} \sigma _i} \prod_{i<j} \mathbb{E}_{}[e^{\frac{\beta }{\sqrt{n} } \sigma _i \sigma _j J_{ij}}] \\
+			 & = \left( \sum_{\sigma } e^{B \sum_{i=1}^{n} \sigma _i} \right) e^{\frac{1}{4} \beta ^2 (n - 1)}                                    \\
+			 & = 2^n \cosh(B)^n e^{\frac{\beta ^2}{4} (n-1)}
+			\approx \left( 2 \cosh(B) e^{\beta ^2 / 4} \cdot e^{- \beta ^2 / 4}\right) ^n.
+		\end{split}
+	\]
+	For \(\mathcal{N} (0, 1)\) density, \(F_n(\beta , B; J) \approx \mathbb{E}_{}[F_n(\beta , B; J)] \leq n \log (2 \cosh(B) e^{\beta ^2 / 4})\).
+\end{eg}
+
+Order parameter: let \(\sigma , \tau \) be the two replicas from the spin glass model given some matrix \(J\), let \(R \coloneqq \langle \frac{1}{n}\sum_{i=1}^{n} \sigma _i \tau _i \rangle _{\beta , B, J}\).
+
+\begin{theorem}
+	If \(B = 0\), \(\beta < 1\), and \(J_{ij} \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\), then
+	\[
+		\ln Z_n(\beta , B; J) - \ln \mathbb{E}_{}[Z_n(\beta , B; J)]
+		\overset{D}{\to} \mathcal{N} (\cdot, \cdot).
+	\]
+	The same is true if \(J_{ij} \overset{\text{i.i.d.} }{\sim } \) mean \(0\), variance \(1\), \(4^{\text{th} }\) moment finite.
+\end{theorem}
+
+\begin{theorem}
+	If \(B > 0\) \(\beta > 0\), \(J_{ij} \overset{\text{i.i.d.} }{\sim } \mathcal{N} (0, 1)\), then
+	\[
+		\frac{1}{\sqrt{n} } \left( \ln Z_n(\beta , B; J) - \mathbb{E}_{}[\ln Z_n(\beta , B; J)]  \right)
+		\overset{D}{\to} \mathcal{N} (0, \cdot).
+	\]
+\end{theorem}

@@ -1,0 +1,117 @@
+\lecture{27}{29 Apr.\ 9:30}{Long-Range Models}
+\subsection{First Passage Percolation}
+Let \(G = (V, E)\) and \(w_e \overset{\text{i.i.d.} }{\sim } F\) with support on \([0, \infty )\).
+
+\begin{eg}
+	Consider \(F \sim \operatorname{Exp}(1) \).
+\end{eg}
+
+Let \(T(u, v) \coloneqq \inf _{\text{path } P \colon u \to v} \sum_{e \in P } w_e\), which is the first passage time from \(u\) to \(v\). Moreover, let \(\mathcal{B} _t = \{ v \mid T(u, v) \leq t \text{ for some } u \in \mathcal{B} _0 \} \), which is the ball of radius \(t\) around \(\mathcal{B} _0\) given that \(\mathcal{B} _0 = \{ u_0 \} \)for some seed vertex \(u_0\).
+
+\begin{eg}
+	Let \(G = \mathbb{Z} ^2\) with nearest neighbor connections, and let \(\mathcal{B} _0 = \{ (0, 0) = 0 \} \), and \(\mathcal{B} _1 = \{ v \mid T(0, v) \leq 1 \} \). The big question is to estimate \(\diam (\mathcal{B} _t)\).
+	\begin{center}
+		\incfig{first-passage-percolation}
+	\end{center}
+\end{eg}
+
+\begin{theorem}
+	If \(\mathbb{E}_{}[w] < \infty \), \(\mathcal{B} _0 = \{ 0 \} \), and \(\mathcal{B} _t = \mathcal{B} _t \oplus [-1 / 2, 1 / 2]^d\) for some \(d \geq 2\), then as \(t \to \infty \),
+	\[
+		\frac{\overline{\mathcal{B} _t} }{t}
+		\to \mathcal{C}
+	\]
+	where \(\mathcal{C} \) is a deterministic, convex, non-trivial set almost surely.\footnote{I.e., for every \(\epsilon > 0\), \(t(1 - \epsilon ) \mathcal{C} \subseteq \overline{\mathcal{B} } _t \subseteq t(1 + \epsilon ) \mathcal{C} \).}
+\end{theorem}
+
+Now, consider the long-range version with \(\mathcal{B} _0 = \{ 0 \} \). Now, instead of considering \(w_e \overset{\text{i.i.d.} }{\sim } \operatorname{Exp}(1) \), we think of each vertex has a \(\operatorname{Pois}(1) \) clock that starts when it's infected. Now, after the clock stops after \(\operatorname{Pois}(1) \), it passes its information to \(x\) chosen with probability \(c \cdot \lVert x \rVert ^{-\alpha }\) for some fixed \(\alpha > d\). This generalizes the nearest neighbor jump in a smooth manner.
+
+\begin{note}
+	We require \(\sum_{r=1}^{\infty} r^{-\alpha } \cdot r^{d - 1} < \infty \) if \(\alpha > d\).
+\end{note}
+
+\begin{problem*}
+	What's the growth of \(\mathcal{B} ^{(\alpha )}_t\)?
+\end{problem*}
+
+Equivalent to this smooth generalization that can jump to any vertex in the graph, consider a complete graph on \(\mathbb{Z} ^d\) such that for any \(u, v \in \mathbb{Z} ^d\), \(w_{uv} = \operatorname{Exp}(\lVert u - v \rVert ^{-\alpha }) \), independent.
+
+\begin{theorem}
+	Consider the torus \((\quotient{\mathbb{Z} }{n \mathbb{Z} } )^d\) with size \(N \coloneqq n^d\), then we have the following.
+	\begin{itemize}
+		\item \(\alpha < d\): For some \(x \in (0, 1)^d\), \(T_n(0, \lfloor n x \rfloor ) \approx \frac{\log (n^d)}{n^{d - \alpha }} \approx \frac{\log N}{N^{1 - \alpha / d} } \overset{p}{\to} 0\) as \(N \to \infty \).
+
+		      \begin{conjecture}
+			      \(n^{d - \alpha } T_n(0, \lfloor n x \rfloor ) - c \log n \) converges in distribution to some non-trivial random variable.
+		      \end{conjecture}
+		\item \(d < \alpha < 2d\): \(\frac{\log T(0, \lfloor n x \rfloor )}{\log \log n} \to \frac{1}{\log (2d / \alpha )}\), or \(T(0, \lceil n x \rceil ) \approx (\log n)^{\frac{1}{\log (2d / \alpha )}}\), or \(\diam(\mathcal{B} _t) \approx e^{t \log (2d / \alpha )}\).
+		\item \(2d < \alpha < 2d + 1\): \(T(0, \lfloor n x \rfloor ) \approx n^{\alpha - 2d}\), or \(\diam (\mathcal{B} _t) \approx t^{\frac{1}{\alpha - 2d}}\).
+		      \begin{conjecture}
+			      \((\overline{\mathcal{B} }_t / t^{\frac{1}{\alpha - 2d}} )_{u \geq 0} \overset{D}{\to} (\mathcal{A} _u)_{u \geq 0}\) where \(\mathcal{A} _u\) is a levy set process.
+		      \end{conjecture}
+		\item \(\alpha > 2d + 1\): \(T(0, \lfloor n x \rfloor ) \approx n\), or \(\overline{\mathcal{B} }^t / t \overset{D}{\to} \mathcal{C} _\alpha \), where \(\mathcal{C} _\alpha \to \mathcal{C} _\infty \) as \(\alpha \to \infty \).
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	We only give a heuristic upper bound on \(d < \alpha < 2d\) for \(T(0, \lfloor n x \rfloor )\). Consider two points \(0\) and \(\lfloor nx \rfloor \), with their corresponding radius \(n / 3\) balls. They both have \(n^d\) many nodes, and hence there are \(n^{2d} \) possible jumps between two balls. We know that the minimum of \(n^{2d}\) many exponential random variable with mean \(n^{\alpha }\) has the same distribution as an exponential random variable with mean \(1 / \sum_{1 / n^\alpha } = 1 / n^{a2d - \alpha } = n^{\alpha - 2d}\).
+
+	One can do the same thing at a different scale from \(0\) to the starting point of the jump, and also the end point of the jump to \(\lfloor nx \rfloor \). From the same computation, the best possible jump is exponential with mean \(n^{\alpha - 2\gamma d} \leq O(1)\) with \(\gamma \leq \alpha / 2d < 1\).
+
+	\begin{center}
+		\incfig{torus-first-passage-percolation}
+	\end{center}
+
+	Let \(n^{\alpha ^k} \) be approximately some constant, or \(\gamma ^k \cdot \log n\) is some constant, which is equivalently to \(k \log \gamma + \log \log n \approx c\), hence, \(k \approx \frac{\log \log n}{\log 1 / \gamma }\). We see that the number of edges in this path is
+	\[
+		1 + 2 + 2^2 + \dots + 2^k
+		\approx 2^{k+1}
+		= e^{k \log 2}
+		= \exp (\log \log n \cdot \frac{\log 2}{\log (2d / \alpha )})
+		= (\log n)^{\frac{\log 2}{\log (2d / \alpha )}}.
+	\]
+
+	As for \(2d < \alpha < 2d + 1\), since
+	\[
+		w_{uv} \overset{D}{=} \lVert u - v \rVert ^{\alpha } \cdot \operatorname{Exp}(1)
+		\leq n^{\alpha - 2d + \epsilon } \lVert u - v \rVert ^{2d - \epsilon } \operatorname{Exp}(1),
+	\]
+	hence
+	\[
+		\frac{w_{uv}}{n^{\alpha - 2d + \epsilon }}
+		\leq \operatorname{Exp}(\lVert u - v \rVert ^{- (2d - \epsilon )}),
+	\]
+	which gives \(T(0, \lfloor n x \rfloor ) \leq n^{\alpha - 2d + \epsilon + o(1)}\).
+\end{proof}
+
+\begin{remark}
+	When \(\alpha = 0\), this becomes the previous complete graph case and we have shown the results previously.
+\end{remark}
+
+We can consider susceptible model, or inflection model, or even recover model. Due to the complexity, it's possible that these model never stop.
+
+\subsection{Scale-Free Graph}
+\begin{definition}
+	A \emph{scale-free} random variable \(X\) satisfies for all \(t \geq 1\) and \(u \geq 1\),
+	\[
+		\Pr_{}\left(X \geq ut \mid X \geq t\right)
+		= \Pr_{}\left(X \geq u \mid X \geq 1\right).
+	\]
+\end{definition}
+
+\begin{eg}
+	Let \(\Pr_{}\left(X \geq x\right) = c x^{-\alpha }\) for \(x \geq 1\). Then,
+	\[
+		\Pr_{}\left(X \geq u t \mid X \geq t\right)
+		= \frac{\Pr_{}\left(X \geq ut\right) }{\Pr_{}\left(X \geq t\right) }
+		= \frac{c u^{-\alpha } t^{- \alpha }}{c t^{-\alpha }}
+		= u^{-\alpha }.
+	\]
+\end{eg}
+
+\begin{notation}
+	\(\operatorname{ER}(n, p) \) is also the \(\operatorname{Percolation}(p) \) model on \(K_n\).
+\end{notation}
+
+\begin{notation}
+	Long-range percolation \(\mathbb{Z} ^d\) is that edge \((u, v)\) with probability \(1 - \exp (- \beta / \lVert u - v \rVert ^\alpha ) \approx \beta / \lVert u - v \rVert ^{\alpha }\).
+\end{notation}
